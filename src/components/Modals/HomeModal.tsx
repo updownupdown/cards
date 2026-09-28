@@ -13,7 +13,8 @@ import { getTestGameDotPaths, getTestWonPaths } from "@/data/test-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors, theme } from "@/styles/styles";
+import { ThemePicker } from "../common/ThemePicker";
 import {
   getDeviceLanguageCodes,
   useDisplayLanguage,
@@ -98,11 +99,11 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
     Platform.OS !== "web" ||
     (typeof navigator !== "undefined" && "wakeLock" in navigator);
 
-  const footerText = { size: "xs", weight: 300, color: Colors.K600 } as const;
+  const footerText = { size: "xs", weight: 300, color: theme.faint } as const;
   const footerLink = {
     size: "xs",
     weight: 500,
-    color: Colors.accentBlue,
+    color: theme.accent,
   } as const;
 
   return (
@@ -127,6 +128,24 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             { gap: spacing(30) },
           ]}
         >
+          <View
+            style={[
+              flexStyles.colStart,
+              flexStyles.fullWidth,
+              { gap: spacing(12) },
+            ]}
+          >
+            <Text weight={500} size="md" color={theme.ink}>
+              {t("colorTheme.label")}
+            </Text>
+            <ThemePicker
+              value={settings.colorTheme}
+              onChange={(colorTheme) => {
+                void updateSettings({ colorTheme });
+              }}
+            />
+          </View>
+
           {/* Language: follow the phone (Auto), or pick one. */}
           <View
             style={[
@@ -135,7 +154,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               { gap: spacing(12) },
             ]}
           >
-            <Text weight={500} size="lg" color={Colors.K200}>
+            <Text weight={500} size="md" color={theme.ink}>
               {t("language.label")}
             </Text>
             <SelectControl
@@ -214,10 +233,10 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
           )}
           <View style={{ width: "100%", gap: spacing(10) }}>
             <View style={{ gap: spacing(4) }}>
-              <Text weight={500} size="lg" color={Colors.K200}>
+              <Text weight={500} size="md" color={theme.ink}>
                 {t("autoComplete.label")}
               </Text>
-              <Text size="sm" weight={300} color={rgba(Colors.white, 0.6)}>
+              <Text size="sm" weight={300} color={theme.dim}>
                 {t("autoComplete.description")}
               </Text>
             </View>

@@ -55,5 +55,8 @@
   "resetData": {
     "button": "Reset all app data",
     "confirm": "Erase all progress and settings?"
+  },
+  "colorTheme": {
+    "label": "Colour theme"
   }
 }

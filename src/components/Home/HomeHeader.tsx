@@ -120,10 +120,7 @@ export function HomeHeaderBackground({
     });
   }, [backgroundOpacity, showBackground]);
 
-  const headerHeight =
-    insets.top +
-    spacing(layoutDims.pagePadding) +
-    spacing(layoutDims.menuBarHeight);
+  const headerHeight = insets.top + spacing(layoutDims.pagePadding);
 
   return (
     <Animated.View

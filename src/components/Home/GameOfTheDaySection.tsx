@@ -1,6 +1,6 @@
 import { Text } from "@/components/common/Text";
 import { HomeCard } from "@/components/Home/HomeCard";
-import { HomeSectionTitle } from "@/components/Home/HomeSectionTitle";
+import { SectionTitle } from "@/components/ui/Nocturne";
 import {
   daysBefore,
   getDailyStreak,
@@ -15,7 +15,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba } from "@/styles/styles";
+import { rgba, theme } from "@/styles/styles";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 
@@ -97,13 +97,17 @@ export function GameOfTheDaySection({
         alignSelf: "center",
       }}
     >
-      <HomeSectionTitle
-        title={t("sections.gameOfTheDay")}
-        subtitle={t("gameOfTheDay.streak", { count: streak })}
-        iconName="featured"
-        pageSidePadding={pageSidePadding}
-        contentMaxWidth={contentMaxWidth}
-      />
+      <View style={{ paddingHorizontal: pageSidePadding }}>
+        <SectionTitle
+          action={
+            <Text size="xs" weight={300} color={theme.dim}>
+              {t("gameOfTheDay.streak", { count: streak })}
+            </Text>
+          }
+        >
+          {t("sections.gameOfTheDay")}
+        </SectionTitle>
+      </View>
 
       <ScrollView
         ref={scrollRef}
@@ -132,8 +136,7 @@ export function GameOfTheDaySection({
               style={{
                 width: pageWidth,
                 paddingHorizontal: pageSidePadding,
-                paddingTop: spacing(10),
-                paddingBottom: spacing(14),
+                paddingBottom: spacing(12),
                 gap: spacing(8),
               }}
             >
@@ -147,7 +150,7 @@ export function GameOfTheDaySection({
                 <Text
                   size="sm"
                   weight={400}
-                  color={daysAgo === 0 ? Colors.K200 : Colors.K500}
+                  color={daysAgo === 0 ? theme.ink : theme.dim}
                   style={{ flex: 1 }}
                 >
                   {dayLabel(daysAgo, day.date)}
@@ -161,16 +164,16 @@ export function GameOfTheDaySection({
                         paddingHorizontal: spacing(10),
                         height: spacing(26),
                         borderRadius: spacing(13),
-                        backgroundColor: rgba(Colors.win, 0.2),
+                        backgroundColor: rgba(theme.accent, 0.14),
                       },
                     ]}
                   >
                     <Icon
                       name="trophy"
                       size={spacing(14)}
-                      color={Colors.trophyGold}
+                      color={theme.accent}
                     />
-                    <Text size="xs" weight={500} color={Colors.K100}>
+                    <Text size="xs" weight={500} color={theme.accent}>
                       {daysAgo === 0
                         ? t("gameOfTheDay.wonToday")
                         : t("gameOfTheDay.won")}
@@ -216,10 +219,10 @@ export function GameOfTheDaySection({
                 borderRadius: spacing(3),
                 backgroundColor:
                   index === pageIndex
-                    ? Colors.suitsRed
+                    ? theme.accent
                     : dailyWins.has(day.key)
-                      ? Colors.win
-                      : Colors.K800,
+                      ? rgba(theme.accent, 0.45)
+                      : rgba(theme.ink, 0.14),
               }}
             />
           </Pressable>

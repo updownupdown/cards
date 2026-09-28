@@ -1,9 +1,9 @@
 {
   "tabs": {
     "home": "Home",
-    "collect": "Collect",
-    "search": "Search",
-    "campaign": "Campaign"
+    "campaign": "Odyssey",
+    "collect": "Gallery",
+    "search": "Search"
   },
   "cardSize": {
     "small": "List",
@@ -21,14 +21,23 @@
     "filter": "Filter",
     "resetFilters": "Reset filters",
     "all": "All",
-    "unplayed": "Unplayed"
+    "unplayed": "Unplayed",
+    "count_one": "{{count}} game",
+    "count_other": "{{count}} games",
+    "sortAZ": "A–Z",
+    "sortDifficulty": "Difficulty",
+    "sortRecent": "Recent",
+    "sortBy": "Sort"
   },
   "sections": {
     "localOnly": "Local-only Games",
     "gameOfTheDay": "Game of the Day",
     "easyGames": "Easy games to get started",
     "jumpBackIn": "Jump Back In",
-    "favorites": "Favorites"
+    "favorites": "Favorites",
+    "continue": "Continue",
+    "resume": "Resume",
+    "fact": "Did you know"
   },
   "gameOfTheDay": {
     "today": "Today",
@@ -154,5 +163,17 @@
     "dismissed": "No problem — you can install any time from your browser menu.",
     "installNow": "Install now",
     "notNow": "Not now"
+  },
+  "gallery": {
+    "acquired": "Works acquired",
+    "roomsCompleted": "Rooms completed",
+    "uncollected": "Win {{game}} to acquire this work.",
+    "previous": "Previous work",
+    "next": "Next work",
+    "play": "Play"
+  },
+  "header": {
+    "stats": "Stats",
+    "settings": "Settings"
   }
 }

@@ -4,7 +4,8 @@ import { useTranslation } from "@/i18n";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
-import { Colors, rgba, layoutDims, transitionStyles } from "@/styles/styles";
+import { Colors, rgba, layoutDims, theme, transitionStyles } from "@/styles/styles";
+import { Text } from "@/components/common/Text";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect } from "react";
 import {
@@ -28,7 +29,7 @@ export type HomeTabKey = "home" | "collect" | "search" | "campaign";
 export const HOME_TABS: { key: HomeTabKey; icon: IconName }[] = [
   { key: "home", icon: "home" },
   { key: "campaign", icon: "milky-way" },
-  { key: "collect", icon: "stamp" },
+  { key: "collect", icon: "gallery" },
   { key: "search", icon: "search" },
 ];
 
@@ -139,44 +140,64 @@ export function HomeTabBar({
             flexStyles.rowCentered,
             {
               width: "100%",
-              padding: spacing(layoutDims.tabBarPadding),
               height: spacing(layoutDims.tabBarHeight),
-              borderRadius: spacing(layoutDims.tabBarHeight / 2),
-              backgroundColor: rgba(Colors.K950, 0.9),
+              borderRadius: spacing(22),
+              backgroundColor: rgba(theme.surface, 0.92),
+              borderWidth: 1,
+              borderColor: rgba(theme.ink, 0.08),
               ...homeSurfaceShadow(spacing, { translucent: true }),
+              ...(Platform.OS === "web"
+                ? ({ backdropFilter: "blur(14px)" } as object)
+                : null),
             },
           ]}
         >
           {HOME_TABS.map((tab, index) => {
             const isActive = index === activeIndex;
+            const label = t(`tabs.${tab.key}`);
 
             return (
               <Pressable
                 key={tab.key}
                 onPress={() => onSelectTab(index)}
                 accessibilityRole="button"
-                accessibilityLabel={t(`tabs.${tab.key}`)}
-                style={[
-                  flexStyles.rowCentered,
-                  {
-                    ...transitionStyles.all02sec,
-                    flex: 1,
-                    height: "100%",
-                    paddingVertical: spacing(12),
-                    borderRadius: spacing(
-                      layoutDims.tabBarHeight / 2 - layoutDims.tabBarPadding,
-                    ),
-                    backgroundColor: isActive ? Colors.suitsRed : "transparent",
-                    outline: "none",
-                  },
-                ]}
+                accessibilityLabel={label}
+                accessibilityState={{ selected: isActive }}
+                style={{
+                  flex: 1,
+                  height: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: spacing(3),
+                  outline: "none",
+                }}
               >
+                <View
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    width: spacing(26),
+                    height: 2,
+                    borderRadius: 2,
+                    backgroundColor: theme.accent,
+                    opacity: isActive ? 1 : 0,
+                    ...transitionStyles.all02sec,
+                  }}
+                />
                 <Icon
                   name={tab.icon}
-                  size={spacing(32)}
-                  color={isActive ? Colors.white : Colors.K500}
+                  size={spacing(24)}
+                  color={isActive ? theme.accent : theme.faint}
                   style={{ ...transitionStyles.all02sec }}
                 />
+                <Text
+                  size="xxs"
+                  weight={400}
+                  color={isActive ? theme.ink : theme.faint}
+                  style={{ fontSize: spacing(11), lineHeight: spacing(13) }}
+                >
+                  {label}
+                </Text>
               </Pressable>
             );
           })}

@@ -6,8 +6,8 @@ import {
   FontWeight,
   layoutDims,
   rgba,
+  theme as appTheme,
   transitionStyles,
-  webDropShadow,
 } from "@/styles/styles";
 import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
 import { useEffect, useRef } from "react";
@@ -27,13 +27,7 @@ import {
   ViewStyle,
   Easing as RNEasing,
 } from "react-native";
-import { textStyles } from "@/styles/textStyles";
-import {
-  darkenHexColor,
-  desaturateHexColor,
-  lightenHexColor,
-  roundToPixel,
-} from "@/utils/utils";
+import { roundToPixel } from "@/utils/utils";
 import { HexColor } from "@/data/games-data";
 import { flexStyles } from "@/styles/flexStyles";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -52,6 +46,37 @@ const THEME_COLORS = {
 } as const;
 
 const isHexColor = (value: string) => /^#[0-9a-f]{6}$/i.test(value);
+
+const NAMED_PRIMARY = new Set(["blue", "red", "orange", "purple", "green", "pink", "win", "lose"]);
+
+type ButtonVariant = "primary" | "secondary" | "text" | "none";
+
+/**
+ * Which of the app's button looks a requested colour gets: named and bright
+ * colours are the main (accent) button, dark and see-through ones the quiet
+ * one.
+ */
+function resolveButtonVariant(
+  requested: string | undefined,
+  textOnly: boolean,
+): ButtonVariant {
+  if (textOnly) return "text";
+  if (!requested) return "primary";
+  if (requested === "none" || requested === "transparent") return "none";
+  if (NAMED_PRIMARY.has(requested)) return "primary";
+  if (requested in THEME_COLORS) return "secondary";
+  if (/^rgba?\(/i.test(requested)) return "secondary";
+  if (isHexColor(requested)) {
+    const value = parseInt(requested.slice(1), 16);
+    const luminance =
+      (0.2126 * ((value >> 16) & 255) +
+        0.7152 * ((value >> 8) & 255) +
+        0.0722 * (value & 255)) /
+      255;
+    return luminance < 0.3 ? "secondary" : "primary";
+  }
+  return "primary";
+}
 
 // Animated so state changes (e.g. enabled/disabled) fade on native, where the
 // CSS transition in transitionStyles is ignored.
@@ -144,18 +169,21 @@ export const Button = ({
         } as any)
       : undefined;
 
-  const fallbackColor = textOnly ? Colors.accentBlue : Colors.buttonBlue;
+  // Buttons follow the app's colour theme, whatever colour a screen asks
+  // for: bright requests become the accent-filled button, dark or
+  // translucent ones the quiet one, and "none" stays transparent.
+  const variant = resolveButtonVariant(theme, textOnly);
   let themeColor: string =
-    (theme && THEME_COLORS[theme as keyof typeof THEME_COLORS]) ||
-    theme ||
-    fallbackColor;
+    variant === "primary"
+      ? appTheme.accent
+      : variant === "secondary"
+        ? rgba(appTheme.ink, 0.1)
+        : variant === "text"
+          ? appTheme.accent
+          : "none";
+  const contentColor =
+    variant === "primary" ? appTheme.accentInk : appTheme.ink;
   const borderColor = themeColor;
-
-  if (disabled) {
-    themeColor = textOnly
-      ? Colors.white
-      : darkenHexColor(desaturateHexColor(themeColor, 0.6), 0.3);
-  }
 
   const baseFontSize = Typography.size[size];
   const sizeScale = baseFontSize / Typography.size.md;
@@ -164,7 +192,7 @@ export const Button = ({
   let height: number | undefined = roundToPixel(
     40 * uiScale * sizeScale * (taller ? 1.4 : halfTaller ? 1.2 : 1),
   );
-  let borderRadius = height / 2;
+  let borderRadius = roundToPixel(height * 0.32);
   let gap = height / 6;
   let paddingVertical = roundToPixel(6 * uiScale * sizeScale);
   let paddingHorizontal = roundToPixel(20 * uiScale * sizeScale);
@@ -186,7 +214,7 @@ export const Button = ({
     {
       ...transitionStyles.limited04sec,
       outlineWidth: 0,
-      opacity: disabled ? 0.6 : 1,
+      opacity: disabled ? 0.35 : 1,
       // Only clip when there's an autoProgress bar to contain: on native,
       // overflow:hidden also clips the button's own drop shadow.
       overflow: autoProgress === undefined ? undefined : "hidden",
@@ -206,9 +234,11 @@ export const Button = ({
       // silently dropped that shadow; Reanimated's animated component throws
       // on it, so leave the shadow out, as it effectively was before.
       boxShadow:
-        height && isHexColor(borderColor)
-          ? `inset 0 0 1px 1px ${rgba(lightenHexColor(borderColor, 0.3), disabled ? 0.2 : 1)}, ${roundToPixel(height * 0.04)}px ${roundToPixel(height * 0.08)}px ${roundToPixel(height * (disabled ? 0.1 : 0.24))}px ${rgba(Colors.black, disabled ? 0.1 : 0.3)}`
+        height && variant === "primary" && isHexColor(borderColor)
+          ? `0 ${roundToPixel(height * 0.08)}px ${roundToPixel(height * 0.3)}px ${rgba(Colors.black, disabled ? 0.1 : 0.3)}`
           : undefined,
+      borderWidth: variant === "secondary" && height ? 1 : 0,
+      borderColor: rgba(appTheme.ink, 0.1),
       // Invalid values (e.g. theme="none") were always ignored; drop them so
       // Reanimated's animated component doesn't throw on them.
       backgroundColor:
@@ -310,12 +340,15 @@ export const Button = ({
         <Icon
           name={iconName}
           size={iconSize ?? roundToPixel(24 * uiScale)}
-          color={iconColor ?? Colors.white}
+          color={
+            variant === "text" || variant === "none" || headerButton
+              ? (iconColor ?? appTheme.ink)
+              : contentColor
+          }
           style={[
             {
               ...transitionStyles.limited04sec,
               flexShrink: 0,
-              ...webDropShadow("0 1px 3px rgba(0, 0, 0, 0.2)"),
             },
           ]}
         />
@@ -328,11 +361,10 @@ export const Button = ({
               fontSize,
               fontFamily,
               textTransform: uppercase ? "uppercase" : "none",
-              color: textOnly ? themeColor : Colors.white,
+              color: textOnly ? themeColor : contentColor,
               lineHeight: lineHeightUpdated,
               textAlign: "center",
             },
-            textStyles.shadowText,
             textStyle,
           ]}
         >

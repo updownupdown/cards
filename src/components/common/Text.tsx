@@ -1,10 +1,14 @@
 import { HexColor } from "@/data/games-data";
-import { Colors, FontWeight as FontFamilies } from "@/styles/styles";
+import { FontWeight as FontFamilies, SerifFont, theme } from "@/styles/styles";
 import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
 import { createElement, forwardRef, useMemo, type ReactNode } from "react";
 import { getDisplayLanguage } from "@/i18n";
 import { Platform, StyleSheet, Text as RNText } from "react-native";
-import type { TextProps as RNTextProps } from "react-native";
+import type {
+  StyleProp,
+  TextProps as RNTextProps,
+  TextStyle,
+} from "react-native";
 
 const SUIT_WITHOUT_TEXT_PRESENTATION = /([♠♣♥♦])(?!\uFE0E)/g;
 
@@ -81,6 +85,25 @@ export interface TextProps extends RNTextProps {
   lineHeight?: number;
   weight?: TextWeight;
   textTransform?: "none" | "capitalize" | "uppercase" | "lowercase";
+  /**
+   * EB Garamond, for anything belonging to the art, the Tao or the quotes
+   * (Outfit is for the games and the interface). Serif text uses oldstyle
+   * figures.
+   */
+  serif?: boolean;
+  italic?: boolean;
+  /** Small caps: serif labels. Write the label in normal case. */
+  smallCaps?: boolean;
+}
+
+/** The EB Garamond face closest to an Outfit weight. */
+export function serifFontFamily(weight: TextWeight, italic = false) {
+  const heavy =
+    weight === 600 || weight === 700 || weight === "bold" || weight === "semibold";
+  const medium = weight === 500 || weight === "medium";
+  if (heavy) return italic ? SerifFont.mediumItalic : SerifFont.semibold;
+  if (medium) return italic ? SerifFont.mediumItalic : SerifFont.medium;
+  return italic ? SerifFont.italic : SerifFont.regular;
 }
 
 export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
@@ -92,7 +115,10 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
       weight = "regular",
       textTransform = "none",
       style,
-      color = Colors.white,
+      color = theme.ink,
+      serif = false,
+      italic = false,
+      smallCaps = false,
       ...otherProps
     } = props;
     const ui = useResponsiveUiLayout();
@@ -101,10 +127,17 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
       return getScaledTextSize(size, ui.textScale);
     }, [size, ui.textScale]);
 
-    const fontFamily = Typography.fontFamily[weight];
+    const fontFamily = serif
+      ? serifFontFamily(weight, italic)
+      : Typography.fontFamily[weight];
     const resolvedLineHeight = fontSize * lineHeight;
+    const fontVariant: TextStyle["fontVariant"] = serif
+      ? smallCaps
+        ? ["small-caps", "oldstyle-nums"]
+        : ["oldstyle-nums"]
+      : undefined;
 
-    const textStyle = [
+    const textStyle: StyleProp<TextStyle>[] = [
       {
         fontSize,
         fontFamily,
@@ -112,6 +145,8 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
         textTransform,
         lineHeight: resolvedLineHeight,
         flexShrink: 1,
+        ...(fontVariant ? { fontVariant } : null),
+        ...(smallCaps ? { letterSpacing: fontSize * 0.08 } : null),
       },
       style,
     ];

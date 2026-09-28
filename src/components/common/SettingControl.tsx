@@ -2,7 +2,7 @@ import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors, rgba, theme } from "@/styles/styles";
 import { darkenHexColor } from "@/utils/utils";
 import React from "react";
 import { Pressable, View } from "react-native";
@@ -23,7 +23,7 @@ type SettingControlProps<T> = {
 
 export function SettingControl<T>({
   label,
-  labelColor = Colors.K200,
+  labelColor = theme.ink,
   description,
   helpText,
   applyBehaviorText,
@@ -41,12 +41,12 @@ export function SettingControl<T>({
         style={[flexStyles.colStart, flexStyles.fullWidth, { gap: spacing(4) }]}
       >
         {helpText && (
-          <Text size="sm" weight={400} color={Colors.white}>
+          <Text size="sm" weight={400} color={theme.ink}>
             {helpText}
           </Text>
         )}
         {applyBehaviorText && (
-          <Text size="sm" weight={300} color={rgba(Colors.white, 0.6)}>
+          <Text size="sm" weight={300} color={theme.dim}>
             {applyBehaviorText}
           </Text>
         )}
@@ -95,11 +95,11 @@ export function SettingControl<T>({
             ]}
           >
             {/* Default line height: 1 clipped descenders (g, p) on Android. */}
-            <Text weight={500} size="lg" color={labelColor}>
+            <Text weight={500} size="md" color={labelColor}>
               {label}
             </Text>
             {description && (
-              <Text size="sm" weight={300} color={rgba(Colors.white, 0.6)}>
+              <Text size="sm" weight={300} color={theme.dim}>
                 {description}
               </Text>
             )}
@@ -116,8 +116,8 @@ export function SettingControl<T>({
                   height: 32,
                   borderRadius: 16,
                   backgroundColor: isTrue
-                    ? Colors.suitsRed
-                    : darkenHexColor(labelColor, 0.56),
+                    ? theme.accent
+                    : rgba(theme.ink, 0.12),
                   justifyContent: "center",
                   paddingHorizontal: 2,
                 },
@@ -131,7 +131,7 @@ export function SettingControl<T>({
                   width: 22,
                   height: 22,
                   borderRadius: 11,
-                  backgroundColor: Colors.white,
+                  backgroundColor: isTrue ? theme.accentInk : theme.ink,
                   transform: [{ translateX: isTrue ? 30 : 4 }],
                   boxShadow: `1px 2px 8px ${rgba(Colors.black, 0.3)}`,
                 }}
@@ -149,7 +149,7 @@ export function SettingControl<T>({
             >
               <Icon
                 name={isTrue ? "check-box-on" : "check-box-off"}
-                color={Colors.accentBlue}
+                color={theme.accent}
               />
             </View>
           )}
@@ -171,7 +171,7 @@ export function SettingControl<T>({
           },
         ]}
       >
-        <Text weight={500} size="lg" color={labelColor}>
+        <Text weight={500} size="md" color={labelColor}>
           {label}
         </Text>
 
@@ -207,8 +207,8 @@ export function SettingControl<T>({
                         borderRadius: spacing(10),
                         borderWidth: 2,
                         borderColor: isSelected
-                          ? Colors.accentBlue
-                          : rgba(Colors.white, 0.5),
+                          ? theme.accent
+                          : rgba(theme.ink, 0.3),
                         alignItems: "center",
                         justifyContent: "center",
                       }}
@@ -219,7 +219,7 @@ export function SettingControl<T>({
                             width: spacing(10),
                             height: spacing(10),
                             borderRadius: spacing(5),
-                            backgroundColor: Colors.accentBlue,
+                            backgroundColor: theme.accent,
                           }}
                         />
                       )}
@@ -227,7 +227,7 @@ export function SettingControl<T>({
                     <Text
                       size="md"
                       weight={400}
-                      color={isSelected ? Colors.accentBlue : Colors.white}
+                      color={isSelected ? theme.accent : theme.ink}
                       style={{ userSelect: "none" }}
                     >
                       {opt.label}
@@ -238,7 +238,7 @@ export function SettingControl<T>({
                 {opt.description && (
                   <Text
                     size="sm"
-                    color={rgba(Colors.white, 0.8)}
+                    color={theme.dim}
                     style={{ paddingLeft: spacing(28), userSelect: "none" }}
                   >
                     {opt.description}
