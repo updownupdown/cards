@@ -4,7 +4,13 @@ import { useTranslation } from "@/i18n";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
-import { Colors, rgba, layoutDims, theme, transitionStyles } from "@/styles/styles";
+import {
+  Colors,
+  rgba,
+  layoutDims,
+  theme,
+  transitionStyles,
+} from "@/styles/styles";
 import { Text } from "@/components/common/Text";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect } from "react";

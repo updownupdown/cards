@@ -2,7 +2,13 @@ import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, LayerZIndexes, layoutDims, rgba, theme } from "@/styles/styles";
+import {
+  Colors,
+  LayerZIndexes,
+  layoutDims,
+  rgba,
+  theme,
+} from "@/styles/styles";
 import { ActionButton, Kicker } from "@/components/ui/Nocturne";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, Platform, View } from "react-native";
@@ -199,10 +205,15 @@ export const WinLoseBox = ({
 
           {won && (winTimes || winCount !== undefined) && (
             <View style={{ flexDirection: "row", gap: spacing(24) }}>
-              {winTimes && stat(tCommon("stats.time"), formatPlayTime(winTimes.timeMs))}
               {winTimes &&
-                stat(tCommon("stats.bestTimeLabel"), formatPlayTime(winTimes.bestMs))}
-              {winCount !== undefined && stat(tCommon("stats.wins"), String(winCount))}
+                stat(tCommon("stats.time"), formatPlayTime(winTimes.timeMs))}
+              {winTimes &&
+                stat(
+                  tCommon("stats.bestTimeLabel"),
+                  formatPlayTime(winTimes.bestMs),
+                )}
+              {winCount !== undefined &&
+                stat(tCommon("stats.wins"), String(winCount))}
             </View>
           )}
 

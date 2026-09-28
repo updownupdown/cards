@@ -155,7 +155,8 @@ export function HomeTab({
         </View>
 
         {/* Local-only games */}
-        {isLocalDevEnvironment() && localOnlyGames.length > 0 &&
+        {isLocalDevEnvironment() &&
+          localOnlyGames.length > 0 &&
           section(
             t("sections.localOnly"),
             <ArtShelf
@@ -215,4 +216,3 @@ export function HomeTab({
     </View>
   );
 }
-

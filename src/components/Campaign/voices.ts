@@ -66,7 +66,10 @@ function placeStars(names: string[]) {
     const jitter = (key: string) => (hashUnit(`${name}:${key}`) - 0.5) * 12;
     return {
       x: Math.max(6, Math.min(94, 50 + Math.cos(angle) * radius + jitter("x"))),
-      y: Math.max(6, Math.min(94, 50 + Math.sin(angle) * radius * 0.85 + jitter("y"))),
+      y: Math.max(
+        6,
+        Math.min(94, 50 + Math.sin(angle) * radius * 0.85 + jitter("y")),
+      ),
     };
   });
 }

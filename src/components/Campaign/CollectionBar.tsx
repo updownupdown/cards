@@ -14,7 +14,8 @@ function useTabBarTop() {
   const { spacing } = useResponsiveMetrics();
   const insets = useSafeAreaInsets();
   return (
-    insets.bottom + spacing(layoutDims.tabBarHeight + layoutDims.pagePadding * 0.5)
+    insets.bottom +
+    spacing(layoutDims.tabBarHeight + layoutDims.pagePadding * 0.5)
   );
 }
 

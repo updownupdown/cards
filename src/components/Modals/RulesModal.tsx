@@ -57,7 +57,6 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
             content={gameInfo.howToPlay ?? [t("rules.unavailable")]}
             headingColor={headingColor}
           />
-
         </View>
       </ScrollView>
     </ModalFull>

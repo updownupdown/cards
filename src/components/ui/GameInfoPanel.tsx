@@ -77,7 +77,9 @@ export function GameInfoPanel({
         style,
       ]}
     >
-      <View style={{ flexDirection: "row", alignItems: "center", gap: spacing(12) }}>
+      <View
+        style={{ flexDirection: "row", alignItems: "center", gap: spacing(12) }}
+      >
         {leading === "thumbnail" ? (
           <Image
             source={gameArt(game)}
@@ -141,7 +143,13 @@ export function GameInfoPanel({
         </View>
       </View>
 
-      <View style={{ flexDirection: "row", alignItems: "flex-end", gap: spacing(14) }}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "flex-end",
+          gap: spacing(14),
+        }}
+      >
         <View style={{ flex: 1 }}>
           <RatingMeters
             rating={game.rating}

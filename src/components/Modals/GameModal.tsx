@@ -145,7 +145,10 @@ export default function GameModal({
             <View style={{ flexDirection: "row", gap: spacing(20) }}>
               {stat(tCommon("stats.won"), settings.stats.wins)}
               {stat(tCommon("stats.lost"), settings.stats.losses)}
-              {stat(tCommon("stats.winPercent"), calculateWinRate(settings.stats))}
+              {stat(
+                tCommon("stats.winPercent"),
+                calculateWinRate(settings.stats),
+              )}
               {settings.stats.highestScore !== null &&
                 stat(tCommon("stats.best"), settings.stats.highestScore)}
             </View>

@@ -196,8 +196,7 @@ export function CampaignTab({ contentPaddingTop }: Props) {
               collectedQuoteIds={collectedQuoteIds}
               style={{
                 width: "100%",
-                maxWidth:
-                  ui.contentMaxWidth - spacing(layoutDims.pagePadding),
+                maxWidth: ui.contentMaxWidth - spacing(layoutDims.pagePadding),
                 backgroundColor: rgba(theme.surface, 0.92),
                 ...(Platform.OS === "web"
                   ? ({ backdropFilter: "blur(14px)" } as ViewStyle)

@@ -208,7 +208,9 @@ export function VoicesView({ collectedIds, topInset }: Props) {
   const group = open ? groups[open.group] : null;
   const quoteId = group && open ? group.collected[open.quote] : undefined;
   const authorOf = (id: QuoteId | undefined) =>
-    group?.authors.find((author) => id !== undefined && author.quoteIds.includes(id));
+    group?.authors.find(
+      (author) => id !== undefined && author.quoteIds.includes(id),
+    );
   const author = authorOf(quoteId);
   const neighbour = (direction: 1 | -1) => {
     if (!group || !open) return undefined;
@@ -230,7 +232,9 @@ export function VoicesView({ collectedIds, topInset }: Props) {
         setSize({ width, height });
       }}
     >
-      <Animated.View style={[StyleSheet.absoluteFill, { overflow: "hidden" }, skyStyle]}>
+      <Animated.View
+        style={[StyleSheet.absoluteFill, { overflow: "hidden" }, skyStyle]}
+      >
         {size && (
           <View style={[StyleSheet.absoluteFill, pointerEventsStyles.none]}>
             <ParallaxStars
@@ -244,7 +248,12 @@ export function VoicesView({ collectedIds, topInset }: Props) {
         )}
         {size && (
           <GestureDetector gesture={skyGesture}>
-            <View style={[StyleSheet.absoluteFill, open ? pointerEventsStyles.none : null]}>
+            <View
+              style={[
+                StyleSheet.absoluteFill,
+                open ? pointerEventsStyles.none : null,
+              ]}
+            >
               <Animated.View
                 style={[
                   {
@@ -326,7 +335,9 @@ const PeriodCell = memo(function PeriodCell({
     >
       <Svg width={FIGURE} height={FIGURE} viewBox="-4 -4 108 108">
         <Polyline
-          points={group.authors.map((author) => `${author.star.x},${author.star.y}`).join(" ")}
+          points={group.authors
+            .map((author) => `${author.star.x},${author.star.y}`)
+            .join(" ")}
           fill="none"
           stroke={rgba(theme.accent, known.length ? 0.4 : 0.12)}
           strokeWidth={0.5 / scale + 0.2}
@@ -373,7 +384,8 @@ const PeriodCell = memo(function PeriodCell({
         color={theme.dim}
         style={{ textAlign: "center" }}
       >
-        {formatYear(group.from)} – {group.to === null ? "today" : formatYear(group.to)}
+        {formatYear(group.from)} –{" "}
+        {group.to === null ? "today" : formatYear(group.to)}
       </Text>
       <Text size="sm" weight={300} color={theme.faint} style={{ marginTop: 2 }}>
         {known.length} / {group.authors.length}
@@ -416,14 +428,23 @@ function VoiceDetail({
       >
         {author.name}
       </Text>
-      <Text size="xs" weight={300} color={theme.dim} style={{ textAlign: "center" }}>
+      <Text
+        size="xs"
+        weight={300}
+        color={theme.dim}
+        style={{ textAlign: "center" }}
+      >
         {lifespan(author)}
       </Text>
       {quote && (
         <Animated.View
           key={quoteId}
           entering={FadeIn.duration(900).delay(150)}
-          style={{ alignItems: "center", marginTop: spacing(20), gap: spacing(12) }}
+          style={{
+            alignItems: "center",
+            marginTop: spacing(20),
+            gap: spacing(12),
+          }}
         >
           <Text
             serif
@@ -438,7 +459,12 @@ function VoiceDetail({
           >
             “{quote.text}”
           </Text>
-          <Text size="xs" weight={300} color={theme.dim} style={{ textAlign: "center" }}>
+          <Text
+            size="xs"
+            weight={300}
+            color={theme.dim}
+            style={{ textAlign: "center" }}
+          >
             {quote.source}
           </Text>
         </Animated.View>

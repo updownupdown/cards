@@ -49,7 +49,9 @@ export function SpadeMark({
 export function Logo({ height = 32 }: { height?: number }) {
   const { font } = useResponsiveMetrics();
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: height * 0.3 }}>
+    <View
+      style={{ flexDirection: "row", alignItems: "center", gap: height * 0.3 }}
+    >
       <SpadeMark size={height} />
       <Text
         weight={400}

@@ -99,7 +99,10 @@ export interface TextProps extends RNTextProps {
 /** The EB Garamond face closest to an Outfit weight. */
 export function serifFontFamily(weight: TextWeight, italic = false) {
   const heavy =
-    weight === 600 || weight === 700 || weight === "bold" || weight === "semibold";
+    weight === 600 ||
+    weight === 700 ||
+    weight === "bold" ||
+    weight === "semibold";
   const medium = weight === 500 || weight === "medium";
   if (heavy) return italic ? SerifFont.mediumItalic : SerifFont.semibold;
   if (medium) return italic ? SerifFont.mediumItalic : SerifFont.medium;

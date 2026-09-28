@@ -96,13 +96,11 @@ const LINE_WIDTH = { arm: 1.9, bridge: 0.77 };
 /** Locked links are drawn a little finer as well as fainter. */
 const LOCKED_LINE_SCALE = 0.85;
 
-
 /** A sprite's size in world points: room for the widest halo. Must match
  *  SPRITES.nodeSize in scripts/generate-campaign-map.mjs. */
 const GAME_DOT_SPRITE_SIZE = 96;
 /** The gap between a selected game dot and its first ring, in world points. */
 const SELECTION_GAP = 4;
-
 
 /**
  * Game dot names are drawn like the engraving on a star chart: small, spaced
@@ -125,7 +123,6 @@ const LABEL_OPACITY = {
   won: 0.8,
   complete: 0.85,
 } as const;
-
 
 function labelColor(state: GameDotState) {
   return state === "won" || state === "complete" ? theme.ink : theme.dim;
@@ -631,7 +628,7 @@ const GameDot = memo(function GameDot({
   const ring = state === "connected" ? `inset 0 0 0 1.5px ${color}` : "";
   const halo = lit ? `0 0 ${dotSize * 0.9}px ${rgba(color, 0.45)}` : "";
   const selectionRings = selected
-    ? `0 0 0 ${SELECTION_GAP}px ${rgba(theme.night, 0)}, 0 0 0 ${SELECTION_GAP + 1}px ${theme.accent}, 0 0 0 ${SELECTION_GAP + 5}px ${rgba(theme.night, 0)}, 0 0 0 ${SELECTION_GAP + 5.6}px ${rgba(theme.accent, 0.6)}`
+    ? `0 0 0 ${SELECTION_GAP}px ${theme.night}, 0 0 0 ${SELECTION_GAP + 1}px ${theme.accent}, 0 0 0 ${SELECTION_GAP + 5}px ${theme.night}, 0 0 0 ${SELECTION_GAP + 5.6}px ${rgba(theme.accent, 0.6)}`
     : "";
 
   const webStyle = {
@@ -644,7 +641,8 @@ const GameDot = memo(function GameDot({
     height: dotSize,
     borderRadius: dotSize / 2,
     backgroundColor: fill,
-    boxShadow: [ring, selectionRings, halo].filter(Boolean).join(", ") || "none",
+    boxShadow:
+      [ring, selectionRings, halo].filter(Boolean).join(", ") || "none",
   } as const;
   // Native taps are handled by the map's tap gesture (see CampaignMap), and
   // native draws the same look from plain views: a map has over a hundred of

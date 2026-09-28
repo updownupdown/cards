@@ -246,8 +246,9 @@ export const GameWrapper = ({
   const revealing = !!taoRevealText || !!quoteReveal;
   // The win box shows first, its buttons faded, then after a pause the
   // reward's reveal fades in over it.
-  const [revealStarted, setRevealStarted] =
-    useState<CampaignWinResult | null>(null);
+  const [revealStarted, setRevealStarted] = useState<CampaignWinResult | null>(
+    null,
+  );
   useEffect(() => {
     if (!campaignWinResult?.awardedReward) return;
     const timer = setTimeout(

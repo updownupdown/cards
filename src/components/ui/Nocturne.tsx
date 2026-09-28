@@ -185,12 +185,7 @@ export function RatingMeters({
     <View style={{ flexDirection: "row", gap: spacing(14) }}>
       {items.map(([label, value]) => (
         <View key={label} style={{ flex: 1, gap: spacing(6) }}>
-          <Text
-            size="xxs"
-            weight={400}
-            color={theme.dim}
-            numberOfLines={1}
-          >
+          <Text size="xxs" weight={400} color={theme.dim} numberOfLines={1}>
             {label}
           </Text>
           <Meter value={value / 100} />
@@ -317,7 +312,11 @@ export function RoundButton({
             : null),
         }}
       >
-        <Icon name={iconName} size={Math.round(diameter * 0.48)} color={iconColor} />
+        <Icon
+          name={iconName}
+          size={Math.round(diameter * 0.48)}
+          color={iconColor}
+        />
       </View>
       {label ? (
         <Text
@@ -378,7 +377,12 @@ export function ActionButton({
       ]}
     >
       {iconName && <Icon name={iconName} size={spacing(16)} color={ink} />}
-      <Text size={small ? "sm" : "md"} weight={600} color={ink} numberOfLines={1}>
+      <Text
+        size={small ? "sm" : "md"}
+        weight={600}
+        color={ink}
+        numberOfLines={1}
+      >
         {label}
       </Text>
     </Pressable>

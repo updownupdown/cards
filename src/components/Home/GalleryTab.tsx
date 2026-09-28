@@ -139,9 +139,18 @@ export function GalleryTab({
         showsVerticalScrollIndicator={false}
       >
         <PageTitle>{t("tabs.collect")}</PageTitle>
-        <View style={{ flexDirection: "row", gap: spacing(16), marginTop: spacing(4) }}>
+        <View
+          style={{
+            flexDirection: "row",
+            gap: spacing(16),
+            marginTop: spacing(4),
+          }}
+        >
           {stat(`${acquired} / ${allWorks.length}`, t("gallery.acquired"))}
-          {stat(`${roomsCompleted} / ${rooms.length}`, t("gallery.roomsCompleted"))}
+          {stat(
+            `${roomsCompleted} / ${rooms.length}`,
+            t("gallery.roomsCompleted"),
+          )}
         </View>
         <SegmentBar
           done={acquired}
@@ -173,7 +182,12 @@ export function GalleryTab({
                   paddingHorizontal: spacing(16),
                 }}
               >
-                <Text size="lg" weight={500} numberOfLines={1} style={{ flex: 1 }}>
+                <Text
+                  size="lg"
+                  weight={500}
+                  numberOfLines={1}
+                  style={{ flex: 1 }}
+                >
                   {t(`tags.${tag}`)}
                 </Text>
                 <Text
@@ -389,7 +403,11 @@ function WorkViewer({
 
         {/* The work's label, and stepping between works. */}
         <View
-          style={{ flexDirection: "row", alignItems: "center", gap: spacing(12) }}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: spacing(12),
+          }}
         >
           <RoundButton
             iconName="chevron-left"
@@ -408,7 +426,12 @@ function WorkViewer({
                 >
                   {credit.title}
                 </Text>
-                <Text serif size="sm" color={theme.dim} style={{ textAlign: "center" }}>
+                <Text
+                  serif
+                  size="sm"
+                  color={theme.dim}
+                  style={{ textAlign: "center" }}
+                >
                   {[credit.artistName, credit.date].filter(Boolean).join(", ")}
                 </Text>
                 {credit.sourceName ? (

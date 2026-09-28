@@ -38,7 +38,6 @@ const SPAN_Y = GRID + ABOUT_HEIGHT + 2 * PITCH;
 const GRID_DUST = 110;
 const MAX_SCALE = 2.4;
 
-
 export type Camera = {
   x: SharedValue<number>;
   y: SharedValue<number>;

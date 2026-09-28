@@ -163,7 +163,10 @@ export function TaoView({ collectedIds, topInset }: Props) {
     setBusy(true);
     focusIndex.value = chapter - 1;
     focus.value = others.value;
-    others.value = withTiming(0, { duration: OTHERS_OUT_MS, easing: easeInOut });
+    others.value = withTiming(0, {
+      duration: OTHERS_OUT_MS,
+      easing: easeInOut,
+    });
     focus.value = withDelay(
       FOCUS_OUT_AT,
       withTiming(0, { duration: FOCUS_OUT_MS, easing: easeInOut }),
@@ -213,7 +216,10 @@ export function TaoView({ collectedIds, topInset }: Props) {
     later(DETAIL_OUT_MS, () => {
       setSelected(null);
       focusIndex.value = -1;
-      others.value = withTiming(1, { duration: GRID_BACK_MS, easing: easeInOut });
+      others.value = withTiming(1, {
+        duration: GRID_BACK_MS,
+        easing: easeInOut,
+      });
       parallax.value = withTiming(1, {
         duration: GRID_BACK_MS,
         easing: easeInOut,
@@ -252,7 +258,11 @@ export function TaoView({ collectedIds, topInset }: Props) {
       >
         {size && (
           <Animated.View
-            style={[StyleSheet.absoluteFill, pointerEventsStyles.none, parallaxStyle]}
+            style={[
+              StyleSheet.absoluteFill,
+              pointerEventsStyles.none,
+              parallaxStyle,
+            ]}
           >
             <ParallaxStars
               width={size.width}
@@ -331,7 +341,9 @@ export function TaoView({ collectedIds, topInset }: Props) {
       <View
         style={[
           { position: "absolute", left: 0, right: 0, bottom: 0 },
-          selected !== null ? pointerEventsStyles.boxNone : pointerEventsStyles.none,
+          selected !== null
+            ? pointerEventsStyles.boxNone
+            : pointerEventsStyles.none,
         ]}
       >
         <Animated.View style={barStyle}>

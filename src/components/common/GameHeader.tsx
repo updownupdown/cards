@@ -1,6 +1,12 @@
 import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, LayerZIndexes, layoutDims, rgba, theme } from "@/styles/styles";
+import {
+  Colors,
+  LayerZIndexes,
+  layoutDims,
+  rgba,
+  theme,
+} from "@/styles/styles";
 import { memo } from "react";
 import { Animated, Platform, View } from "react-native";
 import { Button } from "../Button/Button";

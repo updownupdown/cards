@@ -91,7 +91,16 @@ export function SearchTab({
           title(a).localeCompare(title(b), language),
       );
     return list;
-  }, [allEnabledGames, favorites, filter, language, query, recentPaths, sort, unplayed]);
+  }, [
+    allEnabledGames,
+    favorites,
+    filter,
+    language,
+    query,
+    recentPaths,
+    sort,
+    unplayed,
+  ]);
 
   const sortLabels: Record<Sort, string> = {
     az: t("search.sortAZ"),
@@ -188,7 +197,11 @@ export function SearchTab({
           accessibilityLabel={t("search.sortBy")}
           aria-expanded={sortOpen}
           onPress={() => setSortOpen((open) => !open)}
-          style={{ flexDirection: "row", alignItems: "center", gap: spacing(4) }}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: spacing(4),
+          }}
         >
           <Text size="xs" weight={400} color={theme.ink}>
             {sortLabels[sort]}
@@ -337,7 +350,11 @@ function GameRow({
             {localizeGameTitle(game, path, language)}
           </Text>
           <View
-            style={{ flexDirection: "row", alignItems: "center", gap: spacing(10) }}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: spacing(10),
+            }}
           >
             <Text size="xs" weight={300} color={theme.dim} numberOfLines={1}>
               {category(game)}

@@ -18,7 +18,7 @@ import { localizeGameTitle } from "@/i18n/content";
 import { formatPercent } from "@/i18n/format";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba, layoutDims } from "@/styles/styles";
+import { Colors, rgba, layoutDims, theme } from "@/styles/styles";
 import { type Href } from "expo-router";
 import { useMemo, useRef, useState } from "react";
 import {
@@ -47,7 +47,12 @@ export type StatsRow = {
 };
 
 type PersonaKey =
-  "comfort" | "nemesis" | "whale" | "faithful" | "rivalry" | "natural";
+  | "comfort"
+  | "nemesis"
+  | "whale"
+  | "faithful"
+  | "rivalry"
+  | "natural";
 
 export type Persona = {
   key: PersonaKey;
@@ -733,7 +738,7 @@ function HeadlineStat({
         isGrid ? { width: "50%" } : { flex: 1 },
       ]}
     >
-      <Icon name={iconName} size={spacing(33)} color={Colors.suitsRed} shadow />
+      <Icon name={iconName} size={spacing(30)} color={theme.accent} />
       <Text size="xl" weight={600} lineHeight={1.1} numberOfLines={1}>
         {value}
       </Text>

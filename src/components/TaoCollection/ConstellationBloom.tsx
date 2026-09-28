@@ -37,7 +37,6 @@ const STARS_SPREAD = 850;
 const STAR_POP = 520;
 const LINES_START = 1050;
 
-
 const FADE_IN = { from: { opacity: 0 }, to: { opacity: 1 } };
 const STAR_IN = {
   from: { opacity: 0, transform: [{ scale: 0.2 }] },

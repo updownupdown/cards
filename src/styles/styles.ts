@@ -1,11 +1,7 @@
 import "@/styles/global.css";
 import { darkenHexColor, roundToPixel } from "@/utils/utils";
 import { Platform, StyleSheet, type TextStyle } from "react-native";
-import {
-  DEFAULT_COLOR_THEME,
-  getColorTheme,
-  type ThemeColors,
-} from "./themes";
+import { DEFAULT_COLOR_THEME, getColorTheme, type ThemeColors } from "./themes";
 
 const BASE_COLORS = {
   // Buttons and progress bars
@@ -155,7 +151,9 @@ function parseRgbChannels(color: string): [number, number, number] | null {
  * built during render pick up the new theme. (Styles built once at import
  * keep the default theme.)
  */
-export const theme: ThemeColors = { ...getColorTheme(DEFAULT_COLOR_THEME).colors };
+export const theme: ThemeColors = {
+  ...getColorTheme(DEFAULT_COLOR_THEME).colors,
+};
 let activeColorTheme: string = DEFAULT_COLOR_THEME;
 
 export function getActiveColorTheme() {

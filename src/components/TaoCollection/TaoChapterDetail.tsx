@@ -118,7 +118,11 @@ export function TaoChapterDetail({
           serif
           weight={500}
           color={theme.accent}
-          style={{ fontSize: font(26), lineHeight: font(32), textAlign: "center" }}
+          style={{
+            fontSize: font(26),
+            lineHeight: font(32),
+            textAlign: "center",
+          }}
         >
           {t("tao.chapter", { number: toRoman(chapterNumber) })}
         </Text>

@@ -2,7 +2,7 @@ import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors } from "@/styles/styles";
+import { Colors, theme } from "@/styles/styles";
 import { View } from "react-native";
 
 type HomeSectionTitleProps = {
@@ -46,7 +46,7 @@ export function HomeSectionTitle({
           <Icon
             name={iconName}
             size={spacing(27.6)}
-            color={Colors.suitsRed}
+            color={theme.accent}
             shadow
           />
         )}

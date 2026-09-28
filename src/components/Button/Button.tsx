@@ -47,7 +47,16 @@ const THEME_COLORS = {
 
 const isHexColor = (value: string) => /^#[0-9a-f]{6}$/i.test(value);
 
-const NAMED_PRIMARY = new Set(["blue", "red", "orange", "purple", "green", "pink", "win", "lose"]);
+const NAMED_PRIMARY = new Set([
+  "blue",
+  "red",
+  "orange",
+  "purple",
+  "green",
+  "pink",
+  "win",
+  "lose",
+]);
 
 type ButtonVariant = "primary" | "secondary" | "text" | "none";
 
