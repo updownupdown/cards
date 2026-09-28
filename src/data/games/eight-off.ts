@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const eightOff: GameDefinition = {
   path: "/eight-off",
@@ -21,8 +19,6 @@ export const eightOff: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Wassily_Kandinsky_Composition_VIII.jpg",
   },
-  background: GAME_BACKGROUNDS.cherryBlossoms,
-  animation: GameAnimations.CherryBlossom,
   gameColorDark: "#0e2741",
   gameColorPale: "#d9ffff",
   cardBack: CardBackColors.Ocean,

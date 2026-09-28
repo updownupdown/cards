@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const fieldCommand: GameDefinition = {
   path: "/field-command",
@@ -20,8 +18,6 @@ export const fieldCommand: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/93394",
   },
-  background: GAME_BACKGROUNDS.field,
-  animation: GameAnimations.Clouds,
   gameColorDark: "#2b2d42",
   gameColorPale: "#d4cdc3",
   cardBack: CardBackColors.Violet,

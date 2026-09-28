@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const nestor: GameDefinition = {
   path: "/nestor",
@@ -20,8 +18,6 @@ export const nestor: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/467828",
   },
-  background: GAME_BACKGROUNDS.greece,
-  animation: GameAnimations.Clouds,
   gameColorDark: "#112e49",
   gameColorPale: "#e7f7ff",
   cardBack: CardBackColors.Ocean,

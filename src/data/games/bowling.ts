@@ -1,5 +1,4 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 
 export const bowling: GameDefinition = {
@@ -20,7 +19,6 @@ export const bowling: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:David_Teniers_II_(1610-1690)_(style_of)_-_A_Game_of_Bowls_-_959522_-_National_Trust.jpg",
   },
-  background: GAME_BACKGROUNDS.bowling,
   gameColorDark: "#331e0f",
   gameColorPale: "#a9e9f1",
   cardBack: CardBackColors.Forest,

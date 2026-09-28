@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const grandfathersClock: GameDefinition = {
   path: "/grandfathers-clock",
@@ -25,8 +23,6 @@ export const grandfathersClock: GameDefinition = {
     sourceLink:
       "https://www.rijksmuseum.nl/en/collection/object/Pendule-bekroond-met-buste--95917566038e68f1ebff75e459c0feff",
   },
-  background: GAME_BACKGROUNDS.bookstore,
-  animation: GameAnimations.Dust,
   gameColorDark: "#2a2118",
   gameColorPale: "#f3e2c2",
   cardBack: CardBackColors.Bronze,

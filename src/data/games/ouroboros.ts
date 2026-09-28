@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const ouroboros: GameDefinition = {
   path: "/ouroboros",
@@ -25,8 +23,6 @@ export const ouroboros: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Serpiente_alquimica.jpg",
   },
-  background: GAME_BACKGROUNDS.stoneTunnel,
-  animation: GameAnimations.ManaDust,
   gameColorDark: "#1d120e",
   gameColorPale: "#dfd4bd",
   cardBack: CardBackColors.Burgundy,

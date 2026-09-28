@@ -1,5 +1,3 @@
-import { GameAnimations } from "@/animations/types";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -20,8 +18,6 @@ export const fortunesCall: GameDefinition = {
   gameColorDark: "#272330",
   gameColorPale: "#b8f1c6",
   cardBack: CardBackColors.Rose,
-  background: GAME_BACKGROUNDS.alaska,
-  animation: GameAnimations.Snow,
   quickStart: [
     "Color calls score 1.",
     "Higher or lower calls score 2.",

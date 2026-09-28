@@ -1,7 +1,5 @@
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
-import { GameAnimations } from "@/animations";
 
 export const whitehead: GameDefinition = {
   path: "/whitehead",
@@ -12,8 +10,6 @@ export const whitehead: GameDefinition = {
     GameTag.StockAndWaste,
   ],
   rating: { complexity: 30, difficulty: 45, luck: 20 },
-  background: GAME_BACKGROUNDS.bloomingTree,
-  animation: GameAnimations.Pollen,
   gameColorDark: "#30383a",
   gameColorPale: "#edf0e6",
   cardBack: CardBackColors.Ocean,

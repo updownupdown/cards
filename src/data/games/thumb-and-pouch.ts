@@ -1,5 +1,3 @@
-import { GameAnimations } from "@/animations";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -12,8 +10,6 @@ export const thumbAndPouch: GameDefinition = {
     GameTag.StockAndWaste,
   ],
   rating: { complexity: 25, difficulty: 35, luck: 45 },
-  background: GAME_BACKGROUNDS.cozyCabin,
-  animation: GameAnimations.Dust,
   gameColorDark: "#3b3028",
   gameColorPale: "#ead9b8",
   cardBack: CardBackColors.Terracotta,

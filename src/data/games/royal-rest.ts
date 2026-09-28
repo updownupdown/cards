@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const royalRest: GameDefinition = {
   path: "/royal-rest",
@@ -14,8 +12,6 @@ export const royalRest: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/824878",
   },
-  background: GAME_BACKGROUNDS.cabinInterior,
-  animation: GameAnimations.Dust,
   tags: [GameTag.PairMatching, GameTag.SequenceBuilding],
   rating: {
     complexity: 30,

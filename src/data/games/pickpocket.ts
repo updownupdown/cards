@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const pickpocket: GameDefinition = {
   path: "/pickpocket",
@@ -21,8 +19,6 @@ export const pickpocket: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/89782",
   },
-  background: GAME_BACKGROUNDS.castleIndoors,
-  animation: GameAnimations.CandleMotes,
   gameColorDark: "#2b1b22",
   gameColorPale: "#f2dcc4",
   cardBack: CardBackColors.Burgundy,

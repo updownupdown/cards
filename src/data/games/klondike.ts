@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const klondike: GameDefinition = {
   path: "/klondike",
@@ -21,8 +19,6 @@ export const klondike: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:September_Evening,_Mount_McKinley,_Alaska,_by_Sydney_Laurence.jpg",
   },
-  background: GAME_BACKGROUNDS.yukon,
-  animation: GameAnimations.Clouds,
   gameColorDark: "#2c3a36",
   gameColorPale: "#EEF0FF",
   cardBack: CardBackColors.Bicycle,

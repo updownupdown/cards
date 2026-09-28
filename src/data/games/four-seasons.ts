@@ -1,5 +1,3 @@
-import { GameAnimations } from "@/animations";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -19,8 +17,6 @@ export const fourSeasons: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Alfons_Mucha_-_The_Seasons,_1896.jpg",
   },
-  background: GAME_BACKGROUNDS.cherryBlossoms,
-  animation: GameAnimations.CherryBlossom,
   gameColorDark: "#33402c",
   gameColorPale: "#eef6e4",
   cardBack: CardBackColors.Moss,

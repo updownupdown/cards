@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const royalCotillion: GameDefinition = {
   path: "/royal-cotillion",
@@ -25,8 +23,6 @@ export const royalCotillion: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Hieronymus_Janssens_(Antwerp_1624_-_Antwerp_1693)_-_Charles_II_dancing_at_a_Ball_at_Court_-_RCIN_400525_-_Royal_Collection.jpg",
   },
-  background: GAME_BACKGROUNDS.alhambra,
-  animation: GameAnimations.ManaDust,
   gameColorDark: "#211a36",
   gameColorPale: "#f1e6ff",
   cardBack: CardBackColors.Violet,

@@ -8,7 +8,6 @@
     "assets:generate": "node ./scripts/generate-assets.js",
     "thumbnails:convert": "node ./scripts/convert-thumbnails.mjs",
     "thumbnails:review": "node ./scripts/review-thumbnail-crops.mjs",
-    "backgrounds:convert": "node ./scripts/convert-backgrounds.mjs",
     "store-graphics:generate": "node ./scripts/generate-store-graphics.mjs",
     "card-backs:generate": "node ./scripts/generate-card-backs.mjs",
     "campaign:generate": "node ./scripts/generate-campaign-map.mjs",

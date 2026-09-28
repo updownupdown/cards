@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const penguin: GameDefinition = {
   path: "/penguin",
@@ -23,8 +21,6 @@ export const penguin: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:History_of_the_birds_of_NZ_1st_ed_p344.jpg",
   },
-  background: GAME_BACKGROUNDS.antarctica,
-  animation: GameAnimations.Snow,
   gameColorDark: "#111b27",
   gameColorPale: "#ff944d",
   cardBack: CardBackColors.Terracotta,

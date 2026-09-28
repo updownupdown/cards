@@ -1,5 +1,3 @@
-import { GameAnimations } from "@/animations/types";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -14,8 +12,6 @@ export const dynasty: GameDefinition = {
     sourceName: "Cleveland Museum of Art",
     sourceLink: "https://www.clevelandart.org/art/1969.31",
   },
-  background: GAME_BACKGROUNDS.castleIndoors,
-  animation: GameAnimations.Dust,
   tags: [GameTag.CardCombat, GameTag.SpatialControl],
   rating: { complexity: 65, difficulty: 70, luck: 35 },
   gameColorDark: "#262f35",

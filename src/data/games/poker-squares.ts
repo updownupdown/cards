@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const pokerSquares: GameDefinition = {
   path: "/poker-squares",
@@ -24,8 +22,6 @@ export const pokerSquares: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/435868",
   },
-  background: GAME_BACKGROUNDS.casino,
-  animation: GameAnimations.Glitter,
   gameColorDark: "#112c1f",
   gameColorPale: "#fff4ce",
   cardBack: CardBackColors.Moss,

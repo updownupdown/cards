@@ -1,5 +1,3 @@
-import { GameAnimations } from "@/animations";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -17,8 +15,6 @@ export const bristol: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/13777",
   },
-  background: GAME_BACKGROUNDS.shipwreck,
-  animation: GameAnimations.Mist,
   gameColorDark: "#2a3638",
   gameColorPale: "#e2f1f2",
   cardBack: CardBackColors.Teal,

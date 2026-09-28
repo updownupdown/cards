@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const queensAudience: GameDefinition = {
   path: "/queens-audience",
@@ -20,8 +18,6 @@ export const queensAudience: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/61545",
   },
-  background: GAME_BACKGROUNDS.oldRoom,
-  animation: GameAnimations.Dust,
   gameColorDark: "#24162b",
   gameColorPale: "#f7e0f1",
   cardBack: CardBackColors.Plum,

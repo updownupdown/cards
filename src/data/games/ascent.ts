@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const ascent: GameDefinition = {
   path: "/ascent",
@@ -20,8 +18,6 @@ export const ascent: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/10151",
   },
-  background: GAME_BACKGROUNDS.mountain1,
-  animation: GameAnimations.Snow,
   gameColorDark: "#2a3b4d",
   gameColorPale: "#e8f2ff",
   cardBack: CardBackColors.Bicycle,

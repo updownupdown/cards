@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const ebbAndFlow: GameDefinition = {
   path: "/ebb-and-flow",
@@ -21,8 +19,6 @@ export const ebbAndFlow: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/218848",
   },
-  background: GAME_BACKGROUNDS.stonyBeach,
-  animation: GameAnimations.Mist,
   gameColorDark: "#1a2430",
   gameColorPale: "#dfe9f0",
   cardBack: CardBackColors.Navy,

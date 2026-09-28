@@ -1,7 +1,5 @@
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
-import { GameAnimations } from "@/animations";
 
 export const gaps: GameDefinition = {
   path: "/gaps",
@@ -17,8 +15,6 @@ export const gaps: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/23628",
   },
-  background: GAME_BACKGROUNDS.mountain1,
-  animation: GameAnimations.Mist,
   gameColorDark: "#2c322f",
   gameColorPale: "#e7ddc2",
   cardBack: CardBackColors.Bronze,

@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const windmill: GameDefinition = {
   path: "/windmill",
@@ -24,8 +22,6 @@ export const windmill: GameDefinition = {
     sourceLink:
       "https://artvee.com/dl/windmill-on-the-sea-coast-near-hastings/",
   },
-  background: GAME_BACKGROUNDS.dirtRoad,
-  animation: GameAnimations.Birds,
   gameColorDark: "#1e2a1f",
   gameColorPale: "#eef5d6",
   cardBack: CardBackColors.Olive,

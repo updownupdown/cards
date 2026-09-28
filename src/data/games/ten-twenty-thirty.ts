@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const tenTwentyThirty: GameDefinition = {
   path: "/ten-twenty-thirty",
@@ -21,8 +19,6 @@ export const tenTwentyThirty: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/81282",
   },
-  background: GAME_BACKGROUNDS.modernMetal2,
-  animation: GameAnimations.Firefly,
   gameColorDark: "#132d35",
   gameColorPale: "#e1f5ff",
   cardBack: CardBackColors.Navy,

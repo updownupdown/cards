@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const spiderSolitaire: GameDefinition = {
   path: "/spider-solitaire",
@@ -19,8 +17,6 @@ export const spiderSolitaire: GameDefinition = {
     sourceName: "Artvee",
     sourceLink: "https://artvee.com/dl/a-spider-and-web-with-blue-flowers/",
   },
-  background: GAME_BACKGROUNDS.dungeon,
-  animation: GameAnimations.Spiders,
   gameColorDark: "#25111e",
   gameColorPale: "#f6e6ff",
   cardBack: CardBackColors.Plum,

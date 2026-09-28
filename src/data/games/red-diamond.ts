@@ -1,5 +1,3 @@
-import { GameAnimations } from "@/animations";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -12,8 +10,6 @@ export const redDiamond: GameDefinition = {
     difficulty: 55,
     luck: 55,
   },
-  background: GAME_BACKGROUNDS.cozyRoom4,
-  animation: GameAnimations.ManaDust,
   thumbnail: "RedDiamond.webp",
   thumbnailCredit: {
     title: "Sarape with Serrated Diamond Pattern",

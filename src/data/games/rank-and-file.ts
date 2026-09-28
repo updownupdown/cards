@@ -1,5 +1,3 @@
-import { GameAnimations } from "@/animations";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -22,8 +20,6 @@ export const rankAndFile: GameDefinition = {
     sourceName: "Cleveland Museum of Art",
     sourceLink: "https://www.clevelandart.org/art/1930.583.4",
   },
-  background: GAME_BACKGROUNDS.city,
-  animation: GameAnimations.Clouds,
   gameColorDark: "#26343b",
   gameColorPale: "#dfe2d4",
   cardBack: CardBackColors.Forest,

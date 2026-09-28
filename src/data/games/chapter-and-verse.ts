@@ -1,5 +1,3 @@
-import { GameAnimations } from "@/animations";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -17,8 +15,6 @@ export const chapterAndVerse: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Carl_Spitzweg_-_%22The_Bookworm%22.jpg",
   },
-  background: GAME_BACKGROUNDS.bookstore,
-  animation: GameAnimations.CandleMotes,
   gameColorDark: "#2e2d27",
   gameColorPale: "#f0e9d7",
   cardBack: CardBackColors.Bronze,

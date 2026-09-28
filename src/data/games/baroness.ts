@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const baroness: GameDefinition = {
   path: "/baroness",
@@ -21,8 +19,6 @@ export const baroness: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Portrait_of_the_Baroness_of_Bernus_(SM_1798).png",
   },
-  background: GAME_BACKGROUNDS.cozyRoom2,
-  animation: GameAnimations.Dust,
   gameColorDark: "#3a1620",
   gameColorPale: "#f3d6dd",
   cardBack: CardBackColors.Rose,

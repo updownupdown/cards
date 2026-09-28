@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const apothecary: GameDefinition = {
   path: "/apothecary",
@@ -22,8 +20,6 @@ export const apothecary: GameDefinition = {
     sourceLink:
       "https://www.rijksmuseum.nl/en/collection/object/Apodictische-Waaren-allegorie-op-de-filosofie-van-Kant--2074a287e4025924d2dcf09f128d0cbb",
   },
-  background: GAME_BACKGROUNDS.headlessStatue,
-  animation: GameAnimations.CandleMotes,
   gameColorDark: "#1d2a2a",
   gameColorPale: "#dcefe6",
   cardBack: CardBackColors.Teal,

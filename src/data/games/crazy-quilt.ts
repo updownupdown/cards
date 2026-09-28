@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const crazyQuilt: GameDefinition = {
   path: "/crazy-quilt",
@@ -21,8 +19,6 @@ export const crazyQuilt: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/181720",
   },
-  background: GAME_BACKGROUNDS.cozyCabin,
-  animation: GameAnimations.Snow,
   gameColorDark: "#2c1d26",
   gameColorPale: "#fbe3ea",
   cardBack: CardBackColors.Rose,

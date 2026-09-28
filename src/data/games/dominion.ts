@@ -1,7 +1,5 @@
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
-import { GameAnimations } from "@/animations";
 
 export const dominion: GameDefinition = {
   path: "/dominion",
@@ -12,8 +10,6 @@ export const dominion: GameDefinition = {
     difficulty: 65,
     luck: 35,
   },
-  background: GAME_BACKGROUNDS.nightSky,
-  animation: GameAnimations.Stars,
   thumbnail: "Dominion.webp",
   thumbnailCredit: {
     title: "Procession of a Daimyo",

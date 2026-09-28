@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const tripleStack: GameDefinition = {
   path: "/triple-stack",
@@ -20,8 +18,6 @@ export const tripleStack: GameDefinition = {
     sourceName: "Artvee",
     sourceLink: "https://artvee.com/dl/a-country-grocer/",
   },
-  background: GAME_BACKGROUNDS.modernStairs,
-  animation: GameAnimations.Dust,
   gameColorDark: "#102524",
   gameColorPale: "#b0eee9",
   cardBack: CardBackColors.Teal,

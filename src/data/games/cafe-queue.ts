@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const cafeQueue: GameDefinition = {
   path: "/cafe-queue",
@@ -21,8 +19,6 @@ export const cafeQueue: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Terrasse_des_Cafés_an_der_Place_du_Forum_in_Arles_am_Abend1.jpeg",
   },
-  background: GAME_BACKGROUNDS.city2,
-  animation: GameAnimations.Clouds,
   gameColorDark: "#2b1c29",
   gameColorPale: "#eed5a0",
   cardBack: CardBackColors.Walnut,

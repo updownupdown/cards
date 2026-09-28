@@ -1,5 +1,3 @@
-import { GameAnimations } from "@/animations";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -22,8 +20,6 @@ export const missMilligan: GameDefinition = {
     sourceName: "Cleveland Museum of Art",
     sourceLink: "https://www.clevelandart.org/art/1921.1239",
   },
-  background: GAME_BACKGROUNDS.oldRoom,
-  animation: GameAnimations.Dust,
   gameColorDark: "#3a2a33",
   gameColorPale: "#f6e6ee",
   cardBack: CardBackColors.Rose,

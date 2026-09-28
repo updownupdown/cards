@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const lightsOut: GameDefinition = {
   path: "/lights-out",
@@ -20,8 +18,6 @@ export const lightsOut: GameDefinition = {
     sourceLink:
       "https://www.rijksmuseum.nl/en/collection/object/Eruption-of-Mt-Vesuvius-Seen-from-the-Ponte-della-Maddalena-in-Naples--e30197f5500c476812d6b072e2b4186d",
   },
-  background: GAME_BACKGROUNDS.darkAlley,
-  animation: GameAnimations.Snow,
   gameColorDark: "#2b2117",
   gameColorPale: "#fdf3e8",
   cardBack: CardBackColors.Charcoal,

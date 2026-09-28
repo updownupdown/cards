@@ -1,3 +1,4 @@
+import { GameBackdrop } from "@/components/common/GameBackdrop";
 import { Typography } from "@/components/common/Text";
 import { REVEAL_TIMING } from "@/components/common/reveal-timing";
 import { getQuoteAuthor } from "@/data/quote-authors";
@@ -5,7 +6,6 @@ import { rgba } from "@/styles/styles";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   BackHandler,
-  ImageBackground,
   Platform,
   StyleSheet,
   View,
@@ -42,8 +42,8 @@ type Props = {
   text: string;
   author: string;
   source: string;
-  /** The game's background and colour, redrawn over the game's UI. */
-  background: ImageSourcePropType;
+  /** The game's backdrop art and colour, redrawn over the game's UI. */
+  background: ImageSourcePropType | null;
   overlayColor: string;
   /** Just before the scene clears: the screen behind can change unseen. */
   onUncover?: () => void;
@@ -558,11 +558,7 @@ function RevealScene({
           backdropStyle,
         ]}
       >
-        <ImageBackground
-          source={background}
-          resizeMode="cover"
-          style={StyleSheet.absoluteFill}
-        />
+        <GameBackdrop source={background} />
         <View
           style={[
             StyleSheet.absoluteFill,

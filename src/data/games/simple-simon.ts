@@ -1,7 +1,5 @@
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
-import { GameAnimations } from "@/animations";
 
 export const simpleSimon: GameDefinition = {
   path: "/simple-simon",
@@ -17,8 +15,6 @@ export const simpleSimon: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:The_Boyd_Smith_Mother_Goose_(1920)_(14590961767).jpg",
   },
-  background: GAME_BACKGROUNDS.modernStairs,
-  animation: GameAnimations.Dust,
   gameColorDark: "#312d29",
   gameColorPale: "#eadfca",
   cardBack: CardBackColors.Crimson,

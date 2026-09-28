@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const freeCell: GameDefinition = {
   path: "/freecell",
@@ -23,8 +21,6 @@ export const freeCell: GameDefinition = {
     sourceLink:
       "https://www.rijksmuseum.nl/en/collection/object/The-room-of-Cornelis-de-Witt-in-prison-The-Gevangenpoort-The-Hague-1844--2ee2ca395f6f78ff00f09456efbd73a5",
   },
-  background: GAME_BACKGROUNDS.cabinInterior,
-  animation: GameAnimations.Dust,
   gameColorDark: "#2b231b",
   gameColorPale: "#fff1dd",
   cardBack: CardBackColors.Bronze,

@@ -1,5 +1,3 @@
-import { GameAnimations } from "@/animations";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -16,8 +14,6 @@ export const bisley: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/390328",
   },
-  background: GAME_BACKGROUNDS.london,
-  animation: GameAnimations.Rain,
   gameColorDark: "#30343a",
   gameColorPale: "#e8e1d3",
   cardBack: CardBackColors.Slate,

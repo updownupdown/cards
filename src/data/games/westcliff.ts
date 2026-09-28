@@ -1,5 +1,3 @@
-import { GameAnimations } from "@/animations";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -12,8 +10,6 @@ export const westcliff: GameDefinition = {
     GameTag.StockAndWaste,
   ],
   rating: { complexity: 25, difficulty: 55, luck: 50 },
-  background: GAME_BACKGROUNDS.cliffFields,
-  animation: GameAnimations.Pollen,
   gameColorDark: "#27363b",
   gameColorPale: "#e4ece9",
   cardBack: CardBackColors.Pine,

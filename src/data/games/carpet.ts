@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const carpet: GameDefinition = {
   path: "/carpet",
@@ -20,8 +18,6 @@ export const carpet: GameDefinition = {
     sourceName: "Cleveland Museum of Art",
     sourceLink: "https://www.clevelandart.org/art/1926.533",
   },
-  background: GAME_BACKGROUNDS.castleIndoors,
-  animation: GameAnimations.Dust,
   gameColorDark: "#2b1a14",
   gameColorPale: "#f6dcc0",
   cardBack: CardBackColors.Terracotta,

@@ -1,5 +1,3 @@
-import { GameAnimations } from "@/animations";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -22,8 +20,6 @@ export const sultan: GameDefinition = {
     GameTag.StockAndWaste,
   ],
   rating: { complexity: 30, difficulty: 40, luck: 50 },
-  background: GAME_BACKGROUNDS.alhambra,
-  animation: GameAnimations.Clouds,
   gameColorDark: "#362d2a",
   gameColorPale: "#f0dfbd",
   cardBack: CardBackColors.Copper,

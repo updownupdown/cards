@@ -1,5 +1,3 @@
-import { GameAnimations } from "@/animations";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -21,8 +19,6 @@ export const diplomat: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Holbein_Ambassadors.jpg",
   },
-  background: GAME_BACKGROUNDS.oldCityAlley,
-  animation: GameAnimations.Rain,
   gameColorDark: "#25343a",
   gameColorPale: "#dfe0d5",
   cardBack: CardBackColors.Ocean,

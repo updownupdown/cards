@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const fortyThieves: GameDefinition = {
   path: "/forty-thieves",
@@ -21,8 +19,6 @@ export const fortyThieves: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/394910",
   },
-  background: GAME_BACKGROUNDS.abandonedSand,
-  animation: GameAnimations.Birds,
   gameColorDark: "#2E2D34",
   gameColorPale: "#EFE8FF",
   cardBack: CardBackColors.Violet,

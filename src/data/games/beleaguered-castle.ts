@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const beleagueredCastle: GameDefinition = {
   path: "/beleaguered-castle",
@@ -21,8 +19,6 @@ export const beleagueredCastle: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/415848",
   },
-  background: GAME_BACKGROUNDS.castle,
-  animation: GameAnimations.Clouds,
   gameColorDark: "#2e2620",
   gameColorPale: "#f0e2c4",
   cardBack: CardBackColors.Slate,

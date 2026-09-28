@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const pagoda: GameDefinition = {
   path: "/pagoda",
@@ -21,8 +19,6 @@ export const pagoda: GameDefinition = {
     sourceName: "Cleveland Museum of Art",
     sourceLink: "https://www.clevelandart.org/art/1964.371.7",
   },
-  background: GAME_BACKGROUNDS.forest,
-  animation: GameAnimations.Leaves,
   gameColorDark: "#1b2420",
   gameColorPale: "#e6efe9",
   cardBack: CardBackColors.Charcoal,

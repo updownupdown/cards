@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const accordion: GameDefinition = {
   path: "/accordion",
@@ -21,8 +19,6 @@ export const accordion: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Pierre_Mac_Orlan_MET_DT4183.jpg",
   },
-  background: GAME_BACKGROUNDS.fallLeaves,
-  animation: GameAnimations.Leaves,
   gameColorDark: "#351219",
   gameColorPale: "#fffccf",
   cardBack: CardBackColors.Terracotta,

@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const elementaryDetective: GameDefinition = {
   path: "/elementary-detective",
@@ -21,8 +19,6 @@ export const elementaryDetective: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Portrait_of_Sherlock_Holmes_by_Sidney_Paget-Cropped.jpg",
   },
-  background: GAME_BACKGROUNDS.fallLeaves,
-  animation: GameAnimations.Leaves,
   gameColorDark: "#221815",
   gameColorPale: "#c5f7da",
   cardBack: CardBackColors.Olive,

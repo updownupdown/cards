@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const acesUp: GameDefinition = {
   path: "/aces-up",
@@ -19,8 +17,6 @@ export const acesUp: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/82930",
   },
-  background: GAME_BACKGROUNDS.castleIndoors,
-  animation: GameAnimations.Dust,
   gameColorDark: "#1d0f0a",
   gameColorPale: "#eee0ca",
   cardBack: CardBackColors.Terracotta,

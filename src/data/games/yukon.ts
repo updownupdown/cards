@@ -1,5 +1,3 @@
-import { GameAnimations } from "@/animations/types";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -21,8 +19,6 @@ export const yukon: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Mountains_near_Resurrection_Bay,_Alaska_SAAM-1972.29_1.jpg",
   },
-  background: GAME_BACKGROUNDS.yukon,
-  animation: GameAnimations.Clouds,
   gameColorDark: "#20303a",
   gameColorPale: "#e6f1f7",
   cardBack: CardBackColors.Copper,

@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const monteCarlo: GameDefinition = {
   path: "/monte-carlo",
@@ -20,8 +18,6 @@ export const monteCarlo: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/210962",
   },
-  background: GAME_BACKGROUNDS.monteCarlo,
-  animation: GameAnimations.Birds,
   gameColorDark: "#152635",
   gameColorPale: "#fffce5",
   cardBack: CardBackColors.Burgundy,

@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const memory: GameDefinition = {
   path: "/memory",
@@ -22,8 +20,6 @@ export const memory: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/43126",
   },
-  background: GAME_BACKGROUNDS.savanah,
-  animation: GameAnimations.Pollen,
   gameColorDark: "#243b35",
   gameColorPale: "#e8f1df",
   cardBack: CardBackColors.Ocean,

@@ -1,7 +1,5 @@
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
-import { GameAnimations } from "@/animations";
 
 export const calculation: GameDefinition = {
   path: "/calculation",
@@ -25,8 +23,6 @@ export const calculation: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Jacopo_de'_Barbari_(attributed_to)_Portrait_of_Luca_Pacioli_(1445_1517)_with_a_student_(Guidobaldo_da_Montefeltro)_(2).jpg",
   },
-  background: GAME_BACKGROUNDS.geometricCeiling,
-  animation: GameAnimations.Dust,
   gameColorDark: "#12122b",
   gameColorPale: "#eccfff",
   cardBack: CardBackColors.Violet,

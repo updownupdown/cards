@@ -1,6 +1,4 @@
-import { GameAnimations } from "@/animations";
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 
 export const scorpion: GameDefinition = {
@@ -20,8 +18,6 @@ export const scorpion: GameDefinition = {
     sourceName: "Artvee",
     sourceLink: "https://artvee.com/dl/scorpion-2/",
   },
-  background: GAME_BACKGROUNDS.sahara,
-  animation: GameAnimations.Sand,
   gameColorDark: "#352b21",
   gameColorPale: "#fff3e4",
   cardBack: CardBackColors.Terracotta,

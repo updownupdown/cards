@@ -1,6 +1,4 @@
-import { GameAnimations } from "@/animations";
 import { GameDefinition, GameTag } from "../games-data";
-import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 
 export const clock: GameDefinition = {
@@ -20,8 +18,6 @@ export const clock: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/47757",
   },
-  background: GAME_BACKGROUNDS.oldRoom,
-  animation: GameAnimations.CandleMotes,
   gameColorDark: "#1d1610",
   gameColorPale: "#eed9c2",
   cardBack: CardBackColors.Bronze,
