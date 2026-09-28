@@ -14,12 +14,11 @@ export const pocketPoker: GameDefinition = {
   },
   thumbnail: "PocketPoker.webp",
   thumbnailCredit: {
-    title: "Poker Game",
-    artistName: "Cassius Marcellus Coolidge",
-    date: "1894",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Cassius_Marcellus_Coolidge_-_Poker_Game_(1894).png",
+    title: "Poker",
+    artistName: "Félix Vallotton",
+    date: "1896",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://www.clevelandart.org/art/1959.303",
   },
   background: GAME_BACKGROUNDS.casino,
   animation: GameAnimations.Glitter,

@@ -14,12 +14,11 @@ export const monteCarlo: GameDefinition = {
   },
   thumbnail: "MonteCarlo.webp",
   thumbnailCredit: {
-    title: "Monaco Monte-Carlo",
-    artistName: "Alphonse Mucha",
-    date: "1897",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Alfons_Mucha_-_Monaco_Monte_Carlo.jpg",
+    title: "Study for The Terrace, Monte Carlo",
+    artistName: "Theodore Roussel",
+    date: "1905–06",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/210962",
   },
   background: GAME_BACKGROUNDS.monteCarlo,
   animation: GameAnimations.Birds,

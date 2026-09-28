@@ -14,11 +14,12 @@ export const cafeQueue: GameDefinition = {
   },
   thumbnail: "CafeQueue.webp",
   thumbnailCredit: {
-    title: "In the Café",
-    artistName: "Fernand Lungren",
-    date: "1882–84",
-    sourceName: "Art Institute of Chicago",
-    sourceLink: "https://www.artic.edu/artworks/59908",
+    title: "Café Terrace at Night",
+    artistName: "Vincent van Gogh",
+    date: "Arles, circa 16 September 1888",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Terrasse_des_Cafés_an_der_Place_du_Forum_in_Arles_am_Abend1.jpeg",
   },
   background: GAME_BACKGROUNDS.city2,
   animation: GameAnimations.Clouds,

@@ -14,12 +14,11 @@ export const crownslayer: GameDefinition = {
   },
   thumbnail: "Crownslayer.webp",
   thumbnailCredit: {
-    title: "The King, from The Dance of Death",
-    artistName: "Hans Holbein the Younger",
-    date: "ca. 1526",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:The_King,_from_The_Dance_of_Death_MET_DP-19849-001.jpg",
+    title: "Durga Slaying Mahisha",
+    artistName: "Unknown Pahari artist",
+    date: "c. 1700–1710",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://www.clevelandart.org/art/1960.51",
   },
   background: GAME_BACKGROUNDS.monteCarlo,
   animation: GameAnimations.Clouds,

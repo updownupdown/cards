@@ -17,7 +17,7 @@ export const pickpocket: GameDefinition = {
   thumbnailCredit: {
     title: "Dandy Pickpockets Diving",
     artistName: "Isaac Robert Cruikshank",
-    date: "1818",
+    date: "published December 2, 1818",
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/89782",
   },

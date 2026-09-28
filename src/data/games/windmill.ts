@@ -18,11 +18,11 @@ export const windmill: GameDefinition = {
   },
   thumbnail: "Windmill.webp",
   thumbnailCredit: {
-    title: "Landscape with a Windmill",
-    artistName: "Jacob van Ruisdael",
-    date: "1646",
-    sourceName: "Cleveland Museum of Art",
-    sourceLink: "https://clevelandart.org/art/1967.19",
+    title: "Windmill on the Sea Coast Near Hastings",
+    artistName: "Henry Morton",
+    sourceName: "Artvee",
+    sourceLink:
+      "https://artvee.com/dl/windmill-on-the-sea-coast-near-hastings/",
   },
   background: GAME_BACKGROUNDS.dirtRoad,
   animation: GameAnimations.Birds,

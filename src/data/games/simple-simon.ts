@@ -10,12 +10,12 @@ export const simpleSimon: GameDefinition = {
   rating: { complexity: 30, difficulty: 50, luck: 15 },
   thumbnail: "SimpleSimon.webp",
   thumbnailCredit: {
-    title: "Simple Simon",
-    artistName: "Unknown illustrator, McLoughlin Bros.",
-    date: "1899",
+    title: "Simple Simon, from The Boyd Smith Mother Goose",
+    artistName: "E. Boyd Smith",
+    date: "1920",
     sourceName: "Wikimedia Commons",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Simple-Simon-Nursery-Rhyme-illustration.jpg",
+      "https://commons.wikimedia.org/wiki/File:The_Boyd_Smith_Mother_Goose_(1920)_(14590961767).jpg",
   },
   background: GAME_BACKGROUNDS.modernStairs,
   animation: GameAnimations.Dust,

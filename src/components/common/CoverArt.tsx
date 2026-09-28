@@ -1,6 +1,6 @@
 import {
+  GAME_FULL_THUMBNAIL_ASSETS,
   GAME_THUMBNAIL_ASPECTS,
-  GAME_THUMBNAIL_ASSETS,
   type GameThumbnailName,
 } from "@/data/game-thumbnails";
 import { Image } from "expo-image";
@@ -16,8 +16,8 @@ type Props = {
 };
 
 /**
- * A game's cover art whole, uncropped: as large as fits the container's width
- * and maxHeight, at the artwork's own aspect ratio.
+ * A game's cover art whole, uncropped, borders and all: as large as fits the
+ * container's width and maxHeight, at the artwork's own aspect ratio.
  */
 export function CoverArt({ thumbnail, maxHeight, borderRadius, style }: Props) {
   const [availableWidth, setAvailableWidth] = useState(0);
@@ -31,7 +31,7 @@ export function CoverArt({ thumbnail, maxHeight, borderRadius, style }: Props) {
     >
       {width > 0 && (
         <Image
-          source={GAME_THUMBNAIL_ASSETS[thumbnail]}
+          source={GAME_FULL_THUMBNAIL_ASSETS[thumbnail]}
           // Every image is bundled; see HomeCard for why only memory caching.
           cachePolicy="memory"
           contentFit="cover"

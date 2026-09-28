@@ -13,12 +13,12 @@ export const bowling: GameDefinition = {
   },
   thumbnail: "Bowling.webp",
   thumbnailCredit: {
-    title: "Skittle Players outside an Inn",
-    artistName: "Jan Steen",
-    date: "ca. 1660–63",
+    title: "A Game of Bowls",
+    artistName: "Unknown artist",
+    date: "between 1610 and 1690",
     sourceName: "Wikimedia Commons",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Jan_Steen_-_Skittles_Players_Outside_an_Inn.jpg",
+      "https://commons.wikimedia.org/wiki/File:David_Teniers_II_(1610-1690)_(style_of)_-_A_Game_of_Bowls_-_959522_-_National_Trust.jpg",
   },
   background: GAME_BACKGROUNDS.bowling,
   gameColorDark: "#331e0f",

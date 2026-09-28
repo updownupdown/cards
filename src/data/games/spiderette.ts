@@ -10,12 +10,13 @@ export const spiderette: GameDefinition = {
   rating: { complexity: 35, difficulty: 70, luck: 40 },
   thumbnail: "Spiderette.webp",
   thumbnailCredit: {
-    title: "Pink-Toed Tarantula, from Metamorphosis of the Insects of Surinam",
-    artistName: "Maria Sibylla Merian",
-    date: "1705",
-    sourceName: "Wikimedia Commons",
+    title:
+      "Twee tulpen met spin en vlieg in spinnenweb A. Secretarij Langschap",
+    artistName: "Jacob Marrel",
+    date: "1637",
+    sourceName: "Artvee",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Avicularia-avicularia.jpg",
+      "https://artvee.com/dl/twee-tulpen-met-spin-en-vlieg-in-spinnenweb-a-secretarij-langschap/",
   },
   background: GAME_BACKGROUNDS.forestGrasses,
   animation: GameAnimations.Spiders,

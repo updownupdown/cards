@@ -14,12 +14,12 @@ export const cruel: GameDefinition = {
   },
   thumbnail: "Cruel.webp",
   thumbnailCredit: {
-    title: "La Belle Dame sans Merci",
-    artistName: "John William Waterhouse",
-    date: "1893",
+    title: "Dulle Griet (Mad Meg)",
+    artistName: "Pieter Brueghel the Elder",
+    date: "circa 1562",
     sourceName: "Wikimedia Commons",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:John_William_Waterhouse_-_La_Belle_Dame_sans_Merci_(1893).jpg",
+      "https://commons.wikimedia.org/wiki/File:Pieter_Bruegel_the_Elder_-_Dulle_Griet_(Mad_Meg)_-_WGA03400.jpg",
   },
   background: GAME_BACKGROUNDS.darkAlley,
   animation: GameAnimations.Embers,

@@ -16,7 +16,7 @@ export const ebbAndFlow: GameDefinition = {
   thumbnail: "EbbAndFlow.webp",
   thumbnailCredit: {
     title: "Beach at Low Tide (Mouth of the River)",
-    artistName: "Edgar Degas",
+    artistName: "Hilaire Germain Edgar Degas",
     date: "1869",
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/218848",

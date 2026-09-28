@@ -15,11 +15,12 @@ export const apothecary: GameDefinition = {
   },
   thumbnail: "Apothecary.webp",
   thumbnailCredit: {
-    title: "Apothecary's Bottle",
-    artistName: "Unknown Japanese potter, Arita ware",
-    date: "1670s",
-    sourceName: "Cleveland Museum of Art",
-    sourceLink: "https://clevelandart.org/art/1971.169",
+    title: "Apodictic Wares, Allegory of Kant’s Philosophy",
+    artistName: "Jacob Smies",
+    date: "1774 - 1833",
+    sourceName: "Rijksmuseum",
+    sourceLink:
+      "https://www.rijksmuseum.nl/en/collection/object/Apodictische-Waaren-allegorie-op-de-filosofie-van-Kant--2074a287e4025924d2dcf09f128d0cbb",
   },
   background: GAME_BACKGROUNDS.headlessStatue,
   animation: GameAnimations.CandleMotes,

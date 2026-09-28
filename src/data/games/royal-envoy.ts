@@ -14,12 +14,10 @@ export const royalEnvoy: GameDefinition = {
   },
   thumbnail: "RoyalEnvoy.webp",
   thumbnailCredit: {
-    title: "Arrival of the English Ambassadors",
-    artistName: "Vittore Carpaccio",
-    date: "ca. 1495–1500",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Vittore_carpaccio,_Arrival_of_the_English_Ambassadors_02.jpg",
+    title: "Arrival of the messenger",
+    artistName: "Jules Worms",
+    sourceName: "Artvee",
+    sourceLink: "https://artvee.com/dl/arrival-of-the-messenger/",
   },
   background: GAME_BACKGROUNDS.castle,
   animation: GameAnimations.Birds,

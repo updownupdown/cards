@@ -13,11 +13,12 @@ export const easthaven: GameDefinition = {
   rating: { complexity: 30, difficulty: 65, luck: 45 },
   thumbnail: "Easthaven.webp",
   thumbnailCredit: {
-    title: "Harbor of Boston, with the City in the Distance",
-    artistName: "Fitz Henry Lane",
-    date: "ca. 1846–47",
-    sourceName: "Cleveland Museum of Art",
-    sourceLink: "https://clevelandart.org/art/2004.35",
+    title: "Harbour at Low Tide",
+    artistName: "Bernard Essers",
+    date: "1927",
+    sourceName: "Rijksmuseum",
+    sourceLink:
+      "https://www.rijksmuseum.nl/en/collection/object/Haven-bij-eb--796a10bfb6b9d16e48fbcb7c754b1dde",
   },
   background: GAME_BACKGROUNDS.stonyBeach,
   animation: GameAnimations.Glints,

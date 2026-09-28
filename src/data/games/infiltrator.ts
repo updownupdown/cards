@@ -16,12 +16,11 @@ export const infiltrator: GameDefinition = {
   animation: GameAnimations.Dust,
   thumbnail: "Infiltrator.webp",
   thumbnailCredit: {
-    title:
-      "Misbah the Grocer Brings the Spy Parran to His House, from the Hamzanama",
-    artistName: "Dasavanta",
-    date: "ca. 1570",
-    sourceName: "The Metropolitan Museum of Art",
-    sourceLink: "https://www.metmuseum.org/art/collection/search/447752",
+    title: "Satan Starts from the Touch of Ithuriel's Spear",
+    artistName: "Henry Fuseli",
+    date: "1776",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://www.clevelandart.org/art/1954.365",
   },
   gameColorDark: "#182326",
   gameColorPale: "#dce8df",

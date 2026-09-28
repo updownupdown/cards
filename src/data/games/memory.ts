@@ -16,12 +16,11 @@ export const memory: GameDefinition = {
   },
   thumbnail: "Memory.webp",
   thumbnailCredit: {
-    title: "Mnemosyne",
-    artistName: "Dante Gabriel Rossetti",
-    date: "1875–81",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Gabriel_Dante_Rosetti,_Mnemosyne.jpg",
+    title: "Remembrance of Italy",
+    artistName: "Jean Baptiste Camille Corot",
+    date: "1863",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/43126",
   },
   background: GAME_BACKGROUNDS.savanah,
   animation: GameAnimations.Pollen,

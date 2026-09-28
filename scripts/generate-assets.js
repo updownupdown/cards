@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-// Generates the static asset map for thumbnails, the copies of them used for
-// the Collect tab's stamps, and the stamps' perforated paper frame. Drop an
-// image into the relevant assets/ folder, then run:
+// Generates the game thumbnails from their source images (full and cropped),
+// the copies of them used for the Collect tab's stamps, their asset map, and
+// the stamps' perforated paper frame. Drop an image into the relevant assets/
+// folder, then run:
 //   npm run assets:generate
 //
 // Metro requires static require() strings, so these maps must be generated
@@ -12,6 +13,13 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import sharp from "sharp";
+import {
+  CROPS_FILE,
+  SOURCE_DIRECTORY,
+  cropRegion,
+  findCrop,
+  readCropOverrides,
+} from "./thumbnail-crop.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,6 +55,94 @@ function mapEntries(files, aliasDir) {
 }
 
 // --- Thumbnails ---------------------------------------------------------
+// Each game's art comes from one source image in assets/thumbnails-source,
+// which the app never loads. From it come two thumbnails:
+// - assets/thumbnails-full: the whole image, borders and all, for showing
+//   the artwork as it is (game details, art gallery).
+// - assets/thumbnails: the artwork cut from its margins and frames (see
+//   scripts/thumbnail-crop.mjs), for surfaces that crop it to their own
+//   shape (home cards, stamps), where a border would show as a stripe.
+// Cropped thumbnails are shown cropped to fill squares, cards and stamps, so
+// their shorter side is what must stay sharp.
+const SHORT_SIDE = 460;
+const MAX_LONG_SIDE = SHORT_SIDE * 2;
+// Full thumbnails are shown whole, so their longer side is what counts.
+const FULL_LONG_SIDE = 1000;
+
+/** Whether `target` needs making again from any of `sources`. */
+function isStale(target, sources) {
+  if (!fs.existsSync(target)) return true;
+  const made = fs.statSync(target).mtimeMs;
+  return sources.some(
+    (source) => fs.existsSync(source) && fs.statSync(source).mtimeMs > made,
+  );
+}
+
+/** Removes images in `dir` not named in `wanted`. */
+function removeUnwanted(dir, wanted) {
+  for (const file of listImages(dir)) {
+    if (!wanted.has(file)) fs.rmSync(path.join(dir, file));
+  }
+}
+
+/** Makes the full and cropped thumbnails; returns their (shared) names. */
+async function generateFromSources() {
+  const sources = listImages(SOURCE_DIRECTORY);
+  const cropDir = path.join(projectRoot, "assets", "thumbnails");
+  const fullDir = path.join(projectRoot, "assets", "thumbnails-full");
+  fs.mkdirSync(cropDir, { recursive: true });
+  fs.mkdirSync(fullDir, { recursive: true });
+  const overrides = readCropOverrides();
+  const names = [];
+  for (const file of sources) {
+    const name = `${path.parse(file).name}.webp`;
+    if (names.includes(name)) {
+      throw new Error(`Two source images make ${name}; keep one`);
+    }
+    names.push(name);
+    const source = path.join(SOURCE_DIRECTORY, file);
+
+    const full = path.join(fullDir, name);
+    if (isStale(full, [source])) {
+      await sharp(source)
+        .rotate()
+        .resize(FULL_LONG_SIDE, FULL_LONG_SIDE, {
+          fit: "inside",
+          withoutEnlargement: true,
+        })
+        .webp({ quality: 78 })
+        .toFile(full);
+    }
+
+    const cropped = path.join(cropDir, name);
+    if (isStale(cropped, [source, CROPS_FILE])) {
+      const upright = await sharp(source).rotate().toBuffer();
+      const { width, height } = await sharp(upright).metadata();
+      const { crop } = await findCrop(source, overrides);
+      const region = cropRegion(crop, width, height);
+      // The shorter side at SHORT_SIDE, unless that makes the longer one
+      // too long; never enlarged.
+      const scale = Math.min(
+        1,
+        SHORT_SIDE / Math.min(region.width, region.height),
+        MAX_LONG_SIDE / Math.max(region.width, region.height),
+      );
+      await sharp(upright)
+        .extract(region)
+        .resize(
+          Math.round(region.width * scale),
+          Math.round(region.height * scale),
+        )
+        .webp({ quality: 80 })
+        .toFile(cropped);
+    }
+  }
+  const wanted = new Set(names);
+  removeUnwanted(cropDir, wanted);
+  removeUnwanted(fullDir, wanted);
+  return names;
+}
+
 /**
  * Copies of every thumbnail in `targetName`, `width` across and cropped to
  * the stamp's picture, redone when stale.
@@ -55,11 +151,8 @@ async function generateCopies(files, targetName, width, { grey = false } = {}) {
   const dir = path.join(projectRoot, "assets", "thumbnails");
   const targetDir = path.join(projectRoot, "assets", targetName);
   fs.mkdirSync(targetDir, { recursive: true });
-  const wanted = new Set(files);
   // Copies of thumbnails since removed.
-  for (const file of listImages(targetDir)) {
-    if (!wanted.has(file)) fs.rmSync(path.join(targetDir, file));
-  }
+  removeUnwanted(targetDir, new Set(files));
   const height = Math.round(width * STAMP_PICTURE_ASPECT);
   for (const file of files) {
     const source = path.join(dir, file);
@@ -78,8 +171,7 @@ async function generateCopies(files, targetName, width, { grey = false } = {}) {
 }
 
 async function generateThumbnails() {
-  const dir = path.join(projectRoot, "assets", "thumbnails");
-  const files = listImages(dir);
+  const files = await generateFromSources();
   await generateCopies(files, "thumbnail-stickers", STICKER_SIZE);
   await generateCopies(files, "thumbnail-stickers-grey", STICKER_SIZE, {
     grey: true,
@@ -87,18 +179,25 @@ async function generateThumbnails() {
   await generateCopies(files, "thumbnails-grey", GREY_STAMP_SIZE, {
     grey: true,
   });
-  // Width over height of each thumbnail, for showing the whole artwork.
+  // Width over height of each full thumbnail, for showing the whole artwork.
+  const fullDir = path.join(projectRoot, "assets", "thumbnails-full");
   const aspects = [];
   for (const file of files) {
-    const { width, height } = await sharp(path.join(dir, file)).metadata();
+    const { width, height } = await sharp(path.join(fullDir, file)).metadata();
     aspects.push(`  "${file}": ${Math.round((width / height) * 1000) / 1000},`);
   }
   const output = `// AUTO-GENERATED FILE. DO NOT EDIT.
 // Run: npm run assets:generate
 
+/** Each game's art cut from its margins and frames, for filling a shape. */
 export const GAME_THUMBNAIL_ASSETS = {
 ${mapEntries(files, "thumbnails")}
 } as const;
+
+/** Each game's art whole, borders and all, for showing it uncropped. */
+export const GAME_FULL_THUMBNAIL_ASSETS: Record<GameThumbnailName, number> = {
+${mapEntries(files, "thumbnails-full")}
+};
 
 /** Small copies of the thumbnails, for the Collect tab's stickers. */
 export const GAME_STICKER_ASSETS: Record<GameThumbnailName, number> = {
@@ -115,7 +214,7 @@ export const GAME_GREY_THUMBNAIL_ASSETS: Record<GameThumbnailName, number> = {
 ${mapEntries(files, "thumbnails-grey")}
 };
 
-/** Width over height of each thumbnail, uncropped. */
+/** Width over height of each full thumbnail. */
 export const GAME_THUMBNAIL_ASPECTS: Record<GameThumbnailName, number> = {
 ${aspects.join("\n")}
 };

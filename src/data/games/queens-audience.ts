@@ -14,12 +14,11 @@ export const queensAudience: GameDefinition = {
   },
   thumbnail: "QueensAudience.webp",
   thumbnailCredit: {
-    title: "The Secret of England's Greatness",
-    artistName: "Thomas Jones Barker",
-    date: "ca. 1862–63",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:The_Secret_of_England%27s_Greatness%27_(Queen_Victoria_presenting_a_Bible_in_the_Audience_Chamber_at_Windsor)_by_Thomas_Jones_Barker.jpg",
+    title:
+      "Her Most Gracious Majesty Queen Victoria Receiving the Sacrament at Her Coronation",
+    artistName: "George Baxter",
+    sourceName: "Art Institute of Chicago",
+    sourceLink: "https://www.artic.edu/artworks/61545",
   },
   background: GAME_BACKGROUNDS.oldRoom,
   animation: GameAnimations.Dust,

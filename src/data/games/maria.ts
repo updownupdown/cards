@@ -15,11 +15,12 @@ export const maria: GameDefinition = {
   rating: { complexity: 25, difficulty: 65, luck: 45 },
   thumbnail: "Maria.webp",
   thumbnailCredit: {
-    title: "Virgin and Child",
-    artistName: "Anna Maria Carew",
-    date: "ca. 1662",
-    sourceName: "Cleveland Museum of Art",
-    sourceLink: "https://clevelandart.org/art/2008.148",
+    title: "Flower Painter Maria van Oosterwijck",
+    artistName: "Wallerant Vaillant",
+    date: "1671",
+    sourceName: "Rijksmuseum",
+    sourceLink:
+      "https://www.rijksmuseum.nl/en/collection/object/Flower-Painter-Maria-van-Oosterwijck--ce0e1972dbe3091d2b1c85c968fa70e3",
   },
   background: GAME_BACKGROUNDS.painting,
   animation: GameAnimations.CherryBlossom,

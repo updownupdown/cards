@@ -11,11 +11,12 @@ export const laBelleLucie: GameDefinition = {
   rating: { complexity: 25, difficulty: 75, luck: 45 },
   thumbnail: "LaBelleLucie.webp",
   thumbnailCredit: {
-    title: "Saint Lucy",
-    artistName: "Unknown Cuzco School painter",
-    date: "18th century",
-    sourceName: "The Metropolitan Museum of Art",
-    sourceLink: "https://www.metmuseum.org/art/collection/search/232204",
+    title: "The Artist’s Niece, Marianne Lavergne, Known as ‘La Liseuse’",
+    artistName: "Jean-Etienne Liotard",
+    date: "1746",
+    sourceName: "Rijksmuseum",
+    sourceLink:
+      "https://www.rijksmuseum.nl/en/collection/object/The-Artists-Niece-Marianne-Lavergne-Known-as-La-Liseuse--4f8b0612bb4049770fadcb8d29bac8f9",
   },
   background: GAME_BACKGROUNDS.sunsetOldCity,
   animation: GameAnimations.CherryBlossom,

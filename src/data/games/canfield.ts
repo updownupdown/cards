@@ -16,7 +16,7 @@ export const canfield: GameDefinition = {
   thumbnailCredit: {
     title: "The Cardsharps",
     artistName: "Caravaggio",
-    date: "ca. 1595",
+    date: "circa 1595",
     sourceName: "Wikimedia Commons",
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Caravaggio_(Michelangelo_Merisi)_-_The_Cardsharps_-_Google_Art_Project.jpg",

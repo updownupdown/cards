@@ -14,11 +14,12 @@ export const herbalist: GameDefinition = {
   },
   thumbnail: "Herbalist.webp",
   thumbnailCredit: {
-    title: "Hanuman Bearing the Mountaintop with Medicinal Herbs",
-    artistName: "Unknown Rajasthani artist",
-    date: "ca. 1800",
-    sourceName: "The Metropolitan Museum of Art",
-    sourceLink: "https://www.metmuseum.org/art/collection/search/37960",
+    title:
+      "Folio from an Arabic translation of the Materia Medica of Dioscorides",
+    artistName: "Abdallah ibn al-Fadl",
+    date: "1224",
+    sourceName: "Cleveland Museum of Art",
+    sourceLink: "https://www.clevelandart.org/art/1977.91",
   },
   background: GAME_BACKGROUNDS.forest,
   animation: GameAnimations.Firefly,

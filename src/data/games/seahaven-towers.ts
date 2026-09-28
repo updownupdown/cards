@@ -11,11 +11,11 @@ export const seahavenTowers: GameDefinition = {
   rating: { complexity: 25, difficulty: 45, luck: 15 },
   thumbnail: "SeahavenTowers.webp",
   thumbnailCredit: {
-    title: "The Port of La Rochelle",
-    artistName: "Paul Signac",
-    sourceName: "Wikimedia Commons",
-    sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Le_port_de_la_Rochelle_Signac_Nancy.jpg",
+    title: "Molo z widokiem na dwie latarnie",
+    artistName: "Tadeusz Makowski",
+    date: "1932",
+    sourceName: "Artvee",
+    sourceLink: "https://artvee.com/dl/molo-z-widokiem-na-dwie-latarnie/",
   },
   background: GAME_BACKGROUNDS.shipwreck,
   animation: GameAnimations.Mist,

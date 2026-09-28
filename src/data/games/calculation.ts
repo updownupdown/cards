@@ -19,11 +19,11 @@ export const calculation: GameDefinition = {
   thumbnail: "Calculation.webp",
   thumbnailCredit: {
     title: "Portrait of Luca Pacioli",
-    artistName: "Attributed to Jacopo de' Barbari",
-    date: "1495",
+    artistName: "Jacopo de' Barbari",
+    date: "between 1495 and 1500",
     sourceName: "Wikimedia Commons",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Jacopo_de%27_Barbari_(attributed_to)_Portrait_of_Luca_Pacioli_(1445_1517)_with_a_student_(Guidobaldo_da_Montefeltro)_(2).jpg",
+      "https://commons.wikimedia.org/wiki/File:Jacopo_de'_Barbari_(attributed_to)_Portrait_of_Luca_Pacioli_(1445_1517)_with_a_student_(Guidobaldo_da_Montefeltro)_(2).jpg",
   },
   background: GAME_BACKGROUNDS.geometricCeiling,
   animation: GameAnimations.Dust,

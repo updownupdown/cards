@@ -14,11 +14,12 @@ export const gremlin: GameDefinition = {
   },
   thumbnail: "Gremlin.webp",
   thumbnailCredit: {
-    title: "The Gargoyle, from Etchings of Paris",
-    artistName: "Charles Meryon",
-    date: "1853",
-    sourceName: "Cleveland Museum of Art",
-    sourceLink: "https://clevelandart.org/art/1941.298",
+    title: "Forest Landscape in the Moonlight",
+    artistName: "Georg Eduard Otto Saal",
+    date: "1861",
+    sourceName: "Rijksmuseum",
+    sourceLink:
+      "https://www.rijksmuseum.nl/en/collection/object/Forest-Landscape-in-the-Moonlight--f20a4913dbb122bad9efa767afb90d7f",
   },
   background: GAME_BACKGROUNDS.treeRain,
   animation: GameAnimations.Firefly,
