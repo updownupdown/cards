@@ -24,8 +24,6 @@ export const congress: GameDefinition = {
   gameColorDark: "#292f38",
   gameColorPale: "#e9dfca",
   cardBack: CardBackColors.Bronze,
-  cardDescription:
-    "Guide two decks through eight columns with one-card moves and a single stock pass.",
   quickStart: [
     "Build eight foundations up by suit.",
     "Build tableau down regardless of suit.",

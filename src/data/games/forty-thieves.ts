@@ -26,7 +26,6 @@ export const fortyThieves: GameDefinition = {
   gameColorDark: "#2E2D34",
   gameColorPale: "#EFE8FF",
   cardBack: CardBackColors.Violet,
-  cardDescription: "A demanding two-deck foundation building patience.",
   quickStart: [
     "Build all 8 foundations up by suit from A to K.",
     "Build tableau columns down by suit, moving one card at a time.",

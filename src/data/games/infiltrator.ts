@@ -25,8 +25,6 @@ export const infiltrator: GameDefinition = {
   gameColorDark: "#182326",
   gameColorPale: "#dce8df",
   cardBack: CardBackColors.Forest,
-  cardDescription:
-    "Capture a majority of the Key Spies through careful recruitment, countering, and assassination.",
   quickStart: [
     "Win by recruiting more than half of the Key Spies (J, Q, K).",
     "Build your deck by recruiting spies of increasing value.",

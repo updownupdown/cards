@@ -96,7 +96,6 @@ export type GameMenuInfo = {
   gameColorPale: HexColor;
   /** Which shared card-back ink this game's deck is printed in. */
   cardBack: CardBackColor;
-  cardDescription: string;
 
   // How to Play
   quickStart?: string[]; // Plain text only

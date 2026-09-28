@@ -25,8 +25,6 @@ export const invaders: GameDefinition = {
   gameColorDark: "#2a2836",
   gameColorPale: "#b5faff",
   cardBack: CardBackColors.Teal,
-  cardDescription:
-    "Fight off waves of alien invaders before running out of defenders.",
   quickStart: [
     "Beat back 2 waves of attackers using attacks and sacrifices.",
     "Single attacks: opposite color and larger value.",

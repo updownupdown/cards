@@ -22,7 +22,6 @@ export const gaps: GameDefinition = {
   gameColorDark: "#2c322f",
   gameColorPale: "#e7ddc2",
   cardBack: CardBackColors.Bronze,
-  cardDescription: "Arrange the rows in order by suit by filling the gaps.",
   quickStart: [
     "Arrange the rows in order (2 to K).",
     "Cards can be moved to a gap when they are the same suit as, and one rank above, its left neighbor.",

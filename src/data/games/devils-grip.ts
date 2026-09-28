@@ -30,8 +30,6 @@ export const devilsGrip: GameDefinition = {
   gameColorDark: "#4e211e",
   gameColorPale: "#ffecd6",
   cardBack: CardBackColors.Crimson,
-  cardDescription:
-    "Build 24 same-suit piles upward by threes in a three-row grid.",
   quickStart: [
     "Build same-suit sequences: 2-5-8-J (top row), 3-6-9-Q (middle row), and 4-7-10-K (bottom row).",
     "Move cards or stacks to create sequences or to swap their position.",

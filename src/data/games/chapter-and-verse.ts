@@ -22,8 +22,6 @@ export const chapterAndVerse: GameDefinition = {
   gameColorDark: "#2e2d27",
   gameColorPale: "#f0e9d7",
   cardBack: CardBackColors.Bronze,
-  cardDescription:
-    "Match customer offers with available books and offers to maximize your score.",
   quickStart: [
     "Match the customer offers exactly by selecting from available books.",
     "Customer preferences and used books affect book pricing.",

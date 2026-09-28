@@ -25,8 +25,6 @@ export const tripleStack: GameDefinition = {
   gameColorDark: "#102524",
   gameColorPale: "#b0eee9",
   cardBack: CardBackColors.Teal,
-  cardDescription:
-    "Serve sandwiches by selecting evenly spaced cards; don't let your ingredients run out!",
   quickStart: [
     "Select 3 cards with equally spaced ranks (ranks wrap from A to K).",
     "Better sandwiches (same suit/color) refill more cards.",

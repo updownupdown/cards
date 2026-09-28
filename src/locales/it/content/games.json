@@ -1,9 +1,5 @@
 {
   "accordion": {
-    "cardDescription": {
-      "hash": "7e489b6e",
-      "value": "Riduci l'intero mazzo a una sola pila, abbinando una alla volta carte vicine dello stesso seme o valore."
-    },
     "howToPlay": {
       "hash": "5a32be9c",
       "value": [
@@ -30,10 +26,6 @@
     }
   },
   "aces-up": {
-    "cardDescription": {
-      "hash": "7afc29df",
-      "value": "Scarta le carte basse dei semi ripetuti finché restano solo i quattro Assi."
-    },
     "howToPlay": {
       "hash": "0c45e0c2",
       "value": [
@@ -60,10 +52,6 @@
     }
   },
   "apothecary": {
-    "cardDescription": {
-      "hash": "b66e1d4d",
-      "value": "Travasa le carte da un vaso all'altro finché tutti i valori sono riuniti."
-    },
     "howToPlay": {
       "hash": "4b2b06d2",
       "value": [
@@ -94,10 +82,6 @@
     }
   },
   "ascent": {
-    "cardDescription": {
-      "hash": "301e448f",
-      "value": "Un gioco di arrampicata in solitario: gioca vie sempre più alte per raggiungere tre campi prima che finisca il mazzo."
-    },
     "howToPlay": {
       "hash": "acb5c7a2",
       "value": [
@@ -152,10 +136,6 @@
     }
   },
   "australian-patience": {
-    "cardDescription": {
-      "hash": "3e888b8b",
-      "value": "La libertà dello Yukon incontra una rigida costruzione per seme e un mazzo da girare una sola volta."
-    },
     "howToPlay": {
       "hash": "1faa036d",
       "value": [
@@ -182,10 +162,6 @@
     }
   },
   "bakers-dozen": {
-    "cardDescription": {
-      "hash": "1616b54c",
-      "value": "Svuota tredici colonne compatte nelle quattro fondazioni per seme."
-    },
     "howToPlay": {
       "hash": "b7b35342",
       "value": [
@@ -214,10 +190,6 @@
     }
   },
   "baroness": {
-    "cardDescription": {
-      "hash": "32a23d8a",
-      "value": "Svuota cinque pile scartando carte che sommate fanno tredici."
-    },
     "howToPlay": {
       "hash": "e0cdb3c4",
       "value": [
@@ -244,10 +216,6 @@
     }
   },
   "beehive": {
-    "cardDescription": {
-      "hash": "dbca3d18",
-      "value": "Completa gruppi di quattro carte in sei spazi dello stesso valore usando l'alveare, il pozzo e il mazzo."
-    },
     "howToPlay": {
       "hash": "426ee910",
       "value": [
@@ -274,10 +242,6 @@
     }
   },
   "beleaguered-castle": {
-    "cardDescription": {
-      "hash": "f890639b",
-      "value": "Prendi d'assalto il castello: costruisci ogni seme dall'Asso al Re, con colonne tutte scoperte."
-    },
     "howToPlay": {
       "hash": "8fb5fdcb",
       "value": [
@@ -306,10 +270,6 @@
     }
   },
   "bisley": {
-    "cardDescription": {
-      "hash": "5480127a",
-      "value": "Costruisci ogni seme da entrambi i capi mentre tredici colonne scoperte ti stringono d'assedio."
-    },
     "howToPlay": {
       "hash": "9a5911e7",
       "value": [
@@ -337,10 +297,6 @@
     }
   },
   "black-hole": {
-    "cardDescription": {
-      "hash": "64debd9d",
-      "value": "Attira tutte le 52 carte in un buco nero centrale, un valore alla volta."
-    },
     "howToPlay": {
       "hash": "f8156c21",
       "value": [
@@ -371,10 +327,6 @@
     }
   },
   "blackberry-pie": {
-    "cardDescription": {
-      "hash": "efcdf8a7",
-      "value": "Forma terne sotto le carte mora per aiutare la Regina a sfornare la sua torta."
-    },
     "howToPlay": {
       "hash": "4a9fa370",
       "value": [
@@ -412,10 +364,6 @@
     }
   },
   "bowling": {
-    "cardDescription": {
-      "hash": "57809475",
-      "value": "Gioca una partita completa di bowling a 10 birilli con le carte, a caccia di strike e spare."
-    },
     "howToPlay": {
       "hash": "467c3b31",
       "value": [
@@ -451,10 +399,6 @@
     }
   },
   "bristol": {
-    "cardDescription": {
-      "hash": "9b1c2517",
-      "value": "Otto piccoli ventagli e tre pile di riserva alimentate dal mazzo, dove il seme non conta mai."
-    },
     "howToPlay": {
       "hash": "21ddab2f",
       "value": [
@@ -485,10 +429,6 @@
     }
   },
   "cabin-siege": {
-    "cardDescription": {
-      "hash": "d080e51a",
-      "value": "Difendi la tua baita da un assedio di zombie, usando con strategia le carte di supporto."
-    },
     "howToPlay": {
       "hash": "669496da",
       "value": [
@@ -527,10 +467,6 @@
     }
   },
   "cafe-queue": {
-    "cardDescription": {
-      "hash": "98f19edd",
-      "value": "Un gioco di azzardo calcolato in cui devi gestire code ordinate di clienti."
-    },
     "howToPlay": {
       "hash": "22d411d4",
       "value": [
@@ -561,10 +497,6 @@
     }
   },
   "calculation": {
-    "cardDescription": {
-      "hash": "35edc39a",
-      "value": "Costruisci quattro fondazioni a passi di 1, 2, 3 e 4, fino a K."
-    },
     "howToPlay": {
       "hash": "08af239e",
       "value": [
@@ -595,10 +527,6 @@
     }
   },
   "canfield": {
-    "cardDescription": {
-      "hash": "a81515a3",
-      "value": "Costruisci le fondazioni per seme da un valore di base casuale, alimentate da una riserva di 13 carte."
-    },
     "howToPlay": {
       "hash": "d1f393e8",
       "value": [
@@ -629,10 +557,6 @@
     }
   },
   "carpet": {
-    "cardDescription": {
-      "hash": "bf2e1ad7",
-      "value": "Solleva un tappeto di venti carte sulle fondazioni mentre il mazzo ne rattoppa ogni buco."
-    },
     "howToPlay": {
       "hash": "0af4a81e",
       "value": [
@@ -659,10 +583,6 @@
     }
   },
   "chain-of-command": {
-    "cardDescription": {
-      "hash": "26aaf0b8",
-      "value": "Promuovi con strategia membri e candidati fino in cima alla catena di comando."
-    },
     "howToPlay": {
       "hash": "4b1772c7",
       "value": [
@@ -690,10 +610,6 @@
     }
   },
   "chapter-and-verse": {
-    "cardDescription": {
-      "hash": "f6ff591c",
-      "value": "Soddisfa le offerte dei clienti con i libri disponibili per ottenere il punteggio più alto."
-    },
     "howToPlay": {
       "hash": "2558e4ff",
       "value": [
@@ -733,10 +649,6 @@
     }
   },
   "city-grid": {
-    "cardDescription": {
-      "hash": "b923e9bb",
-      "value": "Un gioco di piazzamento di tessere in cui ogni mossa può scombinare una griglia precaria."
-    },
     "howToPlay": {
       "hash": "316682c7",
       "value": [
@@ -767,10 +679,6 @@
     }
   },
   "clock": {
-    "cardDescription": {
-      "hash": "61261ec5",
-      "value": "Un solitario di pura fortuna: segui le carte intorno all'orologio prima che escano tutti i Re."
-    },
     "howToPlay": {
       "hash": "36c70a77",
       "value": [
@@ -795,10 +703,6 @@
     }
   },
   "congress": {
-    "cardDescription": {
-      "hash": "fe8ab4a0",
-      "value": "Guida due mazzi attraverso otto colonne, con mosse di una carta e un solo giro del mazzo."
-    },
     "howToPlay": {
       "hash": "686ea922",
       "value": [
@@ -826,10 +730,6 @@
     }
   },
   "crazy-quilt": {
-    "cardDescription": {
-      "hash": "e28c27ea",
-      "value": "Scuci una trapunta di carte dritte e di traverso, un capo libero alla volta."
-    },
     "howToPlay": {
       "hash": "ee571b00",
       "value": [
@@ -859,10 +759,6 @@
     }
   },
   "crescent": {
-    "cardDescription": {
-      "hash": "4de6a2cd",
-      "value": "Fai girare sedici pile al chiaro di luna verso fondazioni che crescono dagli Assi e dai Re."
-    },
     "howToPlay": {
       "hash": "2122d621",
       "value": [
@@ -891,10 +787,6 @@
     }
   },
   "cribbage-squares": {
-    "cardDescription": {
-      "hash": "4ff9ff90",
-      "value": "Forma un quadrato di sedici carte collegate, poi calcola il punteggio di ogni riga e colonna con una carta starter."
-    },
     "howToPlay": {
       "hash": "d49f4554",
       "value": [
@@ -937,10 +829,6 @@
     }
   },
   "crownslayer": {
-    "cardDescription": {
-      "hash": "60d95812",
-      "value": "Abbatti le 12 figure nemiche con combinazioni potenziate dai semi."
-    },
     "howToPlay": {
       "hash": "82061d43",
       "value": [
@@ -992,10 +880,6 @@
     }
   },
   "cruel": {
-    "cardDescription": {
-      "hash": "3a229ead",
-      "value": "Dodici pile scoperte, niente mazzo e una ridistribuzione che rimescola tutto ciò che hai costruito."
-    },
     "howToPlay": {
       "hash": "14e03858",
       "value": [
@@ -1022,10 +906,6 @@
     }
   },
   "delta-21": {
-    "cardDescription": {
-      "hash": "0886780b",
-      "value": "Porta quattro popolazioni di pesci di fiume a esattamente 21 e pubblica i tuoi studi."
-    },
     "howToPlay": {
       "hash": "b75491fc",
       "value": [
@@ -1084,10 +964,6 @@
     }
   },
   "devils-grip": {
-    "cardDescription": {
-      "hash": "5790b2dc",
-      "value": "Costruisci 24 pile dello stesso seme di tre in tre in una griglia di tre file."
-    },
     "howToPlay": {
       "hash": "23ce0cda",
       "value": [
@@ -1128,10 +1004,6 @@
     }
   },
   "diplomat": {
-    "cardDescription": {
-      "hash": "1e3f9a93",
-      "value": "Negozia con otto colonne scoperte, impilando solo per valore e spostando una carta alla volta."
-    },
     "howToPlay": {
       "hash": "ca4c9166",
       "value": [
@@ -1159,10 +1031,6 @@
     }
   },
   "dominion": {
-    "cardDescription": {
-      "hash": "747f9f9d",
-      "value": "Conquista carte dello stesso valore o seme, finché resta un solo dominio."
-    },
     "howToPlay": {
       "hash": "65da5614",
       "value": [
@@ -1193,10 +1061,6 @@
     }
   },
   "dynasty": {
-    "cardDescription": {
-      "hash": "0faabfb3",
-      "value": "Abbatti tutte e dodici le figure piazzando carte su una griglia 3x3."
-    },
     "howToPlay": {
       "hash": "2c41141f",
       "value": [
@@ -1228,10 +1092,6 @@
     }
   },
   "easthaven": {
-    "cardDescription": {
-      "hash": "bd4d84bb",
-      "value": "Costruisci sette colonne compatte, poi distribuisci ogni nuova fila del mazzo direttamente sulle colonne."
-    },
     "howToPlay": {
       "hash": "0253c855",
       "value": [
@@ -1258,10 +1118,6 @@
     }
   },
   "eight-off": {
-    "cardDescription": {
-      "hash": "0443457b",
-      "value": "Un parente spazioso di FreeCell per seme, con otto celle e colonne vuote riservate ai Re."
-    },
     "howToPlay": {
       "hash": "014c8f8e",
       "value": [
@@ -1289,10 +1145,6 @@
     }
   },
   "elementary-detective": {
-    "cardDescription": {
-      "hash": "efdce805",
-      "value": "Trova i tuoi compagni di gioco nascosti con pianificazione e deduzione."
-    },
     "howToPlay": {
       "hash": "cc00bd38",
       "value": [
@@ -1318,10 +1170,6 @@
     }
   },
   "field-command": {
-    "cardDescription": {
-      "hash": "046a65e6",
-      "value": "Usa carte basse e jolly per smantellare le forze nemiche, proteggendo dalla cattura ogni Asso e ogni figura."
-    },
     "howToPlay": {
       "hash": "14749a82",
       "value": [
@@ -1351,10 +1199,6 @@
     }
   },
   "fifteen-puzzle": {
-    "cardDescription": {
-      "hash": "8d1fa8fb",
-      "value": "Rimetti in ordine le carte di una griglia 4x4 facendole scorrere una alla volta."
-    },
     "howToPlay": {
       "hash": "dc55b9d9",
       "value": [
@@ -1383,10 +1227,6 @@
     }
   },
   "fight-clubs": {
-    "cardDescription": {
-      "hash": "da6e6079",
-      "value": "Usa con saggezza i tuoi tredici fiori per svuotare una griglia 3x3 che cambia di continuo."
-    },
     "howToPlay": {
       "hash": "1c19d9ff",
       "value": [
@@ -1437,10 +1277,6 @@
     }
   },
   "flower-garden": {
-    "cardDescription": {
-      "hash": "4b5c020b",
-      "value": "Coltiva sei aiuole con tutte le sedici carte del mazzolino sempre a disposizione."
-    },
     "howToPlay": {
       "hash": "e4cc4b14",
       "value": [
@@ -1467,10 +1303,6 @@
     }
   },
   "fortress": {
-    "cardDescription": {
-      "hash": "49b04b9f",
-      "value": "Manovra dieci corsie scoperte in su o in giù per seme per liberare ogni fondazione."
-    },
     "howToPlay": {
       "hash": "0591fc6a",
       "value": [
@@ -1497,10 +1329,6 @@
     }
   },
   "fortunes-call": {
-    "cardDescription": {
-      "hash": "49133345",
-      "value": "Indovina il colore o la direzione di ogni carta nascosta prima di sbagliare tre volte."
-    },
     "howToPlay": {
       "hash": "a76b0266",
       "value": [
@@ -1527,10 +1355,6 @@
     }
   },
   "forty-thieves": {
-    "cardDescription": {
-      "hash": "e81e4597",
-      "value": "Un impegnativo solitario a due mazzi in cui si costruiscono le fondazioni."
-    },
     "howToPlay": {
       "hash": "327ab3c4",
       "value": [
@@ -1563,10 +1387,6 @@
     }
   },
   "four-seasons": {
-    "cardDescription": {
-      "hash": "caddc762",
-      "value": "Cinque carte a croce e quattro angoli: fai girare le stagioni a partire dalla prima carta d'angolo."
-    },
     "howToPlay": {
       "hash": "baf2850a",
       "value": [
@@ -1597,10 +1417,6 @@
     }
   },
   "freecell": {
-    "cardDescription": {
-      "hash": "50d37ce8",
-      "value": "Un classico a carte scoperte in cui quasi ogni partita si può vincere con un po' di attenzione."
-    },
     "howToPlay": {
       "hash": "1d797da4",
       "value": [
@@ -1629,10 +1445,6 @@
     }
   },
   "frog": {
-    "cardDescription": {
-      "hash": "ab1e9fc2",
-      "value": "Fai saltare due mazzi su otto fondazioni, smistando il mazzo su cinque pile a forma di ninfea."
-    },
     "howToPlay": {
       "hash": "2f091e43",
       "value": [
@@ -1660,10 +1472,6 @@
     }
   },
   "gaps": {
-    "cardDescription": {
-      "hash": "3edac6c4",
-      "value": "Metti in ordine le righe per seme riempiendo i buchi."
-    },
     "howToPlay": {
       "hash": "bdf0ca39",
       "value": [
@@ -1694,10 +1502,6 @@
     }
   },
   "gargantua": {
-    "cardDescription": {
-      "hash": "9a18d2a2",
-      "value": "Scala un Klondike a nove colonne e due mazzi, con otto fondazioni."
-    },
     "howToPlay": {
       "hash": "4a898796",
       "value": [
@@ -1726,10 +1530,6 @@
     }
   },
   "golf": {
-    "cardDescription": {
-      "hash": "df8ad9d9",
-      "value": "Svuota sette colonne giocando carte a un valore di distanza dal pozzo."
-    },
     "howToPlay": {
       "hash": "24a82fa3",
       "value": [
@@ -1757,10 +1557,6 @@
     }
   },
   "grandfathers-clock": {
-    "cardDescription": {
-      "hash": "929d905b",
-      "value": "Carica dodici fondazioni intorno al quadrante finché ogni ora mostra il suo numero."
-    },
     "howToPlay": {
       "hash": "d994567d",
       "value": [
@@ -1792,10 +1588,6 @@
     }
   },
   "gremlin": {
-    "cardDescription": {
-      "hash": "277c9762",
-      "value": "Costruisci colonne di carte in sequenze decrescenti dello stesso seme, gestendo un aiuto che non hai chiesto."
-    },
     "howToPlay": {
       "hash": "24c4d019",
       "value": [
@@ -1834,10 +1626,6 @@
     }
   },
   "herbalist": {
-    "cardDescription": {
-      "hash": "820b189b",
-      "value": "Distribuisci le erbe nelle tue scuderie per curare tutte le creature che ci vivono."
-    },
     "howToPlay": {
       "hash": "49f3dd1e",
       "value": [
@@ -1872,10 +1660,6 @@
     }
   },
   "indian": {
-    "cardDescription": {
-      "hash": "bbc78988",
-      "value": "Costruisci colonne a due mazzi in ordine decrescente, evitando con cura lo stesso seme."
-    },
     "howToPlay": {
       "hash": "96bf0d1c",
       "value": [
@@ -1902,10 +1686,6 @@
     }
   },
   "infiltrator": {
-    "cardDescription": {
-      "hash": "dff09eb2",
-      "value": "Conquista la maggioranza delle spie chiave con reclutamenti, contromosse e assassinii ben calcolati."
-    },
     "howToPlay": {
       "hash": "b297c489",
       "value": [
@@ -1944,10 +1724,6 @@
     }
   },
   "invaders": {
-    "cardDescription": {
-      "hash": "beef4003",
-      "value": "Respingi ondate di invasori alieni prima di restare senza difensori."
-    },
     "howToPlay": {
       "hash": "5644ce85",
       "value": [
@@ -1976,10 +1752,6 @@
     }
   },
   "jailbreak": {
-    "cardDescription": {
-      "hash": "d2cc3eee",
-      "value": "Abbina totali uguali di rosse e nere per far evadere il Jolly attraverso un muro."
-    },
     "howToPlay": {
       "hash": "aad3689d",
       "value": [
@@ -2010,10 +1782,6 @@
     }
   },
   "king-albert": {
-    "cardDescription": {
-      "hash": "43b55724",
-      "value": "Tutte le carte sono distribuite scoperte: nove colonne, una piccola riserva e una sola carta spostata alla volta."
-    },
     "howToPlay": {
       "hash": "6c0f25fe",
       "value": [
@@ -2045,10 +1813,6 @@
     }
   },
   "klondike": {
-    "cardDescription": {
-      "hash": "1873d35c",
-      "value": "Il solitario classico: costruisci quattro fondazioni per seme dall'Asso al Re."
-    },
     "howToPlay": {
       "hash": "6b0bf248",
       "value": [
@@ -2076,10 +1840,6 @@
     }
   },
   "la-belle-lucie": {
-    "cardDescription": {
-      "hash": "1fb69740",
-      "value": "Scopri un campo compatto di ventagli, con due rimescolate per sciogliere i nodi."
-    },
     "howToPlay": {
       "hash": "64ab3a33",
       "value": [
@@ -2109,10 +1869,6 @@
     }
   },
   "labyrinth": {
-    "cardDescription": {
-      "hash": "46c8506f",
-      "value": "Distribuisci una fila dopo l'altra e libera le carte dall'alto e dal basso del labirinto."
-    },
     "howToPlay": {
       "hash": "d02b7d3c",
       "value": [
@@ -2139,10 +1895,6 @@
     }
   },
   "lights-out": {
-    "cardDescription": {
-      "hash": "d9f86dc4",
-      "value": "Spegni una griglia di carte in cui ogni mossa gira anche le carte vicine."
-    },
     "howToPlay": {
       "hash": "246e4fe2",
       "value": [
@@ -2167,10 +1919,6 @@
     }
   },
   "lone-joker": {
-    "cardDescription": {
-      "hash": "6ff380b4",
-      "value": "Forma mani di poker, metti da parte i Jolly e spendi i punti in più per superare round sempre più difficili."
-    },
     "howToPlay": {
       "hash": "11835fe7",
       "value": [
@@ -2225,10 +1973,6 @@
     }
   },
   "lycan": {
-    "cardDescription": {
-      "hash": "9561f249",
-      "value": "Svuota la mano del Lupo con catture astute... e impara quando lasciare."
-    },
     "howToPlay": {
       "hash": "d62c9ca0",
       "value": [
@@ -2274,10 +2018,6 @@
     }
   },
   "maria": {
-    "cardDescription": {
-      "hash": "ae9582d4",
-      "value": "Un parente a nove colonne di Quaranta ladroni, in cui si impila alternando rosso e nero."
-    },
     "howToPlay": {
       "hash": "3ac89609",
       "value": [
@@ -2305,10 +2045,6 @@
     }
   },
   "memory": {
-    "cardDescription": {
-      "hash": "bb8a7bd4",
-      "value": "Scopri le coppie nascoste e svuota il tavolo usando la memoria."
-    },
     "howToPlay": {
       "hash": "fd06d530",
       "value": [
@@ -2333,10 +2069,6 @@
     }
   },
   "miss-milligan": {
-    "cardDescription": {
-      "hash": "2fafaca0",
-      "value": "Parti da otto carte isolate e distribuisci una fila su ogni colonna quando vuoi."
-    },
     "howToPlay": {
       "hash": "d8f2b41f",
       "value": [
@@ -2368,10 +2100,6 @@
     }
   },
   "monte-carlo": {
-    "cardDescription": {
-      "hash": "752d12bd",
-      "value": "Abbina coppie adiacenti dello stesso valore per svuotare la griglia."
-    },
     "howToPlay": {
       "hash": "9447fa02",
       "value": [
@@ -2396,10 +2124,6 @@
     }
   },
   "nestor": {
-    "cardDescription": {
-      "hash": "8afbbddb",
-      "value": "Forma coppie di valori uguali per svuotare ogni colonna."
-    },
     "howToPlay": {
       "hash": "5a96cea6",
       "value": [
@@ -2422,10 +2146,6 @@
     }
   },
   "night-vigil": {
-    "cardDescription": {
-      "hash": "7d07c621",
-      "value": "Rispondi alle minacce con contromosse tattiche in una sfida noir contro dodici canaglie."
-    },
     "howToPlay": {
       "hash": "ca40e560",
       "value": [
@@ -2465,10 +2185,6 @@
     }
   },
   "ouroboros": {
-    "cardDescription": {
-      "hash": "9249639e",
-      "value": "Raccogli le carte del cerchio che danno punti, mantenendo lo slancio ed evitando interruzioni pericolose."
-    },
     "howToPlay": {
       "hash": "23113eb3",
       "value": [
@@ -2519,10 +2235,6 @@
     }
   },
   "pagoda": {
-    "cardDescription": {
-      "hash": "c1c2c60e",
-      "value": "Prendi le carte dai piani della pagoda e offri ogni tris al santuario."
-    },
     "howToPlay": {
       "hash": "5eb45815",
       "value": [
@@ -2552,10 +2264,6 @@
     }
   },
   "parallels": {
-    "cardDescription": {
-      "hash": "31eac556",
-      "value": "Impila file parallele di due mazzi tra fondazioni di Assi e di Re, liberando carte da entrambi i bordi."
-    },
     "howToPlay": {
       "hash": "a09786ce",
       "value": [
@@ -2584,10 +2292,6 @@
     }
   },
   "penguin": {
-    "cardDescription": {
-      "hash": "a45ab2f6",
-      "value": "Un gioco simile a FreeCell che costruisce sequenze per seme a partire da un valore «becco» casuale."
-    },
     "howToPlay": {
       "hash": "362cf9e1",
       "value": [
@@ -2615,10 +2319,6 @@
     }
   },
   "pocket-poker": {
-    "cardDescription": {
-      "hash": "d28135be",
-      "value": "Un duello di poker tascabile: pesca, punta e batti un avversario servito dallo stesso mazzo."
-    },
     "howToPlay": {
       "hash": "24a831bd",
       "value": [
@@ -2656,10 +2356,6 @@
     }
   },
   "poker-squares": {
-    "cardDescription": {
-      "hash": "8ed02b35",
-      "value": "Forma dieci mani di poker in una griglia per ottenere il punteggio più alto possibile."
-    },
     "howToPlay": {
       "hash": "ef2f0865",
       "value": [
@@ -2694,10 +2390,6 @@
     }
   },
   "pyramid": {
-    "cardDescription": {
-      "hash": "659fff1e",
-      "value": "Smonta la piramide togliendo coppie di carte che sommate fanno 13."
-    },
     "howToPlay": {
       "hash": "05b90345",
       "value": [
@@ -2722,10 +2414,6 @@
     }
   },
   "queens-audience": {
-    "cardDescription": {
-      "hash": "b7f94eaa",
-      "value": "Accompagna le coppie reali nella sala delle udienze e lascia che ogni Fante guidi il suo seme verso il basso."
-    },
     "howToPlay": {
       "hash": "90bcd31f",
       "value": [
@@ -2754,10 +2442,6 @@
     }
   },
   "rank-and-file": {
-    "cardDescription": {
-      "hash": "54303353",
-      "value": "Scopri dieci colonne disciplinate e manovra formazioni a colori alterni."
-    },
     "howToPlay": {
       "hash": "544745e3",
       "value": [
@@ -2789,10 +2473,6 @@
     }
   },
   "red-diamond": {
-    "cardDescription": {
-      "hash": "8f0b8b18",
-      "value": "Piazza tutti i fiori e le picche intorno a quattro carte di quadri, con abbinamenti aritmetici."
-    },
     "howToPlay": {
       "hash": "a23e76cc",
       "value": [
@@ -2829,10 +2509,6 @@
     }
   },
   "rogue-run": {
-    "cardDescription": {
-      "hash": "833255e0",
-      "value": "Un'esplorazione di dungeon in cui gestisci la forza delle armi e l'uso delle pozioni."
-    },
     "howToPlay": {
       "hash": "852f99a5",
       "value": [
@@ -2869,10 +2545,6 @@
     }
   },
   "royal-cotillion": {
-    "cardDescription": {
-      "hash": "78d83f7f",
-      "value": "Due mazzi danzano sulle fondazioni a passi di due, partendo dagli Assi e dai 2."
-    },
     "howToPlay": {
       "hash": "55f6e9ce",
       "value": [
@@ -2903,10 +2575,6 @@
     }
   },
   "royal-envoy": {
-    "cardDescription": {
-      "hash": "1cc10e97",
-      "value": "Vinci esattamente il numero giusto di dibattiti in ogni regno, con l'aiuto dei tuoi consiglieri."
-    },
     "howToPlay": {
       "hash": "f119c81a",
       "value": [
@@ -2937,10 +2605,6 @@
     }
   },
   "royal-rest": {
-    "cardDescription": {
-      "hash": "298cb8cb",
-      "value": "Riunisci le carte dello stesso valore in cuscini e metti a letto tutti i Fanti."
-    },
     "howToPlay": {
       "hash": "ad734452",
       "value": [
@@ -2977,10 +2641,6 @@
     }
   },
   "scorpion": {
-    "cardDescription": {
-      "hash": "959e0b20",
-      "value": "Districa colonne scoperte in quattro sequenze dello stesso seme, dal Re all'Asso."
-    },
     "howToPlay": {
       "hash": "6cabf38a",
       "value": [
@@ -3011,10 +2671,6 @@
     }
   },
   "seahaven-towers": {
-    "cardDescription": {
-      "hash": "fb19dd37",
-      "value": "Dieci colonne scoperte e quattro torri compatte premiano una pianificazione attenta per seme."
-    },
     "howToPlay": {
       "hash": "1342469d",
       "value": [
@@ -3042,10 +2698,6 @@
     }
   },
   "seer": {
-    "cardDescription": {
-      "hash": "6d0878cd",
-      "value": "Leggi un mazzo corto, completa otto previsioni e non lasciare che le pietre blocchino il tavolo."
-    },
     "howToPlay": {
       "hash": "3824f461",
       "value": [
@@ -3081,10 +2733,6 @@
     }
   },
   "shifting-sands": {
-    "cardDescription": {
-      "hash": "146a620a",
-      "value": "Raccogli sabbia, costruisci verso l'esterno senza cambiare direzione e crea un castello abbastanza solido da resistere all'alta marea."
-    },
     "howToPlay": {
       "hash": "91681187",
       "value": [
@@ -3121,10 +2769,6 @@
     }
   },
   "simple-simon": {
-    "cardDescription": {
-      "hash": "64c1cf9e",
-      "value": "Tutte le 52 carte partono scoperte su dieci colonne, in questo riflessivo parente del Ragno."
-    },
     "howToPlay": {
       "hash": "c280dcc9",
       "value": [
@@ -3151,10 +2795,6 @@
     }
   },
   "sir-tommy": {
-    "cardDescription": {
-      "hash": "980ec70d",
-      "value": "Il capostipite dei solitari: smista il mazzo su quattro pile per formare quattro pile dall'Asso al Re."
-    },
     "howToPlay": {
       "hash": "95c0ca0b",
       "value": [
@@ -3187,10 +2827,6 @@
     }
   },
   "sly-fox": {
-    "cardDescription": {
-      "hash": "77dd0eeb",
-      "value": "Nascondi ogni distribuzione di venti carte in venti pile di riserva, poi ritrova quello che hai nascosto."
-    },
     "howToPlay": {
       "hash": "cd900ba6",
       "value": [
@@ -3220,10 +2856,6 @@
     }
   },
   "somnus": {
-    "cardDescription": {
-      "hash": "317aad94",
-      "value": "Costruisci il mazzo dei guardiani di Alice, sconfiggi gli incubi del mazzo dei sogni e proteggi la sua vita."
-    },
     "howToPlay": {
       "hash": "fc9dcb5c",
       "value": [
@@ -3266,10 +2898,6 @@
     }
   },
   "spider-solitaire": {
-    "cardDescription": {
-      "hash": "d9fbe47f",
-      "value": "Costruisci sequenze dello stesso seme dal Re all'Asso in un intricato doppio mazzo."
-    },
     "howToPlay": {
       "hash": "349fc938",
       "value": [
@@ -3298,10 +2926,6 @@
     }
   },
   "spiderette": {
-    "cardDescription": {
-      "hash": "f8691a69",
-      "value": "Un Ragno compatto a un solo mazzo, giocato su sette colonne disposte come nel Klondike."
-    },
     "howToPlay": {
       "hash": "07143aa9",
       "value": [
@@ -3328,10 +2952,6 @@
     }
   },
   "stalker": {
-    "cardDescription": {
-      "hash": "bf48bf06",
-      "value": "Mantieni il tuo precario vantaggio su un inseguitore inarrestabile."
-    },
     "howToPlay": {
       "hash": "304772d4",
       "value": [
@@ -3366,10 +2986,6 @@
     }
   },
   "sultan": {
-    "cardDescription": {
-      "hash": "e649013d",
-      "value": "Innalza otto fondazioni reali finché il Sultano al centro è circondato dalle Donne."
-    },
     "howToPlay": {
       "hash": "9b72d9f3",
       "value": [
@@ -3401,10 +3017,6 @@
     }
   },
   "ten-twenty-thirty": {
-    "cardDescription": {
-      "hash": "5aef36ef",
-      "value": "Distribuisci una fila sempre più lunga e togli gruppi di carte che fanno 10, 20 o 30."
-    },
     "howToPlay": {
       "hash": "03753ddd",
       "value": [
@@ -3432,10 +3044,6 @@
     }
   },
   "terrace": {
-    "cardDescription": {
-      "hash": "adb8e1e5",
-      "value": "Scegli il valore delle fondazioni, poi svuota una lunga terrazza di carte prima che finisca il mazzo."
-    },
     "howToPlay": {
       "hash": "885ccd26",
       "value": [
@@ -3472,10 +3080,6 @@
     }
   },
   "three-peaks": {
-    "cardDescription": {
-      "hash": "575e4a8f",
-      "value": "Svuota i tre picchi giocando carte di un valore sopra o sotto il pozzo."
-    },
     "howToPlay": {
       "hash": "6c8edb31",
       "value": [
@@ -3499,10 +3103,6 @@
     }
   },
   "thumb-and-pouch": {
-    "cardDescription": {
-      "hash": "c3b2dd00",
-      "value": "Un Klondike flessibile in cui le carte evitano il proprio seme e qualsiasi carta riempie un vuoto."
-    },
     "howToPlay": {
       "hash": "9a483acf",
       "value": [
@@ -3529,10 +3129,6 @@
     }
   },
   "tower-of-hanoi": {
-    "cardDescription": {
-      "hash": "d44cd598",
-      "value": "Ricomponi tutte e nove le carte in un'unica torre decrescente spostando solo le carte in cima."
-    },
     "howToPlay": {
       "hash": "441fdb6b",
       "value": [
@@ -3559,10 +3155,6 @@
     }
   },
   "triple-stack": {
-    "cardDescription": {
-      "hash": "ccdd2c75",
-      "value": "Servi panini scegliendo carte a intervalli regolari; non restare senza ingredienti!"
-    },
     "howToPlay": {
       "hash": "882965ff",
       "value": [
@@ -3593,10 +3185,6 @@
     }
   },
   "twelve-trials": {
-    "cardDescription": {
-      "hash": "6c6923c8",
-      "value": "Sconfiggi dodici mostri del dungeon pianificando con strategia i tuoi attacchi."
-    },
     "howToPlay": {
       "hash": "c8d9dd27",
       "value": [
@@ -3640,10 +3228,6 @@
     }
   },
   "waypoint": {
-    "cardDescription": {
-      "hash": "ae467716",
-      "value": "Cambia marcia in tre tappe di rally, centra esattamente ogni settore e resta davanti al cronometro."
-    },
     "howToPlay": {
       "hash": "7bb3bc13",
       "value": [
@@ -3692,10 +3276,6 @@
     }
   },
   "westcliff": {
-    "cardDescription": {
-      "hash": "63e50d5a",
-      "value": "Un ampio parente del Klondike a dieci colonne, con molta libertà sulle colonne vuote."
-    },
     "howToPlay": {
       "hash": "3b649110",
       "value": [
@@ -3723,10 +3303,6 @@
     }
   },
   "whitehead": {
-    "cardDescription": {
-      "hash": "38b3a363",
-      "value": "Un parente scoperto del Klondike, costruito per colore, in cui le sequenze dello stesso seme si spostano insieme."
-    },
     "howToPlay": {
       "hash": "60370154",
       "value": [
@@ -3753,10 +3329,6 @@
     }
   },
   "windmill": {
-    "cardDescription": {
-      "hash": "5828d1de",
-      "value": "Porta quattro sequenze complete al centro del mulino mentre gli angoli scendono dai Re."
-    },
     "howToPlay": {
       "hash": "f5a3d316",
       "value": [
@@ -3787,10 +3359,6 @@
     }
   },
   "yukon": {
-    "cardDescription": {
-      "hash": "81c89142",
-      "value": "Il Klondike senza freni: sposta interi gruppi di carte, in qualsiasi ordine, tra le colonne."
-    },
     "howToPlay": {
       "hash": "e8b97b81",
       "value": [

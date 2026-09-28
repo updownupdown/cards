@@ -28,8 +28,6 @@ export const terrace: GameDefinition = {
   gameColorDark: "#2c3440",
   gameColorPale: "#e6eef8",
   cardBack: CardBackColors.Ocean,
-  cardDescription:
-    "Choose the foundation rank, then clear a long terrace of cards before the stock runs out.",
   quickStart: [
     "Tap one of the four highlighted cards to choose the foundation rank.",
     "Foundations build up in alternating colors, wrapping from King to Ace.",

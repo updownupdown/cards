@@ -26,8 +26,6 @@ export const pickpocket: GameDefinition = {
   gameColorDark: "#2b1b22",
   gameColorPale: "#f2dcc4",
   cardBack: CardBackColors.Burgundy,
-  cardDescription:
-    "Work the royal ball for coins, reading each row and column to tell where the court cards stand.",
   quickStart: [
     "Flip cards: Aces, Twos and Threes multiply your purse.",
     "Each row and column shows its coin total and how many court cards it hides.",

@@ -29,8 +29,6 @@ export const cribbageSquares: GameDefinition = {
   gameColorDark: "#15221c",
   gameColorPale: "#d6f0ec",
   cardBack: CardBackColors.Forest,
-  cardDescription:
-    "Build sixteen connected cards, then score every row and column with a starter card.",
   quickStart: [
     "Place each card beside another card in the grid.",
     'A "starter" card is revealed after all sixteen are placed.',

@@ -26,8 +26,6 @@ export const klondike: GameDefinition = {
   gameColorDark: "#2c3a36",
   gameColorPale: "#EEF0FF",
   cardBack: CardBackColors.Bicycle,
-  cardDescription:
-    "The classic solitaire: build four suit foundations from Ace to King.",
   quickStart: [
     "Build foundations up by suit.",
     "Build tableau down by alternating color.",

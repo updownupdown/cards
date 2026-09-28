@@ -27,8 +27,6 @@ export const sultan: GameDefinition = {
   gameColorDark: "#362d2a",
   gameColorPale: "#f0dfbd",
   cardBack: CardBackColors.Copper,
-  cardDescription:
-    "Raise eight royal foundations until the central Sultan is surrounded by Queens.",
   quickStart: [
     "Build the eight outer foundations upward by suit to Queens.",
     "Play from the waste or any of eight reserve cards.",

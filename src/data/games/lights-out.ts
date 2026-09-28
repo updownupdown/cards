@@ -25,8 +25,6 @@ export const lightsOut: GameDefinition = {
   gameColorDark: "#2b2117",
   gameColorPale: "#fdf3e8",
   cardBack: CardBackColors.Charcoal,
-  cardDescription:
-    "Extinguish a grid of cards where every move flips its neighbors.",
   quickStart: [
     "Tap a card to flip it and its orthogonal neighbors.",
     "Turn every card face down to win.",

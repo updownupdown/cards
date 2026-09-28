@@ -25,8 +25,6 @@ export const pocketPoker: GameDefinition = {
   gameColorDark: "#142e1f",
   gameColorPale: "#fff5bd",
   cardBack: CardBackColors.Moss,
-  cardDescription:
-    "A pocket poker duel: draw, bet, and out-rank an opponent dealt from the same deck.",
   quickStart: [
     "Build a poker hand, then bet.",
     "Bigger bets make your rival draw more cards.",

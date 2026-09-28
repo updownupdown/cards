@@ -23,8 +23,6 @@ export const kingAlbert: GameDefinition = {
   gameColorDark: "#2f3d35",
   gameColorPale: "#e9e7d3",
   cardBack: CardBackColors.Pine,
-  cardDescription:
-    "Every card is dealt face up: nine columns, a small reserve, and one card moved at a time.",
   quickStart: [
     "Move every card to the four foundations by suit, from A to K.",
     "Build down in alternating colors, one card at a time.",

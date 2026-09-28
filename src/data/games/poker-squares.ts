@@ -29,8 +29,6 @@ export const pokerSquares: GameDefinition = {
   gameColorDark: "#112c1f",
   gameColorPale: "#fff4ce",
   cardBack: CardBackColors.Moss,
-  cardDescription:
-    "Build ten poker hands within a grid to achieve the highest score possible.",
   quickStart: [
     "Place each dealt card carefully; rows and columns score poker hands.",
   ],

@@ -113,18 +113,17 @@ export function DealMeAGame({
       }}
     >
       <View style={{ paddingHorizontal: pageSidePadding }}>
-        <SectionTitle>{t("deal.title")}</SectionTitle>
+        <SectionTitle
+          action={
+            <Text size="xs" weight={300} color={theme.dim}>
+              {t("deal.intro")}
+            </Text>
+          }
+        >
+          {t("deal.title")}
+        </SectionTitle>
       </View>
-      <View
-        style={{
-          paddingHorizontal: pageSidePadding,
-          gap: spacing(14),
-        }}
-      >
-        <Text size="sm" weight={300} color={theme.dim}>
-          {t("deal.intro")}
-        </Text>
-
+      <View style={{ paddingHorizontal: pageSidePadding }}>
         <View
           onLayout={(event) => setCardWidth(event.nativeEvent.layout.width)}
           style={{
@@ -265,7 +264,6 @@ function DealtCard({
           <HomeCard
             path={path}
             game={game}
-            size="large"
             isFavorite={isFavorite}
             // Keeps its usual drop shadow, which parts the cards in the stack.
             style={{ width: "100%", height }}

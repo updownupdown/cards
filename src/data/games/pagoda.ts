@@ -26,8 +26,6 @@ export const pagoda: GameDefinition = {
   gameColorDark: "#1b2420",
   gameColorPale: "#e6efe9",
   cardBack: CardBackColors.Charcoal,
-  cardDescription:
-    "Take cards from the tiers of the pagoda, and offer every three of a kind at the shrine.",
   quickStart: [
     "Tap an uncovered card to move it into your tray.",
     "Three cards of the same rank in the tray are offered at the shrine.",

@@ -24,8 +24,6 @@ export const bowling: GameDefinition = {
   gameColorDark: "#331e0f",
   gameColorPale: "#a9e9f1",
   cardBack: CardBackColors.Forest,
-  cardDescription:
-    "Bowl a full game of 10-pin using cards, chasing strikes and spares.",
   quickStart: [
     "Pick a ball card, and 1 to 3 adjacent pins cards.",
     "The ball can be thrown if the last digits match.",

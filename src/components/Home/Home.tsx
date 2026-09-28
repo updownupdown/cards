@@ -127,7 +127,6 @@ export default function Home() {
   const { settings, updateSettings } = useGlobalSettings();
   // Set by the Campaign tab while the map is open; the UFO itself is drawn here.
   const [ufo, setUfo] = useState<UfoRequest | null>(null);
-  const cardSize = settings.discoverCardSize ?? "large";
 
   const [containerHeight, setContainerHeight] = useState(0);
 
@@ -161,6 +160,14 @@ export default function Home() {
   const onInvalidateHomeData = () => {
     setHomeDataRefreshToken((current) => current + 1);
   };
+
+  // Home stays mounted under a game, so what was played or starred there is
+  // read again on the way back.
+  const wasFocused = useRef(isFocused);
+  useEffect(() => {
+    if (isFocused && !wasFocused.current) onInvalidateHomeData();
+    wasFocused.current = isFocused;
+  }, [isFocused]);
 
   useEffect(() => {
     // Delay rendering heavy components so the UI can mount and fade in first.

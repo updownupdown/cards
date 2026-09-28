@@ -26,8 +26,6 @@ export const cruel: GameDefinition = {
   gameColorDark: "#2c1919",
   gameColorPale: "#f7e0da",
   cardBack: CardBackColors.Burgundy,
-  cardDescription:
-    "Twelve open piles, no stock, and a redeal that reshapes everything you built.",
   quickStart: [
     "Build foundations up by suit from the Aces.",
     "Move top cards down by suit; spaces stay empty.",

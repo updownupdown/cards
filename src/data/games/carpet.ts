@@ -25,8 +25,6 @@ export const carpet: GameDefinition = {
   gameColorDark: "#2b1a14",
   gameColorPale: "#f6dcc0",
   cardBack: CardBackColors.Terracotta,
-  cardDescription:
-    "Lift a twenty-card carpet onto the foundations as the stock patches every gap.",
   quickStart: [
     "Build foundations up by suit from the Aces.",
     "Tap a carpet or waste card to send it up.",

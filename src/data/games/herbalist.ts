@@ -26,8 +26,6 @@ export const herbalist: GameDefinition = {
   gameColorDark: "#1b3a1f",
   gameColorPale: "#edffba",
   cardBack: CardBackColors.Olive,
-  cardDescription:
-    "Distribute herbs across your stables to heal all the resident creatures.",
   quickStart: [
     "Select a stack of herbs, and distribute them to the adjacent locations, one at a time.",
     "Heal Js, Qs, and Ks in order, using herb stacks of the same value (11, 12, and 13).",

@@ -25,8 +25,6 @@ export const beehive: GameDefinition = {
   gameColorDark: "#1e2b16",
   gameColorPale: "#f4f9d3",
   cardBack: CardBackColors.Honey,
-  cardDescription:
-    "Clear four-card sets from six same-rank tableau slots using the beehive, waste, and stock.",
   quickStart: [
     "Match cards by rank and clear every four-card set.",
     "Tap a beehive or waste card to place it automatically.",

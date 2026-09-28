@@ -6,7 +6,7 @@ import {
   winRateColor,
   type StatsRow,
 } from "@/components/Home/StatsList";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors, rgba, theme } from "@/styles/styles";
 import type { GameSettingsMap, GameStats } from "@/data/game-menu";
 import { describe, expect, jest, test } from "@jest/globals";
 import React from "react";
@@ -69,29 +69,26 @@ jest.mock("@/components/Button/Button", () => {
   };
 });
 
-jest.mock("@/components/Home/HomeCard", () => {
+jest.mock("@/components/Home/HomeArt", () => {
   const { Pressable } =
     require("react-native") as typeof import("react-native"); // eslint-disable-line @typescript-eslint/no-require-imports
   return {
-    HomeCard: ({
+    GameTile: ({
       path,
       size,
-      style,
       isFavorite,
       onToggleFavorite,
       onOpen,
     }: {
       path: string;
-      size: string;
-      style: object;
+      size: number;
       isFavorite: boolean;
       onToggleFavorite: (path: string) => void;
       onOpen?: () => void;
     }) => (
       <Pressable
         accessibilityLabel={`card ${path}`}
-        accessibilityHint={size}
-        style={style}
+        style={{ width: size }}
         accessibilityState={{ selected: isFavorite }}
         onLongPress={() => onToggleFavorite(path)}
         onPress={() => {
@@ -423,12 +420,11 @@ describe("StatsList", () => {
     expect(all.some((text) => text.includes("personas.title"))).toBe(false);
   });
 
-  test("each award uses a medium home card that can be favourited", () => {
+  test("each award shows the game's tile, which can be favourited", () => {
     const onToggleFavorite = jest.fn();
     const renderer = renderList(settingsMap, jest.fn(), onToggleFavorite);
     // Awards: Bravo (comfort), Alpha (nemesis), Charlie (whale).
     const bravo = findByLabel(renderer, "card /bravo");
-    expect(bravo.props.accessibilityHint).toBe("medium");
     expect(bravo.props.accessibilityState).toEqual({ selected: true });
     expect(
       findByLabel(renderer, "card /charlie").props.accessibilityState,
@@ -500,7 +496,7 @@ describe("StatsList", () => {
       renderer.root.findAll(
         (node) =>
           typeof node.props.onLayout === "function" &&
-          node.props.style?.backgroundColor === Colors.K875,
+          node.props.style?.backgroundColor === theme.surface,
       )[0];
 
     act(() => header().props.onLayout({ nativeEvent: { layout: { y: 300 } } }));

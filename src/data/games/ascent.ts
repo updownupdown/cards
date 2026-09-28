@@ -25,8 +25,6 @@ export const ascent: GameDefinition = {
   gameColorDark: "#2a3b4d",
   gameColorPale: "#e8f2ff",
   cardBack: CardBackColors.Bicycle,
-  cardDescription:
-    "A solo climbing game: play ever-higher routes to reach three camps before the deck runs out.",
   quickStart: [
     'Build progressively "higher" routes to empty your hand and reach a camp.',
     "Resting resets your hand but increases fatigue.",

@@ -27,8 +27,6 @@ export const missMilligan: GameDefinition = {
   gameColorDark: "#3a2a33",
   gameColorPale: "#f6e6ee",
   cardBack: CardBackColors.Rose,
-  cardDescription:
-    "Start from eight lone cards and deal a row onto every column whenever you are ready.",
   quickStart: [
     "Build eight foundations up by suit, from A to K.",
     "Build columns down in alternating colors; move built runs.",

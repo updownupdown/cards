@@ -26,8 +26,6 @@ export const ebbAndFlow: GameDefinition = {
   gameColorDark: "#1a2430",
   gameColorPale: "#dfe9f0",
   cardBack: CardBackColors.Navy,
-  cardDescription:
-    "Play your whole deck onto two rising and two falling piles, at least two cards a turn.",
   quickStart: [
     "Play cards from your hand: rising piles go up, falling piles go down.",
     "Play at least two cards, then tap the deck to draw back up.",

@@ -26,8 +26,6 @@ export const accordion: GameDefinition = {
   gameColorDark: "#351219",
   gameColorPale: "#fffccf",
   cardBack: CardBackColors.Terracotta,
-  cardDescription:
-    "Collapse the whole deck into a single pile, matching adjacent suits or ranks one at a time.",
   quickStart: [
     "Collapse the whole deck into a single pile.",
     "Card can be moved 1 or 3 spots to their left, onto cards of matching suit or rank.",

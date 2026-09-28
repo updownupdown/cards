@@ -26,8 +26,6 @@ export const beleagueredCastle: GameDefinition = {
   gameColorDark: "#2e2620",
   gameColorPale: "#f0e2c4",
   cardBack: CardBackColors.Slate,
-  cardDescription:
-    "Storm the castle: build every suit up from Ace to King with open tableau play.",
   quickStart: [
     "Build all foundations, up by suit, from A to K.",
     "Build columns down by rank, regardless of suit, one card at a time.",

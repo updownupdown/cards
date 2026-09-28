@@ -26,8 +26,6 @@ export const cafeQueue: GameDefinition = {
   gameColorDark: "#2b1c29",
   gameColorPale: "#eed5a0",
   cardBack: CardBackColors.Walnut,
-  cardDescription:
-    "A push-your-luck game where you must manage ordered queues of customers.",
   quickStart: [
     "Select a queue position for the next customer.",
     "Queues must remain in descending order of rank.",

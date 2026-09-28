@@ -25,8 +25,6 @@ export const twelveTrials: GameDefinition = {
   gameColorDark: "#352820",
   gameColorPale: "#fff6dc",
   cardBack: CardBackColors.Terracotta,
-  cardDescription:
-    "Defeat twelve dungeon monsters by strategically planning your attacks.",
   quickStart: [
     "Defeat each monster with three cards (cards can be played across turns).",
     "The first two cards must add to (or exceed) the monster's rank.",

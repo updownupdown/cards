@@ -21,8 +21,6 @@ export const bisley: GameDefinition = {
   gameColorDark: "#30343a",
   gameColorPale: "#e8e1d3",
   cardBack: CardBackColors.Slate,
-  cardDescription:
-    "Build each suit from both ends while thirteen open columns tighten around you.",
   quickStart: [
     "Build Ace foundations up and King foundations down by suit.",
     "Build tableau one rank up or down in the same suit.",

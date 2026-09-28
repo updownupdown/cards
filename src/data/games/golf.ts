@@ -25,8 +25,6 @@ export const golf: GameDefinition = {
   gameColorDark: "#1d301e",
   gameColorPale: "#f2fccc",
   cardBack: CardBackColors.Crimson,
-  cardDescription:
-    "Clear seven columns by playing cards one rank away from the waste.",
   quickStart: [
     "Clear all cards to win.",
     "Clear exposed cards that are 1 rank above or below the top waste card.",

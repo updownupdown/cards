@@ -25,8 +25,6 @@ export const easthaven: GameDefinition = {
   gameColorDark: "#203638",
   gameColorPale: "#dcefed",
   cardBack: CardBackColors.Teal,
-  cardDescription:
-    "Build seven compact columns, then deal each new stock row straight onto the tableau.",
   quickStart: [
     "Build foundations up by suit.",
     "Build tableau down in alternating colors.",

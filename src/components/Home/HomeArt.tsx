@@ -1,6 +1,6 @@
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
-import { ActionButton, hairline, Kicker } from "@/components/ui/Nocturne";
+import { ActionButton, hairline } from "@/components/ui/Nocturne";
 import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
 import type { GameMenuInfo } from "@/data/games-data";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
@@ -11,7 +11,8 @@ import { rgba, theme } from "@/styles/styles";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import type { Href } from "expo-router";
-import { Pressable, ScrollView, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { FavButton } from "./FavButton";
 import { useTabReadyImage } from "./TabReady";
 
 export function gameArt(game: GameMenuInfo) {
@@ -24,50 +25,97 @@ export function useGameCategory() {
   return (game: GameMenuInfo) => t(`tags.${game.tags[0]}`);
 }
 
-/** A game on a shelf: its art, and its name underneath. */
-export function ArtTile({
+/** The dark fade at the foot of a picture, so its caption reads. */
+export function ArtFade({ from = 0.35 }: { from?: number }) {
+  return (
+    <LinearGradient
+      colors={[rgba(theme.night, 0), rgba(theme.night, 0.9)]}
+      locations={[from, 1]}
+      style={StyleSheet.absoluteFill}
+    />
+  );
+}
+
+/**
+ * A game as a square of its art, its name over a fade at the foot and a
+ * favourite star in the corner. The star sits beside the pressable art rather
+ * than inside it, since a button can't hold another button.
+ */
+export function GameTile({
   path,
   game,
-  width,
+  size,
+  isFavorite,
+  onToggleFavorite,
+  onOpen,
 }: {
   path: string;
   game: GameMenuInfo;
-  width: number;
+  size: number;
+  isFavorite?: boolean;
+  onToggleFavorite?: (path: string) => void;
+  /** Called as the game launches (a modal can close). */
+  onOpen?: () => void;
 }) {
   const { spacing } = useResponsiveMetrics();
   const language = useDisplayLanguage();
-  const category = useGameCategory();
   const source = gameArt(game);
   const ready = useTabReadyImage(source);
+  const title = localizeGameTitle(game, path, language);
   return (
-    <Pressable
-      onPress={() => launchGame(path as Href)}
-      accessibilityRole="button"
-      style={{ width, gap: spacing(8) }}
+    <View
+      style={{
+        width: size,
+        height: size,
+        borderRadius: spacing(10),
+        overflow: "hidden",
+        backgroundColor: game.gameColorDark,
+        borderWidth: 1,
+        borderColor: hairline(),
+      }}
     >
-      <Image
-        source={source}
-        cachePolicy="memory"
-        contentFit="cover"
-        style={{
-          width,
-          height: width * 1.25,
-          borderRadius: spacing(6),
-          borderWidth: 1,
-          borderColor: hairline(),
-          backgroundColor: game.gameColorDark,
+      <Pressable
+        onPress={() => {
+          onOpen?.();
+          launchGame(path as Href);
         }}
-        {...ready}
-      />
-      <View style={{ gap: spacing(2) }}>
-        <Text size="sm" weight={500} numberOfLines={1}>
-          {localizeGameTitle(game, path, language)}
-        </Text>
-        <Text size="xxs" weight={300} color={theme.dim} numberOfLines={1}>
-          {category(game)}
-        </Text>
-      </View>
-    </Pressable>
+        accessibilityRole="button"
+        accessibilityLabel={title}
+        style={StyleSheet.absoluteFill}
+      >
+        <Image
+          source={source}
+          cachePolicy="memory"
+          contentFit="cover"
+          style={StyleSheet.absoluteFill}
+          {...ready}
+        />
+        <ArtFade from={0.4} />
+        <View
+          style={{
+            marginTop: "auto",
+            paddingHorizontal: spacing(10),
+            paddingBottom: spacing(9),
+          }}
+        >
+          <Text size="md" weight={500} lineHeight={1.15} numberOfLines={2}>
+            {title}
+          </Text>
+        </View>
+      </Pressable>
+      {onToggleFavorite && (
+        <FavButton
+          style={{ position: "absolute", top: 0, right: 0 }}
+          isFavorite={!!isFavorite}
+          onToggleFavorite={() => onToggleFavorite(path)}
+          size={spacing(36)}
+          iconSize={spacing(20)}
+          activeColor={theme.accent}
+          inactiveColor={theme.ink}
+          backdrop
+        />
+      )}
+    </View>
   );
 }
 
@@ -75,9 +123,13 @@ export function ArtTile({
 export function ArtShelf({
   games,
   pageSidePadding,
+  favorites,
+  onToggleFavorite,
 }: {
   games: HomeGameEntry[];
   pageSidePadding: number;
+  favorites: Set<string>;
+  onToggleFavorite: (path: string) => void;
 }) {
   const { spacing } = useResponsiveMetrics();
   return (
@@ -86,81 +138,144 @@ export function ArtShelf({
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{
         paddingHorizontal: pageSidePadding,
-        gap: spacing(14),
+        gap: spacing(12),
       }}
     >
       {games.map(([path, game]) => (
-        <ArtTile key={path} path={path} game={game} width={spacing(112)} />
+        <GameTile
+          key={path}
+          path={path}
+          game={game}
+          size={spacing(140)}
+          isFavorite={favorites.has(path)}
+          onToggleFavorite={onToggleFavorite}
+        />
       ))}
     </ScrollView>
   );
 }
 
-/** The last game played, large, to pick up again. */
-export function ContinueCard({
+/**
+ * The games played last, to pick up again: the latest large, with a Resume
+ * button, and the ones before at half its width. The first card leaves the
+ * next one peeking in, so the row reads as one that scrolls.
+ */
+export function ContinueShelf({
+  games,
+  pageSidePadding,
+  pageWidth,
+}: {
+  games: HomeGameEntry[];
+  pageSidePadding: number;
+  /** The width the shelf is laid out in, padding included. */
+  pageWidth: number;
+}) {
+  const { spacing } = useResponsiveMetrics();
+  const gap = spacing(12);
+  const innerWidth = pageWidth - pageSidePadding * 2;
+  const firstWidth =
+    games.length > 1 ? Math.round(innerWidth * 0.74) : innerWidth;
+  const height = spacing(200);
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{ paddingHorizontal: pageSidePadding, gap }}
+    >
+      {games.map(([path, game], index) => (
+        <ContinueCard
+          key={path}
+          path={path}
+          game={game}
+          width={index === 0 ? firstWidth : Math.round(firstWidth / 2)}
+          height={height}
+          latest={index === 0}
+        />
+      ))}
+    </ScrollView>
+  );
+}
+
+function ContinueCard({
   path,
   game,
+  width,
+  height,
+  latest,
 }: {
   path: string;
   game: GameMenuInfo;
+  width: number;
+  height: number;
+  /** The last game played: a larger title and a Resume button. */
+  latest: boolean;
 }) {
   const { t } = useTranslation("home");
   const { spacing } = useResponsiveMetrics();
   const language = useDisplayLanguage();
-  const category = useGameCategory();
   const source = gameArt(game);
   const ready = useTabReadyImage(source);
-  const radius = spacing(18);
+  const title = localizeGameTitle(game, path, language);
+  const open = () => launchGame(path as Href);
   return (
-    <Pressable
-      onPress={() => launchGame(path as Href)}
-      accessibilityRole="button"
+    <View
       style={{
-        borderRadius: radius,
+        width,
+        height,
+        borderRadius: spacing(16),
         overflow: "hidden",
-        aspectRatio: 16 / 11,
         backgroundColor: game.gameColorDark,
         borderWidth: 1,
         borderColor: hairline(),
       }}
     >
-      <Image
-        source={source}
-        cachePolicy="memory"
-        contentFit="cover"
-        style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
-        {...ready}
-      />
-      <LinearGradient
-        colors={[rgba(theme.night, 0), rgba(theme.night, 0.92)]}
-        locations={[0.35, 1]}
-        style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
-      />
-      <View
-        style={{
-          marginTop: "auto",
-          padding: spacing(16),
-          flexDirection: "row",
-          alignItems: "flex-end",
-          gap: spacing(12),
-        }}
+      <Pressable
+        onPress={open}
+        accessibilityRole="button"
+        accessibilityLabel={title}
+        style={StyleSheet.absoluteFill}
       >
-        <View style={{ flex: 1, gap: spacing(6) }}>
-          <Kicker>{t("sections.continue")}</Kicker>
-          <Text weight={500} size="xxl" numberOfLines={1}>
-            {localizeGameTitle(game, path, language)}
-          </Text>
-          <Text size="xs" weight={300} color={theme.dim} numberOfLines={1}>
-            {category(game)}
+        <Image
+          source={source}
+          cachePolicy="memory"
+          contentFit="cover"
+          style={StyleSheet.absoluteFill}
+          {...ready}
+        />
+        <ArtFade from={latest ? 0.35 : 0.45} />
+        <View
+          style={{
+            marginTop: "auto",
+            padding: spacing(latest ? 16 : 12),
+            // Clears the Resume button, which sits beside this.
+            paddingBottom: latest
+              ? spacing(16) + spacing(38) + spacing(10)
+              : undefined,
+          }}
+        >
+          <Text
+            weight={500}
+            size={latest ? "xxl" : "md"}
+            lineHeight={1.15}
+            numberOfLines={2}
+          >
+            {title}
           </Text>
         </View>
+      </Pressable>
+      {latest && (
         <ActionButton
           small
           iconName="play"
           label={t("sections.resume")}
-          onPress={() => launchGame(path as Href)}
+          onPress={open}
+          style={{
+            position: "absolute",
+            left: spacing(16),
+            bottom: spacing(16),
+          }}
         />
-      </View>
-    </Pressable>
+      )}
+    </View>
   );
 }

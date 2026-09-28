@@ -1,7 +1,8 @@
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Button } from "@/components/Button/Button";
 import { getScaledTextSize, Text } from "@/components/common/Text";
-import { HomeCard } from "@/components/Home/HomeCard";
+import { GameTile } from "@/components/Home/HomeArt";
+import { Caps, hairline } from "@/components/ui/Nocturne";
 import {
   formatPlayTime,
   getGameSettings,
@@ -407,22 +408,14 @@ export function StatsList({
           },
         ]}
       >
-        {isActive ? (
-          <Icon name={iconName} size={14} color={Colors.white} />
-        ) : null}
+        {isActive ? <Icon name={iconName} size={14} color={theme.ink} /> : null}
 
-        <Text
-          size="sm"
-          weight={500}
-          numberOfLines={1}
-          style={[
-            {
-              color: isActive ? Colors.white : Colors.K400,
-            },
-          ]}
+        <Caps
+          color={isActive ? theme.ink : theme.dim}
+          style={{ letterSpacing: spacing(0.8) }}
         >
           {label}
-        </Text>
+        </Caps>
       </Pressable>
     );
   };
@@ -538,7 +531,8 @@ export function StatsList({
         tableHeaderY.current = event.nativeEvent.layout.y;
       }}
       style={{
-        backgroundColor: Colors.K875,
+        // The modal's own colour, so the header reads as part of it.
+        backgroundColor: theme.surface,
         // Only while pinned, to show the rows are scrolling underneath.
         boxShadow: isHeaderStuck
           ? `0 ${spacing(6)}px ${spacing(8)}px -${spacing(4)}px ${rgba(Colors.black, 0.1875)}`
@@ -551,9 +545,9 @@ export function StatsList({
           {
             flexDirection: "row",
             alignItems: "center",
-            paddingVertical: 8,
-            borderBottomWidth: StyleSheet.hairlineWidth,
-            borderBottomColor: Colors.K750,
+            paddingVertical: spacing(10),
+            borderBottomWidth: 1,
+            borderBottomColor: hairline(),
           },
         ]}
       >
@@ -623,8 +617,8 @@ export function StatsList({
           flexDirection: "row",
           alignItems: "center",
           paddingTop: 8,
-          borderTopWidth: StyleSheet.hairlineWidth,
-          borderTopColor: Colors.K750,
+          borderTopWidth: 1,
+          borderTopColor: hairline(),
           marginTop: 4,
         }}
       >
@@ -727,8 +721,7 @@ function HeadlineStat({
   isGrid: boolean;
 }) {
   const { spacing, textScale } = useResponsiveMetrics();
-  const labelSize = getScaledTextSize("xxs", textScale) * 1.25;
-  const labelLineHeight = labelSize * 1.2;
+  const labelLineHeight = getScaledTextSize("xxs", textScale) * 1.4;
 
   return (
     <View
@@ -743,19 +736,16 @@ function HeadlineStat({
         {value}
       </Text>
       {/* Always two lines, so every label lines up: "games\nplayed". */}
-      <Text
-        weight={400}
-        color={Colors.K400}
+      <Caps
         numberOfLines={2}
         style={{
           textAlign: "center",
-          fontSize: labelSize,
           lineHeight: labelLineHeight,
           minHeight: labelLineHeight * 2,
         }}
       >
         {label.replace(" ", "\n")}
-      </Text>
+      </Caps>
     </View>
   );
 }
@@ -781,7 +771,6 @@ function PersonaCard({
 }) {
   const { spacing } = useResponsiveMetrics();
   const { t } = useTranslation("home");
-  const labelColor = rgba(game.gameColorPale, 0.6);
 
   return (
     <View
@@ -790,9 +779,10 @@ function PersonaCard({
         flexBasis: spacing(300),
         gap: spacing(12),
         padding: spacing(14.4),
-        borderRadius: spacing(10),
-        backgroundColor: Colors.K950,
-        boxShadow: `0 ${spacing(2)}px ${spacing(10)}px ${rgba(Colors.black, 0.25)}`,
+        borderRadius: spacing(14),
+        backgroundColor: rgba(theme.ink, 0.035),
+        borderWidth: 1,
+        borderColor: hairline(),
       }}
     >
       {/* Award name and rule */}
@@ -819,14 +809,13 @@ function PersonaCard({
 
       {/* Game card and stats */}
       <View style={[flexStyles.rowCentered, { gap: spacing(20) }]}>
-        <HomeCard
+        <GameTile
           path={row.path}
           game={game}
-          size="medium"
+          size={cardWidth}
           isFavorite={isFavorite}
           onToggleFavorite={onToggleFavorite}
           onOpen={onOpenGame}
-          style={{ width: cardWidth, flexShrink: 0 }}
         />
         <View
           style={{
@@ -839,26 +828,18 @@ function PersonaCard({
           <PersonaStat
             label={t("statsTab.columns.played")}
             value={row.stats.attempts}
-            color={game.gameColorPale}
-            labelColor={labelColor}
           />
           <PersonaStat
             label={t("statsTab.columns.won")}
             value={row.stats.wins}
-            color={game.gameColorPale}
-            labelColor={labelColor}
           />
           <PersonaStat
             label={t("statsTab.columns.lost")}
             value={row.stats.losses}
-            color={game.gameColorPale}
-            labelColor={labelColor}
           />
           <PersonaStat
             label={t("statsTab.columns.winPercent")}
             value={formatWinRate(row.stats.wins, row.stats.losses)}
-            color={game.gameColorPale}
-            labelColor={labelColor}
           />
         </View>
       </View>
@@ -869,13 +850,9 @@ function PersonaCard({
 function PersonaStat({
   label,
   value,
-  color,
-  labelColor,
 }: {
   label: string;
   value: string | number;
-  color: string;
-  labelColor: string;
 }) {
   // Half the width, so the four stats form a 2x2 grid, each centred in its
   // cell.
@@ -884,21 +861,12 @@ function PersonaStat({
       <Text
         size="md"
         weight={600}
-        color={color}
         lineHeight={1.1}
         style={{ textAlign: "center" }}
       >
         {value}
       </Text>
-      <Text
-        size="xs"
-        weight={400}
-        color={labelColor}
-        lineHeight={1.2}
-        style={{ textAlign: "center" }}
-      >
-        {label}
-      </Text>
+      <Caps style={{ textAlign: "center" }}>{label}</Caps>
     </View>
   );
 }

@@ -26,8 +26,6 @@ export const gremlin: GameDefinition = {
   gameColorDark: "#1c423f",
   gameColorPale: "#e7f5ce",
   cardBack: CardBackColors.Moss,
-  cardDescription:
-    "Build columns of cards in decreasing suit-matched sequences while managing unwanted help.",
   quickStart: [
     "Draw to 5, then play/discard/hold.",
     "Lose if a card can't be placed and all 12 columns are used.",

@@ -26,8 +26,6 @@ export const parallels: GameDefinition = {
   gameColorDark: "#1a1f24",
   gameColorPale: "#e3eaf0",
   cardBack: CardBackColors.Slate,
-  cardDescription:
-    "Stack parallel rows of two decks between Ace and King foundations, freeing cards from either edge.",
   quickStart: [
     "Move all 104 cards to the foundations. Build As up and Ks down by suit.",
     "With three or more rows, a card needs an open space above or below.",

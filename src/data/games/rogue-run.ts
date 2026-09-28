@@ -25,8 +25,6 @@ export const rogueRun: GameDefinition = {
   gameColorDark: "#292116",
   gameColorPale: "#faefe3",
   cardBack: CardBackColors.Burgundy,
-  cardDescription:
-    "A dungeon crawl where you manage weapon strength and potion usage.",
   quickStart: [
     "Resolve any 3 cards to clear a room. You can skip at most one room in a row.",
     "Equip weapons to increase damage. Reuse weapons on monsters of equal or lower value.",

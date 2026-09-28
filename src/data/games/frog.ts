@@ -27,8 +27,6 @@ export const frog: GameDefinition = {
   gameColorDark: "#15261b",
   gameColorPale: "#e2f5c6",
   cardBack: CardBackColors.Moss,
-  cardDescription:
-    "Hop two decks onto eight foundations, sorting the stock across five lily-pad piles.",
   quickStart: [
     "Build foundations up from A to K, regardless of suit.",
     "Tap a waste pile to drop the stock card on it.",

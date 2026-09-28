@@ -21,8 +21,6 @@ export const fortress: GameDefinition = {
   gameColorDark: "#302a24",
   gameColorPale: "#ead9b8",
   cardBack: CardBackColors.Walnut,
-  cardDescription:
-    "Maneuver ten open lanes up or down by suit to free every foundation.",
   quickStart: [
     "Build foundations up by suit from Ace to King.",
     "Build lanes one rank up or down in the same suit.",

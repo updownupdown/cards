@@ -27,8 +27,6 @@ export const jailbreak: GameDefinition = {
   gameColorDark: "#17211d",
   gameColorPale: "#d9eee3",
   cardBack: CardBackColors.Pine,
-  cardDescription:
-    "Match equal red and black totals to break the Joker through a wall.",
   quickStart: [
     "Expose one of the side walls to allow the Joker to escape.",
     "Clear cards by selecting exposed red and black cards with equal totals.",

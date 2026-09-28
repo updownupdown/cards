@@ -671,7 +671,10 @@ export function getGameSettings(
   const key = normalizeGamePath(pathname);
   const defaults = getDefaultGameSettings(key);
   const existing = map[key];
-  if (!existing) return defaults;
+  // A copy: callers change what they get back (toggleFavoriteGame flips
+  // isFavorite), which on the shared defaults made every game a favourite in
+  // memory and left the stored entry without one.
+  if (!existing) return { ...defaults, stats: { ...defaults.stats } };
 
   const merged = {
     ...defaults,

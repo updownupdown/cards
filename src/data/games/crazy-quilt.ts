@@ -26,8 +26,6 @@ export const crazyQuilt: GameDefinition = {
   gameColorDark: "#2c1d26",
   gameColorPale: "#fbe3ea",
   cardBack: CardBackColors.Rose,
-  cardDescription:
-    "Unpick a quilt of upright and sideways cards, one free end at a time.",
   quickStart: [
     "Move all 104 cards to the foundations.",
     "Build Aces up, and Kings down, by suit.",

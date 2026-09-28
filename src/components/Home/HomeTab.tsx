@@ -1,5 +1,5 @@
 import { Logo } from "@/components/common/Logo";
-import { ArtShelf, ContinueCard } from "@/components/Home/HomeArt";
+import { ArtShelf, ContinueShelf } from "@/components/Home/HomeArt";
 import { RoundButton, SectionTitle } from "@/components/ui/Nocturne";
 import { DealMeAGame } from "@/components/Home/DealMeAGame";
 import { GameOfTheDaySection } from "@/components/Home/GameOfTheDaySection";
@@ -111,7 +111,6 @@ export function HomeTab({
       {children}
     </View>
   );
-  const lastPlayed = jumpBackInGames[0];
 
   return (
     <View style={{ flex: 1 }}>
@@ -162,6 +161,8 @@ export function HomeTab({
             <ArtShelf
               games={localOnlyGames as HomeGameEntry[]}
               pageSidePadding={scaledPageSidePadding}
+              favorites={favorites}
+              onToggleFavorite={onToggleFavorite}
             />,
           )}
 
@@ -171,15 +172,19 @@ export function HomeTab({
             <ArtShelf
               games={easyGames}
               pageSidePadding={scaledPageSidePadding}
+              favorites={favorites}
+              onToggleFavorite={onToggleFavorite}
             />,
           )}
 
-        {lastPlayed &&
+        {jumpBackInGames.length > 0 &&
           section(
             t("sections.continue"),
-            <View style={{ paddingHorizontal: scaledPageSidePadding }}>
-              <ContinueCard path={lastPlayed[0]} game={lastPlayed[1]} />
-            </View>,
+            <ContinueShelf
+              games={jumpBackInGames}
+              pageSidePadding={scaledPageSidePadding}
+              pageWidth={renderedContentWidth}
+            />,
           )}
 
         {favoriteGames.length > 0 &&
@@ -188,6 +193,8 @@ export function HomeTab({
             <ArtShelf
               games={favoriteGames}
               pageSidePadding={scaledPageSidePadding}
+              favorites={favorites}
+              onToggleFavorite={onToggleFavorite}
             />,
           )}
 

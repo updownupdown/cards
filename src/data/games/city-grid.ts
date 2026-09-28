@@ -25,8 +25,6 @@ export const cityGrid: GameDefinition = {
   gameColorDark: "#383d4e",
   gameColorPale: "#e3f6ff",
   cardBack: CardBackColors.Bicycle,
-  cardDescription:
-    "A tile-laying game where each move can disrupt the precarious grid.",
   quickStart: [
     "Fill up the grid with all top cards facing up.",
     "Add to or beside existing piles, up to 4 cards tall.",

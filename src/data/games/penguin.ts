@@ -28,8 +28,6 @@ export const penguin: GameDefinition = {
   gameColorDark: "#111b27",
   gameColorPale: "#ff944d",
   cardBack: CardBackColors.Terracotta,
-  cardDescription:
-    "A FreeCell-like game building suit runs from a random beak rank.",
   quickStart: [
     "From the beak rank, build foundations up by suit and tableau down in suit.",
   ],

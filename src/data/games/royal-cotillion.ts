@@ -30,8 +30,6 @@ export const royalCotillion: GameDefinition = {
   gameColorDark: "#211a36",
   gameColorPale: "#f1e6ff",
   cardBack: CardBackColors.Violet,
-  cardDescription:
-    "Two decks dance up the foundations in steps of two, from Aces and from Twos.",
   quickStart: [
     "Move all 104 cards to the eight foundations, building by suit in steps of two.",
     "Aces build A, 3, 5... K, 2, 4... Q by suit.",

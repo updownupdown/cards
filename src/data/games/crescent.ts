@@ -22,8 +22,6 @@ export const crescent: GameDefinition = {
   gameColorDark: "#182334",
   gameColorPale: "#e5dfca",
   cardBack: CardBackColors.Navy,
-  cardDescription:
-    "Turn sixteen moonlit piles toward foundations growing from both Aces and Kings.",
   quickStart: [
     "Build Ace foundations up and King foundations down by suit.",
     "Build tableau one rank up or down in suit, wrapping Ace and King.",

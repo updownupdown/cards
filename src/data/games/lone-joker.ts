@@ -25,8 +25,6 @@ export const loneJoker: GameDefinition = {
   gameColorDark: "#111e35",
   gameColorPale: "#d8ffeb",
   cardBack: CardBackColors.Violet,
-  cardDescription:
-    "Build poker hands, bank wild Jokers, and spend excess points to survive escalating rounds.",
   quickStart: [
     "Select up to five cards to play poker hands (or discard).",
     "Meet the round target to survive to the next round.",

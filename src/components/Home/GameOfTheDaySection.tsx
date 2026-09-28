@@ -184,7 +184,6 @@ export function GameOfTheDaySection({
               <HomeCard
                 path={day.path}
                 game={GAMES_DATA[day.path]}
-                size="large"
                 onToggleFavorite={onToggleFavorite}
                 isFavorite={favorites.has(day.path)}
                 style={{ width: "100%" }}

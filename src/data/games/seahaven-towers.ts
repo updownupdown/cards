@@ -23,8 +23,6 @@ export const seahavenTowers: GameDefinition = {
   gameColorDark: "#173946",
   gameColorPale: "#dceff0",
   cardBack: CardBackColors.Teal,
-  cardDescription:
-    "Ten open columns and four compact towers reward careful same-suit planning.",
   quickStart: [
     "Build foundations up by suit from Ace to King.",
     "Build tableau down in the same suit.",

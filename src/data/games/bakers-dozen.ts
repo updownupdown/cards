@@ -27,7 +27,6 @@ export const bakersDozen: GameDefinition = {
   gameColorDark: "#253b36",
   gameColorPale: "#edf7e8",
   cardBack: CardBackColors.Ocean,
-  cardDescription: "Clear thirteen compact columns into four suit foundations.",
   quickStart: [
     "Build foundations up by suit from A to K.",
     "Build tableau columns down by rank, regardless of suit.",

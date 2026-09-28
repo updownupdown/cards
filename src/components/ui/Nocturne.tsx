@@ -53,6 +53,32 @@ export function Kicker({
   );
 }
 
+/**
+ * A small label in capitals, spaced out: ratings, stats and table headings.
+ * Dim by default; the Kicker is its accented sibling for section headings.
+ */
+export function Caps({
+  children,
+  color = theme.dim,
+  style,
+  ...props
+}: TextProps & { children: ReactNode }) {
+  const { spacing } = useResponsiveMetrics();
+  return (
+    <Text
+      size="xxs"
+      weight={500}
+      color={color}
+      textTransform="uppercase"
+      numberOfLines={1}
+      style={[{ letterSpacing: spacing(1.2) }, style]}
+      {...props}
+    >
+      {children}
+    </Text>
+  );
+}
+
 /** A page's title: Home, Odyssey, Gallery, Search. */
 export function PageTitle({ children }: { children: ReactNode }) {
   const { font } = useResponsiveMetrics();
@@ -167,13 +193,19 @@ export function SegmentBar({
   );
 }
 
-/** Three labelled meters: complexity, difficulty, luck. */
+/**
+ * Three labelled meters: complexity, difficulty, luck. Side by side, or
+ * stacked with the labels to the left where a card is too narrow for three
+ * labels in a row.
+ */
 export function RatingMeters({
   rating,
   labels,
+  stacked = false,
 }: {
   rating: { complexity: number; difficulty: number; luck: number };
   labels: { complexity: string; difficulty: string; luck: string };
+  stacked?: boolean;
 }) {
   const { spacing } = useResponsiveMetrics();
   const items = [
@@ -181,13 +213,30 @@ export function RatingMeters({
     [labels.difficulty, rating.difficulty],
     [labels.luck, rating.luck],
   ] as const;
+  if (stacked) {
+    return (
+      <View style={{ gap: spacing(7) }}>
+        {items.map(([label, value]) => (
+          <View
+            key={label}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: spacing(10),
+            }}
+          >
+            <Caps style={{ width: spacing(84) }}>{label}</Caps>
+            <Meter value={value / 100} style={{ flex: 1 }} />
+          </View>
+        ))}
+      </View>
+    );
+  }
   return (
     <View style={{ flexDirection: "row", gap: spacing(14) }}>
       {items.map(([label, value]) => (
         <View key={label} style={{ flex: 1, gap: spacing(6) }}>
-          <Text size="xxs" weight={400} color={theme.dim} numberOfLines={1}>
-            {label}
-          </Text>
+          <Caps>{label}</Caps>
           <Meter value={value / 100} />
         </View>
       ))}

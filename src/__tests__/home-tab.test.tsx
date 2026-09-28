@@ -102,9 +102,23 @@ jest.mock("@/components/Home/HomeCard", () => {
   };
 });
 
+// Shelves as stand-ins, one marker per card by path, like HomeCard's below.
+jest.mock("@/components/Home/HomeArt", () => {
+  const { View } = require("react-native") as typeof import("react-native"); // eslint-disable-line @typescript-eslint/no-require-imports
+  const Shelf = ({ games }: { games: [string][] }) => (
+    <View>
+      {games.map(([path]) => (
+        <View key={path} testID={`card ${path}`} />
+      ))}
+    </View>
+  );
+  return { ArtShelf: Shelf, ContinueShelf: Shelf };
+});
+
 jest.mock("@/hooks/useResponsiveMetrics", () => ({
   useResponsiveMetrics: () => ({
     spacing: (value: number) => value,
+    font: (value: number) => value,
     ui: { contentMaxWidth: 420, isTablet: false },
   }),
 }));
@@ -140,10 +154,10 @@ const GAMES: HomeGameEntry[] = [
   ...Array.from({ length: 7 }, (_, index) => entry(`/easy${index}`, index / 2)),
 ];
 
-function renderHomeTab(
-  overrides: Partial<React.ComponentProps<typeof HomeTab>> = {},
-) {
-  const props = {
+type HomeTabProps = React.ComponentProps<typeof HomeTab>;
+
+function homeTabProps(overrides: Partial<HomeTabProps> = {}): HomeTabProps {
+  return {
     allEnabledGames: GAMES,
     unplayedGamePaths: [],
     favorites: new Set<string>(),
@@ -155,9 +169,12 @@ function renderHomeTab(
     onScrolledChange: jest.fn(),
     ...overrides,
   };
+}
+
+function renderHomeTab(overrides: Partial<HomeTabProps> = {}) {
   let renderer!: ReactTestRenderer;
   act(() => {
-    renderer = create(<HomeTab {...props} />);
+    renderer = create(<HomeTab {...homeTabProps(overrides)} />);
   });
   return renderer;
 }
@@ -227,7 +244,7 @@ describe("Home tab", () => {
   test("the easy games stay, above both, while either has no games", () => {
     expect(sections(renderHomeTab({ recentPaths: ["/yukon"] }))).toEqual([
       "sections.easyGames",
-      "sections.jumpBackIn",
+      "sections.continue",
       "sections.gameOfTheDay",
     ]);
     expect(
@@ -245,13 +262,44 @@ describe("Home tab", () => {
       favorites: new Set(["/klondike"]),
     });
     expect(sections(renderer)).toEqual([
-      "sections.jumpBackIn",
+      "sections.continue",
       "sections.favorites",
       "sections.gameOfTheDay",
     ]);
   });
 
-  test("Jump back in shows the six most recent games, skipping removed ones", () => {
+  test("Favorites list the starred games by name, above Game of the Day", () => {
+    const renderer = renderHomeTab({
+      recentPaths: ["/yukon"],
+      favorites: new Set(["/spider", "/canfield", "/no-such-game"]),
+    });
+    const order = sections(renderer);
+    expect(order.indexOf("sections.favorites")).toBeLessThan(
+      order.indexOf("sections.gameOfTheDay"),
+    );
+    expect(cardsUnder(renderer, "sections.favorites")).toEqual([
+      "/canfield",
+      "/spider",
+    ]);
+  });
+
+  test("a game starred on Home shows under Favorites straight away", () => {
+    const renderer = renderHomeTab({ recentPaths: ["/yukon"] });
+    expect(sections(renderer)).not.toContain("sections.favorites");
+    act(() =>
+      renderer.update(
+        <HomeTab
+          {...homeTabProps({
+            recentPaths: ["/yukon"],
+            favorites: new Set(["/golf"]),
+          })}
+        />,
+      ),
+    );
+    expect(cardsUnder(renderer, "sections.favorites")).toEqual(["/golf"]);
+  });
+
+  test("Continue shows the six most recent games, skipping removed ones", () => {
     const renderer = renderHomeTab({
       recentPaths: [
         "/spider",
@@ -264,7 +312,7 @@ describe("Home tab", () => {
         "/pyramid",
       ],
     });
-    expect(cardsUnder(renderer, "sections.jumpBackIn")).toEqual([
+    expect(cardsUnder(renderer, "sections.continue")).toEqual([
       "/spider",
       "/klondike",
       "/golf",

@@ -27,7 +27,6 @@ export const apothecary: GameDefinition = {
   gameColorDark: "#1d2a2a",
   gameColorPale: "#dcefe6",
   cardBack: CardBackColors.Teal,
-  cardDescription: "Transfer cards between jars until all ranks are grouped.",
   quickStart: [
     "Fill every jar with four of a kind to seal it.",
     "Tap a jar, then tap where to pour its top cards.",

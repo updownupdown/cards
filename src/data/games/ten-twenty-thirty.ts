@@ -26,8 +26,6 @@ export const tenTwentyThirty: GameDefinition = {
   gameColorDark: "#132d35",
   gameColorPale: "#e1f5ff",
   cardBack: CardBackColors.Navy,
-  cardDescription:
-    "Deal a growing line and clear runs of cards that total 10, 20 or 30.",
   quickStart: [
     "Discard all 52 cards by removing adjacent runs totaling 10, 20 or 30.",
     "Tap the stock to add a card to the end of the line.",

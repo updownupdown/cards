@@ -23,8 +23,6 @@ export const laBelleLucie: GameDefinition = {
   gameColorDark: "#28352d",
   gameColorPale: "#f5dce4",
   cardBack: CardBackColors.Rose,
-  cardDescription:
-    "Uncover a compact field of fans, with two reshuffles to loosen the knots.",
   quickStart: [
     "Build foundations up by suit from A to K.",
     "Build fans down by suit, moving one exposed card at a time.",

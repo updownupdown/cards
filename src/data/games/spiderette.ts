@@ -23,8 +23,6 @@ export const spiderette: GameDefinition = {
   gameColorDark: "#202e27",
   gameColorPale: "#dae6cf",
   cardBack: CardBackColors.Rose,
-  cardDescription:
-    "A compact single-deck Spider played across seven Klondike-shaped columns.",
   quickStart: [
     "Remove four complete suited runs from King to Ace.",
     "Build down by rank and move descending same-suit runs.",

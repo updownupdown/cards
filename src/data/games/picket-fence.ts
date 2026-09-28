@@ -31,8 +31,6 @@ export const picketFence: GameDefinition = {
   gameColorDark: "#1e2a1c",
   gameColorPale: "#e8efd9",
   cardBack: CardBackColors.Olive,
-  cardDescription:
-    "Build three streets of rising house numbers, adding parks, pools and fences as you go.",
   quickStart: [
     "Each turn, build one card as a house and use another card's suit as its effect.",
     "House numbers must rise from left to right along each street.",
