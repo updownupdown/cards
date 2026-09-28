@@ -1,3 +1,4 @@
+import { GLOBAL_SETTINGS_STORAGE_KEY } from "./storage-keys";
 import { DEFAULT_COLOR_THEME } from "@/styles/themes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
@@ -161,7 +162,7 @@ export function isCampaignModeParam(mode: string | undefined) {
   return mode === "campaign" || mode === "nodes";
 }
 
-export const GLOBAL_SETTINGS_STORAGE_KEY = "cards.globalSettings.v1";
+export { GLOBAL_SETTINGS_STORAGE_KEY };
 export const GAME_SETTINGS_STORAGE_KEY = "cards.gameSettings.v1";
 export const RECENT_GAMES_STORAGE_KEY = "cards.recentGames.v1";
 export const GAME_SESSION_STORAGE_KEY = "cards.gameSession.v1";

@@ -1,3 +1,5 @@
+import { GLOBAL_SETTINGS_STORAGE_KEY } from "@/data/storage-keys";
+import { COLOR_THEMES, DEFAULT_COLOR_THEME } from "@/styles/themes";
 import { ScrollViewStyleReset } from "expo-router/html";
 import type { ReactNode } from "react";
 
@@ -25,11 +27,13 @@ export default function Root({ children }: { children: ReactNode }) {
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
-        {/* The splash colour, matching the manifest's background_color. The
-            app switches these to the current screen's colour once it mounts
-            (see the theme-color effect in _layout). */}
-        <meta name="theme-color" content="#C62440" />
-        <meta name="msapplication-navbutton-color" content="#C62440" />
+        {/* The splash colour, matching the manifest's background_color, until
+            the script below swaps in the saved colour theme's. The app
+            switches these to the current screen's colour once it mounts (see
+            the theme-color effect in _layout). */}
+        <meta name="theme-color" content="#07080d" />
+        <meta name="msapplication-navbutton-color" content="#07080d" />
+        <script dangerouslySetInnerHTML={{ __html: themedSplash }} />
         <meta name="color-scheme" content="dark" />
         <link rel="manifest" href="./manifest.json" />
         <link rel="icon" href="./favicon.ico" sizes="any" />
@@ -90,4 +94,24 @@ if ('serviceWorker' in navigator) {
       .catch(function () {});
   });
 }
+`;
+
+/**
+ * Paints the page in the saved colour theme's night before the app loads, so
+ * the splash already matches the theme (settings are in localStorage, where
+ * AsyncStorage keeps them on the web).
+ */
+const themeNights = Object.fromEntries(
+  COLOR_THEMES.map((theme) => [theme.id, theme.colors.night]),
+);
+const themedSplash = `
+try {
+  var nights = ${JSON.stringify(themeNights)};
+  var saved = JSON.parse(localStorage.getItem(${JSON.stringify(GLOBAL_SETTINGS_STORAGE_KEY)}) || "{}");
+  var night = nights[saved.colorTheme] || nights[${JSON.stringify(DEFAULT_COLOR_THEME)}];
+  document.documentElement.style.backgroundColor = night;
+  document.querySelectorAll('meta[name="theme-color"], meta[name="msapplication-navbutton-color"]').forEach(function (meta) {
+    meta.setAttribute("content", night);
+  });
+} catch (error) {}
 `;

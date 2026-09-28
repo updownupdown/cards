@@ -5,7 +5,7 @@ import { useLanguageSync } from "@/hooks/useLanguageSync";
 import { getGameInfo, isGamePath } from "@/data/game-menu";
 import { useDisplayLanguage } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
-import { applyColorTheme, Colors } from "@/styles/styles";
+import { applyColorTheme, Colors, theme } from "@/styles/styles";
 import {
   addGameBreadcrumb,
   initCrashReporting,
@@ -79,11 +79,11 @@ function Layout() {
   // Colour for the chrome the app can't draw behind: Chrome mobile's header,
   // and the page background Chrome samples for Android's button bar in a
   // standalone PWA. Each value is the flattest match for what the screen
-  // itself shows - the splash red until the app is ready, a game's own dark
+  // itself shows - the theme's night until the app is ready, a game's own dark
   // colour inside a game, and the starfield's overlay colour on the home
   // screen, whose tabs all sit on the same background image.
   const themeColor = isSplashVisible
-    ? Colors.suitsRed
+    ? theme.night
     : isGamePath(pathname)
       ? colorDark
       : Colors.starfieldOverlay;

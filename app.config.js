@@ -12,16 +12,16 @@ const config = {
   // modals (which React Native draws edge-to-edge with a contrast scrim) a
   // light navigation bar with dark buttons.
   userInterfaceStyle: "dark",
-  backgroundColor: "#343f49",
+  backgroundColor: "#07080d",
   primaryColor: "#C62440",
   ios: {
     icon: "./assets/app-icon/icon.png",
   },
   android: {
-    backgroundColor: "#343f49",
+    backgroundColor: "#07080d",
     softwareKeyboardLayoutMode: "resize",
     adaptiveIcon: {
-      backgroundColor: "#343f49",
+      backgroundColor: "#07080d",
       foregroundImage: "./assets/app-icon/android-foreground.png",
       backgroundImage: "./assets/app-icon/android-background.png",
       monochromeImage: "./assets/app-icon/android-monochrome.png",
@@ -46,19 +46,17 @@ const config = {
     output: "static",
     favicon: "./assets/app-icon/icon.png",
     // Chrome 152 can pin installed PWAs to this color and ignore runtime
-    // theme-color updates (crbug.com/554055703). Keep the splash itself red
-    // via backgroundColor, but use the Home color as the status-bar fallback:
-    // the home screen's starfield overlay (Colors.starfieldOverlay), which is
-    // where the app opens. Mirrored in public/manifest.json, the manifest the
-    // static web build actually ships.
-    themeColor: "#11181f",
+    // theme-color updates (crbug.com/554055703), so it is Nocturne's night,
+    // where the app opens, as is the splash (backgroundColor). Mirrored in
+    // public/manifest.json, the manifest the static web build actually ships.
+    themeColor: "#07080d",
     name: "Solitarius",
     shortName: "Solitarius",
     description: "A collection of solo playing card games.",
     display: "standalone",
     startUrl: "./",
     scope: "./",
-    backgroundColor: "#C62440",
+    backgroundColor: "#07080d",
     orientation: "any",
   },
   plugins: [
@@ -88,11 +86,11 @@ const config = {
     [
       "expo-splash-screen",
       {
-        backgroundColor: "#C62440",
-        android: {
-          image: "./assets/app-icon/icon.png",
-          imageWidth: 76,
-        },
+        // The spade in gold on Nocturne's night. The splash shows before the
+        // app can read the chosen colour theme, so it keeps the default one.
+        backgroundColor: "#07080d",
+        image: "./assets/app-icon/splash-icon.png",
+        imageWidth: 72,
       },
     ],
     [
