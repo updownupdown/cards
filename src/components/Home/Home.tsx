@@ -1,5 +1,5 @@
 import { LoadingOverlay } from "@/components/common/LoadingOverlay";
-import { CollectTab } from "@/components/Home/CollectTab";
+import { GalleryTab } from "@/components/Home/GalleryTab";
 import { HomeHeaderBackground } from "@/components/Home/HomeHeader";
 import { HomeTab } from "@/components/Home/HomeTab";
 import { HomeTabBar } from "@/components/Home/HomeTabBar";
@@ -306,7 +306,7 @@ export default function Home() {
         <HomeHeaderBackground
           showBackground={showHeaderBackgroundFor(COLLECT_HOME_TAB_INDEX)}
         />
-        <CollectTab
+        <GalleryTab
           allEnabledGames={allEnabledGames}
           settingsMap={settingsMap}
           favorites={favorites}
@@ -324,18 +324,14 @@ export default function Home() {
         allEnabledGames={allEnabledGames}
         unplayedGamePaths={unplayedGamePaths}
         favorites={favorites}
+        recentPaths={recentPaths}
         onToggleFavorite={toggleFavorite}
-        cardSize={cardSize}
-        onCardSizeChange={(value) =>
-          updateSettings({ discoverCardSize: value })
-        }
         onScrolledChange={(scrolled) =>
           setTabScrolled(SEARCH_HOME_TAB_INDEX, scrolled)
         }
         showHeaderBackground={showHeaderBackgroundFor(SEARCH_HOME_TAB_INDEX)}
         contentPaddingTop={contentPaddingTop}
         contentPaddingBottom={contentPaddingBottom}
-        searchControlBottom={searchControlBottom}
       />
     ),
   };
