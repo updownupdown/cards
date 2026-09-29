@@ -29,6 +29,7 @@ export const calculation: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#12122b",
   gameColorPale: "#eccfff",
+  gameColorAccent: "#e2bf8d",
   cardBack: CardBackColors.Violet,
   quickStart: [
     "Build four foundations in steps of 1, 2, 3, and 4, up to K.",

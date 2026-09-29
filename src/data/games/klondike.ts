@@ -25,6 +25,7 @@ export const klondike: GameDefinition = {
   animation: GameAnimations.Clouds,
   gameColorDark: "#2c3a36",
   gameColorPale: "#EEF0FF",
+  gameColorAccent: "#ebc86f",
   cardBack: CardBackColors.Bicycle,
   quickStart: [
     "Build foundations up by suit.",

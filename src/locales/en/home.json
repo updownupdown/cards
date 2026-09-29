@@ -5,11 +5,6 @@
     "collect": "Gallery",
     "search": "Search"
   },
-  "cardSize": {
-    "small": "List",
-    "medium": "Cards",
-    "large": "Details"
-  },
   "favorites": {
     "add": "Add to favorites",
     "remove": "Remove from favorites"
@@ -17,14 +12,10 @@
   "search": {
     "placeholder": "Search...",
     "clear": "Clear search",
-    "filters": "Filters",
-    "filter": "Filter",
-    "resetFilters": "Reset filters",
     "all": "All",
     "unplayed": "Unplayed",
     "unbeaten": "Unbeaten",
     "won": "Won",
-    "skill": "Low luck",
     "count_one": "{{count}} game",
     "count_other": "{{count}} games",
     "sortAZ": "A–Z",
@@ -44,10 +35,8 @@
     "localOnly": "Local-only Games",
     "gameOfTheDay": "Game of the Day",
     "easyGames": "Easy games to get started",
-    "jumpBackIn": "Jump Back In",
     "favorites": "Favorites",
     "continue": "Continue",
-    "resume": "Resume",
     "fact": "Did you know"
   },
   "gameOfTheDay": {
@@ -61,16 +50,6 @@
   "deal": {
     "title": "Random Deal",
     "intro": "Swipe to pass, tap to play"
-  },
-  "collect": {
-    "games": "Games: {{won}}/{{total}}",
-    "categories": "Categories: {{won}}/{{total}}",
-    "tagProgress": "{{tag}}: {{won}} of {{total}} won",
-    "intro": {
-      "title": "Traveler's Log",
-      "text": "Win a game to collect its stamp. Explore similar mechanics and try to complete all the sets!",
-      "close": "Dismiss"
-    }
   },
   "tags": {
     "KlondikeFamily": "Klondike Family",
@@ -176,10 +155,8 @@
     "notNow": "Not now"
   },
   "gallery": {
-    "uncollected": "Win {{game}} to acquire this work.",
     "previous": "Previous work",
     "next": "Next work",
-    "play": "Play",
     "views": {
       "works": "Works",
       "chapters": "Chapters",
@@ -232,9 +209,9 @@
       "object": "Objects & Textiles",
       "photograph": "Photographs"
     },
-    "close": "Close",
     "back": "Back to Gallery",
-    "unknownArtist": "Unknown artist"
+    "unknownArtist": "Unknown artist",
+    "notAcquired": "Not acquired"
   },
   "header": {
     "stats": "Stats",

@@ -1,25 +1,30 @@
 {
   "menu": {
     "home": "Accueil",
-    "campaign": "Campagne",
-    "instantWin": "Victoire instantanée"
+    "campaign": "Odyssée",
+    "instantWin": "Victoire instantanée",
+    "rules": "Règles",
+    "undo": "Annuler",
+    "reset": "Recommencer",
+    "menu": "Menu"
   },
   "result": {
-    "won": "Vous avez gagné !",
+    "won": "Vous avez gagné",
     "lost": "Vous avez perdu",
     "score": "Score : {{score}}",
     "playAgain": "Rejouer",
-    "tryAgain": "Réessayer"
+    "tryAgain": "Réessayer",
+    "continueOdyssey": "Continuer l'Odyssée",
+    "home": "Accueil"
   },
   "reset": {
     "hold": "Maintenez pour recommencer"
   },
   "tips": {
-    "quickStart": "Démarrage rapide",
-    "viewRules": "Voir les règles"
+    "quickStart": "Démarrage rapide"
   },
   "rules": {
-    "title": "Comment jouer",
+    "title": "Règles",
     "unavailable": "Les instructions ne sont pas disponibles pour ce jeu."
   },
   "mercySkip": {
@@ -27,7 +32,6 @@
   },
   "settings": {
     "title": "Réglages",
-    "none": "Aucun réglage pour ce jeu",
     "appliesNow": "S'applique sans recommencer la partie.",
     "appliesNextGame": "Recommence la partie en cas de changement."
   },
@@ -36,9 +40,7 @@
   },
   "credits": {
     "title": "Crédits",
-    "backgroundImage": "Image de fond (floutée) :",
-    "gameArt": "Illustration de couverture :",
-    "artSource": "Domaine public, provenant de"
+    "backgroundImage": "Image de fond :"
   },
   "deckPreview": {
     "title": "Aperçu du paquet",

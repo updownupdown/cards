@@ -1,25 +1,30 @@
 {
   "menu": {
     "home": "Beranda",
-    "campaign": "Kampanye",
-    "instantWin": "Menang instan"
+    "campaign": "Pengembaraan",
+    "instantWin": "Menang instan",
+    "rules": "Aturan",
+    "undo": "Urungkan",
+    "reset": "Ulangi",
+    "menu": "Menu"
   },
   "result": {
-    "won": "Kamu menang!",
+    "won": "Anda menang",
     "lost": "Kamu kalah",
     "score": "Skor: {{score}}",
     "playAgain": "Main lagi",
-    "tryAgain": "Coba lagi"
+    "tryAgain": "Coba lagi",
+    "continueOdyssey": "Lanjutkan Pengembaraan",
+    "home": "Beranda"
   },
   "reset": {
     "hold": "Tahan untuk mengulang permainan"
   },
   "tips": {
-    "quickStart": "Mulai cepat",
-    "viewRules": "Lihat aturan"
+    "quickStart": "Mulai cepat"
   },
   "rules": {
-    "title": "Cara bermain",
+    "title": "Aturan",
     "unavailable": "Petunjuk untuk permainan ini belum tersedia."
   },
   "mercySkip": {
@@ -27,7 +32,6 @@
   },
   "settings": {
     "title": "Pengaturan",
-    "none": "Tidak ada pengaturan permainan",
     "appliesNow": "Berlaku tanpa mengulang permainan.",
     "appliesNextGame": "Permainan diulang saat diubah."
   },
@@ -36,9 +40,7 @@
   },
   "credits": {
     "title": "Kredit",
-    "backgroundImage": "Gambar latar (diburamkan):",
-    "gameArt": "Gambar sampul:",
-    "artSource": "Domain publik, dari"
+    "backgroundImage": "Gambar latar:"
   },
   "deckPreview": {
     "title": "Pratinjau dek",

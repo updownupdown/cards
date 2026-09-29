@@ -26,6 +26,7 @@ export const sirTommy: GameDefinition = {
   animation: GameAnimations.Rain,
   gameColorDark: "#1a2c33",
   gameColorPale: "#fdf7d9",
+  gameColorAccent: "#e28d94",
   cardBack: CardBackColors.Teal,
   quickStart: [
     "Build foundations up from A to K, regardless of suit.",

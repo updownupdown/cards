@@ -4,18 +4,19 @@
   "reset": "Atur ulang",
   "play": "Main",
   "home": "Beranda",
-  "notAvailable": "T/A",
   "stats": {
     "complexity": "Kerumitan",
     "difficulty": "Kesulitan",
     "luck": "Keberuntungan",
-    "played": "Dimainkan",
     "won": "Menang",
     "lost": "Kalah",
-    "winRate": "Tingkat menang",
     "winPercent": "% Menang",
     "best": "Terbaik",
-    "bestTime": "Terbaik: {{time}}",
-    "fastest": "Tercepat"
-  }
+    "time": "Waktu",
+    "bestTimeLabel": "Waktu terbaik",
+    "wins": "Menang"
+  },
+  "undo": "Urungkan",
+  "collectFrom": "Dapatkan dari:",
+  "collectedFrom": "Didapat dari:"
 }

@@ -24,6 +24,7 @@ export const scorpion: GameDefinition = {
   animation: GameAnimations.Sand,
   gameColorDark: "#352b21",
   gameColorPale: "#fff3e4",
+  gameColorAccent: "#eb9c72",
   cardBack: CardBackColors.Terracotta,
   quickStart: [
     "Build the four foundations, by suit, from K to A.",

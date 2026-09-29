@@ -25,6 +25,7 @@ export const indian: GameDefinition = {
   animation: GameAnimations.Mist,
   gameColorDark: "#49362a",
   gameColorPale: "#ead6ad",
+  gameColorAccent: "#add897",
   cardBack: CardBackColors.Moss,
   quickStart: [
     "Build down on any suit except the same suit.",

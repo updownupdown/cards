@@ -25,6 +25,7 @@ export const canfield: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#311a1e",
   gameColorPale: "#E4F6FF",
+  gameColorAccent: "#e2bf8d",
   cardBack: CardBackColors.Burgundy,
   quickStart: [
     "Build foundations up by suit.",

@@ -27,6 +27,7 @@ export const freeCell: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#2b231b",
   gameColorPale: "#fff1dd",
+  gameColorAccent: "#e3c07a",
   cardBack: CardBackColors.Bronze,
   quickStart: [
     "Build foundations up by suit, from A to K.",

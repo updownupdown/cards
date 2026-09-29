@@ -24,6 +24,7 @@ export const glazier: GameDefinition = {
   animation: GameAnimations.Embers,
   gameColorDark: "#1c2033",
   gameColorPale: "#f1d7a2",
+  gameColorAccent: "#8de0e2",
   cardBack: CardBackColors.Indigo,
   quickStart: [
     "Take all panes of one suit from a kiln; the rest move to the workbench.",

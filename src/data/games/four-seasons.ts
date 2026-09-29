@@ -23,6 +23,7 @@ export const fourSeasons: GameDefinition = {
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#33402c",
   gameColorPale: "#eef6e4",
+  gameColorAccent: "#e69db5",
   cardBack: CardBackColors.Moss,
   quickStart: [
     "The corner card sets the rank every foundation starts from.",

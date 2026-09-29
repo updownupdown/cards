@@ -104,6 +104,10 @@ export function FloatingBar({
             width: "100%",
             maxWidth: ui.contentMaxWidth - side * 2,
             height: spacing(stacked ? STACKED_HEIGHT : layoutDims.tabBarHeight),
+            // Round ends, as the tab bar has.
+            borderRadius: spacing(
+              (stacked ? STACKED_HEIGHT : layoutDims.tabBarHeight) / 2,
+            ),
             flexDirection: "row",
             alignItems: "center",
           },
@@ -186,14 +190,23 @@ export function StepperBar({
   previousLabel,
   nextLabel,
   disabled = false,
+  swapColours = false,
 }: {
   placement: "tabBar" | "aboveTabBar";
-  action: { iconName: IconName; label: string; onPress: () => void };
+  action: {
+    iconName: IconName;
+    label: string;
+    /** What a screen reader says, when it isn't the label. */
+    accessibilityLabel?: string;
+    onPress: () => void;
+  };
   onPrevious: () => void;
   onNext: () => void;
   previousLabel: string;
   nextLabel: string;
   disabled?: boolean;
+  /** The action in the accent and the chevrons plain, rather than the reverse. */
+  swapColours?: boolean;
 }) {
   const { spacing } = useResponsiveMetrics();
   const chevron = (
@@ -215,7 +228,11 @@ export function StepperBar({
         outline: "none",
       }}
     >
-      <Icon name={iconName} size={spacing(24)} color={theme.accent} />
+      <Icon
+        name={iconName}
+        size={spacing(24)}
+        color={swapColours ? theme.ink : theme.accent}
+      />
     </Pressable>
   );
   return (
@@ -223,7 +240,9 @@ export function StepperBar({
       <BarButton
         iconName={action.iconName}
         label={action.label}
+        accessibilityLabel={action.accessibilityLabel}
         align="left"
+        accent={swapColours}
         onPress={action.onPress}
       />
       <View

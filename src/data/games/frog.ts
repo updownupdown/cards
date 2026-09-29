@@ -26,6 +26,7 @@ export const frog: GameDefinition = {
   animation: GameAnimations.Firefly,
   gameColorDark: "#15261b",
   gameColorPale: "#e2f5c6",
+  gameColorAccent: "#e8d56f",
   cardBack: CardBackColors.Moss,
   quickStart: [
     "Build foundations up from A to K, regardless of suit.",

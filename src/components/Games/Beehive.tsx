@@ -262,7 +262,15 @@ function moveTableauToValidTableau(
   return true;
 }
 
-const gameStateInitial = createInitialState();
+// Undealt, every card in the stock: a new game deals from there, so the
+// opening deal flies out of the stock rather than into it first.
+const gameStateInitial: BeehiveGameState = {
+  beehive: [],
+  tableau: Array.from({ length: TABLEAU_COUNT }, () => []),
+  stock: shuffle(createDeck({ faceUp: false })),
+  waste: [],
+  discard: [],
+};
 
 export const beehiveRules = {
   createInitialState,

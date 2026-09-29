@@ -1,57 +1,25 @@
 {
-  "progress": {
-    "games": "Oyunlar",
-    "chapters": "Bölümler",
-    "quotes": "Alıntılar",
-    "summary": "{{label}}: {{collected}} / {{total}}"
-  },
-  "reward": {
-    "taoChapter": "Tao Te Ching: {{number}}. bölüm",
-    "quoteBy": "Alıntı: {{author}}",
-    "unlockedGames_one": "Kilidi açılan {{count}} oyun:",
-    "unlockedGames_other": "Kilidi açılan {{count}} oyun:"
-  },
-  "details": {
-    "locked": "Kilitli"
-  },
   "mercySkip": {
     "granted": "Nazik bir yolcu sana bir **af** sunuyor! Zor bir oyunu o oyunun menüsünden atla.",
     "ufoLabel": "Geçen bir UFO",
     "dismiss": "Kapat"
   },
-  "collection": {
-    "previous": "Önceki toplanan öğe",
-    "next": "Sonraki toplanan öğe",
-    "select": "Öğe {{id}} seç",
-    "locked": "Kilitli öğe {{id}}"
-  },
   "quotes": {
-    "title": "Alıntılar",
-    "subtitle": "{{collected}}/{{total}} alıntı toplandı",
-    "empty": "{{authors}} düşünür, yazar ve bilim insanının {{quotes}} alıntısının hepsini toplamak için Göksel Yolculuk'ta oyun kazan.",
-    "about": "Her yazarın portresi, alıntılarından birini topladığında burada belirir.",
-    "count": "{{collected}}/{{total}}",
-    "previousAuthor": "Önceki yazar",
-    "nextAuthor": "Sonraki yazar",
     "previousQuote": "Önceki alıntı",
     "nextQuote": "Sonraki alıntı",
-    "yearsBC": "MÖ {{from}}–{{to}}",
-    "yearsBCtoAD": "MÖ {{from}} – MS {{to}}",
-    "circa": "y. {{years}}"
+    "pick": "Yazar seç",
+    "byEra": "Dönemler",
+    "byName": "Alfabetik",
+    "uncollected": "Bu alıntı henüz toplanmadı.",
+    "barLabel": "{{name}}, {{index}}/{{total}}"
   },
   "tao": {
-    "title": "Tao Te Ching",
-    "subtitle": "{{collected}}/{{total}} bölüm toplandı",
     "chapter": "Bölüm {{number}}",
-    "viewAll": "Tümünü gör",
     "previous": "Önceki bölüm",
     "next": "Sonraki bölüm",
-    "empty": "Tao Te Ching'in 81 bölümünün tamamını toplamak için Göksel Yolculuk'ta oyun kazan.",
-    "about": "Tao Te Ching, geleneksel olarak bilge Laozi'ye atfedilen, temel bir antik Çin metnidir. Evrenin doğal akışı ve ritmi olan Tao ile uyum içinde yaşamayı öğretir. Wu wei'yi (çabasız eylem) uygulayarak ve alçakgönüllülüğü, sadeliği ve esnekliği benimseyerek kalıcı bir huzur ve denge bulunabileceği söylenir."
-  },
-  "games": {
-    "title": "Oyunlar",
-    "subtitle": "{{unlocked}}/{{total}} oyunun kilidi açıldı"
+    "about": "Tao Te Ching, geleneksel olarak bilge Laozi'ye atfedilen, temel bir antik Çin metnidir. Evrenin doğal akışı ve ritmi olan Tao ile uyum içinde yaşamayı öğretir. Wu wei'yi (çabasız eylem) uygulayarak ve alçakgönüllülüğü, sadeliği ve esnekliği benimseyerek kalıcı bir huzur ve denge bulunabileceği söylenir.",
+    "pick": "Bölüm seç",
+    "uncollected": "Bu bölüm henüz toplanmadı."
   },
   "original": {
     "label": "Orijinalini göster"

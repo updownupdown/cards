@@ -5,7 +5,7 @@ import { GameMenuInfo } from "@/data/games-data";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
-import { rgba, theme } from "@/styles/styles";
+import { rgba, theme as appTheme } from "@/styles/styles";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { type Href } from "expo-router";
@@ -78,7 +78,7 @@ export function HomeCard({
               top: 0,
               bottom: 0,
               right: 0,
-              width: "74%",
+              width: "100%",
               backgroundColor: game.gameColorDark,
             }}
           >
@@ -96,12 +96,10 @@ export function HomeCard({
             <LinearGradient
               colors={[
                 theme.surface,
-                rgba(theme.surface, 0.82),
-                rgba(theme.surface, 0.45),
-                rgba(theme.surface, 0.12),
+                rgba(theme.surface, 0.6),
                 rgba(theme.surface, 0),
               ]}
-              locations={[0, 0.22, 0.5, 0.78, 1]}
+              locations={[0, 0.5, 1]}
               start={{ x: 0, y: 0.5 }}
               end={{ x: 1, y: 0.5 }}
               style={StyleSheet.absoluteFill}
@@ -140,10 +138,10 @@ export function HomeCard({
           onToggleFavorite={() => onToggleFavorite?.(path)}
           size={spacing(40)}
           iconSize={spacing(22)}
-          activeColor={theme.accent}
+          // The app theme's accent, on every game card.
+          activeColor={appTheme.accent}
           inactiveColor={theme.ink}
           disabled={!onToggleFavorite}
-          backdrop
         />
       </View>
     </PaletteContext.Provider>

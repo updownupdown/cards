@@ -1,5 +1,5 @@
 import { Text } from "@/components/common/Text";
-import { usePalette } from "@/styles/palette";
+import { useGameAccent, usePalette } from "@/styles/palette";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
@@ -36,6 +36,8 @@ export function SettingControl<T>({
 }: SettingControlProps<T>) {
   const { spacing } = useResponsiveMetrics();
   const theme = usePalette();
+  // A chosen radio option takes the game's own accent.
+  const gameAccent = useGameAccent();
   const labelColor = labelColorProp ?? theme.ink;
 
   const HelpText = () => {
@@ -210,7 +212,7 @@ export function SettingControl<T>({
                         borderRadius: spacing(10),
                         borderWidth: 2,
                         borderColor: isSelected
-                          ? theme.accent
+                          ? gameAccent
                           : rgba(theme.ink, 0.3),
                         alignItems: "center",
                         justifyContent: "center",
@@ -222,7 +224,7 @@ export function SettingControl<T>({
                             width: spacing(10),
                             height: spacing(10),
                             borderRadius: spacing(5),
-                            backgroundColor: theme.accent,
+                            backgroundColor: gameAccent,
                           }}
                         />
                       )}
@@ -230,7 +232,7 @@ export function SettingControl<T>({
                     <Text
                       size="md"
                       weight={400}
-                      color={isSelected ? theme.accent : theme.ink}
+                      color={isSelected ? gameAccent : theme.ink}
                       style={{ userSelect: "none" }}
                     >
                       {opt.label}

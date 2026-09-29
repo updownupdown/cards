@@ -13,7 +13,7 @@
   },
   "showAnimations": {
     "label": "Mostrar animações",
-    "description": "Efeitos de clima e paisagem atrás das cartas."
+    "description": "Clima e paisagem atrás das cartas, e estrelas em movimento nos menus."
   },
   "showTips": {
     "label": "Mostrar dicas",
@@ -40,11 +40,6 @@
   },
   "populateTestProgress": "Preencher progresso de teste",
   "credits": {
-    "starfield": {
-      "prefix": "Fundo estrelado por ",
-      "name": "Olena Bohovyk",
-      "suffix": ""
-    },
     "taoTranslation": {
       "prefix": "Capítulos do Tao Te Ching traduzidos da versão em inglês de ",
       "name": "John H. McDonald",
@@ -55,5 +50,11 @@
   "resetData": {
     "button": "Redefinir todos os dados do app",
     "confirm": "Apagar todo o progresso e as configurações?"
+  },
+  "colorTheme": {
+    "label": "Tema de cores",
+    "expand": "Mostrar todos",
+    "collapse": "Recolher",
+    "highContrast": "Alto contraste"
   }
 }

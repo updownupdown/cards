@@ -24,6 +24,7 @@ export const beehive: GameDefinition = {
   animation: GameAnimations.Bees,
   gameColorDark: "#1e2b16",
   gameColorPale: "#f4f9d3",
+  gameColorAccent: "#ebc084",
   cardBack: CardBackColors.Honey,
   quickStart: [
     "Match cards by rank and clear every four-card set.",

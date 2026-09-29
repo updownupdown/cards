@@ -24,6 +24,7 @@ export const tripleStack: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#102524",
   gameColorPale: "#b0eee9",
+  gameColorAccent: "#e2bf8d",
   cardBack: CardBackColors.Teal,
   quickStart: [
     "Select 3 cards with equally spaced ranks (ranks wrap from A to K).",

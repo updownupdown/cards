@@ -26,6 +26,7 @@ export const jailbreak: GameDefinition = {
   animation: GameAnimations.Spiders,
   gameColorDark: "#17211d",
   gameColorPale: "#d9eee3",
+  gameColorAccent: "#e7ad70",
   cardBack: CardBackColors.Pine,
   quickStart: [
     "Expose one of the side walls to allow the Joker to escape.",

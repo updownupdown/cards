@@ -4,18 +4,19 @@
   "reset": "Redefinir",
   "play": "Jogar",
   "home": "Início",
-  "notAvailable": "N/D",
   "stats": {
     "complexity": "Complexidade",
     "difficulty": "Dificuldade",
     "luck": "Sorte",
-    "played": "Partidas",
     "won": "Vitórias",
     "lost": "Derrotas",
-    "winRate": "Taxa de vitórias",
     "winPercent": "% vitórias",
     "best": "Recorde",
-    "bestTime": "Recorde: {{time}}",
-    "fastest": "Mais rápida"
-  }
+    "time": "Tempo",
+    "bestTimeLabel": "Melhor tempo",
+    "wins": "Vitórias"
+  },
+  "undo": "Desfazer",
+  "collectFrom": "Obtenha em:",
+  "collectedFrom": "Obtida em:"
 }

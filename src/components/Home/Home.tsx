@@ -1,13 +1,16 @@
 import { LoadingOverlay } from "@/components/common/LoadingOverlay";
 import { GalleryTab } from "@/components/Home/GalleryTab";
-import { HomeHeaderBackground } from "@/components/Home/HomeHeader";
 import { HomeTab } from "@/components/Home/HomeTab";
 import { HomeTabBar } from "@/components/Home/HomeTabBar";
 import { SearchTab } from "@/components/Home/SearchTab";
 import { CampaignTab } from "@/components/Campaign/CampaignTab";
 import { CampaignUFO } from "@/components/Campaign/CampaignUFO";
 import { UfoContext, type UfoRequest } from "@/components/Campaign/UfoContext";
-import { StarfieldBackdrop } from "./Starfield";
+import {
+  StarfieldBackdrop,
+  StarfieldProvider,
+  useStarfieldMotion,
+} from "./Starfield";
 import { createTabReadyGate, TabReadyContext } from "./TabReady";
 import {
   COLLECT_HOME_TAB_INDEX,
@@ -109,23 +112,8 @@ export default function Home() {
   const [mountedTabs, setMountedTabs] = useState<ReadonlySet<HomeTabIndex>>(
     () => new Set([initialActiveTab]),
   );
-  const [scrolledTabs, setScrolledTabs] = useState<ReadonlySet<HomeTabIndex>>(
-    () => new Set(),
-  );
-  const setTabScrolled = (index: HomeTabIndex, scrolled: boolean) =>
-    setScrolledTabs((current) => {
-      if (current.has(index) === scrolled) return current;
-      const next = new Set(current);
-      if (scrolled) next.add(index);
-      else next.delete(index);
-      return next;
-    });
-  // The header and tab bar fade the page out behind them. On the web they
-  // wait until the page scrolls; on a phone they always show, on every tab,
-  // so the screen's edges never change as the tabs switch.
-  const showHeaderBackgroundFor = (index: HomeTabIndex) =>
-    !isWeb || (index !== CAMPAIGN_HOME_TAB_INDEX && scrolledTabs.has(index));
   const { settings, updateSettings } = useGlobalSettings();
+  const starfield = useStarfieldMotion(activeTab);
   // Set by the Campaign tab while the map is open; the UFO itself is drawn here.
   const [ufo, setUfo] = useState<UfoRequest | null>(null);
 
@@ -274,54 +262,31 @@ export default function Home() {
 
   // Each tab's page, built out here rather than in the loop below, so a
   // switch between tabs (which re-renders this) leaves them all untouched.
-  // The Search tab draws its own header background, so its toggle can sit
-  // above it.
   const tabContents: Record<HomeTabIndex, ReactNode> = {
     [HOME_HOME_TAB_INDEX]: (
-      <>
-        <HomeHeaderBackground
-          showBackground={showHeaderBackgroundFor(HOME_HOME_TAB_INDEX)}
-        />
-        <HomeTab
-          allEnabledGames={allEnabledGames}
-          unplayedGamePaths={unplayedGamePaths}
-          favorites={favorites}
-          recentPaths={recentPaths}
-          onToggleFavorite={toggleFavorite}
-          dataLoaded={homeDataLoaded}
-          onOpenStats={() => setShowStatsModal(true)}
-          onOpenSettings={() => setShowSettingsModal(true)}
-          onScrolledChange={(scrolled) =>
-            setTabScrolled(HOME_HOME_TAB_INDEX, scrolled)
-          }
-          contentPaddingTop={contentPaddingTop}
-          contentPaddingBottom={contentPaddingBottom}
-        />
-      </>
+      <HomeTab
+        allEnabledGames={allEnabledGames}
+        unplayedGamePaths={unplayedGamePaths}
+        favorites={favorites}
+        recentPaths={recentPaths}
+        onToggleFavorite={toggleFavorite}
+        dataLoaded={homeDataLoaded}
+        onOpenStats={() => setShowStatsModal(true)}
+        onOpenSettings={() => setShowSettingsModal(true)}
+        contentPaddingTop={contentPaddingTop}
+        contentPaddingBottom={contentPaddingBottom}
+      />
     ),
     [CAMPAIGN_HOME_TAB_INDEX]: (
-      <>
-        <HomeHeaderBackground
-          showBackground={showHeaderBackgroundFor(CAMPAIGN_HOME_TAB_INDEX)}
-        />
-        <CampaignTab contentPaddingTop={contentPaddingTop} />
-      </>
+      <CampaignTab contentPaddingTop={contentPaddingTop} />
     ),
     [COLLECT_HOME_TAB_INDEX]: (
-      <>
-        <HomeHeaderBackground
-          showBackground={showHeaderBackgroundFor(COLLECT_HOME_TAB_INDEX)}
-        />
-        <GalleryTab
-          allEnabledGames={allEnabledGames}
-          settingsMap={settingsMap}
-          onScrolledChange={(scrolled) =>
-            setTabScrolled(COLLECT_HOME_TAB_INDEX, scrolled)
-          }
-          contentPaddingTop={contentPaddingTop}
-          contentPaddingBottom={contentPaddingBottom}
-        />
-      </>
+      <GalleryTab
+        allEnabledGames={allEnabledGames}
+        settingsMap={settingsMap}
+        contentPaddingTop={contentPaddingTop}
+        contentPaddingBottom={contentPaddingBottom}
+      />
     ),
     [SEARCH_HOME_TAB_INDEX]: (
       <SearchTab
@@ -358,76 +323,70 @@ export default function Home() {
           onClose={() => setShowStatsModal(false)}
         />
       )}
-      <UfoContext.Provider value={setUfo}>
-        <View style={containerStyle} onLayout={onContainerLayout}>
-          {isScreenReady && (
-            <View
-              style={{
-                flex: 1,
-                height: screenHeight || undefined,
-                // Clips the tabs moved aside, so they are skipped entirely.
-                overflow: "hidden",
-              }}
-            >
-              {/* One sky behind every tab. */}
-              <StarfieldBackdrop
-                animated={settings.showAnimations}
-                comets={isFocused}
-              />
+      <StarfieldProvider value={starfield}>
+        <UfoContext.Provider value={setUfo}>
+          <View style={containerStyle} onLayout={onContainerLayout}>
+            {isScreenReady && (
+              <View
+                style={{
+                  flex: 1,
+                  height: screenHeight || undefined,
+                  // Clips the tabs moved aside, so they are skipped entirely.
+                  overflow: "hidden",
+                }}
+              >
+                {/* One sky behind every tab, moving as you go between them. */}
+                <StarfieldBackdrop
+                  motion={starfield}
+                  activeTab={activeTab}
+                  animated={settings.showAnimations}
+                  comets={isFocused}
+                />
 
-              {HOME_TAB_INDICES.map((index) => {
-                if (!mountedTabs.has(index)) return null;
-                if (index === CAMPAIGN_HOME_TAB_INDEX && !isFocused)
-                  return null;
-                return (
-                  <TabLayer
-                    key={index}
-                    state={
-                      index === shownTab
-                        ? "shown"
-                        : index === activeTab
-                          ? "preparing"
-                          : "away"
-                    }
-                    onReady={() => onTabReady(index)}
-                  >
-                    {tabContents[index]}
-                  </TabLayer>
-                );
-              })}
+                {HOME_TAB_INDICES.map((index) => {
+                  if (!mountedTabs.has(index)) return null;
+                  if (index === CAMPAIGN_HOME_TAB_INDEX && !isFocused)
+                    return null;
+                  return (
+                    <TabLayer
+                      key={index}
+                      state={
+                        index === shownTab
+                          ? "shown"
+                          : index === activeTab
+                            ? "preparing"
+                            : "away"
+                      }
+                      onReady={() => onTabReady(index)}
+                    >
+                      {tabContents[index]}
+                    </TabLayer>
+                  );
+                })}
 
-              {/* Each tab draws its own header fade, so the controls in it can
-                sit above the fade; on a phone this one stands in while no tab
-                is shown, so the fade stays put through a switch. */}
-              {shownTab === null && !isWeb && (
-                <HomeHeaderBackground showBackground />
-              )}
-              {shownTab === null && (
-                <TabSpinner immediate={!mountedTabs.has(activeTab)} />
-              )}
-            </View>
-          )}
+                {shownTab === null && (
+                  <TabSpinner immediate={!mountedTabs.has(activeTab)} />
+                )}
+              </View>
+            )}
 
-          <HomeTabBar
-            activeIndex={activeTab}
-            onSelectTab={onSelectTab}
-            showBackground={showHeaderBackgroundFor(activeTab)}
-          />
+            <HomeTabBar activeIndex={activeTab} onSelectTab={onSelectTab} />
 
-          {/* Last, so it flies over the header and tab bar rather than under
+            {/* Last, so it flies over the header and tab bar rather than under
             them. It only exists while the Campaign tab has asked for it. */}
-          {ufo && shownTab === CAMPAIGN_HOME_TAB_INDEX && (
-            <CampaignUFO
-              width={viewportWidth}
-              height={viewportHeight}
-              animationsEnabled={settings.showAnimations && ufo.gateOpen}
-              summons={ufo.summons}
-              visits={ufo.visits}
-              onCatch={ufo.onCatch}
-            />
-          )}
-        </View>
-      </UfoContext.Provider>
+            {ufo && shownTab === CAMPAIGN_HOME_TAB_INDEX && (
+              <CampaignUFO
+                width={viewportWidth}
+                height={viewportHeight}
+                animationsEnabled={settings.showAnimations && ufo.gateOpen}
+                summons={ufo.summons}
+                visits={ufo.visits}
+                onCatch={ufo.onCatch}
+              />
+            )}
+          </View>
+        </UfoContext.Provider>
+      </StarfieldProvider>
     </>
   );
 }

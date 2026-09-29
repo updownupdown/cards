@@ -25,6 +25,7 @@ export const gargantua: GameDefinition = {
   animation: GameAnimations.Clouds,
   gameColorDark: "#24323a",
   gameColorPale: "#dce5df",
+  gameColorAccent: "#e28d8d",
   cardBack: CardBackColors.Teal,
   quickStart: [
     "Move both decks to eight foundations, built by suit from A to K.",

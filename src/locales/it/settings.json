@@ -13,7 +13,7 @@
   },
   "showAnimations": {
     "label": "Mostra animazioni",
-    "description": "Effetti meteo e paesaggi dietro le carte."
+    "description": "Meteo e paesaggi dietro le carte, e stelle in movimento nei menu."
   },
   "showTips": {
     "label": "Mostra suggerimenti",
@@ -40,11 +40,6 @@
   },
   "populateTestProgress": "Genera progressi di prova",
   "credits": {
-    "starfield": {
-      "prefix": "Sfondo stellato di ",
-      "name": "Olena Bohovyk",
-      "suffix": ""
-    },
     "taoTranslation": {
       "prefix": "Capitoli del Tao Te Ching tradotti dalla versione inglese di ",
       "name": "John H. McDonald",
@@ -55,5 +50,11 @@
   "resetData": {
     "button": "Azzera tutti i dati dell'app",
     "confirm": "Cancellare tutti i progressi e le impostazioni?"
+  },
+  "colorTheme": {
+    "label": "Tema colori",
+    "expand": "Mostra tutti",
+    "collapse": "Comprimi",
+    "highContrast": "Contrasto elevato"
   }
 }

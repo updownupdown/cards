@@ -1529,6 +1529,50 @@
       "value": "Gargantua"
     }
   },
+  "glazier": {
+    "howToPlay": {
+      "hash": "2e3ae25d",
+      "value": [
+        "## Obiettivo",
+        "Fai **40 punti** o più in quattro round riempiendo una vetrata 4x4.",
+        "## Scelta",
+        "- A ogni round, tre fornaci ricevono quattro vetri ciascuna e il banco ne riceve uno.",
+        "- Prendi **tutti** i vetri di un seme da una fornace o dal banco. Gli altri vetri della fornace vanno sul banco.",
+        "- Il round finisce quando fornaci e banco sono vuoti.",
+        "## Telai",
+        "- I telai tengono 1, 2, 3 e 4 vetri di un solo seme, un telaio per riga della finestra.",
+        "- Un telaio non può prendere un seme che non entra più nella sua riga della finestra.",
+        "- I vetri che non entrano si rompono. Puoi anche rompere un gruppo di proposito.",
+        "## Finestra",
+        "- A fine round, ogni telaio pieno posa un vetro nella sua riga, e scegli tu la colonna.",
+        "- **Nessun seme può ripetersi in una riga o colonna.**",
+        "- I vetri che non si possono più posare si rompono.",
+        "## Punteggio",
+        "- Un vetro vale la lunghezza della linea che unisce in orizzontale più quella che unisce in verticale, o 1 se non ne unisce nessuna.",
+        "- A ogni round, le schegge costano 1, 1, 2, 2, 2, 3 e 3 punti; le successive sono gratis.",
+        "- Alla fine, ogni riga completa vale **3** e ogni colonna completa **6**.",
+        "## Gradi",
+        "- 40+: Apprendista",
+        "- 55+: Maestro vetraio",
+        "- 70+: Vetrata da cattedrale",
+        "## Consigli",
+        "- Ciò che lasci in una fornace si accumula sul banco.",
+        "- Prima di posare un vetro, controlla quali colonne restano libere per i semi che servono ancora alla sua riga."
+      ]
+    },
+    "quickStart": {
+      "hash": "51bc2e4e",
+      "value": [
+        "Prendi tutti i vetri di un seme da una fornace; il resto va sul banco.",
+        "I telai tengono da 1 a 4 vetri di un seme. I vetri in più si rompono e costano punti.",
+        "Un telaio pieno posa un vetro nella finestra; nessun seme due volte in una riga o colonna."
+      ]
+    },
+    "title": {
+      "hash": "2b72c1f3",
+      "value": "Il Vetraio"
+    }
+  },
   "golf": {
     "howToPlay": {
       "hash": "24a82fa3",

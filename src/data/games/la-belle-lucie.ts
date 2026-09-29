@@ -22,6 +22,7 @@ export const laBelleLucie: GameDefinition = {
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#28352d",
   gameColorPale: "#f5dce4",
+  gameColorAccent: "#d897ae",
   cardBack: CardBackColors.Rose,
   quickStart: [
     "Build foundations up by suit from A to K.",

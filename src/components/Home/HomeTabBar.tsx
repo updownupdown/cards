@@ -10,22 +10,13 @@ import {
   theme,
   transitionStyles,
 } from "@/styles/styles";
-import { Text } from "@/components/common/Text";
-import { LinearGradient } from "expo-linear-gradient";
-import { useEffect } from "react";
 import {
   Animated as RNAnimated,
   Platform,
   Pressable,
-  StyleSheet,
   View,
   type LayoutChangeEvent,
 } from "react-native";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 
@@ -42,30 +33,17 @@ type HomeTabBarProps = {
   activeIndex: number;
   onSelectTab: (index: number) => void;
   onHeightChange?: (height: number) => void;
-  showBackground: boolean;
 };
 
 export function HomeTabBar({
   activeIndex,
   onSelectTab,
   onHeightChange,
-  showBackground,
 }: HomeTabBarProps) {
   const insets = useSafeAreaInsets();
   const { spacing, ui } = useResponsiveMetrics();
   const { t } = useTranslation("home");
   const glass = useGlassStyle();
-  const backgroundOpacity = useSharedValue(showBackground ? 1 : 0);
-  const backgroundStyle = useAnimatedStyle(() => ({
-    opacity: backgroundOpacity.value,
-  }));
-
-  useEffect(() => {
-    backgroundOpacity.value = withTiming(showBackground ? 1 : 0, {
-      duration: 350,
-    });
-  }, [backgroundOpacity, showBackground]);
-
   const onLayout = (event: LayoutChangeEvent) => {
     onHeightChange?.(event.nativeEvent.layout.height);
   };
@@ -84,43 +62,22 @@ export function HomeTabBar({
         },
       ]}
     >
-      {/* The header's fade, mirrored: content scrolling past the floating pill
-          dissolves into the same colour at both ends of the screen. On a
-          phone it runs on under the system navigation buttons, deepening but
-          never solid, so the starfield still shows faintly behind them. */}
-      <Animated.View
-        testID="home-tab-bar-background"
-        style={[
-          StyleSheet.absoluteFill,
-          { pointerEvents: "none" },
-          backgroundStyle,
-        ]}
-      >
-        <LinearGradient
-          colors={[
-            rgba(Colors.starfieldOverlay, 0),
-            rgba(Colors.starfieldOverlay, insets.bottom > 0 ? 0.6 : 1),
-          ]}
-          start={{ x: 0.5, y: 0 }}
-          end={{ x: 0.5, y: 1 }}
-          style={[StyleSheet.absoluteFill, { bottom: insets.bottom }]}
-        />
-        <LinearGradient
-          colors={[
-            rgba(Colors.starfieldOverlay, 0.6),
-            rgba(Colors.starfieldOverlay, 0.8),
-          ]}
-          start={{ x: 0.5, y: 0 }}
-          end={{ x: 0.5, y: 1 }}
+      {/* On a phone, a veil of the night under the system navigation
+          buttons, never solid, so the starfield still shows faintly. */}
+      {insets.bottom > 0 && (
+        <View
+          testID="home-tab-bar-background"
           style={{
             position: "absolute",
+            pointerEvents: "none",
             left: 0,
             right: 0,
             bottom: 0,
             height: insets.bottom,
+            backgroundColor: rgba(Colors.starfieldOverlay, 0.7),
           }}
         />
-      </Animated.View>
+      )}
 
       <View
         style={{
@@ -143,11 +100,14 @@ export function HomeTabBar({
               width: "100%",
               height: spacing(layoutDims.tabBarHeight),
               ...glass,
+              // Round ends.
+              borderRadius: spacing(layoutDims.tabBarHeight / 2),
             },
           ]}
         >
           {HOME_TABS.map((tab, index) => {
             const isActive = index === activeIndex;
+            // Icons only; the name is for screen readers.
             const label = t(`tabs.${tab.key}`);
 
             return (
@@ -162,7 +122,6 @@ export function HomeTabBar({
                   height: "100%",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: spacing(3),
                   outline: "none",
                 }}
               >
@@ -184,14 +143,6 @@ export function HomeTabBar({
                   color={isActive ? theme.accent : theme.dim}
                   style={{ ...transitionStyles.all02sec }}
                 />
-                <Text
-                  size="xxs"
-                  weight={400}
-                  color={isActive ? theme.ink : theme.dim}
-                  style={{ fontSize: spacing(11), lineHeight: spacing(13) }}
-                >
-                  {label}
-                </Text>
               </Pressable>
             );
           })}

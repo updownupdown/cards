@@ -28,6 +28,7 @@ export const cribbageSquares: GameDefinition = {
   animation: GameAnimations.Snow,
   gameColorDark: "#15221c",
   gameColorPale: "#d6f0ec",
+  gameColorAccent: "#8dc6e2",
   cardBack: CardBackColors.Forest,
   quickStart: [
     "Place each card beside another card in the grid.",

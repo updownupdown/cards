@@ -1,9 +1,5 @@
 {
   "jailbreak": {
-    "red": "Kırmızı",
-    "black": "Siyah",
-    "redTotal": "Kırmızı: {{count}}",
-    "blackTotal": "Siyah: {{count}}",
     "theJokerEscaped": "Joker kaçtı!"
   },
   "accordion": {
@@ -124,6 +120,35 @@
     "trade": "Takas",
     "offer": "Teklif"
   },
+  "charlatan": {
+    "statusStart": "İksiri kaynatmaya başlamak için destenize dokunun.",
+    "statusRisk": "Taşma riski %{{risk}} · Şimdi durursanız: {{points}} puan, {{coins}} altın",
+    "statusRiskFinal": "Taşma riski %{{risk}} · Şimdi durursanız: {{points}} puan",
+    "statusBoiledOver": "İksir taştı! Puanlarını ya da altınlarını alın.",
+    "statusMarket": "{{coins}} altın · {{buys}} tane daha alabilirsiniz (farklı renkler)",
+    "dudReturned": "Sinek, bozuk kartı destenize geri gönderir.",
+    "strength": "Güç {{strength}}",
+    "strengthWithBonus": "Güç {{strength}} (durursanız +{{bonus}} ♦)",
+    "duds": "Bozuklar",
+    "effect_hearts": "Etkisi yok",
+    "effect_diamonds": "Son kart ×2",
+    "effect_clubs": "Bozuk kartı geri gönderir",
+    "effect_spades": "Sonraki kartı gösterir",
+    "costValue": "Bedel: değeri",
+    "costValuePlus": "Bedel: değeri + {{extra}}",
+    "addCard": "Kart ekle",
+    "stop": "Dur",
+    "keepPoints": "+{{value}} puan",
+    "keepCoins": "+{{value}} altın",
+    "nextRound": "Tur {{round}} / {{total}}",
+    "round": "Tur",
+    "score": "Puan",
+    "tierVillageHealer": "Köy Şifacısı",
+    "tierCourtAlchemist": "Saray Simyacısı",
+    "tierMiracleWorker": "Mucize Yaratıcı",
+    "wonWithTier": "{{score}} puan: {{tier}}!",
+    "lostShortOfTarget": "{{score}} puan. Kazanmak için {{target}} puan gerekiyor."
+  },
   "cityGrid": {
     "pileIsFull": "Yığın dolu!",
     "mustPlaceOnExistingOr": "Mevcut ya da bitişik bir yığına koymalısın!",
@@ -186,6 +211,17 @@
     "allTwelveRoyalsAreDown": "On iki soylunun hepsi düştü.",
     "youRanOutOfCards": "On iki soylunun hepsini yenemeden kartların bitti."
   },
+  "ebbAndFlow": {
+    "rising": "Yükselen",
+    "falling": "Alçalan",
+    "playMore_one": "{{count}} kart daha oynayın",
+    "playMore_other": "{{count}} kart daha oynayın",
+    "playOrDraw": "Oynamaya devam edin ya da kart çekmek için desteye dokunun",
+    "deckEmpty": "Deste boş: oynayabildiğiniz her kartı oynayın",
+    "allPlayed": "Tüm kartlar oynandı!",
+    "stuck_one": "Oynanabilecek kart yok. {{count}} kart kaldı.",
+    "stuck_other": "Oynanabilecek kart yok. {{count}} kart kaldı."
+  },
   "elementaryDetective": {
     "youScored20ToWin": "Puanın: {{score}} (kazanmak için 20)",
     "score": "Puan"
@@ -241,6 +277,21 @@
   },
   "grandfathersClock": {
     "everyHourStruck": "Bütün saatler çaldı!"
+  },
+  "glazier": {
+    "paneSet": "Cam yerleşti: +{{count}}",
+    "paneShattered": "Pencerede yer yok: cam kırılıyor.",
+    "framesShattered": "Bir çerçeve artık sırasına sığmıyor: camları kırılıyor.",
+    "shardsPenalty": "Kırıklar: −{{count}}",
+    "windowBonus": "Pencere bonusları: +{{count}}",
+    "roundStart": "Tur {{round}} / {{total}}",
+    "round": "Tur",
+    "score": "Puan",
+    "tierJourneyman": "Kalfa",
+    "tierMaster": "Usta Camcı",
+    "tierCathedral": "Katedral Vitrayı",
+    "wonWithTier": "{{score}} puan: {{tier}}!",
+    "lostShortOfTarget": "{{score}} puan. Kazanmak için {{target}} puan gerekiyor."
   },
   "gremlin": {
     "helper": "Yardımcı",
@@ -376,6 +427,43 @@
     "shrineComplete": "Tüm setler tapınakta!",
     "trayFull": "Tepsi doldu."
   },
+  "picketFence": {
+    "statusChooseHouse": "Ev olarak inşa edilecek bir kart seçin.",
+    "statusChooseLot": "İnşa etmek için vurgulanan bir arsaya dokunun.",
+    "statusChooseEffect": "Bir etki seçin: {{hearts}} park · {{diamonds}} havuz · {{spades}} çit · {{clubs}} ev",
+    "statusChooseFence": "Çitin gideceği yere dokunun.",
+    "statusChooseSecondHouse": "İkinci ev için bir arsaya dokunun.",
+    "noLotFits": "Bu kart hiçbir arsaya sığmıyor.",
+    "effectWasted": "Bu sefer etkisi yok: kart atılıyor.",
+    "estateBlocked": "✕",
+    "parks": "Parklar {{count}}/{{max}} · {{points}}",
+    "pools": "Havuzlar",
+    "score": "Puan",
+    "tierGoodNeighbours": "İyi Komşular",
+    "tierModelSuburb": "Örnek Mahalle",
+    "tierPicturePerfect": "Kartpostal Gibi",
+    "tierQuietStreet": "Sakin Sokak",
+    "tierVacantLots": "Boş Arsalar",
+    "wonWithTier": "{{score}} puan: {{tier}}!",
+    "lostShortOfTarget": "{{score}} puan: {{tier}}. Kazanmak için {{target}} puan gerekiyor."
+  },
+  "pickpocket": {
+    "round": "Tur",
+    "score": "Altın",
+    "statusStart": "Kesenizi başlatmak için bir kart çevirin.",
+    "statusPurse": "Kese: {{purse}}",
+    "cleanSweep": "Kusursuz vurgun! {{purse}} sizde kalıyor.",
+    "walkedAway": "{{purse}} ile sıvıştınız.",
+    "caught": "Yakalandınız! Kesenizdeki {{purse}} kayboldu.",
+    "caughtEmpty": "Tek altın almadan yakalandınız!",
+    "walkAway": "Sıvış",
+    "nextRound": "Sonraki tur",
+    "tierLightFingers": "Hafif Parmaklar",
+    "tierCutpurse": "Yankesici",
+    "tierPrinceOfThieves": "Hırsızlar Prensi",
+    "wonWithTier": "{{score}} altın: {{tier}}!",
+    "lostShortOfTarget": "{{score}} altın. Kazanmak için {{target}} altın gerekiyor."
+  },
   "pocketPoker": {
     "youHit10PointsYou": "10 puana ulaştın, kazandın!",
     "youBustedOut": "Puanın bitti.",
@@ -479,7 +567,6 @@
   },
   "slyFox": {
     "dealing": "Dağıtılıyor",
-    "place": "{{toPlace}} yerleştir",
     "outfoxedTheDeck": "Desteyi kurnazlıkla yendin!"
   },
   "somnus": {

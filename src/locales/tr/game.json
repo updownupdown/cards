@@ -1,25 +1,30 @@
 {
   "menu": {
     "home": "Ana sayfa",
-    "campaign": "Kampanya",
-    "instantWin": "Anında kazan"
+    "campaign": "Yolculuk",
+    "instantWin": "Anında kazan",
+    "rules": "Kurallar",
+    "undo": "Geri al",
+    "reset": "Yeniden başlat",
+    "menu": "Menü"
   },
   "result": {
-    "won": "Kazandın!",
+    "won": "Kazandınız",
     "lost": "Kaybettin",
     "score": "Puan: {{score}}",
     "playAgain": "Tekrar oyna",
-    "tryAgain": "Tekrar dene"
+    "tryAgain": "Tekrar dene",
+    "continueOdyssey": "Yolculuğa devam et",
+    "home": "Ana sayfa"
   },
   "reset": {
     "hold": "Oyunu sıfırlamak için basılı tut"
   },
   "tips": {
-    "quickStart": "Hızlı başlangıç",
-    "viewRules": "Kuralları gör"
+    "quickStart": "Hızlı başlangıç"
   },
   "rules": {
-    "title": "Nasıl oynanır",
+    "title": "Kurallar",
     "unavailable": "Bu oyun için talimat yok."
   },
   "mercySkip": {
@@ -27,7 +32,6 @@
   },
   "settings": {
     "title": "Ayarlar",
-    "none": "Oyun ayarı yok",
     "appliesNow": "Oyunu sıfırlamadan uygulanır.",
     "appliesNextGame": "Değiştirince oyun sıfırlanır."
   },
@@ -36,9 +40,7 @@
   },
   "credits": {
     "title": "Emeği geçenler",
-    "backgroundImage": "Arka plan görseli (bulanık):",
-    "gameArt": "Kapak görseli:",
-    "artSource": "Kamu malı, kaynak:"
+    "backgroundImage": "Arka plan görseli:"
   },
   "deckPreview": {
     "title": "Deste önizlemesi",

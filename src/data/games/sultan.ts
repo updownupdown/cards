@@ -26,6 +26,7 @@ export const sultan: GameDefinition = {
   animation: GameAnimations.Clouds,
   gameColorDark: "#362d2a",
   gameColorPale: "#f0dfbd",
+  gameColorAccent: "#e39a6c",
   cardBack: CardBackColors.Copper,
   quickStart: [
     "Build the eight outer foundations upward by suit to Queens.",

@@ -1,12 +1,13 @@
 import { Text } from "@/components/common/Text";
 import { useGlassStyle } from "@/components/ui/FloatingBar";
 import { Kicker, RoundButton } from "@/components/ui/Nocturne";
+import { Icon } from "@/icons";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState, type ReactNode } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { rgba, theme } from "@/styles/styles";
+import { Colors, rgba, theme } from "@/styles/styles";
 
 /**
  * A number kept across sessions (the chapter or quote last looked at).
@@ -199,5 +200,37 @@ export function CountRow({
     </Pressable>
   ) : (
     <View style={style}>{content}</View>
+  );
+}
+
+/**
+ * A work not yet acquired: a plain box in the theme's colour, the size of
+ * the work, with a picture icon in the middle.
+ */
+export function WorkPlaceholder({
+  width,
+  height,
+  iconSize,
+  radius,
+}: {
+  width: number;
+  height: number;
+  iconSize: number;
+  radius: number;
+}) {
+  return (
+    <View
+      style={{
+        width,
+        height,
+        borderRadius: radius,
+        backgroundColor: theme.surface,
+        alignItems: "center",
+        justifyContent: "center",
+        boxShadow: `0 ${radius + 1}px ${radius * 4}px ${rgba(Colors.black, 0.55)}`,
+      }}
+    >
+      <Icon name="gallery" size={iconSize} color={theme.faint} />
+    </View>
   );
 }

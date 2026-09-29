@@ -24,6 +24,7 @@ export const nestor: GameDefinition = {
   animation: GameAnimations.Clouds,
   gameColorDark: "#112e49",
   gameColorPale: "#e7f7ff",
+  gameColorAccent: "#ecc878",
   cardBack: CardBackColors.Ocean,
   quickStart: [
     "Clear all cards by removing pairs of matching ranks from the bottom of columns or the reserve.",

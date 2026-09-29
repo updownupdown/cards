@@ -139,12 +139,16 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
               ]}
             >
               <Kicker>{t("tips.quickStart")}</Kicker>
+              {/* Which game these are the tips for. */}
+              <Text size="xs" weight={400} color={theme.dim} numberOfLines={1}>
+                {gameInfo.title}
+              </Text>
             </View>
 
             <Button
               size="sm"
               iconName="instructions"
-              text={t("tips.viewRules")}
+              text={t("rules.title")}
               onPress={() => {
                 onClose();
                 showRulesModal();

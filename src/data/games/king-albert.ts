@@ -22,6 +22,7 @@ export const kingAlbert: GameDefinition = {
   animation: GameAnimations.Leaves,
   gameColorDark: "#2f3d35",
   gameColorPale: "#e9e7d3",
+  gameColorAccent: "#e6c07c",
   cardBack: CardBackColors.Pine,
   quickStart: [
     "Move every card to the four foundations by suit, from A to K.",

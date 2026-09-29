@@ -142,7 +142,11 @@ export default function DynamicGameRoute() {
   const palette = useMemo(
     () =>
       gameInfo
-        ? gamePalette(gameInfo.gameColorDark, gameInfo.gameColorPale)
+        ? gamePalette(
+            gameInfo.gameColorDark,
+            gameInfo.gameColorPale,
+            gameInfo.gameColorAccent,
+          )
         : null,
     [gameInfo],
   );

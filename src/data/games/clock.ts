@@ -24,6 +24,7 @@ export const clock: GameDefinition = {
   animation: GameAnimations.CandleMotes,
   gameColorDark: "#1d1610",
   gameColorPale: "#eed9c2",
+  gameColorAccent: "#efc16e",
   cardBack: CardBackColors.Bronze,
   quickStart: [
     "Tap the center pile to start, then tap the hour pile that matches the last revealed card.",

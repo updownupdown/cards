@@ -26,6 +26,7 @@ export const rankAndFile: GameDefinition = {
   animation: GameAnimations.Clouds,
   gameColorDark: "#26343b",
   gameColorPale: "#dfe2d4",
+  gameColorAccent: "#97d8b2",
   cardBack: CardBackColors.Forest,
   quickStart: [
     "Move both decks to eight foundations, built by suit from A to K.",

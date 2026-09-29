@@ -1,14 +1,9 @@
 {
   "tabs": {
     "home": "Home",
-    "collect": "Collezione",
-    "search": "Cerca",
-    "campaign": "Campagna"
-  },
-  "cardSize": {
-    "small": "Elenco",
-    "medium": "Schede",
-    "large": "Dettagli"
+    "campaign": "Odissea",
+    "collect": "Galleria",
+    "search": "Cerca"
   },
   "favorites": {
     "add": "Aggiungi ai preferiti",
@@ -17,18 +12,32 @@
   "search": {
     "placeholder": "Cerca...",
     "clear": "Cancella la ricerca",
-    "filters": "Filtri",
-    "filter": "Filtra",
-    "resetFilters": "Azzera i filtri",
     "all": "Tutti",
-    "unplayed": "Mai giocati"
+    "unplayed": "Mai giocati",
+    "unbeaten": "Mai vinti",
+    "won": "Vinti",
+    "count_one": "{{count}} gioco",
+    "count_other": "{{count}} giochi",
+    "sortAZ": "A–Z",
+    "sortDifficulty": "Difficoltà",
+    "sortEasiest": "Prima i più facili",
+    "sortHardest": "Prima i più difficili",
+    "sortRecent": "Recenti",
+    "sortLuck": "Fortuna",
+    "sortLeastLuck": "Prima i meno fortunati",
+    "sortMostLuck": "Prima i più fortunati",
+    "sortPlays": "Partite giocate",
+    "sortLeastPlayed": "Prima i meno giocati",
+    "sortMostPlayed": "Prima i più giocati",
+    "sortBy": "Ordina"
   },
   "sections": {
     "localOnly": "Giochi solo in locale",
     "gameOfTheDay": "Gioco del giorno",
     "easyGames": "Giochi facili per iniziare",
-    "jumpBackIn": "Riprendi",
-    "favorites": "Preferiti"
+    "favorites": "Preferiti",
+    "continue": "Continua",
+    "fact": "Lo sapevi?"
   },
   "gameOfTheDay": {
     "today": "Oggi",
@@ -40,17 +49,7 @@
   },
   "deal": {
     "title": "Mano a caso",
-    "intro": "Scorri a sinistra o a destra per passare, o tocca per giocare."
-  },
-  "collect": {
-    "games": "Giochi: {{won}}/{{total}}",
-    "categories": "Categorie: {{won}}/{{total}}",
-    "tagProgress": "{{tag}}: {{won}} vinti su {{total}}",
-    "intro": {
-      "title": "Diario di viaggio",
-      "text": "Vinci un gioco per ottenere il suo timbro. Esplora meccaniche simili e prova a completare tutte le serie!",
-      "close": "Chiudi"
-    }
+    "intro": "Scorri per passare, tocca per giocare"
   },
   "tags": {
     "KlondikeFamily": "Famiglia Klondike",
@@ -154,5 +153,68 @@
     "dismissed": "Nessun problema: puoi installarla quando vuoi dal menu del browser.",
     "installNow": "Installa ora",
     "notNow": "Non ora"
+  },
+  "gallery": {
+    "previous": "Opera precedente",
+    "next": "Opera successiva",
+    "views": {
+      "works": "Opere",
+      "chapters": "Capitoli",
+      "quotes": "Citazioni"
+    },
+    "groupBy": {
+      "era": "Epoca",
+      "style": "Stile",
+      "category": "Categoria di gioco",
+      "region": "Regione",
+      "medium": "Tecnica"
+    },
+    "eras": {
+      "ancient": "Prima del 1400",
+      "renaissance": "1400–1599",
+      "c17": "XVII secolo",
+      "c18": "XVIII secolo",
+      "early-c19": "1800–1849",
+      "late-c19": "1850–1899",
+      "c20": "XX secolo"
+    },
+    "styles": {
+      "sacred": "Arte sacra e miniature",
+      "renaissance": "Rinascimento",
+      "baroque": "Barocco e Secolo d'oro",
+      "rococo": "Rococò e neoclassicismo",
+      "east-asian": "Asia orientale",
+      "romanticism": "Romanticismo",
+      "realism": "Realismo",
+      "impressionism": "Impressionismo e oltre",
+      "modern": "Modernismo",
+      "satire": "Satira e caricatura",
+      "illustration": "Illustrazione e storia naturale",
+      "architecture": "Mappe e architettura",
+      "decorative": "Arti decorative"
+    },
+    "regions": {
+      "europe": "Europa",
+      "americas": "Americhe",
+      "east-asia": "Asia orientale",
+      "south-asia": "Asia meridionale e Himalaya",
+      "africa-middle-east": "Africa e Medio Oriente",
+      "oceania": "Oceania"
+    },
+    "media": {
+      "painting": "Dipinti",
+      "drawing": "Disegni e acquerelli",
+      "print": "Stampe",
+      "manuscript": "Manoscritti",
+      "object": "Oggetti e tessuti",
+      "photograph": "Fotografie"
+    },
+    "back": "Torna alla galleria",
+    "unknownArtist": "Artista sconosciuto",
+    "notAcquired": "Non acquisita"
+  },
+  "header": {
+    "stats": "Statistiche",
+    "settings": "Impostazioni"
   }
 }

@@ -178,7 +178,7 @@ function DealtCard({
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const stackDepth = useSharedValue(depth);
-  const stackOffset = spacing(12);
+  const stackOffset = spacing(18);
   const isTop = depth === 0;
 
   useEffect(() => {

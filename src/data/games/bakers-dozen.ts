@@ -26,6 +26,7 @@ export const bakersDozen: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#253b36",
   gameColorPale: "#edf7e8",
+  gameColorAccent: "#e2bf8d",
   cardBack: CardBackColors.Ocean,
   quickStart: [
     "Build foundations up by suit from A to K.",

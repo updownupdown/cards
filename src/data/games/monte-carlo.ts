@@ -24,6 +24,7 @@ export const monteCarlo: GameDefinition = {
   animation: GameAnimations.Birds,
   gameColorDark: "#152635",
   gameColorPale: "#fffce5",
+  gameColorAccent: "#df90a2",
   cardBack: CardBackColors.Burgundy,
   quickStart: [
     "Tap adjacent cards of equal rank to remove them.",

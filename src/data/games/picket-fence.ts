@@ -30,6 +30,7 @@ export const picketFence: GameDefinition = {
   animation: GameAnimations.Pollen,
   gameColorDark: "#1e2a1c",
   gameColorPale: "#e8efd9",
+  gameColorAccent: "#ccd897",
   cardBack: CardBackColors.Olive,
   quickStart: [
     "Each turn, build one card as a house and use another card's suit as its effect.",

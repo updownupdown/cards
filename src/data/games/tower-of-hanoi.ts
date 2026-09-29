@@ -26,6 +26,7 @@ export const towerOfHanoi: GameDefinition = {
   },
   gameColorDark: "#304f63",
   gameColorPale: "#d8efe8",
+  gameColorAccent: "#e6c29d",
   cardBack: CardBackColors.Teal,
   quickStart: [
     "Move only the top card from a pile.",

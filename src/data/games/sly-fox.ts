@@ -25,6 +25,7 @@ export const slyFox: GameDefinition = {
   animation: GameAnimations.Leaves,
   gameColorDark: "#2b1a10",
   gameColorPale: "#fde2cc",
+  gameColorAccent: "#f0a060",
   cardBack: CardBackColors.Copper,
   quickStart: [
     "Move all 104 cards to the foundations. Build As up and Ks down by suit.",

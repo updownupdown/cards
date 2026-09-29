@@ -26,6 +26,7 @@ export const apothecary: GameDefinition = {
   animation: GameAnimations.CandleMotes,
   gameColorDark: "#1d2a2a",
   gameColorPale: "#dcefe6",
+  gameColorAccent: "#e2c68d",
   cardBack: CardBackColors.Teal,
   quickStart: [
     "Fill every jar with four of a kind to seal it.",

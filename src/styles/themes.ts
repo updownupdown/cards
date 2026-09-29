@@ -14,8 +14,9 @@
  * - sky: the tint at the heart of the starry backgrounds.
  *
  * Text contrast: dim holds at least 7.8:1 on the surface (6.8:1 on raise) and
- * faint at least 4.6:1, so secondary text stays readable. Beacon and Signal
- * are the high-contrast themes: black, white and one strong accent.
+ * faint at least 4.6:1, so secondary text stays readable. The high-contrast
+ * themes (highContrast, listed last and under their own heading in Settings)
+ * are black, white and one strong accent.
  */
 type Hex = `#${string}`;
 
@@ -36,6 +37,7 @@ export type ColorTheme = {
   id: string;
   name: string;
   colors: ThemeColors;
+  highContrast?: boolean;
 };
 
 export const COLOR_THEMES = [
@@ -264,8 +266,25 @@ export const COLOR_THEMES = [
     },
   },
   {
+    id: "glacier",
+    name: "Glacier",
+    colors: {
+      night: "#060a0e",
+      surface: "#161d24",
+      raise: "#222b35",
+      ink: "#eaf2f7",
+      dim: "#b4c3ce",
+      faint: "#8494a0",
+      accent: "#9ee6ff",
+      accentInk: "#06202c",
+      accent2: "#ffb3c7",
+      sky: "#122233",
+    },
+  },
+  {
     id: "beacon",
     name: "Beacon",
+    highContrast: true,
     colors: {
       night: "#000000",
       surface: "#0f0f0f",
@@ -282,6 +301,7 @@ export const COLOR_THEMES = [
   {
     id: "signal",
     name: "Signal",
+    highContrast: true,
     colors: {
       night: "#000000",
       surface: "#0c0f12",
@@ -293,6 +313,23 @@ export const COLOR_THEMES = [
       accentInk: "#00141a",
       accent2: "#ffb347",
       sky: "#06121a",
+    },
+  },
+  {
+    id: "flare",
+    name: "Flare",
+    highContrast: true,
+    colors: {
+      night: "#000000",
+      surface: "#110c10",
+      raise: "#2b2229",
+      ink: "#ffffff",
+      dim: "#e2d8de",
+      faint: "#aa9ea6",
+      accent: "#ff6bc1",
+      accentInk: "#1a0010",
+      accent2: "#7dff9e",
+      sky: "#12060e",
     },
   },
 ] as const satisfies readonly ColorTheme[];

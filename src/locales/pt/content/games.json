@@ -1529,6 +1529,50 @@
       "value": "Gargântua"
     }
   },
+  "glazier": {
+    "howToPlay": {
+      "hash": "2e3ae25d",
+      "value": [
+        "## Objetivo",
+        "Faça **40 pontos** ou mais em quatro rodadas preenchendo um vitral 4x4.",
+        "## Escolha",
+        "- A cada rodada, três fornos recebem quatro vidros cada e a bancada recebe um.",
+        "- Pegue **todos** os vidros de um naipe de um forno ou da bancada. Os outros vidros do forno vão para a bancada.",
+        "- A rodada termina quando os fornos e a bancada estão vazios.",
+        "## Molduras",
+        "- As molduras levam 1, 2, 3 e 4 vidros de um único naipe, uma moldura por linha da janela.",
+        "- Uma moldura não pode receber um naipe que já não cabe na sua linha da janela.",
+        "- Vidros que não cabem se quebram. Você também pode quebrar um grupo de propósito.",
+        "## Janela",
+        "- No fim da rodada, cada moldura cheia coloca um vidro na sua linha, e você escolhe a coluna.",
+        "- **Nenhum naipe pode se repetir numa linha ou coluna.**",
+        "- Vidros que não podem mais ser colocados se quebram.",
+        "## Pontuação",
+        "- Um vidro vale o comprimento da linha que ele une na horizontal mais a que une na vertical, ou 1 se não unir nenhuma.",
+        "- A cada rodada, os cacos custam 1, 1, 2, 2, 2, 3 e 3 pontos; os seguintes são grátis.",
+        "- No fim, cada linha completa vale **3** e cada coluna completa **6**.",
+        "## Níveis",
+        "- 40+: Oficial",
+        "- 55+: Mestre vidraceiro",
+        "- 70+: Vitral de catedral",
+        "## Dicas",
+        "- O que você deixa num forno se acumula na bancada.",
+        "- Antes de colocar um vidro, veja quais colunas continuam livres para os naipes que a linha ainda precisa."
+      ]
+    },
+    "quickStart": {
+      "hash": "51bc2e4e",
+      "value": [
+        "Pegue todos os vidros de um naipe de um forno; o resto vai para a bancada.",
+        "As molduras levam de 1 a 4 vidros de um naipe. Vidros a mais se quebram e custam pontos.",
+        "Uma moldura cheia coloca um vidro na janela; nenhum naipe se repete numa linha ou coluna."
+      ]
+    },
+    "title": {
+      "hash": "2b72c1f3",
+      "value": "Vidraceiro"
+    }
+  },
   "golf": {
     "howToPlay": {
       "hash": "24a82fa3",

@@ -26,6 +26,7 @@ export const blackHole: GameDefinition = {
   animation: GameAnimations.Stars,
   gameColorDark: "#150e25",
   gameColorPale: "#d4cbff",
+  gameColorAccent: "#e2cd8d",
   cardBack: CardBackColors.Violet,
   quickStart: [
     "Cards of adjacent value to the hole card can be cleared. Clear all to win. A<->K wraps.",

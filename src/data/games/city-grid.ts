@@ -24,6 +24,7 @@ export const cityGrid: GameDefinition = {
   animation: GameAnimations.Birds,
   gameColorDark: "#383d4e",
   gameColorPale: "#e3f6ff",
+  gameColorAccent: "#efa874",
   cardBack: CardBackColors.Bicycle,
   quickStart: [
     "Fill up the grid with all top cards facing up.",

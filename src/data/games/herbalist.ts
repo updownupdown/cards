@@ -25,6 +25,7 @@ export const herbalist: GameDefinition = {
   animation: GameAnimations.Firefly,
   gameColorDark: "#1b3a1f",
   gameColorPale: "#edffba",
+  gameColorAccent: "#8da9e2",
   cardBack: CardBackColors.Olive,
   quickStart: [
     "Select a stack of herbs, and distribute them to the adjacent locations, one at a time.",

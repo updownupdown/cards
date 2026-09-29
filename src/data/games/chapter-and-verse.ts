@@ -21,6 +21,7 @@ export const chapterAndVerse: GameDefinition = {
   animation: GameAnimations.CandleMotes,
   gameColorDark: "#2e2d27",
   gameColorPale: "#f0e9d7",
+  gameColorAccent: "#ddc692",
   cardBack: CardBackColors.Bronze,
   quickStart: [
     "Match the customer offers exactly by selecting from available books.",

@@ -1529,6 +1529,50 @@
       "value": "Gargantúa"
     }
   },
+  "glazier": {
+    "howToPlay": {
+      "hash": "2e3ae25d",
+      "value": [
+        "## Objetivo",
+        "Consigue **40 puntos** o más en cuatro rondas llenando una vidriera de 4x4.",
+        "## Selección",
+        "- En cada ronda, tres hornos reciben cuatro cristales cada uno y el banco de trabajo recibe uno.",
+        "- Toma **todos** los cristales de un palo de un horno o del banco de trabajo. Los demás cristales del horno pasan al banco.",
+        "- La ronda termina cuando los hornos y el banco están vacíos.",
+        "## Marcos",
+        "- Los marcos admiten 1, 2, 3 y 4 cristales de un solo palo, un marco por fila de la ventana.",
+        "- Un marco no puede tomar un palo que ya no cabe en su fila de la ventana.",
+        "- Los cristales que no caben se rompen. También puedes romper un grupo a propósito.",
+        "## Ventana",
+        "- Al final de la ronda, cada marco lleno coloca un cristal en su fila, y tú eliges la columna.",
+        "- **Ningún palo puede repetirse en una fila o columna.**",
+        "- Los cristales que ya no se pueden colocar se rompen.",
+        "## Puntuación",
+        "- Un cristal puntúa la longitud de la línea que une en horizontal más la que une en vertical, o 1 si no une ninguna.",
+        "- En cada ronda, las esquirlas restan 1, 1, 2, 2, 2, 3 y 3 puntos; las siguientes son gratis.",
+        "- Al final, cada fila completa da **3** y cada columna completa **6**.",
+        "## Rangos",
+        "- 40+: Oficial",
+        "- 55+: Maestro vidriero",
+        "- 70+: Vitral de catedral",
+        "## Consejos",
+        "- Lo que dejas en un horno se acumula en el banco de trabajo.",
+        "- Antes de colocar un cristal, comprueba qué columnas quedan libres para los palos que aún necesita su fila."
+      ]
+    },
+    "quickStart": {
+      "hash": "51bc2e4e",
+      "value": [
+        "Toma todos los cristales de un palo de un horno; el resto pasa al banco de trabajo.",
+        "Los marcos admiten de 1 a 4 cristales de un palo. Los cristales de más se rompen y restan puntos.",
+        "Un marco lleno coloca un cristal en la ventana; ningún palo se repite en una fila o columna."
+      ]
+    },
+    "title": {
+      "hash": "2b72c1f3",
+      "value": "Vidriero"
+    }
+  },
   "golf": {
     "howToPlay": {
       "hash": "24a82fa3",

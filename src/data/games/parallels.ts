@@ -25,6 +25,7 @@ export const parallels: GameDefinition = {
   animation: GameAnimations.Rain,
   gameColorDark: "#1a1f24",
   gameColorPale: "#e3eaf0",
+  gameColorAccent: "#97b4d8",
   cardBack: CardBackColors.Slate,
   quickStart: [
     "Move all 104 cards to the foundations. Build As up and Ks down by suit.",

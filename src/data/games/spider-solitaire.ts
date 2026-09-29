@@ -23,6 +23,7 @@ export const spiderSolitaire: GameDefinition = {
   animation: GameAnimations.Spiders,
   gameColorDark: "#25111e",
   gameColorPale: "#f6e6ff",
+  gameColorAccent: "#e8b46a",
   cardBack: CardBackColors.Plum,
   quickStart: ["Build down by rank; move same-suit runs; deal when stuck."],
   howToPlay: [

@@ -24,6 +24,7 @@ export const lycan: GameDefinition = {
   animation: GameAnimations.Mist,
   gameColorDark: "#311a20",
   gameColorPale: "#f7e2ca",
+  gameColorAccent: "#8dd4e2",
   cardBack: CardBackColors.Walnut,
   quickStart: [
     "Capture the Wolf's cards by using match/sum/split/overtake actions.",

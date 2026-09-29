@@ -24,6 +24,7 @@ export const shiftingSands: GameDefinition = {
   },
   gameColorDark: "#645641",
   gameColorPale: "#f4d99b",
+  gameColorAccent: "#ffd0b0",
   cardBack: CardBackColors.Terracotta,
   quickStart: [
     "Draw 1–7 cards, optionally reverse them, then play across adjacent columns in one direction.",

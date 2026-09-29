@@ -28,6 +28,7 @@ export const pokerSquares: GameDefinition = {
   animation: GameAnimations.Glitter,
   gameColorDark: "#112c1f",
   gameColorPale: "#fff4ce",
+  gameColorAccent: "#f28b82",
   cardBack: CardBackColors.Moss,
   quickStart: [
     "Place each dealt card carefully; rows and columns score poker hands.",

@@ -1,9 +1,5 @@
 {
   "jailbreak": {
-    "red": "Rosso",
-    "black": "Nero",
-    "redTotal": "Rosso: {{count}}",
-    "blackTotal": "Nero: {{count}}",
     "theJokerEscaped": "Il jolly è fuggito!"
   },
   "accordion": {
@@ -124,6 +120,35 @@
     "trade": "Scambia",
     "offer": "Offerta"
   },
+  "charlatan": {
+    "statusStart": "Tocca il tuo mazzo per iniziare la pozione.",
+    "statusRisk": "Rischio di esplosione {{risk}}% · Fermandoti: {{points}} punti, {{coins}} monete",
+    "statusRiskFinal": "Rischio di esplosione {{risk}}% · Fermandoti: {{points}} punti",
+    "statusBoiledOver": "La pozione è traboccata! Tieni i suoi punti o le sue monete.",
+    "statusMarket": "{{coins}} monete · Puoi comprarne altre {{buys}} (semi diversi)",
+    "dudReturned": "Il fiori rimanda la carta fallita nel tuo mazzo.",
+    "strength": "Forza {{strength}}",
+    "strengthWithBonus": "Forza {{strength}} (+{{bonus}} ♦ se ti fermi)",
+    "duds": "Fallite",
+    "effect_hearts": "Nessun effetto",
+    "effect_diamonds": "Ultima carta ×2",
+    "effect_clubs": "Rimanda una fallita",
+    "effect_spades": "Mostra la prossima",
+    "costValue": "Costo: valore",
+    "costValuePlus": "Costo: valore + {{extra}}",
+    "addCard": "Aggiungi carta",
+    "stop": "Fermati",
+    "keepPoints": "+{{value}} punti",
+    "keepCoins": "+{{value}} monete",
+    "nextRound": "Round {{round}} / {{total}}",
+    "round": "Round",
+    "score": "Punti",
+    "tierVillageHealer": "Guaritore del villaggio",
+    "tierCourtAlchemist": "Alchimista di corte",
+    "tierMiracleWorker": "Operatore di miracoli",
+    "wonWithTier": "{{score}} punti: {{tier}}!",
+    "lostShortOfTarget": "{{score}} punti. Te ne servono {{target}} per vincere."
+  },
   "cityGrid": {
     "pileIsFull": "La pila è piena!",
     "mustPlaceOnExistingOr": "Devi piazzare su una pila esistente o adiacente!",
@@ -186,6 +211,17 @@
     "allTwelveRoyalsAreDown": "Tutte e dodici le figure sono cadute.",
     "youRanOutOfCards": "Hai finito le carte prima di sconfiggere tutte e dodici le figure."
   },
+  "ebbAndFlow": {
+    "rising": "In salita",
+    "falling": "In discesa",
+    "playMore_one": "Gioca ancora {{count}} carta",
+    "playMore_other": "Gioca ancora {{count}} carte",
+    "playOrDraw": "Continua, o tocca il mazzo per pescare",
+    "deckEmpty": "Mazzo vuoto: gioca tutte le carte che puoi",
+    "allPlayed": "Tutte le carte sono giocate!",
+    "stuck_one": "Nessuna carta giocabile. Resta {{count}} carta.",
+    "stuck_other": "Nessuna carta giocabile. Restano {{count}} carte."
+  },
   "elementaryDetective": {
     "youScored20ToWin": "Hai fatto {{score}} punti (20 per vincere)",
     "score": "Punti"
@@ -241,6 +277,21 @@
   },
   "grandfathersClock": {
     "everyHourStruck": "Tutte le ore sono suonate!"
+  },
+  "glazier": {
+    "paneSet": "Vetro posato: +{{count}}",
+    "paneShattered": "Niente spazio nella finestra: il vetro si rompe.",
+    "framesShattered": "Un telaio non entra più nella sua fila: i suoi vetri si rompono.",
+    "shardsPenalty": "Schegge: −{{count}}",
+    "windowBonus": "Bonus finestre: +{{count}}",
+    "roundStart": "Round {{round}} di {{total}}",
+    "round": "Round",
+    "score": "Punti",
+    "tierJourneyman": "Apprendista",
+    "tierMaster": "Maestro vetraio",
+    "tierCathedral": "Vetrata da cattedrale",
+    "wonWithTier": "{{score}} punti: {{tier}}!",
+    "lostShortOfTarget": "{{score}} punti. Te ne servono {{target}} per vincere."
   },
   "gremlin": {
     "helper": "Aiutante",
@@ -376,6 +427,43 @@
     "shrineComplete": "Ogni tris riposa nel santuario!",
     "trayFull": "Il vassoio è pieno."
   },
+  "picketFence": {
+    "statusChooseHouse": "Scegli una carta da costruire come casa.",
+    "statusChooseLot": "Tocca un lotto evidenziato per costruirci.",
+    "statusChooseEffect": "Scegli un effetto: {{hearts}} parco · {{diamonds}} piscina · {{spades}} steccato · {{clubs}} casa",
+    "statusChooseFence": "Tocca dove va lo steccato.",
+    "statusChooseSecondHouse": "Tocca un lotto per la seconda casa.",
+    "noLotFits": "Questa carta non entra in nessun lotto.",
+    "effectWasted": "Nessun effetto stavolta: la carta viene scartata.",
+    "estateBlocked": "✕",
+    "parks": "Parchi {{count}}/{{max}} · {{points}}",
+    "pools": "Piscine",
+    "score": "Punti",
+    "tierGoodNeighbours": "Buoni vicini",
+    "tierModelSuburb": "Quartiere modello",
+    "tierPicturePerfect": "Da cartolina",
+    "tierQuietStreet": "Via tranquilla",
+    "tierVacantLots": "Lotti vuoti",
+    "wonWithTier": "{{score}} punti: {{tier}}!",
+    "lostShortOfTarget": "{{score}} punti: {{tier}}. Te ne servono {{target}} per vincere."
+  },
+  "pickpocket": {
+    "round": "Round",
+    "score": "Monete",
+    "statusStart": "Gira una carta per iniziare la tua borsa.",
+    "statusPurse": "Borsa: {{purse}}",
+    "cleanSweep": "Colpo perfetto! Tieni {{purse}}.",
+    "walkedAway": "Te la sei svignata con {{purse}}.",
+    "caught": "Preso! Perdi i {{purse}} della tua borsa.",
+    "caughtEmpty": "Preso prima di aver preso una moneta!",
+    "walkAway": "Svignatela",
+    "nextRound": "Round successivo",
+    "tierLightFingers": "Dita leggere",
+    "tierCutpurse": "Tagliaborse",
+    "tierPrinceOfThieves": "Principe dei ladri",
+    "wonWithTier": "{{score}} monete: {{tier}}!",
+    "lostShortOfTarget": "{{score}} monete. Te ne servono {{target}} per vincere."
+  },
   "pocketPoker": {
     "youHit10PointsYou": "Hai raggiunto 10 punti: hai vinto!",
     "youBustedOut": "Sei rimasto a secco.",
@@ -479,7 +567,6 @@
   },
   "slyFox": {
     "dealing": "Distribuzione",
-    "place": "Piazza {{toPlace}}",
     "outfoxedTheDeck": "Hai battuto il mazzo in astuzia!"
   },
   "somnus": {

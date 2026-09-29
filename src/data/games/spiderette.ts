@@ -22,6 +22,7 @@ export const spiderette: GameDefinition = {
   animation: GameAnimations.Spiders,
   gameColorDark: "#202e27",
   gameColorPale: "#dae6cf",
+  gameColorAccent: "#d897ae",
   cardBack: CardBackColors.Rose,
   quickStart: [
     "Remove four complete suited runs from King to Ace.",

@@ -25,6 +25,7 @@ export const pyramid: GameDefinition = {
   animation: GameAnimations.Sand,
   gameColorDark: "#251703",
   gameColorPale: "#FFEACC",
+  gameColorAccent: "#e9c27a",
   cardBack: CardBackColors.Walnut,
   quickStart: [
     "Remove Kings, or exposed pairs totaling 13. Draw for more matches.",

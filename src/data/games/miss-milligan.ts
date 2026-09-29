@@ -26,6 +26,7 @@ export const missMilligan: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#3a2a33",
   gameColorPale: "#f6e6ee",
+  gameColorAccent: "#d897ae",
   cardBack: CardBackColors.Rose,
   quickStart: [
     "Build eight foundations up by suit, from A to K.",

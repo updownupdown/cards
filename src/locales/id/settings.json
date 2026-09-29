@@ -13,7 +13,7 @@
   },
   "showAnimations": {
     "label": "Tampilkan animasi",
-    "description": "Efek cuaca dan pemandangan di belakang kartu."
+    "description": "Cuaca dan pemandangan di balik kartu, serta bintang bergerak di menu."
   },
   "showTips": {
     "label": "Tampilkan tips",
@@ -40,11 +40,6 @@
   },
   "populateTestProgress": "Isi progres uji",
   "credits": {
-    "starfield": {
-      "prefix": "Latar bintang oleh ",
-      "name": "Olena Bohovyk",
-      "suffix": ""
-    },
     "taoTranslation": {
       "prefix": "Bab Tao Te Ching diterjemahkan dari versi bahasa Inggris karya ",
       "name": "John H. McDonald",
@@ -55,5 +50,11 @@
   "resetData": {
     "button": "Atur ulang semua data aplikasi",
     "confirm": "Hapus semua progres dan pengaturan?"
+  },
+  "colorTheme": {
+    "label": "Tema warna",
+    "expand": "Tampilkan semua",
+    "collapse": "Ciutkan",
+    "highContrast": "Kontras tinggi"
   }
 }

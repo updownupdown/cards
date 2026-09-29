@@ -24,6 +24,7 @@ export const seer: GameDefinition = {
   },
   gameColorDark: "#1b2135",
   gameColorPale: "#d2d3c0",
+  gameColorAccent: "#8fdae0",
   cardBack: CardBackColors.Teal,
   quickStart: [
     "Choose a prediction space to reveal the top card.",

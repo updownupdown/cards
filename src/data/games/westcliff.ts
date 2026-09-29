@@ -16,6 +16,7 @@ export const westcliff: GameDefinition = {
   animation: GameAnimations.Pollen,
   gameColorDark: "#27363b",
   gameColorPale: "#e4ece9",
+  gameColorAccent: "#e2d78d",
   cardBack: CardBackColors.Pine,
   thumbnail: "Westcliff.webp",
   thumbnailCredit: {

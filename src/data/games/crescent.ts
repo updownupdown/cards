@@ -21,6 +21,7 @@ export const crescent: GameDefinition = {
   animation: GameAnimations.Stars,
   gameColorDark: "#182334",
   gameColorPale: "#e5dfca",
+  gameColorAccent: "#e2cd8d",
   cardBack: CardBackColors.Navy,
   quickStart: [
     "Build Ace foundations up and King foundations down by suit.",

@@ -24,6 +24,7 @@ export const dominion: GameDefinition = {
   },
   gameColorDark: "#1d2231",
   gameColorPale: "#dbe9eb",
+  gameColorAccent: "#e2cd8d",
   cardBack: CardBackColors.Ocean,
   quickStart: [
     "Conquer adjacent cards of the same suit or rank.",

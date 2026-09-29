@@ -1529,6 +1529,50 @@
       "value": "Gargantua"
     }
   },
+  "glazier": {
+    "howToPlay": {
+      "hash": "2e3ae25d",
+      "value": [
+        "## Tujuan",
+        "Raih **40 poin** atau lebih dalam empat ronde dengan mengisi jendela kaca patri 4x4.",
+        "## Memilih",
+        "- Tiap ronde, tiga tungku masing-masing mendapat empat kaca dan meja kerja mendapat satu.",
+        "- Ambil **semua** kaca dari satu jenis dari sebuah tungku atau dari meja kerja. Kaca lain di tungku itu pindah ke meja kerja.",
+        "- Ronde berakhir saat tungku dan meja kerja kosong.",
+        "## Bingkai",
+        "- Bingkai memuat 1, 2, 3, dan 4 kaca dari satu jenis, satu bingkai untuk tiap baris jendela.",
+        "- Bingkai tak bisa menerima jenis yang tidak lagi muat di baris jendelanya.",
+        "- Kaca yang tidak muat pecah. Anda juga bisa sengaja memecahkan satu kelompok.",
+        "## Jendela",
+        "- Di akhir ronde, tiap bingkai penuh memasang satu kaca di barisnya, dan Anda memilih kolomnya.",
+        "- **Tak ada jenis yang boleh berulang dalam satu baris atau kolom.**",
+        "- Kaca yang tak bisa lagi dipasang akan pecah.",
+        "## Skor",
+        "- Sebuah kaca bernilai panjang garis mendatar yang disambungnya ditambah garis menurun yang disambungnya, atau 1 jika tidak menyambung apa pun.",
+        "- Tiap ronde, pecahan mengurangi 1, 1, 2, 2, 2, 3, dan 3 poin; selebihnya gratis.",
+        "- Di akhir, tiap baris penuh bernilai **3** dan tiap kolom penuh **6**.",
+        "## Peringkat",
+        "- 40+: Tukang Muda",
+        "- 55+: Ahli Kaca",
+        "- 70+: Jendela Katedral",
+        "## Tips",
+        "- Apa yang Anda tinggalkan di tungku menumpuk di meja kerja.",
+        "- Sebelum memasang kaca, periksa kolom mana yang masih terbuka untuk jenis yang masih dibutuhkan barisnya."
+      ]
+    },
+    "quickStart": {
+      "hash": "51bc2e4e",
+      "value": [
+        "Ambil semua kaca dari satu jenis dari sebuah tungku; sisanya pindah ke meja kerja.",
+        "Bingkai memuat 1 sampai 4 kaca dari satu jenis. Kaca berlebih pecah dan mengurangi poin.",
+        "Bingkai penuh memasang satu kaca di jendela; tak boleh ada jenis yang sama dua kali dalam satu baris atau kolom."
+      ]
+    },
+    "title": {
+      "hash": "2b72c1f3",
+      "value": "Tukang Kaca"
+    }
+  },
   "golf": {
     "howToPlay": {
       "hash": "24a82fa3",

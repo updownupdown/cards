@@ -16,6 +16,7 @@ export const whitehead: GameDefinition = {
   animation: GameAnimations.Pollen,
   gameColorDark: "#30383a",
   gameColorPale: "#edf0e6",
+  gameColorAccent: "#90c6e0",
   cardBack: CardBackColors.Ocean,
   thumbnail: "Whitehead.webp",
   thumbnailCredit: {

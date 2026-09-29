@@ -25,6 +25,7 @@ export const fortyThieves: GameDefinition = {
   animation: GameAnimations.Birds,
   gameColorDark: "#2E2D34",
   gameColorPale: "#EFE8FF",
+  gameColorAccent: "#e7c078",
   cardBack: CardBackColors.Violet,
   quickStart: [
     "Build all 8 foundations up by suit from A to K.",

@@ -25,6 +25,7 @@ export const pagoda: GameDefinition = {
   animation: GameAnimations.Leaves,
   gameColorDark: "#1b2420",
   gameColorPale: "#e6efe9",
+  gameColorAccent: "#dfb190",
   cardBack: CardBackColors.Charcoal,
   quickStart: [
     "Tap an uncovered card to move it into your tray.",

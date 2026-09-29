@@ -24,6 +24,7 @@ export const redDiamond: GameDefinition = {
   },
   gameColorDark: "#220a12",
   gameColorPale: "#ffeaea",
+  gameColorAccent: "#bf8de2",
   cardBack: CardBackColors.Crimson,
   quickStart: [
     "Place all black cards before running out of Diamonds.",

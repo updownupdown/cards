@@ -4,7 +4,13 @@
     "/klondike": {
       "x": 0,
       "y": 0,
-      "connections": ["/fifteen-puzzle", "/memory", "/sultan"],
+      "connections": [
+        "/beehive",
+        "/fifteen-puzzle",
+        "/memory",
+        "/pocket-poker",
+        "/sultan"
+      ],
       "rewards": [
         {
           "type": "tao",
@@ -161,7 +167,13 @@
     "/beehive": {
       "x": 0.0478,
       "y": -0.1971,
-      "connections": ["/bakers-dozen", "/freecell", "/frog", "/tower-of-hanoi"],
+      "connections": [
+        "/bakers-dozen",
+        "/freecell",
+        "/frog",
+        "/klondike",
+        "/tower-of-hanoi"
+      ],
       "rewards": [
         {
           "type": "tao",
@@ -180,7 +192,13 @@
     "/pocket-poker": {
       "x": -0.1334,
       "y": -0.1814,
-      "connections": ["/freecell", "/ouroboros", "/penguin", "/sultan"],
+      "connections": [
+        "/freecell",
+        "/klondike",
+        "/ouroboros",
+        "/penguin",
+        "/sultan"
+      ],
       "rewards": [
         {
           "type": "tao",

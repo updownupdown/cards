@@ -29,6 +29,7 @@ export const royalCotillion: GameDefinition = {
   animation: GameAnimations.ManaDust,
   gameColorDark: "#211a36",
   gameColorPale: "#f1e6ff",
+  gameColorAccent: "#eac86e",
   cardBack: CardBackColors.Violet,
   quickStart: [
     "Move all 104 cards to the eight foundations, building by suit in steps of two.",

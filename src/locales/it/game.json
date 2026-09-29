@@ -1,25 +1,30 @@
 {
   "menu": {
     "home": "Home",
-    "campaign": "Campagna",
-    "instantWin": "Vittoria istantanea"
+    "campaign": "Odissea",
+    "instantWin": "Vittoria istantanea",
+    "rules": "Regole",
+    "undo": "Annulla",
+    "reset": "Ricomincia",
+    "menu": "Menu"
   },
   "result": {
-    "won": "Hai vinto!",
+    "won": "Hai vinto",
     "lost": "Hai perso",
     "score": "Punteggio: {{score}}",
     "playAgain": "Gioca ancora",
-    "tryAgain": "Riprova"
+    "tryAgain": "Riprova",
+    "continueOdyssey": "Continua l'Odissea",
+    "home": "Home"
   },
   "reset": {
     "hold": "Tieni premuto per ricominciare la partita"
   },
   "tips": {
-    "quickStart": "Guida rapida",
-    "viewRules": "Vedi le regole"
+    "quickStart": "Guida rapida"
   },
   "rules": {
-    "title": "Come si gioca",
+    "title": "Regole",
     "unavailable": "Le istruzioni non sono disponibili per questo gioco."
   },
   "mercySkip": {
@@ -27,7 +32,6 @@
   },
   "settings": {
     "title": "Impostazioni",
-    "none": "Nessuna impostazione per questo gioco",
     "appliesNow": "Si applica senza ricominciare la partita.",
     "appliesNextGame": "Ricomincia la partita quando la cambi."
   },
@@ -36,9 +40,7 @@
   },
   "credits": {
     "title": "Crediti",
-    "backgroundImage": "Immagine di sfondo (sfocata):",
-    "gameArt": "Illustrazione di copertina:",
-    "artSource": "Pubblico dominio, da"
+    "backgroundImage": "Immagine di sfondo:"
   },
   "deckPreview": {
     "title": "Anteprima del mazzo",

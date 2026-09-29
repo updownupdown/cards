@@ -24,6 +24,7 @@ export const cabinSiege: GameDefinition = {
   animation: GameAnimations.Leaves,
   gameColorDark: "#201207",
   gameColorPale: "#e9f1d9",
+  gameColorAccent: "#97b4d8",
   cardBack: CardBackColors.Slate,
   quickStart: [
     "Kill zombies by placing cards in adjacent, valid spots.",

@@ -1,14 +1,9 @@
 {
   "tabs": {
     "home": "Accueil",
-    "collect": "Collection",
-    "search": "Recherche",
-    "campaign": "Campagne"
-  },
-  "cardSize": {
-    "small": "Liste",
-    "medium": "Cartes",
-    "large": "Détails"
+    "campaign": "Odyssée",
+    "collect": "Galerie",
+    "search": "Recherche"
   },
   "favorites": {
     "add": "Ajouter aux favoris",
@@ -17,18 +12,32 @@
   "search": {
     "placeholder": "Rechercher…",
     "clear": "Effacer la recherche",
-    "filters": "Filtres",
-    "filter": "Filtrer",
-    "resetFilters": "Réinitialiser les filtres",
     "all": "Tous",
-    "unplayed": "Jamais joués"
+    "unplayed": "Jamais joués",
+    "unbeaten": "Jamais gagnés",
+    "won": "Gagnés",
+    "count_one": "{{count}} jeu",
+    "count_other": "{{count}} jeux",
+    "sortAZ": "A–Z",
+    "sortDifficulty": "Difficulté",
+    "sortEasiest": "Les plus faciles d'abord",
+    "sortHardest": "Les plus difficiles d'abord",
+    "sortRecent": "Récents",
+    "sortLuck": "Chance",
+    "sortLeastLuck": "Le moins de chance d'abord",
+    "sortMostLuck": "Le plus de chance d'abord",
+    "sortPlays": "Parties jouées",
+    "sortLeastPlayed": "Les moins joués d'abord",
+    "sortMostPlayed": "Les plus joués d'abord",
+    "sortBy": "Trier"
   },
   "sections": {
     "localOnly": "Jeux locaux uniquement",
     "gameOfTheDay": "Jeu du jour",
     "easyGames": "Des jeux faciles pour commencer",
-    "jumpBackIn": "Reprendre",
-    "favorites": "Favoris"
+    "favorites": "Favoris",
+    "continue": "Continuer",
+    "fact": "Le saviez-vous"
   },
   "gameOfTheDay": {
     "today": "Aujourd'hui",
@@ -40,17 +49,7 @@
   },
   "deal": {
     "title": "Donne au hasard",
-    "intro": "Glissez à gauche ou à droite pour passer, ou touchez pour jouer."
-  },
-  "collect": {
-    "games": "Jeux : {{won}}/{{total}}",
-    "categories": "Catégories : {{won}}/{{total}}",
-    "tagProgress": "{{tag}} : {{won}} gagnés sur {{total}}",
-    "intro": {
-      "title": "Journal de voyage",
-      "text": "Gagnez un jeu pour obtenir son tampon. Explorez des mécaniques similaires et essayez de compléter toutes les séries !",
-      "close": "Fermer"
-    }
+    "intro": "Balayez pour passer, touchez pour jouer"
   },
   "tags": {
     "KlondikeFamily": "Famille Klondike",
@@ -154,5 +153,68 @@
     "dismissed": "Pas de problème, vous pouvez l'installer à tout moment depuis le menu de votre navigateur.",
     "installNow": "Installer",
     "notNow": "Plus tard"
+  },
+  "gallery": {
+    "previous": "Œuvre précédente",
+    "next": "Œuvre suivante",
+    "views": {
+      "works": "Œuvres",
+      "chapters": "Chapitres",
+      "quotes": "Citations"
+    },
+    "groupBy": {
+      "era": "Époque",
+      "style": "Style",
+      "category": "Catégorie de jeu",
+      "region": "Région",
+      "medium": "Technique"
+    },
+    "eras": {
+      "ancient": "Avant 1400",
+      "renaissance": "1400–1599",
+      "c17": "XVIIe siècle",
+      "c18": "XVIIIe siècle",
+      "early-c19": "1800–1849",
+      "late-c19": "1850–1899",
+      "c20": "XXe siècle"
+    },
+    "styles": {
+      "sacred": "Art sacré et enluminures",
+      "renaissance": "Renaissance",
+      "baroque": "Baroque et Siècle d'or",
+      "rococo": "Rococo et néoclassicisme",
+      "east-asian": "Asie de l'Est",
+      "romanticism": "Romantisme",
+      "realism": "Réalisme",
+      "impressionism": "Impressionnisme et après",
+      "modern": "Modernisme",
+      "satire": "Satire et caricature",
+      "illustration": "Illustration et histoire naturelle",
+      "architecture": "Cartes et architecture",
+      "decorative": "Arts décoratifs"
+    },
+    "regions": {
+      "europe": "Europe",
+      "americas": "Amériques",
+      "east-asia": "Asie de l'Est",
+      "south-asia": "Asie du Sud et Himalaya",
+      "africa-middle-east": "Afrique et Moyen-Orient",
+      "oceania": "Océanie"
+    },
+    "media": {
+      "painting": "Peintures",
+      "drawing": "Dessins et aquarelles",
+      "print": "Estampes",
+      "manuscript": "Manuscrits",
+      "object": "Objets et textiles",
+      "photograph": "Photographies"
+    },
+    "back": "Retour à la galerie",
+    "unknownArtist": "Artiste inconnu",
+    "notAcquired": "Pas encore acquise"
+  },
+  "header": {
+    "stats": "Statistiques",
+    "settings": "Paramètres"
   }
 }

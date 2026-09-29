@@ -24,6 +24,7 @@ export const chainOfCommand: GameDefinition = {
   animation: GameAnimations.Leaves,
   gameColorDark: "#252220",
   gameColorPale: "#b2eee1",
+  gameColorAccent: "#e2b08d",
   cardBack: CardBackColors.Forest,
   quickStart: [
     "Win by promoting a member beyond rank 1.",

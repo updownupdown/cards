@@ -1,57 +1,25 @@
 {
-  "progress": {
-    "games": "Jogos",
-    "chapters": "Capítulos",
-    "quotes": "Citações",
-    "summary": "{{label}}: {{collected}} de {{total}}"
-  },
-  "reward": {
-    "taoChapter": "Tao Te Ching: capítulo {{number}}",
-    "quoteBy": "Uma citação de {{author}}",
-    "unlockedGames_one": "{{count}} jogo desbloqueado:",
-    "unlockedGames_other": "{{count}} jogos desbloqueados:"
-  },
-  "details": {
-    "locked": "Bloqueado"
-  },
   "mercySkip": {
     "granted": "Um viajante gentil oferece-lhe um **indulto**! Salte uma partida difícil a partir do menu dessa partida.",
     "ufoLabel": "Um OVNI passando",
     "dismiss": "Fechar"
   },
-  "collection": {
-    "previous": "Item anterior",
-    "next": "Próximo item",
-    "select": "Selecionar o item {{id}}",
-    "locked": "Item {{id}} bloqueado"
-  },
   "quotes": {
-    "title": "Citações",
-    "subtitle": "{{collected}}/{{total}} citações coletadas",
-    "empty": "Vença jogos na Odisseia Celestial para coletar todas as {{quotes}} citações de {{authors}} pensadores, escritores e cientistas.",
-    "about": "O retrato de cada autor aparece aqui assim que você coleta uma de suas citações.",
-    "count": "{{collected}}/{{total}}",
-    "previousAuthor": "Autor anterior",
-    "nextAuthor": "Próximo autor",
     "previousQuote": "Citação anterior",
     "nextQuote": "Próxima citação",
-    "yearsBC": "{{from}}–{{to}} a.C.",
-    "yearsBCtoAD": "{{from}} a.C. – {{to}} d.C.",
-    "circa": "c. {{years}}"
+    "pick": "Escolher autor",
+    "byEra": "Épocas",
+    "byName": "Alfabética",
+    "uncollected": "Esta citação ainda não foi obtida.",
+    "barLabel": "{{name}}, {{index}} de {{total}}"
   },
   "tao": {
-    "title": "Tao Te Ching",
-    "subtitle": "{{collected}}/{{total}} capítulos coletados",
     "chapter": "Capítulo {{number}}",
-    "viewAll": "Ver todos",
     "previous": "Capítulo anterior",
     "next": "Próximo capítulo",
-    "empty": "Vença jogos na Odisseia Celestial para coletar todos os 81 capítulos do Tao Te Ching.",
-    "about": "O Tao Te Ching é um texto fundamental da China antiga, tradicionalmente atribuído ao sábio Laozi. Ele ensina a viver em harmonia com o Tao, o fluxo e o ritmo naturais do universo. Diz-se que, praticando o wu wei (a ação sem esforço) e cultivando a humildade, a simplicidade e a flexibilidade, é possível encontrar paz e equilíbrio duradouros."
-  },
-  "games": {
-    "title": "Jogos",
-    "subtitle": "{{unlocked}}/{{total}} jogos desbloqueados"
+    "about": "O Tao Te Ching é um texto fundamental da China antiga, tradicionalmente atribuído ao sábio Laozi. Ele ensina a viver em harmonia com o Tao, o fluxo e o ritmo naturais do universo. Diz-se que, praticando o wu wei (a ação sem esforço) e cultivando a humildade, a simplicidade e a flexibilidade, é possível encontrar paz e equilíbrio duradouros.",
+    "pick": "Escolher capítulo",
+    "uncollected": "Este capítulo ainda não foi obtido."
   },
   "original": {
     "label": "Mostrar original"

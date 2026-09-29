@@ -24,6 +24,7 @@ export const golf: GameDefinition = {
   animation: GameAnimations.Birds,
   gameColorDark: "#1d301e",
   gameColorPale: "#f2fccc",
+  gameColorAccent: "#e88790",
   cardBack: CardBackColors.Crimson,
   quickStart: [
     "Clear all cards to win.",

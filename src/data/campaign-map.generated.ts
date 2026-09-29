@@ -7,7 +7,13 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     x: 0,
     y: 0,
     arm: null,
-    connections: ["/fifteen-puzzle", "/memory", "/sultan"],
+    connections: [
+      "/beehive",
+      "/fifteen-puzzle",
+      "/memory",
+      "/pocket-poker",
+      "/sultan",
+    ],
     rewards: [
       {
         type: "tao",
@@ -175,7 +181,13 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     x: 0.0478,
     y: -0.1971,
     arm: null,
-    connections: ["/bakers-dozen", "/freecell", "/frog", "/tower-of-hanoi"],
+    connections: [
+      "/bakers-dozen",
+      "/freecell",
+      "/frog",
+      "/klondike",
+      "/tower-of-hanoi",
+    ],
     rewards: [
       {
         type: "tao",
@@ -196,7 +208,13 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     x: -0.1334,
     y: -0.1814,
     arm: 0,
-    connections: ["/freecell", "/ouroboros", "/penguin", "/sultan"],
+    connections: [
+      "/freecell",
+      "/klondike",
+      "/ouroboros",
+      "/penguin",
+      "/sultan",
+    ],
     rewards: [
       {
         type: "tao",

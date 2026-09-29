@@ -27,6 +27,7 @@ export const terrace: GameDefinition = {
   animation: GameAnimations.Leaves,
   gameColorDark: "#2c3440",
   gameColorPale: "#e6eef8",
+  gameColorAccent: "#e2b08d",
   cardBack: CardBackColors.Ocean,
   quickStart: [
     "Tap one of the four highlighted cards to choose the foundation rank.",

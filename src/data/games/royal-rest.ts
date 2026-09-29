@@ -24,6 +24,7 @@ export const royalRest: GameDefinition = {
   },
   gameColorDark: "#332518",
   gameColorPale: "#def7ff",
+  gameColorAccent: "#90c6e0",
   cardBack: CardBackColors.Ocean,
   quickStart: [
     "Create four stacks of pillow-Jack-pillow.",

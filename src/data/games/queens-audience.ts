@@ -24,6 +24,7 @@ export const queensAudience: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#24162b",
   gameColorPale: "#f7e0f1",
+  gameColorAccent: "#e2bf8d",
   cardBack: CardBackColors.Plum,
   quickStart: [
     "Bring all 52 cards into the audience chamber.",

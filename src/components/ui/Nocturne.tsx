@@ -5,11 +5,11 @@
  * Colours come from `theme` at render time, so they follow the colour theme.
  */
 import { Text, type TextProps } from "@/components/common/Text";
-import { usePalette } from "@/styles/palette";
+import { mix, usePalette } from "@/styles/palette";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, type IconName } from "@/icons";
-import { rgba, theme, transitionStyles } from "@/styles/styles";
-import type { ReactNode } from "react";
+import { Colors, rgba, theme, transitionStyles } from "@/styles/styles";
+import { useState, type ReactNode } from "react";
 import {
   Platform,
   Pressable,
@@ -282,7 +282,7 @@ export function Pill({
   onPress: () => void;
   iconName?: IconName;
 }) {
-  const { spacing } = useResponsiveMetrics();
+  const { spacing, font } = useResponsiveMetrics();
   const theme = usePalette();
   return (
     <Pressable
@@ -297,11 +297,16 @@ export function Pill({
         flexDirection: "row",
         alignItems: "center",
         gap: spacing(6),
+        // Unselected, the tab bar's glass; selected, a tint of the accent
+        // over it. A shadow lifts both off the sky.
         backgroundColor: selected
-          ? rgba(theme.accent, 0.14)
-          : rgba(theme.ink, 0.07),
+          ? rgba(mix(theme.surface, theme.accent, 0.16), 0.8)
+          : rgba(theme.surface, 0.8),
         borderWidth: 1,
-        borderColor: selected ? rgba(theme.accent, 0.45) : hairline(),
+        borderColor: selected
+          ? rgba(theme.accent, 0.45)
+          : rgba(theme.ink, 0.16),
+        boxShadow: `0 ${spacing(2)}px ${spacing(8)}px ${rgba(Colors.black, 0.45)}`,
         outline: "none",
       }}
     >
@@ -317,6 +322,8 @@ export function Pill({
         weight={400}
         color={selected ? theme.accent : theme.ink}
         numberOfLines={1}
+        // A fifth larger than the xs size.
+        style={{ fontSize: font(13 * 1.2), lineHeight: font(13 * 1.2 * 1.3) }}
       >
         {label}
       </Text>
@@ -418,6 +425,7 @@ export function ActionButton({
   secondary = false,
   small = false,
   disabled = false,
+  color,
   onLayout,
   style,
 }: {
@@ -425,6 +433,8 @@ export function ActionButton({
   onPress: () => void;
   iconName?: IconName;
   secondary?: boolean;
+  /** Its fill, in place of the accent (a game's own accent, say). */
+  color?: string;
   small?: boolean;
   disabled?: boolean;
   onLayout?: (event: LayoutChangeEvent) => void;
@@ -450,7 +460,9 @@ export function ActionButton({
           alignItems: "center",
           justifyContent: "center",
           gap: spacing(8),
-          backgroundColor: secondary ? rgba(theme.ink, 0.08) : theme.accent,
+          backgroundColor: secondary
+            ? rgba(theme.ink, 0.08)
+            : (color ?? theme.accent),
           opacity: disabled ? 0.35 : 1,
           outline: "none",
         },
@@ -487,17 +499,25 @@ export function Segmented<T extends string>({
   value,
   onChange,
   size = "md",
+  pill = false,
   style,
 }: {
   options: { value: T; label: string; detail?: string }[];
   value: T;
   onChange: (value: T) => void;
   size?: "sm" | "md";
+  /**
+   * Round-ended choices, the chosen one's label in the accent and its
+   * detail only paler.
+   */
+  pill?: boolean;
   style?: StyleProp<ViewStyle>;
 }) {
   const { spacing } = useResponsiveMetrics();
   const theme = usePalette();
-  const radius = spacing(size === "md" ? 14 : 12);
+  const [optionHeight, setOptionHeight] = useState(0);
+  const radius =
+    pill && optionHeight ? optionHeight / 2 : spacing(size === "md" ? 14 : 12);
   return (
     <View
       style={[
@@ -511,11 +531,16 @@ export function Segmented<T extends string>({
         style,
       ]}
     >
-      {options.map((option) => {
+      {options.map((option, index) => {
         const selected = option.value === value;
         return (
           <Pressable
             key={option.value}
+            onLayout={
+              pill && index === 0
+                ? (event) => setOptionHeight(event.nativeEvent.layout.height)
+                : undefined
+            }
             onPress={() => onChange(option.value)}
             accessibilityRole="button"
             accessibilityState={{ selected }}
@@ -533,7 +558,7 @@ export function Segmented<T extends string>({
             <Text
               size={size === "md" ? "md" : "sm"}
               weight={500}
-              color={selected ? theme.ink : theme.dim}
+              color={selected ? (pill ? theme.accent : theme.ink) : theme.dim}
               numberOfLines={1}
             >
               {option.label}
@@ -542,7 +567,13 @@ export function Segmented<T extends string>({
               <Text
                 size="xs"
                 weight={400}
-                color={selected ? theme.accent : theme.dim}
+                color={
+                  selected
+                    ? pill
+                      ? rgba(theme.ink, 0.72)
+                      : theme.accent
+                    : theme.dim
+                }
                 style={{ fontVariant: ["tabular-nums"] }}
               >
                 {option.detail}

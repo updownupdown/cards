@@ -23,8 +23,12 @@ import {
   StyleSheet,
   TextInput,
   View,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
 } from "react-native";
 import { FavButton } from "./FavButton";
+import { SEARCH_HOME_TAB_INDEX } from "./home-view-state";
+import { useStarfield } from "./Starfield";
 
 const FILTERS = ["all", "unplayed", "favorites", "unbeaten", "won"] as const;
 type Filter = (typeof FILTERS)[number];
@@ -50,16 +54,6 @@ const INDEX_WIDTH = 44;
 const ROW_HEIGHT = 52;
 /** The list's space above its first row. */
 const LIST_TOP = 8;
-
-/** The list's top edge fades on the web, where CSS masks are available. */
-const listFade =
-  Platform.OS === "web"
-    ? ({
-        maskImage: "linear-gradient(to bottom, transparent 0, black 10px)",
-        WebkitMaskImage:
-          "linear-gradient(to bottom, transparent 0, black 10px)",
-      } as object)
-    : null;
 
 const AnimatedSectionList = Animated.createAnimatedComponent(
   SectionList<HomeGameEntry, Section>,
@@ -97,12 +91,19 @@ export function SearchTab({
   const pageSidePadding = spacing(layoutDims.pagePadding);
   const indexed = sort === "az";
   const scrollY = useRef(new Animated.Value(0)).current;
+  const starfield = useStarfield();
   const onScroll = useMemo(
     () =>
       Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
         useNativeDriver: Platform.OS !== "web",
+        // The sky behind moves with the list.
+        listener: (event: NativeSyntheticEvent<NativeScrollEvent>) =>
+          starfield?.reportScroll(
+            SEARCH_HOME_TAB_INDEX,
+            event.nativeEvent.contentOffset.y,
+          ),
       }),
-    [scrollY],
+    [scrollY, starfield],
   );
 
   const stats = (path: string) => settingsMap[path]?.stats;
@@ -230,9 +231,8 @@ export function SearchTab({
     <View style={{ flex: 1 }}>
       {/* Starts under the header, so the index letters stick just below it,
           and rows end at the header's foot: the header needs no background
-          of its own, and the sky shows through it. On the web the rows fade
-          out there rather than stopping. */}
-      <View style={[{ flex: 1, marginTop: headerHeight }, listFade]}>
+          of its own, and the sky shows through it. */}
+      <View style={{ flex: 1, marginTop: headerHeight }}>
         <AnimatedSectionList
           sections={sections}
           keyExtractor={([path]) => path}
@@ -302,9 +302,14 @@ export function SearchTab({
             horizontal
             showsHorizontalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
-            style={{ marginHorizontal: -pageSidePadding }}
+            // Room above and below for the pills' shadows.
+            style={{
+              marginHorizontal: -pageSidePadding,
+              marginVertical: -spacing(10),
+            }}
             contentContainerStyle={{
               paddingHorizontal: pageSidePadding,
+              paddingVertical: spacing(10),
               gap: spacing(8),
             }}
           >

@@ -20,6 +20,7 @@ export const bisley: GameDefinition = {
   animation: GameAnimations.Rain,
   gameColorDark: "#30343a",
   gameColorPale: "#e8e1d3",
+  gameColorAccent: "#97b4d8",
   cardBack: CardBackColors.Slate,
   quickStart: [
     "Build Ace foundations up and King foundations down by suit.",

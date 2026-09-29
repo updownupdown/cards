@@ -1529,6 +1529,50 @@
       "value": "Gargantua"
     }
   },
+  "glazier": {
+    "howToPlay": {
+      "hash": "2e3ae25d",
+      "value": [
+        "## Objectif",
+        "Marquez **40 points** ou plus en quatre manches en remplissant un vitrail de 4x4.",
+        "## Sélection",
+        "- À chaque manche, trois fours reçoivent quatre vitres chacun et l'établi en reçoit une.",
+        "- Prenez **toutes** les vitres d'une couleur dans un four ou sur l'établi. Les autres vitres du four vont sur l'établi.",
+        "- La manche se termine quand les fours et l'établi sont vides.",
+        "## Cadres",
+        "- Les cadres tiennent 1, 2, 3 et 4 vitres d'une seule couleur, un cadre par rangée de la fenêtre.",
+        "- Un cadre ne peut pas prendre une couleur qui ne tient plus dans sa rangée de la fenêtre.",
+        "- Les vitres qui ne tiennent pas se brisent. Vous pouvez aussi briser un groupe exprès.",
+        "## Fenêtre",
+        "- À la fin de la manche, chaque cadre plein pose une vitre dans sa rangée, et vous choisissez la colonne.",
+        "- **Aucune couleur ne peut se répéter dans une rangée ou une colonne.**",
+        "- Les vitres qui ne peuvent plus être posées se brisent.",
+        "## Score",
+        "- Une vitre marque la longueur de la ligne qu'elle rejoint horizontalement plus celle qu'elle rejoint verticalement, ou 1 si elle n'en rejoint aucune.",
+        "- À chaque manche, les éclats coûtent 1, 1, 2, 2, 2, 3 et 3 points ; les suivants sont gratuits.",
+        "- À la fin, chaque rangée complète rapporte **3** et chaque colonne complète **6**.",
+        "## Rangs",
+        "- 40+ : Compagnon",
+        "- 55+ : Maître verrier",
+        "- 70+ : Vitrail de cathédrale",
+        "## Conseils",
+        "- Ce que vous laissez dans un four s'accumule sur l'établi.",
+        "- Avant de poser une vitre, vérifiez quelles colonnes restent libres pour les couleurs dont sa rangée a encore besoin."
+      ]
+    },
+    "quickStart": {
+      "hash": "51bc2e4e",
+      "value": [
+        "Prenez toutes les vitres d'une couleur dans un four ; le reste va sur l'établi.",
+        "Les cadres tiennent de 1 à 4 vitres d'une même couleur. Les vitres en trop se brisent et coûtent des points.",
+        "Un cadre plein pose une vitre dans la fenêtre ; jamais deux fois la même couleur dans une rangée ou une colonne."
+      ]
+    },
+    "title": {
+      "hash": "2b72c1f3",
+      "value": "Le Vitrier"
+    }
+  },
   "golf": {
     "howToPlay": {
       "hash": "24a82fa3",

@@ -20,6 +20,7 @@ export const dynasty: GameDefinition = {
   rating: { complexity: 65, difficulty: 70, luck: 35 },
   gameColorDark: "#262f35",
   gameColorPale: "#b5f4e1",
+  gameColorAccent: "#e2bf8d",
   cardBack: CardBackColors.Forest,
   quickStart: [
     "Draw and place number cards on equal or lower grid cards.",

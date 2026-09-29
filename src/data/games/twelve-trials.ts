@@ -24,6 +24,7 @@ export const twelveTrials: GameDefinition = {
   animation: GameAnimations.ManaDust,
   gameColorDark: "#352820",
   gameColorPale: "#fff6dc",
+  gameColorAccent: "#bf8de2",
   cardBack: CardBackColors.Terracotta,
   quickStart: [
     "Defeat each monster with three cards (cards can be played across turns).",

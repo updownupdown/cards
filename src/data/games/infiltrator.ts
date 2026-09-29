@@ -24,6 +24,7 @@ export const infiltrator: GameDefinition = {
   },
   gameColorDark: "#182326",
   gameColorPale: "#dce8df",
+  gameColorAccent: "#eab96d",
   cardBack: CardBackColors.Forest,
   quickStart: [
     "Win by recruiting more than half of the Key Spies (J, Q, K).",

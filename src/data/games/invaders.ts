@@ -24,6 +24,7 @@ export const invaders: GameDefinition = {
   animation: GameAnimations.Stars,
   gameColorDark: "#2a2836",
   gameColorPale: "#b5faff",
+  gameColorAccent: "#e2cd8d",
   cardBack: CardBackColors.Teal,
   quickStart: [
     "Beat back 2 waves of attackers using attacks and sacrifices.",

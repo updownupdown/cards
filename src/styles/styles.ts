@@ -204,7 +204,8 @@ export const SerifFont = {
 export const layoutDims = {
   menuBarPadding: 6,
   menuBarHeight: 58,
-  tabBarHeight: 64,
+  // The same height as the game menu bar.
+  tabBarHeight: 58,
   tabBarPadding: 8,
   /** Search tab's search input, card size toggle and Filters button. */
   searchControlHeight: 52,

@@ -1,14 +1,9 @@
 {
   "tabs": {
     "home": "Ana sayfa",
-    "collect": "Koleksiyon",
-    "search": "Ara",
-    "campaign": "Kampanya"
-  },
-  "cardSize": {
-    "small": "Liste",
-    "medium": "Kartlar",
-    "large": "Ayrıntılar"
+    "campaign": "Yolculuk",
+    "collect": "Galeri",
+    "search": "Ara"
   },
   "favorites": {
     "add": "Favorilere ekle",
@@ -17,18 +12,32 @@
   "search": {
     "placeholder": "Ara...",
     "clear": "Aramayı temizle",
-    "filters": "Filtreler",
-    "filter": "Filtrele",
-    "resetFilters": "Filtreleri sıfırla",
     "all": "Tümü",
-    "unplayed": "Oynanmamış"
+    "unplayed": "Oynanmamış",
+    "unbeaten": "Kazanılmamış",
+    "won": "Kazanılmış",
+    "count_one": "{{count}} oyun",
+    "count_other": "{{count}} oyun",
+    "sortAZ": "A–Z",
+    "sortDifficulty": "Zorluk",
+    "sortEasiest": "Önce en kolay",
+    "sortHardest": "Önce en zor",
+    "sortRecent": "Son oynanan",
+    "sortLuck": "Şans",
+    "sortLeastLuck": "Önce en az şans",
+    "sortMostLuck": "Önce en çok şans",
+    "sortPlays": "Oynanma sayısı",
+    "sortLeastPlayed": "Önce en az oynanan",
+    "sortMostPlayed": "Önce en çok oynanan",
+    "sortBy": "Sırala"
   },
   "sections": {
     "localOnly": "Yalnızca yerel oyunlar",
     "gameOfTheDay": "Günün oyunu",
     "easyGames": "Başlamak için kolay oyunlar",
-    "jumpBackIn": "Kaldığın yerden devam et",
-    "favorites": "Favoriler"
+    "favorites": "Favoriler",
+    "continue": "Devam et",
+    "fact": "Biliyor muydunuz?"
   },
   "gameOfTheDay": {
     "today": "Bugün",
@@ -40,17 +49,7 @@
   },
   "deal": {
     "title": "Rastgele dağıtım",
-    "intro": "Geçmek için sola ya da sağa kaydır, oynamak için dokun."
-  },
-  "collect": {
-    "games": "Oyunlar: {{won}}/{{total}}",
-    "categories": "Kategoriler: {{won}}/{{total}}",
-    "tagProgress": "{{tag}}: {{total}} oyundan {{won}} kazanıldı",
-    "intro": {
-      "title": "Gezgin Günlüğü",
-      "text": "Bir oyunu kazanarak damgasını topla. Benzer mekanikleri keşfet ve tüm setleri tamamlamaya çalış!",
-      "close": "Kapat"
-    }
+    "intro": "Geçmek için kaydırın, oynamak için dokunun"
   },
   "tags": {
     "KlondikeFamily": "Klondike ailesi",
@@ -154,5 +153,68 @@
     "dismissed": "Sorun değil; istediğin zaman tarayıcı menüsünden yükleyebilirsin.",
     "installNow": "Şimdi yükle",
     "notNow": "Şimdi değil"
+  },
+  "gallery": {
+    "previous": "Önceki eser",
+    "next": "Sonraki eser",
+    "views": {
+      "works": "Eserler",
+      "chapters": "Bölümler",
+      "quotes": "Alıntılar"
+    },
+    "groupBy": {
+      "era": "Dönem",
+      "style": "Üslup",
+      "category": "Oyun kategorisi",
+      "region": "Bölge",
+      "medium": "Teknik"
+    },
+    "eras": {
+      "ancient": "1400 öncesi",
+      "renaissance": "1400–1599",
+      "c17": "17. yüzyıl",
+      "c18": "18. yüzyıl",
+      "early-c19": "1800–1849",
+      "late-c19": "1850–1899",
+      "c20": "20. yüzyıl"
+    },
+    "styles": {
+      "sacred": "Kutsal sanat ve tezhip",
+      "renaissance": "Rönesans",
+      "baroque": "Barok ve Altın Çağ",
+      "rococo": "Rokoko ve Neoklasisizm",
+      "east-asian": "Doğu Asya",
+      "romanticism": "Romantizm",
+      "realism": "Gerçekçilik",
+      "impressionism": "İzlenimcilik ve sonrası",
+      "modern": "Modernizm",
+      "satire": "Hiciv ve karikatür",
+      "illustration": "İllüstrasyon ve doğa tarihi",
+      "architecture": "Haritalar ve mimari",
+      "decorative": "Dekoratif sanatlar"
+    },
+    "regions": {
+      "europe": "Avrupa",
+      "americas": "Amerika kıtası",
+      "east-asia": "Doğu Asya",
+      "south-asia": "Güney Asya ve Himalayalar",
+      "africa-middle-east": "Afrika ve Orta Doğu",
+      "oceania": "Okyanusya"
+    },
+    "media": {
+      "painting": "Resimler",
+      "drawing": "Çizimler ve suluboyalar",
+      "print": "Baskılar",
+      "manuscript": "El yazmaları",
+      "object": "Nesneler ve dokumalar",
+      "photograph": "Fotoğraflar"
+    },
+    "back": "Galeriye dön",
+    "unknownArtist": "Bilinmeyen sanatçı",
+    "notAcquired": "Edinilmedi"
+  },
+  "header": {
+    "stats": "İstatistikler",
+    "settings": "Ayarlar"
   }
 }

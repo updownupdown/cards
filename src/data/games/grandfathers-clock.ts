@@ -29,6 +29,7 @@ export const grandfathersClock: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#2a2118",
   gameColorPale: "#f3e2c2",
+  gameColorAccent: "#e2bf78",
   cardBack: CardBackColors.Bronze,
   quickStart: [
     "Build each clock foundation up by suit until it shows its hour.",

@@ -12,9 +12,9 @@ import { grantMercySkip } from "@/data/campaign-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Platform, View, type ViewStyle } from "react-native";
+import { Platform, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { layoutDims, rgba, theme } from "@/styles/styles";
+import { layoutDims } from "@/styles/styles";
 import { CampaignMap } from "./CampaignMap";
 import { CampaignIntroPanel } from "./CampaignIntroPanel";
 import { UfoContext } from "./UfoContext";
@@ -172,10 +172,6 @@ export function CampaignTab({ contentPaddingTop }: Props) {
           style={{
             width: "100%",
             maxWidth: ui.contentMaxWidth - spacing(layoutDims.pagePadding),
-            backgroundColor: rgba(theme.surface, 0.92),
-            ...(Platform.OS === "web"
-              ? ({ backdropFilter: "blur(14px)" } as ViewStyle)
-              : null),
           }}
         />
       </View>

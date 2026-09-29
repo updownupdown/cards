@@ -5,6 +5,7 @@ import {
   MAP_GEOMETRY,
   MIN_GAME_DOT_SPACING,
   CAMPAIGN_START_PATH,
+  HUB_EXTRA_LINKS,
   GAME_DOT_DEFINITIONS,
   validateCampaignMap,
 } from "@/data/campaign-map";
@@ -158,10 +159,17 @@ describe("Campaign map", () => {
 
   test("the first games are each of a different category", () => {
     const byPath = new Map(RELEASED.map((gameDot) => [gameDot.path, gameDot]));
+    // The layout's own links: Klondike's hand-added ones don't count.
+    const handAdded = (from: string, to: string) =>
+      [from, to].includes(CAMPAIGN_START_PATH) &&
+      [from, to].some((path) => HUB_EXTRA_LINKS.includes(path));
     const near = new Set([CAMPAIGN_START_PATH]);
     for (let step = 0; step < 2; step += 1) {
       for (const path of [...near]) {
-        byPath.get(path)!.connections.forEach((next) => near.add(next));
+        byPath
+          .get(path)!
+          .connections.filter((next) => !handAdded(path, next))
+          .forEach((next) => near.add(next));
       }
     }
     const categories = [...near].map((path) => GAMES_DATA[path]!.tags[0]);

@@ -20,6 +20,7 @@ export const australianPatience: GameDefinition = {
   animation: GameAnimations.Birds,
   gameColorDark: "#29382a",
   gameColorPale: "#f4d88d",
+  gameColorAccent: "#eb9a6a",
   cardBack: CardBackColors.Copper,
   quickStart: [
     "Build foundations up by suit.",

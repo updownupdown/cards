@@ -20,6 +20,7 @@ export const fortress: GameDefinition = {
   animation: GameAnimations.Clouds,
   gameColorDark: "#302a24",
   gameColorPale: "#ead9b8",
+  gameColorAccent: "#d8b297",
   cardBack: CardBackColors.Walnut,
   quickStart: [
     "Build foundations up by suit from Ace to King.",

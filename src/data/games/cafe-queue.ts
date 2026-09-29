@@ -25,6 +25,7 @@ export const cafeQueue: GameDefinition = {
   animation: GameAnimations.Clouds,
   gameColorDark: "#2b1c29",
   gameColorPale: "#eed5a0",
+  gameColorAccent: "#8db8e2",
   cardBack: CardBackColors.Walnut,
   quickStart: [
     "Select a queue position for the next customer.",

@@ -1,5 +1,7 @@
 import { ShowOriginalToggle } from "@/components/Campaign/ShowOriginalToggle";
 import { Text } from "@/components/common/Text";
+import { CollectFrom } from "@/components/common/CollectFrom";
+import { getRewardSource } from "@/data/campaign-map";
 import { getTaoChapter } from "@/data/collectibles";
 import { getTaoConstellation } from "@/data/tao-constellations";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
@@ -145,6 +147,7 @@ export function TaoChapterDetail({
   );
 
   const chapter = getTaoChapter(chapterNumber);
+  const source = getRewardSource({ type: "tao", id: chapterNumber });
   const constellation = getTaoConstellation(chapterNumber);
   const hasTranslation =
     !!chapter &&
@@ -260,14 +263,14 @@ export function TaoChapterDetail({
           }}
         >
           <Text
-            serif
-            italic
             size="lg"
+            weight={400}
             color={theme.dim}
             style={{ textAlign: "center" }}
           >
             {t("tao.uncollected")}
           </Text>
+          {source && <CollectFrom path={source} campaign />}
           {about ? (
             <Text
               size="sm"

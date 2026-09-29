@@ -24,6 +24,7 @@ export const easthaven: GameDefinition = {
   animation: GameAnimations.Glints,
   gameColorDark: "#203638",
   gameColorPale: "#dcefed",
+  gameColorAccent: "#e28db0",
   cardBack: CardBackColors.Teal,
   quickStart: [
     "Build foundations up by suit.",

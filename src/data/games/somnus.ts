@@ -26,6 +26,7 @@ export const somnus: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#1b1f25",
   gameColorPale: "#efd8f0",
+  gameColorAccent: "#d897d4",
   cardBack: CardBackColors.Plum,
   quickStart: [
     "Select Guardians from your hand, select a Dream card, then assign them.",

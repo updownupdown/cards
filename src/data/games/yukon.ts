@@ -25,6 +25,7 @@ export const yukon: GameDefinition = {
   animation: GameAnimations.Clouds,
   gameColorDark: "#20303a",
   gameColorPale: "#e6f1f7",
+  gameColorAccent: "#dfb291",
   cardBack: CardBackColors.Copper,
   quickStart: [
     "Build foundations up by suit, A to K.",

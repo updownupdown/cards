@@ -24,6 +24,7 @@ export const carpet: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#2b1a14",
   gameColorPale: "#f6dcc0",
+  gameColorAccent: "#e7937a",
   cardBack: CardBackColors.Terracotta,
   quickStart: [
     "Build foundations up by suit from the Aces.",

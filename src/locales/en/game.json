@@ -3,7 +3,6 @@
     "home": "Home",
     "campaign": "Odyssey",
     "instantWin": "Instant win",
-    "win": "Win",
     "rules": "Rules",
     "undo": "Undo",
     "reset": "Reset",
@@ -22,8 +21,7 @@
     "hold": "Hold to reset game"
   },
   "tips": {
-    "quickStart": "Quick Start",
-    "viewRules": "View rules"
+    "quickStart": "Quick Start"
   },
   "rules": {
     "title": "Rules",
@@ -34,7 +32,6 @@
   },
   "settings": {
     "title": "Settings",
-    "none": "No game settings",
     "appliesNow": "Applies without resetting the game.",
     "appliesNextGame": "Resets the game on change."
   },
@@ -43,9 +40,7 @@
   },
   "credits": {
     "title": "Credits",
-    "backgroundImage": "Background image (blurred):",
-    "gameArt": "Cover art:",
-    "artSource": "Public domain, from"
+    "backgroundImage": "Background image:"
   },
   "deckPreview": {
     "title": "Deck Preview",

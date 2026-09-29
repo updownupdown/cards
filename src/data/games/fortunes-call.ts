@@ -19,6 +19,7 @@ export const fortunesCall: GameDefinition = {
   rating: { complexity: 10, difficulty: 55, luck: 85 },
   gameColorDark: "#272330",
   gameColorPale: "#b8f1c6",
+  gameColorAccent: "#d897ae",
   cardBack: CardBackColors.Rose,
   background: GAME_BACKGROUNDS.alaska,
   animation: GameAnimations.Snow,

@@ -25,6 +25,7 @@ export const pickpocket: GameDefinition = {
   animation: GameAnimations.CandleMotes,
   gameColorDark: "#2b1b22",
   gameColorPale: "#f2dcc4",
+  gameColorAccent: "#e8c06d",
   cardBack: CardBackColors.Burgundy,
   quickStart: [
     "Flip cards: Aces, Twos and Threes multiply your purse.",

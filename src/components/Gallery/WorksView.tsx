@@ -1,4 +1,6 @@
 import { Text } from "@/components/common/Text";
+import { COLLECT_HOME_TAB_INDEX } from "@/components/Home/home-view-state";
+import { useStarfield } from "@/components/Home/Starfield";
 import { useTabReadyImage } from "@/components/Home/TabReady";
 import { useBarSideInset } from "@/components/ui/FloatingBar";
 import { Pill } from "@/components/ui/Nocturne";
@@ -20,8 +22,9 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
-import { theme } from "@/styles/styles";
+import { Colors, rgba, theme } from "@/styles/styles";
 import { Image } from "expo-image";
+import { WorkPlaceholder } from "./shared";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 
@@ -144,7 +147,6 @@ export function WorksView({
   onOpenWork,
   contentPaddingTop,
   contentPaddingBottom,
-  onScrolledChange,
 }: {
   allEnabledGames: HomeGameEntry[];
   hasWon: (path: string) => boolean;
@@ -152,12 +154,12 @@ export function WorksView({
   onOpenWork: (path: string, order: string[]) => void;
   contentPaddingTop: number;
   contentPaddingBottom: number;
-  onScrolledChange: (scrolled: boolean) => void;
 }) {
   const { t } = useTranslation("home");
   const { spacing, ui } = useResponsiveMetrics();
   const { width: viewportWidth } = useViewportDimensions();
   const [grouping, setGrouping] = useState<WorkGrouping>(lastGrouping);
+  const starfield = useStarfield();
   const shelves = useShelves(allEnabledGames, grouping);
   const order = useMemo(
     () => shelves.flatMap((shelf) => shelf.games.map(([path]) => path)),
@@ -180,11 +182,11 @@ export function WorksView({
       contentContainerStyle={{
         paddingTop: contentPaddingTop,
         paddingBottom: contentPaddingBottom,
-        gap: spacing(45),
+        gap: spacing(67.5),
       }}
       onScroll={(event) => {
         const y = event.nativeEvent.contentOffset.y;
-        onScrolledChange(y > 1);
+        starfield?.reportScroll(COLLECT_HOME_TAB_INDEX, y);
       }}
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
@@ -192,8 +194,11 @@ export function WorksView({
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
+        // Room above and below for the pills' shadows.
+        style={{ marginVertical: -spacing(10) }}
         contentContainerStyle={{
           paddingHorizontal: shelfStart,
+          paddingVertical: spacing(10),
           gap: spacing(8),
         }}
       >
@@ -245,7 +250,7 @@ export function WorksView({
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{
                 paddingHorizontal: shelfStart,
-                gap: spacing(14),
+                gap: spacing(19.6),
                 alignItems: "flex-start",
               }}
             >
@@ -283,7 +288,8 @@ function ShelfWork({
   const language = useDisplayLanguage();
   const thumbnail = game.thumbnail;
   const source = thumbnail ? GAME_FULL_THUMBNAIL_ASSETS[thumbnail] : null;
-  const ready = useTabReadyImage(source);
+  // Only an acquired work draws its picture, so only it is waited for.
+  const ready = useTabReadyImage(collected ? source : null);
   const aspect = thumbnail ? GAME_THUMBNAIL_ASPECTS[thumbnail] : 0.8;
   const height = spacing(WORK_HEIGHT);
   const width = height * aspect;
@@ -299,19 +305,37 @@ function ShelfWork({
         gap: spacing(8),
       }}
     >
-      <Image
-        source={source}
-        cachePolicy="memory"
-        contentFit="cover"
-        style={{
-          height,
-          width,
-          borderRadius: spacing(3),
-          opacity: collected ? 1 : 0.1,
-        }}
-        {...ready}
-      />
-      {/* Only an acquired work shows its label; until then, its game. */}
+      {collected ? (
+        <View
+          style={{
+            height,
+            width,
+            borderRadius: spacing(3),
+            backgroundColor: theme.night,
+            boxShadow: `0 ${spacing(4)}px ${spacing(12)}px ${rgba(Colors.black, 0.55)}`,
+          }}
+        >
+          <Image
+            source={source}
+            cachePolicy="memory"
+            contentFit="cover"
+            style={{
+              height,
+              width,
+              borderRadius: spacing(3),
+            }}
+            {...ready}
+          />
+        </View>
+      ) : (
+        <WorkPlaceholder
+          width={width}
+          height={height}
+          iconSize={spacing(28)}
+          radius={spacing(3)}
+        />
+      )}
+      {/* Only an acquired work shows its label. */}
       <View style={{ gap: spacing(1) }}>
         <Text
           serif
@@ -321,7 +345,7 @@ function ShelfWork({
           color={collected ? theme.ink : theme.faint}
           numberOfLines={1}
         >
-          {collected ? credit?.title || gameTitle : gameTitle}
+          {collected ? credit?.title || gameTitle : t("gallery.notAcquired")}
         </Text>
         {collected && (
           <Text serif size="xs" color={theme.dim} numberOfLines={1}>

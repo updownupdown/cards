@@ -24,6 +24,7 @@ export const loneJoker: GameDefinition = {
   },
   gameColorDark: "#111e35",
   gameColorPale: "#d8ffeb",
+  gameColorAccent: "#b097d8",
   cardBack: CardBackColors.Violet,
   quickStart: [
     "Select up to five cards to play poker hands (or discard).",

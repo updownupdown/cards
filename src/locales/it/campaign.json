@@ -1,57 +1,25 @@
 {
-  "progress": {
-    "games": "Giochi",
-    "chapters": "Capitoli",
-    "quotes": "Citazioni",
-    "summary": "{{label}}: {{collected}} di {{total}}"
-  },
-  "reward": {
-    "taoChapter": "Tao Te Ching: capitolo {{number}}",
-    "quoteBy": "Una citazione di {{author}}",
-    "unlockedGames_one": "{{count}} gioco sbloccato:",
-    "unlockedGames_other": "{{count}} giochi sbloccati:"
-  },
-  "details": {
-    "locked": "Bloccato"
-  },
   "mercySkip": {
     "granted": "Un viaggiatore gentile ti offre una **grazia**! Salta una partita difficile dal menu di quella partita.",
     "ufoLabel": "Un UFO di passaggio",
     "dismiss": "Chiudi"
   },
-  "collection": {
-    "previous": "Elemento precedente",
-    "next": "Elemento successivo",
-    "select": "Seleziona l'elemento {{id}}",
-    "locked": "Elemento {{id}} bloccato"
-  },
   "quotes": {
-    "title": "Citazioni",
-    "subtitle": "{{collected}}/{{total}} citazioni raccolte",
-    "empty": "Vinci partite nell'Odissea celeste per raccogliere tutte le {{quotes}} citazioni di {{authors}} pensatori, scrittori e scienziati.",
-    "about": "Il ritratto di ogni autore appare qui non appena raccogli una delle sue citazioni.",
-    "count": "{{collected}}/{{total}}",
-    "previousAuthor": "Autore precedente",
-    "nextAuthor": "Autore successivo",
     "previousQuote": "Citazione precedente",
     "nextQuote": "Citazione successiva",
-    "yearsBC": "{{from}}–{{to}} a.C.",
-    "yearsBCtoAD": "{{from}} a.C. – {{to}} d.C.",
-    "circa": "c. {{years}}"
+    "pick": "Scegli un autore",
+    "byEra": "Epoche",
+    "byName": "Alfabetico",
+    "uncollected": "Questa citazione non è ancora stata ottenuta.",
+    "barLabel": "{{name}}, {{index}} di {{total}}"
   },
   "tao": {
-    "title": "Tao Te Ching",
-    "subtitle": "{{collected}}/{{total}} capitoli raccolti",
     "chapter": "Capitolo {{number}}",
-    "viewAll": "Vedi tutti",
     "previous": "Capitolo precedente",
     "next": "Capitolo successivo",
-    "empty": "Vinci partite nell'Odissea celeste per raccogliere tutti gli 81 capitoli del Tao Te Ching.",
-    "about": "Il Tao Te Ching è un testo fondamentale dell'antica Cina, tradizionalmente attribuito al saggio Laozi. Insegna a vivere in armonia con il Tao, il flusso e il ritmo naturali dell'universo. Si dice che praticando il wu wei (l'azione senza sforzo) e coltivando umiltà, semplicità e flessibilità si possano trovare pace ed equilibrio duraturi."
-  },
-  "games": {
-    "title": "Giochi",
-    "subtitle": "{{unlocked}}/{{total}} giochi sbloccati"
+    "about": "Il Tao Te Ching è un testo fondamentale dell'antica Cina, tradizionalmente attribuito al saggio Laozi. Insegna a vivere in armonia con il Tao, il flusso e il ritmo naturali dell'universo. Si dice che praticando il wu wei (l'azione senza sforzo) e coltivando umiltà, semplicità e flessibilità si possano trovare pace ed equilibrio duraturi.",
+    "pick": "Scegli un capitolo",
+    "uncollected": "Questo capitolo non è ancora stato ottenuto."
   },
   "original": {
     "label": "Mostra l'originale"

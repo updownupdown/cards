@@ -24,6 +24,7 @@ export const fightClubs: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#221b20",
   gameColorPale: "#d6fbff",
+  gameColorAccent: "#9d97d8",
   cardBack: CardBackColors.Indigo,
   quickStart: [
     "Use one Club per turn to clear one or more cards from the grid.",

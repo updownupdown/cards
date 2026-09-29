@@ -24,6 +24,7 @@ export const waypoint: GameDefinition = {
   },
   gameColorDark: "#263b38",
   gameColorPale: "#f5e4ad",
+  gameColorAccent: "#eba36a",
   cardBack: CardBackColors.Walnut,
   quickStart: [
     "Choose either end of the stage, then tap gears, boosts, and brakes to match the current sector.",

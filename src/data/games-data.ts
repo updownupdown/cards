@@ -94,6 +94,12 @@ export type GameMenuInfo = {
   // Colors
   gameColorDark: HexColor;
   gameColorPale: HexColor;
+  /**
+   * A highlight that goes with the game's two colours, for links and other
+   * touches in its menus: often its card back's ink, lightened, unless that
+   * sits too close to the game's own colours or its scene.
+   */
+  gameColorAccent: HexColor;
   /** Which shared card-back ink this game's deck is printed in. */
   cardBack: CardBackColor;
 

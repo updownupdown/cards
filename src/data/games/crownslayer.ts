@@ -24,6 +24,7 @@ export const crownslayer: GameDefinition = {
   animation: GameAnimations.Clouds,
   gameColorDark: "#1b1727",
   gameColorPale: "#e2e9ff",
+  gameColorAccent: "#e8c46e",
   cardBack: CardBackColors.Indigo,
   quickStart: [
     "Defeat 12 royals, one at a time.",

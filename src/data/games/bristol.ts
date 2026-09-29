@@ -21,6 +21,7 @@ export const bristol: GameDefinition = {
   animation: GameAnimations.Mist,
   gameColorDark: "#2a3638",
   gameColorPale: "#e2f1f2",
+  gameColorAccent: "#efae84",
   cardBack: CardBackColors.Teal,
   quickStart: [
     "Build foundations up from Ace to King, regardless of suit.",

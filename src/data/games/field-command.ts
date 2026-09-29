@@ -24,6 +24,7 @@ export const fieldCommand: GameDefinition = {
   animation: GameAnimations.Clouds,
   gameColorDark: "#2b2d42",
   gameColorPale: "#d4cdc3",
+  gameColorAccent: "#e3c77e",
   cardBack: CardBackColors.Violet,
   quickStart: ["Enemy line shifts right, then refills from enemy deck."],
   howToPlay: [

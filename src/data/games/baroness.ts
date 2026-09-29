@@ -25,6 +25,7 @@ export const baroness: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#3a1620",
   gameColorPale: "#f3d6dd",
+  gameColorAccent: "#e2bf8d",
   cardBack: CardBackColors.Rose,
   quickStart: [
     "Discard lone Ks, or pairs that add to 13.",

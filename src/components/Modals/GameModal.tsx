@@ -8,7 +8,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle, localizeSettingDefinitions } from "@/i18n/content";
 import { useModalStyles } from "@/styles/modalStyles";
-import { rgba, theme } from "@/styles/styles";
+import { Colors, rgba, theme } from "@/styles/styles";
 import { ActionButton, Caps, RatingMeters } from "@/components/ui/Nocturne";
 import {
   GAME_FULL_THUMBNAIL_ASSETS,
@@ -144,7 +144,7 @@ export default function GameModal({
               }}
               size={spacing(42)}
               iconSize={spacing(28)}
-              activeColor={theme.accent}
+              activeColor={theme.accent2}
               inactiveColor={theme.dim}
             />
             <View style={{ flexDirection: "row", gap: spacing(20) }}>
@@ -162,7 +162,7 @@ export default function GameModal({
           {/* Game settings */}
           {gameSpecificSettings.length > 0 && (
             <View style={{ width: "100%", gap: spacing(10) }}>
-              <ModalHeading title={t("settings.title")} />
+              <ModalHeading title={t("settings.title")} color={theme.accent2} />
               {localizedSettings.map((setting) => (
                 <View key={setting.key} style={card}>
                   <SettingControl
@@ -190,7 +190,7 @@ export default function GameModal({
 
           {/* Ratings */}
           <View style={{ width: "100%", gap: spacing(10) }}>
-            <ModalHeading title={t("rating.title")} />
+            <ModalHeading title={t("rating.title")} color={theme.accent2} />
             <View style={card}>
               <RatingMeters
                 rating={gameInfo.rating}
@@ -222,19 +222,21 @@ export default function GameModal({
           {hasCredits(gameInfo) && <CreditsSection />}
         </ScrollView>
 
-        {/* The rules stay in reach at the bottom. */}
+        {/* The rules stay in reach at the bottom, the list fading out above
+            them as it does under the header. */}
         <View
           style={{
             paddingHorizontal: spacing(30),
             paddingTop: spacing(12),
             paddingBottom: spacing(20),
-            borderTopWidth: 1,
-            borderTopColor: rgba(theme.ink, 0.14),
+            backgroundColor: theme.surface,
+            boxShadow: `0 0 ${spacing(6)}px ${spacing(6)}px ${theme.surface}`,
           }}
         >
           <ActionButton
             label={t("rules.title")}
             iconName="instructions"
+            color={theme.accent2}
             onPress={() => {
               handleClose();
               showRulesModal();
@@ -261,13 +263,17 @@ type CreditLinkProps = {
   link?: string;
 };
 
-/** A credited name, linked to its page when it has a valid one. */
-const CreditLink = ({ name, link }: CreditLinkProps) =>
-  isValidLink(link) ? (
+/**
+ * A credited name, linked to its page when it has a valid one, in the game's
+ * own accent colour.
+ */
+const CreditLink = ({ name, link }: CreditLinkProps) => {
+  const theme = usePalette();
+  return isValidLink(link) ? (
     <Text
       size="xs"
       weight={500}
-      color={theme.accent}
+      color={theme.accent2}
       onPress={() => void Linking.openURL(link)}
     >
       {name}
@@ -275,6 +281,7 @@ const CreditLink = ({ name, link }: CreditLinkProps) =>
   ) : (
     name
   );
+};
 
 export const CreditsSection = ({ style }: CreditsSectionProps) => {
   const pathname = useGamePath();
@@ -291,7 +298,7 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
 
   return (
     <View style={[{ width: "100%", gap: spacing(10) }, style]}>
-      <ModalHeading title={t("credits.title")} />
+      <ModalHeading title={t("credits.title")} color={theme.accent2} />
       <View
         style={{
           width: "100%",
@@ -310,20 +317,6 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
               gap: spacing(14),
             }}
           >
-            {/* The whole work, uncropped, small beside its label. */}
-            {thumbnail && (
-              <Image
-                source={GAME_FULL_THUMBNAIL_ASSETS[thumbnail]}
-                cachePolicy="memory"
-                contentFit="contain"
-                style={{
-                  height: spacing(84),
-                  width: spacing(84) * GAME_THUMBNAIL_ASPECTS[thumbnail],
-                  maxWidth: spacing(120),
-                  borderRadius: spacing(3),
-                }}
-              />
-            )}
             <View style={{ flex: 1, gap: spacing(2) }}>
               <Text serif italic size="lg" color={theme.ink}>
                 {art.title}
@@ -332,11 +325,50 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
                 {[art.artistName, art.date].filter(Boolean).join(", ")}
               </Text>
               <Text size="xs" weight={400} color={theme.dim}>
-                {t("credits.artSource")}{" "}
                 <CreditLink name={art.sourceName} link={art.sourceLink} />
               </Text>
             </View>
+            {/* The whole work, uncropped, small beside its label. */}
+            {thumbnail && (
+              // The shadow sits on a wrapper: a native image view draws none.
+              <View
+                style={{
+                  borderRadius: spacing(3),
+                  boxShadow: `0 ${spacing(3)}px ${spacing(10)}px ${rgba(Colors.black, 0.5)}`,
+                }}
+              >
+                <Image
+                  source={GAME_FULL_THUMBNAIL_ASSETS[thumbnail]}
+                  cachePolicy="memory"
+                  contentFit="contain"
+                  // Sized to the work itself, so the shadow falls on its edges.
+                  style={{
+                    height:
+                      Math.min(
+                        spacing(84) * GAME_THUMBNAIL_ASPECTS[thumbnail],
+                        spacing(120),
+                      ) / GAME_THUMBNAIL_ASPECTS[thumbnail],
+                    width: Math.min(
+                      spacing(84) * GAME_THUMBNAIL_ASPECTS[thumbnail],
+                      spacing(120),
+                    ),
+                    borderRadius: spacing(3),
+                  }}
+                />
+              </View>
+            )}
           </View>
+        )}
+
+        {/* A rule between the two credits, in the box's edge colour. */}
+        {art && background?.authorName && (
+          <View
+            style={{
+              height: 1,
+              marginVertical: spacing(4),
+              backgroundColor: rgba(theme.ink, 0.14),
+            }}
+          />
         )}
 
         {background?.authorName && (

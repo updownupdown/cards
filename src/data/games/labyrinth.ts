@@ -28,6 +28,7 @@ export const labyrinth: GameDefinition = {
   animation: GameAnimations.ManaDust,
   gameColorDark: "#1c1f26",
   gameColorPale: "#dde4f2",
+  gameColorAccent: "#97b4d8",
   cardBack: CardBackColors.Slate,
   quickStart: [
     "Build all four foundations by suit, from Ace to King.",

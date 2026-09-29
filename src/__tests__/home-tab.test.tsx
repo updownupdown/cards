@@ -166,7 +166,6 @@ function homeTabProps(overrides: Partial<HomeTabProps> = {}): HomeTabProps {
     dataLoaded: true,
     contentPaddingTop: 0,
     contentPaddingBottom: 0,
-    onScrolledChange: jest.fn(),
     ...overrides,
   };
 }

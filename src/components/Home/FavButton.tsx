@@ -20,8 +20,6 @@ type Props = {
   activeColor?: string;
   inactiveColor?: string;
   disabled?: boolean;
-  /** A soft dark glow behind the star, to keep it clear on pale pictures. */
-  backdrop?: boolean;
   style?: ViewStyle | ViewStyle[];
 };
 
@@ -33,7 +31,6 @@ export function FavButton({
   activeColor = Colors.favoriteStar,
   inactiveColor = Colors.accentBlue,
   disabled = false,
-  backdrop = false,
   style,
 }: Props) {
   const { t } = useTranslation("home");
@@ -107,24 +104,6 @@ export function FavButton({
         style,
       ]}
     >
-      {backdrop && (
-        // A soft radial shade that fades to nothing, so it never shows an
-        // edge: enough to keep the star clear on a pale picture.
-        <Svg
-          width={iconSize * 2.6}
-          height={iconSize * 2.6}
-          style={{ position: "absolute", pointerEvents: "none" }}
-        >
-          <Defs>
-            <RadialGradient id="fav-shade" cx="50%" cy="50%" r="50%">
-              <Stop offset="0" stopColor={Colors.black} stopOpacity={0.3} />
-              <Stop offset="0.45" stopColor={Colors.black} stopOpacity={0.14} />
-              <Stop offset="1" stopColor={Colors.black} stopOpacity={0} />
-            </RadialGradient>
-          </Defs>
-          <Rect width="100%" height="100%" fill="url(#fav-shade)" />
-        </Svg>
-      )}
       <Animated.View
         style={{
           pointerEvents: "none",

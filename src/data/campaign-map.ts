@@ -10,6 +10,14 @@ import { GAME_DOT_DEFINITIONS as ALL_GAME_DOT_DEFINITIONS } from "./campaign-map
 
 export const CAMPAIGN_START_PATH = "/klondike";
 
+/**
+ * Links from Klondike added by hand, beyond the ones the layout drew, so the
+ * first win opens more of the map. The centre may hold up to
+ * MAP_GEOMETRY.maxConnections links; the rule that the first games are each
+ * of a different category leaves these out.
+ */
+export const HUB_EXTRA_LINKS: readonly string[] = ["/beehive", "/pocket-poker"];
+
 export type GameDotDefinition = {
   path: string;
   x: number;
@@ -96,6 +104,19 @@ export const GAME_DOTS_BY_PATH = new Map(
 
 export function getGameDotDefinition(path: string) {
   return GAME_DOTS_BY_PATH.get(path);
+}
+
+const REWARD_SOURCES = new Map(
+  GAME_DOT_DEFINITIONS.flatMap((gameDot) =>
+    gameDot.rewards.map(
+      (reward) => [`${reward.type}:${reward.id}`, gameDot.path] as const,
+    ),
+  ),
+);
+
+/** The game whose Campaign win gives a Tao chapter or a quote. */
+export function getRewardSource(reward: CollectibleReward) {
+  return REWARD_SOURCES.get(`${reward.type}:${reward.id}`);
 }
 
 export function getUnlockedGameDotPaths(wonPaths: ReadonlySet<string>) {

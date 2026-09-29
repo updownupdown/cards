@@ -24,6 +24,7 @@ export const pocketPoker: GameDefinition = {
   animation: GameAnimations.Glitter,
   gameColorDark: "#142e1f",
   gameColorPale: "#fff5bd",
+  gameColorAccent: "#f28b82",
   cardBack: CardBackColors.Moss,
   quickStart: [
     "Build a poker hand, then bet.",

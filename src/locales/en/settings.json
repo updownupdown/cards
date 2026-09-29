@@ -40,11 +40,6 @@
   },
   "populateTestProgress": "Populate test progress",
   "credits": {
-    "starfield": {
-      "prefix": "Starfield background by ",
-      "name": "Olena Bohovyk",
-      "suffix": ""
-    },
     "taoTranslation": {
       "prefix": "Tao Te Ching translation by ",
       "name": "John H. McDonald",
@@ -59,6 +54,7 @@
   "colorTheme": {
     "label": "Colour theme",
     "expand": "Expand",
-    "collapse": "Collapse"
+    "collapse": "Collapse",
+    "highContrast": "High contrast"
   }
 }

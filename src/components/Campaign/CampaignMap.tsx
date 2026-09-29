@@ -11,7 +11,8 @@ import {
 import { Colors, FontWeight, rgba, textShadow, theme } from "@/styles/styles";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useDisplayLanguage } from "@/i18n";
-import { useTabReadyHold } from "@/components/Home/TabReady";
+import { useStarfield } from "@/components/Home/Starfield";
+import { useTabReadyHold, useTabReadyImage } from "@/components/Home/TabReady";
 import { localizeGameTitle } from "@/i18n/content";
 import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -22,17 +23,19 @@ import {
   View,
   type LayoutChangeEvent,
 } from "react-native";
+import { Image } from "expo-image";
+import { GAME_CHANGE_MS } from "@/components/ui/GameInfoPanel";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Svg, { Path } from "react-native-svg";
 import { scheduleOnRN } from "react-native-worklets";
 import Animated, {
   Extrapolation,
-  FadeOut,
   interpolate,
   type SharedValue,
+  useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  ZoomIn,
 } from "react-native-reanimated";
 
 // A spiral galaxy needs room: 114 game dots three dot-diameters apart do not fit
@@ -59,58 +62,56 @@ const GAME_DOT_EXTENT_Y =
   GAME_DOT_SIZE;
 
 /**
- * A game dot's look, as a star on a chart: finished games burn in the accent;
- * won ones with collectibles still to find, in the second accent; reachable
- * ones are an open ring in the second accent, and locked ones a pale grey
- * ring. Lit dots glow.
+ * A game dot's look, as a star on a chart: finished games are a four-pointed
+ * star in the accent (see STAR_PATH), won ones a dot in the accent, reachable
+ * ones an open ring in the accent, and locked ones a pale grey ring.
  */
 function gameDotLook(state: GameDotState) {
   switch (state) {
     case "complete":
-      return { fill: theme.accent, border: theme.accent, glow: theme.accent };
     case "won":
-      return {
-        fill: theme.accent2,
-        border: theme.accent2,
-        glow: theme.accent2,
-      };
+      return { fill: theme.accent, border: theme.accent };
     case "connected":
-      return { fill: undefined, border: theme.accent2, glow: theme.accent2 };
+      return { fill: theme.surface, border: theme.accent };
     default:
-      return {
-        fill: undefined,
-        border: rgba(theme.ink, 0.32),
-        glow: undefined,
-      };
+      return { fill: theme.surface, border: rgba(theme.ink, 0.32) };
   }
 }
 
-/** How strongly each state glows: lit stars most, reachable ones faintly. */
-const GLOW_OPACITY = { complete: 0.55, won: 0.5, connected: 0.22, locked: 0 };
+/**
+ * A finished game's star: four points with curved sides, in a 100 by 100
+ * box, its tips softened by a round stroke. Larger than a dot, so it reads
+ * as a star.
+ */
+const STAR_PATH = "M50 4 Q58 42 96 50 Q58 58 50 96 Q42 58 4 50 Q42 42 50 4 Z";
+const STAR_SIZE = GAME_DOT_SIZE * 1.5;
 
 /** The game dot states, least advanced first. */
 const STATE_ORDER: GameDotState[] = ["locked", "connected", "won", "complete"];
 function lessAdvanced(a: GameDotState, b: GameDotState) {
   return STATE_ORDER.indexOf(a) <= STATE_ORDER.indexOf(b) ? a : b;
 }
-/** A link's colour for the state of its less advanced end. */
+/**
+ * A link's look for the state of its less advanced end: every link between
+ * reachable games is in the accent, the further along the brighter.
+ */
 const LINK_LOOK: Record<
   GameDotState,
   () => { color: string; opacity: number }
 > = {
-  complete: () => ({ color: theme.accent, opacity: 0.55 }),
-  won: () => ({ color: theme.accent2, opacity: 0.5 }),
-  connected: () => ({ color: theme.ink, opacity: 0.3 }),
-  locked: () => ({ color: theme.ink, opacity: 0.07 }),
+  complete: () => ({ color: theme.accent, opacity: 0.8 }),
+  won: () => ({ color: theme.accent, opacity: 0.8 }),
+  connected: () => ({ color: theme.accent, opacity: 0.8 }),
+  locked: () => ({ color: theme.ink, opacity: 0.3 }),
 };
 
 /** Link widths in world points: arm strands heavier than the links between. */
-const LINE_WIDTH = { arm: 1.9, bridge: 0.77 };
+const LINE_WIDTH = { arm: 1, bridge: 1 };
 /** Locked links are drawn a little finer as well as fainter. */
-const LOCKED_LINE_SCALE = 0.85;
+const LOCKED_LINE_SCALE = 1;
 
-/** The selected game dot's ring: its gap from the dot, in world points. */
-const SELECTION_GAP = 7;
+/** The selected game dot is drawn this much larger. */
+const SELECTED_SCALE = 1.6;
 
 /**
  * Game dot names are drawn like the engraving on a star chart: small, spaced
@@ -121,10 +122,10 @@ const LABEL = {
   fadeFrom: 0.62,
   fadeTo: 1.05,
   fontSize: 7.2,
-  letterSpacing: 0.4,
+  letterSpacing: 1.6,
   /** Wide enough that names are never cut off. */
   maxWidth: 150,
-  gap: 7,
+  gap: 14,
 };
 /** Locked games are named more faintly, so the lit ones lead the eye. */
 const LABEL_OPACITY = {
@@ -253,6 +254,44 @@ const GameDotLabels = memo(function GameDotLabels({
   );
 });
 
+const GALAXY_GLOW = require("@/assets/images/galaxy-glow.webp");
+
+/**
+ * The arms, drawn rather than implied: a soft glow along each spine of the
+ * spiral, under the links and dots. One image baked by an earlier version of
+ * scripts/generate-campaign-map.mjs: a real blur is the only way to get
+ * smooth arms (stacked shapes band), SVG blur filters are unreliable on
+ * Android, and Android draws a map-sized SVG as one huge bitmap. The tab
+ * waits for it, so the map never shows without it.
+ */
+const GalaxyArms = memo(function GalaxyArms() {
+  const ready = useTabReadyImage(GALAXY_GLOW);
+  return (
+    // The wrapper carries pointerEvents, which expo-image's style does not
+    // accept; the image inherits it, so a drag pans the map on web rather
+    // than picking the picture up.
+    <View
+      style={{
+        position: "absolute",
+        pointerEvents: "none",
+        left: 0,
+        top: 0,
+        width: WORLD_SIZE,
+        height: WORLD_SIZE,
+      }}
+    >
+      <Image
+        source={GALAXY_GLOW}
+        cachePolicy="memory"
+        contentFit="fill"
+        style={{ width: "100%", height: "100%", opacity: 0.75 }}
+        onDisplay={ready.onDisplay}
+        onError={ready.onError}
+      />
+    </View>
+  );
+});
+
 const GameDotConnections = memo(function GameDotConnections({
   gameDotStates,
 }: {
@@ -301,6 +340,77 @@ const GameDotConnections = memo(function GameDotConnections({
   );
 });
 
+/**
+ * A game dot's mark: a four-pointed star when finished, else a dot, with a
+ * glow in the accent around it once it can be played. The web draws the glow
+ * as a drop shadow; native, as two faint circles, since Android draws a
+ * blurred shadow on each of a hundred dots slowly.
+ */
+function DotMark({ state }: { state: GameDotState }) {
+  const size = GAME_DOT_SIZE;
+  const { fill, border } = gameDotLook(state);
+  const complete = state === "complete";
+  const box = complete ? STAR_SIZE : size;
+  const lit = state !== "locked";
+  const webGlow =
+    Platform.OS === "web" && lit
+      ? ({
+          filter: `drop-shadow(0 0 ${size * 0.45}px ${rgba(theme.accent, 0.8)})`,
+        } as object)
+      : null;
+  const nativeGlow = Platform.OS !== "web" && lit;
+  const halo = (scale: number, opacity: number) => (
+    <View
+      style={{
+        position: "absolute",
+        left: (box - size * scale) / 2,
+        top: (box - size * scale) / 2,
+        width: size * scale,
+        height: size * scale,
+        borderRadius: (size * scale) / 2,
+        backgroundColor: rgba(theme.accent, opacity),
+      }}
+    />
+  );
+  return (
+    <View style={[{ width: box, height: box }, webGlow]}>
+      {nativeGlow && halo(2.4, 0.08)}
+      {nativeGlow && halo(1.7, 0.16)}
+      {complete ? (
+        <Svg
+          width={STAR_SIZE}
+          height={STAR_SIZE}
+          viewBox="0 0 100 100"
+          style={{ pointerEvents: "none" }}
+        >
+          <Path
+            d={STAR_PATH}
+            fill={theme.accent}
+            stroke={theme.accent}
+            strokeWidth={6}
+            strokeLinejoin="round"
+          />
+        </Svg>
+      ) : (
+        <View
+          style={{
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+            borderWidth: 1.2,
+            borderColor: border,
+            backgroundColor: fill,
+          }}
+        />
+      )}
+    </View>
+  );
+}
+
+function markBox(state: GameDotState) {
+  return state === "complete" ? STAR_SIZE : GAME_DOT_SIZE;
+}
+
 const GameDot = memo(function GameDot({
   gameDot,
   state,
@@ -310,22 +420,11 @@ const GameDot = memo(function GameDot({
   state: GameDotState;
   onSelectGameDot: (gameDot: GameDotDefinition) => void;
 }) {
-  const size = GAME_DOT_SIZE;
   const game = GAMES_DATA[gameDot.path];
   const title = localizeGameTitle(game, gameDot.path, useDisplayLanguage());
-  const { fill, border, glow } = gameDotLook(state);
-  const glowOpacity = GLOW_OPACITY[state];
   const left = toWorld(gameDot.x);
   const top = toWorld(gameDot.y);
-  const dot = {
-    position: "absolute",
-    width: size,
-    height: size,
-    borderRadius: size / 2,
-    borderWidth: 1.2,
-    borderColor: border,
-    backgroundColor: fill,
-  } as const;
+  const box = markBox(state);
 
   if (Platform.OS === "web") {
     return (
@@ -334,34 +433,21 @@ const GameDot = memo(function GameDot({
         accessibilityLabel={`${title}, ${state}`}
         onPress={() => onSelectGameDot(gameDot)}
         style={{
-          ...dot,
+          position: "absolute",
           outline: "none",
           pointerEvents: "auto",
-          left: left - size / 2,
-          top: top - size / 2,
-          boxShadow: glow
-            ? `0 0 ${size * 0.9}px ${size * 0.25}px ${rgba(glow, glowOpacity)}`
-            : "none",
+          left: left - box / 2,
+          top: top - box / 2,
+          width: box,
+          height: box,
         }}
-      />
+      >
+        <DotMark state={state} />
+      </Pressable>
     );
   }
 
-  // Native taps are handled by the map's tap gesture (see CampaignMap), and
-  // native draws the glow from plain circles: a map has over a hundred of
-  // these, and Android draws blurred shadows slowly.
-  const box = size * 3;
-  const circle = (scale: number, style: object) => (
-    <View
-      style={{
-        position: "absolute",
-        width: size * scale,
-        height: size * scale,
-        borderRadius: (size * scale) / 2,
-        ...style,
-      }}
-    />
-  );
+  // Native taps are handled by the map's tap gesture (see CampaignMap).
   return (
     <View
       accessibilityLabel={`${title}, ${state}`}
@@ -372,40 +458,110 @@ const GameDot = memo(function GameDot({
         top: top - box / 2,
         width: box,
         height: box,
-        alignItems: "center",
-        justifyContent: "center",
       }}
     >
-      {glow && circle(3, { backgroundColor: rgba(glow, glowOpacity * 0.18) })}
-      {glow && circle(1.9, { backgroundColor: rgba(glow, glowOpacity * 0.35) })}
-      {circle(1, { ...dot, position: "absolute" })}
+      <DotMark state={state} />
     </View>
   );
 });
 
 /**
- * The ring around the selected game dot. Only its coming and going is
- * animated: it grows in around the newly selected dot as the last one's
- * fades away.
+ * The selected game dot, drawn again over its own at twice the size: it
+ * grows as it is chosen and shrinks back as another is, in step with the
+ * game's card below the map changing its colours.
  */
-function SelectionRing({ gameDot }: { gameDot: GameDotDefinition }) {
-  const size = GAME_DOT_SIZE + SELECTION_GAP * 2;
+function SelectedDots({
+  selected,
+  gameDotStates,
+}: {
+  selected: GameDotDefinition | undefined;
+  gameDotStates: ReadonlyMap<string, GameDotState>;
+}) {
+  // The dot shrinking back stays drawn until it is its own size again.
+  const [leaving, setLeaving] = useState<GameDotDefinition[]>([]);
+  const shown = useRef(selected);
+  useEffect(() => {
+    const previous = shown.current;
+    shown.current = selected;
+    if (previous && previous.path !== selected?.path) {
+      setLeaving((current) => [
+        ...current.filter((gameDot) => gameDot.path !== previous.path),
+        previous,
+      ]);
+    }
+    if (selected) {
+      setLeaving((current) =>
+        current.filter((gameDot) => gameDot.path !== selected.path),
+      );
+    }
+  }, [selected]);
+  const done = (path: string) =>
+    setLeaving((current) => current.filter((gameDot) => gameDot.path !== path));
+  return (
+    <>
+      {leaving.map((gameDot) => (
+        <GrowingDot
+          key={`out-${gameDot.path}`}
+          gameDot={gameDot}
+          state={gameDotStates.get(gameDot.path)!}
+          grow={false}
+          onDone={done}
+        />
+      ))}
+      {selected && (
+        <GrowingDot
+          key={`in-${selected.path}`}
+          gameDot={selected}
+          state={gameDotStates.get(selected.path)!}
+          grow
+        />
+      )}
+    </>
+  );
+}
+
+function GrowingDot({
+  gameDot,
+  state,
+  grow,
+  onDone,
+}: {
+  gameDot: GameDotDefinition;
+  state: GameDotState;
+  grow: boolean;
+  onDone?: (path: string) => void;
+}) {
+  const scale = useSharedValue(grow ? 1 : SELECTED_SCALE);
+  useEffect(() => {
+    const path = gameDot.path;
+    scale.value = withTiming(
+      grow ? SELECTED_SCALE : 1,
+      { duration: GAME_CHANGE_MS },
+      (finished) => {
+        if (finished && onDone) scheduleOnRN(onDone, path);
+      },
+    );
+  }, [gameDot.path, grow, onDone, scale]);
+  const style = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+  const box = markBox(state);
   return (
     <Animated.View
-      entering={ZoomIn.duration(220)}
-      exiting={FadeOut.duration(180)}
-      style={{
-        position: "absolute",
-        pointerEvents: "none",
-        left: toWorld(gameDot.x) - size / 2,
-        top: toWorld(gameDot.y) - size / 2,
-        width: size,
-        height: size,
-        borderRadius: size / 2,
-        borderWidth: 1.2,
-        borderColor: theme.accent,
-      }}
-    />
+      style={[
+        {
+          position: "absolute",
+          pointerEvents: "none",
+          left: toWorld(gameDot.x) - box / 2,
+          top: toWorld(gameDot.y) - box / 2,
+          width: box,
+          height: box,
+        },
+        style,
+      ]}
+    >
+      <DotMark state={state} />
+    </Animated.View>
   );
 }
 
@@ -430,6 +586,26 @@ export function CampaignMap({
   const [centered, setCentered] = useState(false);
   useTabReadyHold(!centered);
   const containerRef = useRef<View>(null);
+  const starfield = useStarfield();
+  // Once linked, the star layers follow the map's pans. (Only the shared
+  // values go into the worklet.)
+  const sky = starfield && {
+    skyX: starfield.skyX,
+    skyY: starfield.skyY,
+    panLinked: starfield.panLinked,
+    panFromX: starfield.panFromX,
+    panFromY: starfield.panFromY,
+  };
+  useAnimatedReaction(
+    () => [translateX.value, translateY.value] as const,
+    ([x, y]) => {
+      if (!sky || !sky.panLinked.value) return;
+      sky.skyX.value += x - sky.panFromX.value;
+      sky.skyY.value += y - sky.panFromY.value;
+      sky.panFromX.value = x;
+      sky.panFromY.value = y;
+    },
+  );
   const hasCenteredInitialGameDot = useRef(false);
   const unlockedPaths = useMemo(
     () => getUnlockedGameDotPaths(wonPaths),
@@ -475,6 +651,8 @@ export function CampaignMap({
     centerGameDot(gameDot, false);
     hasCenteredInitialGameDot.current = true;
     setCentered(true);
+    // From here, the sky follows the map's pans.
+    starfield?.linkPan(translateX.value, translateY.value);
   }, [ready, selectedPath, settings.showAnimations, viewport.width]);
 
   useEffect(() => {
@@ -619,7 +797,7 @@ export function CampaignMap({
 
   return (
     <GestureDetector gesture={cameraGesture}>
-      {/* The sky behind is Home's starfield. */}
+      {/* The sky behind is Home's starfield, which this map moves. */}
       <View
         ref={containerRef}
         onLayout={onLayout}
@@ -652,6 +830,8 @@ export function CampaignMap({
             <CampaignBlackHole animationsEnabled={settings.showAnimations} />
           </Animated.View>
 
+          <GalaxyArms />
+
           <GameDotConnections gameDotStates={gameDotStates} />
 
           {GAME_DOT_DEFINITIONS.map((gameDot) => {
@@ -665,12 +845,10 @@ export function CampaignMap({
             );
           })}
 
-          {selectedGameDot && (
-            <SelectionRing
-              key={selectedGameDot.path}
-              gameDot={selectedGameDot}
-            />
-          )}
+          <SelectedDots
+            selected={selectedGameDot}
+            gameDotStates={gameDotStates}
+          />
 
           <GameDotLabels gameDotStates={gameDotStates} scale={scale} />
         </Animated.View>

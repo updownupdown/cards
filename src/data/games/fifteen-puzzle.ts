@@ -22,6 +22,7 @@ export const fifteenPuzzle: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#293b32",
   gameColorPale: "#f6edcf",
+  gameColorAccent: "#90c6e0",
   cardBack: CardBackColors.Ocean,
   quickStart: [
     "Reorder the cards from Ace to 4 in each row: Hearts, Clubs, Diamonds, then Spades.",

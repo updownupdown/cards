@@ -21,6 +21,7 @@ export const gaps: GameDefinition = {
   animation: GameAnimations.Mist,
   gameColorDark: "#2c322f",
   gameColorPale: "#e7ddc2",
+  gameColorAccent: "#ddc692",
   cardBack: CardBackColors.Bronze,
   quickStart: [
     "Arrange the rows in order (2 to K).",

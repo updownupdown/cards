@@ -6,7 +6,7 @@ import { Icon } from "@/icons";
 import { rgba, theme } from "@/styles/styles";
 import { COLOR_THEMES } from "@/styles/themes";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 /**
@@ -26,7 +26,7 @@ const FOLDED_ROWS = 2.55;
 
 /**
  * The colour themes as swatches, three to a row, each drawn in its own
- * colours. Folded, a couple of rows show, fading into an Expand button;
+ * colours, the high-contrast ones under a heading of their own. Folded, a couple of rows show, fading into an Expand button;
  * expanded, they all do. It opens expanded when the chosen theme would be
  * out of sight.
  */
@@ -72,68 +72,89 @@ export function ThemePicker({
             opacity: width ? 1 : 0,
           }}
         >
-          {COLOR_THEMES.map(({ id, name, colors }, index) => {
+          {COLOR_THEMES.map((colorTheme, index) => {
+            const { id, name, colors } = colorTheme;
             const selected = id === value;
+            // The high-contrast themes come last, under their own heading,
+            // which takes a whole row.
+            const firstHighContrast =
+              "highContrast" in colorTheme &&
+              !("highContrast" in (COLOR_THEMES[index - 1] ?? {}));
             return (
-              <Pressable
-                key={id}
-                accessibilityRole="button"
-                accessibilityLabel={name}
-                accessibilityState={{ selected }}
-                onLayout={
-                  index === 0
-                    ? (event) =>
-                        setRowHeight(Math.ceil(event.nativeEvent.layout.height))
-                    : undefined
-                }
-                onPress={() => {
-                  if (selected) return;
-                  reopenSettings = true;
-                  onChange(id);
-                }}
-                style={{
-                  width: cardWidth || `${100 / COLUMNS - 3}%`,
-                  paddingVertical: spacing(12),
-                  paddingHorizontal: spacing(10),
-                  gap: spacing(10),
-                  borderRadius: spacing(14),
-                  backgroundColor: colors.night,
-                  borderWidth: selected ? 2 : 1,
-                  borderColor: selected ? theme.accent : rgba(theme.ink, 0.16),
-                  outline: "none",
-                }}
-              >
-                <View style={{ flexDirection: "row", gap: spacing(3) }}>
-                  {[
-                    colors.accent,
-                    colors.accent2,
-                    colors.surface,
-                    colors.ink,
-                  ].map((color, dot) => (
-                    <View
-                      key={dot}
-                      style={{
-                        width: spacing(14),
-                        height: spacing(14),
-                        borderRadius: spacing(7),
-                        backgroundColor: color,
-                        borderWidth: 1,
-                        borderColor: rgba(colors.ink, 0.15),
-                      }}
-                    />
-                  ))}
-                </View>
-                <Text
-                  size="xxs"
-                  weight={600}
-                  color={colors.ink}
-                  textTransform="uppercase"
-                  numberOfLines={1}
-                  style={{ letterSpacing: spacing(0.8) }}
+              <Fragment key={id}>
+                {firstHighContrast && (
+                  <Text
+                    size="xs"
+                    weight={500}
+                    color={theme.dim}
+                    style={{ width: "100%", marginTop: spacing(8) }}
+                  >
+                    {t("colorTheme.highContrast")}
+                  </Text>
+                )}
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={name}
+                  accessibilityState={{ selected }}
+                  onLayout={
+                    index === 0
+                      ? (event) =>
+                          setRowHeight(
+                            Math.ceil(event.nativeEvent.layout.height),
+                          )
+                      : undefined
+                  }
+                  onPress={() => {
+                    if (selected) return;
+                    reopenSettings = true;
+                    onChange(id);
+                  }}
+                  style={{
+                    width: cardWidth || `${100 / COLUMNS - 3}%`,
+                    paddingVertical: spacing(12),
+                    paddingHorizontal: spacing(10),
+                    gap: spacing(10),
+                    borderRadius: spacing(14),
+                    backgroundColor: colors.night,
+                    borderWidth: selected ? 2 : 1,
+                    borderColor: selected
+                      ? theme.accent
+                      : rgba(theme.ink, 0.16),
+                    outline: "none",
+                  }}
                 >
-                  {name}
-                </Text>
-              </Pressable>
+                  <View style={{ flexDirection: "row", gap: spacing(3) }}>
+                    {[
+                      colors.accent,
+                      colors.accent2,
+                      colors.surface,
+                      colors.ink,
+                    ].map((color, dot) => (
+                      <View
+                        key={dot}
+                        style={{
+                          width: spacing(14),
+                          height: spacing(14),
+                          borderRadius: spacing(7),
+                          backgroundColor: color,
+                          borderWidth: 1,
+                          borderColor: rgba(colors.ink, 0.15),
+                        }}
+                      />
+                    ))}
+                  </View>
+                  <Text
+                    size="xxs"
+                    weight={600}
+                    color={colors.ink}
+                    textTransform="uppercase"
+                    numberOfLines={1}
+                    style={{ letterSpacing: spacing(0.8) }}
+                  >
+                    {name}
+                  </Text>
+                </Pressable>
+              </Fragment>
             );
           })}
         </View>

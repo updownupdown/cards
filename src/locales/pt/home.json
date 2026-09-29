@@ -1,14 +1,9 @@
 {
   "tabs": {
     "home": "Início",
-    "collect": "Coleção",
-    "search": "Buscar",
-    "campaign": "Campanha"
-  },
-  "cardSize": {
-    "small": "Lista",
-    "medium": "Cartões",
-    "large": "Detalhes"
+    "campaign": "Odisseia",
+    "collect": "Galeria",
+    "search": "Buscar"
   },
   "favorites": {
     "add": "Adicionar aos favoritos",
@@ -17,18 +12,32 @@
   "search": {
     "placeholder": "Buscar...",
     "clear": "Limpar busca",
-    "filters": "Filtros",
-    "filter": "Filtrar",
-    "resetFilters": "Redefinir filtros",
     "all": "Todos",
-    "unplayed": "Não jogados"
+    "unplayed": "Não jogados",
+    "unbeaten": "Não vencidos",
+    "won": "Vencidos",
+    "count_one": "{{count}} jogo",
+    "count_other": "{{count}} jogos",
+    "sortAZ": "A–Z",
+    "sortDifficulty": "Dificuldade",
+    "sortEasiest": "Mais fáceis primeiro",
+    "sortHardest": "Mais difíceis primeiro",
+    "sortRecent": "Recentes",
+    "sortLuck": "Sorte",
+    "sortLeastLuck": "Menos sorte primeiro",
+    "sortMostLuck": "Mais sorte primeiro",
+    "sortPlays": "Partidas jogadas",
+    "sortLeastPlayed": "Menos jogados primeiro",
+    "sortMostPlayed": "Mais jogados primeiro",
+    "sortBy": "Ordenar"
   },
   "sections": {
     "localOnly": "Jogos só locais",
     "gameOfTheDay": "Jogo do dia",
     "easyGames": "Jogos fáceis para começar",
-    "jumpBackIn": "Continuar jogando",
-    "favorites": "Favoritos"
+    "favorites": "Favoritos",
+    "continue": "Continuar",
+    "fact": "Você sabia?"
   },
   "gameOfTheDay": {
     "today": "Hoje",
@@ -40,17 +49,7 @@
   },
   "deal": {
     "title": "Partida aleatória",
-    "intro": "Deslize para a esquerda ou para a direita para passar, ou toque para jogar."
-  },
-  "collect": {
-    "games": "Jogos: {{won}}/{{total}}",
-    "categories": "Categorias: {{won}}/{{total}}",
-    "tagProgress": "{{tag}}: {{won}} de {{total}} vencidos",
-    "intro": {
-      "title": "Diário de viagem",
-      "text": "Vença um jogo para ganhar o carimbo dele. Explore mecânicas parecidas e tente completar todas as coleções!",
-      "close": "Fechar"
-    }
+    "intro": "Deslize para passar, toque para jogar"
   },
   "tags": {
     "KlondikeFamily": "Família Klondike",
@@ -154,5 +153,68 @@
     "dismissed": "Sem problemas: você pode instalar quando quiser pelo menu do navegador.",
     "installNow": "Instalar agora",
     "notNow": "Agora não"
+  },
+  "gallery": {
+    "previous": "Obra anterior",
+    "next": "Próxima obra",
+    "views": {
+      "works": "Obras",
+      "chapters": "Capítulos",
+      "quotes": "Citações"
+    },
+    "groupBy": {
+      "era": "Época",
+      "style": "Estilo",
+      "category": "Categoria de jogo",
+      "region": "Região",
+      "medium": "Técnica"
+    },
+    "eras": {
+      "ancient": "Antes de 1400",
+      "renaissance": "1400–1599",
+      "c17": "Século XVII",
+      "c18": "Século XVIII",
+      "early-c19": "1800–1849",
+      "late-c19": "1850–1899",
+      "c20": "Século XX"
+    },
+    "styles": {
+      "sacred": "Arte sacra e iluminuras",
+      "renaissance": "Renascimento",
+      "baroque": "Barroco e Século de Ouro",
+      "rococo": "Rococó e neoclassicismo",
+      "east-asian": "Ásia Oriental",
+      "romanticism": "Romantismo",
+      "realism": "Realismo",
+      "impressionism": "Impressionismo e depois",
+      "modern": "Modernismo",
+      "satire": "Sátira e caricatura",
+      "illustration": "Ilustração e história natural",
+      "architecture": "Mapas e arquitetura",
+      "decorative": "Artes decorativas"
+    },
+    "regions": {
+      "europe": "Europa",
+      "americas": "Américas",
+      "east-asia": "Ásia Oriental",
+      "south-asia": "Sul da Ásia e Himalaia",
+      "africa-middle-east": "África e Oriente Médio",
+      "oceania": "Oceania"
+    },
+    "media": {
+      "painting": "Pinturas",
+      "drawing": "Desenhos e aquarelas",
+      "print": "Gravuras",
+      "manuscript": "Manuscritos",
+      "object": "Objetos e tecidos",
+      "photograph": "Fotografias"
+    },
+    "back": "Voltar à galeria",
+    "unknownArtist": "Artista desconhecido",
+    "notAcquired": "Não adquirida"
+  },
+  "header": {
+    "stats": "Estatísticas",
+    "settings": "Configurações"
   }
 }

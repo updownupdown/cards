@@ -21,6 +21,7 @@ export const simpleSimon: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#312d29",
   gameColorPale: "#eadfca",
+  gameColorAccent: "#e88790",
   cardBack: CardBackColors.Crimson,
   quickStart: [
     "Build down by rank.",

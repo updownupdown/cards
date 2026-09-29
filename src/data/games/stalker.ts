@@ -23,6 +23,7 @@ export const stalker: GameDefinition = {
   animation: GameAnimations.Lightning,
   gameColorDark: "#1b2224",
   gameColorPale: "#daf1f1",
+  gameColorAccent: "#909ddf",
   cardBack: CardBackColors.Charcoal,
   quickStart: [
     "Reach the end of the stock deck without being caught.",

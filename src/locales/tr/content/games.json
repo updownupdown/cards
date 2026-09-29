@@ -1529,6 +1529,50 @@
       "value": "Gargantua"
     }
   },
+  "glazier": {
+    "howToPlay": {
+      "hash": "2e3ae25d",
+      "value": [
+        "## Amaç",
+        "4x4'lük bir vitray pencereyi doldurarak dört turda **40 puan** veya daha fazla toplayın.",
+        "## Seçim",
+        "- Her turda üç fırına dörder cam, tezgâha bir cam gelir.",
+        "- Bir fırından ya da tezgâhtan tek renkteki **tüm** camları alın. Fırındaki diğer camlar tezgâha geçer.",
+        "- Fırınlar ve tezgâh boşaldığında tur biter.",
+        "## Çerçeveler",
+        "- Çerçeveler tek bir renkten 1, 2, 3 ve 4 cam alır; pencerenin her satırı için bir çerçeve vardır.",
+        "- Bir çerçeve, pencere satırına artık sığmayan bir rengi alamaz.",
+        "- Sığmayan camlar kırılır. Bir grubu bilerek de kırabilirsiniz.",
+        "## Pencere",
+        "- Tur sonunda her dolu çerçeve kendi satırına bir cam yerleştirir; sütunu siz seçersiniz.",
+        "- **Hiçbir renk bir satırda ya da sütunda tekrar edemez.**",
+        "- Artık yerleştirilemeyen camlar kırılır.",
+        "## Puanlama",
+        "- Bir cam, yatayda katıldığı çizginin uzunluğu artı dikeyde katıldığı çizginin uzunluğu kadar puan alır; hiçbirine katılmazsa 1 puan.",
+        "- Her turda kırıklar 1, 1, 2, 2, 2, 3 ve 3 puan kaybettirir; sonrakiler ücretsizdir.",
+        "- Sonunda her dolu satır **3**, her dolu sütun **6** puan getirir.",
+        "## Dereceler",
+        "- 40+: Kalfa",
+        "- 55+: Usta Camcı",
+        "- 70+: Katedral Vitrayı",
+        "## İpuçları",
+        "- Fırında bıraktığınız her şey tezgâhta birikir.",
+        "- Bir cam yerleştirmeden önce, satırın hâlâ ihtiyaç duyduğu renkler için hangi sütunların açık kaldığına bakın."
+      ]
+    },
+    "quickStart": {
+      "hash": "51bc2e4e",
+      "value": [
+        "Bir fırından tek renkteki tüm camları alın; kalanlar tezgâha geçer.",
+        "Çerçeveler tek renkten 1 ila 4 cam alır. Fazla camlar kırılır ve puan kaybettirir.",
+        "Dolu çerçeve pencereye bir cam yerleştirir; bir satır ya da sütunda aynı renk iki kez olmaz."
+      ]
+    },
+    "title": {
+      "hash": "2b72c1f3",
+      "value": "Camcı"
+    }
+  },
   "golf": {
     "howToPlay": {
       "hash": "24a82fa3",

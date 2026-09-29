@@ -13,10 +13,20 @@ export function usePalette(): ThemeColors {
   return useContext(PaletteContext) ?? theme;
 }
 
+/**
+ * Inside a game, its own accent colour (gameColorAccent); elsewhere, the
+ * app's accent, so shared controls keep their usual look outside games.
+ */
+export function useGameAccent(): string {
+  const palette = useContext(PaletteContext);
+  return palette ? palette.accent2 : theme.accent;
+}
+
 type Hex = `#${string}`;
 const channels = (hex: string) =>
   [1, 3, 5].map((index) => parseInt(hex.slice(index, index + 2), 16));
-function mix(from: string, to: string, amount: number): Hex {
+/** A colour part way from one hex colour to another. */
+export function mix(from: string, to: string, amount: number): Hex {
   const a = channels(from);
   const b = channels(to);
   return `#${a
@@ -29,10 +39,15 @@ function mix(from: string, to: string, amount: number): Hex {
 }
 
 /**
- * A game's palette from its two colours: its dark colour for the surfaces,
- * its pale one as the accent, and the text between the pale and white.
+ * A game's palette from its colours: its dark colour for the surfaces, its
+ * pale one as the accent, the text between the pale and white, and its own
+ * accent colour (gameColorAccent) as the second accent, for links.
  */
-export function gamePalette(dark: string, pale: string): ThemeColors {
+export function gamePalette(
+  dark: string,
+  pale: string,
+  accent?: string,
+): ThemeColors {
   return {
     night: mix(dark, "#000000", 0.45),
     surface: dark as Hex,
@@ -42,7 +57,7 @@ export function gamePalette(dark: string, pale: string): ThemeColors {
     faint: mix(pale, dark, 0.5),
     accent: pale as Hex,
     accentInk: mix(dark, "#000000", 0.35),
-    accent2: mix(pale, "#ffffff", 0.35),
+    accent2: (accent as Hex | undefined) ?? mix(pale, "#ffffff", 0.35),
     sky: dark as Hex,
   };
 }

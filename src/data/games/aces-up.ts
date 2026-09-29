@@ -23,6 +23,7 @@ export const acesUp: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#1d0f0a",
   gameColorPale: "#eee0ca",
+  gameColorAccent: "#e8b86a",
   cardBack: CardBackColors.Terracotta,
   quickStart: [
     "Discard an exposed card if a card of the same suit, but higher rank, is also exposed.",

@@ -24,6 +24,7 @@ export const blackberryPie: GameDefinition = {
   },
   gameColorDark: "#2a1c33",
   gameColorPale: "#f7e4ff",
+  gameColorAccent: "#d897c6",
   cardBack: CardBackColors.Mauve,
   quickStart: [
     "Choose a hand or retainer card, then place it under an available berry.",

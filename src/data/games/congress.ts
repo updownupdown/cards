@@ -23,6 +23,7 @@ export const congress: GameDefinition = {
   animation: GameAnimations.Mist,
   gameColorDark: "#292f38",
   gameColorPale: "#e9dfca",
+  gameColorAccent: "#ddc692",
   cardBack: CardBackColors.Bronze,
   quickStart: [
     "Build eight foundations up by suit.",

@@ -87,8 +87,8 @@ export const GameHeader = memo(function GameHeader({
             width: "100%",
             height: spacing(layoutDims.menuBarHeight),
             paddingHorizontal: spacing(layoutDims.pagePadding / 2),
-            // The tab bar's glass, corner and shadow.
-            borderRadius: spacing(22),
+            // Round ends, as the tab bar has.
+            borderRadius: spacing(layoutDims.menuBarHeight / 2),
             backgroundColor: rgba(theme.surface, 0.8),
             // No edge; a soft, wide shadow lifts it off the game instead.
             boxShadow: `0 ${spacing(10)}px ${spacing(36)}px ${rgba(Colors.black, 0.28)}`,

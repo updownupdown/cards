@@ -1,6 +1,5 @@
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
-import { ActionButton } from "@/components/ui/Nocturne";
 import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
 import type { GameMenuInfo } from "@/data/games-data";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
@@ -12,7 +11,7 @@ import { Colors, rgba, theme } from "@/styles/styles";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import type { Href } from "expo-router";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { FavButton } from "./FavButton";
 import { useTabReadyImage } from "./TabReady";
@@ -25,7 +24,7 @@ export function gameArt(game: GameMenuInfo) {
  * The frame every game card shares, tile to full width: rounded corners and
  * no outline, so the art itself makes the edge. The one place to change it.
  */
-export const CARD_RADIUS = 6;
+export const CARD_RADIUS = 8;
 export function useCardFrame() {
   const { spacing } = useResponsiveMetrics();
   return {
@@ -42,7 +41,8 @@ const SHADOW_ROOM = 20;
 /** A game's own palette, for its card: text, ratings and buttons in its colours. */
 export function useGamePalette(game: GameMenuInfo) {
   return useMemo(
-    () => gamePalette(game.gameColorDark, game.gameColorPale),
+    () =>
+      gamePalette(game.gameColorDark, game.gameColorPale, game.gameColorAccent),
     [game],
   );
 }
@@ -59,7 +59,7 @@ export function ArtFade({ from = 0.35 }: { from?: number }) {
   const theme = usePalette();
   return (
     <LinearGradient
-      colors={[rgba(theme.night, 0), rgba(theme.night, 0.9)]}
+      colors={[rgba(theme.night, 0.6), rgba(theme.night, 0.96)]}
       locations={[from, 1]}
       style={StyleSheet.absoluteFill}
     />
@@ -120,15 +120,21 @@ export function GameTile({
             style={StyleSheet.absoluteFill}
             {...ready}
           />
-          <ArtFade from={0.4} />
+          <ArtFade from={0} />
           <View
             style={{
               marginTop: "auto",
               paddingHorizontal: spacing(10),
-              paddingBottom: spacing(9),
+              paddingBottom: spacing(14),
             }}
           >
-            <Text size="lg" weight={500} lineHeight={1.15} numberOfLines={2}>
+            <Text
+              size="lg"
+              weight={500}
+              lineHeight={1.15}
+              numberOfLines={2}
+              style={{ textAlign: "center" }}
+            >
               {title}
             </Text>
           </View>
@@ -140,9 +146,8 @@ export function GameTile({
             onToggleFavorite={() => onToggleFavorite(path)}
             size={spacing(36)}
             iconSize={spacing(20)}
-            activeColor={palette.accent}
+            activeColor={theme.accent}
             inactiveColor={palette.ink}
-            backdrop
           />
         )}
       </View>
@@ -194,16 +199,20 @@ export function ArtShelf({
 }
 
 /**
- * The games played last, to pick up again: the latest with a Resume button,
+ * The games played last, to pick up again: the latest with a larger title,
  * as wide as two tiles and their gap, so it lines up with the shelves below,
  * and the ones before a tile wide.
  */
 export function ContinueShelf({
   games,
   pageSidePadding,
+  favorites,
+  onToggleFavorite,
 }: {
   games: HomeGameEntry[];
   pageSidePadding: number;
+  favorites: Set<string>;
+  onToggleFavorite: (path: string) => void;
 }) {
   const { spacing } = useResponsiveMetrics();
   const gap = spacing(TILE_GAP);
@@ -229,6 +238,8 @@ export function ContinueShelf({
           width={index === 0 ? firstWidth : tile}
           height={height}
           latest={index === 0}
+          isFavorite={favorites.has(path)}
+          onToggleFavorite={onToggleFavorite}
         />
       ))}
     </ScrollView>
@@ -241,22 +252,23 @@ function ContinueCard({
   width,
   height,
   latest,
+  isFavorite,
+  onToggleFavorite,
 }: {
   path: string;
   game: GameMenuInfo;
   width: number;
   height: number;
-  /** The last game played: a larger title and a Resume button. */
+  /** The last game played: a larger title. */
   latest: boolean;
+  isFavorite: boolean;
+  onToggleFavorite: (path: string) => void;
 }) {
-  const { t } = useTranslation("home");
   const { spacing } = useResponsiveMetrics();
   const language = useDisplayLanguage();
   const source = gameArt(game);
   const ready = useTabReadyImage(source);
   const title = localizeGameTitle(game, path, language);
-  const open = () => launchGame(path as Href);
-  const [resumeWidth, setResumeWidth] = useState(0);
   const frame = useCardFrame();
   const palette = useGamePalette(game);
   return (
@@ -265,7 +277,7 @@ function ContinueCard({
         style={{ ...frame, width, height, backgroundColor: game.gameColorDark }}
       >
         <Pressable
-          onPress={open}
+          onPress={() => launchGame(path as Href)}
           accessibilityRole="button"
           accessibilityLabel={title}
           style={StyleSheet.absoluteFill}
@@ -277,45 +289,33 @@ function ContinueCard({
             style={StyleSheet.absoluteFill}
             {...ready}
           />
-          <ArtFade from={latest ? 0.35 : 0.45} />
+          <ArtFade from={0} />
           <View
             style={{
               marginTop: "auto",
-              padding: spacing(latest ? 14 : 12),
-              flexDirection: "row",
-              alignItems: "flex-end",
-              gap: spacing(10),
+              padding: spacing(14),
             }}
           >
             <Text
               weight={500}
-              size={latest ? "xl" : "lg"}
+              size={"lg"}
               lineHeight={1.15}
               numberOfLines={2}
-              style={{ flex: 1 }}
+              style={{ textAlign: "center" }}
             >
               {title}
             </Text>
-            {/* Room for the Resume button, which sits beside the title. */}
-            {latest && <View style={{ width: resumeWidth }} />}
           </View>
         </Pressable>
-        {latest && (
-          <ActionButton
-            small
-            iconName="play"
-            label={t("sections.resume")}
-            onPress={open}
-            onLayout={(event) =>
-              setResumeWidth(Math.ceil(event.nativeEvent.layout.width))
-            }
-            style={{
-              position: "absolute",
-              right: spacing(14),
-              bottom: spacing(14),
-            }}
-          />
-        )}
+        <FavButton
+          style={{ position: "absolute", top: 0, right: 0 }}
+          isFavorite={isFavorite}
+          onToggleFavorite={() => onToggleFavorite(path)}
+          size={spacing(36)}
+          iconSize={spacing(20)}
+          activeColor={theme.accent}
+          inactiveColor={palette.ink}
+        />
       </View>
     </PaletteContext.Provider>
   );

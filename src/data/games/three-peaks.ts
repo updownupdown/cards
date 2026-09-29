@@ -29,6 +29,7 @@ export const threePeaks: GameDefinition = {
   animation: GameAnimations.Clouds,
   gameColorDark: "#24343a",
   gameColorPale: "#e3fcdd",
+  gameColorAccent: "#efae84",
   cardBack: CardBackColors.Ocean,
   quickStart: ["Play exposed +/-1 to waste; A<->K wraps; draw when stuck."],
   howToPlay: [

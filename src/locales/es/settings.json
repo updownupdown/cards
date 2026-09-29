@@ -13,7 +13,7 @@
   },
   "showAnimations": {
     "label": "Mostrar animaciones",
-    "description": "Efectos de clima y paisaje detrás de las cartas."
+    "description": "Clima y paisaje detrás de las cartas, y estrellas en movimiento en los menús."
   },
   "showTips": {
     "label": "Mostrar consejos",
@@ -40,11 +40,6 @@
   },
   "populateTestProgress": "Rellenar progreso de prueba",
   "credits": {
-    "starfield": {
-      "prefix": "Fondo estrellado de ",
-      "name": "Olena Bohovyk",
-      "suffix": ""
-    },
     "taoTranslation": {
       "prefix": "Capítulos del Tao Te Ching traducidos de la versión inglesa de ",
       "name": "John H. McDonald",
@@ -55,5 +50,11 @@
   "resetData": {
     "button": "Restablecer todos los datos",
     "confirm": "¿Borrar todo el progreso y los ajustes?"
+  },
+  "colorTheme": {
+    "label": "Tema de color",
+    "expand": "Mostrar todos",
+    "collapse": "Contraer",
+    "highContrast": "Alto contraste"
   }
 }

@@ -1,9 +1,5 @@
 {
   "jailbreak": {
-    "red": "Merah",
-    "black": "Hitam",
-    "redTotal": "Merah: {{count}}",
-    "blackTotal": "Hitam: {{count}}",
     "theJokerEscaped": "Joker berhasil kabur!"
   },
   "accordion": {
@@ -124,6 +120,35 @@
     "trade": "Jual",
     "offer": "Tawaran"
   },
+  "charlatan": {
+    "statusStart": "Ketuk dek Anda untuk mulai meracik ramuan.",
+    "statusRisk": "Risiko meledak {{risk}}% · Berhenti sekarang: {{points}} poin, {{coins}} koin",
+    "statusRiskFinal": "Risiko meledak {{risk}}% · Berhenti sekarang: {{points}} poin",
+    "statusBoiledOver": "Ramuannya meluap! Ambil poinnya atau koinnya.",
+    "statusMarket": "{{coins}} koin · Beli hingga {{buys}} lagi (jenis berbeda)",
+    "dudReturned": "Keriting mengembalikan kartu gagal ke dek Anda.",
+    "strength": "Kekuatan {{strength}}",
+    "strengthWithBonus": "Kekuatan {{strength}} (+{{bonus}} ♦ jika berhenti)",
+    "duds": "Kartu gagal",
+    "effect_hearts": "Tanpa efek",
+    "effect_diamonds": "Kartu terakhir ×2",
+    "effect_clubs": "Mengembalikan kartu gagal",
+    "effect_spades": "Menunjukkan kartu berikutnya",
+    "costValue": "Harga: nilainya",
+    "costValuePlus": "Harga: nilainya + {{extra}}",
+    "addCard": "Tambah kartu",
+    "stop": "Berhenti",
+    "keepPoints": "+{{value}} poin",
+    "keepCoins": "+{{value}} koin",
+    "nextRound": "Ronde {{round}} / {{total}}",
+    "round": "Ronde",
+    "score": "Skor",
+    "tierVillageHealer": "Tabib Desa",
+    "tierCourtAlchemist": "Alkemis Istana",
+    "tierMiracleWorker": "Pembuat Mukjizat",
+    "wonWithTier": "{{score}} poin: {{tier}}!",
+    "lostShortOfTarget": "{{score}} poin. Anda butuh {{target}} poin untuk menang."
+  },
   "cityGrid": {
     "pileIsFull": "Tumpukan penuh!",
     "mustPlaceOnExistingOr": "Harus ditaruh di tumpukan yang ada atau di sebelahnya!",
@@ -186,6 +211,17 @@
     "allTwelveRoyalsAreDown": "Kedua belas bangsawan sudah tumbang.",
     "youRanOutOfCards": "Kartumu habis sebelum semua bangsawan dikalahkan."
   },
+  "ebbAndFlow": {
+    "rising": "Naik",
+    "falling": "Turun",
+    "playMore_one": "Mainkan {{count}} kartu lagi",
+    "playMore_other": "Mainkan {{count}} kartu lagi",
+    "playOrDraw": "Terus bermain, atau ketuk dek untuk mengambil kartu",
+    "deckEmpty": "Dek kosong: mainkan setiap kartu yang bisa",
+    "allPlayed": "Semua kartu sudah dimainkan!",
+    "stuck_one": "Tidak ada kartu yang bisa dimainkan. Tersisa {{count}} kartu.",
+    "stuck_other": "Tidak ada kartu yang bisa dimainkan. Tersisa {{count}} kartu."
+  },
   "elementaryDetective": {
     "youScored20ToWin": "Skormu {{score}} (20 untuk menang)",
     "score": "Skor"
@@ -241,6 +277,21 @@
   },
   "grandfathersClock": {
     "everyHourStruck": "Semua jam sudah berdentang!"
+  },
+  "glazier": {
+    "paneSet": "Kaca terpasang: +{{count}}",
+    "paneShattered": "Tidak ada ruang di jendela: kacanya pecah.",
+    "framesShattered": "Sebuah bingkai tak muat lagi di barisnya: kacanya pecah.",
+    "shardsPenalty": "Pecahan: −{{count}}",
+    "windowBonus": "Bonus jendela: +{{count}}",
+    "roundStart": "Ronde {{round}} dari {{total}}",
+    "round": "Ronde",
+    "score": "Skor",
+    "tierJourneyman": "Tukang Muda",
+    "tierMaster": "Ahli Kaca",
+    "tierCathedral": "Jendela Katedral",
+    "wonWithTier": "{{score}} poin: {{tier}}!",
+    "lostShortOfTarget": "{{score}} poin. Anda butuh {{target}} poin untuk menang."
   },
   "gremlin": {
     "helper": "Pembantu",
@@ -376,6 +427,43 @@
     "shrineComplete": "Semua set tersimpan di kuil!",
     "trayFull": "Baki sudah penuh."
   },
+  "picketFence": {
+    "statusChooseHouse": "Pilih kartu untuk dibangun menjadi rumah.",
+    "statusChooseLot": "Ketuk kavling yang disorot untuk membangun di sana.",
+    "statusChooseEffect": "Pilih efek: {{hearts}} taman · {{diamonds}} kolam · {{spades}} pagar · {{clubs}} rumah",
+    "statusChooseFence": "Ketuk tempat pagar dipasang.",
+    "statusChooseSecondHouse": "Ketuk kavling untuk rumah kedua.",
+    "noLotFits": "Kartu ini tidak muat di kavling mana pun.",
+    "effectWasted": "Kali ini tanpa efek: kartu dibuang.",
+    "estateBlocked": "✕",
+    "parks": "Taman {{count}}/{{max}} · {{points}}",
+    "pools": "Kolam",
+    "score": "Skor",
+    "tierGoodNeighbours": "Tetangga Baik",
+    "tierModelSuburb": "Perumahan Teladan",
+    "tierPicturePerfect": "Seindah Lukisan",
+    "tierQuietStreet": "Jalan Sepi",
+    "tierVacantLots": "Kavling Kosong",
+    "wonWithTier": "{{score}} poin: {{tier}}!",
+    "lostShortOfTarget": "{{score}} poin: {{tier}}. Anda butuh {{target}} poin untuk menang."
+  },
+  "pickpocket": {
+    "round": "Ronde",
+    "score": "Koin",
+    "statusStart": "Balik sebuah kartu untuk memulai kantong Anda.",
+    "statusPurse": "Kantong: {{purse}}",
+    "cleanSweep": "Sapu bersih! Anda menyimpan {{purse}}.",
+    "walkedAway": "Anda menyelinap pergi dengan {{purse}}.",
+    "caught": "Tertangkap! {{purse}} di kantong Anda hilang.",
+    "caughtEmpty": "Tertangkap sebelum sempat mengambil koin!",
+    "walkAway": "Pergi",
+    "nextRound": "Ronde berikutnya",
+    "tierLightFingers": "Jari Ringan",
+    "tierCutpurse": "Pencopet",
+    "tierPrinceOfThieves": "Pangeran Pencuri",
+    "wonWithTier": "{{score}} koin: {{tier}}!",
+    "lostShortOfTarget": "{{score}} koin. Anda butuh {{target}} koin untuk menang."
+  },
   "pocketPoker": {
     "youHit10PointsYou": "Kamu mencapai 10 poin — kamu menang!",
     "youBustedOut": "Poinmu habis.",
@@ -479,7 +567,6 @@
   },
   "slyFox": {
     "dealing": "Membagikan",
-    "place": "Taruh {{toPlace}}",
     "outfoxedTheDeck": "Dek berhasil dikecoh!"
   },
   "somnus": {

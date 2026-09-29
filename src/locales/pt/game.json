@@ -1,25 +1,30 @@
 {
   "menu": {
     "home": "Início",
-    "campaign": "Campanha",
-    "instantWin": "Vitória instantânea"
+    "campaign": "Odisseia",
+    "instantWin": "Vitória instantânea",
+    "rules": "Regras",
+    "undo": "Desfazer",
+    "reset": "Reiniciar",
+    "menu": "Menu"
   },
   "result": {
-    "won": "Você venceu!",
+    "won": "Você venceu",
     "lost": "Você perdeu",
     "score": "Pontuação: {{score}}",
     "playAgain": "Jogar de novo",
-    "tryAgain": "Tentar de novo"
+    "tryAgain": "Tentar de novo",
+    "continueOdyssey": "Continuar a Odisseia",
+    "home": "Início"
   },
   "reset": {
     "hold": "Segure para reiniciar a partida"
   },
   "tips": {
-    "quickStart": "Início rápido",
-    "viewRules": "Ver regras"
+    "quickStart": "Início rápido"
   },
   "rules": {
-    "title": "Como jogar",
+    "title": "Regras",
     "unavailable": "As instruções não estão disponíveis para este jogo."
   },
   "mercySkip": {
@@ -27,7 +32,6 @@
   },
   "settings": {
     "title": "Configurações",
-    "none": "Este jogo não tem configurações",
     "appliesNow": "Vale sem reiniciar a partida.",
     "appliesNextGame": "Reinicia a partida ao mudar."
   },
@@ -36,9 +40,7 @@
   },
   "credits": {
     "title": "Créditos",
-    "backgroundImage": "Imagem de fundo (desfocada):",
-    "gameArt": "Arte da capa:",
-    "artSource": "Domínio público, de"
+    "backgroundImage": "Imagem de fundo:"
   },
   "deckPreview": {
     "title": "Prévia do baralho",

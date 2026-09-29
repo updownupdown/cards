@@ -4,22 +4,19 @@
   "reset": "Reset",
   "play": "Play",
   "home": "Home",
-  "notAvailable": "N/A",
   "stats": {
     "complexity": "Complexity",
     "difficulty": "Difficulty",
     "luck": "Luck",
-    "played": "Played",
     "won": "Won",
     "lost": "Lost",
-    "winRate": "Win rate",
     "winPercent": "Win %",
     "best": "Best",
-    "bestTime": "Best: {{time}}",
-    "fastest": "Fastest",
     "time": "Time",
     "bestTimeLabel": "Best time",
     "wins": "Wins"
   },
-  "undo": "Undo"
+  "undo": "Undo",
+  "collectFrom": "Collect from:",
+  "collectedFrom": "Collected from:"
 }

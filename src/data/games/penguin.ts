@@ -27,6 +27,7 @@ export const penguin: GameDefinition = {
   animation: GameAnimations.Snow,
   gameColorDark: "#111b27",
   gameColorPale: "#ff944d",
+  gameColorAccent: "#8fd3f4",
   cardBack: CardBackColors.Terracotta,
   quickStart: [
     "From the beak rank, build foundations up by suit and tableau down in suit.",

@@ -24,6 +24,7 @@ export const ascent: GameDefinition = {
   animation: GameAnimations.Snow,
   gameColorDark: "#2a3b4d",
   gameColorPale: "#e8f2ff",
+  gameColorAccent: "#e69da9",
   cardBack: CardBackColors.Bicycle,
   quickStart: [
     'Build progressively "higher" routes to empty your hand and reach a camp.',

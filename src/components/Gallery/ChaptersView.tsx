@@ -100,11 +100,14 @@ export function ChaptersView({
       {chapter !== undefined && (
         <StepperBar
           placement="aboveTabBar"
+          // The chapter showing; its menu is to pick another.
           action={{
             iconName: "expand-less",
-            label: t("tao.pick"),
+            label: t("tao.chapter", { number: chapter }),
+            accessibilityLabel: t("tao.pick"),
             onPress: () => setPicking(true),
           }}
+          swapColours
           onPrevious={() => go(chapter - 1)}
           onNext={() => go(chapter + 1)}
           previousLabel={t("tao.previous")}
@@ -115,7 +118,10 @@ export function ChaptersView({
   );
 }
 
-/** All 81 chapters, nine to a row: collected ones lit, the current ringed. */
+/**
+ * All 81 chapters, nine to a row, as rounded squares: collected ones lit,
+ * the current ringed.
+ */
 function ChapterGrid({
   current,
   collectedIds,
@@ -155,7 +161,7 @@ function ChapterGrid({
             <View
               style={{
                 flex: 1,
-                borderRadius: 999,
+                borderRadius: spacing(8),
                 alignItems: "center",
                 justifyContent: "center",
                 borderWidth: selected ? 1.5 : 0,

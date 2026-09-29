@@ -1,4 +1,5 @@
-import { launchGame } from "@/components/common/GameLaunchOverlay";
+import { CollectFrom } from "@/components/common/CollectFrom";
+import { WorkPlaceholder } from "./shared";
 import { Text } from "@/components/common/Text";
 import { ZoomableImage } from "@/components/common/ZoomableImage";
 import {
@@ -6,15 +7,17 @@ import {
   useBarSideInset,
   useGlassStyle,
 } from "@/components/ui/FloatingBar";
-import { ActionButton, Kicker } from "@/components/ui/Nocturne";
+import { ActionButton, Caps, Kicker, Meter } from "@/components/ui/Nocturne";
 import {
   GAME_FULL_THUMBNAIL_ASSETS,
   GAME_THUMBNAIL_ASPECTS,
 } from "@/data/game-thumbnails";
 import { GAMES_DATA } from "@/data/games-registry";
+import { useGameCategory, useGamePalette } from "@/components/Home/HomeArt";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
+import { PaletteContext } from "@/styles/palette";
 import { layoutDims, rgba, theme } from "@/styles/styles";
 import type { Href } from "expo-router";
 import { useState } from "react";
@@ -72,16 +75,21 @@ export function WorkViewer({
             gap: spacing(16),
           }}
         >
-          <WorkGamePanel
-            path={path}
-            onPlay={() => {
-              onClose();
-              launchGame(path as Href);
-            }}
-          />
+          {/* Where an acquired work came from; an unacquired one says where
+              to win it, under its placeholder. */}
+          {collected && (
+            <CollectFrom path={path} collected onLaunch={onClose} />
+          )}
 
+          {/* Above the game and the label, which the work grows over when
+              zoomed. */}
           <View
-            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+            style={{
+              flex: 1,
+              zIndex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
             onLayout={(event) =>
               setArtBox({
                 width: event.nativeEvent.layout.width,
@@ -89,43 +97,38 @@ export function WorkViewer({
               })
             }
           >
-            {collected && game.thumbnail ? (
-              artWidth > 0 && (
-                <ZoomableImage
-                  key={path}
-                  source={GAME_FULL_THUMBNAIL_ASSETS[game.thumbnail]}
-                  width={artWidth}
-                  height={artWidth / aspect}
-                />
-              )
-            ) : (
-              <View
-                style={{
-                  width: "70%",
-                  aspectRatio: aspect,
-                  maxHeight: "100%",
-                  borderRadius: spacing(4),
-                  borderWidth: 1,
-                  borderStyle: "dashed",
-                  borderColor: rgba(theme.ink, 0.15),
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: spacing(20),
-                }}
-              >
-                <Text
-                  serif
-                  italic
-                  size="lg"
-                  color={theme.dim}
-                  style={{ textAlign: "center" }}
-                >
-                  {t("gallery.uncollected", {
-                    game: localizeGameTitle(game, path, language),
-                  })}
-                </Text>
-              </View>
-            )}
+            {collected && game.thumbnail
+              ? artWidth > 0 && (
+                  <ZoomableImage
+                    key={path}
+                    source={GAME_FULL_THUMBNAIL_ASSETS[game.thumbnail]}
+                    width={artWidth}
+                    height={artWidth / aspect}
+                  />
+                )
+              : artWidth > 0 && (
+                  <View style={{ alignItems: "center", gap: spacing(14) }}>
+                    <WorkPlaceholder
+                      // Room kept under it for the two lines below.
+                      width={Math.min(
+                        artBox.width * 0.7,
+                        (artBox.height - spacing(80)) * aspect,
+                      )}
+                      height={
+                        Math.min(
+                          artBox.width * 0.7,
+                          (artBox.height - spacing(80)) * aspect,
+                        ) / aspect
+                      }
+                      iconSize={spacing(48)}
+                      radius={spacing(4)}
+                    />
+                    <Text size="lg" weight={400} color={theme.dim}>
+                      {t("gallery.notAcquired")}
+                    </Text>
+                    <CollectFrom path={path} onLaunch={onClose} />
+                  </View>
+                )}
           </View>
 
           {/* The work's label. */}
@@ -143,7 +146,9 @@ export function WorkViewer({
                 style={{
                   textAlign: "center",
                   fontSize: font(25),
-                  lineHeight: font(30),
+                  // Tall enough for the italic's descenders, which two
+                  // clipped lines would otherwise cut off.
+                  lineHeight: font(34),
                 }}
                 numberOfLines={2}
               >
@@ -154,14 +159,21 @@ export function WorkViewer({
                 color={theme.dim}
                 style={{
                   textAlign: "center",
-                  fontSize: font(19),
-                  lineHeight: font(24),
+                  fontSize: font(15.2),
+                  lineHeight: font(19.2),
                 }}
               >
                 {[credit.artistName, credit.date].filter(Boolean).join(", ")}
               </Text>
               {credit.sourceName ? (
-                <Kicker color={theme.faint} style={{ marginTop: spacing(4) }}>
+                <Kicker
+                  color={theme.faint}
+                  style={{
+                    marginTop: spacing(4),
+                    fontSize: font(8.8),
+                    lineHeight: font(11),
+                  }}
+                >
                   {credit.sourceName}
                 </Kicker>
               ) : null}
@@ -183,38 +195,5 @@ export function WorkViewer({
         />
       </GestureHandlerRootView>
     </Modal>
-  );
-}
-
-/** The work's game, in one line: its name, and Play. */
-function WorkGamePanel({ path, onPlay }: { path: string; onPlay: () => void }) {
-  const { spacing } = useResponsiveMetrics();
-  const { t: tCommon } = useTranslation("common");
-  const language = useDisplayLanguage();
-  const glass = useGlassStyle();
-  const game = GAMES_DATA[path];
-  return (
-    <View
-      style={[
-        glass,
-        {
-          flexDirection: "row",
-          alignItems: "center",
-          gap: spacing(12),
-          padding: spacing(10),
-          paddingLeft: spacing(18),
-        },
-      ]}
-    >
-      <Text size="lg" weight={500} numberOfLines={1} style={{ flex: 1 }}>
-        {localizeGameTitle(game, path, language)}
-      </Text>
-      <ActionButton
-        small
-        iconName="play"
-        label={tCommon("play")}
-        onPress={onPlay}
-      />
-    </View>
   );
 }

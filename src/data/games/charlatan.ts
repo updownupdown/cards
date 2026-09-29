@@ -25,6 +25,7 @@ export const charlatan: GameDefinition = {
   animation: GameAnimations.Embers,
   gameColorDark: "#2a1d2b",
   gameColorPale: "#f0e1ec",
+  gameColorAccent: "#e2ba8d",
   cardBack: CardBackColors.Plum,
   quickStart: [
     "Tap your deck to add its top card to the cauldron.",

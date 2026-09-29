@@ -1,14 +1,9 @@
 {
   "tabs": {
     "home": "Inicio",
-    "collect": "Colección",
-    "search": "Buscar",
-    "campaign": "Campaña"
-  },
-  "cardSize": {
-    "small": "Lista",
-    "medium": "Tarjetas",
-    "large": "Detalles"
+    "campaign": "Odisea",
+    "collect": "Galería",
+    "search": "Buscar"
   },
   "favorites": {
     "add": "Añadir a favoritos",
@@ -17,18 +12,32 @@
   "search": {
     "placeholder": "Buscar…",
     "clear": "Borrar la búsqueda",
-    "filters": "Filtros",
-    "filter": "Filtrar",
-    "resetFilters": "Restablecer filtros",
     "all": "Todos",
-    "unplayed": "Sin jugar"
+    "unplayed": "Sin jugar",
+    "unbeaten": "Sin ganar",
+    "won": "Ganados",
+    "count_one": "{{count}} juego",
+    "count_other": "{{count}} juegos",
+    "sortAZ": "A–Z",
+    "sortDifficulty": "Dificultad",
+    "sortEasiest": "Más fáciles primero",
+    "sortHardest": "Más difíciles primero",
+    "sortRecent": "Recientes",
+    "sortLuck": "Suerte",
+    "sortLeastLuck": "Menos suerte primero",
+    "sortMostLuck": "Más suerte primero",
+    "sortPlays": "Partidas",
+    "sortLeastPlayed": "Menos jugados primero",
+    "sortMostPlayed": "Más jugados primero",
+    "sortBy": "Ordenar"
   },
   "sections": {
     "localOnly": "Juegos solo locales",
     "gameOfTheDay": "Juego del día",
     "easyGames": "Juegos fáciles para empezar",
-    "jumpBackIn": "Retomar",
-    "favorites": "Favoritos"
+    "favorites": "Favoritos",
+    "continue": "Continuar",
+    "fact": "¿Sabías que…?"
   },
   "gameOfTheDay": {
     "today": "Hoy",
@@ -40,17 +49,7 @@
   },
   "deal": {
     "title": "Reparto al azar",
-    "intro": "Desliza a la izquierda o a la derecha para pasar, o toca para jugar."
-  },
-  "collect": {
-    "games": "Juegos: {{won}}/{{total}}",
-    "categories": "Categorías: {{won}}/{{total}}",
-    "tagProgress": "{{tag}}: {{won}} de {{total}} ganados",
-    "intro": {
-      "title": "Diario de viaje",
-      "text": "Gana un juego para conseguir su sello. ¡Explora mecánicas similares e intenta completar todas las colecciones!",
-      "close": "Cerrar"
-    }
+    "intro": "Desliza para pasar, toca para jugar"
   },
   "tags": {
     "KlondikeFamily": "Familia Klondike",
@@ -154,5 +153,68 @@
     "dismissed": "No pasa nada: puedes instalarla cuando quieras desde el menú del navegador.",
     "installNow": "Instalar ahora",
     "notNow": "Ahora no"
+  },
+  "gallery": {
+    "previous": "Obra anterior",
+    "next": "Obra siguiente",
+    "views": {
+      "works": "Obras",
+      "chapters": "Capítulos",
+      "quotes": "Citas"
+    },
+    "groupBy": {
+      "era": "Época",
+      "style": "Estilo",
+      "category": "Categoría de juego",
+      "region": "Región",
+      "medium": "Técnica"
+    },
+    "eras": {
+      "ancient": "Antes de 1400",
+      "renaissance": "1400–1599",
+      "c17": "Siglo XVII",
+      "c18": "Siglo XVIII",
+      "early-c19": "1800–1849",
+      "late-c19": "1850–1899",
+      "c20": "Siglo XX"
+    },
+    "styles": {
+      "sacred": "Arte sacro e iluminado",
+      "renaissance": "Renacimiento",
+      "baroque": "Barroco y Siglo de Oro",
+      "rococo": "Rococó y neoclasicismo",
+      "east-asian": "Asia oriental",
+      "romanticism": "Romanticismo",
+      "realism": "Realismo",
+      "impressionism": "Impresionismo y después",
+      "modern": "Modernismo",
+      "satire": "Sátira y caricatura",
+      "illustration": "Ilustración e historia natural",
+      "architecture": "Mapas y arquitectura",
+      "decorative": "Artes decorativas"
+    },
+    "regions": {
+      "europe": "Europa",
+      "americas": "América",
+      "east-asia": "Asia oriental",
+      "south-asia": "Asia meridional y el Himalaya",
+      "africa-middle-east": "África y Oriente Medio",
+      "oceania": "Oceanía"
+    },
+    "media": {
+      "painting": "Pinturas",
+      "drawing": "Dibujos y acuarelas",
+      "print": "Grabados",
+      "manuscript": "Manuscritos",
+      "object": "Objetos y textiles",
+      "photograph": "Fotografías"
+    },
+    "back": "Volver a la galería",
+    "unknownArtist": "Artista desconocido",
+    "notAcquired": "No adquirida"
+  },
+  "header": {
+    "stats": "Estadísticas",
+    "settings": "Ajustes"
   }
 }

@@ -1,4 +1,5 @@
 import { createContext, useContext, useLayoutEffect, useRef } from "react";
+import { Platform, type LayoutChangeEvent } from "react-native";
 
 /**
  * What a Home tab is still waiting on before it is shown: images not yet on
@@ -48,6 +49,10 @@ export function useTabReadyHold(holding: boolean) {
 /**
  * Keeps the tab hidden until an image has been drawn. Spread the result
  * into the expo-image; `source` null means there is nothing to wait for.
+ *
+ * On the web the image loads lazily, only once it nears the screen, so the
+ * tab waits only for those that start on screen: one laid out off screen
+ * lets go straight away (it would never be drawn while the tab waits).
  */
 export function useTabReadyImage(source: unknown) {
   const gate = useContext(TabReadyContext);
@@ -65,5 +70,22 @@ export function useTabReadyImage(source: unknown) {
     release.current?.();
     release.current = null;
   };
-  return { onDisplay: onDone, onError: onDone };
+  if (Platform.OS !== "web") return { onDisplay: onDone, onError: onDone };
+  return {
+    loading: "lazy" as const,
+    onDisplay: onDone,
+    onError: onDone,
+    onLayout: (event: LayoutChangeEvent) => {
+      if (!release.current) return;
+      const node = (event.nativeEvent as { target?: unknown }).target;
+      if (!(node instanceof Element)) return;
+      const box = node.getBoundingClientRect();
+      const onScreen =
+        box.right > 0 &&
+        box.bottom > 0 &&
+        box.left < window.innerWidth &&
+        box.top < window.innerHeight;
+      if (!onScreen) onDone();
+    },
+  };
 }

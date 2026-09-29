@@ -25,6 +25,7 @@ export const tenTwentyThirty: GameDefinition = {
   animation: GameAnimations.Firefly,
   gameColorDark: "#132d35",
   gameColorPale: "#e1f5ff",
+  gameColorAccent: "#d4e28d",
   cardBack: CardBackColors.Navy,
   quickStart: [
     "Discard all 52 cards by removing adjacent runs totaling 10, 20 or 30.",

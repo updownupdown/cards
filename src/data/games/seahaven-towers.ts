@@ -22,6 +22,7 @@ export const seahavenTowers: GameDefinition = {
   // animation: GameAnimations.Clouds,
   gameColorDark: "#173946",
   gameColorPale: "#dceff0",
+  gameColorAccent: "#e28da9",
   cardBack: CardBackColors.Teal,
   quickStart: [
     "Build foundations up by suit from Ace to King.",

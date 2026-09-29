@@ -43,6 +43,8 @@ Once players have progress, the map must not change under them: which games are 
 
 The map was locked on 2026-09-27, with the 170 hand-picked quotes. To change a locked map on purpose, delete the lock file, and migrate saved progress in `src/data/campaign-progress.ts` if it no longer fits.
 
+On 2026-09-29 Klondike gained two links by hand, to Beehive and Pocket Poker (`HUB_EXTRA_LINKS` in `src/data/campaign-map.ts`), so the first win opens more of the map; the map was locked again with them. A new link only unlocks more, so saved progress needed no migration. The centre may hold up to six links like any node, and the rule that the first games are each of a different category leaves these two out.
+
 ## Validation
 
 Development validation in `src/data/campaign-map.ts` enforces:

@@ -25,6 +25,7 @@ export const ebbAndFlow: GameDefinition = {
   animation: GameAnimations.Mist,
   gameColorDark: "#1a2430",
   gameColorPale: "#dfe9f0",
+  gameColorAccent: "#e28da9",
   cardBack: CardBackColors.Navy,
   quickStart: [
     "Play cards from your hand: rising piles go up, falling piles go down.",

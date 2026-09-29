@@ -220,8 +220,8 @@ export function GameOfTheDaySection({
                   index === pageIndex
                     ? theme.accent
                     : dailyWins.has(day.key)
-                      ? rgba(theme.accent, 0.45)
-                      : rgba(theme.ink, 0.14),
+                      ? rgba(theme.accent, 0.6)
+                      : rgba(theme.ink, 0.4),
               }}
             />
           </Pressable>

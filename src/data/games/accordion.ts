@@ -25,6 +25,7 @@ export const accordion: GameDefinition = {
   animation: GameAnimations.Leaves,
   gameColorDark: "#351219",
   gameColorPale: "#fffccf",
+  gameColorAccent: "#e2b08d",
   cardBack: CardBackColors.Terracotta,
   quickStart: [
     "Collapse the whole deck into a single pile.",

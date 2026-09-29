@@ -26,6 +26,7 @@ export const maria: GameDefinition = {
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#3c2d36",
   gameColorPale: "#efd9dd",
+  gameColorAccent: "#df90a2",
   cardBack: CardBackColors.Burgundy,
   quickStart: [
     "Build eight foundations by suit, from A to K.",

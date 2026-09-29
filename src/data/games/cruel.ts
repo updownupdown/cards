@@ -25,6 +25,7 @@ export const cruel: GameDefinition = {
   animation: GameAnimations.Embers,
   gameColorDark: "#2c1919",
   gameColorPale: "#f7e0da",
+  gameColorAccent: "#f0a860",
   cardBack: CardBackColors.Burgundy,
   quickStart: [
     "Build foundations up by suit from the Aces.",

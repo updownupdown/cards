@@ -121,12 +121,12 @@ export default function ModalFull({
 
 type ModalHeadingProps = {
   title: string;
-  /** Kept for older callers; headings are all in the accent now. */
+  /** The accent unless given (a game's modal gives its own accent). */
   color?: string;
   iconName?: IconName;
 };
 
 /** A section heading inside a modal: a small label in the accent. */
-export const ModalHeading = ({ title }: ModalHeadingProps) => (
-  <Kicker>{title}</Kicker>
+export const ModalHeading = ({ title, color }: ModalHeadingProps) => (
+  <Kicker color={color}>{title}</Kicker>
 );

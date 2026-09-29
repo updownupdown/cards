@@ -24,6 +24,7 @@ export const lightsOut: GameDefinition = {
   animation: GameAnimations.Snow,
   gameColorDark: "#2b2117",
   gameColorPale: "#fdf3e8",
+  gameColorAccent: "#90c5df",
   cardBack: CardBackColors.Charcoal,
   quickStart: [
     "Tap a card to flip it and its orthogonal neighbors.",

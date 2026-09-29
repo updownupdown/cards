@@ -26,6 +26,7 @@ export const memory: GameDefinition = {
   animation: GameAnimations.Pollen,
   gameColorDark: "#243b35",
   gameColorPale: "#e8f1df",
+  gameColorAccent: "#e2d78d",
   cardBack: CardBackColors.Ocean,
   quickStart: [
     "Clear the board by finding all matching pairs.",

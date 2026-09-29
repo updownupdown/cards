@@ -10,6 +10,8 @@ import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Segmented } from "@/components/ui/Nocturne";
+import { COLLECT_HOME_TAB_INDEX } from "./home-view-state";
+import { useStarfield } from "./Starfield";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { useState } from "react";
 import { View } from "react-native";
@@ -20,7 +22,6 @@ const VIEWS: GalleryView[] = ["works", "chapters", "quotes"];
 type GalleryTabProps = {
   allEnabledGames: HomeGameEntry[];
   settingsMap: GameSettingsMap;
-  onScrolledChange: (isScrolled: boolean) => void;
   contentPaddingTop: number;
   contentPaddingBottom: number;
 };
@@ -32,7 +33,6 @@ type GalleryTabProps = {
 export function GalleryTab({
   allEnabledGames,
   settingsMap,
-  onScrolledChange,
   contentPaddingTop,
   contentPaddingBottom,
 }: GalleryTabProps) {
@@ -42,6 +42,7 @@ export function GalleryTab({
   const glass = useGlassStyle(18);
   const side = useBarSideInset();
   const [view, setView] = useState<GalleryView>("works");
+  const starfield = useStarfield();
   const [switchHeight, setSwitchHeight] = useState(0);
   const [open, setOpen] = useState<{ path: string; order: string[] } | null>(
     null,
@@ -65,7 +66,6 @@ export function GalleryTab({
           onOpenWork={(path, order) => setOpen({ path, order })}
           contentPaddingTop={belowSwitch}
           contentPaddingBottom={contentPaddingBottom}
-          onScrolledChange={onScrolledChange}
         />
       )}
       {view === "chapters" && (
@@ -99,9 +99,12 @@ export function GalleryTab({
               maxWidth: ui.contentMaxWidth - side * 2,
               padding: spacing(4),
             },
+            // Round ends, like the choices inside.
+            switchHeight > 0 && { borderRadius: switchHeight / 2 },
           ]}
         >
           <Segmented
+            pill
             options={VIEWS.map((key) => ({
               value: key,
               label: t(`gallery.views.${key}`),
@@ -110,7 +113,7 @@ export function GalleryTab({
             value={view}
             onChange={(key) => {
               setView(key);
-              onScrolledChange(false);
+              starfield?.resetScroll(COLLECT_HOME_TAB_INDEX);
             }}
             // The glass is the track here.
             style={{

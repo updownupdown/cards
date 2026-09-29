@@ -13,7 +13,7 @@
   },
   "showAnimations": {
     "label": "Animasyonları göster",
-    "description": "Kartların arkasında hava ve manzara efektleri."
+    "description": "Kartların arkasında hava durumu ve manzara, menülerde hareketli yıldızlar."
   },
   "showTips": {
     "label": "İpuçlarını göster",
@@ -40,11 +40,6 @@
   },
   "populateTestProgress": "Test ilerlemesi doldur",
   "credits": {
-    "starfield": {
-      "prefix": "Yıldızlı arka plan: ",
-      "name": "Olena Bohovyk",
-      "suffix": ""
-    },
     "taoTranslation": {
       "prefix": "Tao Te Ching bölümleri, ",
       "name": "John H. McDonald",
@@ -55,5 +50,11 @@
   "resetData": {
     "button": "Tüm uygulama verilerini sıfırla",
     "confirm": "Tüm ilerleme ve ayarlar silinsin mi?"
+  },
+  "colorTheme": {
+    "label": "Renk teması",
+    "expand": "Tümünü göster",
+    "collapse": "Daralt",
+    "highContrast": "Yüksek kontrast"
   }
 }

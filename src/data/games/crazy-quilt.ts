@@ -25,6 +25,7 @@ export const crazyQuilt: GameDefinition = {
   animation: GameAnimations.Snow,
   gameColorDark: "#2c1d26",
   gameColorPale: "#fbe3ea",
+  gameColorAccent: "#8dc6e2",
   cardBack: CardBackColors.Rose,
   quickStart: [
     "Move all 104 cards to the foundations.",

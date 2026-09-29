@@ -1,14 +1,9 @@
 {
   "tabs": {
     "home": "Beranda",
-    "collect": "Koleksi",
-    "search": "Cari",
-    "campaign": "Kampanye"
-  },
-  "cardSize": {
-    "small": "Daftar",
-    "medium": "Kartu",
-    "large": "Detail"
+    "campaign": "Pengembaraan",
+    "collect": "Galeri",
+    "search": "Cari"
   },
   "favorites": {
     "add": "Tambahkan ke favorit",
@@ -17,18 +12,32 @@
   "search": {
     "placeholder": "Cari...",
     "clear": "Hapus pencarian",
-    "filters": "Filter",
-    "filter": "Saring",
-    "resetFilters": "Atur ulang filter",
     "all": "Semua",
-    "unplayed": "Belum dimainkan"
+    "unplayed": "Belum dimainkan",
+    "unbeaten": "Belum dimenangkan",
+    "won": "Dimenangkan",
+    "count_one": "{{count}} permainan",
+    "count_other": "{{count}} permainan",
+    "sortAZ": "A–Z",
+    "sortDifficulty": "Kesulitan",
+    "sortEasiest": "Termudah dulu",
+    "sortHardest": "Tersulit dulu",
+    "sortRecent": "Terbaru",
+    "sortLuck": "Keberuntungan",
+    "sortLeastLuck": "Paling sedikit keberuntungan dulu",
+    "sortMostLuck": "Paling banyak keberuntungan dulu",
+    "sortPlays": "Jumlah main",
+    "sortLeastPlayed": "Paling jarang dimainkan dulu",
+    "sortMostPlayed": "Paling sering dimainkan dulu",
+    "sortBy": "Urutkan"
   },
   "sections": {
     "localOnly": "Permainan khusus lokal",
     "gameOfTheDay": "Permainan hari ini",
     "easyGames": "Permainan mudah untuk memulai",
-    "jumpBackIn": "Lanjutkan bermain",
-    "favorites": "Favorit"
+    "favorites": "Favorit",
+    "continue": "Lanjutkan",
+    "fact": "Tahukah Anda?"
   },
   "gameOfTheDay": {
     "today": "Hari ini",
@@ -40,17 +49,7 @@
   },
   "deal": {
     "title": "Bagi acak",
-    "intro": "Geser ke kiri atau kanan untuk melewati, atau ketuk untuk bermain."
-  },
-  "collect": {
-    "games": "Permainan: {{won}}/{{total}}",
-    "categories": "Kategori: {{won}}/{{total}}",
-    "tagProgress": "{{tag}}: {{won}} dari {{total}} dimenangkan",
-    "intro": {
-      "title": "Catatan Perjalanan",
-      "text": "Menangkan permainan untuk mengumpulkan capnya. Jelajahi mekanik serupa dan coba lengkapi semua set!",
-      "close": "Tutup"
-    }
+    "intro": "Geser untuk lewati, ketuk untuk main"
   },
   "tags": {
     "KlondikeFamily": "Keluarga Klondike",
@@ -154,5 +153,68 @@
     "dismissed": "Tidak masalah — kamu bisa memasang kapan saja dari menu browser.",
     "installNow": "Pasang sekarang",
     "notNow": "Nanti saja"
+  },
+  "gallery": {
+    "previous": "Karya sebelumnya",
+    "next": "Karya berikutnya",
+    "views": {
+      "works": "Karya",
+      "chapters": "Bab",
+      "quotes": "Kutipan"
+    },
+    "groupBy": {
+      "era": "Era",
+      "style": "Gaya",
+      "category": "Kategori permainan",
+      "region": "Wilayah",
+      "medium": "Media"
+    },
+    "eras": {
+      "ancient": "Sebelum 1400",
+      "renaissance": "1400–1599",
+      "c17": "Abad ke-17",
+      "c18": "Abad ke-18",
+      "early-c19": "1800–1849",
+      "late-c19": "1850–1899",
+      "c20": "Abad ke-20"
+    },
+    "styles": {
+      "sacred": "Seni sakral dan iluminasi",
+      "renaissance": "Renaisans",
+      "baroque": "Barok dan Zaman Keemasan",
+      "rococo": "Rokoko dan Neoklasik",
+      "east-asian": "Asia Timur",
+      "romanticism": "Romantisisme",
+      "realism": "Realisme",
+      "impressionism": "Impresionisme dan sesudahnya",
+      "modern": "Modernisme",
+      "satire": "Satire dan karikatur",
+      "illustration": "Ilustrasi dan sejarah alam",
+      "architecture": "Peta dan arsitektur",
+      "decorative": "Seni dekoratif"
+    },
+    "regions": {
+      "europe": "Eropa",
+      "americas": "Benua Amerika",
+      "east-asia": "Asia Timur",
+      "south-asia": "Asia Selatan dan Himalaya",
+      "africa-middle-east": "Afrika dan Timur Tengah",
+      "oceania": "Oseania"
+    },
+    "media": {
+      "painting": "Lukisan",
+      "drawing": "Gambar dan cat air",
+      "print": "Cetakan",
+      "manuscript": "Naskah",
+      "object": "Benda dan tekstil",
+      "photograph": "Foto"
+    },
+    "back": "Kembali ke Galeri",
+    "unknownArtist": "Seniman tidak diketahui",
+    "notAcquired": "Belum diperoleh"
+  },
+  "header": {
+    "stats": "Statistik",
+    "settings": "Pengaturan"
   }
 }

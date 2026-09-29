@@ -23,6 +23,7 @@ export const bowling: GameDefinition = {
   background: GAME_BACKGROUNDS.bowling,
   gameColorDark: "#331e0f",
   gameColorPale: "#a9e9f1",
+  gameColorAccent: "#f2878a",
   cardBack: CardBackColors.Forest,
   quickStart: [
     "Pick a ball card, and 1 to 3 adjacent pins cards.",

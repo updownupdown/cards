@@ -3,6 +3,7 @@ import {
   lifespan,
   portraitLength,
   listedName,
+  shortName,
   voicesGroups,
   type VoicesAuthor,
 } from "@/components/Campaign/voices";
@@ -12,6 +13,8 @@ import {
   useStackedBarHeight,
 } from "@/components/ui/FloatingBar";
 import { Segmented } from "@/components/ui/Nocturne";
+import { CollectFrom } from "@/components/common/CollectFrom";
+import { getRewardSource } from "@/data/campaign-map";
 import { getQuote, type QuoteId } from "@/data/collectibles";
 import { GALLERY_LAST_QUOTE_STORAGE_KEY } from "@/data/storage-keys";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -44,8 +47,9 @@ let lastAuthorOrder: AuthorOrder = "eras";
 /**
  * The quotes, one at a time, by their authors from the oldest on: the
  * author's portrait drawn in a single line, their name and years, and the
- * quote once it is collected. The bar steps through them all; its middle
- * lists every author, by era, to jump to.
+ * quote once it is collected (until then, the game it comes from). The bar
+ * names the author and which of their quotes this is, steps through them
+ * all, and opens a list of every author, by era, to jump to.
  */
 export function QuotesView({
   collectedIds,
@@ -190,11 +194,19 @@ export function QuotesView({
       {entry && (
         <StepperBar
           placement="aboveTabBar"
+          // The author and which of their quotes this is; its menu is to
+          // pick another author.
           action={{
             iconName: "expand-less",
-            label: t("quotes.pick"),
+            label: t("quotes.barLabel", {
+              name: shortName(entry.author.name),
+              index: entry.author.quoteIds.indexOf(entry.quoteId) + 1,
+              total: entry.author.quoteIds.length,
+            }),
+            accessibilityLabel: t("quotes.pick"),
             onPress: () => setPicking(true),
           }}
+          swapColours
           onPrevious={() => go(at(-1).quoteId)}
           onNext={() => go(at(1).quoteId)}
           previousLabel={t("quotes.previousQuote")}
@@ -222,7 +234,7 @@ function QuoteDetail({
   const { spacing, font } = useResponsiveMetrics();
   const { t } = useTranslation("campaign");
   const quote = getQuote(quoteId);
-  const count = author.quoteIds.length;
+  const source = getRewardSource({ type: "quote", id: quoteId });
   return (
     <ScrollView
       style={{ flex: 1 }}
@@ -293,31 +305,19 @@ function QuoteDetail({
             </Text>
           </>
         ) : (
-          <Text
-            serif
-            italic
-            size="xl"
-            color={theme.dim}
-            style={{ textAlign: "center", maxWidth: spacing(420) }}
-          >
-            {t("quotes.uncollected")}
-          </Text>
+          <>
+            <Text
+              size="lg"
+              weight={400}
+              color={theme.dim}
+              style={{ textAlign: "center", maxWidth: spacing(420) }}
+            >
+              {t("quotes.uncollected")}
+            </Text>
+            {source && <CollectFrom path={source} campaign />}
+          </>
         )}
       </Animated.View>
-
-      {/* Which of the author's quotes this is, just above the bar. */}
-      <Text
-        size="sm"
-        weight={400}
-        color={theme.dim}
-        style={{
-          textAlign: "center",
-          fontVariant: ["tabular-nums"],
-          opacity: count > 1 ? 1 : 0,
-        }}
-      >
-        {author.quoteIds.indexOf(quoteId) + 1} / {count}
-      </Text>
     </ScrollView>
   );
 }

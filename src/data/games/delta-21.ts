@@ -25,6 +25,7 @@ export const delta21: GameDefinition = {
   animation: GameAnimations.Birds,
   gameColorDark: "#11343d",
   gameColorPale: "#c3e9ff",
+  gameColorAccent: "#e2b88d",
   cardBack: CardBackColors.Ocean,
   quickStart: [
     "Create columns of 21 and complete research goals along the way.",

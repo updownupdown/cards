@@ -25,6 +25,7 @@ export const beleagueredCastle: GameDefinition = {
   animation: GameAnimations.Clouds,
   gameColorDark: "#2e2620",
   gameColorPale: "#f0e2c4",
+  gameColorAccent: "#97b4d8",
   cardBack: CardBackColors.Slate,
   quickStart: [
     "Build all foundations, up by suit, from A to K.",

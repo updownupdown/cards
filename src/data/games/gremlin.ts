@@ -25,6 +25,7 @@ export const gremlin: GameDefinition = {
   animation: GameAnimations.Firefly,
   gameColorDark: "#1c423f",
   gameColorPale: "#e7f5ce",
+  gameColorAccent: "#95afe4",
   cardBack: CardBackColors.Moss,
   quickStart: [
     "Draw to 5, then play/discard/hold.",

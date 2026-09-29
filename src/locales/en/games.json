@@ -1,9 +1,5 @@
 {
   "jailbreak": {
-    "red": "Red",
-    "black": "Black",
-    "redTotal": "Red: {{count}}",
-    "blackTotal": "Black: {{count}}",
     "theJokerEscaped": "The Joker escaped!"
   },
   "accordion": {
@@ -571,7 +567,6 @@
   },
   "slyFox": {
     "dealing": "Dealing",
-    "place": "Place {{toPlace}}",
     "outfoxedTheDeck": "Outfoxed the deck!"
   },
   "somnus": {

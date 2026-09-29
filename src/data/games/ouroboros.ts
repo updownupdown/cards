@@ -29,6 +29,7 @@ export const ouroboros: GameDefinition = {
   animation: GameAnimations.ManaDust,
   gameColorDark: "#1d120e",
   gameColorPale: "#dfd4bd",
+  gameColorAccent: "#bf8de2",
   cardBack: CardBackColors.Burgundy,
   quickStart: [
     "Collect all Aces and exit through the Joker to win.",

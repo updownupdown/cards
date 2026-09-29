@@ -23,6 +23,7 @@ export const royalEnvoy: GameDefinition = {
   animation: GameAnimations.Birds,
   gameColorDark: "#241e33",
   gameColorPale: "#acdeff",
+  gameColorAccent: "#e2b88d",
   cardBack: CardBackColors.Bicycle,
   quickStart: [
     "Choose a kingdom and win exactly its listed number of debates.",

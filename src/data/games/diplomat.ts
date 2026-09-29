@@ -25,6 +25,7 @@ export const diplomat: GameDefinition = {
   animation: GameAnimations.Rain,
   gameColorDark: "#25343a",
   gameColorPale: "#dfe0d5",
+  gameColorAccent: "#e8b870",
   cardBack: CardBackColors.Ocean,
   quickStart: [
     "Move both decks to eight foundations, built by suit from A to K.",

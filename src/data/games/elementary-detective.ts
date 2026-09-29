@@ -25,6 +25,7 @@ export const elementaryDetective: GameDefinition = {
   animation: GameAnimations.Leaves,
   gameColorDark: "#221815",
   gameColorPale: "#c5f7da",
+  gameColorAccent: "#ccd897",
   cardBack: CardBackColors.Olive,
   quickStart: [
     "Place guesses around the hidden playmates.",

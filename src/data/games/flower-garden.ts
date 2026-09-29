@@ -21,6 +21,7 @@ export const flowerGarden: GameDefinition = {
   animation: GameAnimations.Pollen,
   gameColorDark: "#24402f",
   gameColorPale: "#f2e4c2",
+  gameColorAccent: "#f09ab8",
   cardBack: CardBackColors.Olive,
   quickStart: [
     "Build foundations up by suit from Ace to King.",

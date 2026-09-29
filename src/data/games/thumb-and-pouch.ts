@@ -16,6 +16,7 @@ export const thumbAndPouch: GameDefinition = {
   animation: GameAnimations.Dust,
   gameColorDark: "#3b3028",
   gameColorPale: "#ead9b8",
+  gameColorAccent: "#e99a7c",
   cardBack: CardBackColors.Terracotta,
   thumbnail: "ThumbAndPouch.webp",
   thumbnailCredit: {

@@ -24,6 +24,7 @@ export const rogueRun: GameDefinition = {
   animation: GameAnimations.Embers,
   gameColorDark: "#292116",
   gameColorPale: "#faefe3",
+  gameColorAccent: "#df90a2",
   cardBack: CardBackColors.Burgundy,
   quickStart: [
     "Resolve any 3 cards to clear a room. You can skip at most one room in a row.",

@@ -28,6 +28,7 @@ export const windmill: GameDefinition = {
   animation: GameAnimations.Birds,
   gameColorDark: "#1e2a1f",
   gameColorPale: "#eef5d6",
+  gameColorAccent: "#ccd897",
   cardBack: CardBackColors.Olive,
   quickStart: [
     "Move all 104 cards to the foundations.",

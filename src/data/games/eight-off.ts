@@ -25,6 +25,7 @@ export const eightOff: GameDefinition = {
   animation: GameAnimations.CherryBlossom,
   gameColorDark: "#0e2741",
   gameColorPale: "#d9ffff",
+  gameColorAccent: "#e28da9",
   cardBack: CardBackColors.Ocean,
   quickStart: [
     "Move cards to foundations by suit, from A to K.",
