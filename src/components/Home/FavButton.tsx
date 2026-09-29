@@ -1,7 +1,6 @@
 import { useTranslation } from "@/i18n";
 import { Icon } from "@/icons";
 import { Colors } from "@/styles/styles";
-import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 import { useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -20,6 +19,8 @@ type Props = {
   activeColor?: string;
   inactiveColor?: string;
   disabled?: boolean;
+  /** A soft drop shadow under the star (on the web). None on game cards. */
+  shadow?: boolean;
   style?: ViewStyle | ViewStyle[];
 };
 
@@ -31,6 +32,7 @@ export function FavButton({
   activeColor = Colors.favoriteStar,
   inactiveColor = Colors.accentBlue,
   disabled = false,
+  shadow = true,
   style,
 }: Props) {
   const { t } = useTranslation("home");
@@ -131,7 +133,8 @@ export function FavButton({
           name={displayFavorite ? "star" : "star-outline"}
           size={iconSize}
           color={displayFavorite ? activeColor : inactiveColor}
-          shadow
+          // No dark halo: a game card's art already keeps the star clear.
+          shadow={shadow}
         />
       </Animated.View>
     </Pressable>

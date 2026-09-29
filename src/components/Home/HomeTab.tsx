@@ -1,8 +1,6 @@
 import { Logo } from "@/components/common/Logo";
 import {
   ArtShelf,
-  CONTINUE_HEIGHT,
-  ContinueShelf,
   ShelfPlaceholder,
   TILE_SIZE,
 } from "@/components/Home/HomeArt";
@@ -171,12 +169,14 @@ export function HomeTab({
           <RoundButton
             iconName="chart"
             size={HEADER_BUTTON_SIZE}
+            glass
             accessibilityLabel={t("header.stats")}
             onPress={() => onOpenStats?.()}
           />
           <RoundButton
             iconName="settings"
             size={HEADER_BUTTON_SIZE}
+            glass
             accessibilityLabel={t("header.settings")}
             onPress={() => onOpenSettings?.()}
           />
@@ -210,7 +210,7 @@ export function HomeTab({
           section(
             t("sections.continue"),
             jumpBackInGames.length > 0 ? (
-              <ContinueShelf
+              <ArtShelf
                 games={jumpBackInGames}
                 pageSidePadding={shelfPadding}
                 favorites={favorites}
@@ -219,7 +219,7 @@ export function HomeTab({
             ) : (
               <ShelfPlaceholder
                 testID="placeholder continue"
-                height={spacing(CONTINUE_HEIGHT)}
+                height={spacing(TILE_SIZE)}
                 pageSidePadding={shelfPadding}
                 text={t("sections.continueEmpty")}
               />

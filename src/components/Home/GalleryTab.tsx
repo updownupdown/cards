@@ -2,7 +2,12 @@ import { ChaptersView } from "@/components/Gallery/ChaptersView";
 import { QuotesView } from "@/components/Gallery/QuotesView";
 import { WorksView } from "@/components/Gallery/WorksView";
 import { WorkViewer } from "@/components/Gallery/WorkViewer";
-import { useBarSideInset, useGlassStyle } from "@/components/ui/FloatingBar";
+import {
+  glassFill,
+  useBarSideInset,
+  useGlassStyle,
+} from "@/components/ui/FloatingBar";
+import { GlassView } from "@/components/ui/Glass";
 import { QUOTE_COUNT, TAO_CHAPTER_COUNT } from "@/data/collectibles";
 import type { GameSettingsMap } from "@/data/game-menu";
 import { useCampaignProgress } from "@/hooks/useCampaignProgress";
@@ -88,10 +93,13 @@ export function GalleryTab({
           },
         ]}
       >
-        <View
+        <GlassView
           onLayout={(event) =>
             setSwitchHeight(Math.ceil(event.nativeEvent.layout.height))
           }
+          fill={glassFill()}
+          // Round ends, like the choices inside.
+          radius={switchHeight > 0 ? switchHeight / 2 : spacing(18)}
           style={[
             glass,
             {
@@ -99,7 +107,6 @@ export function GalleryTab({
               maxWidth: ui.contentMaxWidth - side * 2,
               padding: spacing(4),
             },
-            // Round ends, like the choices inside.
             switchHeight > 0 && { borderRadius: switchHeight / 2 },
           ]}
         >
@@ -122,7 +129,7 @@ export function GalleryTab({
               backgroundColor: "transparent",
             }}
           />
-        </View>
+        </GlassView>
       </View>
 
       {open && (

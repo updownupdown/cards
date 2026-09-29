@@ -230,7 +230,7 @@ export function WorkPlaceholder({
         boxShadow: `0 ${radius + 1}px ${radius * 4}px ${rgba(Colors.black, 0.55)}`,
       }}
     >
-      <Icon name="gallery" size={iconSize} color={theme.faint} />
+      <Icon name="frame" size={iconSize} color={theme.faint} />
     </View>
   );
 }

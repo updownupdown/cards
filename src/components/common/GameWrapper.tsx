@@ -56,6 +56,7 @@ import {
   ImageBackground,
   Platform,
   Pressable,
+  StyleSheet,
   View,
 } from "react-native";
 import { setBoardInputLocked } from "@/components/Cards/input-lock";
@@ -70,6 +71,7 @@ import { WinLoseBox, type WinTimes } from "./WinLoseBox";
 import { AutoCompletePanel } from "./AutoCompletePanel";
 import { useAutoCompleteOffer } from "@/hooks/auto-complete-offer";
 import { GameHeader } from "./GameHeader";
+import { GlassTarget, GlassTargetContext } from "@/components/ui/Glass";
 import { useStableCallback } from "@/hooks/useStableCallback";
 import { requestMercySkipVisit } from "@/components/Campaign/ufo-visit";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
@@ -269,6 +271,7 @@ export const GameWrapper = ({
   const autoCompleteFade = useFade(!!autoCompleteOffer && !ended, 500);
   const [tipsDismissed, setTipsDismissed] = useState(false);
   const tipsMorphProgress = useRef(new Animated.Value(0)).current;
+  const backgroundGlassRef = useRef<View>(null);
   const instructionsHighlight = useRef(new Animated.Value(0)).current;
 
   // Wait for settings before deciding whether the tips box should appear.
@@ -466,7 +469,7 @@ export const GameWrapper = ({
   const background = gameInfo.background ?? DEFAULT_GAME_BACKGROUND;
 
   return (
-    <>
+    <GlassTargetContext.Provider value={backgroundGlassRef}>
       <LoadingOverlay
         isLoaded={!!isLoaded}
         endsGameLaunch
@@ -549,34 +552,41 @@ export const GameWrapper = ({
           backgroundColor,
         }}
       >
-        <ImageBackground
-          source={background.source}
-          resizeMode="cover"
-          style={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-          }}
-        />
+        {/* The still background, which is what the header's and the
+            tips' glass blur on Android. */}
+        <GlassTarget
+          targetRef={backgroundGlassRef}
+          style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}
+        >
+          <ImageBackground
+            source={background.source}
+            resizeMode="cover"
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+            }}
+          />
 
-        {/* Background color overlay */}
-        <View
-          style={{
-            pointerEvents: "none",
-            position: "absolute",
-            zIndex: LayerZIndexes.boardBackgroundOverlay,
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            backgroundColor,
-            opacity: 0.6,
-          }}
-        />
+          {/* Background color overlay */}
+          <View
+            style={{
+              pointerEvents: "none",
+              position: "absolute",
+              zIndex: LayerZIndexes.boardBackgroundOverlay,
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              backgroundColor,
+              opacity: 0.6,
+            }}
+          />
+        </GlassTarget>
 
         {globalSettings.showAnimations &&
           !isGlobalSettingsLoading &&
@@ -694,6 +704,6 @@ export const GameWrapper = ({
           onDone={() => setRevealedWinResult(campaignWinResult)}
         />
       )}
-    </>
+    </GlassTargetContext.Provider>
   );
 };

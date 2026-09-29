@@ -9,7 +9,8 @@ import {
   theme,
 } from "@/styles/styles";
 import { memo } from "react";
-import { Animated, Platform, View } from "react-native";
+import { Animated, View } from "react-native";
+import { GlassView } from "@/components/ui/Glass";
 import { Button } from "../Button/Button";
 import { ResetButton } from "./ResetButton";
 
@@ -80,21 +81,18 @@ export const GameHeader = memo(function GameHeader({
         paddingBottom: spacing(layoutDims.pagePadding / 2),
       }}
     >
-      <View
+      <GlassView
+        fill={rgba(theme.surface, 0.8)}
+        // Round ends, as the tab bar has.
+        radius={spacing(layoutDims.menuBarHeight / 2)}
         style={[
           flexStyles.rowCentered,
           {
             width: "100%",
             height: spacing(layoutDims.menuBarHeight),
             paddingHorizontal: spacing(layoutDims.pagePadding / 2),
-            // Round ends, as the tab bar has.
-            borderRadius: spacing(layoutDims.menuBarHeight / 2),
-            backgroundColor: rgba(theme.surface, 0.8),
             // No edge; a soft, wide shadow lifts it off the game instead.
             boxShadow: `0 ${spacing(10)}px ${spacing(36)}px ${rgba(Colors.black, 0.28)}`,
-            ...(Platform.OS === "web"
-              ? ({ backdropFilter: "blur(14px)" } as object)
-              : null),
           },
         ]}
       >
@@ -116,7 +114,6 @@ export const GameHeader = memo(function GameHeader({
             accessibilityLabel={t("menu.instantWin")}
             onPress={onInstantWin}
             iconName="trophy"
-
             iconColor={theme.accent}
             disabled={ended}
             style={{ flex: 1, paddingHorizontal: 0 }}
@@ -202,7 +199,7 @@ export const GameHeader = memo(function GameHeader({
           iconColor={theme.accent}
           style={{ flex: 1, paddingHorizontal: 0 }}
         />
-      </View>
+      </GlassView>
     </Animated.View>
   );
 });

@@ -5,7 +5,8 @@ import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { layoutDims, rgba, theme } from "@/styles/styles";
 import type { ReactNode } from "react";
-import { Platform, Pressable, View, type ViewStyle } from "react-native";
+import { Pressable, View, type ViewStyle } from "react-native";
+import { GlassView } from "./Glass";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 /** The gap between a bar and the tab bar under it. */
@@ -46,20 +47,17 @@ export const glassFill = () => rgba(theme.surface, 0.8);
 export const glassEdge = () => rgba(theme.ink, 0.16);
 
 /**
- * The glassy pill every floating bar and panel shares with the tab bar and
- * the search field: a little see-through, with a thin, visible edge.
+ * The edge and shadow of the glassy pill every floating bar and panel shares
+ * with the tab bar and the search field: a thin, visible edge. The frosted
+ * fill itself is a GlassView's (see Glass), with `glassFill()`.
  */
 export function useGlassStyle(radius = 22): ViewStyle {
   const { spacing } = useResponsiveMetrics();
   return {
     borderRadius: spacing(radius),
-    backgroundColor: glassFill(),
     borderWidth: 1,
     borderColor: glassEdge(),
     ...homeSurfaceShadow(spacing, { translucent: true }),
-    ...(Platform.OS === "web"
-      ? ({ backdropFilter: "blur(14px)" } as ViewStyle)
-      : null),
   };
 }
 
@@ -81,6 +79,9 @@ export function FloatingBar({
   const tabBarTop = useTabBarTop();
   const glass = useGlassStyle();
   const stacked = placement === "aboveTabBar";
+  const radius = spacing(
+    (stacked ? STACKED_HEIGHT : layoutDims.tabBarHeight) / 2,
+  );
   return (
     <View
       style={[
@@ -97,24 +98,24 @@ export function FloatingBar({
         },
       ]}
     >
-      <View
+      <GlassView
+        fill={glassFill()}
+        // Round ends, as the tab bar has.
+        radius={radius}
         style={[
           glass,
           {
             width: "100%",
             maxWidth: ui.contentMaxWidth - side * 2,
             height: spacing(stacked ? STACKED_HEIGHT : layoutDims.tabBarHeight),
-            // Round ends, as the tab bar has.
-            borderRadius: spacing(
-              (stacked ? STACKED_HEIGHT : layoutDims.tabBarHeight) / 2,
-            ),
+            borderRadius: radius,
             flexDirection: "row",
             alignItems: "center",
           },
         ]}
       >
         {children}
-      </View>
+      </GlassView>
     </View>
   );
 }

@@ -10,6 +10,7 @@ import { GameHeading } from "@/components/Modals/ModalFull";
 import { useEffect, useRef, useState } from "react";
 import { Animated, LayoutChangeEvent, View } from "react-native";
 import { Button } from "../Button/Button";
+import { GlassBackdrop, glassBlurStyle, useNativeGlass } from "../ui/Glass";
 import { QuickStart } from "../Modals/RulesModal";
 
 const AUTO_CLOSE_DELAY = 15000; // milliseconds
@@ -32,6 +33,8 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
   const { t: tCommon } = useTranslation("common");
   const { spacing, ui } = useResponsiveMetrics();
   const theme = usePalette();
+  const nativeGlass = useNativeGlass();
+  const glassTint = rgba(theme.surface, 0.85);
   const [expandedWidth, setExpandedWidth] = useState<number>();
   const [contentHeight, setContentHeight] = useState<number>();
   const instructionButtonSize = spacing(layoutDims.menuButtonSize);
@@ -88,7 +91,9 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
             inputRange: [0, 1],
             outputRange: [instructionButtonSize / 2, spacing(18)],
           }),
-          backgroundColor: rgba(theme.surface, 0.95),
+          // Frosted glass, as the header it grows out of.
+          backgroundColor: nativeGlass ? "transparent" : glassTint,
+          ...glassBlurStyle(),
           borderWidth: 1,
           borderColor: rgba(theme.ink, 0.14),
           transform: [
@@ -105,6 +110,8 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
           )}`,
         }}
       >
+        {/* Clipped to the box's changing corners by the box itself. */}
+        <GlassBackdrop fill={glassTint} />
         <View
           onLayout={(event: LayoutChangeEvent) => {
             const { height } = event.nativeEvent.layout;

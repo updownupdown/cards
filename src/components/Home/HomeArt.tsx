@@ -66,8 +66,30 @@ export function ArtFade({ from = 0.35 }: { from?: number }) {
   );
 }
 
+/** The favourite star's button on a game card, and the star inside it. */
+const FAV_SIZE = 36;
+const FAV_ICON_SIZE = 20;
 /**
- * A game as a square of its art, its name over a fade at the foot and a
+ * How far the star sits in from a game card's top and right edges, the same
+ * both ways, on every card from the shelves' tiles to Game of the Day.
+ */
+const FAV_INSET = 10.5;
+
+/**
+ * Where a game card's favourite button goes: its star FAV_INSET in from the
+ * card's top and right edges, whatever the size of the button around it.
+ */
+export function favCorner(
+  spacing: (value: number) => number,
+  size: number,
+  iconSize: number,
+) {
+  const offset = spacing(FAV_INSET) - (size - iconSize) / 2;
+  return { position: "absolute", top: offset, right: offset } as const;
+}
+
+/**
+ * A game as a card of its art, its name over a fade at the foot and a
  * favourite star in the corner. The star sits beside the pressable art rather
  * than inside it, since a button can't hold another button.
  */
@@ -75,13 +97,16 @@ export function GameTile({
   path,
   game,
   size,
+  height = size,
   isFavorite,
   onToggleFavorite,
   onOpen,
 }: {
   path: string;
   game: GameMenuInfo;
+  /** Its width, and its height too unless that is given: a square. */
   size: number;
+  height?: number;
   isFavorite?: boolean;
   onToggleFavorite?: (path: string) => void;
   /** Called as the game launches (a modal can close). */
@@ -100,7 +125,7 @@ export function GameTile({
         style={{
           ...frame,
           width: size,
-          height: size,
+          height,
           backgroundColor: game.gameColorDark,
         }}
       >
@@ -141,13 +166,18 @@ export function GameTile({
         </Pressable>
         {onToggleFavorite && (
           <FavButton
-            style={{ position: "absolute", top: 0, right: 0 }}
+            style={favCorner(
+              spacing,
+              spacing(FAV_SIZE),
+              spacing(FAV_ICON_SIZE),
+            )}
             isFavorite={!!isFavorite}
             onToggleFavorite={() => onToggleFavorite(path)}
-            size={spacing(36)}
-            iconSize={spacing(20)}
+            size={spacing(FAV_SIZE)}
+            iconSize={spacing(FAV_ICON_SIZE)}
             activeColor={theme.accent}
             inactiveColor={palette.ink}
+            shadow={false}
           />
         )}
       </View>
@@ -155,12 +185,13 @@ export function GameTile({
   );
 }
 
-/** The side of a square game tile, and the gap between tiles in a row. */
+/**
+ * The height of a shelf's game cards (Continue, Favorites, the easy games),
+ * their width at 4:3, and the gap between cards in a row.
+ */
 export const TILE_SIZE = 140;
+export const TILE_WIDTH = (TILE_SIZE * 4) / 3;
 export const TILE_GAP = 12;
-
-/** The height of the Continue shelf's cards. */
-export const CONTINUE_HEIGHT = 200;
 
 /**
  * Stands in for a shelf with no games yet, exactly as tall as the shelf's
@@ -206,7 +237,10 @@ export function ShelfPlaceholder({
   );
 }
 
-/** A row of games that scrolls sideways, edge to edge. */
+/**
+ * A row of games that scrolls sideways, edge to edge, every card the same
+ * size: Continue, Favorites and the easy games.
+ */
 export function ArtShelf({
   games,
   pageSidePadding,
@@ -236,134 +270,12 @@ export function ArtShelf({
           key={path}
           path={path}
           game={game}
-          size={spacing(TILE_SIZE)}
+          size={spacing(TILE_WIDTH)}
+          height={spacing(TILE_SIZE)}
           isFavorite={favorites.has(path)}
           onToggleFavorite={onToggleFavorite}
         />
       ))}
     </ScrollView>
-  );
-}
-
-/**
- * The games played last, to pick up again: the latest with a larger title,
- * as wide as two tiles and their gap, so it lines up with the shelves below,
- * and the ones before a tile wide.
- */
-export function ContinueShelf({
-  games,
-  pageSidePadding,
-  favorites,
-  onToggleFavorite,
-}: {
-  games: HomeGameEntry[];
-  pageSidePadding: number;
-  favorites: Set<string>;
-  onToggleFavorite: (path: string) => void;
-}) {
-  const { spacing } = useResponsiveMetrics();
-  const gap = spacing(TILE_GAP);
-  const tile = spacing(TILE_SIZE);
-  const firstWidth = tile * 2 + gap;
-  const height = spacing(CONTINUE_HEIGHT);
-  return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      style={{ marginVertical: -spacing(SHADOW_ROOM) }}
-      contentContainerStyle={{
-        paddingHorizontal: pageSidePadding,
-        paddingVertical: spacing(SHADOW_ROOM),
-        gap,
-      }}
-    >
-      {games.map(([path, game], index) => (
-        <ContinueCard
-          key={path}
-          path={path}
-          game={game}
-          width={index === 0 ? firstWidth : tile}
-          height={height}
-          latest={index === 0}
-          isFavorite={favorites.has(path)}
-          onToggleFavorite={onToggleFavorite}
-        />
-      ))}
-    </ScrollView>
-  );
-}
-
-function ContinueCard({
-  path,
-  game,
-  width,
-  height,
-  latest,
-  isFavorite,
-  onToggleFavorite,
-}: {
-  path: string;
-  game: GameMenuInfo;
-  width: number;
-  height: number;
-  /** The last game played: a larger title. */
-  latest: boolean;
-  isFavorite: boolean;
-  onToggleFavorite: (path: string) => void;
-}) {
-  const { spacing } = useResponsiveMetrics();
-  const language = useDisplayLanguage();
-  const source = gameArt(game);
-  const ready = useTabReadyImage(source);
-  const title = localizeGameTitle(game, path, language);
-  const frame = useCardFrame();
-  const palette = useGamePalette(game);
-  return (
-    <PaletteContext.Provider value={palette}>
-      <View
-        style={{ ...frame, width, height, backgroundColor: game.gameColorDark }}
-      >
-        <Pressable
-          onPress={() => launchGame(path as Href)}
-          accessibilityRole="button"
-          accessibilityLabel={title}
-          style={StyleSheet.absoluteFill}
-        >
-          <Image
-            source={source}
-            cachePolicy="memory"
-            contentFit="cover"
-            style={StyleSheet.absoluteFill}
-            {...ready}
-          />
-          <ArtFade from={0} />
-          <View
-            style={{
-              marginTop: "auto",
-              padding: spacing(14),
-            }}
-          >
-            <Text
-              weight={500}
-              size={"lg"}
-              lineHeight={1.15}
-              numberOfLines={2}
-              style={{ textAlign: "center" }}
-            >
-              {title}
-            </Text>
-          </View>
-        </Pressable>
-        <FavButton
-          style={{ position: "absolute", top: 0, right: 0 }}
-          isFavorite={isFavorite}
-          onToggleFavorite={() => onToggleFavorite(path)}
-          size={spacing(36)}
-          iconSize={spacing(20)}
-          activeColor={theme.accent}
-          inactiveColor={palette.ink}
-        />
-      </View>
-    </PaletteContext.Provider>
   );
 }

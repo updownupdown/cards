@@ -31,6 +31,7 @@ import ExpandLessIcon from "./ExpandLess.svg";
 import ExpandMoreIcon from "./ExpandMore.svg";
 import FastForwardIcon from "./FastForward.svg";
 import FistIcon from "./Fist.svg";
+import FrameIcon from "./Frame.svg";
 import FreeCellIcon from "./FreeCell.svg";
 import GalleryIcon from "./Gallery.svg";
 import GamesIcon from "./Games.svg";
@@ -102,6 +103,7 @@ export type IconName =
   | "expand-more"
   | "fast-forward"
   | "fist"
+  | "frame"
   | "free-cell"
   | "gallery"
   | "games"
@@ -173,6 +175,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "expand-more": ExpandMoreIcon,
   "fast-forward": FastForwardIcon,
   fist: FistIcon,
+  frame: FrameIcon,
   "free-cell": FreeCellIcon,
   gallery: GalleryIcon,
   games: GamesIcon,
