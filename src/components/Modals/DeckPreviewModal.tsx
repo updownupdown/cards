@@ -10,7 +10,8 @@ import {
   useResponsiveUiLayout,
 } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { useTranslation } from "@/i18n";
+import { useDisplayLanguage, useTranslation } from "@/i18n";
+import { localizeGameTitle } from "@/i18n/content";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
 import { Colors } from "@/styles/styles";
@@ -43,6 +44,7 @@ export function DeckPreviewModal({
   const pathname = useGamePath();
   const { t } = useTranslation("game");
   const gameInfo = getGameInfo(pathname);
+  const displayLanguage = useDisplayLanguage();
   const { width: screenWidthActual } = useViewportDimensions();
   const ui = useResponsiveUiLayout();
   const spacing = (value: number) => roundToPixel(value * ui.scale);
@@ -69,6 +71,7 @@ export function DeckPreviewModal({
 
   return (
     <ModalFull
+      gameName={localizeGameTitle(gameInfo, pathname, displayLanguage)}
       title={title ?? t("deckPreview.title")}
       onClose={closeModal}
       backgroundColor={gameInfo.gameColorDark}

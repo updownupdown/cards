@@ -455,7 +455,8 @@ export function ActionButton({
           ...transitionStyles.limited02sec,
           height,
           paddingHorizontal: spacing(small ? 16 : 20),
-          borderRadius: spacing(small ? 12 : 14),
+          // Fully round ends, as every other button in the app has.
+          borderRadius: height / 2,
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",

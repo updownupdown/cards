@@ -6,7 +6,8 @@
     "rules": "Règles",
     "undo": "Annuler",
     "reset": "Recommencer",
-    "menu": "Menu"
+    "menu": "Menu",
+    "infoAndSettings": "Infos et réglages"
   },
   "result": {
     "won": "Vous avez gagné",

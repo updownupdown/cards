@@ -117,7 +117,8 @@ export default function GameModal({
     <>
       <ModalFull
         onClose={handleClose}
-        title={localizeGameTitle(gameInfo, pathname, displayLanguage)}
+        gameName={localizeGameTitle(gameInfo, pathname, displayLanguage)}
+        title={t("menu.infoAndSettings")}
       >
         <ScrollView
           contentContainerStyle={[

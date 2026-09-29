@@ -6,7 +6,8 @@
     "rules": "Kurallar",
     "undo": "Geri al",
     "reset": "Yeniden başlat",
-    "menu": "Menü"
+    "menu": "Menü",
+    "infoAndSettings": "Bilgi ve Ayarlar"
   },
   "result": {
     "won": "Kazandınız",

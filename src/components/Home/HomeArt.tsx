@@ -159,6 +159,53 @@ export function GameTile({
 export const TILE_SIZE = 140;
 export const TILE_GAP = 12;
 
+/** The height of the Continue shelf's cards. */
+export const CONTINUE_HEIGHT = 200;
+
+/**
+ * Stands in for a shelf with no games yet, exactly as tall as the shelf's
+ * cards, so the first game added fills it without moving anything below.
+ */
+export function ShelfPlaceholder({
+  height,
+  pageSidePadding,
+  text,
+  testID,
+}: {
+  height: number;
+  pageSidePadding: number;
+  text: string;
+  testID?: string;
+}) {
+  const { spacing } = useResponsiveMetrics();
+  return (
+    <View
+      testID={testID}
+      style={{
+        height,
+        marginHorizontal: pageSidePadding,
+        borderRadius: spacing(CARD_RADIUS),
+        borderWidth: 1,
+        borderStyle: "dashed",
+        borderColor: rgba(theme.ink, 0.18),
+        backgroundColor: rgba(theme.night, 0.35),
+        alignItems: "center",
+        justifyContent: "center",
+        paddingHorizontal: spacing(24),
+      }}
+    >
+      <Text
+        size="sm"
+        weight={400}
+        color={theme.dim}
+        style={{ textAlign: "center" }}
+      >
+        {text}
+      </Text>
+    </View>
+  );
+}
+
 /** A row of games that scrolls sideways, edge to edge. */
 export function ArtShelf({
   games,
@@ -218,7 +265,7 @@ export function ContinueShelf({
   const gap = spacing(TILE_GAP);
   const tile = spacing(TILE_SIZE);
   const firstWidth = tile * 2 + gap;
-  const height = spacing(200);
+  const height = spacing(CONTINUE_HEIGHT);
   return (
     <ScrollView
       horizontal

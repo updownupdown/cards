@@ -1,5 +1,11 @@
 import { Logo } from "@/components/common/Logo";
-import { ArtShelf, ContinueShelf } from "@/components/Home/HomeArt";
+import {
+  ArtShelf,
+  CONTINUE_HEIGHT,
+  ContinueShelf,
+  ShelfPlaceholder,
+  TILE_SIZE,
+} from "@/components/Home/HomeArt";
 import { RoundButton, SectionTitle } from "@/components/ui/Nocturne";
 import { DealMeAGame } from "@/components/Home/DealMeAGame";
 import { GameOfTheDaySection } from "@/components/Home/GameOfTheDaySection";
@@ -13,7 +19,7 @@ import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
 import { layoutDims } from "@/styles/styles";
 import { isLocalDevEnvironment } from "@/utils/utils";
-import { type ReactNode, useMemo } from "react";
+import { type ReactNode, useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { HOME_HOME_TAB_INDEX } from "./home-view-state";
 import { useStarfield } from "./Starfield";
@@ -21,6 +27,8 @@ import { useTabReadyHold } from "./TabReady";
 
 const EASY_GAME_COUNT = 6;
 const JUMP_BACK_IN_COUNT = 6;
+/** Stats and Settings: a fifth larger than a RoundButton's usual 40. */
+export const HEADER_BUTTON_SIZE = 48;
 
 type HomeTabProps = {
   allEnabledGames: HomeGameEntry[];
@@ -82,8 +90,8 @@ export function HomeTab({
     [favorites, language],
   );
 
-  // For newcomers: shown until there is at least one game both to jump back
-  // into and among the favorites.
+  // For newcomers: shown when Home opens without at least one game both to
+  // jump back into and among the favorites.
   const easyGames = useMemo(
     () =>
       [...allEnabledGames]
@@ -95,8 +103,16 @@ export function HomeTab({
         .slice(0, EASY_GAME_COUNT),
     [allEnabledGames],
   );
-  const showEasyGames =
-    dataLoaded && (jumpBackInGames.length === 0 || favoriteGames.length === 0);
+  // Decided once, when the data first comes in, and kept while Home stays
+  // open: starring a game (or coming back from one) never makes a section
+  // appear or vanish, and so never moves the page. Continue and Favorites
+  // always show, with a placeholder the size of their cards while empty.
+  const [showEasyGames, setShowEasyGames] = useState<boolean | null>(null);
+  if (dataLoaded && showEasyGames === null) {
+    setShowEasyGames(
+      jumpBackInGames.length === 0 || favoriteGames.length === 0,
+    );
+  }
 
   const localOnlyGames = Object.entries(GAMES_DATA).filter(
     ([, game]) => game.enabledOnLocalOnly,
@@ -154,11 +170,13 @@ export function HomeTab({
           </View>
           <RoundButton
             iconName="chart"
+            size={HEADER_BUTTON_SIZE}
             accessibilityLabel={t("header.stats")}
             onPress={() => onOpenStats?.()}
           />
           <RoundButton
             iconName="settings"
+            size={HEADER_BUTTON_SIZE}
             accessibilityLabel={t("header.settings")}
             onPress={() => onOpenSettings?.()}
           />
@@ -188,26 +206,44 @@ export function HomeTab({
             />,
           )}
 
-        {jumpBackInGames.length > 0 &&
+        {dataLoaded &&
           section(
             t("sections.continue"),
-            <ContinueShelf
-              games={jumpBackInGames}
-              pageSidePadding={shelfPadding}
-              favorites={favorites}
-              onToggleFavorite={onToggleFavorite}
-            />,
+            jumpBackInGames.length > 0 ? (
+              <ContinueShelf
+                games={jumpBackInGames}
+                pageSidePadding={shelfPadding}
+                favorites={favorites}
+                onToggleFavorite={onToggleFavorite}
+              />
+            ) : (
+              <ShelfPlaceholder
+                testID="placeholder continue"
+                height={spacing(CONTINUE_HEIGHT)}
+                pageSidePadding={shelfPadding}
+                text={t("sections.continueEmpty")}
+              />
+            ),
           )}
 
-        {favoriteGames.length > 0 &&
+        {dataLoaded &&
           section(
             t("sections.favorites"),
-            <ArtShelf
-              games={favoriteGames}
-              pageSidePadding={shelfPadding}
-              favorites={favorites}
-              onToggleFavorite={onToggleFavorite}
-            />,
+            favoriteGames.length > 0 ? (
+              <ArtShelf
+                games={favoriteGames}
+                pageSidePadding={shelfPadding}
+                favorites={favorites}
+                onToggleFavorite={onToggleFavorite}
+              />
+            ) : (
+              <ShelfPlaceholder
+                testID="placeholder favorites"
+                height={spacing(TILE_SIZE)}
+                pageSidePadding={shelfPadding}
+                text={t("sections.favoritesEmpty")}
+              />
+            ),
           )}
 
         <GameOfTheDaySection

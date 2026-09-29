@@ -1,8 +1,8 @@
 import { Text } from "@/components/common/Text";
-import { usePalette } from "@/styles/palette";
+import { useGameAccent, usePalette } from "@/styles/palette";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { rgba, layoutDims, theme } from "@/styles/styles";
+import { Colors, rgba, layoutDims, theme } from "@/styles/styles";
 import React from "react";
 import { Modal, Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -18,6 +18,8 @@ type Props = {
   title?: string;
   titleColor?: string;
   subtitle?: string;
+  /** In a game: its name, small in its accent above the title. */
+  gameName?: string;
   backgroundColor?: string;
   showLogo?: boolean;
   iconName?: IconName;
@@ -29,6 +31,7 @@ export default function ModalFull({
   title,
   titleColor: titleColorProp,
   subtitle,
+  gameName,
   backgroundColor: backgroundColorProp,
   showLogo,
   iconName,
@@ -91,7 +94,9 @@ export default function ModalFull({
             )}
 
             {/* Title */}
-            {title && (
+            {title && gameName ? (
+              <GameHeading gameName={gameName} title={title} />
+            ) : title ? (
               <View style={[flexStyles.colStart]}>
                 <Text size="xl" color={titleColor} weight={500}>
                   {title}
@@ -102,7 +107,7 @@ export default function ModalFull({
                   </Text>
                 )}
               </View>
-            )}
+            ) : null}
 
             {/* Close button */}
             <RoundButton
@@ -130,3 +135,28 @@ type ModalHeadingProps = {
 export const ModalHeading = ({ title, color }: ModalHeadingProps) => (
   <Kicker color={color}>{title}</Kicker>
 );
+
+/**
+ * The heading of every game menu and panel (the menu, the rules, the quick
+ * start): the game's name small in its accent, and what this is below it,
+ * larger and in white.
+ */
+export function GameHeading({
+  gameName,
+  title,
+}: {
+  gameName: string;
+  title: string;
+}) {
+  const accent = useGameAccent();
+  return (
+    <View style={{ flexShrink: 1, alignItems: "flex-start" }}>
+      <Kicker color={accent} numberOfLines={1}>
+        {gameName}
+      </Kicker>
+      <Text size="xxl" weight={500} color={Colors.white} numberOfLines={1}>
+        {title}
+      </Text>
+    </View>
+  );
+}

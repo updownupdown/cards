@@ -37,7 +37,9 @@
     "easyGames": "Başlamak için kolay oyunlar",
     "favorites": "Favoriler",
     "continue": "Devam et",
-    "fact": "Biliyor muydunuz?"
+    "fact": "Biliyor muydunuz?",
+    "continueEmpty": "Oynadığın oyunlar burada görünecek.",
+    "favoritesEmpty": "Bir oyunu burada tutmak için yıldızına dokun."
   },
   "gameOfTheDay": {
     "today": "Bugün",

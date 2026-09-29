@@ -1,4 +1,5 @@
 import { GameLaunchOverlay } from "@/components/common/GameLaunchOverlay";
+import { SystemBarScrims } from "@/components/common/SystemBarScrims";
 import { ToastProvider } from "@/components/common/Toast";
 import { useGameColors } from "@/hooks/useGameColors";
 import { useLanguageSync } from "@/hooks/useLanguageSync";
@@ -196,6 +197,9 @@ function Layout() {
               <Stack.Screen name="[game]" dangerouslySingular={() => "game"} />
             </Stack>
             <GameLaunchOverlay />
+            {/* Keeps the system bars readable over every screen. LOCKED:
+                see utils/system-bar-scrims. */}
+            <SystemBarScrims />
           </View>
         </ToastProvider>
       </SafeAreaProvider>

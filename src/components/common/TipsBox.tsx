@@ -1,4 +1,3 @@
-import { Text } from "@/components/common/Text";
 import { usePalette } from "@/styles/palette";
 import { getGameInfo } from "@/data/game-menu";
 import { useGamePath } from "@/hooks/useGamePath";
@@ -7,7 +6,7 @@ import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGame } from "@/i18n/content";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, layoutDims, rgba, theme } from "@/styles/styles";
-import { Kicker } from "@/components/ui/Nocturne";
+import { GameHeading } from "@/components/Modals/ModalFull";
 import { useEffect, useRef, useState } from "react";
 import { Animated, LayoutChangeEvent, View } from "react-native";
 import { Button } from "../Button/Button";
@@ -138,11 +137,10 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
                 { alignItems: "flex-start" },
               ]}
             >
-              <Kicker>{t("tips.quickStart")}</Kicker>
-              {/* Which game these are the tips for. */}
-              <Text size="xs" weight={400} color={theme.dim} numberOfLines={1}>
-                {gameInfo.title}
-              </Text>
+              <GameHeading
+                gameName={gameInfo.title}
+                title={t("tips.quickStart")}
+              />
             </View>
 
             <Button

@@ -141,21 +141,47 @@ export const ProgressBar = ({
   );
 
   const snappedBarWidth = roundToPixel(barWidth);
-  const progressWidth: DimensionValue =
-    snappedBarWidth > 0
-      ? roundToPixel((progressPercentage / 100) * snappedBarWidth)
-      : (`${progressPercentage}%` as `${number}%`);
-  const previewProgressWidth: DimensionValue =
-    snappedBarWidth > 0
-      ? roundToPixel((previewProgressPercentage / 100) * snappedBarWidth)
-      : (`${previewProgressPercentage}%` as `${number}%`);
-  const progressBorderRadius = roundToPixel(height / 2);
-  const isProgressFull = progressPercentage === 100;
-  const isPreviewProgressFull = previewProgressPercentage === 100;
+  // A started fill is never narrower than it is tall, so it always keeps its
+  // round ends rather than squashing into a sliver.
+  const fillWidth = (percentage: number, value: number): DimensionValue => {
+    if (value <= 0 && !iconName) return 0;
+    if (snappedBarWidth <= 0) return `${percentage}%` as `${number}%`;
+    return roundToPixel(Math.max(height, (percentage / 100) * snappedBarWidth));
+  };
+  const progressWidth = fillWidth(progressPercentage, normalizedProgress);
+  const previewProgressWidth = fillWidth(
+    previewProgressPercentage,
+    normalizedPreviewProgress,
+  );
+  const radius = roundToPixel(height / 2);
+  // A hairline edge and a faint top light, instead of glows.
+  const hairline = Math.max(1, roundToPixel(height * 0.04));
 
   const showText =
     tallyText ||
     (autoTallyText ? `${progressValue} / ${totalValue}` : undefined);
+
+  const labelFontSize = clamp(
+    height * 0.36 * textScale,
+    8 * textScale,
+    13 * textScale,
+  );
+  const tallyFontSize = clamp(
+    height * 0.45 * textScale,
+    11 * textScale,
+    26 * textScale,
+  );
+
+  const fillStyle = (width: DimensionValue): ViewStyle => ({
+    ...TRANSITION_STYLE,
+    position: "absolute",
+    width,
+    top: 0,
+    bottom: 0,
+    left: flipDirection ? undefined : 0,
+    right: flipDirection ? 0 : undefined,
+    borderRadius: radius,
+  });
 
   return (
     <View
@@ -167,39 +193,55 @@ export const ProgressBar = ({
           position: "relative",
           overflow: "hidden",
           height,
-          backgroundColor: backgroundColor ?? rgba(Colors.K400, 0.12),
-          borderRadius: roundToPixel(height / 2),
+          backgroundColor: backgroundColor ?? rgba(Colors.black, 0.35),
+          borderRadius: radius,
           width: "100%",
-          boxShadow: `inset 0 0 0 ${roundToPixel(height * 0.03)}px ${rgba(
-            Colors.white,
-            0.2,
-          )}, inset 0 0 ${roundToPixel(height * 0.2)}px ${rgba(
-            Colors.K200,
-            0.2,
-          )}, 0 0 ${roundToPixel(height * 0.2)}px ${rgba(Colors.K950, 0.2)}`,
+          boxShadow: `inset 0 0 0 ${hairline}px ${rgba(Colors.white, 0.1)}`,
         },
         style,
       ]}
     >
+      {/* Progress, dimmed under a preview of what it will be */}
+      <View
+        style={[
+          fillStyle(progressWidth),
+          {
+            zIndex: 1,
+            backgroundColor: rgba(
+              progressColor,
+              previewProgressValue === undefined ? 1 : 0.45,
+            ),
+          },
+        ]}
+      />
+      <View
+        style={[
+          fillStyle(previewProgressWidth),
+          {
+            zIndex: 2,
+            backgroundColor: progressColor,
+            boxShadow: `inset 0 ${hairline}px 0 ${rgba(Colors.white, 0.22)}`,
+          },
+        ]}
+      />
+
       {labelText && (
         <Text
-          weight={300}
-          color={Colors.white}
+          weight={500}
+          color={rgba(Colors.white, 0.9)}
+          numberOfLines={1}
           style={{
             position: "absolute",
             zIndex: 10,
-            left: flipDirection ? undefined : roundToPixel(height * 0.4),
-            right: flipDirection ? roundToPixel(height * 0.4) : undefined,
+            left: flipDirection ? undefined : roundToPixel(height * 0.45),
+            right: flipDirection ? roundToPixel(height * 0.45) : undefined,
             top: "50%",
             transform: [{ translateY: "-50%" }],
-            fontSize: clamp(
-              height * 0.4 * textScale,
-              6 * textScale,
-              14 * textScale,
-            ),
+            fontSize: labelFontSize,
+            lineHeight: labelFontSize * 1.2,
+            letterSpacing: clamp(height * 0.04, 0.5, 1.5),
             ...textStyles.shadowText,
           }}
-          lineHeight={1}
           textTransform="uppercase"
         >
           {labelText}
@@ -219,11 +261,7 @@ export const ProgressBar = ({
               width: iconWrapperSize,
               height: iconWrapperSize,
               borderRadius: roundToPixel(iconWrapperSize / 2),
-              backgroundColor: rgba(Colors.K900, 0.9),
-              boxShadow: `inset 0 0 ${roundToPixel(height * 0.2)}px ${rgba(
-                Colors.K950,
-                0.2,
-              )}`,
+              backgroundColor: rgba(Colors.black, 0.45),
             },
           ]}
         >
@@ -245,112 +283,27 @@ export const ProgressBar = ({
       )}
 
       {/* Tally */}
-      <Text
-        weight={600}
-        color={Colors.white}
-        style={{
-          position: "absolute",
-          zIndex: 10,
-          right: flipDirection ? undefined : roundToPixel(scale * height * 0.5),
-          left: flipDirection ? roundToPixel(scale * height * 0.5) : undefined,
-          top: "50%",
-          transform: [{ translateY: "-50%" }],
-          fontSize: clamp(
-            height * 0.5 * textScale,
-            12 * textScale,
-            30 * textScale,
-          ),
-          ...textStyles.shadowText,
-        }}
-      >
-        {showText}
-      </Text>
-
-      {/* Progress */}
-      <View
-        style={[
-          {
-            ...TRANSITION_STYLE,
+      {showText ? (
+        <Text
+          weight={600}
+          color={Colors.white}
+          numberOfLines={1}
+          style={{
             position: "absolute",
-            zIndex: 1,
-            width: progressWidth,
-            top: 0,
-            bottom: 0,
-            left: flipDirection ? undefined : 0,
-            right: flipDirection ? 0 : undefined,
-            backgroundColor: rgba(
-              progressColor,
-              previewProgressValue === undefined ? 1 : 0.5,
-            ),
-            borderRadius: progressBorderRadius,
-            borderTopRightRadius: flipDirection
-              ? 0
-              : isProgressFull
-                ? progressBorderRadius
-                : 0,
-            borderTopLeftRadius: flipDirection
-              ? isProgressFull
-                ? progressBorderRadius
-                : 0
-              : 0,
-            borderBottomRightRadius: flipDirection
-              ? 0
-              : isProgressFull
-                ? progressBorderRadius
-                : 0,
-            borderBottomLeftRadius: flipDirection
-              ? isProgressFull
-                ? progressBorderRadius
-                : 0
-              : 0,
-          },
-        ]}
-      />
-
-      {/* Progress Preview */}
-      <View
-        style={[
-          {
-            ...TRANSITION_STYLE,
-            position: "absolute",
-            zIndex: 2,
-            width: previewProgressWidth,
-            top: 0,
-            bottom: 0,
-            left: flipDirection ? undefined : 0,
-            right: flipDirection ? 0 : undefined,
-            backgroundColor: progressColor,
-            borderRadius: progressBorderRadius,
-            borderTopRightRadius: flipDirection
-              ? 0
-              : isPreviewProgressFull
-                ? progressBorderRadius
-                : 0,
-            borderTopLeftRadius: flipDirection
-              ? isPreviewProgressFull
-                ? progressBorderRadius
-                : 0
-              : 0,
-            borderBottomLeftRadius: flipDirection
-              ? isPreviewProgressFull
-                ? progressBorderRadius
-                : 0
-              : 0,
-            borderBottomRightRadius: flipDirection
-              ? 0
-              : isPreviewProgressFull
-                ? progressBorderRadius
-                : 0,
-            boxShadow: `inset 0 0 0 ${roundToPixel(height * 0.03)}px ${rgba(
-              Colors.white,
-              0.2,
-            )}, inset 0 0 ${roundToPixel(height * 0.4)}px ${rgba(
-              Colors.white,
-              0.3,
-            )}, 0 0 ${roundToPixel(height * 0.2)}px ${rgba(progressColor, 0.8)}`,
-          },
-        ]}
-      />
+            zIndex: 10,
+            right: flipDirection ? undefined : roundToPixel(height * 0.45),
+            left: flipDirection ? roundToPixel(height * 0.45) : undefined,
+            top: "50%",
+            transform: [{ translateY: "-50%" }],
+            fontSize: tallyFontSize,
+            lineHeight: tallyFontSize * 1.2,
+            fontVariant: ["tabular-nums"],
+            ...textStyles.shadowText,
+          }}
+        >
+          {showText}
+        </Text>
+      ) : null}
     </View>
   );
 };

@@ -37,7 +37,9 @@
     "easyGames": "Des jeux faciles pour commencer",
     "favorites": "Favoris",
     "continue": "Continuer",
-    "fact": "Le saviez-vous"
+    "fact": "Le saviez-vous",
+    "continueEmpty": "Les jeux auxquels vous jouez apparaîtront ici.",
+    "favoritesEmpty": "Touchez l’étoile d’un jeu pour le garder ici."
   },
   "gameOfTheDay": {
     "today": "Aujourd'hui",
