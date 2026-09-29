@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { usePalette } from "@/styles/palette";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
@@ -9,7 +10,7 @@ import {
   rgba,
   theme,
 } from "@/styles/styles";
-import { ActionButton, Kicker } from "@/components/ui/Nocturne";
+import { ActionButton, Caps, Kicker } from "@/components/ui/Nocturne";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, Platform, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -37,8 +38,6 @@ interface Props {
   actionsDisabled?: boolean;
   /** @deprecated The old name of actionsDisabled. */
   actionsHidden?: boolean;
-  /** @deprecated No longer shown: the reward plays over the whole screen. */
-  topPanel?: ReactNode;
   /** The game's name, large at the top. */
   title?: string;
   /** How many times the game has been won, this win included. */
@@ -65,6 +64,7 @@ export const WinLoseBox = ({
   onExit,
 }: Props) => {
   const { ui, spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   const actionsDisabled = actionsDisabledProp || actionsHidden;
   const { t } = useTranslation("game");
   const { t: tCommon } = useTranslation("common");
@@ -77,9 +77,7 @@ export const WinLoseBox = ({
       >
         {value}
       </Text>
-      <Text size="xxs" weight={300} color={theme.dim}>
-        {label}
-      </Text>
+      <Caps>{label}</Caps>
     </View>
   );
   const insets = useSafeAreaInsets();
@@ -187,7 +185,7 @@ export const WinLoseBox = ({
             borderRadius: spacing(22),
             backgroundColor: rgba(theme.surface, 0.96),
             borderWidth: 1,
-            borderColor: rgba(theme.ink, 0.08),
+            borderColor: rgba(theme.ink, 0.14),
             boxShadow: `0 ${spacing(12)}px ${spacing(40)}px ${rgba(Colors.black, 0.5)}`,
           }}
         >
@@ -220,12 +218,12 @@ export const WinLoseBox = ({
           {message || (!hideScore && score !== undefined) ? (
             <View style={{ gap: spacing(4) }}>
               {message ? (
-                <Text size="md" weight={300} color={theme.dim}>
+                <Text size="md" weight={400} color={theme.dim}>
                   {message.replace(/\\n/g, "\n")}
                 </Text>
               ) : null}
               {!hideScore && score !== undefined && (
-                <Text size="md" weight={300} color={theme.dim}>
+                <Text size="md" weight={400} color={theme.dim}>
                   {t("result.score", { score })}
                 </Text>
               )}

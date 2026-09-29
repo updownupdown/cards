@@ -30,8 +30,6 @@ export const threePeaks: GameDefinition = {
   gameColorDark: "#24343a",
   gameColorPale: "#e3fcdd",
   cardBack: CardBackColors.Ocean,
-  cardDescription:
-    "Clear the three peaks by playing cards one rank above or below the waste.",
   quickStart: ["Play exposed +/-1 to waste; A<->K wraps; draw when stuck."],
   howToPlay: [
     "## Objective",

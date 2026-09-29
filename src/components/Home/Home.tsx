@@ -7,6 +7,7 @@ import { SearchTab } from "@/components/Home/SearchTab";
 import { CampaignTab } from "@/components/Campaign/CampaignTab";
 import { CampaignUFO } from "@/components/Campaign/CampaignUFO";
 import { UfoContext, type UfoRequest } from "@/components/Campaign/UfoContext";
+import { StarfieldBackdrop } from "./Starfield";
 import { createTabReadyGate, TabReadyContext } from "./TabReady";
 import {
   COLLECT_HOME_TAB_INDEX,
@@ -25,7 +26,7 @@ import { useHomeData } from "@/hooks/useHomeData";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { Colors, layoutDims, theme } from "@/styles/styles";
+import { Colors, layoutDims } from "@/styles/styles";
 import {
   type ReactNode,
   useEffect,
@@ -127,7 +128,6 @@ export default function Home() {
   const { settings, updateSettings } = useGlobalSettings();
   // Set by the Campaign tab while the map is open; the UFO itself is drawn here.
   const [ufo, setUfo] = useState<UfoRequest | null>(null);
-  const cardSize = settings.discoverCardSize ?? "large";
 
   const [containerHeight, setContainerHeight] = useState(0);
 
@@ -155,12 +155,18 @@ export default function Home() {
   const contentPaddingBottom =
     spacing(layoutDims.tabBarHeight + layoutDims.pagePadding * 0.5 + 48) +
     insets.bottom;
-  const searchControlBottom =
-    spacing(layoutDims.tabBarHeight + layoutDims.pagePadding) + insets.bottom;
 
   const onInvalidateHomeData = () => {
     setHomeDataRefreshToken((current) => current + 1);
   };
+
+  // Home stays mounted under a game, so what was played or starred there is
+  // read again on the way back.
+  const wasFocused = useRef(isFocused);
+  useEffect(() => {
+    if (isFocused && !wasFocused.current) onInvalidateHomeData();
+    wasFocused.current = isFocused;
+  }, [isFocused]);
 
   useEffect(() => {
     // Delay rendering heavy components so the UI can mount and fade in first.
@@ -309,8 +315,6 @@ export default function Home() {
         <GalleryTab
           allEnabledGames={allEnabledGames}
           settingsMap={settingsMap}
-          favorites={favorites}
-          onToggleFavorite={toggleFavorite}
           onScrolledChange={(scrolled) =>
             setTabScrolled(COLLECT_HOME_TAB_INDEX, scrolled)
           }
@@ -322,14 +326,10 @@ export default function Home() {
     [SEARCH_HOME_TAB_INDEX]: (
       <SearchTab
         allEnabledGames={allEnabledGames}
-        unplayedGamePaths={unplayedGamePaths}
+        settingsMap={settingsMap}
         favorites={favorites}
         recentPaths={recentPaths}
         onToggleFavorite={toggleFavorite}
-        onScrolledChange={(scrolled) =>
-          setTabScrolled(SEARCH_HOME_TAB_INDEX, scrolled)
-        }
-        showHeaderBackground={showHeaderBackgroundFor(SEARCH_HOME_TAB_INDEX)}
         contentPaddingTop={contentPaddingTop}
         contentPaddingBottom={contentPaddingBottom}
       />
@@ -358,7 +358,6 @@ export default function Home() {
           onClose={() => setShowStatsModal(false)}
         />
       )}
-
       <UfoContext.Provider value={setUfo}>
         <View style={containerStyle} onLayout={onContainerLayout}>
           {isScreenReady && (
@@ -370,11 +369,10 @@ export default function Home() {
                 overflow: "hidden",
               }}
             >
-              <View
-                style={[
-                  StyleSheet.absoluteFill,
-                  { backgroundColor: theme.night },
-                ]}
+              {/* One sky behind every tab. */}
+              <StarfieldBackdrop
+                animated={settings.showAnimations}
+                comets={isFocused}
               />
 
               {HOME_TAB_INDICES.map((index) => {

@@ -27,8 +27,6 @@ export const towerOfHanoi: GameDefinition = {
   gameColorDark: "#304f63",
   gameColorPale: "#d8efe8",
   cardBack: CardBackColors.Teal,
-  cardDescription:
-    "Rebuild all nine cards into one descending tower using only legal top-card moves.",
   quickStart: [
     "Move only the top card from a pile.",
     "Place a card only on a higher rank or an empty pile.",

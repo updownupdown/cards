@@ -1,4 +1,5 @@
 import { useTranslation } from "@/i18n";
+import { usePalette } from "@/styles/palette";
 import { flexStyles } from "@/styles/flexStyles";
 import {
   Colors,
@@ -61,6 +62,8 @@ export const GameHeader = memo(function GameHeader({
 }: Props) {
   const spacing = (value: number) => value * scale;
   const { t } = useTranslation("game");
+  // The game's palette: its dark colour behind, its pale one in the icons.
+  const theme = usePalette();
 
   return (
     <Animated.View
@@ -84,11 +87,11 @@ export const GameHeader = memo(function GameHeader({
             width: "100%",
             height: spacing(layoutDims.menuBarHeight),
             paddingHorizontal: spacing(layoutDims.pagePadding / 2),
-            borderRadius: spacing(20),
-            backgroundColor: rgba(theme.surface, 0.88),
-            borderWidth: 1,
-            borderColor: rgba(theme.ink, 0.08),
-            boxShadow: `0 ${spacing(8)}px ${spacing(24)}px ${rgba(Colors.black, 0.35)}`,
+            // The tab bar's glass, corner and shadow.
+            borderRadius: spacing(22),
+            backgroundColor: rgba(theme.surface, 0.8),
+            // No edge; a soft, wide shadow lifts it off the game instead.
+            boxShadow: `0 ${spacing(10)}px ${spacing(36)}px ${rgba(Colors.black, 0.28)}`,
             ...(Platform.OS === "web"
               ? ({ backdropFilter: "blur(14px)" } as object)
               : null),
@@ -102,8 +105,7 @@ export const GameHeader = memo(function GameHeader({
           }
           onPress={onHome}
           iconName={isCampaignMode ? "milky-way" : "home"}
-          label={isCampaignMode ? t("menu.campaign") : t("menu.home")}
-          iconColor={theme.ink}
+          iconColor={theme.accent}
           style={{ flex: 1, paddingHorizontal: 0 }}
         />
 
@@ -114,8 +116,8 @@ export const GameHeader = memo(function GameHeader({
             accessibilityLabel={t("menu.instantWin")}
             onPress={onInstantWin}
             iconName="trophy"
-            label={t("menu.win")}
-            iconColor={theme.ink}
+
+            iconColor={theme.accent}
             disabled={ended}
             style={{ flex: 1, paddingHorizontal: 0 }}
           />
@@ -169,8 +171,8 @@ export const GameHeader = memo(function GameHeader({
             headerButton
             onPress={onRules}
             iconName={"instructions"}
-            label={t("menu.rules")}
-            iconColor={theme.ink}
+            accessibilityLabel={t("menu.rules")}
+            iconColor={theme.accent}
             style={{ width: "100%", paddingHorizontal: 0 }}
           />
         </View>
@@ -179,8 +181,8 @@ export const GameHeader = memo(function GameHeader({
           headerButton
           onPress={onUndo}
           iconName="undo"
-          label={t("menu.undo")}
-          iconColor={!ended && canUndo ? theme.ink : theme.faint}
+          accessibilityLabel={t("menu.undo")}
+          iconColor={!ended && canUndo ? theme.accent : theme.faint}
           disabled={undoDisabled}
           style={{ flex: 1, paddingHorizontal: 0 }}
         />
@@ -188,16 +190,16 @@ export const GameHeader = memo(function GameHeader({
         <ResetButton
           reset={onReset}
           label={t("menu.reset")}
-          iconColor={theme.ink}
-          pressedIconColor={theme.accent}
+          iconColor={theme.accent}
+          pressedIconColor={theme.ink}
         />
 
         <Button
           headerButton
           onPress={onMenu}
           iconName="more"
-          label={t("menu.menu")}
-          iconColor={theme.ink}
+          accessibilityLabel={t("menu.menu")}
+          iconColor={theme.accent}
           style={{ flex: 1, paddingHorizontal: 0 }}
         />
       </View>

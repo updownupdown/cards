@@ -21,8 +21,6 @@ export const dynasty: GameDefinition = {
   gameColorDark: "#262f35",
   gameColorPale: "#b5f4e1",
   cardBack: CardBackColors.Forest,
-  cardDescription:
-    "Bring down all twelve royals by placing cards on a 3x3 grid.",
   quickStart: [
     "Draw and place number cards on equal or lower grid cards.",
     "A placement fires through the two cards opposite an adjacent royal.",

@@ -37,7 +37,12 @@
     "nextQuote": "Next quote",
     "yearsBC": "{{from}}–{{to}} BC",
     "yearsBCtoAD": "{{from}} BC – AD {{to}}",
-    "circa": "c. {{years}}"
+    "circa": "c. {{years}}",
+    "pick": "Select author",
+    "byEra": "Eras",
+    "byName": "Alphabetical",
+    "uncollected": "Win games in the Celestial Odyssey to collect this quote.",
+    "authors": "Authors"
   },
   "tao": {
     "title": "Tao Te Ching",
@@ -47,7 +52,9 @@
     "previous": "Previous chapter",
     "next": "Next chapter",
     "empty": "Win games in the Celestial Odyssey to collect all 81 chapters of the Tao Te Ching.",
-    "about": "The Tao Te Ching is a foundational ancient Chinese text traditionally attributed to the sage Laozi. It teaches individuals to live in harmony with the Tao, the natural flow and rhythm of the universe. By practicing wu wei (effortless action) and embracing humility, simplicity, and flexibility, it is said that one can find lasting peace and balance."
+    "about": "The Tao Te Ching is a foundational ancient Chinese text traditionally attributed to the sage Laozi. It teaches individuals to live in harmony with the Tao, the natural flow and rhythm of the universe. By practicing wu wei (effortless action) and embracing humility, simplicity, and flexibility, it is said that one can find lasting peace and balance.",
+    "pick": "Select chapter",
+    "uncollected": "Win games in the Celestial Odyssey to collect this chapter."
   },
   "games": {
     "title": "Games",

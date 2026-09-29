@@ -1,7 +1,7 @@
 import { Button } from "@/components/Button/Button";
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
-import { HomeCard } from "@/components/Home/HomeCard";
+import { HOME_CARD_HEIGHT, HomeCard } from "@/components/Home/HomeCard";
 import { SectionTitle } from "@/components/ui/Nocturne";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -70,7 +70,7 @@ export function DealMeAGame({
 }: DealMeAGameProps) {
   const { t } = useTranslation("home");
   const { spacing } = useResponsiveMetrics();
-  const cardHeight = spacing(190);
+  const cardHeight = spacing(HOME_CARD_HEIGHT);
   const [cardWidth, setCardWidth] = useState(0);
   const [position, setPosition] = useState(0);
   // Buttons ask the top card to fly off, as if it had been swiped.
@@ -113,18 +113,17 @@ export function DealMeAGame({
       }}
     >
       <View style={{ paddingHorizontal: pageSidePadding }}>
-        <SectionTitle>{t("deal.title")}</SectionTitle>
+        <SectionTitle
+          action={
+            <Text size="xs" weight={400} color={theme.dim}>
+              {t("deal.intro")}
+            </Text>
+          }
+        >
+          {t("deal.title")}
+        </SectionTitle>
       </View>
-      <View
-        style={{
-          paddingHorizontal: pageSidePadding,
-          gap: spacing(14),
-        }}
-      >
-        <Text size="sm" weight={300} color={theme.dim}>
-          {t("deal.intro")}
-        </Text>
-
+      <View style={{ paddingHorizontal: pageSidePadding }}>
         <View
           onLayout={(event) => setCardWidth(event.nativeEvent.layout.width)}
           style={{
@@ -265,7 +264,6 @@ function DealtCard({
           <HomeCard
             path={path}
             game={game}
-            size="large"
             isFavorite={isFavorite}
             // Keeps its usual drop shadow, which parts the cards in the stack.
             style={{ width: "100%", height }}

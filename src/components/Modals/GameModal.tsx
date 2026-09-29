@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { usePalette } from "@/styles/palette";
 import {
   useGameSettings,
   useGameSpecificSettings,
@@ -8,7 +9,12 @@ import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle, localizeSettingDefinitions } from "@/i18n/content";
 import { useModalStyles } from "@/styles/modalStyles";
 import { rgba, theme } from "@/styles/styles";
-import { ActionButton, RatingMeters } from "@/components/ui/Nocturne";
+import { ActionButton, Caps, RatingMeters } from "@/components/ui/Nocturne";
+import {
+  GAME_FULL_THUMBNAIL_ASSETS,
+  GAME_THUMBNAIL_ASPECTS,
+} from "@/data/game-thumbnails";
+import { Image } from "expo-image";
 import { isValidLink } from "@/utils/utils";
 import { useGamePath } from "@/hooks/useGamePath";
 import { useRef } from "react";
@@ -54,6 +60,7 @@ export default function GameModal({
   const { t } = useTranslation("game");
   const { t: tCommon } = useTranslation("common");
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   const modalStyles = useModalStyles();
 
   // Track when a setting that only applies on the next deal is changed so the
@@ -102,9 +109,7 @@ export default function GameModal({
       >
         {value}
       </Text>
-      <Text size="xxs" weight={300} color={theme.dim}>
-        {label}
-      </Text>
+      <Caps>{label}</Caps>
     </View>
   );
 
@@ -217,14 +222,14 @@ export default function GameModal({
           {hasCredits(gameInfo) && <CreditsSection />}
         </ScrollView>
 
-        {/* How to Play stays in reach at the bottom. */}
+        {/* The rules stay in reach at the bottom. */}
         <View
           style={{
             paddingHorizontal: spacing(30),
             paddingTop: spacing(12),
             paddingBottom: spacing(20),
             borderTopWidth: 1,
-            borderTopColor: rgba(theme.ink, 0.08),
+            borderTopColor: rgba(theme.ink, 0.14),
           }}
         >
           <ActionButton
@@ -275,10 +280,12 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
   const pathname = useGamePath();
   const gameInfo = getGameInfo(pathname);
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   const { t } = useTranslation("game");
 
   const background = gameInfo.background;
   const art = gameInfo.thumbnailCredit;
+  const thumbnail = gameInfo.thumbnail;
 
   if (!hasCredits(gameInfo)) return null;
 
@@ -292,29 +299,48 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
           padding: spacing(16),
           borderRadius: spacing(14),
           borderWidth: 1,
-          borderColor: rgba(theme.ink, 0.08),
+          borderColor: rgba(theme.ink, 0.14),
         }}
       >
         {art && (
-          <View style={{ gap: spacing(2) }}>
-            <Text size="xxs" weight={400} color={theme.dim}>
-              {t("credits.gameArt")}
-            </Text>
-            <Text serif italic size="lg" color={theme.ink}>
-              {art.title}
-            </Text>
-            <Text serif size="sm" color={theme.dim}>
-              {[art.artistName, art.date].filter(Boolean).join(", ")}
-            </Text>
-            <Text size="xs" weight={300} color={theme.dim}>
-              {t("credits.artSource")}{" "}
-              <CreditLink name={art.sourceName} link={art.sourceLink} />
-            </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-start",
+              gap: spacing(14),
+            }}
+          >
+            {/* The whole work, uncropped, small beside its label. */}
+            {thumbnail && (
+              <Image
+                source={GAME_FULL_THUMBNAIL_ASSETS[thumbnail]}
+                cachePolicy="memory"
+                contentFit="contain"
+                style={{
+                  height: spacing(84),
+                  width: spacing(84) * GAME_THUMBNAIL_ASPECTS[thumbnail],
+                  maxWidth: spacing(120),
+                  borderRadius: spacing(3),
+                }}
+              />
+            )}
+            <View style={{ flex: 1, gap: spacing(2) }}>
+              <Text serif italic size="lg" color={theme.ink}>
+                {art.title}
+              </Text>
+              <Text serif size="sm" color={theme.dim}>
+                {[art.artistName, art.date].filter(Boolean).join(", ")}
+              </Text>
+              <Text size="xs" weight={400} color={theme.dim}>
+                {t("credits.artSource")}{" "}
+                <CreditLink name={art.sourceName} link={art.sourceLink} />
+              </Text>
+            </View>
           </View>
         )}
 
         {background?.authorName && (
-          <Text size="xs" weight={300} color={theme.dim}>
+          <Text size="xs" weight={400} color={theme.dim}>
             {t("credits.backgroundImage")}{" "}
             <CreditLink
               name={background.authorName}

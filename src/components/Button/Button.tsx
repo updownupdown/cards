@@ -1,4 +1,5 @@
 import { Text, Typography } from "@/components/common/Text";
+import { usePalette } from "@/styles/palette";
 import type { TextSize } from "@/components/common/Text";
 import { Icon, IconName } from "@/icons";
 import {
@@ -6,7 +7,6 @@ import {
   FontWeight,
   layoutDims,
   rgba,
-  theme as appTheme,
   transitionStyles,
 } from "@/styles/styles";
 import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
@@ -153,6 +153,8 @@ export const Button = ({
   const autoProgressValue = useRef(new Animated.Value(0)).current;
   const { spacing } = useResponsiveMetrics();
   const ui = useResponsiveUiLayout();
+  // Inside a game, the game's palette.
+  const appTheme = usePalette();
   const uiScale = ui.scale;
   const textScale = ui.textScale;
 
@@ -266,7 +268,8 @@ export const Button = ({
     },
     headerButton && {
       ...flexStyles.rowCentered,
-      ...(label ? { flexDirection: "column" as const, gap: 2 } : null),
+      // Laid out as the tab bar's buttons are: icon over label, 3 apart.
+      ...(label ? { flexDirection: "column" as const, gap: spacing(3) } : null),
       flex: 1,
       padding: 0,
       width: spacing(layoutDims.menuButtonSize),
@@ -370,8 +373,8 @@ export const Button = ({
         <Text
           numberOfLines={1}
           style={{
-            fontSize: roundToPixel(10 * uiScale),
-            lineHeight: roundToPixel(12 * uiScale),
+            fontSize: roundToPixel(11 * uiScale),
+            lineHeight: roundToPixel(13 * uiScale),
             fontFamily: FontWeight[400],
             color: disabled ? appTheme.faint : appTheme.dim,
           }}

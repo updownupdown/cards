@@ -25,8 +25,6 @@ export const glazier: GameDefinition = {
   gameColorDark: "#1c2033",
   gameColorPale: "#f1d7a2",
   cardBack: CardBackColors.Indigo,
-  cardDescription:
-    "Draft coloured glass from the kilns and set a stained-glass window where no colour repeats in any row or column.",
   quickStart: [
     "Take all panes of one suit from a kiln; the rest move to the workbench.",
     "Frames hold 1 to 4 panes of one suit. Extra panes shatter and cost points.",

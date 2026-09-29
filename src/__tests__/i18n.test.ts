@@ -214,16 +214,16 @@ describe("Content translations", () => {
   test("translated game text is shown, and English when it has changed", () => {
     const klondike = GAMES_DATA["/klondike"];
     const french = localizeGame(klondike, "/klondike", "fr");
-    expect(french.cardDescription).not.toBe(klondike.cardDescription);
+    expect(french.quickStart).not.toEqual(klondike.quickStart);
     expect(french.howToPlay).toHaveLength(klondike.howToPlay!.length);
     expect(french.title).toBe(klondike.title);
 
     const edited = {
       ...klondike,
-      cardDescription: "A newly edited description.",
+      quickStart: ["A newly edited first step."],
     };
     const stale = localizeGame(edited, "/klondike", "fr");
-    expect(stale.cardDescription).toBe("A newly edited description.");
-    expect(stale.quickStart).toEqual(french.quickStart);
+    expect(stale.quickStart).toEqual(["A newly edited first step."]);
+    expect(stale.howToPlay).toEqual(french.howToPlay);
   });
 });

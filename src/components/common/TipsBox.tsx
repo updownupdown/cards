@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { usePalette } from "@/styles/palette";
 import { getGameInfo } from "@/data/game-menu";
 import { useGamePath } from "@/hooks/useGamePath";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -31,6 +32,7 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
   const { t } = useTranslation("game");
   const { t: tCommon } = useTranslation("common");
   const { spacing, ui } = useResponsiveMetrics();
+  const theme = usePalette();
   const [expandedWidth, setExpandedWidth] = useState<number>();
   const [contentHeight, setContentHeight] = useState<number>();
   const instructionButtonSize = spacing(layoutDims.menuButtonSize);
@@ -89,7 +91,7 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
           }),
           backgroundColor: rgba(theme.surface, 0.95),
           borderWidth: 1,
-          borderColor: rgba(theme.ink, 0.08),
+          borderColor: rgba(theme.ink, 0.14),
           transform: [
             {
               translateX: morphProgress.interpolate({
@@ -148,7 +150,7 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
                 showRulesModal();
               }}
               theme={rgba(theme.ink, 0.1)}
-              style={{ paddingLeft: spacing(14) }}
+              style={{ paddingLeft: spacing(14), borderWidth: 0 }}
             />
 
             <Button
@@ -159,7 +161,7 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
               autoProgressColor={rgba(theme.accent, 0.25)}
               onPress={onClose}
               theme={rgba(theme.ink, 0.1)}
-              style={{ paddingRight: spacing(9) }}
+              style={{ paddingRight: spacing(9), borderWidth: 0 }}
             />
           </View>
 

@@ -25,8 +25,6 @@ export const shiftingSands: GameDefinition = {
   gameColorDark: "#645641",
   gameColorPale: "#f4d99b",
   cardBack: CardBackColors.Terracotta,
-  cardDescription:
-    "Gather sand, build outward without changing direction, and make a castle strong enough to survive high tide.",
   quickStart: [
     "Draw 1–7 cards, optionally reverse them, then play across adjacent columns in one direction.",
   ],

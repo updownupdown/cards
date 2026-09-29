@@ -27,8 +27,6 @@ export const blackHole: GameDefinition = {
   gameColorDark: "#150e25",
   gameColorPale: "#d4cbff",
   cardBack: CardBackColors.Violet,
-  cardDescription:
-    "Pull all 52 cards into a central black hole, one rank at a time.",
   quickStart: [
     "Cards of adjacent value to the hole card can be cleared. Clear all to win. A<->K wraps.",
   ],

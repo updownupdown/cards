@@ -27,8 +27,6 @@ export const sirTommy: GameDefinition = {
   gameColorDark: "#1a2c33",
   gameColorPale: "#fdf7d9",
   cardBack: CardBackColors.Teal,
-  cardDescription:
-    "The granddaddy of solitaire: sort the deck across four piles into four Ace-to-King stacks.",
   quickStart: [
     "Build foundations up from A to K, regardless of suit.",
     "Cards in the waste piles cannot be moved.",

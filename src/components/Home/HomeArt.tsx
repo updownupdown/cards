@@ -1,21 +1,50 @@
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
-import { ActionButton, hairline, Kicker } from "@/components/ui/Nocturne";
+import { ActionButton } from "@/components/ui/Nocturne";
 import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
 import type { GameMenuInfo } from "@/data/games-data";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
-import { rgba, theme } from "@/styles/styles";
+import { gamePalette, PaletteContext, usePalette } from "@/styles/palette";
+import { Colors, rgba, theme } from "@/styles/styles";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import type { Href } from "expo-router";
-import { Pressable, ScrollView, View } from "react-native";
+import { useMemo, useState } from "react";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { FavButton } from "./FavButton";
 import { useTabReadyImage } from "./TabReady";
 
 export function gameArt(game: GameMenuInfo) {
   return game.thumbnail ? GAME_THUMBNAIL_ASSETS[game.thumbnail] : null;
+}
+
+/**
+ * The frame every game card shares, tile to full width: rounded corners and
+ * no outline, so the art itself makes the edge. The one place to change it.
+ */
+export const CARD_RADIUS = 6;
+export function useCardFrame() {
+  const { spacing } = useResponsiveMetrics();
+  return {
+    borderRadius: spacing(CARD_RADIUS),
+    overflow: "hidden",
+    // Lifts the card off the sky.
+    boxShadow: `0 ${spacing(6)}px ${spacing(18)}px ${rgba(Colors.black, 0.5)}`,
+  } as const;
+}
+
+/** How much room a shelf leaves above and below its cards for their shadow. */
+const SHADOW_ROOM = 20;
+
+/** A game's own palette, for its card: text, ratings and buttons in its colours. */
+export function useGamePalette(game: GameMenuInfo) {
+  return useMemo(
+    () => gamePalette(game.gameColorDark, game.gameColorPale),
+    [game],
+  );
 }
 
 /** The name of a game's family, its first tag. */
@@ -24,55 +53,152 @@ export function useGameCategory() {
   return (game: GameMenuInfo) => t(`tags.${game.tags[0]}`);
 }
 
-/** A game on a shelf: its art, and its name underneath. */
-export function ArtTile({
-  path,
-  game,
-  width,
-}: {
-  path: string;
-  game: GameMenuInfo;
-  width: number;
-}) {
-  const { spacing } = useResponsiveMetrics();
-  const language = useDisplayLanguage();
-  const category = useGameCategory();
-  const source = gameArt(game);
-  const ready = useTabReadyImage(source);
+/** The dark fade at the foot of a picture, so its caption reads. */
+export function ArtFade({ from = 0.35 }: { from?: number }) {
+  // On a game's card, the fade is the game's own dark colour.
+  const theme = usePalette();
   return (
-    <Pressable
-      onPress={() => launchGame(path as Href)}
-      accessibilityRole="button"
-      style={{ width, gap: spacing(8) }}
-    >
-      <Image
-        source={source}
-        cachePolicy="memory"
-        contentFit="cover"
-        style={{
-          width,
-          height: width * 1.25,
-          borderRadius: spacing(6),
-          borderWidth: 1,
-          borderColor: hairline(),
-          backgroundColor: game.gameColorDark,
-        }}
-        {...ready}
-      />
-      <View style={{ gap: spacing(2) }}>
-        <Text size="sm" weight={500} numberOfLines={1}>
-          {localizeGameTitle(game, path, language)}
-        </Text>
-        <Text size="xxs" weight={300} color={theme.dim} numberOfLines={1}>
-          {category(game)}
-        </Text>
-      </View>
-    </Pressable>
+    <LinearGradient
+      colors={[rgba(theme.night, 0), rgba(theme.night, 0.9)]}
+      locations={[from, 1]}
+      style={StyleSheet.absoluteFill}
+    />
   );
 }
 
+/**
+ * A game as a square of its art, its name over a fade at the foot and a
+ * favourite star in the corner. The star sits beside the pressable art rather
+ * than inside it, since a button can't hold another button.
+ */
+export function GameTile({
+  path,
+  game,
+  size,
+  isFavorite,
+  onToggleFavorite,
+  onOpen,
+}: {
+  path: string;
+  game: GameMenuInfo;
+  size: number;
+  isFavorite?: boolean;
+  onToggleFavorite?: (path: string) => void;
+  /** Called as the game launches (a modal can close). */
+  onOpen?: () => void;
+}) {
+  const { spacing } = useResponsiveMetrics();
+  const frame = useCardFrame();
+  const language = useDisplayLanguage();
+  const source = gameArt(game);
+  const ready = useTabReadyImage(source);
+  const title = localizeGameTitle(game, path, language);
+  const palette = useGamePalette(game);
+  return (
+    <PaletteContext.Provider value={palette}>
+      <View
+        style={{
+          ...frame,
+          width: size,
+          height: size,
+          backgroundColor: game.gameColorDark,
+        }}
+      >
+        <Pressable
+          onPress={() => {
+            onOpen?.();
+            launchGame(path as Href);
+          }}
+          accessibilityRole="button"
+          accessibilityLabel={title}
+          style={StyleSheet.absoluteFill}
+        >
+          <Image
+            source={source}
+            cachePolicy="memory"
+            contentFit="cover"
+            style={StyleSheet.absoluteFill}
+            {...ready}
+          />
+          <ArtFade from={0.4} />
+          <View
+            style={{
+              marginTop: "auto",
+              paddingHorizontal: spacing(10),
+              paddingBottom: spacing(9),
+            }}
+          >
+            <Text size="lg" weight={500} lineHeight={1.15} numberOfLines={2}>
+              {title}
+            </Text>
+          </View>
+        </Pressable>
+        {onToggleFavorite && (
+          <FavButton
+            style={{ position: "absolute", top: 0, right: 0 }}
+            isFavorite={!!isFavorite}
+            onToggleFavorite={() => onToggleFavorite(path)}
+            size={spacing(36)}
+            iconSize={spacing(20)}
+            activeColor={palette.accent}
+            inactiveColor={palette.ink}
+            backdrop
+          />
+        )}
+      </View>
+    </PaletteContext.Provider>
+  );
+}
+
+/** The side of a square game tile, and the gap between tiles in a row. */
+export const TILE_SIZE = 140;
+export const TILE_GAP = 12;
+
 /** A row of games that scrolls sideways, edge to edge. */
 export function ArtShelf({
+  games,
+  pageSidePadding,
+  favorites,
+  onToggleFavorite,
+}: {
+  games: HomeGameEntry[];
+  pageSidePadding: number;
+  favorites: Set<string>;
+  onToggleFavorite: (path: string) => void;
+}) {
+  const { spacing } = useResponsiveMetrics();
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      // Room for the cards' shadows, taken back from the layout.
+      style={{ marginVertical: -spacing(SHADOW_ROOM) }}
+      contentContainerStyle={{
+        paddingHorizontal: pageSidePadding,
+        paddingVertical: spacing(SHADOW_ROOM),
+        gap: spacing(TILE_GAP),
+      }}
+    >
+      {games.map(([path, game]) => (
+        <GameTile
+          key={path}
+          path={path}
+          game={game}
+          size={spacing(TILE_SIZE)}
+          isFavorite={favorites.has(path)}
+          onToggleFavorite={onToggleFavorite}
+        />
+      ))}
+    </ScrollView>
+  );
+}
+
+/**
+ * The games played last, to pick up again: the latest with a Resume button,
+ * as wide as two tiles and their gap, so it lines up with the shelves below,
+ * and the ones before a tile wide.
+ */
+export function ContinueShelf({
   games,
   pageSidePadding,
 }: {
@@ -80,87 +206,117 @@ export function ArtShelf({
   pageSidePadding: number;
 }) {
   const { spacing } = useResponsiveMetrics();
+  const gap = spacing(TILE_GAP);
+  const tile = spacing(TILE_SIZE);
+  const firstWidth = tile * 2 + gap;
+  const height = spacing(200);
   return (
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
+      style={{ marginVertical: -spacing(SHADOW_ROOM) }}
       contentContainerStyle={{
         paddingHorizontal: pageSidePadding,
-        gap: spacing(14),
+        paddingVertical: spacing(SHADOW_ROOM),
+        gap,
       }}
     >
-      {games.map(([path, game]) => (
-        <ArtTile key={path} path={path} game={game} width={spacing(112)} />
+      {games.map(([path, game], index) => (
+        <ContinueCard
+          key={path}
+          path={path}
+          game={game}
+          width={index === 0 ? firstWidth : tile}
+          height={height}
+          latest={index === 0}
+        />
       ))}
     </ScrollView>
   );
 }
 
-/** The last game played, large, to pick up again. */
-export function ContinueCard({
+function ContinueCard({
   path,
   game,
+  width,
+  height,
+  latest,
 }: {
   path: string;
   game: GameMenuInfo;
+  width: number;
+  height: number;
+  /** The last game played: a larger title and a Resume button. */
+  latest: boolean;
 }) {
   const { t } = useTranslation("home");
   const { spacing } = useResponsiveMetrics();
   const language = useDisplayLanguage();
-  const category = useGameCategory();
   const source = gameArt(game);
   const ready = useTabReadyImage(source);
-  const radius = spacing(18);
+  const title = localizeGameTitle(game, path, language);
+  const open = () => launchGame(path as Href);
+  const [resumeWidth, setResumeWidth] = useState(0);
+  const frame = useCardFrame();
+  const palette = useGamePalette(game);
   return (
-    <Pressable
-      onPress={() => launchGame(path as Href)}
-      accessibilityRole="button"
-      style={{
-        borderRadius: radius,
-        overflow: "hidden",
-        aspectRatio: 16 / 11,
-        backgroundColor: game.gameColorDark,
-        borderWidth: 1,
-        borderColor: hairline(),
-      }}
-    >
-      <Image
-        source={source}
-        cachePolicy="memory"
-        contentFit="cover"
-        style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
-        {...ready}
-      />
-      <LinearGradient
-        colors={[rgba(theme.night, 0), rgba(theme.night, 0.92)]}
-        locations={[0.35, 1]}
-        style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
-      />
+    <PaletteContext.Provider value={palette}>
       <View
-        style={{
-          marginTop: "auto",
-          padding: spacing(16),
-          flexDirection: "row",
-          alignItems: "flex-end",
-          gap: spacing(12),
-        }}
+        style={{ ...frame, width, height, backgroundColor: game.gameColorDark }}
       >
-        <View style={{ flex: 1, gap: spacing(6) }}>
-          <Kicker>{t("sections.continue")}</Kicker>
-          <Text weight={500} size="xxl" numberOfLines={1}>
-            {localizeGameTitle(game, path, language)}
-          </Text>
-          <Text size="xs" weight={300} color={theme.dim} numberOfLines={1}>
-            {category(game)}
-          </Text>
-        </View>
-        <ActionButton
-          small
-          iconName="play"
-          label={t("sections.resume")}
-          onPress={() => launchGame(path as Href)}
-        />
+        <Pressable
+          onPress={open}
+          accessibilityRole="button"
+          accessibilityLabel={title}
+          style={StyleSheet.absoluteFill}
+        >
+          <Image
+            source={source}
+            cachePolicy="memory"
+            contentFit="cover"
+            style={StyleSheet.absoluteFill}
+            {...ready}
+          />
+          <ArtFade from={latest ? 0.35 : 0.45} />
+          <View
+            style={{
+              marginTop: "auto",
+              padding: spacing(latest ? 14 : 12),
+              flexDirection: "row",
+              alignItems: "flex-end",
+              gap: spacing(10),
+            }}
+          >
+            <Text
+              weight={500}
+              size={latest ? "xl" : "lg"}
+              lineHeight={1.15}
+              numberOfLines={2}
+              style={{ flex: 1 }}
+            >
+              {title}
+            </Text>
+            {/* Room for the Resume button, which sits beside the title. */}
+            {latest && <View style={{ width: resumeWidth }} />}
+          </View>
+        </Pressable>
+        {latest && (
+          <ActionButton
+            small
+            iconName="play"
+            label={t("sections.resume")}
+            onPress={open}
+            onLayout={(event) =>
+              setResumeWidth(Math.ceil(event.nativeEvent.layout.width))
+            }
+            style={{
+              position: "absolute",
+              right: spacing(14),
+              bottom: spacing(14),
+            }}
+          />
+        )}
       </View>
-    </Pressable>
+    </PaletteContext.Provider>
   );
 }

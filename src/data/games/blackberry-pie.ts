@@ -22,8 +22,6 @@ export const blackberryPie: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/348612",
   },
-  cardDescription:
-    "Build matching trios under berry cards to help the Queen bake her pie.",
   gameColorDark: "#2a1c33",
   gameColorPale: "#f7e4ff",
   cardBack: CardBackColors.Mauve,

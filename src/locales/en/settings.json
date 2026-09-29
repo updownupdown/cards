@@ -13,7 +13,7 @@
   },
   "showAnimations": {
     "label": "Show animations",
-    "description": "Weather and scenery effects behind the cards."
+    "description": "Weather and scenery behind the cards, and moving stars in the menus."
   },
   "showTips": {
     "label": "Show tips",
@@ -57,6 +57,8 @@
     "confirm": "Erase all progress and settings?"
   },
   "colorTheme": {
-    "label": "Colour theme"
+    "label": "Colour theme",
+    "expand": "Expand",
+    "collapse": "Collapse"
   }
 }

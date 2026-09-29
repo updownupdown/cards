@@ -25,8 +25,6 @@ export const clock: GameDefinition = {
   gameColorDark: "#1d1610",
   gameColorPale: "#eed9c2",
   cardBack: CardBackColors.Bronze,
-  cardDescription:
-    "A pure-luck patience: follow cards around the clock before all the Kings are uncovered.",
   quickStart: [
     "Tap the center pile to start, then tap the hour pile that matches the last revealed card.",
   ],

@@ -1,4 +1,5 @@
 import { Button } from "@/components/Button/Button";
+import { usePalette } from "@/styles/palette";
 import { Text } from "@/components/common/Text";
 import { useFade } from "@/hooks/useFade";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -26,6 +27,7 @@ export function ResetButton({
   label,
 }: Props) {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   const { t } = useTranslation("game");
   const [showResetHint, setShowResetHint] = useState(false);
   const { isRendered: renderResetHint, opacity: hintOpacity } = useFade(
@@ -128,7 +130,8 @@ export function ResetButton({
         delayLongPress={holdToResetDuration}
         preventWebLongPressMenu
         iconName="reset"
-        label={label}
+        // Icon only, as in the game header: the name is for screen readers.
+        accessibilityLabel={label}
         iconColor={isResetPressed ? (pressedIconColor ?? iconColor) : iconColor}
         style={{ flex: 1, paddingHorizontal: 0 }}
       />

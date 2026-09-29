@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { usePalette } from "@/styles/palette";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
 import { rgba, layoutDims, theme } from "@/styles/styles";
@@ -26,15 +27,18 @@ type Props = {
 export default function ModalFull({
   children,
   title,
-  titleColor = theme.ink,
+  titleColor: titleColorProp,
   subtitle,
-  backgroundColor = theme.surface,
+  backgroundColor: backgroundColorProp,
   showLogo,
   iconName,
   onClose,
 }: Props) {
   const modalStyles = useModalStyles();
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
+  const titleColor = titleColorProp ?? theme.ink;
+  const backgroundColor = backgroundColorProp ?? theme.surface;
   const insets = useSafeAreaInsets();
 
   return (
@@ -60,7 +64,7 @@ export default function ModalFull({
             {
               backgroundColor,
               borderWidth: 1,
-              borderColor: rgba(theme.ink, 0.08),
+              borderColor: rgba(theme.ink, 0.14),
               borderRadius: spacing(22),
             },
           ]}
@@ -93,7 +97,7 @@ export default function ModalFull({
                   {title}
                 </Text>
                 {subtitle && (
-                  <Text size="sm" color={theme.dim} weight={300}>
+                  <Text size="sm" color={theme.dim} weight={400}>
                     {subtitle}
                   </Text>
                 )}

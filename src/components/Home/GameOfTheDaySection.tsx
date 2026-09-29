@@ -100,7 +100,7 @@ export function GameOfTheDaySection({
       <View style={{ paddingHorizontal: pageSidePadding }}>
         <SectionTitle
           action={
-            <Text size="xs" weight={300} color={theme.dim}>
+            <Text size="xs" weight={400} color={theme.dim}>
               {t("gameOfTheDay.streak", { count: streak })}
             </Text>
           }
@@ -184,7 +184,6 @@ export function GameOfTheDaySection({
               <HomeCard
                 path={day.path}
                 game={GAMES_DATA[day.path]}
-                size="large"
                 onToggleFavorite={onToggleFavorite}
                 isFavorite={favorites.has(day.path)}
                 style={{ width: "100%" }}

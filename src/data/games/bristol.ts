@@ -22,8 +22,6 @@ export const bristol: GameDefinition = {
   gameColorDark: "#2a3638",
   gameColorPale: "#e2f1f2",
   cardBack: CardBackColors.Teal,
-  cardDescription:
-    "Eight small fans and three reserve piles fed from the stock, with suits that never matter.",
   quickStart: [
     "Build foundations up from Ace to King, regardless of suit.",
     "Build fans down, regardless of suit, one card at a time.",

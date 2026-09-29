@@ -24,8 +24,6 @@ export const royalEnvoy: GameDefinition = {
   gameColorDark: "#241e33",
   gameColorPale: "#acdeff",
   cardBack: CardBackColors.Bicycle,
-  cardDescription:
-    "Win exactly the right number of debates in each kingdom, using your advisors.",
   quickStart: [
     "Choose a kingdom and win exactly its listed number of debates.",
     "Follow the topic suit when possible.",

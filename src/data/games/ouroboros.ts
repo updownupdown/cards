@@ -30,8 +30,6 @@ export const ouroboros: GameDefinition = {
   gameColorDark: "#1d120e",
   gameColorPale: "#dfd4bd",
   cardBack: CardBackColors.Burgundy,
-  cardDescription:
-    "Capture scoring loop cards while preserving momentum and avoiding disruptive breaks.",
   quickStart: [
     "Collect all Aces and exit through the Joker to win.",
     "Lose by landing on face up face cards.",

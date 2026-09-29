@@ -26,8 +26,6 @@ export const canfield: GameDefinition = {
   gameColorDark: "#311a1e",
   gameColorPale: "#E4F6FF",
   cardBack: CardBackColors.Burgundy,
-  cardDescription:
-    "Build suit foundations from a random base rank, fed by a 13-card reserve.",
   quickStart: [
     "Build foundations up by suit.",
     "Build tableau columns down by alternating color.",

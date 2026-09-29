@@ -25,7 +25,6 @@ export const crownslayer: GameDefinition = {
   gameColorDark: "#1b1727",
   gameColorPale: "#e2e9ff",
   cardBack: CardBackColors.Indigo,
-  cardDescription: "Topple the 12 royals using suit-powered combos.",
   quickStart: [
     "Defeat 12 royals, one at a time.",
     "Suits have powers; enemies are immune to their own suit; Aces allow combos.",

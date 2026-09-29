@@ -22,8 +22,6 @@ export const flowerGarden: GameDefinition = {
   gameColorDark: "#24402f",
   gameColorPale: "#f2e4c2",
   cardBack: CardBackColors.Olive,
-  cardDescription:
-    "Cultivate six flower beds with every card in the sixteen-card bouquet available.",
   quickStart: [
     "Build foundations up by suit from Ace to King.",
     "Build flower beds down by rank, regardless of suit.",

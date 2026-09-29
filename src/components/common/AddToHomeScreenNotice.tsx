@@ -1,11 +1,10 @@
 import { Text } from "@/components/common/Text";
 import { Button } from "@/components/Button/Button";
-import { Icon } from "@/icons";
 import { usePwaInstallPrompt } from "@/hooks/usePwaInstallPrompt";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors, rgba, theme } from "@/styles/styles";
 import { useState } from "react";
 import { View } from "react-native";
 
@@ -60,22 +59,26 @@ export function AddToHomeScreenNotice({
       style={{
         width: "100%",
         borderRadius: spacing(14),
-        backgroundColor: rgba(Colors.K800, 0.5),
-        padding: spacing(24),
-        gap: spacing(12),
+        backgroundColor: rgba(theme.ink, 0.04),
+        borderWidth: 1,
+        borderColor: rgba(theme.ink, 0.14),
+        padding: spacing(20),
+        gap: spacing(8),
       }}
     >
-      <View style={[flexStyles.rowCentered, { gap: spacing(8) }]}>
-        <Icon name="home" size={spacing(20)} color={Colors.buttonBlue} />
-        <Text weight={600} size="md" color={Colors.K100}>
-          {title}
-        </Text>
-      </View>
+      <Text
+        weight={500}
+        size="md"
+        color={theme.ink}
+        style={{ textAlign: "center" }}
+      >
+        {title}
+      </Text>
 
       <Text
         size="sm"
         weight={300}
-        color={Colors.K300}
+        color={theme.dim}
         style={{ textAlign: "center" }}
       >
         {instructions}
@@ -88,7 +91,7 @@ export function AddToHomeScreenNotice({
       )}
 
       {installState === "dismissed" && (
-        <Text size="xs" color={Colors.K400}>
+        <Text size="xs" color={theme.dim}>
           {t("install.dismissed")}
         </Text>
       )}
@@ -108,7 +111,6 @@ export function AddToHomeScreenNotice({
             <Button
               text={t("install.installNow")}
               theme="blue"
-              iconName="home"
               uppercase={false}
               onPress={async () => {
                 const outcome = await promptInstall();

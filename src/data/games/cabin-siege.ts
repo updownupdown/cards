@@ -25,8 +25,6 @@ export const cabinSiege: GameDefinition = {
   gameColorDark: "#201207",
   gameColorPale: "#e9f1d9",
   cardBack: CardBackColors.Slate,
-  cardDescription:
-    "Defend your cabin against a siege of zombies, using supporting cards strategically.",
   quickStart: [
     "Kill zombies by placing cards in adjacent, valid spots.",
     "The other two cards in that line must add to at least 10 and match suit (Ks) or color (Qs).",

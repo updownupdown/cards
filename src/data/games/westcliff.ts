@@ -25,8 +25,6 @@ export const westcliff: GameDefinition = {
     sourceName: "Artvee",
     sourceLink: "https://artvee.com/dl/bald-head-cliff-york-maine/",
   },
-  cardDescription:
-    "A broad ten-column Klondike relative with generous open-column play.",
   quickStart: [
     "Build foundations up by suit from Ace to King.",
     "Build tableau down by alternating color.",

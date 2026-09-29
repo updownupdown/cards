@@ -22,8 +22,6 @@ export const simpleSimon: GameDefinition = {
   gameColorDark: "#312d29",
   gameColorPale: "#eadfca",
   cardBack: CardBackColors.Crimson,
-  cardDescription:
-    "All 52 cards begin exposed across ten columns in this thoughtful Spider relative.",
   quickStart: [
     "Build down by rank.",
     "Move descending same-suit runs.",

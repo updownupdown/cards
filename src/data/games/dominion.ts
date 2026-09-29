@@ -25,8 +25,6 @@ export const dominion: GameDefinition = {
   gameColorDark: "#1d2231",
   gameColorPale: "#dbe9eb",
   cardBack: CardBackColors.Ocean,
-  cardDescription:
-    "Conquer cards of matching rank or suit, until one dominion remains.",
   quickStart: [
     "Conquer adjacent cards of the same suit or rank.",
     "Reserve cards can (and must) be played to empty spaces.",

@@ -42,6 +42,14 @@ type Props = {
    */
   timing?: { openedAt: number; startMs: number };
   onDone?: () => void;
+  /**
+   * Each line's place in the text, and when (ms after `openedAt`) its first
+   * word appears: lets the page follow the reading.
+   */
+  onLineLayout?: (
+    lineIndex: number,
+    line: { y: number; height: number; startsAt: number },
+  ) => void;
 };
 
 export const ChapterText = memo(function ChapterText({
@@ -49,6 +57,7 @@ export const ChapterText = memo(function ChapterText({
   fontSize,
   timing,
   onDone,
+  onLineLayout,
 }: Props) {
   const parsed = useMemo(() => parseChapterText(text), [text]);
   const schedule = useMemo(
@@ -101,6 +110,19 @@ export const ChapterText = memo(function ChapterText({
       {parsed.lines.slice(0, mountedLines).map((line, lineIndex) => (
         <View
           key={lineIndex}
+          onLayout={
+            onLineLayout && schedule
+              ? (event) => {
+                  const { y, height } = event.nativeEvent.layout;
+                  const firstGlyph = parsed.words[line.words[0]]?.glyphs[0];
+                  onLineLayout(lineIndex, {
+                    y,
+                    height,
+                    startsAt: schedule.tIn[firstGlyph] ?? 0,
+                  });
+                }
+              : undefined
+          }
           style={{
             marginTop:
               line.paragraphStart && lineIndex > 0 ? lineHeight * 0.7 : 0,

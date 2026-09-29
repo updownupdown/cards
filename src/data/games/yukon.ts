@@ -26,8 +26,6 @@ export const yukon: GameDefinition = {
   gameColorDark: "#20303a",
   gameColorPale: "#e6f1f7",
   cardBack: CardBackColors.Copper,
-  cardDescription:
-    "Klondike unleashed: move whole groups of cards, in any order, across the tableau.",
   quickStart: [
     "Build foundations up by suit, A to K.",
     "Build columns down by alternating colors.",

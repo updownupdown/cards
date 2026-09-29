@@ -30,8 +30,6 @@ export const grandfathersClock: GameDefinition = {
   gameColorDark: "#2a2118",
   gameColorPale: "#f3e2c2",
   cardBack: CardBackColors.Bronze,
-  cardDescription:
-    "Wind twelve foundations around a clock face until every hour shows its number.",
   quickStart: [
     "Build each clock foundation up by suit until it shows its hour.",
     "Build the tableau down regardless of suit; K goes on A.",

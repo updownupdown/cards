@@ -26,8 +26,6 @@ export const pyramid: GameDefinition = {
   gameColorDark: "#251703",
   gameColorPale: "#FFEACC",
   cardBack: CardBackColors.Walnut,
-  cardDescription:
-    "Clear the pyramid by removing pairs of cards that add up to 13.",
   quickStart: [
     "Remove Kings, or exposed pairs totaling 13. Draw for more matches.",
   ],

@@ -25,8 +25,6 @@ export const chainOfCommand: GameDefinition = {
   gameColorDark: "#252220",
   gameColorPale: "#b2eee1",
   cardBack: CardBackColors.Forest,
-  cardDescription:
-    "Strategically promote members and candidates to the top of the chain of command hierarchy.",
   quickStart: [
     "Win by promoting a member beyond rank 1.",
     "Select a member to promote to the next rank, and replace it by a candidate.",

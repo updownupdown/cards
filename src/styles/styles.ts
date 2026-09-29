@@ -208,7 +208,8 @@ export const layoutDims = {
   tabBarPadding: 8,
   /** Search tab's search input, card size toggle and Filters button. */
   searchControlHeight: 52,
-  menuIconSize: 28,
+  // The tab bar's icon size, so the game's bar matches it.
+  menuIconSize: 24,
   menuButtonSize: 52,
   pagePadding: 20,
 } as const;

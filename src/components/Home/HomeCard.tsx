@@ -1,368 +1,151 @@
+import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
-import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
+import { RatingMeters } from "@/components/ui/Nocturne";
 import { GameMenuInfo } from "@/data/games-data";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
-import { hairline, RatingMeters } from "@/components/ui/Nocturne";
-import { localizeGame } from "@/i18n/content";
-import { Colors, rgba, theme } from "@/styles/styles";
-import { LinearGradient } from "expo-linear-gradient";
-import { launchGame } from "@/components/common/GameLaunchOverlay";
-import { setLastPlayedGameDot } from "@/data/campaign-progress";
-import { type Href } from "expo-router";
+import { localizeGameTitle } from "@/i18n/content";
+import { rgba, theme } from "@/styles/styles";
 import { Image } from "expo-image";
-import { Platform, Pressable, View, type ViewStyle } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { type Href } from "expo-router";
+import { Pressable, StyleSheet, View, type ViewStyle } from "react-native";
 import { FavButton } from "./FavButton";
-import { RatingsBars } from "./RatingBars";
-import { Icon } from "@/icons";
-import { flexStyles } from "@/styles/flexStyles";
-import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
+import {
+  gameArt,
+  useCardFrame,
+  useGameCategory,
+  useGamePalette,
+} from "./HomeArt";
+import { PaletteContext } from "@/styles/palette";
 import { useTabReadyImage } from "./TabReady";
-
-/** A game without art shows its own colour, behind the thumbnail. */
-function getGameThumbnail(game: GameMenuInfo) {
-  return game.thumbnail ? GAME_THUMBNAIL_ASSETS[game.thumbnail] : null;
-}
 
 type Props = {
   path: string;
   game: GameMenuInfo;
   onToggleFavorite?: (path: string) => void;
   isFavorite: boolean;
-  size?: "small" | "medium" | "large";
-  isLarge?: boolean;
   style?: ViewStyle;
-  showCompleted?: boolean;
-  /** Launch in Campaign mode, so a win counts on the map. */
-  campaign?: boolean;
-  onOpen?: () => void;
-  /** False shows only the game's colour where the thumbnail goes, for now. */
-  showThumbnail?: boolean;
 };
 
+/** The height of a full-width game card, the same wherever it shows. */
+export const HOME_CARD_HEIGHT = 172;
+
+/**
+ * A game at full width: its art on the right, melting into the card, with its
+ * name, family and ratings at the foot on the left (Game of the Day, the
+ * Random Deal).
+ */
 export function HomeCard({
   path,
   game,
   onToggleFavorite,
   isFavorite,
-  size = "medium",
   style,
-  showCompleted,
-  campaign,
-  onOpen,
-  showThumbnail = true,
 }: Props) {
   const { spacing } = useResponsiveMetrics();
+  const frame = useCardFrame();
   const { t: tCommon } = useTranslation("common");
-  const thumbnail = showThumbnail ? getGameThumbnail(game) : null;
+  const category = useGameCategory();
+  const thumbnail = gameArt(game);
   const thumbnailReady = useTabReadyImage(thumbnail);
-  const { title, cardDescription } = localizeGame(
-    game,
-    path,
-    useDisplayLanguage(),
-  );
+  const title = localizeGameTitle(game, path, useDisplayLanguage());
 
-  const handleOpen = () => {
-    onOpen?.();
-    if (campaign) {
-      void setLastPlayedGameDot(path);
-      launchGame({ pathname: path, params: { mode: "campaign" } } as Href);
-      return;
-    }
-    launchGame(path as Href);
-  };
-
-  // Not narrowing `size`: the classic layout below still handles all three.
-  const layout: string = size;
-  if (layout === "large") {
-    return (
+  // The card in the game's own colours.
+  const theme = useGamePalette(game);
+  return (
+    <PaletteContext.Provider value={theme}>
       <View
         style={[
           {
-            flexDirection: "row",
-            borderRadius: spacing(18),
-            overflow: "hidden",
+            ...frame,
+            height: spacing(HOME_CARD_HEIGHT),
             backgroundColor: theme.surface,
-            borderWidth: 1,
-            borderColor: hairline(),
           },
           style,
         ]}
       >
         <Pressable
-          onPress={handleOpen}
-          style={{ flex: 1, flexDirection: "row", alignItems: "stretch" }}
+          onPress={() => launchGame(path as Href)}
+          accessibilityRole="button"
+          accessibilityLabel={title}
+          style={{ flex: 1 }}
         >
-          <Image
-            source={thumbnail}
-            cachePolicy="memory"
-            contentFit="cover"
+          {/* The art, melting slowly into the card towards the text. */}
+          <View
             style={{
-              width: "34%",
-              minHeight: spacing(150),
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              right: 0,
+              width: "74%",
               backgroundColor: game.gameColorDark,
             }}
-            {...thumbnailReady}
-          />
+          >
+            <Image
+              source={thumbnail}
+              // Every image is bundled, so skip expo-image's disk cache. On
+              // Android it keys bundled images by resource id, which a new build
+              // can reshuffle; while versionCode stays the same, the cache served
+              // other games' thumbnails. Keep cachePolicy="memory" on every Image.
+              cachePolicy="memory"
+              contentFit="cover"
+              style={StyleSheet.absoluteFill}
+              {...thumbnailReady}
+            />
+            <LinearGradient
+              colors={[
+                theme.surface,
+                rgba(theme.surface, 0.82),
+                rgba(theme.surface, 0.45),
+                rgba(theme.surface, 0.12),
+                rgba(theme.surface, 0),
+              ]}
+              locations={[0, 0.22, 0.5, 0.78, 1]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={StyleSheet.absoluteFill}
+            />
+          </View>
           <View
             style={{
               flex: 1,
-              padding: spacing(14),
-              paddingRight: spacing(44),
-              gap: spacing(6),
+              width: "80%",
+              justifyContent: "flex-end",
+              padding: spacing(16),
+              gap: spacing(12),
             }}
           >
-            <Text size="lg" weight={500} lineHeight={1.2}>
-              {title}
-            </Text>
-            <Text
-              size="xs"
-              weight={300}
-              color={theme.dim}
-              lineHeight={1.35}
-              numberOfLines={3}
-            >
-              {cardDescription}
-            </Text>
-            <View style={{ marginTop: "auto", paddingTop: spacing(8) }}>
-              <RatingMeters
-                rating={game.rating}
-                labels={{
-                  complexity: tCommon("stats.complexity"),
-                  difficulty: tCommon("stats.difficulty"),
-                  luck: tCommon("stats.luck"),
-                }}
-              />
+            <View style={{ gap: spacing(2), width: "78%" }}>
+              <Text size="xl" weight={500} lineHeight={1.15} numberOfLines={2}>
+                {title}
+              </Text>
+              <Text size="xs" weight={400} color={theme.dim} numberOfLines={1}>
+                {category(game)}
+              </Text>
             </View>
+            <RatingMeters
+              rating={game.rating}
+              labels={{
+                complexity: tCommon("stats.complexity"),
+                difficulty: tCommon("stats.difficulty"),
+                luck: tCommon("stats.luck"),
+              }}
+            />
           </View>
         </Pressable>
         <FavButton
-          style={{
-            position: "absolute",
-            top: spacing(4),
-            right: spacing(4),
-            width: spacing(40),
-            height: spacing(40),
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+          style={{ position: "absolute", top: spacing(4), right: spacing(4) }}
           isFavorite={isFavorite}
           onToggleFavorite={() => onToggleFavorite?.(path)}
           size={spacing(40)}
           iconSize={spacing(22)}
           activeColor={theme.accent}
-          inactiveColor={theme.dim}
+          inactiveColor={theme.ink}
           disabled={!onToggleFavorite}
+          backdrop
         />
       </View>
-    );
-  }
-
-  const borderRadius = spacing(8);
-  const padding = spacing(size === "large" ? 22 : size === "medium" ? 12 : 18);
-  // A small card is only spacing(50) tall, so the horizontal padding would
-  // leave a content box shorter than one line of text and clip the title on
-  // native (web just lets it overflow the padding box).
-  const paddingVertical = size === "small" ? spacing(8) : padding;
-  const smallCardHeight = spacing(50);
-  const mediumCardHeight = spacing(120);
-
-  const height =
-    size === "large"
-      ? undefined
-      : size === "small"
-        ? smallCardHeight
-        : mediumCardHeight;
-
-  const favBtnSize = spacing(42);
-  const favBtnInset = spacing(4);
-
-  return (
-    <View
-      style={[
-        {
-          // No overflow:hidden here - it would clip this view's own shadow on
-          // native. The inner view does the clipping instead.
-          position: "relative",
-          height,
-          borderRadius,
-          ...homeSurfaceShadow(spacing),
-          ...(Platform.OS === "android"
-            ? { backgroundColor: game.gameColorDark }
-            : null),
-        },
-        style,
-      ]}
-    >
-      <View
-        style={{
-          overflow: "hidden",
-          borderRadius,
-          width: "100%",
-          height: size === "large" ? undefined : "100%",
-          // A large card sizes to its content, unless given a height, which
-          // it then fills.
-          flexGrow: size === "large" ? 1 : undefined,
-        }}
-      >
-        {/* Thumbnail */}
-        <Image
-          source={thumbnail}
-          // Every image is bundled, so skip expo-image's disk cache. On Android
-          // it keys bundled images by resource id, which a new build can
-          // reshuffle; while versionCode stays the same, the cache served
-          // other games' thumbnails. Keep cachePolicy="memory" on every Image.
-          cachePolicy="memory"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: game.gameColorDark,
-          }}
-          contentFit="cover"
-          {...thumbnailReady}
-        />
-
-        <LinearGradient
-          colors={
-            size === "medium"
-              ? [rgba(game.gameColorDark, 0.94), rgba(game.gameColorDark, 0.3)]
-              : [
-                  rgba(game.gameColorDark, 0.95),
-                  rgba(game.gameColorDark, 0.9),
-                  rgba(game.gameColorDark, 0.7),
-                ]
-          }
-          start={size === "medium" ? { x: 0.5, y: 1 } : { x: 0.2, y: 1 }}
-          end={size === "medium" ? { x: 0.5, y: 0 } : { x: 0.5, y: 0 }}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-          }}
-        />
-
-        <Pressable
-          style={{
-            gap: spacing(14),
-            paddingHorizontal: padding,
-            paddingVertical,
-            height: size === "large" ? undefined : "100%",
-          }}
-          onPress={handleOpen}
-        >
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: size === "medium" ? "center" : "flex-start",
-              height: size === "large" ? undefined : "100%",
-              minHeight: size === "large" ? spacing(80) : undefined,
-              gap: spacing(8),
-              // Grows from its content, not from nothing: on native, flex: 1
-              // squeezes the text down to minHeight in a card given a height.
-              flexGrow: 1,
-              justifyContent: size === "medium" ? "flex-end" : "center",
-            }}
-          >
-            {/* Title and Completed */}
-
-            <Text
-              size={size === "large" ? "xl" : "lg"}
-              weight={500}
-              color={game.gameColorPale}
-              style={{
-                textAlign: size === "medium" ? "center" : undefined,
-              }}
-              lineHeight={1.2}
-            >
-              {title}
-            </Text>
-
-            {/* Description */}
-            {size === "large" && (
-              <Text
-                size="sm"
-                weight={300}
-                color={Colors.K100}
-                lineHeight={1.25}
-              >
-                {cardDescription}
-              </Text>
-            )}
-          </View>
-
-          {size === "large" && (
-            <RatingsBars rating={game.rating} gameColor={game.gameColorPale} />
-          )}
-        </Pressable>
-
-        {showCompleted && (
-          <View
-            style={[
-              flexStyles.rowCentered,
-              {
-                pointerEvents: "none",
-                userSelect: "none",
-                position: "absolute",
-                zIndex: 2,
-                top: size === "small" ? "50%" : favBtnInset,
-                right: size === "medium" ? undefined : favBtnInset + favBtnSize,
-                left: size === "medium" ? favBtnInset : undefined,
-                width: favBtnSize,
-                height: favBtnSize,
-                transform:
-                  size === "small"
-                    ? [{ translateY: -favBtnSize / 2 }]
-                    : undefined,
-              },
-            ]}
-          >
-            <View
-              style={[
-                flexStyles.rowCentered,
-                {
-                  width: spacing(24),
-                  height: spacing(24),
-                  borderRadius: spacing(12),
-                  backgroundColor: rgba(Colors.black, 0.7),
-                  boxShadow: `0 ${spacing(1)}px ${spacing(6)}px ${rgba(Colors.black, 0.4)}`,
-                },
-              ]}
-            >
-              <Icon name="done" size={spacing(18)} color={Colors.win} />
-            </View>
-          </View>
-        )}
-
-        <FavButton
-          style={[
-            {
-              position: "absolute",
-              zIndex: 2,
-              alignItems: "center",
-              justifyContent: "center",
-              top: size === "small" ? "50%" : favBtnInset,
-              right: favBtnInset,
-              width: favBtnSize,
-              height: favBtnSize,
-              transform:
-                size === "small"
-                  ? [{ translateY: -favBtnSize / 2 }]
-                  : undefined,
-            },
-          ]}
-          isFavorite={isFavorite}
-          onToggleFavorite={() => onToggleFavorite?.(path)}
-          size={favBtnSize}
-          iconSize={spacing(30)}
-          inactiveColor={game.gameColorPale}
-          disabled={!onToggleFavorite}
-        />
-      </View>
-    </View>
+    </PaletteContext.Provider>
   );
 }

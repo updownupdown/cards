@@ -25,7 +25,6 @@ export const monteCarlo: GameDefinition = {
   gameColorDark: "#152635",
   gameColorPale: "#fffce5",
   cardBack: CardBackColors.Burgundy,
-  cardDescription: "Match adjacent pairs of equal rank to clear the grid.",
   quickStart: [
     "Tap adjacent cards of equal rank to remove them.",
     "Consolidate the grid to unlock new pairs.",

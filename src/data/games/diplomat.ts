@@ -26,8 +26,6 @@ export const diplomat: GameDefinition = {
   gameColorDark: "#25343a",
   gameColorPale: "#dfe0d5",
   cardBack: CardBackColors.Ocean,
-  cardDescription:
-    "Negotiate eight open columns with rank-only packing and single-card moves.",
   quickStart: [
     "Move both decks to eight foundations, built by suit from A to K.",
     "Build tableau down by rank regardless of suit.",

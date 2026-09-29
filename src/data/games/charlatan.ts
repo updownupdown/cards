@@ -26,8 +26,6 @@ export const charlatan: GameDefinition = {
   gameColorDark: "#2a1d2b",
   gameColorPale: "#f0e1ec",
   cardBack: CardBackColors.Plum,
-  cardDescription:
-    "Brew potions from your own deck, stop before the duds boil over, and buy better ingredients.",
   quickStart: [
     "Tap your deck to add its top card to the cauldron.",
     "Stop before the black A, 2 and 3 duds add up to more than 7.",

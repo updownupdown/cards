@@ -1,7 +1,8 @@
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Button } from "@/components/Button/Button";
 import { getScaledTextSize, Text } from "@/components/common/Text";
-import { HomeCard } from "@/components/Home/HomeCard";
+import { GameTile } from "@/components/Home/HomeArt";
+import { Caps, hairline } from "@/components/ui/Nocturne";
 import {
   formatPlayTime,
   getGameSettings,
@@ -47,12 +48,7 @@ export type StatsRow = {
 };
 
 type PersonaKey =
-  | "comfort"
-  | "nemesis"
-  | "whale"
-  | "faithful"
-  | "rivalry"
-  | "natural";
+  "comfort" | "nemesis" | "whale" | "faithful" | "rivalry" | "natural";
 
 export type Persona = {
   key: PersonaKey;
@@ -87,37 +83,6 @@ const winRateValue = (stats: GameStats) => {
 
 const formatWinRate = (wins: number, losses: number) =>
   wins + losses > 0 ? formatPercent(wins / (wins + losses)) : "-";
-
-// Win rate colours, from 0% through 50% to 100%.
-const WIN_RATE_COLORS = [
-  Colors.cardSelectRed,
-  Colors.cardSelectYellow,
-  Colors.cardSelectGreen,
-] as const;
-
-const mixHexColors = (from: string, to: string, amount: number) => {
-  const channel = (hex: string, index: number) =>
-    parseInt(hex.slice(1 + index * 2, 3 + index * 2), 16);
-  return `#${[0, 1, 2]
-    .map((index) =>
-      Math.round(
-        channel(from, index) +
-          (channel(to, index) - channel(from, index)) * amount,
-      )
-        .toString(16)
-        .padStart(2, "0"),
-    )
-    .join("")}`;
-};
-
-/** Red at 0%, yellow at 50%, green at 100%; dim when nothing was decided. */
-export const winRateColor = (wins: number, losses: number) => {
-  if (wins + losses === 0) return Colors.K700;
-  const rate = wins / (wins + losses);
-  return rate < 0.5
-    ? mixHexColors(WIN_RATE_COLORS[0], WIN_RATE_COLORS[1], rate * 2)
-    : mixHexColors(WIN_RATE_COLORS[1], WIN_RATE_COLORS[2], rate * 2 - 1);
-};
 
 /** Rows with no value sort last in either direction. */
 const compareNullable = (
@@ -260,7 +225,7 @@ export function StatsList({
     useViewportDimensions();
   const isHeadlineGrid = viewportWidth < NARROW_HEADLINE_SCREEN_WIDTH;
   const awardCardWidth = spacing(
-    viewportWidth < NARROW_AWARD_SCREEN_WIDTH ? 135 : 161,
+    viewportWidth < NARROW_AWARD_SCREEN_WIDTH ? 104 : 120,
   );
 
   const scaledPageSidePadding = spacing(layoutDims.pagePadding);
@@ -407,22 +372,14 @@ export function StatsList({
           },
         ]}
       >
-        {isActive ? (
-          <Icon name={iconName} size={14} color={Colors.white} />
-        ) : null}
+        {isActive ? <Icon name={iconName} size={14} color={theme.ink} /> : null}
 
-        <Text
-          size="sm"
-          weight={500}
-          numberOfLines={1}
-          style={[
-            {
-              color: isActive ? Colors.white : Colors.K400,
-            },
-          ]}
+        <Caps
+          color={isActive ? theme.ink : theme.dim}
+          style={{ letterSpacing: spacing(0.8) }}
         >
           {label}
-        </Text>
+        </Caps>
       </Pressable>
     );
   };
@@ -538,7 +495,8 @@ export function StatsList({
         tableHeaderY.current = event.nativeEvent.layout.y;
       }}
       style={{
-        backgroundColor: Colors.K875,
+        // The modal's own colour, so the header reads as part of it.
+        backgroundColor: theme.surface,
         // Only while pinned, to show the rows are scrolling underneath.
         boxShadow: isHeaderStuck
           ? `0 ${spacing(6)}px ${spacing(8)}px -${spacing(4)}px ${rgba(Colors.black, 0.1875)}`
@@ -551,9 +509,9 @@ export function StatsList({
           {
             flexDirection: "row",
             alignItems: "center",
-            paddingVertical: 8,
-            borderBottomWidth: StyleSheet.hairlineWidth,
-            borderBottomColor: Colors.K750,
+            paddingVertical: spacing(10),
+            borderBottomWidth: 1,
+            borderBottomColor: hairline(),
           },
         ]}
       >
@@ -601,10 +559,7 @@ export function StatsList({
           </Text>
           <StatCell value={row.stats.wins} />
           <StatCell value={row.stats.losses} />
-          <StatCell
-            value={formatWinRate(row.stats.wins, row.stats.losses)}
-            color={winRateColor(row.stats.wins, row.stats.losses)}
-          />
+          <StatCell value={formatWinRate(row.stats.wins, row.stats.losses)} />
           <StatCell value={row.stats.highestScore?.toLocaleString(language)} />
           <StatCell
             value={
@@ -623,8 +578,8 @@ export function StatsList({
           flexDirection: "row",
           alignItems: "center",
           paddingTop: 8,
-          borderTopWidth: StyleSheet.hairlineWidth,
-          borderTopColor: Colors.K750,
+          borderTopWidth: 1,
+          borderTopColor: hairline(),
           marginTop: 4,
         }}
       >
@@ -633,11 +588,7 @@ export function StatsList({
         </Text>
         <StatCell isTotal value={totals.wins} />
         <StatCell isTotal value={totals.losses} />
-        <StatCell
-          isTotal
-          value={formatWinRate(totals.wins, totals.losses)}
-          color={winRateColor(totals.wins, totals.losses)}
-        />
+        <StatCell isTotal value={formatWinRate(totals.wins, totals.losses)} />
         <View style={{ flex: 1 }} />
         <View style={{ flex: 1 }} />
       </View>
@@ -693,11 +644,9 @@ export function StatsList({
 function StatCell({
   value,
   isTotal,
-  color = Colors.K200,
 }: {
   value: string | number | null | undefined;
   isTotal?: boolean;
-  color?: string;
 }) {
   const isEmpty = value == null || value === 0 || value === "-";
 
@@ -706,7 +655,7 @@ function StatCell({
       size={isTotal ? "sm" : "xs"}
       weight={isTotal ? 600 : 500}
       style={{ flex: 1, textAlign: "right" }}
-      color={isEmpty ? Colors.K700 : color}
+      color={isEmpty ? theme.faint : theme.ink}
       numberOfLines={1}
     >
       {value ?? "-"}
@@ -727,8 +676,7 @@ function HeadlineStat({
   isGrid: boolean;
 }) {
   const { spacing, textScale } = useResponsiveMetrics();
-  const labelSize = getScaledTextSize("xxs", textScale) * 1.25;
-  const labelLineHeight = labelSize * 1.2;
+  const labelLineHeight = getScaledTextSize("xxs", textScale) * 1.4;
 
   return (
     <View
@@ -738,24 +686,21 @@ function HeadlineStat({
         isGrid ? { width: "50%" } : { flex: 1 },
       ]}
     >
-      <Icon name={iconName} size={spacing(30)} color={theme.accent} />
+      <Icon name={iconName} size={spacing(22)} color={theme.accent} />
       <Text size="xl" weight={600} lineHeight={1.1} numberOfLines={1}>
         {value}
       </Text>
       {/* Always two lines, so every label lines up: "games\nplayed". */}
-      <Text
-        weight={400}
-        color={Colors.K400}
+      <Caps
         numberOfLines={2}
         style={{
           textAlign: "center",
-          fontSize: labelSize,
           lineHeight: labelLineHeight,
           minHeight: labelLineHeight * 2,
         }}
       >
         {label.replace(" ", "\n")}
-      </Text>
+      </Caps>
     </View>
   );
 }
@@ -781,87 +726,65 @@ function PersonaCard({
 }) {
   const { spacing } = useResponsiveMetrics();
   const { t } = useTranslation("home");
-  const labelColor = rgba(game.gameColorPale, 0.6);
 
   return (
     <View
       style={{
         flexGrow: 1,
         flexBasis: spacing(300),
-        gap: spacing(12),
+        flexDirection: "row",
+        alignItems: "center",
+        gap: spacing(16),
         padding: spacing(14.4),
-        borderRadius: spacing(10),
-        backgroundColor: Colors.K950,
-        boxShadow: `0 ${spacing(2)}px ${spacing(10)}px ${rgba(Colors.black, 0.25)}`,
+        borderRadius: spacing(14),
+        backgroundColor: rgba(theme.ink, 0.035),
+        borderWidth: 1,
+        borderColor: hairline(),
       }}
     >
-      {/* Award name and rule */}
-      <View style={[flexStyles.rowCentered, { gap: spacing(12) }]}>
-        <Text
-          size="md"
-          weight={600}
-          color={Colors.white}
-          lineHeight={1.2}
-          style={{ marginRight: "auto" }}
-        >
-          {title}
-        </Text>
-        <Text
-          size="sm"
-          weight={300}
-          color={Colors.K300}
-          lineHeight={1.2}
-          style={{ flexShrink: 1, textAlign: "right" }}
-        >
-          {subtitle}
-        </Text>
-      </View>
-
-      {/* Game card and stats */}
-      <View style={[flexStyles.rowCentered, { gap: spacing(20) }]}>
-        <HomeCard
-          path={row.path}
-          game={game}
-          size="medium"
-          isFavorite={isFavorite}
-          onToggleFavorite={onToggleFavorite}
-          onOpen={onOpenGame}
-          style={{ width: cardWidth, flexShrink: 0 }}
-        />
+      {/* The award, its rule and the stats on the left; the game on the right. */}
+      <View style={{ flex: 1, gap: spacing(14) }}>
+        <View style={{ gap: spacing(3) }}>
+          <Text size="md" weight={600} color={theme.accent} lineHeight={1.2}>
+            {title}
+          </Text>
+          <Text size="sm" weight={400} color={theme.dim} lineHeight={1.25}>
+            {subtitle}
+          </Text>
+        </View>
         <View
           style={{
-            flex: 1,
             flexDirection: "row",
             flexWrap: "wrap",
-            rowGap: spacing(12),
+            rowGap: spacing(10),
           }}
         >
           <PersonaStat
             label={t("statsTab.columns.played")}
             value={row.stats.attempts}
-            color={game.gameColorPale}
-            labelColor={labelColor}
           />
           <PersonaStat
             label={t("statsTab.columns.won")}
             value={row.stats.wins}
-            color={game.gameColorPale}
-            labelColor={labelColor}
           />
           <PersonaStat
             label={t("statsTab.columns.lost")}
             value={row.stats.losses}
-            color={game.gameColorPale}
-            labelColor={labelColor}
           />
           <PersonaStat
             label={t("statsTab.columns.winPercent")}
             value={formatWinRate(row.stats.wins, row.stats.losses)}
-            color={game.gameColorPale}
-            labelColor={labelColor}
           />
         </View>
       </View>
+      <GameTile
+        path={row.path}
+        game={game}
+        size={cardWidth}
+        isFavorite={isFavorite}
+        onToggleFavorite={onToggleFavorite}
+        onOpen={onOpenGame}
+      />
     </View>
   );
 }
@@ -869,36 +792,17 @@ function PersonaCard({
 function PersonaStat({
   label,
   value,
-  color,
-  labelColor,
 }: {
   label: string;
   value: string | number;
-  color: string;
-  labelColor: string;
 }) {
-  // Half the width, so the four stats form a 2x2 grid, each centred in its
-  // cell.
+  // Half the width, so the four stats form a 2x2 grid.
   return (
-    <View style={{ width: "50%", alignItems: "center" }}>
-      <Text
-        size="md"
-        weight={600}
-        color={color}
-        lineHeight={1.1}
-        style={{ textAlign: "center" }}
-      >
+    <View style={{ width: "50%" }}>
+      <Text size="md" weight={600} lineHeight={1.1}>
         {value}
       </Text>
-      <Text
-        size="xs"
-        weight={400}
-        color={labelColor}
-        lineHeight={1.2}
-        style={{ textAlign: "center" }}
-      >
-        {label}
-      </Text>
+      <Caps>{label}</Caps>
     </View>
   );
 }

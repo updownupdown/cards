@@ -23,8 +23,6 @@ export const fifteenPuzzle: GameDefinition = {
   gameColorDark: "#293b32",
   gameColorPale: "#f6edcf",
   cardBack: CardBackColors.Ocean,
-  cardDescription:
-    "Reorder the cards in a 4x4 grid by sliding cards one at a time.",
   quickStart: [
     "Reorder the cards from Ace to 4 in each row: Hearts, Clubs, Diamonds, then Spades.",
     "Tap a card beside the empty space to slide it.",

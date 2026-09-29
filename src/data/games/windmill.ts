@@ -29,8 +29,6 @@ export const windmill: GameDefinition = {
   gameColorDark: "#1e2a1f",
   gameColorPale: "#eef5d6",
   cardBack: CardBackColors.Olive,
-  cardDescription:
-    "Feed four full runs into the windmill's hub while its corners count down from Kings.",
   quickStart: [
     "Move all 104 cards to the foundations.",
     "Build the center from Ace to King four times, and the corners from King to Ace, regardless of suit.",

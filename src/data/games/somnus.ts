@@ -27,8 +27,6 @@ export const somnus: GameDefinition = {
   gameColorDark: "#1b1f25",
   gameColorPale: "#efd8f0",
   cardBack: CardBackColors.Plum,
-  cardDescription:
-    "Build Alice's Guardian deck, defeat the Dream deck's Nightmares, and protect her life.",
   quickStart: [
     "Select Guardians from your hand, select a Dream card, then assign them.",
     "Meet a Guardian's value to recruit it; exceed a Nightmare's value to eliminate it.",

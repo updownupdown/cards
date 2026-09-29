@@ -25,8 +25,6 @@ export const queensAudience: GameDefinition = {
   gameColorDark: "#24162b",
   gameColorPale: "#f7e0f1",
   cardBack: CardBackColors.Plum,
-  cardDescription:
-    "Usher royal couples into the audience chamber, and let each Jack lead its suit down.",
   quickStart: [
     "Bring all 52 cards into the audience chamber.",
     "Tap a King or Queen when its partner is also available.",

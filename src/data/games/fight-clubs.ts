@@ -25,8 +25,6 @@ export const fightClubs: GameDefinition = {
   gameColorDark: "#221b20",
   gameColorPale: "#d6fbff",
   cardBack: CardBackColors.Indigo,
-  cardDescription:
-    "Use your thirteen Clubs wisely to clear a shifting 3x3 grid.",
   quickStart: [
     "Use one Club per turn to clear one or more cards from the grid.",
     "Some actions are always available.",

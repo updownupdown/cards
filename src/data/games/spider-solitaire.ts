@@ -24,8 +24,6 @@ export const spiderSolitaire: GameDefinition = {
   gameColorDark: "#25111e",
   gameColorPale: "#f6e6ff",
   cardBack: CardBackColors.Plum,
-  cardDescription:
-    "Build same-suit runs from King to Ace across a tangled double deck.",
   quickStart: ["Build down by rank; move same-suit runs; deal when stuck."],
   howToPlay: [
     "## Objective",

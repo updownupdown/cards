@@ -99,7 +99,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
     Platform.OS !== "web" ||
     (typeof navigator !== "undefined" && "wakeLock" in navigator);
 
-  const footerText = { size: "xs", weight: 300, color: theme.faint } as const;
+  const footerText = { size: "xs", weight: 400, color: theme.dim } as const;
   const footerLink = {
     size: "xs",
     weight: 500,
@@ -146,37 +146,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             />
           </View>
 
-          {/* Language: follow the phone (Auto), or pick one. */}
-          <View
-            style={[
-              flexStyles.colStart,
-              flexStyles.fullWidth,
-              { gap: spacing(12) },
-            ]}
-          >
-            <Text weight={500} size="md" color={theme.ink}>
-              {t("language.label")}
-            </Text>
-            <SelectControl
-              value={settings.language}
-              options={languageOptions}
-              accessibilityLabel={t("language.label")}
-              onChange={(choice) => {
-                void updateSettings({ language: choice });
-              }}
-            />
-          </View>
-          {language !== SOURCE_LANGUAGE && (
-            <SettingControl
-              label={t("translateCollectibles.label")}
-              description={t("translateCollectibles.description")}
-              value={settings.translateCollectibles}
-              type="boolean"
-              onChange={(val) => {
-                void updateSettings({ translateCollectibles: val });
-              }}
-            />
-          )}
           <SettingControl
             label={t("resumeLastGame.label")}
             description={t("resumeLastGame.description")}
@@ -236,7 +205,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               <Text weight={500} size="md" color={theme.ink}>
                 {t("autoComplete.label")}
               </Text>
-              <Text size="sm" weight={300} color={theme.dim}>
+              <Text size="sm" weight={400} color={theme.dim}>
                 {t("autoComplete.description")}
               </Text>
             </View>
@@ -247,6 +216,37 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               }}
             />
           </View>
+          {/* Language: follow the phone (Auto), or pick one. */}
+          <View
+            style={[
+              flexStyles.colStart,
+              flexStyles.fullWidth,
+              { gap: spacing(12) },
+            ]}
+          >
+            <Text weight={500} size="md" color={theme.ink}>
+              {t("language.label")}
+            </Text>
+            <SelectControl
+              value={settings.language}
+              options={languageOptions}
+              accessibilityLabel={t("language.label")}
+              onChange={(choice) => {
+                void updateSettings({ language: choice });
+              }}
+            />
+          </View>
+          {language !== SOURCE_LANGUAGE && (
+            <SettingControl
+              label={t("translateCollectibles.label")}
+              description={t("translateCollectibles.description")}
+              value={settings.translateCollectibles}
+              type="boolean"
+              onChange={(val) => {
+                void updateSettings({ translateCollectibles: val });
+              }}
+            />
+          )}
           <SettingControl
             label={t("crashReports.label")}
             description={t("crashReports.description")}

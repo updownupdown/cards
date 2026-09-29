@@ -25,8 +25,6 @@ export const redDiamond: GameDefinition = {
   gameColorDark: "#220a12",
   gameColorPale: "#ffeaea",
   cardBack: CardBackColors.Crimson,
-  cardDescription:
-    "Place every Club and Spade around four Diamonds using arithmetic matches.",
   quickStart: [
     "Place all black cards before running out of Diamonds.",
     "Placed cards must alternate suit.",

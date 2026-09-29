@@ -129,7 +129,6 @@ function readEnglish() {
     const slug = game.path.replace(/^\//, "");
     for (const field of [
       "title",
-      "cardDescription",
       "quickStart",
       "howToPlay",
     ]) {

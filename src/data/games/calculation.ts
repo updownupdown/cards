@@ -30,8 +30,6 @@ export const calculation: GameDefinition = {
   gameColorDark: "#12122b",
   gameColorPale: "#eccfff",
   cardBack: CardBackColors.Violet,
-  cardDescription:
-    "Build four foundations in steps of 1, 2, 3, and 4, up to K.",
   quickStart: [
     "Build four foundations in steps of 1, 2, 3, and 4, up to K.",
     "Waste piles can be used to store cards in any order.",

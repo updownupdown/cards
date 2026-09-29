@@ -25,8 +25,6 @@ export const royalRest: GameDefinition = {
   gameColorDark: "#332518",
   gameColorPale: "#def7ff",
   cardBack: CardBackColors.Ocean,
-  cardDescription:
-    "Collapse matching rank cards into pillows, and tuck in all the Jacks to bed.",
   quickStart: [
     "Create four stacks of pillow-Jack-pillow.",
     "Create pillows by stacking four matching ranks together.",

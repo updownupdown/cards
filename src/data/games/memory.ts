@@ -27,7 +27,6 @@ export const memory: GameDefinition = {
   gameColorDark: "#243b35",
   gameColorPale: "#e8f1df",
   cardBack: CardBackColors.Ocean,
-  cardDescription: "Reveal hidden pairs and clear the board using your memory.",
   quickStart: [
     "Clear the board by finding all matching pairs.",
     "You must match both rank and suit.",

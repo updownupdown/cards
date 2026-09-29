@@ -22,8 +22,6 @@ export const fortunesCall: GameDefinition = {
   cardBack: CardBackColors.Rose,
   background: GAME_BACKGROUNDS.alaska,
   animation: GameAnimations.Snow,
-  cardDescription:
-    "Predict each hidden card's color or direction before three misses.",
   quickStart: [
     "Color calls score 1.",
     "Higher or lower calls score 2.",

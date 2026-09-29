@@ -26,8 +26,6 @@ export const whitehead: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Robert_Havell_after_John_James_Audubon,_White-Headed_Eagle,_1832,_NGA_32267.jpg",
   },
-  cardDescription:
-    "An open Klondike relative built by color, with suited runs moving together.",
   quickStart: [
     "Build foundations up by suit.",
     "Build down in the same color.",

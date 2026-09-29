@@ -24,7 +24,6 @@ export const stalker: GameDefinition = {
   gameColorDark: "#1b2224",
   gameColorPale: "#daf1f1",
   cardBack: CardBackColors.Charcoal,
-  cardDescription: "Maintain your precarious lead over an unstoppable pursuer.",
   quickStart: [
     "Reach the end of the stock deck without being caught.",
     "Search a rank or move a safe card. Survive until the 32-card deck is empty.",

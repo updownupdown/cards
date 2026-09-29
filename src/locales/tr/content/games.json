@@ -1,9 +1,5 @@
 {
   "accordion": {
-    "cardDescription": {
-      "hash": "7e489b6e",
-      "value": "Yan yana duran aynı takım ya da değerdeki kartları tek tek eşleştirerek bütün desteyi tek yığına indir."
-    },
     "howToPlay": {
       "hash": "5a32be9c",
       "value": [
@@ -30,10 +26,6 @@
     }
   },
   "aces-up": {
-    "cardDescription": {
-      "hash": "7afc29df",
-      "value": "Takımı tekrar eden düşük kartları, yalnızca dört As kalana kadar ıskartaya at."
-    },
     "howToPlay": {
       "hash": "0c45e0c2",
       "value": [
@@ -60,10 +52,6 @@
     }
   },
   "apothecary": {
-    "cardDescription": {
-      "hash": "b66e1d4d",
-      "value": "Tüm değerler bir araya gelene kadar kartları kavanozlar arasında aktar."
-    },
     "howToPlay": {
       "hash": "4b2b06d2",
       "value": [
@@ -94,10 +82,6 @@
     }
   },
   "ascent": {
-    "cardDescription": {
-      "hash": "301e448f",
-      "value": "Tek kişilik bir tırmanış oyunu: deste bitmeden üç kampa ulaşmak için giderek daha yüksek rotalar oyna."
-    },
     "howToPlay": {
       "hash": "acb5c7a2",
       "value": [
@@ -152,10 +136,6 @@
     }
   },
   "australian-patience": {
-    "cardDescription": {
-      "hash": "3e888b8b",
-      "value": "Yukon'un özgürlüğü, katı takım dizilimi ve tek geçişlik desteyle buluşuyor."
-    },
     "howToPlay": {
       "hash": "1faa036d",
       "value": [
@@ -182,10 +162,6 @@
     }
   },
   "bakers-dozen": {
-    "cardDescription": {
-      "hash": "1616b54c",
-      "value": "On üç kısa sütunu dört takım temeline boşalt."
-    },
     "howToPlay": {
       "hash": "b7b35342",
       "value": [
@@ -214,10 +190,6 @@
     }
   },
   "baroness": {
-    "cardDescription": {
-      "hash": "32a23d8a",
-      "value": "Toplamı on üç eden kartları atarak beş yığını temizle."
-    },
     "howToPlay": {
       "hash": "e0cdb3c4",
       "value": [
@@ -244,10 +216,6 @@
     }
   },
   "beehive": {
-    "cardDescription": {
-      "hash": "dbca3d18",
-      "value": "Kovanı, açık desteyi ve desteyi kullanarak aynı değerdeki altı masa gözünde dörtlü takımlar tamamla."
-    },
     "howToPlay": {
       "hash": "426ee910",
       "value": [
@@ -274,10 +242,6 @@
     }
   },
   "beleaguered-castle": {
-    "cardDescription": {
-      "hash": "f890639b",
-      "value": "Kaleye saldır: tamamen açık sütunlarla her takımı As'tan Papaz'a diz."
-    },
     "howToPlay": {
       "hash": "8fb5fdcb",
       "value": [
@@ -306,10 +270,6 @@
     }
   },
   "bisley": {
-    "cardDescription": {
-      "hash": "5480127a",
-      "value": "On üç açık sütun etrafını sararken her takımı iki uçtan da diz."
-    },
     "howToPlay": {
       "hash": "9a5911e7",
       "value": [
@@ -337,10 +297,6 @@
     }
   },
   "black-hole": {
-    "cardDescription": {
-      "hash": "64debd9d",
-      "value": "52 kartın hepsini, her seferinde bir değer adımıyla ortadaki kara deliğe çek."
-    },
     "howToPlay": {
       "hash": "f8156c21",
       "value": [
@@ -371,10 +327,6 @@
     }
   },
   "blackberry-pie": {
-    "cardDescription": {
-      "hash": "efcdf8a7",
-      "value": "Kraliçenin turtasını pişirmesine yardım etmek için böğürtlen kartlarının altında uyumlu üçlüler kur."
-    },
     "howToPlay": {
       "hash": "4a9fa370",
       "value": [
@@ -412,10 +364,6 @@
     }
   },
   "bowling": {
-    "cardDescription": {
-      "hash": "57809475",
-      "value": "Kartlarla tam bir 10 lobutluk bowling oyunu oyna; strike ve spare peşinde koş."
-    },
     "howToPlay": {
       "hash": "467c3b31",
       "value": [
@@ -451,10 +399,6 @@
     }
   },
   "bristol": {
-    "cardDescription": {
-      "hash": "9b1c2517",
-      "value": "Sekiz küçük yelpaze ve desteden beslenen üç yedek yığın; takımların hiç önemi yok."
-    },
     "howToPlay": {
       "hash": "21ddab2f",
       "value": [
@@ -485,10 +429,6 @@
     }
   },
   "cabin-siege": {
-    "cardDescription": {
-      "hash": "d080e51a",
-      "value": "Destek kartlarını akıllıca kullanarak kulübeni zombi kuşatmasına karşı savun."
-    },
     "howToPlay": {
       "hash": "669496da",
       "value": [
@@ -527,10 +467,6 @@
     }
   },
   "cafe-queue": {
-    "cardDescription": {
-      "hash": "98f19edd",
-      "value": "Sıralı müşteri kuyruklarını yönetmen gereken bir şans zorlama oyunu."
-    },
     "howToPlay": {
       "hash": "22d411d4",
       "value": [
@@ -561,10 +497,6 @@
     }
   },
   "calculation": {
-    "cardDescription": {
-      "hash": "35edc39a",
-      "value": "Dört temeli K'lere kadar 1, 2, 3 ve 4'er adımla diz."
-    },
     "howToPlay": {
       "hash": "08af239e",
       "value": [
@@ -595,10 +527,6 @@
     }
   },
   "canfield": {
-    "cardDescription": {
-      "hash": "a81515a3",
-      "value": "13 kartlık bir yedekten beslenen takım temellerini rastgele bir başlangıç değerinden diz."
-    },
     "howToPlay": {
       "hash": "d1f393e8",
       "value": [
@@ -629,10 +557,6 @@
     }
   },
   "carpet": {
-    "cardDescription": {
-      "hash": "bf2e1ad7",
-      "value": "Deste her deliği yamarken yirmi kartlık bir halıyı temellere kaldır."
-    },
     "howToPlay": {
       "hash": "0af4a81e",
       "value": [
@@ -659,10 +583,6 @@
     }
   },
   "chain-of-command": {
-    "cardDescription": {
-      "hash": "26aaf0b8",
-      "value": "Üyeleri ve adayları akıllıca terfi ettirerek komuta zincirinin tepesine çıkar."
-    },
     "howToPlay": {
       "hash": "4b1772c7",
       "value": [
@@ -690,10 +610,6 @@
     }
   },
   "chapter-and-verse": {
-    "cardDescription": {
-      "hash": "f6ff591c",
-      "value": "Puanını en yükseğe çıkarmak için müşteri tekliflerini eldeki kitaplarla karşıla."
-    },
     "howToPlay": {
       "hash": "2558e4ff",
       "value": [
@@ -733,10 +649,6 @@
     }
   },
   "city-grid": {
-    "cardDescription": {
-      "hash": "b923e9bb",
-      "value": "Her hamlenin dengesiz ızgarayı bozabileceği bir taş yerleştirme oyunu."
-    },
     "howToPlay": {
       "hash": "316682c7",
       "value": [
@@ -767,10 +679,6 @@
     }
   },
   "clock": {
-    "cardDescription": {
-      "hash": "61261ec5",
-      "value": "Tamamen şansa dayalı bir pasyans: bütün Papazlar açılmadan kartları saatin etrafında takip et."
-    },
     "howToPlay": {
       "hash": "36c70a77",
       "value": [
@@ -795,10 +703,6 @@
     }
   },
   "congress": {
-    "cardDescription": {
-      "hash": "fe8ab4a0",
-      "value": "İki desteyi tek kartlık hamleler ve tek deste geçişiyle sekiz sütundan geçir."
-    },
     "howToPlay": {
       "hash": "686ea922",
       "value": [
@@ -826,10 +730,6 @@
     }
   },
   "crazy-quilt": {
-    "cardDescription": {
-      "hash": "e28c27ea",
-      "value": "Dik ve yan duran kartlardan oluşan bir yorganı, serbest uçlarından tek tek sök."
-    },
     "howToPlay": {
       "hash": "ee571b00",
       "value": [
@@ -859,10 +759,6 @@
     }
   },
   "crescent": {
-    "cardDescription": {
-      "hash": "4de6a2cd",
-      "value": "Ay ışığındaki on altı yığını, hem Aslardan hem Papazlardan büyüyen temellere doğru çevir."
-    },
     "howToPlay": {
       "hash": "2122d621",
       "value": [
@@ -891,10 +787,6 @@
     }
   },
   "cribbage-squares": {
-    "cardDescription": {
-      "hash": "4ff9ff90",
-      "value": "Birbirine bağlı on altı kart diz, sonra her satır ve sütunu bir başlangıç kartıyla puanla."
-    },
     "howToPlay": {
       "hash": "d49f4554",
       "value": [
@@ -937,10 +829,6 @@
     }
   },
   "crownslayer": {
-    "cardDescription": {
-      "hash": "60d95812",
-      "value": "Takım güçleriyle çalışan kombolarla 12 soyluyu devir."
-    },
     "howToPlay": {
       "hash": "82061d43",
       "value": [
@@ -992,10 +880,6 @@
     }
   },
   "cruel": {
-    "cardDescription": {
-      "hash": "3a229ead",
-      "value": "On iki açık yığın, deste yok ve kurduğun her şeyi yeniden şekillendiren bir yeniden dağıtım."
-    },
     "howToPlay": {
       "hash": "14e03858",
       "value": [
@@ -1022,10 +906,6 @@
     }
   },
   "delta-21": {
-    "cardDescription": {
-      "hash": "0886780b",
-      "value": "Nehirdeki dört balık nüfusunu tam 21'e getir ve çalışmalarını yayımla."
-    },
     "howToPlay": {
       "hash": "b75491fc",
       "value": [
@@ -1084,10 +964,6 @@
     }
   },
   "devils-grip": {
-    "cardDescription": {
-      "hash": "5790b2dc",
-      "value": "Üç sıralı bir ızgarada aynı takımdan 24 yığını üçer artan sırayla diz."
-    },
     "howToPlay": {
       "hash": "23ce0cda",
       "value": [
@@ -1128,10 +1004,6 @@
     }
   },
   "diplomat": {
-    "cardDescription": {
-      "hash": "1e3f9a93",
-      "value": "Yalnızca değere göre dizilen ve tek tek taşınan kartlarla sekiz açık sütunla müzakere et."
-    },
     "howToPlay": {
       "hash": "ca4c9166",
       "value": [
@@ -1159,10 +1031,6 @@
     }
   },
   "dominion": {
-    "cardDescription": {
-      "hash": "747f9f9d",
-      "value": "Tek bir egemenlik kalana kadar aynı değer ya da takımdaki kartları fethet."
-    },
     "howToPlay": {
       "hash": "65da5614",
       "value": [
@@ -1193,10 +1061,6 @@
     }
   },
   "dynasty": {
-    "cardDescription": {
-      "hash": "0faabfb3",
-      "value": "3x3'lük bir ızgaraya kart koyarak on iki soylunun hepsini devir."
-    },
     "howToPlay": {
       "hash": "2c41141f",
       "value": [
@@ -1228,10 +1092,6 @@
     }
   },
   "easthaven": {
-    "cardDescription": {
-      "hash": "bd4d84bb",
-      "value": "Yedi kısa sütun kur, sonra her yeni deste sırasını doğrudan sütunlara dağıt."
-    },
     "howToPlay": {
       "hash": "0253c855",
       "value": [
@@ -1258,10 +1118,6 @@
     }
   },
   "eight-off": {
-    "cardDescription": {
-      "hash": "0443457b",
-      "value": "Sekiz hücreli ve boş sütunları yalnızca Papazlara açık, takım esaslı ferah bir FreeCell akrabası."
-    },
     "howToPlay": {
       "hash": "014c8f8e",
       "value": [
@@ -1289,10 +1145,6 @@
     }
   },
   "elementary-detective": {
-    "cardDescription": {
-      "hash": "efdce805",
-      "value": "Dikkatli planlama ve tümdengelimle gizli oyun arkadaşlarını bul."
-    },
     "howToPlay": {
       "hash": "cc00bd38",
       "value": [
@@ -1318,10 +1170,6 @@
     }
   },
   "field-command": {
-    "cardDescription": {
-      "hash": "046a65e6",
-      "value": "Her As'ı ve resimli kartı ele geçirilmekten korurken düşük kartlar ve jokerlerle düşman kuvvetlerini dağıt."
-    },
     "howToPlay": {
       "hash": "14749a82",
       "value": [
@@ -1351,10 +1199,6 @@
     }
   },
   "fifteen-puzzle": {
-    "cardDescription": {
-      "hash": "8d1fa8fb",
-      "value": "4x4'lük bir ızgaradaki kartları tek tek kaydırarak yeniden sırala."
-    },
     "howToPlay": {
       "hash": "dc55b9d9",
       "value": [
@@ -1383,10 +1227,6 @@
     }
   },
   "fight-clubs": {
-    "cardDescription": {
-      "hash": "da6e6079",
-      "value": "Sürekli değişen 3x3'lük bir ızgarayı temizlemek için on üç sinek kartını akıllıca kullan."
-    },
     "howToPlay": {
       "hash": "1c19d9ff",
       "value": [
@@ -1437,10 +1277,6 @@
     }
   },
   "flower-garden": {
-    "cardDescription": {
-      "hash": "4b5c020b",
-      "value": "On altı kartlık buketin her kartı elinin altındayken altı çiçek tarhı yetiştir."
-    },
     "howToPlay": {
       "hash": "e4cc4b14",
       "value": [
@@ -1467,10 +1303,6 @@
     }
   },
   "fortress": {
-    "cardDescription": {
-      "hash": "49b04b9f",
-      "value": "Her temeli serbest bırakmak için on açık şeridi takıma göre yukarı ya da aşağı yönlendir."
-    },
     "howToPlay": {
       "hash": "0591fc6a",
       "value": [
@@ -1497,10 +1329,6 @@
     }
   },
   "fortunes-call": {
-    "cardDescription": {
-      "hash": "49133345",
-      "value": "Üç kez yanılmadan her gizli kartın rengini ya da yönünü tahmin et."
-    },
     "howToPlay": {
       "hash": "a76b0266",
       "value": [
@@ -1527,10 +1355,6 @@
     }
   },
   "forty-thieves": {
-    "cardDescription": {
-      "hash": "e81e4597",
-      "value": "Temel kurmaya dayalı, iki desteli zorlu bir pasyans."
-    },
     "howToPlay": {
       "hash": "327ab3c4",
       "value": [
@@ -1563,10 +1387,6 @@
     }
   },
   "four-seasons": {
-    "cardDescription": {
-      "hash": "caddc762",
-      "value": "Haç biçiminde beş kart ve dört köşe: mevsimleri ilk köşe kartından başlayarak döndür."
-    },
     "howToPlay": {
       "hash": "baf2850a",
       "value": [
@@ -1597,10 +1417,6 @@
     }
   },
   "freecell": {
-    "cardDescription": {
-      "hash": "50d37ce8",
-      "value": "Neredeyse her dağıtımın dikkatle kazanılabildiği, bütün kartların açık olduğu bir klasik."
-    },
     "howToPlay": {
       "hash": "1d797da4",
       "value": [
@@ -1629,10 +1445,6 @@
     }
   },
   "frog": {
-    "cardDescription": {
-      "hash": "ab1e9fc2",
-      "value": "Desteyi beş nilüfer yığınına dağıtarak iki desteyi sekiz temele zıplat."
-    },
     "howToPlay": {
       "hash": "2f091e43",
       "value": [
@@ -1660,10 +1472,6 @@
     }
   },
   "gaps": {
-    "cardDescription": {
-      "hash": "3edac6c4",
-      "value": "Boşlukları doldurarak satırları takıma göre sırala."
-    },
     "howToPlay": {
       "hash": "bdf0ca39",
       "value": [
@@ -1694,10 +1502,6 @@
     }
   },
   "gargantua": {
-    "cardDescription": {
-      "hash": "9a18d2a2",
-      "value": "Dokuz sütunlu, iki desteli ve sekiz temelli bir Klondike'a tırman."
-    },
     "howToPlay": {
       "hash": "4a898796",
       "value": [
@@ -1726,10 +1530,6 @@
     }
   },
   "golf": {
-    "cardDescription": {
-      "hash": "df8ad9d9",
-      "value": "Açık destedeki karttan bir değer uzaktaki kartları oynayarak yedi sütunu temizle."
-    },
     "howToPlay": {
       "hash": "24a82fa3",
       "value": [
@@ -1757,10 +1557,6 @@
     }
   },
   "grandfathers-clock": {
-    "cardDescription": {
-      "hash": "929d905b",
-      "value": "Her saat kendi sayısını gösterene kadar kadranın çevresindeki on iki temeli kur."
-    },
     "howToPlay": {
       "hash": "d994567d",
       "value": [
@@ -1792,10 +1588,6 @@
     }
   },
   "gremlin": {
-    "cardDescription": {
-      "hash": "277c9762",
-      "value": "İstenmeyen yardımla başa çıkarken aynı takımdan azalan dizilerle kart sütunları kur."
-    },
     "howToPlay": {
       "hash": "24c4d019",
       "value": [
@@ -1834,10 +1626,6 @@
     }
   },
   "herbalist": {
-    "cardDescription": {
-      "hash": "820b189b",
-      "value": "Ahırındaki bütün hayvanları iyileştirmek için şifalı otları dağıt."
-    },
     "howToPlay": {
       "hash": "49f3dd1e",
       "value": [
@@ -1872,10 +1660,6 @@
     }
   },
   "indian": {
-    "cardDescription": {
-      "hash": "bbc78988",
-      "value": "İki desteli sütunları, aynı takımlardan özenle kaçınarak azalan sırayla diz."
-    },
     "howToPlay": {
       "hash": "96bf0d1c",
       "value": [
@@ -1902,10 +1686,6 @@
     }
   },
   "infiltrator": {
-    "cardDescription": {
-      "hash": "dff09eb2",
-      "value": "Dikkatli devşirme, karşı hamle ve suikastlarla kilit casusların çoğunu ele geçir."
-    },
     "howToPlay": {
       "hash": "b297c489",
       "value": [
@@ -1944,10 +1724,6 @@
     }
   },
   "invaders": {
-    "cardDescription": {
-      "hash": "beef4003",
-      "value": "Savunucuların bitmeden uzaylı istilacı dalgalarını püskürt."
-    },
     "howToPlay": {
       "hash": "5644ce85",
       "value": [
@@ -1976,10 +1752,6 @@
     }
   },
   "jailbreak": {
-    "cardDescription": {
-      "hash": "d2cc3eee",
-      "value": "Joker'i bir duvardan kaçırmak için eşit kırmızı ve siyah toplamları eşleştir."
-    },
     "howToPlay": {
       "hash": "aad3689d",
       "value": [
@@ -2010,10 +1782,6 @@
     }
   },
   "king-albert": {
-    "cardDescription": {
-      "hash": "43b55724",
-      "value": "Bütün kartlar açık dağıtılır: dokuz sütun, küçük bir yedek ve her seferinde tek bir kart."
-    },
     "howToPlay": {
       "hash": "6c0f25fe",
       "value": [
@@ -2045,10 +1813,6 @@
     }
   },
   "klondike": {
-    "cardDescription": {
-      "hash": "1873d35c",
-      "value": "Klasik pasyans: dört takım temelini As'tan Papaz'a diz."
-    },
     "howToPlay": {
       "hash": "6b0bf248",
       "value": [
@@ -2076,10 +1840,6 @@
     }
   },
   "la-belle-lucie": {
-    "cardDescription": {
-      "hash": "1fb69740",
-      "value": "Düğümleri çözmek için iki karıştırma hakkıyla sıkışık bir yelpaze alanını aç."
-    },
     "howToPlay": {
       "hash": "64ab3a33",
       "value": [
@@ -2109,10 +1869,6 @@
     }
   },
   "labyrinth": {
-    "cardDescription": {
-      "hash": "46c8506f",
-      "value": "Sıra sıra kart dağıt ve labirentin üstünden ve altından kartları kurtar."
-    },
     "howToPlay": {
       "hash": "d02b7d3c",
       "value": [
@@ -2139,10 +1895,6 @@
     }
   },
   "lights-out": {
-    "cardDescription": {
-      "hash": "d9f86dc4",
-      "value": "Her hamlenin komşu kartları da çevirdiği bir kart ızgarasını söndür."
-    },
     "howToPlay": {
       "hash": "246e4fe2",
       "value": [
@@ -2167,10 +1919,6 @@
     }
   },
   "lone-joker": {
-    "cardDescription": {
-      "hash": "6ff380b4",
-      "value": "Poker elleri kur, joker biriktir ve giderek zorlaşan turlarda kalmak için fazla puanlarını harca."
-    },
     "howToPlay": {
       "hash": "11835fe7",
       "value": [
@@ -2225,10 +1973,6 @@
     }
   },
   "lycan": {
-    "cardDescription": {
-      "hash": "9561f249",
-      "value": "Akıllı alışlarla Kurt'un elini boşalt... ve ne zaman çekileceğini bil."
-    },
     "howToPlay": {
       "hash": "d62c9ca0",
       "value": [
@@ -2274,10 +2018,6 @@
     }
   },
   "maria": {
-    "cardDescription": {
-      "hash": "ae9582d4",
-      "value": "Kırmızı ve siyah sırayla dizilen dokuz sütunlu bir Kırk Haramiler akrabası."
-    },
     "howToPlay": {
       "hash": "3ac89609",
       "value": [
@@ -2305,10 +2045,6 @@
     }
   },
   "memory": {
-    "cardDescription": {
-      "hash": "bb8a7bd4",
-      "value": "Hafızanı kullanarak gizli çiftleri aç ve masayı temizle."
-    },
     "howToPlay": {
       "hash": "fd06d530",
       "value": [
@@ -2333,10 +2069,6 @@
     }
   },
   "miss-milligan": {
-    "cardDescription": {
-      "hash": "2fafaca0",
-      "value": "Sekiz tek kartla başla ve hazır olduğunda her sütuna bir sıra kart dağıt."
-    },
     "howToPlay": {
       "hash": "d8f2b41f",
       "value": [
@@ -2368,10 +2100,6 @@
     }
   },
   "monte-carlo": {
-    "cardDescription": {
-      "hash": "752d12bd",
-      "value": "Izgarayı temizlemek için aynı değerdeki komşu çiftleri eşleştir."
-    },
     "howToPlay": {
       "hash": "9447fa02",
       "value": [
@@ -2396,10 +2124,6 @@
     }
   },
   "nestor": {
-    "cardDescription": {
-      "hash": "8afbbddb",
-      "value": "Her sütunu boşaltmak için aynı değerdeki kartları çift çift eşleştir."
-    },
     "howToPlay": {
       "hash": "5a96cea6",
       "value": [
@@ -2422,10 +2146,6 @@
     }
   },
   "night-vigil": {
-    "cardDescription": {
-      "hash": "7d07c621",
-      "value": "On iki haydutla dolu kara bir mücadelede tehditleri taktik karşılıklarla eşleştir."
-    },
     "howToPlay": {
       "hash": "ca40e560",
       "value": [
@@ -2465,10 +2185,6 @@
     }
   },
   "ouroboros": {
-    "cardDescription": {
-      "hash": "9249639e",
-      "value": "Döngüdeki puan kartlarını topla; hızını koru ve bozucu kesintilerden kaçın."
-    },
     "howToPlay": {
       "hash": "23113eb3",
       "value": [
@@ -2519,10 +2235,6 @@
     }
   },
   "pagoda": {
-    "cardDescription": {
-      "hash": "c1c2c60e",
-      "value": "Pagodanın katlarından kart al ve her üçlüyü tapınağa sun."
-    },
     "howToPlay": {
       "hash": "5eb45815",
       "value": [
@@ -2552,10 +2264,6 @@
     }
   },
   "parallels": {
-    "cardDescription": {
-      "hash": "31eac556",
-      "value": "İki destenin paralel sıralarını As ve Papaz temelleri arasında diz, kartları iki kenardan da kurtar."
-    },
     "howToPlay": {
       "hash": "a09786ce",
       "value": [
@@ -2584,10 +2292,6 @@
     }
   },
   "penguin": {
-    "cardDescription": {
-      "hash": "a45ab2f6",
-      "value": "Rastgele bir “gaga” değerinden takım dizileri kurulan FreeCell benzeri bir oyun."
-    },
     "howToPlay": {
       "hash": "362cf9e1",
       "value": [
@@ -2615,10 +2319,6 @@
     }
   },
   "pocket-poker": {
-    "cardDescription": {
-      "hash": "d28135be",
-      "value": "Cep boyu bir poker düellosu: kart çek, bahis yap ve aynı desteden dağıtılan rakibini geç."
-    },
     "howToPlay": {
       "hash": "24a831bd",
       "value": [
@@ -2656,10 +2356,6 @@
     }
   },
   "poker-squares": {
-    "cardDescription": {
-      "hash": "8ed02b35",
-      "value": "Olabildiğince yüksek puan için bir ızgarada on poker eli kur."
-    },
     "howToPlay": {
       "hash": "ef2f0865",
       "value": [
@@ -2694,10 +2390,6 @@
     }
   },
   "pyramid": {
-    "cardDescription": {
-      "hash": "659fff1e",
-      "value": "Toplamı 13 eden kart çiftlerini çıkararak piramidi temizle."
-    },
     "howToPlay": {
       "hash": "05b90345",
       "value": [
@@ -2722,10 +2414,6 @@
     }
   },
   "queens-audience": {
-    "cardDescription": {
-      "hash": "b7f94eaa",
-      "value": "Kraliyet çiftlerini huzur salonuna al ve her Vale'nin kendi takımını aşağıya taşımasına izin ver."
-    },
     "howToPlay": {
       "hash": "90bcd31f",
       "value": [
@@ -2754,10 +2442,6 @@
     }
   },
   "rank-and-file": {
-    "cardDescription": {
-      "hash": "54303353",
-      "value": "On disiplinli sütunu aç ve kırmızı-siyah sıralı düzenleri yönet."
-    },
     "howToPlay": {
       "hash": "544745e3",
       "value": [
@@ -2789,10 +2473,6 @@
     }
   },
   "red-diamond": {
-    "cardDescription": {
-      "hash": "8f0b8b18",
-      "value": "Aritmetik eşleştirmelerle bütün sinek ve maçaları dört karonun çevresine yerleştir."
-    },
     "howToPlay": {
       "hash": "a23e76cc",
       "value": [
@@ -2829,10 +2509,6 @@
     }
   },
   "rogue-run": {
-    "cardDescription": {
-      "hash": "833255e0",
-      "value": "Silah gücünü ve iksir kullanımını yönettiğin bir zindan macerası."
-    },
     "howToPlay": {
       "hash": "852f99a5",
       "value": [
@@ -2869,10 +2545,6 @@
     }
   },
   "royal-cotillion": {
-    "cardDescription": {
-      "hash": "78d83f7f",
-      "value": "İki deste, Aslardan ve 2'lerden başlayarak temellerde ikişer adımla dans eder."
-    },
     "howToPlay": {
       "hash": "55f6e9ce",
       "value": [
@@ -2903,10 +2575,6 @@
     }
   },
   "royal-envoy": {
-    "cardDescription": {
-      "hash": "1cc10e97",
-      "value": "Danışmanlarının yardımıyla her krallıkta tam olarak doğru sayıda tartışma kazan."
-    },
     "howToPlay": {
       "hash": "f119c81a",
       "value": [
@@ -2937,10 +2605,6 @@
     }
   },
   "royal-rest": {
-    "cardDescription": {
-      "hash": "298cb8cb",
-      "value": "Aynı değerdeki kartları yastıklara dönüştür ve bütün Valeleri yatağa yatır."
-    },
     "howToPlay": {
       "hash": "ad734452",
       "value": [
@@ -2977,10 +2641,6 @@
     }
   },
   "scorpion": {
-    "cardDescription": {
-      "hash": "959e0b20",
-      "value": "Açık sütunları çözerek Papaz'dan As'a dört aynı takım dizisi kur."
-    },
     "howToPlay": {
       "hash": "6cabf38a",
       "value": [
@@ -3011,10 +2671,6 @@
     }
   },
   "seahaven-towers": {
-    "cardDescription": {
-      "hash": "fb19dd37",
-      "value": "On açık sütun ve dört küçük kule, aynı takım üzerinden dikkatli planlamayı ödüllendirir."
-    },
     "howToPlay": {
       "hash": "1342469d",
       "value": [
@@ -3042,10 +2698,6 @@
     }
   },
   "seer": {
-    "cardDescription": {
-      "hash": "6d0878cd",
-      "value": "Kısa bir desteyi oku, sekiz tahmini tamamla ve taşların masayı tıkamasına izin verme."
-    },
     "howToPlay": {
       "hash": "3824f461",
       "value": [
@@ -3081,10 +2733,6 @@
     }
   },
   "shifting-sands": {
-    "cardDescription": {
-      "hash": "146a620a",
-      "value": "Kum topla, yön değiştirmeden dışa doğru kur ve yüksek dalgaya dayanacak kadar sağlam bir kale yap."
-    },
     "howToPlay": {
       "hash": "91681187",
       "value": [
@@ -3121,10 +2769,6 @@
     }
   },
   "simple-simon": {
-    "cardDescription": {
-      "hash": "64c1cf9e",
-      "value": "Bu düşündürücü Örümcek akrabasında 52 kartın hepsi on sütunda açık başlar."
-    },
     "howToPlay": {
       "hash": "c280dcc9",
       "value": [
@@ -3151,10 +2795,6 @@
     }
   },
   "sir-tommy": {
-    "cardDescription": {
-      "hash": "980ec70d",
-      "value": "Pasyansların atası: desteyi dört yığına dağıtarak dört As'tan Papaz'a yığın oluştur."
-    },
     "howToPlay": {
       "hash": "95c0ca0b",
       "value": [
@@ -3187,10 +2827,6 @@
     }
   },
   "sly-fox": {
-    "cardDescription": {
-      "hash": "77dd0eeb",
-      "value": "Her yirmi kartlık dağıtımı yirmi yedek yığına sakla, sonra sakladıklarını geri çıkar."
-    },
     "howToPlay": {
       "hash": "cd900ba6",
       "value": [
@@ -3220,10 +2856,6 @@
     }
   },
   "somnus": {
-    "cardDescription": {
-      "hash": "317aad94",
-      "value": "Alice'in koruyucu destesini kur, rüya destesinin kâbuslarını yen ve onun canını koru."
-    },
     "howToPlay": {
       "hash": "fc9dcb5c",
       "value": [
@@ -3266,10 +2898,6 @@
     }
   },
   "spider-solitaire": {
-    "cardDescription": {
-      "hash": "d9fbe47f",
-      "value": "Karışık bir çift destede Papaz'dan As'a aynı takım dizileri kur."
-    },
     "howToPlay": {
       "hash": "349fc938",
       "value": [
@@ -3298,10 +2926,6 @@
     }
   },
   "spiderette": {
-    "cardDescription": {
-      "hash": "f8691a69",
-      "value": "Klondike biçimli yedi sütunda oynanan, tek desteli küçük bir Örümcek."
-    },
     "howToPlay": {
       "hash": "07143aa9",
       "value": [
@@ -3328,10 +2952,6 @@
     }
   },
   "stalker": {
-    "cardDescription": {
-      "hash": "bf48bf06",
-      "value": "Durdurulamaz bir takipçiye karşı pamuk ipliğine bağlı önünü koru."
-    },
     "howToPlay": {
       "hash": "304772d4",
       "value": [
@@ -3366,10 +2986,6 @@
     }
   },
   "sultan": {
-    "cardDescription": {
-      "hash": "e649013d",
-      "value": "Ortadaki Sultan Kızlarla çevrilene kadar sekiz kraliyet temelini yükselt."
-    },
     "howToPlay": {
       "hash": "9b72d9f3",
       "value": [
@@ -3401,10 +3017,6 @@
     }
   },
   "ten-twenty-thirty": {
-    "cardDescription": {
-      "hash": "5aef36ef",
-      "value": "Uzayan bir sıra dağıt ve toplamı 10, 20 ya da 30 eden kart gruplarını temizle."
-    },
     "howToPlay": {
       "hash": "03753ddd",
       "value": [
@@ -3432,10 +3044,6 @@
     }
   },
   "terrace": {
-    "cardDescription": {
-      "hash": "adb8e1e5",
-      "value": "Temel değerini seç, sonra deste bitmeden uzun bir kart terasını boşalt."
-    },
     "howToPlay": {
       "hash": "885ccd26",
       "value": [
@@ -3472,10 +3080,6 @@
     }
   },
   "three-peaks": {
-    "cardDescription": {
-      "hash": "575e4a8f",
-      "value": "Açık destedeki karttan bir değer yüksek ya da düşük kartlar oynayarak üç tepeyi temizle."
-    },
     "howToPlay": {
       "hash": "6c8edb31",
       "value": [
@@ -3499,10 +3103,6 @@
     }
   },
   "thumb-and-pouch": {
-    "cardDescription": {
-      "hash": "c3b2dd00",
-      "value": "Kartların kendi takımından kaçındığı ve her boşluğa herhangi bir kartın konabildiği esnek bir Klondike."
-    },
     "howToPlay": {
       "hash": "9a483acf",
       "value": [
@@ -3529,10 +3129,6 @@
     }
   },
   "tower-of-hanoi": {
-    "cardDescription": {
-      "hash": "d44cd598",
-      "value": "Yalnızca en üstteki kartı geçerli hamlelerle taşıyarak dokuz kartı azalan tek bir kuleye yeniden diz."
-    },
     "howToPlay": {
       "hash": "441fdb6b",
       "value": [
@@ -3559,10 +3155,6 @@
     }
   },
   "triple-stack": {
-    "cardDescription": {
-      "hash": "ccdd2c75",
-      "value": "Eşit aralıklı kartlar seçerek sandviç servis et; malzemelerin bitmesin!"
-    },
     "howToPlay": {
       "hash": "882965ff",
       "value": [
@@ -3593,10 +3185,6 @@
     }
   },
   "twelve-trials": {
-    "cardDescription": {
-      "hash": "6c6923c8",
-      "value": "Saldırılarını akıllıca planlayarak on iki zindan canavarını yen."
-    },
     "howToPlay": {
       "hash": "c8d9dd27",
       "value": [
@@ -3640,10 +3228,6 @@
     }
   },
   "waypoint": {
-    "cardDescription": {
-      "hash": "ae467716",
-      "value": "Üç ralli etabında vites değiştir, her sektörü tam tuttur ve saatin önünde kal."
-    },
     "howToPlay": {
       "hash": "7bb3bc13",
       "value": [
@@ -3692,10 +3276,6 @@
     }
   },
   "westcliff": {
-    "cardDescription": {
-      "hash": "63e50d5a",
-      "value": "Boş sütunlarda bol serbestlik sunan, on sütunlu geniş bir Klondike akrabası."
-    },
     "howToPlay": {
       "hash": "3b649110",
       "value": [
@@ -3723,10 +3303,6 @@
     }
   },
   "whitehead": {
-    "cardDescription": {
-      "hash": "38b3a363",
-      "value": "Renge göre dizilen, aynı takım dizilerinin birlikte taşındığı açık bir Klondike akrabası."
-    },
     "howToPlay": {
       "hash": "60370154",
       "value": [
@@ -3753,10 +3329,6 @@
     }
   },
   "windmill": {
-    "cardDescription": {
-      "hash": "5828d1de",
-      "value": "Köşeler Papazlardan geri sayarken değirmenin merkezine dört tam dizi besle."
-    },
     "howToPlay": {
       "hash": "f5a3d316",
       "value": [
@@ -3787,10 +3359,6 @@
     }
   },
   "yukon": {
-    "cardDescription": {
-      "hash": "81c89142",
-      "value": "Zincirlerinden kurtulmuş Klondike: kart gruplarını, sırası ne olursa olsun, sütunlar arasında taşı."
-    },
     "howToPlay": {
       "hash": "e8b97b81",
       "value": [

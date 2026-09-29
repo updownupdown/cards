@@ -1,9 +1,5 @@
 {
   "accordion": {
-    "cardDescription": {
-      "hash": "7e489b6e",
-      "value": "Reduza o baralho inteiro a uma só pilha, combinando uma a uma cartas vizinhas do mesmo naipe ou valor."
-    },
     "howToPlay": {
       "hash": "5a32be9c",
       "value": [
@@ -30,10 +26,6 @@
     }
   },
   "aces-up": {
-    "cardDescription": {
-      "hash": "7afc29df",
-      "value": "Descarte as cartas baixas dos naipes repetidos até restarem só os quatro Ases."
-    },
     "howToPlay": {
       "hash": "0c45e0c2",
       "value": [
@@ -60,10 +52,6 @@
     }
   },
   "apothecary": {
-    "cardDescription": {
-      "hash": "b66e1d4d",
-      "value": "Passe cartas de um pote para outro até agrupar todos os valores."
-    },
     "howToPlay": {
       "hash": "4b2b06d2",
       "value": [
@@ -94,10 +82,6 @@
     }
   },
   "ascent": {
-    "cardDescription": {
-      "hash": "301e448f",
-      "value": "Um jogo de escalada solo: jogue rotas cada vez mais altas para chegar a três acampamentos antes que o baralho acabe."
-    },
     "howToPlay": {
       "hash": "acb5c7a2",
       "value": [
@@ -152,10 +136,6 @@
     }
   },
   "australian-patience": {
-    "cardDescription": {
-      "hash": "3e888b8b",
-      "value": "A liberdade do Yukon encontra a construção rígida por naipe e um monte de uma só passada."
-    },
     "howToPlay": {
       "hash": "1faa036d",
       "value": [
@@ -182,10 +162,6 @@
     }
   },
   "bakers-dozen": {
-    "cardDescription": {
-      "hash": "1616b54c",
-      "value": "Esvazie treze colunas compactas nas quatro fundações por naipe."
-    },
     "howToPlay": {
       "hash": "b7b35342",
       "value": [
@@ -214,10 +190,6 @@
     }
   },
   "baroness": {
-    "cardDescription": {
-      "hash": "32a23d8a",
-      "value": "Esvazie cinco pilhas descartando cartas que somam treze."
-    },
     "howToPlay": {
       "hash": "e0cdb3c4",
       "value": [
@@ -244,10 +216,6 @@
     }
   },
   "beehive": {
-    "cardDescription": {
-      "hash": "dbca3d18",
-      "value": "Complete grupos de quatro cartas em seis espaços de mesmo valor usando a colmeia, o descarte e o monte."
-    },
     "howToPlay": {
       "hash": "426ee910",
       "value": [
@@ -274,10 +242,6 @@
     }
   },
   "beleaguered-castle": {
-    "cardDescription": {
-      "hash": "f890639b",
-      "value": "Tome o castelo de assalto: construa cada naipe do Ás ao Rei, com todas as colunas abertas."
-    },
     "howToPlay": {
       "hash": "8fb5fdcb",
       "value": [
@@ -306,10 +270,6 @@
     }
   },
   "bisley": {
-    "cardDescription": {
-      "hash": "5480127a",
-      "value": "Construa cada naipe pelas duas pontas enquanto treze colunas abertas se fecham ao seu redor."
-    },
     "howToPlay": {
       "hash": "9a5911e7",
       "value": [
@@ -337,10 +297,6 @@
     }
   },
   "black-hole": {
-    "cardDescription": {
-      "hash": "64debd9d",
-      "value": "Puxe as 52 cartas para um buraco negro central, um valor de cada vez."
-    },
     "howToPlay": {
       "hash": "f8156c21",
       "value": [
@@ -371,10 +327,6 @@
     }
   },
   "blackberry-pie": {
-    "cardDescription": {
-      "hash": "efcdf8a7",
-      "value": "Forme trios sob as cartas de amora para ajudar a Rainha a assar sua torta."
-    },
     "howToPlay": {
       "hash": "4a9fa370",
       "value": [
@@ -412,10 +364,6 @@
     }
   },
   "bowling": {
-    "cardDescription": {
-      "hash": "57809475",
-      "value": "Jogue uma partida completa de boliche de 10 pinos com cartas, em busca de strikes e spares."
-    },
     "howToPlay": {
       "hash": "467c3b31",
       "value": [
@@ -451,10 +399,6 @@
     }
   },
   "bristol": {
-    "cardDescription": {
-      "hash": "9b1c2517",
-      "value": "Oito pequenos leques e três pilhas de reserva alimentadas pelo monte, onde o naipe nunca importa."
-    },
     "howToPlay": {
       "hash": "21ddab2f",
       "value": [
@@ -485,10 +429,6 @@
     }
   },
   "cabin-siege": {
-    "cardDescription": {
-      "hash": "d080e51a",
-      "value": "Defenda sua cabana de um cerco de zumbis, usando as cartas de apoio com estratégia."
-    },
     "howToPlay": {
       "hash": "669496da",
       "value": [
@@ -527,10 +467,6 @@
     }
   },
   "cafe-queue": {
-    "cardDescription": {
-      "hash": "98f19edd",
-      "value": "Um jogo de arriscar a sorte em que você administra filas ordenadas de clientes."
-    },
     "howToPlay": {
       "hash": "22d411d4",
       "value": [
@@ -561,10 +497,6 @@
     }
   },
   "calculation": {
-    "cardDescription": {
-      "hash": "35edc39a",
-      "value": "Construa quatro fundações em passos de 1, 2, 3 e 4, até K."
-    },
     "howToPlay": {
       "hash": "08af239e",
       "value": [
@@ -595,10 +527,6 @@
     }
   },
   "canfield": {
-    "cardDescription": {
-      "hash": "a81515a3",
-      "value": "Construa as fundações por naipe a partir de um valor base aleatório, alimentadas por uma reserva de 13 cartas."
-    },
     "howToPlay": {
       "hash": "d1f393e8",
       "value": [
@@ -629,10 +557,6 @@
     }
   },
   "carpet": {
-    "cardDescription": {
-      "hash": "bf2e1ad7",
-      "value": "Leve um tapete de vinte cartas para as fundações enquanto o monte remenda cada buraco."
-    },
     "howToPlay": {
       "hash": "0af4a81e",
       "value": [
@@ -659,10 +583,6 @@
     }
   },
   "chain-of-command": {
-    "cardDescription": {
-      "hash": "26aaf0b8",
-      "value": "Promova com estratégia membros e candidatos até o topo da cadeia de comando."
-    },
     "howToPlay": {
       "hash": "4b1772c7",
       "value": [
@@ -690,10 +610,6 @@
     }
   },
   "chapter-and-verse": {
-    "cardDescription": {
-      "hash": "f6ff591c",
-      "value": "Atenda às ofertas dos clientes com os livros disponíveis para fazer a maior pontuação."
-    },
     "howToPlay": {
       "hash": "2558e4ff",
       "value": [
@@ -733,10 +649,6 @@
     }
   },
   "city-grid": {
-    "cardDescription": {
-      "hash": "b923e9bb",
-      "value": "Um jogo de colocar peças em que cada jogada pode bagunçar uma grade instável."
-    },
     "howToPlay": {
       "hash": "316682c7",
       "value": [
@@ -767,10 +679,6 @@
     }
   },
   "clock": {
-    "cardDescription": {
-      "hash": "61261ec5",
-      "value": "Uma paciência de pura sorte: siga as cartas ao redor do relógio antes que todos os Reis apareçam."
-    },
     "howToPlay": {
       "hash": "36c70a77",
       "value": [
@@ -795,10 +703,6 @@
     }
   },
   "congress": {
-    "cardDescription": {
-      "hash": "fe8ab4a0",
-      "value": "Guie dois baralhos por oito colunas, com jogadas de uma carta e uma única passada pelo monte."
-    },
     "howToPlay": {
       "hash": "686ea922",
       "value": [
@@ -826,10 +730,6 @@
     }
   },
   "crazy-quilt": {
-    "cardDescription": {
-      "hash": "e28c27ea",
-      "value": "Descosture uma colcha de cartas em pé e deitadas, uma ponta livre de cada vez."
-    },
     "howToPlay": {
       "hash": "ee571b00",
       "value": [
@@ -859,10 +759,6 @@
     }
   },
   "crescent": {
-    "cardDescription": {
-      "hash": "4de6a2cd",
-      "value": "Gire dezesseis pilhas ao luar rumo a fundações que crescem a partir dos Ases e dos Reis."
-    },
     "howToPlay": {
       "hash": "2122d621",
       "value": [
@@ -891,10 +787,6 @@
     }
   },
   "cribbage-squares": {
-    "cardDescription": {
-      "hash": "4ff9ff90",
-      "value": "Monte dezesseis cartas ligadas, depois pontue cada linha e coluna com uma carta inicial."
-    },
     "howToPlay": {
       "hash": "d49f4554",
       "value": [
@@ -937,10 +829,6 @@
     }
   },
   "crownslayer": {
-    "cardDescription": {
-      "hash": "60d95812",
-      "value": "Derrube as 12 figuras da realeza com combos turbinados pelos naipes."
-    },
     "howToPlay": {
       "hash": "82061d43",
       "value": [
@@ -992,10 +880,6 @@
     }
   },
   "cruel": {
-    "cardDescription": {
-      "hash": "3a229ead",
-      "value": "Doze pilhas abertas, nenhum monte e uma redistribuição que muda tudo o que você construiu."
-    },
     "howToPlay": {
       "hash": "14e03858",
       "value": [
@@ -1022,10 +906,6 @@
     }
   },
   "delta-21": {
-    "cardDescription": {
-      "hash": "0886780b",
-      "value": "Equilibre quatro populações de peixes de rio em exatamente 21 e publique seus estudos."
-    },
     "howToPlay": {
       "hash": "b75491fc",
       "value": [
@@ -1084,10 +964,6 @@
     }
   },
   "devils-grip": {
-    "cardDescription": {
-      "hash": "5790b2dc",
-      "value": "Construa 24 pilhas do mesmo naipe de três em três numa grade de três fileiras."
-    },
     "howToPlay": {
       "hash": "23ce0cda",
       "value": [
@@ -1128,10 +1004,6 @@
     }
   },
   "diplomat": {
-    "cardDescription": {
-      "hash": "1e3f9a93",
-      "value": "Negocie com oito colunas abertas, empilhando só por valor e movendo uma carta de cada vez."
-    },
     "howToPlay": {
       "hash": "ca4c9166",
       "value": [
@@ -1159,10 +1031,6 @@
     }
   },
   "dominion": {
-    "cardDescription": {
-      "hash": "747f9f9d",
-      "value": "Conquiste cartas do mesmo valor ou naipe até restar um só domínio."
-    },
     "howToPlay": {
       "hash": "65da5614",
       "value": [
@@ -1193,10 +1061,6 @@
     }
   },
   "dynasty": {
-    "cardDescription": {
-      "hash": "0faabfb3",
-      "value": "Derrube as doze figuras colocando cartas numa grade 3x3."
-    },
     "howToPlay": {
       "hash": "2c41141f",
       "value": [
@@ -1228,10 +1092,6 @@
     }
   },
   "easthaven": {
-    "cardDescription": {
-      "hash": "bd4d84bb",
-      "value": "Construa sete colunas compactas, depois distribua cada nova fileira do monte direto nas colunas."
-    },
     "howToPlay": {
       "hash": "0253c855",
       "value": [
@@ -1258,10 +1118,6 @@
     }
   },
   "eight-off": {
-    "cardDescription": {
-      "hash": "0443457b",
-      "value": "Um parente espaçoso do FreeCell por naipe, com oito células e colunas vazias só para Reis."
-    },
     "howToPlay": {
       "hash": "014c8f8e",
       "value": [
@@ -1289,10 +1145,6 @@
     }
   },
   "elementary-detective": {
-    "cardDescription": {
-      "hash": "efdce805",
-      "value": "Encontre seus companheiros de brincadeira escondidos com planejamento e dedução."
-    },
     "howToPlay": {
       "hash": "cc00bd38",
       "value": [
@@ -1318,10 +1170,6 @@
     }
   },
   "field-command": {
-    "cardDescription": {
-      "hash": "046a65e6",
-      "value": "Use cartas baixas e coringas para desmontar as forças inimigas, protegendo da captura cada Ás e cada figura."
-    },
     "howToPlay": {
       "hash": "14749a82",
       "value": [
@@ -1351,10 +1199,6 @@
     }
   },
   "fifteen-puzzle": {
-    "cardDescription": {
-      "hash": "8d1fa8fb",
-      "value": "Ponha em ordem as cartas de uma grade 4x4 deslizando uma de cada vez."
-    },
     "howToPlay": {
       "hash": "dc55b9d9",
       "value": [
@@ -1383,10 +1227,6 @@
     }
   },
   "fight-clubs": {
-    "cardDescription": {
-      "hash": "da6e6079",
-      "value": "Use bem as suas treze cartas de paus para limpar uma grade 3x3 que não para de mudar."
-    },
     "howToPlay": {
       "hash": "1c19d9ff",
       "value": [
@@ -1437,10 +1277,6 @@
     }
   },
   "flower-garden": {
-    "cardDescription": {
-      "hash": "4b5c020b",
-      "value": "Cultive seis canteiros com todas as dezesseis cartas do buquê sempre disponíveis."
-    },
     "howToPlay": {
       "hash": "e4cc4b14",
       "value": [
@@ -1467,10 +1303,6 @@
     }
   },
   "fortress": {
-    "cardDescription": {
-      "hash": "49b04b9f",
-      "value": "Manobre dez corredores abertos para cima ou para baixo por naipe para liberar cada fundação."
-    },
     "howToPlay": {
       "hash": "0591fc6a",
       "value": [
@@ -1497,10 +1329,6 @@
     }
   },
   "fortunes-call": {
-    "cardDescription": {
-      "hash": "49133345",
-      "value": "Adivinhe a cor ou a direção de cada carta escondida antes de errar três vezes."
-    },
     "howToPlay": {
       "hash": "a76b0266",
       "value": [
@@ -1527,10 +1355,6 @@
     }
   },
   "forty-thieves": {
-    "cardDescription": {
-      "hash": "e81e4597",
-      "value": "Uma paciência exigente de dois baralhos em que se constroem as fundações."
-    },
     "howToPlay": {
       "hash": "327ab3c4",
       "value": [
@@ -1563,10 +1387,6 @@
     }
   },
   "four-seasons": {
-    "cardDescription": {
-      "hash": "caddc762",
-      "value": "Cinco cartas em cruz e quatro cantos: faça as estações girarem a partir da primeira carta de canto."
-    },
     "howToPlay": {
       "hash": "baf2850a",
       "value": [
@@ -1597,10 +1417,6 @@
     }
   },
   "freecell": {
-    "cardDescription": {
-      "hash": "50d37ce8",
-      "value": "Um clássico de cartas abertas em que quase toda partida pode ser vencida com cuidado."
-    },
     "howToPlay": {
       "hash": "1d797da4",
       "value": [
@@ -1629,10 +1445,6 @@
     }
   },
   "frog": {
-    "cardDescription": {
-      "hash": "ab1e9fc2",
-      "value": "Faça dois baralhos pularem para oito fundações, distribuindo o monte em cinco pilhas de vitórias-régias."
-    },
     "howToPlay": {
       "hash": "2f091e43",
       "value": [
@@ -1660,10 +1472,6 @@
     }
   },
   "gaps": {
-    "cardDescription": {
-      "hash": "3edac6c4",
-      "value": "Ponha as linhas em ordem por naipe preenchendo as lacunas."
-    },
     "howToPlay": {
       "hash": "bdf0ca39",
       "value": [
@@ -1694,10 +1502,6 @@
     }
   },
   "gargantua": {
-    "cardDescription": {
-      "hash": "9a18d2a2",
-      "value": "Encare um Klondike de nove colunas e dois baralhos, com oito fundações."
-    },
     "howToPlay": {
       "hash": "4a898796",
       "value": [
@@ -1726,10 +1530,6 @@
     }
   },
   "golf": {
-    "cardDescription": {
-      "hash": "df8ad9d9",
-      "value": "Esvazie sete colunas jogando cartas a um valor de distância da carta do descarte."
-    },
     "howToPlay": {
       "hash": "24a82fa3",
       "value": [
@@ -1757,10 +1557,6 @@
     }
   },
   "grandfathers-clock": {
-    "cardDescription": {
-      "hash": "929d905b",
-      "value": "Dê corda em doze fundações ao redor do mostrador até cada hora mostrar seu número."
-    },
     "howToPlay": {
       "hash": "d994567d",
       "value": [
@@ -1792,10 +1588,6 @@
     }
   },
   "gremlin": {
-    "cardDescription": {
-      "hash": "277c9762",
-      "value": "Construa colunas de cartas em sequências decrescentes do mesmo naipe, enquanto lida com uma ajuda que você não pediu."
-    },
     "howToPlay": {
       "hash": "24c4d019",
       "value": [
@@ -1834,10 +1626,6 @@
     }
   },
   "herbalist": {
-    "cardDescription": {
-      "hash": "820b189b",
-      "value": "Distribua ervas pelos seus estábulos para curar todas as criaturas que vivem lá."
-    },
     "howToPlay": {
       "hash": "49f3dd1e",
       "value": [
@@ -1872,10 +1660,6 @@
     }
   },
   "indian": {
-    "cardDescription": {
-      "hash": "bbc78988",
-      "value": "Construa colunas de dois baralhos em ordem decrescente, evitando com cuidado o mesmo naipe."
-    },
     "howToPlay": {
       "hash": "96bf0d1c",
       "value": [
@@ -1902,10 +1686,6 @@
     }
   },
   "infiltrator": {
-    "cardDescription": {
-      "hash": "dff09eb2",
-      "value": "Conquiste a maioria dos espiões-chave com recrutamentos, neutralizações e assassinatos bem pensados."
-    },
     "howToPlay": {
       "hash": "b297c489",
       "value": [
@@ -1944,10 +1724,6 @@
     }
   },
   "invaders": {
-    "cardDescription": {
-      "hash": "beef4003",
-      "value": "Repila ondas de invasores alienígenas antes que seus defensores acabem."
-    },
     "howToPlay": {
       "hash": "5644ce85",
       "value": [
@@ -1976,10 +1752,6 @@
     }
   },
   "jailbreak": {
-    "cardDescription": {
-      "hash": "d2cc3eee",
-      "value": "Combine totais iguais de vermelhas e pretas para o Coringa escapar por uma parede."
-    },
     "howToPlay": {
       "hash": "aad3689d",
       "value": [
@@ -2010,10 +1782,6 @@
     }
   },
   "king-albert": {
-    "cardDescription": {
-      "hash": "43b55724",
-      "value": "Todas as cartas são distribuídas viradas para cima: nove colunas, uma pequena reserva e uma única carta movida de cada vez."
-    },
     "howToPlay": {
       "hash": "6c0f25fe",
       "value": [
@@ -2045,10 +1813,6 @@
     }
   },
   "klondike": {
-    "cardDescription": {
-      "hash": "1873d35c",
-      "value": "A paciência clássica: construa quatro fundações por naipe, do Ás ao Rei."
-    },
     "howToPlay": {
       "hash": "6b0bf248",
       "value": [
@@ -2076,10 +1840,6 @@
     }
   },
   "la-belle-lucie": {
-    "cardDescription": {
-      "hash": "1fb69740",
-      "value": "Descubra um campo compacto de leques, com duas reembaralhadas para desfazer os nós."
-    },
     "howToPlay": {
       "hash": "64ab3a33",
       "value": [
@@ -2109,10 +1869,6 @@
     }
   },
   "labyrinth": {
-    "cardDescription": {
-      "hash": "46c8506f",
-      "value": "Distribua fileira após fileira e liberte cartas pelo topo e pelo fundo do labirinto."
-    },
     "howToPlay": {
       "hash": "d02b7d3c",
       "value": [
@@ -2139,10 +1895,6 @@
     }
   },
   "lights-out": {
-    "cardDescription": {
-      "hash": "d9f86dc4",
-      "value": "Apague uma grade de cartas em que cada jogada vira as vizinhas."
-    },
     "howToPlay": {
       "hash": "246e4fe2",
       "value": [
@@ -2167,10 +1919,6 @@
     }
   },
   "lone-joker": {
-    "cardDescription": {
-      "hash": "6ff380b4",
-      "value": "Forme mãos de pôquer, guarde Coringas e gaste os pontos extras para sobreviver a rodadas cada vez mais difíceis."
-    },
     "howToPlay": {
       "hash": "11835fe7",
       "value": [
@@ -2225,10 +1973,6 @@
     }
   },
   "lycan": {
-    "cardDescription": {
-      "hash": "9561f249",
-      "value": "Esvazie a mão do Lobo com capturas espertas... e saiba a hora de desistir."
-    },
     "howToPlay": {
       "hash": "d62c9ca0",
       "value": [
@@ -2274,10 +2018,6 @@
     }
   },
   "maria": {
-    "cardDescription": {
-      "hash": "ae9582d4",
-      "value": "Um parente de nove colunas de Quarenta ladrões, empilhado alternando cores."
-    },
     "howToPlay": {
       "hash": "3ac89609",
       "value": [
@@ -2305,10 +2045,6 @@
     }
   },
   "memory": {
-    "cardDescription": {
-      "hash": "bb8a7bd4",
-      "value": "Revele pares escondidos e limpe a mesa usando a memória."
-    },
     "howToPlay": {
       "hash": "fd06d530",
       "value": [
@@ -2333,10 +2069,6 @@
     }
   },
   "miss-milligan": {
-    "cardDescription": {
-      "hash": "2fafaca0",
-      "value": "Comece com oito cartas soltas e distribua uma fileira em cada coluna quando quiser."
-    },
     "howToPlay": {
       "hash": "d8f2b41f",
       "value": [
@@ -2368,10 +2100,6 @@
     }
   },
   "monte-carlo": {
-    "cardDescription": {
-      "hash": "752d12bd",
-      "value": "Forme pares vizinhos de mesmo valor para limpar a grade."
-    },
     "howToPlay": {
       "hash": "9447fa02",
       "value": [
@@ -2396,10 +2124,6 @@
     }
   },
   "nestor": {
-    "cardDescription": {
-      "hash": "8afbbddb",
-      "value": "Forme pares de valores iguais para esvaziar todas as colunas."
-    },
     "howToPlay": {
       "hash": "5a96cea6",
       "value": [
@@ -2422,10 +2146,6 @@
     }
   },
   "night-vigil": {
-    "cardDescription": {
-      "hash": "7d07c621",
-      "value": "Responda às ameaças com táticas certeiras num desafio noir contra doze vilões."
-    },
     "howToPlay": {
       "hash": "ca40e560",
       "value": [
@@ -2465,10 +2185,6 @@
     }
   },
   "ouroboros": {
-    "cardDescription": {
-      "hash": "9249639e",
-      "value": "Capture as cartas do círculo que dão pontos, mantendo o ritmo e evitando interrupções perigosas."
-    },
     "howToPlay": {
       "hash": "23113eb3",
       "value": [
@@ -2519,10 +2235,6 @@
     }
   },
   "pagoda": {
-    "cardDescription": {
-      "hash": "c1c2c60e",
-      "value": "Pegue cartas dos andares do pagode e ofereça cada trinca no santuário."
-    },
     "howToPlay": {
       "hash": "5eb45815",
       "value": [
@@ -2552,10 +2264,6 @@
     }
   },
   "parallels": {
-    "cardDescription": {
-      "hash": "31eac556",
-      "value": "Empilhe fileiras paralelas de dois baralhos entre fundações de Ases e de Reis, libertando cartas pelas duas bordas."
-    },
     "howToPlay": {
       "hash": "a09786ce",
       "value": [
@@ -2584,10 +2292,6 @@
     }
   },
   "penguin": {
-    "cardDescription": {
-      "hash": "a45ab2f6",
-      "value": "Um jogo parecido com o FreeCell que constrói sequências por naipe a partir de um valor “bico” aleatório."
-    },
     "howToPlay": {
       "hash": "362cf9e1",
       "value": [
@@ -2615,10 +2319,6 @@
     }
   },
   "pocket-poker": {
-    "cardDescription": {
-      "hash": "d28135be",
-      "value": "Um duelo de pôquer de bolso: compre, aposte e supere um oponente servido pelo mesmo baralho."
-    },
     "howToPlay": {
       "hash": "24a831bd",
       "value": [
@@ -2656,10 +2356,6 @@
     }
   },
   "poker-squares": {
-    "cardDescription": {
-      "hash": "8ed02b35",
-      "value": "Forme dez mãos de pôquer numa grade para fazer a maior pontuação possível."
-    },
     "howToPlay": {
       "hash": "ef2f0865",
       "value": [
@@ -2694,10 +2390,6 @@
     }
   },
   "pyramid": {
-    "cardDescription": {
-      "hash": "659fff1e",
-      "value": "Desmonte a pirâmide removendo pares de cartas que somam 13."
-    },
     "howToPlay": {
       "hash": "05b90345",
       "value": [
@@ -2722,10 +2414,6 @@
     }
   },
   "queens-audience": {
-    "cardDescription": {
-      "hash": "b7f94eaa",
-      "value": "Conduza os casais reais à sala de audiências e deixe cada Valete guiar seu naipe para baixo."
-    },
     "howToPlay": {
       "hash": "90bcd31f",
       "value": [
@@ -2754,10 +2442,6 @@
     }
   },
   "rank-and-file": {
-    "cardDescription": {
-      "hash": "54303353",
-      "value": "Descubra dez colunas disciplinadas e manobre formações de cores alternadas."
-    },
     "howToPlay": {
       "hash": "544745e3",
       "value": [
@@ -2789,10 +2473,6 @@
     }
   },
   "red-diamond": {
-    "cardDescription": {
-      "hash": "8f0b8b18",
-      "value": "Coloque todas as cartas de paus e espadas ao redor de quatro cartas de ouros, com combinações aritméticas."
-    },
     "howToPlay": {
       "hash": "a23e76cc",
       "value": [
@@ -2829,10 +2509,6 @@
     }
   },
   "rogue-run": {
-    "cardDescription": {
-      "hash": "833255e0",
-      "value": "Uma exploração de masmorra em que você administra a força das armas e o uso das poções."
-    },
     "howToPlay": {
       "hash": "852f99a5",
       "value": [
@@ -2869,10 +2545,6 @@
     }
   },
   "royal-cotillion": {
-    "cardDescription": {
-      "hash": "78d83f7f",
-      "value": "Dois baralhos dançam pelas fundações em passos de dois, a partir dos Ases e dos 2."
-    },
     "howToPlay": {
       "hash": "55f6e9ce",
       "value": [
@@ -2903,10 +2575,6 @@
     }
   },
   "royal-envoy": {
-    "cardDescription": {
-      "hash": "1cc10e97",
-      "value": "Vença exatamente o número certo de debates em cada reino, com a ajuda dos seus conselheiros."
-    },
     "howToPlay": {
       "hash": "f119c81a",
       "value": [
@@ -2937,10 +2605,6 @@
     }
   },
   "royal-rest": {
-    "cardDescription": {
-      "hash": "298cb8cb",
-      "value": "Junte cartas do mesmo valor em travesseiros e ponha todos os Valetes para dormir."
-    },
     "howToPlay": {
       "hash": "ad734452",
       "value": [
@@ -2977,10 +2641,6 @@
     }
   },
   "scorpion": {
-    "cardDescription": {
-      "hash": "959e0b20",
-      "value": "Desembarace colunas abertas em quatro sequências do mesmo naipe, do Rei ao Ás."
-    },
     "howToPlay": {
       "hash": "6cabf38a",
       "value": [
@@ -3011,10 +2671,6 @@
     }
   },
   "seahaven-towers": {
-    "cardDescription": {
-      "hash": "fb19dd37",
-      "value": "Dez colunas abertas e quatro torres compactas recompensam um planejamento cuidadoso por naipe."
-    },
     "howToPlay": {
       "hash": "1342469d",
       "value": [
@@ -3042,10 +2698,6 @@
     }
   },
   "seer": {
-    "cardDescription": {
-      "hash": "6d0878cd",
-      "value": "Leia um baralho curto, complete oito previsões e não deixe as pedras bloquearem a mesa."
-    },
     "howToPlay": {
       "hash": "3824f461",
       "value": [
@@ -3081,10 +2733,6 @@
     }
   },
   "shifting-sands": {
-    "cardDescription": {
-      "hash": "146a620a",
-      "value": "Junte areia, construa para fora sem mudar de direção e faça um castelo forte o bastante para resistir à maré alta."
-    },
     "howToPlay": {
       "hash": "91681187",
       "value": [
@@ -3121,10 +2769,6 @@
     }
   },
   "simple-simon": {
-    "cardDescription": {
-      "hash": "64c1cf9e",
-      "value": "As 52 cartas começam expostas em dez colunas neste parente pensativo da Aranha."
-    },
     "howToPlay": {
       "hash": "c280dcc9",
       "value": [
@@ -3151,10 +2795,6 @@
     }
   },
   "sir-tommy": {
-    "cardDescription": {
-      "hash": "980ec70d",
-      "value": "O avô das paciências: distribua o baralho por quatro pilhas para formar quatro montes do Ás ao Rei."
-    },
     "howToPlay": {
       "hash": "95c0ca0b",
       "value": [
@@ -3187,10 +2827,6 @@
     }
   },
   "sly-fox": {
-    "cardDescription": {
-      "hash": "77dd0eeb",
-      "value": "Esconda cada distribuição de vinte cartas em vinte pilhas de reserva e depois desenterre o que escondeu."
-    },
     "howToPlay": {
       "hash": "cd900ba6",
       "value": [
@@ -3220,10 +2856,6 @@
     }
   },
   "somnus": {
-    "cardDescription": {
-      "hash": "317aad94",
-      "value": "Monte o baralho de guardiões de Alice, derrote os pesadelos do baralho dos sonhos e proteja a vida dela."
-    },
     "howToPlay": {
       "hash": "fc9dcb5c",
       "value": [
@@ -3266,10 +2898,6 @@
     }
   },
   "spider-solitaire": {
-    "cardDescription": {
-      "hash": "d9fbe47f",
-      "value": "Construa sequências do mesmo naipe do Rei ao Ás num baralho duplo embaralhado."
-    },
     "howToPlay": {
       "hash": "349fc938",
       "value": [
@@ -3298,10 +2926,6 @@
     }
   },
   "spiderette": {
-    "cardDescription": {
-      "hash": "f8691a69",
-      "value": "Uma Aranha compacta de um só baralho, jogada em sete colunas dispostas como no Klondike."
-    },
     "howToPlay": {
       "hash": "07143aa9",
       "value": [
@@ -3328,10 +2952,6 @@
     }
   },
   "stalker": {
-    "cardDescription": {
-      "hash": "bf48bf06",
-      "value": "Mantenha sua frágil vantagem sobre um perseguidor implacável."
-    },
     "howToPlay": {
       "hash": "304772d4",
       "value": [
@@ -3366,10 +2986,6 @@
     }
   },
   "sultan": {
-    "cardDescription": {
-      "hash": "e649013d",
-      "value": "Erga oito fundações reais até o Sultão, no centro, ficar cercado de Damas."
-    },
     "howToPlay": {
       "hash": "9b72d9f3",
       "value": [
@@ -3401,10 +3017,6 @@
     }
   },
   "ten-twenty-thirty": {
-    "cardDescription": {
-      "hash": "5aef36ef",
-      "value": "Distribua uma fila cada vez maior e remova grupos de cartas que somam 10, 20 ou 30."
-    },
     "howToPlay": {
       "hash": "03753ddd",
       "value": [
@@ -3432,10 +3044,6 @@
     }
   },
   "terrace": {
-    "cardDescription": {
-      "hash": "adb8e1e5",
-      "value": "Escolha o valor das fundações e depois esvazie um longo terraço de cartas antes que o monte acabe."
-    },
     "howToPlay": {
       "hash": "885ccd26",
       "value": [
@@ -3472,10 +3080,6 @@
     }
   },
   "three-peaks": {
-    "cardDescription": {
-      "hash": "575e4a8f",
-      "value": "Limpe os três picos jogando cartas um valor acima ou abaixo da carta do descarte."
-    },
     "howToPlay": {
       "hash": "6c8edb31",
       "value": [
@@ -3499,10 +3103,6 @@
     }
   },
   "thumb-and-pouch": {
-    "cardDescription": {
-      "hash": "c3b2dd00",
-      "value": "Um Klondike flexível em que as cartas evitam o próprio naipe e qualquer carta preenche um espaço."
-    },
     "howToPlay": {
       "hash": "9a483acf",
       "value": [
@@ -3529,10 +3129,6 @@
     }
   },
   "tower-of-hanoi": {
-    "cardDescription": {
-      "hash": "d44cd598",
-      "value": "Reconstrua as nove cartas numa única torre decrescente, movendo só as cartas do topo."
-    },
     "howToPlay": {
       "hash": "441fdb6b",
       "value": [
@@ -3559,10 +3155,6 @@
     }
   },
   "triple-stack": {
-    "cardDescription": {
-      "hash": "ccdd2c75",
-      "value": "Sirva sanduíches escolhendo cartas com intervalos iguais; não deixe os ingredientes acabarem!"
-    },
     "howToPlay": {
       "hash": "882965ff",
       "value": [
@@ -3593,10 +3185,6 @@
     }
   },
   "twelve-trials": {
-    "cardDescription": {
-      "hash": "6c6923c8",
-      "value": "Derrote doze monstros da masmorra planejando seus ataques com estratégia."
-    },
     "howToPlay": {
       "hash": "c8d9dd27",
       "value": [
@@ -3640,10 +3228,6 @@
     }
   },
   "waypoint": {
-    "cardDescription": {
-      "hash": "ae467716",
-      "value": "Troque de marcha em três etapas de rali, acerte cada setor em cheio e fique à frente do relógio."
-    },
     "howToPlay": {
       "hash": "7bb3bc13",
       "value": [
@@ -3692,10 +3276,6 @@
     }
   },
   "westcliff": {
-    "cardDescription": {
-      "hash": "63e50d5a",
-      "value": "Um amplo parente do Klondike com dez colunas e muita liberdade nas colunas vazias."
-    },
     "howToPlay": {
       "hash": "3b649110",
       "value": [
@@ -3723,10 +3303,6 @@
     }
   },
   "whitehead": {
-    "cardDescription": {
-      "hash": "38b3a363",
-      "value": "Um parente aberto do Klondike, construído por cor, em que sequências do mesmo naipe se movem juntas."
-    },
     "howToPlay": {
       "hash": "60370154",
       "value": [
@@ -3753,10 +3329,6 @@
     }
   },
   "windmill": {
-    "cardDescription": {
-      "hash": "5828d1de",
-      "value": "Leve quatro sequências completas ao centro do moinho enquanto os cantos descem a partir dos Reis."
-    },
     "howToPlay": {
       "hash": "f5a3d316",
       "value": [
@@ -3787,10 +3359,6 @@
     }
   },
   "yukon": {
-    "cardDescription": {
-      "hash": "81c89142",
-      "value": "O Klondike sem amarras: mova grupos inteiros de cartas, em qualquer ordem, entre as colunas."
-    },
     "howToPlay": {
       "hash": "e8b97b81",
       "value": [

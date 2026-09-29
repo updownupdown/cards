@@ -42,7 +42,7 @@ import { pseudoLocalizeDeep } from "./pseudo";
 /** A translation and the hash of the English it was translated from. */
 type Translation<T> = { hash: string; value: T };
 
-type GameTextField = "title" | "cardDescription" | "quickStart" | "howToPlay";
+type GameTextField = "title" | "quickStart" | "howToPlay";
 
 type SettingText = {
   label: string;
@@ -73,7 +73,6 @@ const CONTENT: Record<Exclude<AppLanguage, "en">, LanguageContent> = {
 
 const GAME_TEXT_FIELDS: GameTextField[] = [
   "title",
-  "cardDescription",
   "quickStart",
   "howToPlay",
 ];

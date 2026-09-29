@@ -5,6 +5,8 @@ const i18next = require("eslint-plugin-i18next");
 
 module.exports = defineConfig([
   expoConfig,
+  // design/ holds a standalone review page, not app code.
+  { ignores: ["design/**"] },
   {
     ignores: ["dist/*"],
     rules: {

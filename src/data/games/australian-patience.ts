@@ -21,8 +21,6 @@ export const australianPatience: GameDefinition = {
   gameColorDark: "#29382a",
   gameColorPale: "#f4d88d",
   cardBack: CardBackColors.Copper,
-  cardDescription:
-    "Yukon-style freedom meets strict suit building and a one-pass stock.",
   quickStart: [
     "Build foundations up by suit.",
     "Build tableau down by suit; only Kings fill spaces.",

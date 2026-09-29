@@ -25,8 +25,6 @@ export const scorpion: GameDefinition = {
   gameColorDark: "#352b21",
   gameColorPale: "#fff3e4",
   cardBack: CardBackColors.Terracotta,
-  cardDescription:
-    "Untangle face-up columns into four same-suit runs from King to Ace.",
   quickStart: [
     "Build the four foundations, by suit, from K to A.",
     "Move any face-up stack, even if out of sequence.",

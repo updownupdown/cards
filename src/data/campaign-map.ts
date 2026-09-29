@@ -6,10 +6,7 @@ import {
 } from "./collectibles";
 import { isGameEnabled } from "./games-data";
 import { GAME_DEFINITIONS } from "./games-registry";
-import {
-  ARM_DUST,
-  GAME_DOT_DEFINITIONS as ALL_GAME_DOT_DEFINITIONS,
-} from "./campaign-map.generated";
+import { GAME_DOT_DEFINITIONS as ALL_GAME_DOT_DEFINITIONS } from "./campaign-map.generated";
 
 export const CAMPAIGN_START_PATH = "/klondike";
 
@@ -30,7 +27,11 @@ export type GameDotDefinition = {
  */
 export const MAP_GEOMETRY = {
   worldSize: 1800,
-  /** GAME_DOT_SIZE * the largest STATE_SIZE_MULTIPLIER in CampaignMap. */
+  /**
+   * The unit game dots are spaced in. Dots were drawn up to this size when
+   * the map was laid out; they are smaller now, but the unit stays so the
+   * layout (and players' progress on it) stays put.
+   */
   gameDotDiameter: 18 * 1.2,
   /** Game dot centres stay at least this many dot-diameters apart. */
   minSpacingInDots: 3,
@@ -51,9 +52,6 @@ export const MAP_GEOMETRY = {
 export const MIN_GAME_DOT_SPACING =
   (MAP_GEOMETRY.minSpacingInDots * MAP_GEOMETRY.gameDotDiameter) /
   (MAP_GEOMETRY.worldSize / 2);
-
-/** A speck of decorative dust: x, y, tint index, opacity. */
-export type ArmDust = [number, number, number, number];
 
 export type GameDotState = "locked" | "connected" | "won" | "complete";
 
@@ -318,4 +316,4 @@ if (__DEV__) {
   }
 }
 
-export { ALL_GAME_DOT_DEFINITIONS, ARM_DUST };
+export { ALL_GAME_DOT_DEFINITIONS };

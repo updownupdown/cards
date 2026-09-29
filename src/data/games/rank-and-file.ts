@@ -27,8 +27,6 @@ export const rankAndFile: GameDefinition = {
   gameColorDark: "#26343b",
   gameColorPale: "#dfe2d4",
   cardBack: CardBackColors.Forest,
-  cardDescription:
-    "Reveal ten disciplined columns and maneuver alternating-color formations.",
   quickStart: [
     "Move both decks to eight foundations, built by suit from A to K.",
     "Only each column's exposed card begins face up.",

@@ -26,8 +26,6 @@ export const slyFox: GameDefinition = {
   gameColorDark: "#2b1a10",
   gameColorPale: "#fde2cc",
   cardBack: CardBackColors.Copper,
-  cardDescription:
-    "Stash each twenty-card deal across twenty reserve piles, then dig out what you hid.",
   quickStart: [
     "Move all 104 cards to the foundations. Build As up and Ks down by suit.",
     "Tap the stock to deal 20 cards, placing each on a reserve pile.",

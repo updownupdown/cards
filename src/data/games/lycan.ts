@@ -25,8 +25,6 @@ export const lycan: GameDefinition = {
   gameColorDark: "#311a20",
   gameColorPale: "#f7e2ca",
   cardBack: CardBackColors.Walnut,
-  cardDescription:
-    "Empty the Wolf's hand through clever captures... and know when to fold.",
   quickStart: [
     "Capture the Wolf's cards by using match/sum/split/overtake actions.",
     "Fold when you can't capture, or to minimize an inevitable loss.",

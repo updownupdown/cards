@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { usePalette } from "@/styles/palette";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
@@ -23,7 +24,7 @@ type SettingControlProps<T> = {
 
 export function SettingControl<T>({
   label,
-  labelColor = theme.ink,
+  labelColor: labelColorProp,
   description,
   helpText,
   applyBehaviorText,
@@ -34,6 +35,8 @@ export function SettingControl<T>({
   options,
 }: SettingControlProps<T>) {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
+  const labelColor = labelColorProp ?? theme.ink;
 
   const HelpText = () => {
     return (
@@ -46,7 +49,7 @@ export function SettingControl<T>({
           </Text>
         )}
         {applyBehaviorText && (
-          <Text size="sm" weight={300} color={theme.dim}>
+          <Text size="sm" weight={400} color={theme.dim}>
             {applyBehaviorText}
           </Text>
         )}
@@ -99,7 +102,7 @@ export function SettingControl<T>({
               {label}
             </Text>
             {description && (
-              <Text size="sm" weight={300} color={theme.dim}>
+              <Text size="sm" weight={400} color={theme.dim}>
                 {description}
               </Text>
             )}

@@ -25,8 +25,6 @@ export const fieldCommand: GameDefinition = {
   gameColorDark: "#2b2d42",
   gameColorPale: "#d4cdc3",
   cardBack: CardBackColors.Violet,
-  cardDescription:
-    "Use low cards and jokers to dismantle enemy forces, while protecting every Ace and face card from capture.",
   quickStart: ["Enemy line shifts right, then refills from enemy deck."],
   howToPlay: [
     "## Objective",

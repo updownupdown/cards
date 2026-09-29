@@ -25,8 +25,6 @@ export const seer: GameDefinition = {
   gameColorDark: "#1b2135",
   gameColorPale: "#d2d3c0",
   cardBack: CardBackColors.Teal,
-  cardDescription:
-    "Read a short deck, complete eight predictions, and keep stones from blocking the board.",
   quickStart: [
     "Choose a prediction space to reveal the top card.",
     "Matches complete spaces and free neighboring stones; misses add stones.",

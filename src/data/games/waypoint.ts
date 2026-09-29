@@ -25,8 +25,6 @@ export const waypoint: GameDefinition = {
   gameColorDark: "#263b38",
   gameColorPale: "#f5e4ad",
   cardBack: CardBackColors.Walnut,
-  cardDescription:
-    "Shift through three rally stages, match every sector exactly, and stay ahead of the clock.",
   quickStart: [
     "Choose either end of the stage, then tap gears, boosts, and brakes to match the current sector.",
     "Finish the sector when ready. Exact one-card hits earn time; misses and unresolved busts cost it.",

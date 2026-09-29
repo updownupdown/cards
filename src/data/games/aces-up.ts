@@ -24,8 +24,6 @@ export const acesUp: GameDefinition = {
   gameColorDark: "#1d0f0a",
   gameColorPale: "#eee0ca",
   cardBack: CardBackColors.Terracotta,
-  cardDescription:
-    "Discard low cards of non-unique suits until only the four Aces remain.",
   quickStart: [
     "Discard an exposed card if a card of the same suit, but higher rank, is also exposed.",
     "Win by discarding all cards except the four Aces.",

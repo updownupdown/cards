@@ -26,8 +26,6 @@ export const indian: GameDefinition = {
   gameColorDark: "#49362a",
   gameColorPale: "#ead6ad",
   cardBack: CardBackColors.Moss,
-  cardDescription:
-    "Build two-deck columns down while carefully avoiding matching suits.",
   quickStart: [
     "Build down on any suit except the same suit.",
     "Move one exposed card at a time.",

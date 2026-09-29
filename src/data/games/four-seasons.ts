@@ -24,8 +24,6 @@ export const fourSeasons: GameDefinition = {
   gameColorDark: "#33402c",
   gameColorPale: "#eef6e4",
   cardBack: CardBackColors.Moss,
-  cardDescription:
-    "Five cards in a cross and four corners: build the seasons round from the first corner card.",
   quickStart: [
     "The corner card sets the rank every foundation starts from.",
     "Foundations build up by suit, wrapping from King to Ace.",

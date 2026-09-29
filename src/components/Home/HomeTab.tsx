@@ -1,5 +1,5 @@
 import { Logo } from "@/components/common/Logo";
-import { ArtShelf, ContinueCard } from "@/components/Home/HomeArt";
+import { ArtShelf, ContinueShelf } from "@/components/Home/HomeArt";
 import { RoundButton, SectionTitle } from "@/components/ui/Nocturne";
 import { DealMeAGame } from "@/components/Home/DealMeAGame";
 import { GameOfTheDaySection } from "@/components/Home/GameOfTheDaySection";
@@ -101,17 +101,25 @@ export function HomeTab({
     ([, game]) => game.enabledOnLocalOnly,
   );
 
+  // Shelves scroll across the whole screen, not just the centred column,
+  // but start in line with it.
+  const shelfPadding =
+    (viewportWidth - renderedContentWidth) / 2 + scaledPageSidePadding;
   const section = (title: string, children: ReactNode) => (
-    <View
-      style={{ width: "100%", maxWidth: contentMaxWidth, alignSelf: "center" }}
-    >
-      <View style={{ paddingHorizontal: scaledPageSidePadding }}>
+    <View style={{ width: "100%" }}>
+      <View
+        style={{
+          width: "100%",
+          maxWidth: contentMaxWidth,
+          alignSelf: "center",
+          paddingHorizontal: scaledPageSidePadding,
+        }}
+      >
         <SectionTitle>{title}</SectionTitle>
       </View>
       {children}
     </View>
   );
-  const lastPlayed = jumpBackInGames[0];
 
   return (
     <View style={{ flex: 1 }}>
@@ -120,11 +128,12 @@ export function HomeTab({
         contentContainerStyle={{
           paddingTop: contentPaddingTop,
           paddingBottom: contentPaddingBottom,
-          gap: spacing(36),
+          gap: spacing(54),
         }}
-        onScroll={(event) =>
-          onScrolledChange(event.nativeEvent.contentOffset.y > 1)
-        }
+        onScroll={(event) => {
+          const y = event.nativeEvent.contentOffset.y;
+          onScrolledChange(y > 1);
+        }}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
       >
@@ -161,7 +170,9 @@ export function HomeTab({
             t("sections.localOnly"),
             <ArtShelf
               games={localOnlyGames as HomeGameEntry[]}
-              pageSidePadding={scaledPageSidePadding}
+              pageSidePadding={shelfPadding}
+              favorites={favorites}
+              onToggleFavorite={onToggleFavorite}
             />,
           )}
 
@@ -170,16 +181,19 @@ export function HomeTab({
             t("sections.easyGames"),
             <ArtShelf
               games={easyGames}
-              pageSidePadding={scaledPageSidePadding}
+              pageSidePadding={shelfPadding}
+              favorites={favorites}
+              onToggleFavorite={onToggleFavorite}
             />,
           )}
 
-        {lastPlayed &&
+        {jumpBackInGames.length > 0 &&
           section(
             t("sections.continue"),
-            <View style={{ paddingHorizontal: scaledPageSidePadding }}>
-              <ContinueCard path={lastPlayed[0]} game={lastPlayed[1]} />
-            </View>,
+            <ContinueShelf
+              games={jumpBackInGames}
+              pageSidePadding={shelfPadding}
+            />,
           )}
 
         {favoriteGames.length > 0 &&
@@ -187,7 +201,9 @@ export function HomeTab({
             t("sections.favorites"),
             <ArtShelf
               games={favoriteGames}
-              pageSidePadding={scaledPageSidePadding}
+              pageSidePadding={shelfPadding}
+              favorites={favorites}
+              onToggleFavorite={onToggleFavorite}
             />,
           )}
 

@@ -4,6 +4,9 @@ import {
   DEFAULT_GAME_SETTINGS,
   getDefaultGameSettings,
   getGameSettings,
+  loadFavoriteGames,
+  resetAllSettings,
+  toggleFavoriteGame,
   type GameSettings,
 } from "@/data/game-menu";
 
@@ -127,5 +130,32 @@ describe("compactGameSettings", () => {
 
     const stored = compactGameSettings(settings, path);
     expect(getGameSettings({ [path]: stored }, path)).toEqual(settings);
+  });
+});
+
+describe("favourites", () => {
+  test("a game with no stored entry gets its own copy of the defaults", () => {
+    const settings = getGameSettings({}, "/canfield");
+    settings.isFavorite = true;
+    settings.stats.wins = 5;
+    expect(DEFAULT_GAME_SETTINGS.isFavorite).toBe(false);
+    expect(DEFAULT_GAME_SETTINGS.stats.wins).toBe(0);
+  });
+
+  test("starring a game saves it, and starring it again removes it", async () => {
+    await resetAllSettings();
+    expect(await toggleFavoriteGame("/canfield")).toEqual(
+      new Set(["/canfield"]),
+    );
+    expect(await toggleFavoriteGame("/klondike/")).toEqual(
+      new Set(["/canfield", "/klondike"]),
+    );
+    expect(await loadFavoriteGames()).toEqual(
+      new Set(["/canfield", "/klondike"]),
+    );
+    expect(await toggleFavoriteGame("/canfield")).toEqual(
+      new Set(["/klondike"]),
+    );
+    expect(await loadFavoriteGames()).toEqual(new Set(["/klondike"]));
   });
 });

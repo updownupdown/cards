@@ -26,8 +26,6 @@ export const baroness: GameDefinition = {
   gameColorDark: "#3a1620",
   gameColorPale: "#f3d6dd",
   cardBack: CardBackColors.Rose,
-  cardDescription:
-    "Clear five piles by discarding cards that add up to thirteen.",
   quickStart: [
     "Discard lone Ks, or pairs that add to 13.",
     "As = 1. Deal when stuck.",

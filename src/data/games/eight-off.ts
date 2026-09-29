@@ -26,8 +26,6 @@ export const eightOff: GameDefinition = {
   gameColorDark: "#0e2741",
   gameColorPale: "#d9ffff",
   cardBack: CardBackColors.Ocean,
-  cardDescription:
-    "A roomy, same-suit FreeCell relative, with eight cells and Kings-only columns.",
   quickStart: [
     "Move cards to foundations by suit, from A to K.",
     "Build tableau columns down by suit.",

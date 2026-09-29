@@ -29,8 +29,6 @@ export const labyrinth: GameDefinition = {
   gameColorDark: "#1c1f26",
   gameColorPale: "#dde4f2",
   cardBack: CardBackColors.Slate,
-  cardDescription:
-    "Deal row after row, and work cards free from the top and bottom of the maze.",
   quickStart: [
     "Build all four foundations by suit, from Ace to King.",
     "Only cards with an open space above or below are free.",

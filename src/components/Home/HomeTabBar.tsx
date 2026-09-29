@@ -1,9 +1,8 @@
-import { useKeyboardState } from "@/hooks/useKeyboardLift";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
+import { useGlassStyle } from "@/components/ui/FloatingBar";
 import {
   Colors,
   rgba,
@@ -55,7 +54,7 @@ export function HomeTabBar({
   const insets = useSafeAreaInsets();
   const { spacing, ui } = useResponsiveMetrics();
   const { t } = useTranslation("home");
-  const keyboard = useKeyboardState();
+  const glass = useGlassStyle();
   const backgroundOpacity = useSharedValue(showBackground ? 1 : 0);
   const backgroundStyle = useAnimatedStyle(() => ({
     opacity: backgroundOpacity.value,
@@ -82,11 +81,7 @@ export function HomeTabBar({
           right: 0,
           bottom: 0,
           zIndex: 8,
-          // Out of the way while the keyboard is up, so only the search box
-          // rides above it.
-          opacity: keyboard.visible ? 0 : 1,
         },
-        keyboard.visible && pointerEventsStyles.none,
       ]}
     >
       {/* The header's fade, mirrored: content scrolling past the floating pill
@@ -147,14 +142,7 @@ export function HomeTabBar({
             {
               width: "100%",
               height: spacing(layoutDims.tabBarHeight),
-              borderRadius: spacing(22),
-              backgroundColor: rgba(theme.surface, 0.92),
-              borderWidth: 1,
-              borderColor: rgba(theme.ink, 0.08),
-              ...homeSurfaceShadow(spacing, { translucent: true }),
-              ...(Platform.OS === "web"
-                ? ({ backdropFilter: "blur(14px)" } as object)
-                : null),
+              ...glass,
             },
           ]}
         >
@@ -193,13 +181,13 @@ export function HomeTabBar({
                 <Icon
                   name={tab.icon}
                   size={spacing(24)}
-                  color={isActive ? theme.accent : theme.faint}
+                  color={isActive ? theme.accent : theme.dim}
                   style={{ ...transitionStyles.all02sec }}
                 />
                 <Text
                   size="xxs"
                   weight={400}
-                  color={isActive ? theme.ink : theme.faint}
+                  color={isActive ? theme.ink : theme.dim}
                   style={{ fontSize: spacing(11), lineHeight: spacing(13) }}
                 >
                   {label}

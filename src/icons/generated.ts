@@ -10,40 +10,28 @@ import ArrowBackIcon from "./ArrowBack.svg";
 import ArrowDownIcon from "./ArrowDown.svg";
 import ArrowForwardIcon from "./ArrowForward.svg";
 import ArrowUpIcon from "./ArrowUp.svg";
-import AttributionIcon from "./Attribution.svg";
 import CancelIcon from "./Cancel.svg";
 import CardColumnIcon from "./CardColumn.svg";
 import CardRowIcon from "./CardRow.svg";
-import CardRowColumnIcon from "./CardRowColumn.svg";
 import ChartIcon from "./Chart.svg";
 import CheckBoxOffIcon from "./CheckBoxOff.svg";
 import CheckBoxOnIcon from "./CheckBoxOn.svg";
 import CheckCircleIcon from "./CheckCircle.svg";
 import ChevronLeftIcon from "./ChevronLeft.svg";
 import ChevronRightIcon from "./ChevronRight.svg";
-import ClockIcon from "./Clock.svg";
 import CloseIcon from "./Close.svg";
 import ClubsIcon from "./Clubs.svg";
-import DeleteIcon from "./Delete.svg";
 import DiamondsIcon from "./Diamonds.svg";
-import DiceIcon from "./Dice.svg";
-import DoneIcon from "./Done.svg";
 import DoorIcon from "./Door.svg";
 import DragonIcon from "./Dragon.svg";
-import DungeonIcon from "./Dungeon.svg";
 import EasyIcon from "./Easy.svg";
 import EqualOutlineIcon from "./EqualOutline.svg";
 import EquipIcon from "./Equip.svg";
 import ExpandLessIcon from "./ExpandLess.svg";
 import ExpandMoreIcon from "./ExpandMore.svg";
-import ExploreIcon from "./Explore.svg";
-import FactIcon from "./Fact.svg";
 import FastForwardIcon from "./FastForward.svg";
-import FeaturedIcon from "./Featured.svg";
-import FilterIcon from "./Filter.svg";
 import FistIcon from "./Fist.svg";
 import FreeCellIcon from "./FreeCell.svg";
-import GalaxyIcon from "./Galaxy.svg";
 import GalleryIcon from "./Gallery.svg";
 import GamesIcon from "./Games.svg";
 import GrappleHookIcon from "./GrappleHook.svg";
@@ -54,26 +42,20 @@ import HerbsIcon from "./Herbs.svg";
 import HerbsBowlIcon from "./HerbsBowl.svg";
 import HomeIcon from "./Home.svg";
 import InfoIcon from "./Info.svg";
-import InfoOutlineIcon from "./InfoOutline.svg";
 import InstructionsIcon from "./Instructions.svg";
 import JokerIcon from "./Joker.svg";
 import KingIcon from "./King.svg";
-import ListLargeIcon from "./ListLarge.svg";
-import ListMediumIcon from "./ListMedium.svg";
-import ListSmallIcon from "./ListSmall.svg";
+import LightbulbIcon from "./Lightbulb.svg";
 import LockIcon from "./Lock.svg";
 import MenuIcon from "./Menu.svg";
 import MilkyWayIcon from "./MilkyWay.svg";
 import MoreIcon from "./More.svg";
-import MoreVerticalIcon from "./MoreVertical.svg";
 import OfferIcon from "./Offer.svg";
-import PalmTreeIcon from "./PalmTree.svg";
 import PlayIcon from "./Play.svg";
 import PlayHandIcon from "./PlayHand.svg";
 import PlusOutlineIcon from "./PlusOutline.svg";
 import PotionIcon from "./Potion.svg";
 import QuoteIcon from "./Quote.svg";
-import RainbowIcon from "./Rainbow.svg";
 import RecentIcon from "./Recent.svg";
 import ResetIcon from "./Reset.svg";
 import RotateDeviceIcon from "./RotateDevice.svg";
@@ -86,17 +68,12 @@ import ShuffleIcon from "./Shuffle.svg";
 import SkullIcon from "./Skull.svg";
 import SmokeBombIcon from "./SmokeBomb.svg";
 import SpadesIcon from "./Spades.svg";
-import StampIcon from "./Stamp.svg";
 import StarIcon from "./Star.svg";
 import StarOutlineIcon from "./StarOutline.svg";
-import SuitsIcon from "./Suits.svg";
 import SwordIcon from "./Sword.svg";
-import TagIcon from "./Tag.svg";
 import TaoIcon from "./Tao.svg";
-import TouchIcon from "./Touch.svg";
 import TrophyIcon from "./Trophy.svg";
 import UndoIcon from "./Undo.svg";
-import ZoomOutIcon from "./ZoomOut.svg";
 
 export type IconName =
   | "ace"
@@ -104,40 +81,28 @@ export type IconName =
   | "arrow-down"
   | "arrow-forward"
   | "arrow-up"
-  | "attribution"
   | "cancel"
   | "card-column"
   | "card-row"
-  | "card-row-column"
   | "chart"
   | "check-box-off"
   | "check-box-on"
   | "check-circle"
   | "chevron-left"
   | "chevron-right"
-  | "clock"
   | "close"
   | "clubs"
-  | "delete"
   | "diamonds"
-  | "dice"
-  | "done"
   | "door"
   | "dragon"
-  | "dungeon"
   | "easy"
   | "equal-outline"
   | "equip"
   | "expand-less"
   | "expand-more"
-  | "explore"
-  | "fact"
   | "fast-forward"
-  | "featured"
-  | "filter"
   | "fist"
   | "free-cell"
-  | "galaxy"
   | "gallery"
   | "games"
   | "grapple-hook"
@@ -148,26 +113,20 @@ export type IconName =
   | "herbs-bowl"
   | "home"
   | "info"
-  | "info-outline"
   | "instructions"
   | "joker"
   | "king"
-  | "list-large"
-  | "list-medium"
-  | "list-small"
+  | "lightbulb"
   | "lock"
   | "menu"
   | "milky-way"
   | "more"
-  | "more-vertical"
   | "offer"
-  | "palm-tree"
   | "play"
   | "play-hand"
   | "plus-outline"
   | "potion"
   | "quote"
-  | "rainbow"
   | "recent"
   | "reset"
   | "rotate-device"
@@ -180,109 +139,81 @@ export type IconName =
   | "skull"
   | "smoke-bomb"
   | "spades"
-  | "stamp"
   | "star"
   | "star-outline"
-  | "suits"
   | "sword"
-  | "tag"
   | "tao"
-  | "touch"
   | "trophy"
-  | "undo"
-  | "zoom-out";
+  | "undo";
 
 export const icons: Record<IconName, ComponentType<SvgProps>> = {
-  "ace": AceIcon,
+  ace: AceIcon,
   "arrow-back": ArrowBackIcon,
   "arrow-down": ArrowDownIcon,
   "arrow-forward": ArrowForwardIcon,
   "arrow-up": ArrowUpIcon,
-  "attribution": AttributionIcon,
-  "cancel": CancelIcon,
+  cancel: CancelIcon,
   "card-column": CardColumnIcon,
   "card-row": CardRowIcon,
-  "card-row-column": CardRowColumnIcon,
-  "chart": ChartIcon,
+  chart: ChartIcon,
   "check-box-off": CheckBoxOffIcon,
   "check-box-on": CheckBoxOnIcon,
   "check-circle": CheckCircleIcon,
   "chevron-left": ChevronLeftIcon,
   "chevron-right": ChevronRightIcon,
-  "clock": ClockIcon,
-  "close": CloseIcon,
-  "clubs": ClubsIcon,
-  "delete": DeleteIcon,
-  "diamonds": DiamondsIcon,
-  "dice": DiceIcon,
-  "done": DoneIcon,
-  "door": DoorIcon,
-  "dragon": DragonIcon,
-  "dungeon": DungeonIcon,
-  "easy": EasyIcon,
+  close: CloseIcon,
+  clubs: ClubsIcon,
+  diamonds: DiamondsIcon,
+  door: DoorIcon,
+  dragon: DragonIcon,
+  easy: EasyIcon,
   "equal-outline": EqualOutlineIcon,
-  "equip": EquipIcon,
+  equip: EquipIcon,
   "expand-less": ExpandLessIcon,
   "expand-more": ExpandMoreIcon,
-  "explore": ExploreIcon,
-  "fact": FactIcon,
   "fast-forward": FastForwardIcon,
-  "featured": FeaturedIcon,
-  "filter": FilterIcon,
-  "fist": FistIcon,
+  fist: FistIcon,
   "free-cell": FreeCellIcon,
-  "galaxy": GalaxyIcon,
-  "gallery": GalleryIcon,
-  "games": GamesIcon,
+  gallery: GalleryIcon,
+  games: GamesIcon,
   "grapple-hook": GrappleHookIcon,
-  "heart": HeartIcon,
-  "hearts": HeartsIcon,
+  heart: HeartIcon,
+  hearts: HeartsIcon,
   "help-outline": HelpOutlineIcon,
-  "herbs": HerbsIcon,
+  herbs: HerbsIcon,
   "herbs-bowl": HerbsBowlIcon,
-  "home": HomeIcon,
-  "info": InfoIcon,
-  "info-outline": InfoOutlineIcon,
-  "instructions": InstructionsIcon,
-  "joker": JokerIcon,
-  "king": KingIcon,
-  "list-large": ListLargeIcon,
-  "list-medium": ListMediumIcon,
-  "list-small": ListSmallIcon,
-  "lock": LockIcon,
-  "menu": MenuIcon,
+  home: HomeIcon,
+  info: InfoIcon,
+  instructions: InstructionsIcon,
+  joker: JokerIcon,
+  king: KingIcon,
+  lightbulb: LightbulbIcon,
+  lock: LockIcon,
+  menu: MenuIcon,
   "milky-way": MilkyWayIcon,
-  "more": MoreIcon,
-  "more-vertical": MoreVerticalIcon,
-  "offer": OfferIcon,
-  "palm-tree": PalmTreeIcon,
-  "play": PlayIcon,
+  more: MoreIcon,
+  offer: OfferIcon,
+  play: PlayIcon,
   "play-hand": PlayHandIcon,
   "plus-outline": PlusOutlineIcon,
-  "potion": PotionIcon,
-  "quote": QuoteIcon,
-  "rainbow": RainbowIcon,
-  "recent": RecentIcon,
-  "reset": ResetIcon,
+  potion: PotionIcon,
+  quote: QuoteIcon,
+  recent: RecentIcon,
+  reset: ResetIcon,
   "rotate-device": RotateDeviceIcon,
-  "royal": RoyalIcon,
-  "search": SearchIcon,
-  "sequence": SequenceIcon,
-  "settings": SettingsIcon,
-  "shield": ShieldIcon,
-  "shuffle": ShuffleIcon,
-  "skull": SkullIcon,
+  royal: RoyalIcon,
+  search: SearchIcon,
+  sequence: SequenceIcon,
+  settings: SettingsIcon,
+  shield: ShieldIcon,
+  shuffle: ShuffleIcon,
+  skull: SkullIcon,
   "smoke-bomb": SmokeBombIcon,
-  "spades": SpadesIcon,
-  "stamp": StampIcon,
-  "star": StarIcon,
+  spades: SpadesIcon,
+  star: StarIcon,
   "star-outline": StarOutlineIcon,
-  "suits": SuitsIcon,
-  "sword": SwordIcon,
-  "tag": TagIcon,
-  "tao": TaoIcon,
-  "touch": TouchIcon,
-  "trophy": TrophyIcon,
-  "undo": UndoIcon,
-  "zoom-out": ZoomOutIcon,
+  sword: SwordIcon,
+  tao: TaoIcon,
+  trophy: TrophyIcon,
+  undo: UndoIcon,
 };

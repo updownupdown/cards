@@ -1,0 +1,355 @@
+<title>Solitarius Design Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,700&family=DM+Mono:wght@500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=IM+Fell+English+SC&family=Jost:wght@400&family=Outfit:wght@300;400;500;600;700&family=Poiret+One&display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --night: #07080d; --surface: #14151f; --raise: #1f2030; --ink: #ece7f2;
+    --dim: #8e8aa4; --faint: #545168; --accent: #ffcf87; --accent-ink: #2a1a05;
+    --accent2: #9fb2ff; --sky: #161830;
+    --line: color-mix(in srgb, var(--ink) 9%, transparent);
+    --sans: "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --serif: "EB Garamond", Georgia, "Times New Roman", serif;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { background: var(--night); }
+  body {
+    margin: 0; background: var(--night); color: var(--ink);
+    font: 300 15px/1.55 var(--sans); padding-inline: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding-block: 0 140px; }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 500; margin: 0; text-wrap: balance; }
+  h2 { font-size: clamp(30px, 4vw, 42px); line-height: 1.1; }
+  h3 { font-size: 22px; }
+  p { margin: 0; max-width: 68ch; }
+  .kicker { font: 500 11px/1.2 var(--sans); letter-spacing: .18em; text-transform: uppercase; color: var(--accent); }
+  .caps { font: 500 10.5px/1.3 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+  .dim { color: var(--dim); }
+  a { color: var(--accent); }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* Top bar */
+  .bar {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+    margin-inline: -16px; padding: 10px 16px;
+    background: color-mix(in srgb, var(--night) 88%, transparent);
+    backdrop-filter: blur(12px); border-bottom: 1px solid var(--line);
+  }
+  .bar-in { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 10px; font: 400 18px var(--sans); margin-right: auto; }
+  .brand svg { width: 26px; height: 26px; }
+  .nav { display: flex; gap: 4px; flex-wrap: wrap; }
+  .nav a { text-decoration: none; color: var(--dim); font-size: 13px; padding: 6px 10px; border-radius: 99px; }
+  .nav a:hover { color: var(--ink); background: var(--raise); }
+  .themes { display: flex; gap: 6px; overflow-x: auto; max-width: 100%; padding-bottom: 2px; }
+  .theme-chip {
+    border: 1px solid var(--line); border-radius: 99px; padding: 5px 10px 5px 6px; background: none;
+    display: inline-flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;
+    font: 500 10.5px var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--dim);
+  }
+  .theme-chip i { width: 14px; height: 14px; border-radius: 50%; display: block; }
+  .theme-chip[aria-pressed="true"] { border-color: var(--accent); color: var(--ink); }
+
+  /* Sections */
+  section { padding-top: 64px; scroll-margin-top: 80px; display: grid; gap: 22px; }
+  .intro { display: grid; gap: 10px; }
+  .hero { padding-top: 48px; display: grid; gap: 14px; }
+  .hero h1 { font-size: clamp(38px, 6vw, 64px); line-height: 1; }
+  .hero p { color: var(--dim); font-size: 16px; }
+  .steps { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+  .steps span { border: 1px solid var(--line); border-radius: 99px; padding: 5px 12px; font-size: 13px; color: var(--dim); }
+
+  /* Selectable tiles */
+  .grid { display: grid; gap: 12px; }
+  .pick {
+    position: relative; border: 1px solid var(--line); border-radius: 16px; background: var(--surface);
+    padding: 14px; cursor: pointer; text-align: left; display: grid; gap: 10px; width: 100%; align-content: start;
+    transition: border-color .15s, background .15s;
+  }
+  .pick:hover { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+  .pick[aria-checked="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, var(--surface)); }
+  .pick[aria-checked="true"]::after {
+    content: "Picked"; position: absolute; top: 10px; right: 10px; font: 600 10px var(--sans);
+    letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink); background: var(--accent);
+    padding: 3px 7px; border-radius: 99px;
+  }
+  .tag { font: 500 11px var(--sans); color: var(--dim); letter-spacing: .06em; }
+  .pick h3 { font-size: 20px; }
+  .pick p { font-size: 13.5px; color: var(--dim); }
+
+  /* Logos */
+  .logo-groups { display: grid; gap: 26px; }
+  .logo-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+  .logo-stage { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; background: var(--night); border-radius: 12px; padding: 16px; }
+  .logo-stage .big { width: 96px; height: 96px; }
+  .logo-side { display: grid; gap: 10px; justify-items: center; }
+  .app-icon { width: 54px; height: 54px; border-radius: 14px; background: var(--surface); display: grid; place-items: center; border: 1px solid var(--line); }
+  .app-icon svg { width: 36px; height: 36px; }
+  .wordmark { display: flex; align-items: center; gap: 7px; font: 400 15px var(--sans); }
+  .wordmark svg { width: 22px; height: 22px; }
+
+  /* Icons */
+  .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .chip {
+    border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 7px 12px;
+    font-size: 13px; cursor: pointer; color: var(--dim);
+  }
+  .chip:hover { color: var(--ink); }
+  .chip.on { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
+  .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  .legend div { border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 4px; }
+  .legend b { font-weight: 500; }
+  .icon-group { display: grid; gap: 8px; }
+  .icon-rows { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 8px; }
+  .icon-row {
+    display: grid; grid-template-columns: 96px repeat(4, 1fr); align-items: center; gap: 4px;
+    border: 1px solid var(--line); border-radius: 14px; padding: 6px 8px; background: var(--surface);
+  }
+  .icon-row .nm { font-size: 12.5px; color: var(--dim); overflow-wrap: anywhere; }
+  .ic {
+    border: 1px solid transparent; background: none; border-radius: 10px; padding: 8px 0 4px; cursor: pointer;
+    display: grid; justify-items: center; gap: 2px; color: var(--ink);
+  }
+  .ic svg { width: 28px; height: 28px; }
+  .ic small { font: 500 9.5px var(--sans); letter-spacing: .1em; color: var(--faint); }
+  .ic:hover { background: var(--raise); }
+  .ic[aria-checked="true"] { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+  .ic[aria-checked="true"] small { color: var(--accent); }
+  .ic .t { fill: currentColor; fill-opacity: .22; stroke: none; }
+  .ic .f { fill: currentColor; stroke: none; }
+  .ic .kf { fill: var(--surface); stroke: none; }
+  .ic .k { stroke: var(--surface); fill: none; }
+  .ic[aria-checked="true"] .kf { fill: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+  .ic[aria-checked="true"] .k { stroke: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+
+  /* Cards */
+  .mix { display: grid; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px; }
+  .mix-controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
+  .field { display: grid; gap: 4px; }
+  select { background: var(--raise); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px; font: 400 14px var(--sans); }
+  .fan { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; }
+  .fan svg, .fan .cardbox { flex: 0 0 auto; width: 118px; height: auto; border-radius: 8px; box-shadow: 0 6px 18px rgb(0 0 0 / .35); }
+  .design { display: grid; gap: 12px; }
+  .design-head { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .pickset { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pickset button {
+    border: 1px solid var(--line); background: var(--raise); color: var(--dim); border-radius: 99px;
+    padding: 5px 11px; font-size: 12.5px; cursor: pointer;
+  }
+  .pickset button[aria-pressed="true"] { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+  .glyphs { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .glyph {
+    width: 40px; height: 48px; border-radius: 8px; border: 1px solid var(--line); cursor: copy;
+    display: grid; place-items: center; padding: 4px;
+  }
+  .glyph svg { width: 100%; height: 100%; }
+  .glyph:hover { border-color: var(--accent); }
+
+  /* Backs */
+  .backs { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .back { width: 100%; aspect-ratio: 250 / 350; border-radius: 12px; overflow: hidden; position: relative; box-shadow: 0 8px 22px rgb(0 0 0 / .4); }
+  .back svg { width: 100%; height: 100%; display: block; }
+  .back-html { position: absolute; inset: 0; }
+  .back-html img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .back-html .over { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .back-html .tone { position: absolute; inset: 0; mix-blend-mode: color; opacity: .9; }
+  .back-html .mask { position: absolute; inset: 0; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; }
+  .back-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* Notes */
+  .notes { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+  .note { border: 1px solid var(--line); border-radius: 18px; padding: 20px; background: var(--surface); display: grid; gap: 12px; align-content: start; }
+  .note ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+  .note li { max-width: 70ch; }
+  .meter { display: grid; grid-template-columns: 130px 1fr auto; gap: 10px; align-items: center; font-size: 13.5px; }
+  .meter .track { height: 6px; border-radius: 6px; background: color-mix(in srgb, var(--ink) 10%, transparent); overflow: hidden; }
+  .meter .track i { display: block; height: 100%; background: var(--accent); border-radius: 6px; }
+  .table-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font: 500 10.5px var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  /* Picks tray */
+  .tray {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: color-mix(in srgb, var(--surface) 94%, transparent); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--line);
+  }
+  .tray-in { max-width: 1180px; margin: 0 auto; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .tray-sum { flex: 1 1 320px; font-size: 13px; color: var(--dim); min-width: 0; }
+  .tray-sum b { color: var(--ink); font-weight: 500; }
+  .btn {
+    border: none; background: var(--accent); color: var(--accent-ink); border-radius: 12px; padding: 10px 16px;
+    font: 600 14px var(--sans); cursor: pointer;
+  }
+  .btn.quiet { background: var(--raise); color: var(--ink); }
+  .toast {
+    position: fixed; left: 50%; bottom: 84px; transform: translateX(-50%); z-index: 40;
+    background: var(--accent); color: var(--accent-ink); padding: 8px 14px; border-radius: 99px; font: 600 13px var(--sans);
+  }
+  textarea { width: 100%; min-height: 160px; background: var(--night); color: var(--ink); border: 1px solid var(--line); border-radius: 12px; padding: 10px; font: 12.5px/1.5 "DM Mono", ui-monospace, monospace; }
+  @media (max-width: 520px) {
+    .icon-row { grid-template-columns: 70px repeat(4, 1fr); }
+    .logo-stage .big { width: 76px; height: 76px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header class="bar">
+  <div class="bar-in">
+    <div class="brand" id="brand"></div>
+    <nav class="nav" aria-label="Sections">
+      <a href="#logo">Logo</a><a href="#icons">Icons</a><a href="#cards">Cards</a><a href="#backs">Backs</a><a href="#notes">Notes</a>
+    </nav>
+    <div class="themes" id="themes" role="group" aria-label="Preview in theme"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <div class="kicker">Solitarius · asset review</div>
+    <h1>Pick the marks, icons, faces and backs</h1>
+    <p>Every option here is drawn in the colours of the app theme chosen above, so you can see each one in Nocturne, Folio or any of the others. Tap an option to pick it; your picks are kept in this browser, and the tray at the bottom copies them as a list to send back.</p>
+    <div class="steps"><span>10 spade marks</span><span>3 alternates for each of 68 icons</span><span>7 card designs, mix and match</span><span>10 card backs</span></div>
+  </div>
+
+  <section id="logo">
+    <div class="intro">
+      <div class="kicker">Logo</div>
+      <h2>The spade mark</h2>
+      <p class="dim">Three that start from the original interlacing ribbons and move towards Nocturne, three variations on the current contour mark, and four new directions. Each shows large, as the app icon, and beside the name as it sits on Home.</p>
+    </div>
+    <div class="logo-groups" id="logos"></div>
+  </section>
+
+  <section id="icons">
+    <div class="intro">
+      <div class="kicker">Icons</div>
+      <h2>Three alternates for every icon</h2>
+      <p class="dim">The 68 icons the app uses (24 more were never referenced, and have been removed). Each alternate belongs to a family, so picking one family throughout keeps the set consistent; pick per icon where one reads better.</p>
+    </div>
+    <div class="legend">
+      <div><b>Current</b><span class="dim">What ships today: 1.7 line icons for the interface, detailed fills for game items.</span></div>
+      <div><b>A · Fine line</b><span class="dim">1.3 strokes, open and engraved, matching the serif and the star-chart map.</span></div>
+      <div><b>B · Duotone</b><span class="dim">A soft tone fill under a 1.6 outline. Reads a little heavier on busy game boards.</span></div>
+      <div><b>C · Solid</b><span class="dim">Filled glyphs with cut-outs. Strongest at small sizes and on artwork.</span></div>
+    </div>
+    <div class="toolbar">
+      <span class="caps">Pick for all</span>
+      <button class="chip" data-all="cur">Current</button>
+      <button class="chip" data-all="0">A · Fine line</button>
+      <button class="chip" data-all="1">B · Duotone</button>
+      <button class="chip" data-all="2">C · Solid</button>
+    </div>
+    <div id="icon-groups" class="grid" style="gap:26px"></div>
+  </section>
+
+  <section id="cards">
+    <div class="intro">
+      <div class="kicker">Card faces</div>
+      <h2>Seven decks, in three parts</h2>
+      <p class="dim">Each design has its own suits, index numerals and court figures (jack, queen, king and joker). Pick the suits, the numerals and the courts separately; the preview below combines your three picks. Switch the layout to see each face as the app's Regular, Tableau and Small cards. Tap any suit or numeral to copy it as SVG, ready to paste into Figma.</p>
+    </div>
+    <div class="mix">
+      <div class="mix-controls">
+        <div class="field"><label class="caps" for="mix-suits">Suits</label><select id="mix-suits"></select></div>
+        <div class="field"><label class="caps" for="mix-ranks">Numerals</label><select id="mix-ranks"></select></div>
+        <div class="field"><label class="caps" for="mix-courts">Courts</label><select id="mix-courts"></select></div>
+        <div class="field"><span class="caps">Layout</span><div class="pickset" id="layouts"></div></div>
+      </div>
+      <div class="fan" id="mix-fan"></div>
+    </div>
+    <div id="designs" class="grid" style="gap:34px"></div>
+  </section>
+
+  <section id="backs">
+    <div class="intro">
+      <div class="kicker">Card backs</div>
+      <h2>One back for every game, in the theme's colours</h2>
+      <p class="dim">Games no longer have their own colours, so these share one back across the app and take the colours of the chosen theme: change the theme above and every back follows. The last two use each game's own artwork instead (shown here with two games' art).</p>
+    </div>
+    <div class="grid backs" id="back-grid"></div>
+  </section>
+
+  <section id="notes">
+    <div class="intro">
+      <div class="kicker">Notes</div>
+      <h2>Card sizes, confidence and costs</h2>
+    </div>
+    <div class="notes">
+      <article class="note">
+        <h3>How the card sizes are used</h3>
+        <p class="dim">Each size is a full set of 56 faces at 500 × 700, drawn as a separate Figma frame set.</p>
+        <div id="size-meters" class="grid" style="gap:8px"></div>
+        <ul>
+          <li><b>Classic is used by one game</b> (Rogue Run) and costs 740 KB and a fourth set to maintain. Regular has the same room for large pips and courts, so I'd move Rogue Run to Regular and drop Classic.</li>
+          <li><b>Small, Tableau and Regular each earn their place</b>: Small for dense grids (47 games), Tableau where cards overlap in columns and only the top strip shows (28), Regular for spread-out layouts with room (17).</li>
+          <li><b>Worth an audit:</b> a few Regular games stack cards in columns much like Tableau games do; moving those to Tableau makes the suit visible on every overlapped card. Spider Solitaire uses Small or Tableau depending on its variant, which is right.</li>
+          <li><b>Make the sizes one design with three layouts.</b> The layout switch above draws all three from the same suits, numerals and courts. Built that way in Figma (variants of one component, not three drawings), the sizes can't drift apart.</li>
+        </ul>
+      </article>
+      <article class="note">
+        <h3>How consistent can I make them?</h3>
+        <div class="meter"><span>Suits alone</span><span class="track"><i style="width:95%"></i></span><b>High</b></div>
+        <div class="meter"><span>Numerals alone</span><span class="track"><i style="width:90%"></i></span><b>High</b></div>
+        <div class="meter"><span>Stylised courts</span><span class="track"><i style="width:72%"></i></span><b>Good</b></div>
+        <div class="meter"><span>Detailed courts</span><span class="track"><i style="width:35%"></i></span><b>Low</b></div>
+        <ul>
+          <li><b>Suits and numerals: very confident.</b> They are vector shapes on one fixed grid, generated from a single definition, so every size and colour is geometrically identical. For Figma I'd deliver numerals converted to outlines, on a shared baseline and cap height, so no font needs installing.</li>
+          <li><b>Stylised courts (the ones on this page): confident.</b> They are built from one figure per rank in a given style, so the four suits and three sizes stay in step. They're a starting point to refine, not finished art.</li>
+          <li><b>Richly illustrated courts like today's</b> (hand-drawn figures with ornament, mirrored top and bottom): not something I'd promise at that quality. I can lay out the figures, symmetry and colour rules and produce clean vector drafts, but the finish needs an illustrator's pass.</li>
+        </ul>
+      </article>
+      <article class="note" style="grid-column: 1 / -1">
+        <h3>Card backs: options and what they cost</h3>
+        <p class="dim">Today each game names one of 22 inks, and each ink is its own 500 × 700 image. All of the options below can take the theme's colours and be the same for every game.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Option</th><th>How it's built</th><th>Bundle size</th><th>At run time</th><th>Follows theme</th></tr></thead>
+            <tbody>
+              <tr><td>Today: an ink per game</td><td>22 rendered images of one ornament</td><td class="num">≈ 2.1 MB</td><td>One image per game</td><td>No</td></tr>
+              <tr><td>Current ornament, tinted (B3)</td><td>One transparent image of the ornament, tinted with the accent over a theme-coloured card</td><td class="num">≈ 90 KB</td><td>One image, recoloured by the image view (no redraw)</td><td>Yes</td></tr>
+              <tr><td>Drawn patterns (B1, B2, B4–B8)</td><td>One transparent image per pattern (or two, for two-colour ones), tinted the same way</td><td class="num">30–120 KB each</td><td>Same as above</td><td>Yes</td></tr>
+              <tr><td>Drawn live as SVG</td><td>The pattern drawn in code for every card</td><td class="num">≈ 5 KB</td><td>Slow on Android with 50+ cards moving: avoid, or draw once and reuse</td><td>Yes</td></tr>
+              <tr><td>Game art, framed (B9)</td><td>The game's thumbnail, already in the app, under a frame</td><td class="num">≈ 0 extra</td><td>One more picture per game (≈ 50 KB, already loaded for Home)</td><td>Frame only</td></tr>
+              <tr><td>Game art, toned (B10)</td><td>As B9, with a colour layer over it</td><td class="num">≈ 0 extra</td><td>A tint layer; a true duotone would need images per theme (113 × 14): avoid</td><td>Yes</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <ul>
+          <li><b>My recommendation:</b> one tinted back for the whole app (B3 or a drawn pattern), which cuts about 2 MB and follows the theme, with game art as an optional setting ("Card backs: Theme / Game art") since it costs nothing extra.</li>
+          <li>The per-game <code>cardBack</code> ink in every game file would then go, along with <code>card-backs.ts</code> and the generation script.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+</main>
+
+<div class="tray">
+  <div class="tray-in">
+    <div class="tray-sum" id="tray-sum"></div>
+    <button class="btn quiet" id="show-picks">Show list</button>
+    <button class="btn" id="copy-picks">Copy picks</button>
+  </div>
+  <div class="tray-in" id="picks-box" hidden style="margin-top:10px"><textarea id="picks-text" readonly aria-label="Your picks"></textarea></div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/*DATA*/
+</script>
+<script>
+/*CARDS*/
+</script>
+<script>
+/*BACKS*/
+</script>
+<script>
+/*APP*/
+</script>

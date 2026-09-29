@@ -25,8 +25,6 @@ export const thumbAndPouch: GameDefinition = {
     sourceName: "Artvee",
     sourceLink: "https://artvee.com/dl/mail-pouch/",
   },
-  cardDescription:
-    "A flexible Klondike where cards avoid their own suit and any card fills a gap.",
   quickStart: [
     "Build four foundations by suit, from A to K.",
     "Build down on any suit except the same suit; move correctly packed runs.",

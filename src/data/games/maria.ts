@@ -27,8 +27,6 @@ export const maria: GameDefinition = {
   gameColorDark: "#3c2d36",
   gameColorPale: "#efd9dd",
   cardBack: CardBackColors.Burgundy,
-  cardDescription:
-    "A nine-column Forty Thieves relative packed by alternating color.",
   quickStart: [
     "Build eight foundations by suit, from A to K.",
     "Build tableau down by alternating color.",

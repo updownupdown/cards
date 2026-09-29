@@ -1,69 +1,118 @@
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
+import { glassEdge, glassFill } from "@/components/ui/FloatingBar";
 import { hairline, Meter, Pill } from "@/components/ui/Nocturne";
+import type { GameSettingsMap } from "@/data/game-menu";
 import { isGameEnabled } from "@/data/games-data";
 import { GAMES_DATA } from "@/data/games-registry";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { foldForSearch, localizeGameTitle } from "@/i18n/content";
-import { Icon } from "@/icons";
+import { Icon, type IconName } from "@/icons";
 import { FontWeight, layoutDims, rgba, theme } from "@/styles/styles";
 import type { Href } from "expo-router";
-import { Image } from "expo-image";
 import { useMemo, useRef, useState } from "react";
-import { FlatList, Platform, Pressable, TextInput, View } from "react-native";
+import {
+  Animated,
+  Keyboard,
+  Platform,
+  Pressable,
+  ScrollView,
+  SectionList,
+  StyleSheet,
+  TextInput,
+  View,
+} from "react-native";
 import { FavButton } from "./FavButton";
-import { gameArt, useGameCategory } from "./HomeArt";
-import { HomeHeaderBackground } from "./HomeHeader";
-import { useTabReadyImage } from "./TabReady";
 
-type Filter = "all" | "unplayed" | "favorites";
-type Sort = "az" | "difficulty" | "recent";
+const FILTERS = ["all", "unplayed", "favorites", "unbeaten", "won"] as const;
+type Filter = (typeof FILTERS)[number];
+
+// Up arrows run low to high, down arrows high to low.
+const SORTS = [
+  "az",
+  "recent",
+  "easiest",
+  "hardest",
+  "leastLuck",
+  "mostLuck",
+  "leastPlayed",
+  "mostPlayed",
+] as const;
+type Sort = (typeof SORTS)[number];
+
 /** The Recent order lists this many games, last played first. */
 const RECENT_COUNT = 20;
+/** Width of the index letters' column, in the A–Z order. */
+const INDEX_WIDTH = 44;
+/** Every result row is this tall, so the index knows where sections start. */
+const ROW_HEIGHT = 52;
+/** The list's space above its first row. */
+const LIST_TOP = 8;
+
+/** The list's top edge fades on the web, where CSS masks are available. */
+const listFade =
+  Platform.OS === "web"
+    ? ({
+        maskImage: "linear-gradient(to bottom, transparent 0, black 10px)",
+        WebkitMaskImage:
+          "linear-gradient(to bottom, transparent 0, black 10px)",
+      } as object)
+    : null;
+
+const AnimatedSectionList = Animated.createAnimatedComponent(
+  SectionList<HomeGameEntry, Section>,
+);
 
 type SearchTabProps = {
   allEnabledGames: HomeGameEntry[];
-  unplayedGamePaths: string[];
+  settingsMap: GameSettingsMap;
   favorites: Set<string>;
   recentPaths: string[];
   onToggleFavorite: (path: string) => void;
-  showHeaderBackground: boolean;
-  onScrolledChange: (isScrolled: boolean) => void;
   contentPaddingTop: number;
   contentPaddingBottom: number;
 };
 
+type Section = { key: string; data: HomeGameEntry[] };
+
 export function SearchTab({
   allEnabledGames,
-  unplayedGamePaths,
+  settingsMap,
   favorites,
   recentPaths,
   onToggleFavorite,
-  showHeaderBackground,
-  onScrolledChange,
   contentPaddingTop,
   contentPaddingBottom,
 }: SearchTabProps) {
-  const { ui, spacing, font } = useResponsiveMetrics();
+  const { ui, spacing } = useResponsiveMetrics();
   const { t } = useTranslation("home");
   const language = useDisplayLanguage();
-  const inputRef = useRef<TextInput>(null);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("az");
   const [sortOpen, setSortOpen] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
   const pageSidePadding = spacing(layoutDims.pagePadding);
-  const unplayed = useMemo(
-    () => new Set(unplayedGamePaths),
-    [unplayedGamePaths],
+  const indexed = sort === "az";
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const onScroll = useMemo(
+    () =>
+      Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
+        useNativeDriver: Platform.OS !== "web",
+      }),
+    [scrollY],
   );
+
+  const stats = (path: string) => settingsMap[path]?.stats;
 
   const games = useMemo(() => {
     const normalizedQuery = foldForSearch(query.trim());
     const title = ([path, game]: HomeGameEntry) =>
       localizeGameTitle(game, path, language);
+    const attempts = ([path]: HomeGameEntry) => stats(path)?.attempts ?? 0;
+    const wins = ([path]: HomeGameEntry) => stats(path)?.wins ?? 0;
     let list: HomeGameEntry[] =
       sort === "recent"
         ? recentPaths
@@ -71,25 +120,32 @@ export function SearchTab({
             .filter(([, game]) => isGameEnabled(game))
             .slice(0, RECENT_COUNT)
         : [...allEnabledGames];
-    list = list.filter(([path, game]) => {
-      if (filter === "unplayed" && !unplayed.has(path)) return false;
+    list = list.filter((entry) => {
+      const [path, game] = entry;
+      if (filter === "unplayed" && attempts(entry) > 0) return false;
       if (filter === "favorites" && !favorites.has(path)) return false;
+      if (filter === "unbeaten" && (attempts(entry) === 0 || wins(entry) > 0))
+        return false;
+      if (filter === "won" && wins(entry) === 0) return false;
       // Match the translated title, the English title and its aliases.
       return (
         !normalizedQuery ||
-        [title([path, game]), game.title, ...(game.aliases ?? [])].some(
-          (name) => foldForSearch(name).includes(normalizedQuery),
+        [title(entry), game.title, ...(game.aliases ?? [])].some((name) =>
+          foldForSearch(name).includes(normalizedQuery),
         )
       );
     });
-    if (sort === "az")
-      list.sort((a, b) => title(a).localeCompare(title(b), language));
-    if (sort === "difficulty")
-      list.sort(
-        (a, b) =>
-          a[1].rating.difficulty - b[1].rating.difficulty ||
-          title(a).localeCompare(title(b), language),
-      );
+    const byTitle = (a: HomeGameEntry, b: HomeGameEntry) =>
+      title(a).localeCompare(title(b), language);
+    const by = (value: (entry: HomeGameEntry) => number) =>
+      list.sort((a, b) => value(a) - value(b) || byTitle(a, b));
+    if (sort === "az") list.sort(byTitle);
+    if (sort === "easiest") by(([, game]) => game.rating.difficulty);
+    if (sort === "hardest") by(([, game]) => -game.rating.difficulty);
+    if (sort === "leastLuck") by(([, game]) => game.rating.luck);
+    if (sort === "mostLuck") by(([, game]) => -game.rating.luck);
+    if (sort === "leastPlayed") by((entry) => attempts(entry));
+    if (sort === "mostPlayed") by((entry) => -attempts(entry));
     return list;
   }, [
     allEnabledGames,
@@ -98,204 +154,440 @@ export function SearchTab({
     language,
     query,
     recentPaths,
+    settingsMap,
     sort,
-    unplayed,
   ]);
 
-  const sortLabels: Record<Sort, string> = {
-    az: t("search.sortAZ"),
-    difficulty: t("search.sortDifficulty"),
-    recent: t("search.sortRecent"),
+  // In A–Z order, a section per first letter; otherwise one list.
+  const sections = useMemo<Section[]>(() => {
+    if (!indexed) return [{ key: "", data: games }];
+    const byLetter = new Map<string, HomeGameEntry[]>();
+    for (const entry of games) {
+      const letter = foldForSearch(
+        localizeGameTitle(entry[1], entry[0], language),
+      )
+        .charAt(0)
+        .toUpperCase();
+      const key = /[A-Z]/.test(letter) ? letter : "#";
+      byLetter.set(key, [...(byLetter.get(key) ?? []), entry]);
+    }
+    return [...byLetter].map(([key, data]) => ({ key, data }));
+  }, [games, indexed, language]);
+
+  const sortOptions: Record<
+    Sort,
+    { label: string; icon?: IconName; accessibilityLabel?: string }
+  > = {
+    az: { label: t("search.sortAZ") },
+    recent: { label: t("search.sortRecent") },
+    easiest: {
+      label: t("search.sortDifficulty"),
+      icon: "arrow-up",
+      accessibilityLabel: t("search.sortEasiest"),
+    },
+    hardest: {
+      label: t("search.sortDifficulty"),
+      icon: "arrow-down",
+      accessibilityLabel: t("search.sortHardest"),
+    },
+    leastLuck: {
+      label: t("search.sortLuck"),
+      icon: "arrow-up",
+      accessibilityLabel: t("search.sortLeastLuck"),
+    },
+    mostLuck: {
+      label: t("search.sortLuck"),
+      icon: "arrow-down",
+      accessibilityLabel: t("search.sortMostLuck"),
+    },
+    leastPlayed: {
+      label: t("search.sortPlays"),
+      icon: "arrow-up",
+      accessibilityLabel: t("search.sortLeastPlayed"),
+    },
+    mostPlayed: {
+      label: t("search.sortPlays"),
+      icon: "arrow-down",
+      accessibilityLabel: t("search.sortMostPlayed"),
+    },
+  };
+  const filterLabels: Record<Filter, string> = {
+    all: t("search.all"),
+    unplayed: t("search.unplayed"),
+    favorites: t("sections.favorites"),
+    unbeaten: t("search.unbeaten"),
+    won: t("search.won"),
   };
 
-  const webInputProps =
-    Platform.OS === "web"
-      ? ({ id: "home-tab-search", name: "home-tab-search" } as object)
-      : undefined;
-
-  const header = (
-    <View style={{ gap: spacing(14), marginBottom: spacing(6), zIndex: 2 }}>
-      <View
-        accessibilityRole="search"
-        style={{
-          height: spacing(48),
-          borderRadius: spacing(14),
-          backgroundColor: theme.surface,
-          borderWidth: 1,
-          borderColor: query ? rgba(theme.accent, 0.4) : hairline(),
-          flexDirection: "row",
-          alignItems: "center",
-          paddingHorizontal: spacing(14),
-          gap: spacing(10),
-        }}
-      >
-        <Icon name="search" size={spacing(20)} color={theme.dim} />
-        <TextInput
-          ref={inputRef}
-          {...webInputProps}
-          value={query}
-          onChangeText={setQuery}
-          placeholder={t("search.placeholder")}
-          placeholderTextColor={theme.faint}
-          autoCapitalize="none"
-          style={{
-            flex: 1,
-            minWidth: 0,
-            height: "100%",
-            color: theme.ink,
-            fontSize: font(16),
-            fontFamily: FontWeight[300],
-            outline: "none",
-          }}
-        />
-        {query ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t("search.clear")}
-            onPress={() => {
-              setQuery("");
-              inputRef.current?.blur();
-            }}
-            hitSlop={spacing(8)}
-          >
-            <Icon name="close" size={spacing(20)} color={theme.dim} />
-          </Pressable>
-        ) : null}
-      </View>
-
-      <View style={{ flexDirection: "row", gap: spacing(8) }}>
-        <Pill
-          label={t("search.all")}
-          selected={filter === "all"}
-          onPress={() => setFilter("all")}
-        />
-        <Pill
-          label={t("search.unplayed")}
-          selected={filter === "unplayed"}
-          onPress={() => setFilter("unplayed")}
-        />
-        <Pill
-          label={t("sections.favorites")}
-          iconName="star-outline"
-          selected={filter === "favorites"}
-          onPress={() => setFilter("favorites")}
-        />
-      </View>
-
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text size="xs" weight={300} color={theme.dim}>
-          {t("search.count", { count: games.length })}
-        </Text>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={t("search.sortBy")}
-          aria-expanded={sortOpen}
-          onPress={() => setSortOpen((open) => !open)}
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: spacing(4),
-          }}
-        >
-          <Text size="xs" weight={400} color={theme.ink}>
-            {sortLabels[sort]}
-          </Text>
-          <Icon
-            name={sortOpen ? "expand-less" : "expand-more"}
-            size={spacing(16)}
-            color={theme.dim}
-          />
-        </Pressable>
-      </View>
-      {sortOpen && (
-        <View
-          style={{
-            alignSelf: "flex-end",
-            minWidth: spacing(150),
-            marginTop: -spacing(6),
-            padding: spacing(4),
-            borderRadius: spacing(12),
-            backgroundColor: theme.raise,
-            borderWidth: 1,
-            borderColor: hairline(),
-          }}
-        >
-          {(Object.keys(sortLabels) as Sort[]).map((option) => (
-            <Pressable
-              key={option}
-              accessibilityRole="button"
-              accessibilityState={{ selected: option === sort }}
-              onPress={() => {
-                setSort(option);
-                setSortOpen(false);
-              }}
-              style={{
-                paddingVertical: spacing(9),
-                paddingHorizontal: spacing(12),
-                borderRadius: spacing(8),
-                backgroundColor:
-                  option === sort ? rgba(theme.accent, 0.12) : undefined,
-              }}
-            >
-              <Text
-                size="sm"
-                weight={400}
-                color={option === sort ? theme.accent : theme.ink}
-              >
-                {sortLabels[option]}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-      )}
-    </View>
-  );
+  const column = {
+    width: "100%",
+    maxWidth: ui.contentMaxWidth,
+    alignSelf: "center",
+    paddingHorizontal: pageSidePadding,
+  } as const;
 
   return (
     <View style={{ flex: 1 }}>
-      <FlatList
-        data={games}
-        keyExtractor={([path]) => path}
-        style={{ flex: 1 }}
-        onScroll={(event) =>
-          onScrolledChange(event.nativeEvent.contentOffset.y > 1)
+      {/* Starts under the header, so the index letters stick just below it,
+          and rows end at the header's foot: the header needs no background
+          of its own, and the sky shows through it. On the web the rows fade
+          out there rather than stopping. */}
+      <View style={[{ flex: 1, marginTop: headerHeight }, listFade]}>
+        <AnimatedSectionList
+          sections={sections}
+          keyExtractor={([path]) => path}
+          style={{ flex: 1 }}
+          keyboardShouldPersistTaps="handled"
+          // On the web, "on-drag" dismisses on any scroll, and filtering the
+          // list scrolls it: the field lost focus after every letter. A drag
+          // by the finger closes the keyboard there instead.
+          keyboardDismissMode={Platform.OS === "web" ? "none" : "on-drag"}
+          {...(Platform.OS === "web"
+            ? ({ onTouchMove: () => Keyboard.dismiss() } as object)
+            : null)}
+          stickySectionHeadersEnabled={false}
+          onScroll={onScroll}
+          scrollEventThrottle={16}
+          contentContainerStyle={{
+            paddingTop: spacing(LIST_TOP),
+            paddingBottom: contentPaddingBottom,
+          }}
+          showsVerticalScrollIndicator={false}
+          initialNumToRender={16}
+          maxToRenderPerBatch={16}
+          windowSize={7}
+          renderItem={({ item: [path, game] }) => (
+            <View
+              style={[
+                column,
+                indexed && {
+                  paddingLeft: pageSidePadding + spacing(INDEX_WIDTH),
+                },
+              ]}
+            >
+              <GameRow
+                path={path}
+                game={game}
+                isFavorite={favorites.has(path)}
+                onToggleFavorite={onToggleFavorite}
+              />
+            </View>
+          )}
+        />
+        {indexed && <IndexLetters sections={sections} scrollY={scrollY} />}
+      </View>
+
+      {/* The search box, filters, count and order stay at the top. */}
+      <View
+        onLayout={(event) =>
+          setHeaderHeight(Math.ceil(event.nativeEvent.layout.height))
         }
-        scrollEventThrottle={16}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{
-          width: "100%",
-          maxWidth: ui.contentMaxWidth,
-          alignSelf: "center",
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 2,
           paddingTop: contentPaddingTop,
-          paddingBottom: contentPaddingBottom,
-          paddingHorizontal: pageSidePadding,
         }}
-        showsVerticalScrollIndicator={false}
-        initialNumToRender={12}
-        maxToRenderPerBatch={12}
-        windowSize={7}
-        ListHeaderComponent={header}
-        renderItem={({ item: [path, game] }) => (
-          <GameRow
-            path={path}
-            game={game}
-            isFavorite={favorites.has(path)}
-            onToggleFavorite={onToggleFavorite}
+      >
+        <View
+          style={[
+            column,
+            { gap: spacing(16), paddingBottom: spacing(10), zIndex: 2 },
+          ]}
+        >
+          <SearchBox query={query} onChange={setQuery} />
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            style={{ marginHorizontal: -pageSidePadding }}
+            contentContainerStyle={{
+              paddingHorizontal: pageSidePadding,
+              gap: spacing(8),
+            }}
+          >
+            {FILTERS.map((key) => (
+              <Pill
+                key={key}
+                label={filterLabels[key]}
+                selected={filter === key}
+                onPress={() => setFilter(key)}
+              />
+            ))}
+          </ScrollView>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text size="xs" weight={400} color={theme.dim}>
+              {t("search.count", { count: games.length })}
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t("search.sortBy")}
+              aria-expanded={sortOpen}
+              onPress={() => setSortOpen((open) => !open)}
+              hitSlop={spacing(8)}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: spacing(4),
+                outline: "none",
+              }}
+            >
+              <SortLabel option={sortOptions[sort]} color={theme.ink} />
+              <Icon
+                name={sortOpen ? "expand-less" : "expand-more"}
+                size={spacing(16)}
+                color={theme.dim}
+              />
+            </Pressable>
+            {/* Hangs from the button, its right edge on the chevron's. */}
+            {sortOpen && (
+              <View
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  right: 0,
+                  marginTop: spacing(8),
+                  minWidth: spacing(200),
+                  padding: spacing(4),
+                  borderRadius: spacing(12),
+                  backgroundColor: theme.raise,
+                  borderWidth: 1,
+                  borderColor: hairline(),
+                  boxShadow: `0 ${spacing(8)}px ${spacing(24)}px ${rgba("#000000", 0.45)}`,
+                }}
+              >
+                {SORTS.map((option) => (
+                  <Pressable
+                    key={option}
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      sortOptions[option].accessibilityLabel ??
+                      sortOptions[option].label
+                    }
+                    accessibilityState={{ selected: option === sort }}
+                    onPress={() => {
+                      setSort(option);
+                      setSortOpen(false);
+                    }}
+                    style={{
+                      paddingVertical: spacing(9),
+                      paddingHorizontal: spacing(12),
+                      borderRadius: spacing(8),
+                      backgroundColor:
+                        option === sort ? rgba(theme.accent, 0.12) : undefined,
+                      outline: "none",
+                    }}
+                  >
+                    <SortLabel
+                      option={sortOptions[option]}
+                      color={option === sort ? theme.accent : theme.ink}
+                      size="sm"
+                    />
+                  </Pressable>
+                ))}
+              </View>
+            )}
+          </View>
+        </View>
+        {/* A tap anywhere outside the menu closes it. */}
+        {sortOpen && (
+          <Pressable
+            accessibilityLabel={t("search.sortBy")}
+            onPress={() => setSortOpen(false)}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 10000,
+              zIndex: 1,
+            }}
           />
         )}
-      />
-      <HomeHeaderBackground showBackground={showHeaderBackground} />
+      </View>
     </View>
   );
 }
 
-/** A game in the results: its art, name, family and difficulty. */
+function SortLabel({
+  option,
+  color,
+  size = "xs",
+}: {
+  option: { label: string; icon?: IconName };
+  color: string;
+  size?: "xs" | "sm";
+}) {
+  const { spacing } = useResponsiveMetrics();
+  return (
+    <View
+      style={{ flexDirection: "row", alignItems: "center", gap: spacing(4) }}
+    >
+      <Text size={size} weight={400} color={color}>
+        {option.label}
+      </Text>
+      {option.icon && (
+        <Icon name={option.icon} size={spacing(14)} color={color} />
+      )}
+    </View>
+  );
+}
+
+function SearchBox({
+  query,
+  onChange,
+}: {
+  query: string;
+  onChange: (query: string) => void;
+}) {
+  const { spacing, font } = useResponsiveMetrics();
+  const { t } = useTranslation("home");
+  const inputRef = useRef<TextInput>(null);
+  const webInputProps =
+    Platform.OS === "web"
+      ? ({ id: "home-tab-search", name: "home-tab-search" } as object)
+      : undefined;
+  return (
+    <View
+      accessibilityRole="search"
+      style={{
+        height: spacing(48),
+        // The glass of the floating bars, without their shadow.
+        borderRadius: spacing(16),
+        backgroundColor: glassFill(),
+        borderWidth: 1,
+        borderColor: query ? rgba(theme.accent, 0.5) : glassEdge(),
+        flexDirection: "row",
+        alignItems: "center",
+        paddingHorizontal: spacing(14),
+        gap: spacing(10),
+      }}
+    >
+      <Icon name="search" size={spacing(20)} color={theme.dim} />
+      <TextInput
+        ref={inputRef}
+        {...webInputProps}
+        value={query}
+        onChangeText={onChange}
+        placeholder={t("search.placeholder")}
+        placeholderTextColor={theme.dim}
+        autoCapitalize="none"
+        style={{
+          flex: 1,
+          minWidth: 0,
+          height: "100%",
+          color: theme.ink,
+          fontSize: font(16),
+          fontFamily: FontWeight[400],
+          outline: "none",
+        }}
+      />
+      {query ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t("search.clear")}
+          onPress={() => {
+            onChange("");
+            inputRef.current?.blur();
+          }}
+          hitSlop={spacing(8)}
+        >
+          <Icon name="close" size={spacing(20)} color={theme.dim} />
+        </Pressable>
+      ) : null}
+    </View>
+  );
+}
+
+/**
+ * The index down the left, like a printed index: each section's letter sits
+ * beside its first row, stays at the top while its games scroll past, and is
+ * pushed off by the next letter, so only one is ever at the top. All of it is
+ * worked out from the scroll position, since every row is the same height.
+ */
+function IndexLetters({
+  sections,
+  scrollY,
+}: {
+  sections: Section[];
+  scrollY: Animated.Value;
+}) {
+  const { spacing, font, ui } = useResponsiveMetrics();
+  const letterHeight = font(36);
+  const rowHeight = spacing(ROW_HEIGHT);
+  const starts: number[] = [];
+  let top = spacing(LIST_TOP);
+  for (const section of sections) {
+    starts.push(top);
+    top += section.data.length * rowHeight;
+  }
+  const far = 100000;
+  return (
+    <View
+      style={[
+        StyleSheet.absoluteFill,
+        { overflow: "hidden", pointerEvents: "none" },
+      ]}
+    >
+      <View
+        style={{
+          width: "100%",
+          maxWidth: ui.contentMaxWidth,
+          alignSelf: "center",
+          flex: 1,
+        }}
+      >
+        {sections.map((section, index) => {
+          const start = starts[index];
+          // Pushed off once the next letter reaches it.
+          const leave = (starts[index + 1] ?? far) - letterHeight - spacing(6);
+          const translateY = scrollY.interpolate({
+            inputRange: [
+              start - far,
+              start,
+              Math.max(start, leave),
+              Math.max(start, leave) + far,
+            ],
+            outputRange: [far, 0, 0, -far],
+          });
+          return (
+            <Animated.View
+              key={section.key}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: spacing(layoutDims.pagePadding),
+                transform: [{ translateY }],
+              }}
+            >
+              <Text
+                weight={500}
+                color={theme.accent}
+                style={{
+                  fontSize: font(30),
+                  lineHeight: letterHeight,
+                  paddingTop: spacing(6),
+                }}
+              >
+                {section.key}
+              </Text>
+            </Animated.View>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+/** A game in the results: its name, then its difficulty and its star. */
 function GameRow({
   path,
   game,
@@ -309,15 +601,14 @@ function GameRow({
 }) {
   const { spacing } = useResponsiveMetrics();
   const language = useDisplayLanguage();
-  const category = useGameCategory();
-  const source = gameArt(game);
-  const ready = useTabReadyImage(source);
-  const artSize = spacing(52);
+  const title = localizeGameTitle(game, path, language);
   return (
     <View
       style={{
+        height: spacing(ROW_HEIGHT),
         flexDirection: "row",
         alignItems: "center",
+        gap: spacing(12),
         borderBottomWidth: 1,
         borderBottomColor: hairline(),
       }}
@@ -325,54 +616,29 @@ function GameRow({
       <Pressable
         onPress={() => launchGame(path as Href)}
         accessibilityRole="button"
+        accessibilityLabel={title}
         style={{
           flex: 1,
-          flexDirection: "row",
-          alignItems: "center",
-          gap: spacing(14),
-          paddingVertical: spacing(10),
+          alignSelf: "stretch",
+          justifyContent: "center",
+          outline: "none",
         }}
       >
-        <Image
-          source={source}
-          cachePolicy="memory"
-          contentFit="cover"
-          style={{
-            width: artSize,
-            height: artSize,
-            borderRadius: spacing(6),
-            backgroundColor: game.gameColorDark,
-          }}
-          {...ready}
-        />
-        <View style={{ flex: 1, minWidth: 0, gap: spacing(5) }}>
-          <Text size="md" weight={500} numberOfLines={1}>
-            {localizeGameTitle(game, path, language)}
-          </Text>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: spacing(10),
-            }}
-          >
-            <Text size="xs" weight={300} color={theme.dim} numberOfLines={1}>
-              {category(game)}
-            </Text>
-            <Meter
-              value={game.rating.difficulty / 100}
-              style={{ width: spacing(44) }}
-            />
-          </View>
-        </View>
+        <Text size="md" weight={400} numberOfLines={1}>
+          {title}
+        </Text>
       </Pressable>
+      <Meter
+        value={game.rating.difficulty / 100}
+        style={{ width: spacing(40) }}
+      />
       <FavButton
         isFavorite={isFavorite}
         onToggleFavorite={() => onToggleFavorite(path)}
-        size={spacing(40)}
+        size={spacing(36)}
         iconSize={spacing(20)}
         activeColor={theme.accent}
-        inactiveColor={theme.faint}
+        inactiveColor={theme.dim}
       />
     </View>
   );

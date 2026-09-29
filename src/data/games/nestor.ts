@@ -25,7 +25,6 @@ export const nestor: GameDefinition = {
   gameColorDark: "#112e49",
   gameColorPale: "#e7f7ff",
   cardBack: CardBackColors.Ocean,
-  cardDescription: "Pair off matching ranks to empty every column.",
   quickStart: [
     "Clear all cards by removing pairs of matching ranks from the bottom of columns or the reserve.",
   ],

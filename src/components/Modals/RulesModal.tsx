@@ -1,4 +1,5 @@
 import React from "react";
+import { usePalette } from "@/styles/palette";
 import ModalFull from "./ModalFull";
 import { Text } from "@/components/common/Text";
 import { getGameInfo } from "@/data/game-menu";
@@ -7,7 +8,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGame } from "@/i18n/content";
 import { flexStyles } from "@/styles/flexStyles";
-import { theme } from "@/styles/styles";
+import { rgba, theme } from "@/styles/styles";
 import { View, ViewStyle } from "react-native";
 import { RichText } from "../common/RichText";
 import { ScrollView } from "react-native-gesture-handler";
@@ -22,6 +23,7 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   );
   const { t } = useTranslation("game");
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   const modalStyles = useModalStyles();
   const headingColor = theme.accent;
 
@@ -50,6 +52,9 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
               gap: spacing(8),
               borderRadius: spacing(14),
               backgroundColor: theme.raise,
+              // Edged, so the summary stands apart from the rules under it.
+              borderWidth: 1,
+              borderColor: rgba(theme.accent, 0.35),
             }}
           />
 
@@ -75,6 +80,7 @@ export const QuickStart = ({
   style,
 }: QuickStartProps) => {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
 
   return (
     gameInfo.quickStart && (
@@ -89,10 +95,10 @@ export const QuickStart = ({
             }}
           >
             <Text
-              size="md"
+              size="sm"
               weight={600}
               color={headingColor}
-              style={{ minWidth: spacing(16) }}
+              style={{ minWidth: spacing(14) }}
             >
               {itemIndex + 1}.
             </Text>

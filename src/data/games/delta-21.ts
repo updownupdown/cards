@@ -26,8 +26,6 @@ export const delta21: GameDefinition = {
   gameColorDark: "#11343d",
   gameColorPale: "#c3e9ff",
   cardBack: CardBackColors.Ocean,
-  cardDescription:
-    "Balance four river fish populations to exactly 21 and publish your studies.",
   quickStart: [
     "Create columns of 21 and complete research goals along the way.",
     "Use face cards to lower totals. Avoid totals of 25 or more.",

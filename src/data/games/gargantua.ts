@@ -26,8 +26,6 @@ export const gargantua: GameDefinition = {
   gameColorDark: "#24323a",
   gameColorPale: "#dce5df",
   cardBack: CardBackColors.Teal,
-  cardDescription:
-    "Climb a nine-column, two-deck Klondike with eight foundations.",
   quickStart: [
     "Move both decks to eight foundations, built by suit from A to K.",
     "Build tableau down by alternating color and move ordered runs.",

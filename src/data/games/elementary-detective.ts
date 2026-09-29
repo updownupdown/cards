@@ -26,8 +26,6 @@ export const elementaryDetective: GameDefinition = {
   gameColorDark: "#221815",
   gameColorPale: "#c5f7da",
   cardBack: CardBackColors.Olive,
-  cardDescription:
-    "Find your hidden playmates through careful planning and deduction.",
   quickStart: [
     "Place guesses around the hidden playmates.",
     "Reveal playmates and score for each guess of the same suit on the same line.",

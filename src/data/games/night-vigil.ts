@@ -26,8 +26,6 @@ export const nightVigil: GameDefinition = {
   gameColorDark: "#11161a",
   gameColorPale: "#e7edf0",
   cardBack: CardBackColors.Ocean,
-  cardDescription:
-    "Match threats with tactical responses in a noir gauntlet of twelve rogues.",
   quickStart: [
     "Draw Responses one at a time. Match each Threat within 0-3 points, or spend your round's Smoke Bomb or Grapple Line. Resolve when ready.",
   ],

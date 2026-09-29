@@ -1,14 +1,10 @@
 import { Text } from "@/components/common/Text";
+import { usePalette } from "@/styles/palette";
+import { segmentChosen, segmentTrack } from "@/components/ui/Nocturne";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import {
-  Colors,
-  FontWeight,
-  rgba,
-  transitionStyles,
-  theme,
-} from "@/styles/styles";
+import { FontWeight, transitionStyles, theme } from "@/styles/styles";
 import {
   Pressable,
   type StyleProp,
@@ -51,9 +47,10 @@ export function RadioButtons<T extends string>({
   iconSize,
   vertical = false,
   flexAllButFirst = false,
-  selectedBackgroundColor = Colors.K850,
+  selectedBackgroundColor = segmentChosen(),
 }: RadioButtonsProps<T>) {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
 
   return (
     <View
@@ -61,10 +58,11 @@ export function RadioButtons<T extends string>({
         {
           display: "flex",
           flexDirection: vertical ? "column" : "row",
-          borderRadius: spacing(8),
-          padding: spacing(6),
-          gap: spacing(6),
-          backgroundColor: theme.raise,
+          // The segmented toggle's look (see Segmented in Nocturne).
+          ...segmentTrack(),
+          borderRadius: spacing(16),
+          padding: spacing(4),
+          gap: spacing(4),
         },
         containerStyle,
       ]}
@@ -91,15 +89,12 @@ export function RadioButtons<T extends string>({
               {
                 ...transitionStyles.limited04sec,
                 flex: flexAllButFirst && i !== 0 ? 1 : undefined,
-                borderRadius: spacing(6),
+                borderRadius: spacing(12),
                 paddingVertical: spacing(2),
                 paddingHorizontal: spacing(12),
                 gap: spacing(8),
                 height: "100%",
                 backgroundColor: isSelected ? selectedBg : "transparent",
-                boxShadow: isSelected
-                  ? `0 1px 2px ${rgba(Colors.K950, 0.18)}`
-                  : `0 1px 2px ${rgba(Colors.K950, 0)}`,
               },
               buttonStyle,
             ]}

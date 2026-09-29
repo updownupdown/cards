@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { usePalette } from "@/styles/palette";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
@@ -26,6 +27,7 @@ export function IntroPanel({
   closeLabel,
 }: IntroPanelProps) {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
 
   return (
     <View
@@ -34,7 +36,7 @@ export function IntroPanel({
         borderRadius: spacing(18),
         backgroundColor: rgba(theme.surface, 0.92),
         borderWidth: 1,
-        borderColor: rgba(theme.ink, 0.08),
+        borderColor: rgba(theme.ink, 0.14),
         overflow: "hidden",
         ...homeSurfaceShadow(spacing, { translucent: true }),
       }}

@@ -22,11 +22,22 @@
     "resetFilters": "Reset filters",
     "all": "All",
     "unplayed": "Unplayed",
+    "unbeaten": "Unbeaten",
+    "won": "Won",
+    "skill": "Low luck",
     "count_one": "{{count}} game",
     "count_other": "{{count}} games",
     "sortAZ": "A–Z",
     "sortDifficulty": "Difficulty",
+    "sortEasiest": "Easiest first",
+    "sortHardest": "Hardest first",
     "sortRecent": "Recent",
+    "sortLuck": "Luck",
+    "sortLeastLuck": "Least luck first",
+    "sortMostLuck": "Most luck first",
+    "sortPlays": "Play count",
+    "sortLeastPlayed": "Least played first",
+    "sortMostPlayed": "Most played first",
     "sortBy": "Sort"
   },
   "sections": {
@@ -49,7 +60,7 @@
   },
   "deal": {
     "title": "Random Deal",
-    "intro": "Swipe left or right to pass, or tap to play."
+    "intro": "Swipe to pass, tap to play"
   },
   "collect": {
     "games": "Games: {{won}}/{{total}}",
@@ -165,12 +176,65 @@
     "notNow": "Not now"
   },
   "gallery": {
-    "acquired": "Works acquired",
-    "roomsCompleted": "Rooms completed",
     "uncollected": "Win {{game}} to acquire this work.",
     "previous": "Previous work",
     "next": "Next work",
-    "play": "Play"
+    "play": "Play",
+    "views": {
+      "works": "Works",
+      "chapters": "Chapters",
+      "quotes": "Quotes"
+    },
+    "groupBy": {
+      "era": "Era",
+      "style": "Style",
+      "category": "Game Category",
+      "region": "Region",
+      "medium": "Medium"
+    },
+    "eras": {
+      "ancient": "Before 1400",
+      "renaissance": "1400–1599",
+      "c17": "17th Century",
+      "c18": "18th Century",
+      "early-c19": "1800–1849",
+      "late-c19": "1850–1899",
+      "c20": "20th Century"
+    },
+    "styles": {
+      "sacred": "Sacred & Illuminated",
+      "renaissance": "Renaissance",
+      "baroque": "Baroque & Golden Age",
+      "rococo": "Rococo & Neoclassical",
+      "east-asian": "East Asian",
+      "romanticism": "Romanticism",
+      "realism": "Realism",
+      "impressionism": "Impressionism & After",
+      "modern": "Modernism",
+      "satire": "Satire & Caricature",
+      "illustration": "Illustration & Natural History",
+      "architecture": "Maps & Architecture",
+      "decorative": "Decorative Arts"
+    },
+    "regions": {
+      "europe": "Europe",
+      "americas": "The Americas",
+      "east-asia": "East Asia",
+      "south-asia": "South Asia & the Himalaya",
+      "africa-middle-east": "Africa & the Middle East",
+      "oceania": "Oceania"
+    },
+    "media": {
+      "painting": "Paintings",
+      "drawing": "Drawings & Watercolours",
+      "print": "Prints",
+      "manuscript": "Manuscripts",
+      "object": "Objects & Textiles",
+      "photograph": "Photographs"
+    },
+    "close": "Close",
+    "back": "Back to Gallery",
+    "unknownArtist": "Unknown artist"
   },
   "header": {
     "stats": "Stats",

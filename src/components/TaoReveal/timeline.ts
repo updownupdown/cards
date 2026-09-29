@@ -260,17 +260,37 @@ export const SPECK_SCALE = 1.5625;
 /** The named stars are drawn this much larger than their base size. */
 export const STAR_DOT_SCALE = 1.25;
 /**
- * The named stars' colours: white, and a few that are clearly blue, green,
- * red, yellow or violet while staying close to white, like a real sky.
+ * The named stars' colours, as real stars show them (by temperature, from a
+ * hot blue through white and yellow to a cool orange). Most are white; the
+ * rest take one of the others.
  */
 export const STAR_TINTS = [
-  "#ffffff",
-  "#bcd3ff",
-  "#bff2cd",
-  "#ffc4b8",
-  "#ffe6a3",
-  "#d6c2ff",
+  "#fbf8ff",
+  "#aabfff",
+  "#cad7ff",
+  "#fff1d6",
+  "#ffd6a5",
+  "#ffbf8f",
 ] as const;
+
+/**
+ * A star's glow: layered soft halos in its own colour that fade out with
+ * distance, the way a bright star blooms on a long exposure. No spread, so
+ * no hard-edged ring round the star.
+ */
+export function starGlow(color: string, dot: number, bright: boolean) {
+  const strength = bright ? 1 : 0.7;
+  return [
+    `0 0 ${dot * 0.8}px ${rgbaHex(color, 0.95 * strength)}`,
+    `0 0 ${dot * 2.2}px ${rgbaHex(color, 0.55 * strength)}`,
+    `0 0 ${dot * (bright ? 5 : 3.5)}px ${rgbaHex(color, 0.28 * strength)}`,
+  ].join(", ");
+}
+
+function rgbaHex(hex: string, alpha: number) {
+  const value = parseInt(hex.slice(1), 16);
+  return `rgba(${(value >> 16) & 255}, ${(value >> 8) & 255}, ${value & 255}, ${alpha})`;
+}
 /** At most this share of a constellation's stars is coloured. */
 export const TINTED_SHARE = 0.25;
 
