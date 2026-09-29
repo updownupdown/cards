@@ -21,8 +21,7 @@
     "i18n": "node ./scripts/i18n.mjs",
     "pen-font:generate": "node ./scripts/generate-pen-font.mjs",
     "logo:generate": "node ./scripts/generate-logo-assets.mjs",
-    "starfield:generate": "node ./scripts/generate-starfield.mjs",
-    "glows:generate": "node ./scripts/generate-card-glows.mjs"
+    "starfield:generate": "node ./scripts/generate-starfield.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/eb-garamond": "^0.4.3",
