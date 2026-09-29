@@ -20,8 +20,7 @@
     "test": "jest",
     "i18n": "node ./scripts/i18n.mjs",
     "pen-font:generate": "node ./scripts/generate-pen-font.mjs",
-    "logo:generate": "node ./scripts/generate-logo-assets.mjs",
-    "starfield:generate": "node ./scripts/generate-starfield.mjs"
+    "logo:generate": "node ./scripts/generate-logo-assets.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/eb-garamond": "^0.4.3",

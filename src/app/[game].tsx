@@ -9,13 +9,14 @@ import {
 import { getGameComponentByPath } from "@/data/games-router";
 import { GAME_DEFINITIONS } from "@/data/games-registry";
 import { Colors } from "@/styles/styles";
+import { gamePalette, PaletteContext } from "@/styles/palette";
 import {
   router,
   useLocalSearchParams,
   Redirect,
   type ErrorBoundaryProps,
 } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, BackHandler, Platform, View } from "react-native";
 import { endGameLaunch } from "@/components/common/GameLaunchOverlay";
 import { i18n } from "@/i18n";
@@ -137,6 +138,15 @@ export default function DynamicGameRoute() {
     return () => subscription.remove();
   }, []);
 
+  const gameInfo = game ? getGameInfo(`/${game}`) : undefined;
+  const palette = useMemo(
+    () =>
+      gameInfo
+        ? gamePalette(gameInfo.gameColorDark, gameInfo.gameColorPale)
+        : null,
+    [gameInfo],
+  );
+
   // Verify parameters exist in your core definitions structure
   const GameComponent = game ? getGameComponentByPath(game) : null;
   // Gracefully boot back to root if game routing configurations fail
@@ -149,6 +159,11 @@ export default function DynamicGameRoute() {
   }
 
   // Keyed by game: when one game replaces another on this screen, the new one
-  // starts fresh instead of inheriting the previous game's state.
-  return <GameComponent key={game} />;
+  // starts fresh instead of inheriting the previous game's state. Everything
+  // in it (header, menus, rules, win box) takes the game's own palette.
+  return (
+    <PaletteContext.Provider value={palette}>
+      <GameComponent key={game} />
+    </PaletteContext.Provider>
+  );
 }

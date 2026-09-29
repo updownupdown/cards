@@ -1,4 +1,5 @@
 import { HexColor } from "@/data/games-data";
+import { usePalette } from "@/styles/palette";
 import { FontWeight as FontFamilies, SerifFont, theme } from "@/styles/styles";
 import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
 import { createElement, forwardRef, useMemo, type ReactNode } from "react";
@@ -118,13 +119,15 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
       weight = "regular",
       textTransform = "none",
       style,
-      color = theme.ink,
+      color: colorProp,
       serif = false,
       italic = false,
       smallCaps = false,
       ...otherProps
     } = props;
     const ui = useResponsiveUiLayout();
+    const theme = usePalette();
+    const color = colorProp ?? theme.ink;
 
     const fontSize = useMemo(() => {
       return getScaledTextSize(size, ui.textScale);

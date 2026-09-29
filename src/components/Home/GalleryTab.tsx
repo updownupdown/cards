@@ -10,8 +10,6 @@ import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Segmented } from "@/components/ui/Nocturne";
-import { COLLECT_HOME_TAB_INDEX } from "./home-view-state";
-import { useStarfield } from "./Starfield";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { useState } from "react";
 import { View } from "react-native";
@@ -44,7 +42,6 @@ export function GalleryTab({
   const glass = useGlassStyle(18);
   const side = useBarSideInset();
   const [view, setView] = useState<GalleryView>("works");
-  const starfield = useStarfield();
   const [switchHeight, setSwitchHeight] = useState(0);
   const [open, setOpen] = useState<{ path: string; order: string[] } | null>(
     null,
@@ -114,7 +111,6 @@ export function GalleryTab({
             onChange={(key) => {
               setView(key);
               onScrolledChange(false);
-              starfield?.reportScroll(COLLECT_HOME_TAB_INDEX, 0);
             }}
             // The glass is the track here.
             style={{

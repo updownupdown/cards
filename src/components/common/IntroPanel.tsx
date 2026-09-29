@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { usePalette } from "@/styles/palette";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
@@ -26,6 +27,7 @@ export function IntroPanel({
   closeLabel,
 }: IntroPanelProps) {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
 
   return (
     <View

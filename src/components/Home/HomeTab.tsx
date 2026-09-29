@@ -15,8 +15,6 @@ import { layoutDims } from "@/styles/styles";
 import { isLocalDevEnvironment } from "@/utils/utils";
 import { type ReactNode, useMemo } from "react";
 import { ScrollView, View } from "react-native";
-import { HOME_HOME_TAB_INDEX } from "./home-view-state";
-import { useStarfield } from "./Starfield";
 import { useTabReadyHold } from "./TabReady";
 
 const EASY_GAME_COUNT = 6;
@@ -54,7 +52,6 @@ export function HomeTab({
   const language = useDisplayLanguage();
   const { ui, spacing } = useResponsiveMetrics();
   const { width: viewportWidth } = useViewportDimensions();
-  const starfield = useStarfield();
   // Kept hidden until then, so the easy games never show and then vanish.
   useTabReadyHold(!dataLoaded);
 
@@ -136,7 +133,6 @@ export function HomeTab({
         onScroll={(event) => {
           const y = event.nativeEvent.contentOffset.y;
           onScrolledChange(y > 1);
-          starfield?.reportScroll(HOME_HOME_TAB_INDEX, y);
         }}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}

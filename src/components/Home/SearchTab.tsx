@@ -23,12 +23,8 @@ import {
   StyleSheet,
   TextInput,
   View,
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
 } from "react-native";
 import { FavButton } from "./FavButton";
-import { SEARCH_HOME_TAB_INDEX } from "./home-view-state";
-import { useStarfield } from "./Starfield";
 
 const FILTERS = ["all", "unplayed", "favorites", "unbeaten", "won"] as const;
 type Filter = (typeof FILTERS)[number];
@@ -101,19 +97,12 @@ export function SearchTab({
   const pageSidePadding = spacing(layoutDims.pagePadding);
   const indexed = sort === "az";
   const scrollY = useRef(new Animated.Value(0)).current;
-  const starfield = useStarfield();
   const onScroll = useMemo(
     () =>
       Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
         useNativeDriver: Platform.OS !== "web",
-        // The sky behind moves with the list.
-        listener: (event: NativeSyntheticEvent<NativeScrollEvent>) =>
-          starfield?.reportScroll(
-            SEARCH_HOME_TAB_INDEX,
-            event.nativeEvent.contentOffset.y,
-          ),
       }),
-    [scrollY, starfield],
+    [scrollY],
   );
 
   const stats = (path: string) => settingsMap[path]?.stats;

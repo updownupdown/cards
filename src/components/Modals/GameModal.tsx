@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { usePalette } from "@/styles/palette";
 import {
   useGameSettings,
   useGameSpecificSettings,
@@ -59,6 +60,7 @@ export default function GameModal({
   const { t } = useTranslation("game");
   const { t: tCommon } = useTranslation("common");
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   const modalStyles = useModalStyles();
 
   // Track when a setting that only applies on the next deal is changed so the
@@ -278,6 +280,7 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
   const pathname = useGamePath();
   const gameInfo = getGameInfo(pathname);
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   const { t } = useTranslation("game");
 
   const background = gameInfo.background;

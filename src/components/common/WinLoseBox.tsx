@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { usePalette } from "@/styles/palette";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
@@ -63,6 +64,7 @@ export const WinLoseBox = ({
   onExit,
 }: Props) => {
   const { ui, spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   const actionsDisabled = actionsDisabledProp || actionsHidden;
   const { t } = useTranslation("game");
   const { t: tCommon } = useTranslation("common");

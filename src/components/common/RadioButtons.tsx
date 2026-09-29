@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { usePalette } from "@/styles/palette";
 import { segmentChosen, segmentTrack } from "@/components/ui/Nocturne";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, IconName } from "@/icons";
@@ -49,6 +50,7 @@ export function RadioButtons<T extends string>({
   selectedBackgroundColor = segmentChosen(),
 }: RadioButtonsProps<T>) {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
 
   return (
     <View

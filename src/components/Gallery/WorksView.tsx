@@ -1,6 +1,4 @@
 import { Text } from "@/components/common/Text";
-import { COLLECT_HOME_TAB_INDEX } from "@/components/Home/home-view-state";
-import { useStarfield } from "@/components/Home/Starfield";
 import { useTabReadyImage } from "@/components/Home/TabReady";
 import { useBarSideInset } from "@/components/ui/FloatingBar";
 import { Pill } from "@/components/ui/Nocturne";
@@ -160,7 +158,6 @@ export function WorksView({
   const { spacing, ui } = useResponsiveMetrics();
   const { width: viewportWidth } = useViewportDimensions();
   const [grouping, setGrouping] = useState<WorkGrouping>(lastGrouping);
-  const starfield = useStarfield();
   const shelves = useShelves(allEnabledGames, grouping);
   const order = useMemo(
     () => shelves.flatMap((shelf) => shelf.games.map(([path]) => path)),
@@ -188,7 +185,6 @@ export function WorksView({
       onScroll={(event) => {
         const y = event.nativeEvent.contentOffset.y;
         onScrolledChange(y > 1);
-        starfield?.reportScroll(COLLECT_HOME_TAB_INDEX, y);
       }}
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}

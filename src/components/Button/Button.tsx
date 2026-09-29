@@ -1,4 +1,5 @@
 import { Text, Typography } from "@/components/common/Text";
+import { usePalette } from "@/styles/palette";
 import type { TextSize } from "@/components/common/Text";
 import { Icon, IconName } from "@/icons";
 import {
@@ -6,7 +7,6 @@ import {
   FontWeight,
   layoutDims,
   rgba,
-  theme as appTheme,
   transitionStyles,
 } from "@/styles/styles";
 import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
@@ -153,6 +153,8 @@ export const Button = ({
   const autoProgressValue = useRef(new Animated.Value(0)).current;
   const { spacing } = useResponsiveMetrics();
   const ui = useResponsiveUiLayout();
+  // Inside a game, the game's palette.
+  const appTheme = usePalette();
   const uiScale = ui.scale;
   const textScale = ui.textScale;
 

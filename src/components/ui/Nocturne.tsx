@@ -5,6 +5,7 @@
  * Colours come from `theme` at render time, so they follow the colour theme.
  */
 import { Text, type TextProps } from "@/components/common/Text";
+import { usePalette } from "@/styles/palette";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, type IconName } from "@/icons";
 import { rgba, theme, transitionStyles } from "@/styles/styles";
@@ -24,6 +25,7 @@ export const hairline = () => rgba(theme.ink, 0.14);
 /** The panel look: a surface with a hairline edge. */
 export function useSurfaceStyle(radius = 18): ViewStyle {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   return {
     backgroundColor: theme.surface,
     borderRadius: spacing(radius),
@@ -35,11 +37,13 @@ export function useSurfaceStyle(radius = 18): ViewStyle {
 /** A small uppercase label over a section, in the accent. */
 export function Kicker({
   children,
-  color = theme.accent,
+  color: colorProp,
   style,
   ...props
 }: TextProps & { children: ReactNode }) {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
+  const color = colorProp ?? theme.accent;
   return (
     <Text
       size="xxs"
@@ -60,11 +64,13 @@ export function Kicker({
  */
 export function Caps({
   children,
-  color = theme.dim,
+  color: colorProp,
   style,
   ...props
 }: TextProps & { children: ReactNode }) {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
+  const color = colorProp ?? theme.dim;
   return (
     <Text
       size="xxs"
@@ -83,6 +89,7 @@ export function Caps({
 /** A page's title: Home, Odyssey, Gallery, Search. */
 export function PageTitle({ children }: { children: ReactNode }) {
   const { font } = useResponsiveMetrics();
+  const theme = usePalette();
   return (
     <Text
       weight={500}
@@ -100,6 +107,7 @@ export function PageTitle({ children }: { children: ReactNode }) {
 /** A section heading's size: the kicker's, 15% larger. */
 export function useSectionTitleStyle() {
   const { font } = useResponsiveMetrics();
+  const theme = usePalette();
   const size = font(11 * 1.15);
   return { fontSize: size, lineHeight: size * 1.3 };
 }
@@ -113,6 +121,7 @@ export function SectionTitle({
   action?: ReactNode;
 }) {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   const titleStyle = useSectionTitleStyle();
   return (
     <View
@@ -132,7 +141,7 @@ export function SectionTitle({
 /** A thin rating or progress meter. */
 export function Meter({
   value,
-  color = theme.accent,
+  color: colorProp,
   style,
 }: {
   /** 0 to 1. */
@@ -141,6 +150,8 @@ export function Meter({
   style?: StyleProp<ViewStyle>;
 }) {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
+  const color = colorProp ?? theme.accent;
   const height = Math.max(2, spacing(3));
   return (
     <View
@@ -183,6 +194,7 @@ export function SegmentBar({
   style?: StyleProp<ViewStyle>;
 }) {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   const count = Math.max(1, Math.min(total, max));
   const lit = total > 0 ? Math.round((done / total) * count) : 0;
   const height = Math.max(2, spacing(3));
@@ -218,6 +230,7 @@ export function RatingMeters({
   stacked?: boolean;
 }) {
   const { spacing, font } = useResponsiveMetrics();
+  const theme = usePalette();
   const items = [
     [labels.complexity, rating.complexity],
     [labels.difficulty, rating.difficulty],
@@ -270,6 +283,7 @@ export function Pill({
   iconName?: IconName;
 }) {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   return (
     <Pressable
       onPress={onPress}
@@ -338,6 +352,7 @@ export function RoundButton({
   style?: StyleProp<ViewStyle>;
 }) {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   const diameter = spacing(size);
   const iconColor = color ?? (active ? theme.accent : theme.ink);
   return (
@@ -416,6 +431,7 @@ export function ActionButton({
   style?: StyleProp<ViewStyle>;
 }) {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   const height = spacing(small ? 38 : 46);
   const ink = secondary ? theme.ink : theme.accentInk;
   return (
@@ -480,6 +496,7 @@ export function Segmented<T extends string>({
   style?: StyleProp<ViewStyle>;
 }) {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   const radius = spacing(size === "md" ? 14 : 12);
   return (
     <View

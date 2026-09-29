@@ -1,4 +1,5 @@
 import React from "react";
+import { usePalette } from "@/styles/palette";
 import ModalFull from "./ModalFull";
 import { Text } from "@/components/common/Text";
 import { getGameInfo } from "@/data/game-menu";
@@ -22,6 +23,7 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   );
   const { t } = useTranslation("game");
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   const modalStyles = useModalStyles();
   const headingColor = theme.accent;
 
@@ -78,6 +80,7 @@ export const QuickStart = ({
   style,
 }: QuickStartProps) => {
   const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
 
   return (
     gameInfo.quickStart && (

@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { usePalette } from "@/styles/palette";
 import { getGameInfo } from "@/data/game-menu";
 import { useGamePath } from "@/hooks/useGamePath";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -31,6 +32,7 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
   const { t } = useTranslation("game");
   const { t: tCommon } = useTranslation("common");
   const { spacing, ui } = useResponsiveMetrics();
+  const theme = usePalette();
   const [expandedWidth, setExpandedWidth] = useState<number>();
   const [contentHeight, setContentHeight] = useState<number>();
   const instructionButtonSize = spacing(layoutDims.menuButtonSize);
