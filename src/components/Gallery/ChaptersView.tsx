@@ -1,5 +1,4 @@
 import { Text } from "@/components/common/Text";
-import { ParallaxStars } from "@/components/TaoCollection/ParallaxStars";
 import { TaoChapterDetail } from "@/components/TaoCollection/TaoChapterDetail";
 import {
   StepperBar,
@@ -8,14 +7,11 @@ import {
 } from "@/components/ui/FloatingBar";
 import { TAO_CHAPTER_COUNT } from "@/data/collectibles";
 import { GALLERY_LAST_CHAPTER_STORAGE_KEY } from "@/data/storage-keys";
-import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
-import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { rgba, theme } from "@/styles/styles";
 import { useEffect, useRef, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
-import { useSharedValue } from "react-native-reanimated";
 import { PICKED_PAUSE_MS, PickerPanel, useSavedNumber } from "./shared";
 
 const COLUMNS = 9;
@@ -38,7 +34,6 @@ export function ChaptersView({
   topInset: number;
 }) {
   const { t } = useTranslation("campaign");
-  const { settings } = useGlobalSettings();
   const barHeight = useStackedBarHeight();
   const barBottom = useStackedBarBottom();
   const firstCollected = Math.min(...collectedIds, Infinity);
@@ -49,7 +44,6 @@ export function ChaptersView({
   );
   const [size, setSize] = useState<{ width: number; height: number }>();
   const [picking, setPicking] = useState(false);
-  const still = useSharedValue(0);
 
   const go = (next: number) => {
     setPicking(false);
@@ -73,18 +67,6 @@ export function ChaptersView({
         setSize({ width, height });
       }}
     >
-      {size && (
-        <View style={[StyleSheet.absoluteFill, pointerEventsStyles.none]}>
-          <ParallaxStars
-            width={size.width}
-            height={size.height}
-            x={still}
-            y={still}
-            moving={settings.showAnimations}
-          />
-        </View>
-      )}
-
       {size && chapter !== undefined && (
         <TaoChapterDetail
           key={chapter}

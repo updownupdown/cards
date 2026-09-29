@@ -2,11 +2,10 @@ import { Text } from "@/components/common/Text";
 import {
   lifespan,
   portraitLength,
-  shortName,
+  listedName,
   voicesGroups,
   type VoicesAuthor,
 } from "@/components/Campaign/voices";
-import { ParallaxStars } from "@/components/TaoCollection/ParallaxStars";
 import {
   StepperBar,
   useStackedBarBottom,
@@ -15,10 +14,8 @@ import {
 import { Segmented } from "@/components/ui/Nocturne";
 import { getQuote, type QuoteId } from "@/data/collectibles";
 import { GALLERY_LAST_QUOTE_STORAGE_KEY } from "@/data/storage-keys";
-import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
-import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { theme } from "@/styles/styles";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
@@ -59,7 +56,6 @@ export function QuotesView({
   topInset: number;
 }) {
   const { t } = useTranslation("campaign");
-  const { settings } = useGlobalSettings();
   const { spacing } = useResponsiveMetrics();
   const barHeight = useStackedBarHeight();
   const barBottom = useStackedBarBottom();
@@ -84,9 +80,7 @@ export function QuotesView({
     entries[Math.max(0, firstCollected)]?.quoteId ?? 1,
     (value) => entries.some((entry) => entry.quoteId === value),
   );
-  const [size, setSize] = useState<{ width: number; height: number }>();
   const [picking, setPicking] = useState(false);
-  const still = useSharedValue(0);
 
   const index = entries.findIndex((entry) => entry.quoteId === savedQuote);
   const entry = entries[index];
@@ -110,14 +104,15 @@ export function QuotesView({
       groups
         .flatMap((group) => group.authors)
         .sort((a, b) =>
-          shortName(a.name).localeCompare(shortName(b.name), language),
+          listedName(a.name).localeCompare(listedName(b.name), language),
         ),
     [groups, language],
   );
   const authorRow = (author: VoicesAuthor) => (
     <CountRow
       key={author.name}
-      label={author.name}
+      // A–Z, last name first: "Tolstoy, Leo".
+      label={order === "alphabetical" ? listedName(author.name) : author.name}
       count={author.collectedIds.length}
       total={author.quoteIds.length}
       selected={author.name === entry?.author.name}
@@ -127,25 +122,7 @@ export function QuotesView({
   );
 
   return (
-    <View
-      style={StyleSheet.absoluteFill}
-      onLayout={(event) => {
-        const { width, height } = event.nativeEvent.layout;
-        setSize({ width, height });
-      }}
-    >
-      {size && (
-        <View style={[StyleSheet.absoluteFill, pointerEventsStyles.none]}>
-          <ParallaxStars
-            width={size.width}
-            height={size.height}
-            x={still}
-            y={still}
-            moving={settings.showAnimations}
-          />
-        </View>
-      )}
-
+    <View style={StyleSheet.absoluteFill}>
       {entry && (
         <QuoteDetail
           author={entry.author}

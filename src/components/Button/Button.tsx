@@ -266,7 +266,8 @@ export const Button = ({
     },
     headerButton && {
       ...flexStyles.rowCentered,
-      ...(label ? { flexDirection: "column" as const, gap: 2 } : null),
+      // Laid out as the tab bar's buttons are: icon over label, 3 apart.
+      ...(label ? { flexDirection: "column" as const, gap: spacing(3) } : null),
       flex: 1,
       padding: 0,
       width: spacing(layoutDims.menuButtonSize),
@@ -370,8 +371,8 @@ export const Button = ({
         <Text
           numberOfLines={1}
           style={{
-            fontSize: roundToPixel(10 * uiScale),
-            lineHeight: roundToPixel(12 * uiScale),
+            fontSize: roundToPixel(11 * uiScale),
+            lineHeight: roundToPixel(13 * uiScale),
             fontFamily: FontWeight[400],
             color: disabled ? appTheme.faint : appTheme.dim,
           }}

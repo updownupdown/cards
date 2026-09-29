@@ -125,6 +125,23 @@ const SHORT_NAMES: Record<string, string> = {
   "Ursula K. Le Guin": "Le Guin",
 };
 
+/** Names kept as they are in an A–Z list: a title, not a surname, leads. */
+const LISTED_AS_IS = new Set(["Dalai Lama XIV"]);
+
+/**
+ * An author as an A–Z list names them: last name first ("Tolstoy, Leo"), or
+ * the name as it is when it has no given name to move (Laozi, Sun Tzu).
+ */
+export function listedName(name: string) {
+  const last = shortName(name);
+  if (last === name || LISTED_AS_IS.has(name)) return name;
+  const given = name
+    .replace(new RegExp(last.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"), "")
+    .replace(/\s+/g, " ")
+    .trim();
+  return given ? `${last}, ${given}` : last;
+}
+
 /** An author as the bar names them: usually their last name. */
 export function shortName(name: string) {
   return SHORT_NAMES[name] ?? name.split(" ").at(-1) ?? name;

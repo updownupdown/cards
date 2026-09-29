@@ -24,7 +24,7 @@ export function gameArt(game: GameMenuInfo) {
  * The frame every game card shares, tile to full width: rounded corners and
  * no outline, so the art itself makes the edge. The one place to change it.
  */
-export const CARD_RADIUS = 8;
+export const CARD_RADIUS = 6;
 export function useCardFrame() {
   const { spacing } = useResponsiveMetrics();
   return { borderRadius: spacing(CARD_RADIUS), overflow: "hidden" } as const;

@@ -1,6 +1,6 @@
 import { GAMES_DATA } from "@/data/games-registry";
-import { CampaignBackground } from "@/components/Campaign/CampaignBackground";
 import { CampaignBlackHole } from "@/components/Campaign/CampaignBlackHole";
+import { WORLD_SIZE } from "@/components/Campaign/ChartGrid";
 import {
   getGameDotState,
   getUnlockedGameDotPaths,
@@ -12,6 +12,7 @@ import {
 import { Colors, FontWeight, rgba, textShadow, theme } from "@/styles/styles";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useDisplayLanguage } from "@/i18n";
+import { useStarfield } from "@/components/Home/Starfield";
 import { useTabReadyHold } from "@/components/Home/TabReady";
 import { localizeGameTitle } from "@/i18n/content";
 import React, { memo, useEffect, useMemo, useRef, useState } from "react";
@@ -30,15 +31,13 @@ import Animated, {
   FadeOut,
   interpolate,
   type SharedValue,
+  useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
   ZoomIn,
 } from "react-native-reanimated";
 
-// A spiral galaxy needs room: 114 game dots three dot-diameters apart do not fit
-// in a smaller world (see MAP_GEOMETRY in src/data/campaign-map.ts).
-const WORLD_SIZE = 1800;
 /** Every game dot is drawn the same size: its state shows in its colours. */
 const GAME_DOT_SIZE = 12;
 /** How close (in screen points) a native tap must be to select a game dot. */
@@ -138,60 +137,6 @@ const LABEL_OPACITY = {
 function labelColor(state: GameDotState) {
   return state === "won" || state === "complete" ? theme.ink : theme.dim;
 }
-
-/**
- * The chart's grid, after the old star atlases (Bayer's Uranometria): rings
- * around Klondike at the centre, crossed by lines through it. Plain views,
- * like the links: Android draws a map-sized SVG as one huge bitmap.
- */
-const CHART_RING_STEP = 110;
-const CHART_RING_COUNT = 8;
-const CHART_SPOKES = 12;
-const CHART_LINE = 0.9;
-
-const ChartGrid = memo(function ChartGrid() {
-  const centre = WORLD_SIZE / 2;
-  const reach = CHART_RING_STEP * CHART_RING_COUNT;
-  const color = rgba(theme.ink, 0.12);
-  return (
-    <View style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}>
-      {Array.from({ length: CHART_RING_COUNT }, (_, index) => {
-        const radius = CHART_RING_STEP * (index + 1);
-        return (
-          <View
-            key={`ring-${index}`}
-            style={{
-              position: "absolute",
-              left: centre - radius,
-              top: centre - radius,
-              width: radius * 2,
-              height: radius * 2,
-              borderRadius: radius,
-              borderWidth: CHART_LINE,
-              // Every other ring a little stronger, as the atlases rule them.
-              borderColor: index % 2 === 1 ? rgba(theme.ink, 0.18) : color,
-            }}
-          />
-        );
-      })}
-      {/* Each spoke is a line right through the centre, so half as many. */}
-      {Array.from({ length: CHART_SPOKES / 2 }, (_, index) => (
-        <View
-          key={`spoke-${index}`}
-          style={{
-            position: "absolute",
-            left: centre - reach,
-            top: centre - CHART_LINE / 2,
-            width: reach * 2,
-            height: CHART_LINE,
-            backgroundColor: rgba(theme.ink, 0.08),
-            transform: [{ rotate: `${(index * 360) / CHART_SPOKES}deg` }],
-          }}
-        />
-      ))}
-    </View>
-  );
-});
 
 function hashUnit(input: string) {
   let hash = 2166136261;
@@ -485,6 +430,30 @@ export function CampaignMap({
   const [centered, setCentered] = useState(false);
   useTabReadyHold(!centered);
   const containerRef = useRef<View>(null);
+  const starfield = useStarfield();
+  // The chart rings follow the map exactly; the star layers follow its pans
+  // once the sky has glided in. (Only the shared values go into the worklet.)
+  const sky = starfield && {
+    chartX: starfield.chartX,
+    chartY: starfield.chartY,
+    chartScale: starfield.chartScale,
+    panX: starfield.panX,
+    panY: starfield.panY,
+    panLinked: starfield.panLinked,
+  };
+  useAnimatedReaction(
+    () => [translateX.value, translateY.value, scale.value] as const,
+    ([x, y, s]) => {
+      if (!sky) return;
+      sky.chartX.value = x;
+      sky.chartY.value = y;
+      sky.chartScale.value = s;
+      if (sky.panLinked.value) {
+        sky.panX.value = x;
+        sky.panY.value = y;
+      }
+    },
+  );
   const hasCenteredInitialGameDot = useRef(false);
   const unlockedPaths = useMemo(
     () => getUnlockedGameDotPaths(wonPaths),
@@ -530,6 +499,8 @@ export function CampaignMap({
     centerGameDot(gameDot, false);
     hasCenteredInitialGameDot.current = true;
     setCentered(true);
+    // The sky eases over to where the map now sits, then follows its pans.
+    starfield?.glideToPan(translateX.value, translateY.value);
   }, [ready, selectedPath, settings.showAnimations, viewport.width]);
 
   useEffect(() => {
@@ -674,12 +645,11 @@ export function CampaignMap({
 
   return (
     <GestureDetector gesture={cameraGesture}>
-      <CampaignBackground
-        animationsEnabled={settings.showAnimations}
-        translateX={translateX}
-        translateY={translateY}
-        containerRef={containerRef}
+      {/* The sky behind is Home's starfield, which this map moves. */}
+      <View
+        ref={containerRef}
         onLayout={onLayout}
+        style={{ flex: 1, overflow: "hidden" }}
       >
         <Animated.View
           style={[
@@ -708,8 +678,6 @@ export function CampaignMap({
             <CampaignBlackHole animationsEnabled={settings.showAnimations} />
           </Animated.View>
 
-          <ChartGrid />
-
           <GameDotConnections gameDotStates={gameDotStates} />
 
           {GAME_DOT_DEFINITIONS.map((gameDot) => {
@@ -732,7 +700,7 @@ export function CampaignMap({
 
           <GameDotLabels gameDotStates={gameDotStates} scale={scale} />
         </Animated.View>
-      </CampaignBackground>
+      </View>
     </GestureDetector>
   );
 }

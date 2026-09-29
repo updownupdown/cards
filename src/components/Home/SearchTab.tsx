@@ -24,17 +24,14 @@ import {
   StyleSheet,
   TextInput,
   View,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
 } from "react-native";
 import { FavButton } from "./FavButton";
+import { SEARCH_HOME_TAB_INDEX } from "./home-view-state";
+import { useStarfield } from "./Starfield";
 
-const FILTERS = [
-  "all",
-  "unplayed",
-  "favorites",
-  "unbeaten",
-  "won",
-  "skill",
-] as const;
+const FILTERS = ["all", "unplayed", "favorites", "unbeaten", "won"] as const;
 type Filter = (typeof FILTERS)[number];
 
 // Up arrows run low to high, down arrows high to low.
@@ -52,8 +49,6 @@ type Sort = (typeof SORTS)[number];
 
 /** The Recent order lists this many games, last played first. */
 const RECENT_COUNT = 20;
-/** Low luck: games that leave this little to chance, out of 100. */
-const LOW_LUCK = 30;
 /** Width of the index letters' column, in the A–Z order. */
 const INDEX_WIDTH = 44;
 /** Every result row is this tall, so the index knows where sections start. */
@@ -97,12 +92,19 @@ export function SearchTab({
   const pageSidePadding = spacing(layoutDims.pagePadding);
   const indexed = sort === "az";
   const scrollY = useRef(new Animated.Value(0)).current;
+  const starfield = useStarfield();
   const onScroll = useMemo(
     () =>
       Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
         useNativeDriver: Platform.OS !== "web",
+        // The sky behind moves with the list.
+        listener: (event: NativeSyntheticEvent<NativeScrollEvent>) =>
+          starfield?.reportScroll(
+            SEARCH_HOME_TAB_INDEX,
+            event.nativeEvent.contentOffset.y,
+          ),
       }),
-    [scrollY],
+    [scrollY, starfield],
   );
 
   const stats = (path: string) => settingsMap[path]?.stats;
@@ -127,7 +129,6 @@ export function SearchTab({
       if (filter === "unbeaten" && (attempts(entry) === 0 || wins(entry) > 0))
         return false;
       if (filter === "won" && wins(entry) === 0) return false;
-      if (filter === "skill" && game.rating.luck > LOW_LUCK) return false;
       // Match the translated title, the English title and its aliases.
       return (
         !normalizedQuery ||
@@ -218,7 +219,6 @@ export function SearchTab({
     favorites: t("sections.favorites"),
     unbeaten: t("search.unbeaten"),
     won: t("search.won"),
-    skill: t("search.skill"),
   };
 
   const column = {

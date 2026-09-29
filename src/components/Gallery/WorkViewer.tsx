@@ -1,7 +1,6 @@
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
 import { ZoomableImage } from "@/components/common/ZoomableImage";
-import { gameArt, useGameCategory } from "@/components/Home/HomeArt";
 import {
   StepperBar,
   useBarSideInset,
@@ -17,7 +16,6 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
 import { layoutDims, rgba, theme } from "@/styles/styles";
-import { Image } from "expo-image";
 import type { Href } from "expo-router";
 import { useState } from "react";
 import { Modal, View } from "react-native";
@@ -188,15 +186,13 @@ export function WorkViewer({
   );
 }
 
-/** The work's game, in one line: its art, name and family, and Play. */
+/** The work's game, in one line: its name, and Play. */
 function WorkGamePanel({ path, onPlay }: { path: string; onPlay: () => void }) {
   const { spacing } = useResponsiveMetrics();
   const { t: tCommon } = useTranslation("common");
   const language = useDisplayLanguage();
-  const category = useGameCategory();
   const glass = useGlassStyle();
   const game = GAMES_DATA[path];
-  const thumb = spacing(44);
   return (
     <View
       style={[
@@ -206,27 +202,13 @@ function WorkGamePanel({ path, onPlay }: { path: string; onPlay: () => void }) {
           alignItems: "center",
           gap: spacing(12),
           padding: spacing(10),
-          paddingRight: spacing(12),
+          paddingLeft: spacing(18),
         },
       ]}
     >
-      <Image
-        source={gameArt(game)}
-        cachePolicy="memory"
-        contentFit="cover"
-        style={{
-          width: thumb,
-          height: thumb,
-          borderRadius: spacing(12),
-          backgroundColor: game.gameColorDark,
-        }}
-      />
-      {/* The game's name is left to the label and the art: only its family. */}
-      <View style={{ flex: 1, minWidth: 0 }}>
-        <Text size="md" weight={400} color={theme.dim} numberOfLines={1}>
-          {category(game)}
-        </Text>
-      </View>
+      <Text size="lg" weight={500} numberOfLines={1} style={{ flex: 1 }}>
+        {localizeGameTitle(game, path, language)}
+      </Text>
       <ActionButton
         small
         iconName="play"

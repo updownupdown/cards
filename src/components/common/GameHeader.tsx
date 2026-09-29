@@ -1,13 +1,8 @@
 import { glassEdge, glassFill } from "@/components/ui/FloatingBar";
+import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
 import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
-import {
-  Colors,
-  LayerZIndexes,
-  layoutDims,
-  rgba,
-  theme,
-} from "@/styles/styles";
+import { LayerZIndexes, layoutDims, theme } from "@/styles/styles";
 import { memo } from "react";
 import { Animated, Platform, View } from "react-native";
 import { Button } from "../Button/Button";
@@ -85,11 +80,12 @@ export const GameHeader = memo(function GameHeader({
             width: "100%",
             height: spacing(layoutDims.menuBarHeight),
             paddingHorizontal: spacing(layoutDims.pagePadding / 2),
-            borderRadius: spacing(20),
+            // The tab bar's glass, corner and shadow.
+            borderRadius: spacing(22),
             backgroundColor: glassFill(),
             borderWidth: 1,
             borderColor: glassEdge(),
-            boxShadow: `0 ${spacing(8)}px ${spacing(24)}px ${rgba(Colors.black, 0.35)}`,
+            ...homeSurfaceShadow(spacing, { translucent: true }),
             ...(Platform.OS === "web"
               ? ({ backdropFilter: "blur(14px)" } as object)
               : null),

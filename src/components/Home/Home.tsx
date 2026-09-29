@@ -7,6 +7,11 @@ import { SearchTab } from "@/components/Home/SearchTab";
 import { CampaignTab } from "@/components/Campaign/CampaignTab";
 import { CampaignUFO } from "@/components/Campaign/CampaignUFO";
 import { UfoContext, type UfoRequest } from "@/components/Campaign/UfoContext";
+import {
+  StarfieldBackdrop,
+  StarfieldProvider,
+  useStarfieldMotion,
+} from "./Starfield";
 import { createTabReadyGate, TabReadyContext } from "./TabReady";
 import {
   COLLECT_HOME_TAB_INDEX,
@@ -25,7 +30,7 @@ import { useHomeData } from "@/hooks/useHomeData";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { Colors, layoutDims, theme } from "@/styles/styles";
+import { Colors, layoutDims } from "@/styles/styles";
 import {
   type ReactNode,
   useEffect,
@@ -125,6 +130,7 @@ export default function Home() {
   const showHeaderBackgroundFor = (index: HomeTabIndex) =>
     !isWeb || (index !== CAMPAIGN_HOME_TAB_INDEX && scrolledTabs.has(index));
   const { settings, updateSettings } = useGlobalSettings();
+  const starfield = useStarfieldMotion(activeTab, settings.showAnimations);
   // Set by the Campaign tab while the map is open; the UFO itself is drawn here.
   const [ufo, setUfo] = useState<UfoRequest | null>(null);
 
@@ -358,77 +364,80 @@ export default function Home() {
         />
       )}
 
-      <UfoContext.Provider value={setUfo}>
-        <View style={containerStyle} onLayout={onContainerLayout}>
-          {isScreenReady && (
-            <View
-              style={{
-                flex: 1,
-                height: screenHeight || undefined,
-                // Clips the tabs moved aside, so they are skipped entirely.
-                overflow: "hidden",
-              }}
-            >
+      <StarfieldProvider value={starfield}>
+        <UfoContext.Provider value={setUfo}>
+          <View style={containerStyle} onLayout={onContainerLayout}>
+            {isScreenReady && (
               <View
-                style={[
-                  StyleSheet.absoluteFill,
-                  { backgroundColor: theme.night },
-                ]}
-              />
+                style={{
+                  flex: 1,
+                  height: screenHeight || undefined,
+                  // Clips the tabs moved aside, so they are skipped entirely.
+                  overflow: "hidden",
+                }}
+              >
+                {/* One sky behind every tab, moving as you go between them. */}
+                <StarfieldBackdrop
+                  motion={starfield}
+                  activeTab={activeTab}
+                  animated={settings.showAnimations}
+                  comets={isFocused}
+                />
 
-              {HOME_TAB_INDICES.map((index) => {
-                if (!mountedTabs.has(index)) return null;
-                if (index === CAMPAIGN_HOME_TAB_INDEX && !isFocused)
-                  return null;
-                return (
-                  <TabLayer
-                    key={index}
-                    state={
-                      index === shownTab
-                        ? "shown"
-                        : index === activeTab
-                          ? "preparing"
-                          : "away"
-                    }
-                    onReady={() => onTabReady(index)}
-                  >
-                    {tabContents[index]}
-                  </TabLayer>
-                );
-              })}
+                {HOME_TAB_INDICES.map((index) => {
+                  if (!mountedTabs.has(index)) return null;
+                  if (index === CAMPAIGN_HOME_TAB_INDEX && !isFocused)
+                    return null;
+                  return (
+                    <TabLayer
+                      key={index}
+                      state={
+                        index === shownTab
+                          ? "shown"
+                          : index === activeTab
+                            ? "preparing"
+                            : "away"
+                      }
+                      onReady={() => onTabReady(index)}
+                    >
+                      {tabContents[index]}
+                    </TabLayer>
+                  );
+                })}
 
-              {/* Each tab draws its own header fade, so the controls in it can
+                {/* Each tab draws its own header fade, so the controls in it can
                 sit above the fade; on a phone this one stands in while no tab
                 is shown, so the fade stays put through a switch. */}
-              {shownTab === null && !isWeb && (
-                <HomeHeaderBackground showBackground />
-              )}
-              {shownTab === null && (
-                <TabSpinner immediate={!mountedTabs.has(activeTab)} />
-              )}
-            </View>
-          )}
+                {shownTab === null && !isWeb && (
+                  <HomeHeaderBackground showBackground />
+                )}
+                {shownTab === null && (
+                  <TabSpinner immediate={!mountedTabs.has(activeTab)} />
+                )}
+              </View>
+            )}
 
-          <HomeTabBar
-            activeIndex={activeTab}
-            onSelectTab={onSelectTab}
-            showBackground={showHeaderBackgroundFor(activeTab)}
-          />
-
-          {/* Last, so it flies over the header and tab bar rather than under
-            them. It only exists while the Campaign tab has asked for it. */}
-          {ufo && shownTab === CAMPAIGN_HOME_TAB_INDEX && (
-            <CampaignUFO
-              width={viewportWidth}
-              height={viewportHeight}
-              animationsEnabled={settings.showAnimations && ufo.gateOpen}
-              summons={ufo.summons}
-              visits={ufo.visits}
-              onCatch={ufo.onCatch}
+            <HomeTabBar
+              activeIndex={activeTab}
+              onSelectTab={onSelectTab}
+              showBackground={showHeaderBackgroundFor(activeTab)}
             />
-          )}
-        </View>
-      </UfoContext.Provider>
+
+            {/* Last, so it flies over the header and tab bar rather than under
+            them. It only exists while the Campaign tab has asked for it. */}
+            {ufo && shownTab === CAMPAIGN_HOME_TAB_INDEX && (
+              <CampaignUFO
+                width={viewportWidth}
+                height={viewportHeight}
+                animationsEnabled={settings.showAnimations && ufo.gateOpen}
+                summons={ufo.summons}
+                visits={ufo.visits}
+                onCatch={ufo.onCatch}
+              />
+            )}
+          </View>
+        </UfoContext.Provider>
+      </StarfieldProvider>
     </>
   );
 }
