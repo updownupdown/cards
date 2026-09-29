@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const parallels: GameDefinition = {
   path: "/parallels",
@@ -19,6 +21,8 @@ export const parallels: GameDefinition = {
     sourceName: "Cleveland Museum of Art",
     sourceLink: "https://www.clevelandart.org/art/1921.318",
   },
+  background: GAME_BACKGROUNDS.stoneWall,
+  animation: GameAnimations.Rain,
   gameColorDark: "#1a1f24",
   gameColorPale: "#e3eaf0",
   cardBack: CardBackColors.Slate,

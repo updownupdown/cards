@@ -8,6 +8,7 @@
     "assets:generate": "node ./scripts/generate-assets.js",
     "thumbnails:convert": "node ./scripts/convert-thumbnails.mjs",
     "thumbnails:review": "node ./scripts/review-thumbnail-crops.mjs",
+    "backgrounds:convert": "node ./scripts/convert-backgrounds.mjs",
     "store-graphics:generate": "node ./scripts/generate-store-graphics.mjs",
     "card-backs:generate": "node ./scripts/generate-card-backs.mjs",
     "campaign:generate": "node ./scripts/generate-campaign-map.mjs",
@@ -20,7 +21,8 @@
     "i18n": "node ./scripts/i18n.mjs",
     "pen-font:generate": "node ./scripts/generate-pen-font.mjs",
     "logo:generate": "node ./scripts/generate-logo-assets.mjs",
-    "starfield:generate": "node ./scripts/generate-starfield.mjs"
+    "starfield:generate": "node ./scripts/generate-starfield.mjs",
+    "glows:generate": "node ./scripts/generate-card-glows.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/eb-garamond": "^0.4.3",

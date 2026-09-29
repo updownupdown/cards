@@ -1,3 +1,5 @@
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -15,6 +17,8 @@ export const crescent: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/29385",
   },
+  background: GAME_BACKGROUNDS.nightSky,
+  animation: GameAnimations.Stars,
   gameColorDark: "#182334",
   gameColorPale: "#e5dfca",
   cardBack: CardBackColors.Navy,

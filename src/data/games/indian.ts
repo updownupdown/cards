@@ -1,5 +1,7 @@
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
+import { GameAnimations } from "@/animations";
 
 export const indian: GameDefinition = {
   path: "/indian",
@@ -19,6 +21,8 @@ export const indian: GameDefinition = {
     sourceLink:
       "https://www.rijksmuseum.nl/en/collection/object/Plattegrond-van-het-eiland-Dieuw-of-Diewij-aan-de-Koromandelkust-India--7366dbd9ee1fd29bf54df254859db4ff",
   },
+  background: GAME_BACKGROUNDS.indianLandscape,
+  animation: GameAnimations.Mist,
   gameColorDark: "#49362a",
   gameColorPale: "#ead6ad",
   cardBack: CardBackColors.Moss,

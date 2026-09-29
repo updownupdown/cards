@@ -1,6 +1,7 @@
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
 import { ActionButton } from "@/components/ui/Nocturne";
+import { GAME_GLOW_ASSETS, GLOW_CORE, GLOW_MARGIN } from "@/data/game-glows";
 import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
 import type { GameMenuInfo } from "@/data/games-data";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
@@ -132,6 +133,94 @@ export function GameTile({
 export const TILE_SIZE = 140;
 export const TILE_GAP = 12;
 
+/** How far a glow reaches past its card, which a shelf leaves room for. */
+const GLOW_ROOM = 48;
+/** Glows sit a little low, as light falling from the card. */
+const GLOW_DROP = 8;
+
+/**
+ * A card's aurora: its art, baked into a soft halo (see
+ * scripts/generate-card-glows.mjs), laid behind the card's box so the
+ * painting seems to cast its own light.
+ */
+export function CardGlow({
+  game,
+  left,
+  top,
+  width,
+  height,
+}: {
+  game: GameMenuInfo;
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}) {
+  const { spacing } = useResponsiveMetrics();
+  const source = game.thumbnail ? GAME_GLOW_ASSETS[game.thumbnail] : null;
+  if (!source) return null;
+  // The halo's margin, scaled so its art covers the card exactly.
+  const marginX = (width / GLOW_CORE) * GLOW_MARGIN;
+  const marginY = (height / GLOW_CORE) * GLOW_MARGIN;
+  return (
+    <Image
+      source={source}
+      cachePolicy="memory"
+      contentFit="fill"
+      style={{
+        position: "absolute",
+        left: left - marginX,
+        top: top - marginY + spacing(GLOW_DROP),
+        width: width + marginX * 2,
+        height: height + marginY * 2,
+        opacity: 0.5,
+      }}
+    />
+  );
+}
+
+/**
+ * The glows for a row of cards, as one layer under all of them, so no glow
+ * falls across a neighbouring card.
+ */
+function ShelfGlows({
+  games,
+  widths,
+  height,
+  left,
+  top,
+  gap,
+}: {
+  games: HomeGameEntry[];
+  widths: number[];
+  height: number;
+  left: number;
+  top: number;
+  gap: number;
+}) {
+  let x = left;
+  return (
+    <View
+      style={{ position: "absolute", left: 0, top: 0, pointerEvents: "none" }}
+    >
+      {games.map(([path, game], index) => {
+        const glow = (
+          <CardGlow
+            key={path}
+            game={game}
+            left={x}
+            top={top}
+            width={widths[index]}
+            height={height}
+          />
+        );
+        x += widths[index] + gap;
+        return glow;
+      })}
+    </View>
+  );
+}
+
 /** A row of games that scrolls sideways, edge to edge. */
 export function ArtShelf({
   games,
@@ -145,15 +234,28 @@ export function ArtShelf({
   onToggleFavorite: (path: string) => void;
 }) {
   const { spacing } = useResponsiveMetrics();
+  const room = spacing(GLOW_ROOM);
+  const size = spacing(TILE_SIZE);
   return (
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
+      // Room above and below for the glows, taken back from the layout.
+      style={{ marginVertical: -room }}
       contentContainerStyle={{
         paddingHorizontal: pageSidePadding,
+        paddingVertical: room,
         gap: spacing(TILE_GAP),
       }}
     >
+      <ShelfGlows
+        games={games}
+        widths={games.map(() => size)}
+        height={size}
+        left={pageSidePadding}
+        top={room}
+        gap={spacing(TILE_GAP)}
+      />
       {games.map(([path, game]) => (
         <GameTile
           key={path}
@@ -185,12 +287,27 @@ export function ContinueShelf({
   const tile = spacing(TILE_SIZE);
   const firstWidth = tile * 2 + gap;
   const height = spacing(200);
+  const room = spacing(GLOW_ROOM);
+  const widths = games.map((_, index) => (index === 0 ? firstWidth : tile));
   return (
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{ paddingHorizontal: pageSidePadding, gap }}
+      style={{ marginVertical: -room }}
+      contentContainerStyle={{
+        paddingHorizontal: pageSidePadding,
+        paddingVertical: room,
+        gap,
+      }}
     >
+      <ShelfGlows
+        games={games}
+        widths={widths}
+        height={height}
+        left={pageSidePadding}
+        top={room}
+        gap={gap}
+      />
       {games.map(([path, game], index) => (
         <ContinueCard
           key={path}

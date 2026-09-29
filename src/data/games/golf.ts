@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const golf: GameDefinition = {
   path: "/golf",
@@ -18,6 +20,8 @@ export const golf: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/391981",
   },
+  background: GAME_BACKGROUNDS.golf,
+  animation: GameAnimations.Birds,
   gameColorDark: "#1d301e",
   gameColorPale: "#f2fccc",
   cardBack: CardBackColors.Crimson,

@@ -1,5 +1,7 @@
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
+import { GameAnimations } from "@/animations";
 
 export const blackberryPie: GameDefinition = {
   path: "/blackberry-pie",
@@ -10,6 +12,8 @@ export const blackberryPie: GameDefinition = {
     difficulty: 60,
     luck: 50,
   },
+  background: GAME_BACKGROUNDS.forestGrasses,
+  animation: GameAnimations.Leaves,
   thumbnail: "BlackberryPie.webp",
   thumbnailCredit: {
     title: 'Gathering Berries (from "Harper\'s Weekly," Vol. XVIII)',

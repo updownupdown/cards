@@ -1,4 +1,6 @@
+import { GameAnimations } from "@/animations";
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 
 export const pyramid: GameDefinition = {
@@ -19,6 +21,8 @@ export const pyramid: GameDefinition = {
     sourceLink:
       "https://artvee.com/dl/the-great-sphinx-pyramids-of-gizeh-giza-july-17th-1839/",
   },
+  background: GAME_BACKGROUNDS.sahara,
+  animation: GameAnimations.Sand,
   gameColorDark: "#251703",
   gameColorPale: "#FFEACC",
   cardBack: CardBackColors.Walnut,

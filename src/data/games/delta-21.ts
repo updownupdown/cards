@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const delta21: GameDefinition = {
   path: "/delta-21",
@@ -19,6 +21,8 @@ export const delta21: GameDefinition = {
     sourceLink:
       "https://www.rijksmuseum.nl/en/collection/object/Nakahara-in-de-provincie-Sagami--85619628311e8b990c85b7efc374e441",
   },
+  background: GAME_BACKGROUNDS.river,
+  animation: GameAnimations.Birds,
   gameColorDark: "#11343d",
   gameColorPale: "#c3e9ff",
   cardBack: CardBackColors.Ocean,

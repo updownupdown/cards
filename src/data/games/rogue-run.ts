@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const rogueRun: GameDefinition = {
   path: "/rogue-run",
@@ -18,6 +20,8 @@ export const rogueRun: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/337725",
   },
+  background: GAME_BACKGROUNDS.stoneTunnel,
+  animation: GameAnimations.Embers,
   gameColorDark: "#292116",
   gameColorPale: "#faefe3",
   cardBack: CardBackColors.Burgundy,

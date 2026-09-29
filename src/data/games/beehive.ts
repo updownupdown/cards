@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const beehive: GameDefinition = {
   path: "/beehive",
@@ -18,6 +20,8 @@ export const beehive: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/544626",
   },
+  background: GAME_BACKGROUNDS.flowerGarden,
+  animation: GameAnimations.Bees,
   gameColorDark: "#1e2b16",
   gameColorPale: "#f4f9d3",
   cardBack: CardBackColors.Honey,

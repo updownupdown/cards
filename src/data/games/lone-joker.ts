@@ -1,3 +1,5 @@
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -10,6 +12,8 @@ export const loneJoker: GameDefinition = {
     difficulty: 72,
     luck: 55,
   },
+  background: GAME_BACKGROUNDS.painting2,
+  animation: GameAnimations.Firefly,
   thumbnail: "LoneJoker.webp",
   thumbnailCredit: {
     title: "The Court Jester Meets a Zangi, from a Tuti-nama",

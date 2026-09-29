@@ -1,3 +1,5 @@
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -21,6 +23,8 @@ export const terrace: GameDefinition = {
     sourceName: "Artvee",
     sourceLink: "https://artvee.com/dl/red-terrace/",
   },
+  background: GAME_BACKGROUNDS.greece,
+  animation: GameAnimations.Leaves,
   gameColorDark: "#2c3440",
   gameColorPale: "#e6eef8",
   cardBack: CardBackColors.Ocean,

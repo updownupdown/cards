@@ -1,5 +1,7 @@
+import { city, GameBackground } from "./game-backgrounds";
 import type { GameThumbnailName } from "./game-thumbnails";
 import { isLocalDevEnvironment } from "@/utils/utils";
+import type { GameAnimation } from "@/animations/types";
 import type { CardBackColor } from "./card-backs";
 
 export enum GameTag {
@@ -52,6 +54,8 @@ export type GameRating = {
 export type GameStatsNames = keyof GameRating;
 export const statKeys: GameStatsNames[] = ["complexity", "difficulty", "luck"];
 
+export const DEFAULT_GAME_BACKGROUND: GameBackground = city;
+
 /** Where a game's public domain thumbnail art comes from. */
 export type ArtCredit = {
   /** The artwork's title, as its source gives it. */
@@ -84,6 +88,8 @@ export type GameMenuInfo = {
   /** Credit for the thumbnail's art. npm run thumbnails:convert won't
    *  assign a new thumbnail to a game without one. */
   thumbnailCredit?: ArtCredit;
+  background?: GameBackground;
+  animation?: GameAnimation;
 
   // Colors
   gameColorDark: HexColor;

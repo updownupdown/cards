@@ -42,8 +42,10 @@ const SCROLL_SHARE = 0.5;
 /** Moving between tabs takes this long, with a slight rush of depth. */
 const TRAVEL_MS = 1400;
 const WARP = 0.14;
+/** Outside the Odyssey, the sky steps back behind the pages. */
+const QUIET_SKY = 0.6;
 /** The chart rings' fade as the Odyssey tab is entered or left. */
-const CHART_FADE_MS = 2000;
+const CHART_FADE_MS = 670;
 
 type Layer = {
   source: ImageSource;
@@ -229,6 +231,15 @@ export const StarfieldBackdrop = memo(function StarfieldBackdrop({
 }) {
   const [size, setSize] = useState({ width: 0, height: 0 });
   const cometColors = useMemo(() => [theme.ink, theme.accent2], []);
+  const odyssey = activeTab === CAMPAIGN_HOME_TAB_INDEX;
+  const skyOpacity = useSharedValue(odyssey ? 1 : QUIET_SKY);
+  useEffect(() => {
+    skyOpacity.value = withTiming(odyssey ? 1 : QUIET_SKY, {
+      duration: CHART_FADE_MS,
+      easing: ease,
+    });
+  }, [odyssey, skyOpacity]);
+  const skyStyle = useAnimatedStyle(() => ({ opacity: skyOpacity.value }));
   return (
     <View
       style={[
@@ -250,7 +261,7 @@ export const StarfieldBackdrop = memo(function StarfieldBackdrop({
       }}
     >
       {size.width > 0 && (
-        <>
+        <Animated.View style={[StyleSheet.absoluteFill, skyStyle]}>
           {BACK_LAYERS.map((layer, index) => (
             <StarLayer
               key={`back-${index}`}
@@ -286,7 +297,7 @@ export const StarfieldBackdrop = memo(function StarfieldBackdrop({
             maxIntervalMs={16000}
             maxSpeed={700}
           />
-        </>
+        </Animated.View>
       )}
     </View>
   );

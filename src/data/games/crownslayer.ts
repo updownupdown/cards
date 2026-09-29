@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const crownslayer: GameDefinition = {
   path: "/crownslayer",
@@ -18,6 +20,8 @@ export const crownslayer: GameDefinition = {
     sourceName: "Cleveland Museum of Art",
     sourceLink: "https://www.clevelandart.org/art/1960.51",
   },
+  background: GAME_BACKGROUNDS.monteCarlo,
+  animation: GameAnimations.Clouds,
   gameColorDark: "#1b1727",
   gameColorPale: "#e2e9ff",
   cardBack: CardBackColors.Indigo,

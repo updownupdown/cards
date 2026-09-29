@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const twelveTrials: GameDefinition = {
   path: "/twelve-trials",
@@ -18,6 +20,8 @@ export const twelveTrials: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/20488",
   },
+  background: GAME_BACKGROUNDS.headlessStatue,
+  animation: GameAnimations.ManaDust,
   gameColorDark: "#352820",
   gameColorPale: "#fff6dc",
   cardBack: CardBackColors.Terracotta,

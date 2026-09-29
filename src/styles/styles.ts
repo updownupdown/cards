@@ -216,6 +216,7 @@ export const layoutDims = {
 
 export const LayerZIndexes = {
   boardBackgroundOverlay: 1,
+  boardAnimation: 2,
   boardContent: 3,
   winLoseBackdrop: 45,
   tipsContainer: 40,

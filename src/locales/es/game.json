@@ -36,6 +36,7 @@
   },
   "credits": {
     "title": "Créditos",
+    "backgroundImage": "Imagen de fondo (difuminada):",
     "gameArt": "Ilustración de portada:",
     "artSource": "Dominio público, procedente de"
   },

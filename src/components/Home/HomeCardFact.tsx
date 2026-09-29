@@ -2,7 +2,6 @@ import { Text } from "@/components/common/Text";
 import { getLaunchCardFact } from "@/data/card-facts";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
-import { hairline } from "@/components/ui/Nocturne";
 import { Icon } from "@/icons";
 import { theme } from "@/styles/styles";
 import { View } from "react-native";
@@ -31,10 +30,7 @@ export function HomeCardFact({
     >
       <View
         style={{
-          paddingTop: spacing(24),
           paddingHorizontal: spacing(12),
-          borderTopWidth: 1,
-          borderTopColor: hairline(),
           alignItems: "center",
           gap: spacing(10),
         }}

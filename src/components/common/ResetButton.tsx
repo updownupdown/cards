@@ -128,7 +128,8 @@ export function ResetButton({
         delayLongPress={holdToResetDuration}
         preventWebLongPressMenu
         iconName="reset"
-        label={label}
+        // Icon only, as in the game header: the name is for screen readers.
+        accessibilityLabel={label}
         iconColor={isResetPressed ? (pressedIconColor ?? iconColor) : iconColor}
         style={{ flex: 1, paddingHorizontal: 0 }}
       />

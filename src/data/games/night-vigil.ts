@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const nightVigil: GameDefinition = {
   path: "/night-vigil",
@@ -10,6 +12,8 @@ export const nightVigil: GameDefinition = {
     difficulty: 76,
     luck: 42,
   },
+  background: GAME_BACKGROUNDS.nightCity,
+  animation: GameAnimations.Lightning,
   thumbnail: "NightVigil.webp",
   thumbnailCredit: {
     title: "The Night Watch",

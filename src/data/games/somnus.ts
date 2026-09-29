@@ -1,3 +1,5 @@
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -20,6 +22,8 @@ export const somnus: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:John_Henry_Fuseli_-_The_NightmareFXD.jpg",
   },
+  background: GAME_BACKGROUNDS.painting,
+  animation: GameAnimations.Dust,
   gameColorDark: "#1b1f25",
   gameColorPale: "#efd8f0",
   cardBack: CardBackColors.Plum,

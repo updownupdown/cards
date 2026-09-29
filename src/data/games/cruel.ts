@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const cruel: GameDefinition = {
   path: "/cruel",
@@ -19,6 +21,8 @@ export const cruel: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Pieter_Bruegel_the_Elder_-_Dulle_Griet_(Mad_Meg)_-_WGA03400.jpg",
   },
+  background: GAME_BACKGROUNDS.darkAlley,
+  animation: GameAnimations.Embers,
   gameColorDark: "#2c1919",
   gameColorPale: "#f7e0da",
   cardBack: CardBackColors.Burgundy,

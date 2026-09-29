@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const gremlin: GameDefinition = {
   path: "/gremlin",
@@ -19,6 +21,8 @@ export const gremlin: GameDefinition = {
     sourceLink:
       "https://www.rijksmuseum.nl/en/collection/object/Forest-Landscape-in-the-Moonlight--f20a4913dbb122bad9efa767afb90d7f",
   },
+  background: GAME_BACKGROUNDS.treeRain,
+  animation: GameAnimations.Firefly,
   gameColorDark: "#1c423f",
   gameColorPale: "#e7f5ce",
   cardBack: CardBackColors.Moss,

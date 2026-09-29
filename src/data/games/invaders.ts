@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const invaders: GameDefinition = {
   path: "/invaders",
@@ -18,6 +20,8 @@ export const invaders: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/459189",
   },
+  background: GAME_BACKGROUNDS.nightSky,
+  animation: GameAnimations.Stars,
   gameColorDark: "#2a2836",
   gameColorPale: "#b5faff",
   cardBack: CardBackColors.Teal,

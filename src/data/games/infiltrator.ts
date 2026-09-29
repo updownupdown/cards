@@ -1,3 +1,5 @@
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -10,6 +12,8 @@ export const infiltrator: GameDefinition = {
     difficulty: 65,
     luck: 45,
   },
+  background: GAME_BACKGROUNDS.darkAlley,
+  animation: GameAnimations.Dust,
   thumbnail: "Infiltrator.webp",
   thumbnailCredit: {
     title: "Satan Starts from the Touch of Ithuriel's Spear",

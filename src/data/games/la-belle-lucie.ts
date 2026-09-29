@@ -1,3 +1,5 @@
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -16,6 +18,8 @@ export const laBelleLucie: GameDefinition = {
     sourceLink:
       "https://www.rijksmuseum.nl/en/collection/object/The-Artists-Niece-Marianne-Lavergne-Known-as-La-Liseuse--4f8b0612bb4049770fadcb8d29bac8f9",
   },
+  background: GAME_BACKGROUNDS.sunsetOldCity,
+  animation: GameAnimations.CherryBlossom,
   gameColorDark: "#28352d",
   gameColorPale: "#f5dce4",
   cardBack: CardBackColors.Rose,

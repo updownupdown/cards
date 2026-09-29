@@ -1,8 +1,5 @@
 import { CARD_BACK_INKS } from "@/data/card-backs";
-import {
-  GameBackdrop,
-  gameBackdropSource,
-} from "@/components/common/GameBackdrop";
+import { BackgroundAnimation } from "@/animations/BackgroundAnimation";
 import {
   clearLastGameSession,
   getGameInfo,
@@ -18,6 +15,7 @@ import {
 } from "@/data/campaign-progress";
 import { useCampaignProgress } from "@/hooks/useCampaignProgress";
 import { recordDailyWin } from "@/data/game-of-the-day";
+import { DEFAULT_GAME_BACKGROUND } from "@/data/games-data";
 import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
@@ -52,7 +50,14 @@ import {
 import { router, useLocalSearchParams } from "expo-router";
 import { useGamePath } from "@/hooks/useGamePath";
 import React, { useEffect, useEffectEvent, useRef, useState } from "react";
-import { Animated, BackHandler, Platform, Pressable, View } from "react-native";
+import {
+  Animated,
+  BackHandler,
+  ImageBackground,
+  Platform,
+  Pressable,
+  View,
+} from "react-native";
 import { setBoardInputLocked } from "@/components/Cards/input-lock";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -72,6 +77,8 @@ import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 const TIPS_MORPH_DURATION = 350;
 const KEEP_AWAKE_TAG = "solitarius-game";
 const KEEP_AWAKE_MS = 10 * 60 * 1000;
+// Scene effects start after the game has loaded and its deal has played.
+const SCENE_START_DELAY_MS = 1000;
 
 export type GameOutcome = "playing" | "won" | "lost";
 
@@ -275,6 +282,17 @@ export const GameWrapper = ({
 
   const tipsFade = useFade(showTipsBox, TIPS_MORPH_DURATION);
 
+  // Background effects wait for the game to load, and freeze while a modal
+  // or overlay (menu, rules, tips, the win/lose box) covers the board.
+  const [isSceneReady, setIsSceneReady] = useState(false);
+  useEffect(() => {
+    if (!isLoaded) return;
+    const timer = setTimeout(() => setIsSceneReady(true), SCENE_START_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [isLoaded]);
+  const isScenePaused =
+    showMenu || openMenu || showRulesModal || !!campaignWinResult || ended;
+
   useEffect(() => {
     setBoardInputLocked(autoCompleting);
     return () => setBoardInputLocked(false);
@@ -445,7 +463,7 @@ export const GameWrapper = ({
   const titleColor = gameInfo.gameColorPale;
   const backgroundColor = gameInfo.gameColorDark;
   const headerHeight = getHeaderHeightWithInset(insets.top, ui.scale);
-  const backdrop = gameBackdropSource(gameInfo);
+  const background = gameInfo.background ?? DEFAULT_GAME_BACKGROUND;
 
   return (
     <>
@@ -531,7 +549,19 @@ export const GameWrapper = ({
           backgroundColor,
         }}
       >
-        <GameBackdrop source={backdrop} />
+        <ImageBackground
+          source={background.source}
+          resizeMode="cover"
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+          }}
+        />
 
         {/* Background color overlay */}
         <View
@@ -547,6 +577,30 @@ export const GameWrapper = ({
             opacity: 0.6,
           }}
         />
+
+        {globalSettings.showAnimations &&
+          !isGlobalSettingsLoading &&
+          isSceneReady && (
+            <View
+              style={{
+                position: "absolute",
+                zIndex: LayerZIndexes.boardAnimation,
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+                overflow: "hidden",
+                pointerEvents: "none",
+              }}
+            >
+              <BackgroundAnimation
+                animation={gameInfo.animation}
+                width={viewportWidth}
+                height={viewportHeight}
+                paused={isScenePaused}
+              />
+            </View>
+          )}
 
         <DeviceRotateHint orientation={showDeviceRotateHint} />
 
@@ -634,7 +688,7 @@ export const GameWrapper = ({
           text={quoteReveal.text}
           author={quoteReveal.author}
           source={quoteReveal.source}
-          background={backdrop}
+          background={background.source}
           overlayColor={backgroundColor}
           onUncover={() => setUncoveredWinResult(campaignWinResult)}
           onDone={() => setRevealedWinResult(campaignWinResult)}

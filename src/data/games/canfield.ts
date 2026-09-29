@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations/types";
 
 export const canfield: GameDefinition = {
   path: "/canfield",
@@ -19,6 +21,8 @@ export const canfield: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Caravaggio_(Michelangelo_Merisi)_-_The_Cardsharps_-_Google_Art_Project.jpg",
   },
+  background: GAME_BACKGROUNDS.cozyRoom3,
+  animation: GameAnimations.Dust,
   gameColorDark: "#311a1e",
   gameColorPale: "#E4F6FF",
   cardBack: CardBackColors.Burgundy,

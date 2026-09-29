@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const pocketPoker: GameDefinition = {
   path: "/pocket-poker",
@@ -18,6 +20,8 @@ export const pocketPoker: GameDefinition = {
     sourceName: "Cleveland Museum of Art",
     sourceLink: "https://www.clevelandart.org/art/1959.303",
   },
+  background: GAME_BACKGROUNDS.casino,
+  animation: GameAnimations.Glitter,
   gameColorDark: "#142e1f",
   gameColorPale: "#fff5bd",
   cardBack: CardBackColors.Moss,

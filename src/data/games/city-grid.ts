@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const cityGrid: GameDefinition = {
   path: "/city-grid",
@@ -18,6 +20,8 @@ export const cityGrid: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/380748",
   },
+  background: GAME_BACKGROUNDS.city,
+  animation: GameAnimations.Birds,
   gameColorDark: "#383d4e",
   gameColorPale: "#e3f6ff",
   cardBack: CardBackColors.Bicycle,

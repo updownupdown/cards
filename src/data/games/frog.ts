@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const frog: GameDefinition = {
   path: "/frog",
@@ -20,6 +22,8 @@ export const frog: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/25099",
   },
+  background: GAME_BACKGROUNDS.marsh,
+  animation: GameAnimations.Firefly,
   gameColorDark: "#15261b",
   gameColorPale: "#e2f5c6",
   cardBack: CardBackColors.Moss,

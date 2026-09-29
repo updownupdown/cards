@@ -12,7 +12,6 @@ import { foldForSearch, localizeGameTitle } from "@/i18n/content";
 import { Icon, type IconName } from "@/icons";
 import { FontWeight, layoutDims, rgba, theme } from "@/styles/styles";
 import type { Href } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
 import { useMemo, useRef, useState } from "react";
 import {
   Animated,
@@ -55,6 +54,16 @@ const INDEX_WIDTH = 44;
 const ROW_HEIGHT = 52;
 /** The list's space above its first row. */
 const LIST_TOP = 8;
+
+/** The list's top edge fades on the web, where CSS masks are available. */
+const listFade =
+  Platform.OS === "web"
+    ? ({
+        maskImage: "linear-gradient(to bottom, transparent 0, black 10px)",
+        WebkitMaskImage:
+          "linear-gradient(to bottom, transparent 0, black 10px)",
+      } as object)
+    : null;
 
 const AnimatedSectionList = Animated.createAnimatedComponent(
   SectionList<HomeGameEntry, Section>,
@@ -230,8 +239,11 @@ export function SearchTab({
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Starts under the header, so the index letters stick just below it. */}
-      <View style={{ flex: 1, marginTop: headerHeight }}>
+      {/* Starts under the header, so the index letters stick just below it,
+          and rows end at the header's foot: the header needs no background
+          of its own, and the sky shows through it. On the web the rows fade
+          out there rather than stopping. */}
+      <View style={[{ flex: 1, marginTop: headerHeight }, listFade]}>
         <AnimatedSectionList
           sections={sections}
           keyExtractor={([path]) => path}
@@ -288,7 +300,6 @@ export function SearchTab({
           right: 0,
           zIndex: 2,
           paddingTop: contentPaddingTop,
-          backgroundColor: theme.night,
         }}
       >
         <View
@@ -397,19 +408,6 @@ export function SearchTab({
             )}
           </View>
         </View>
-        {/* The rows fade out as they pass under the header. */}
-        <LinearGradient
-          colors={[theme.night, rgba(theme.night, 0)]}
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: -spacing(18),
-            height: spacing(18),
-            pointerEvents: "none",
-          }}
-        />
-
         {/* A tap anywhere outside the menu closes it. */}
         {sortOpen && (
           <Pressable

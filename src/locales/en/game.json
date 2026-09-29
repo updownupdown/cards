@@ -43,6 +43,7 @@
   },
   "credits": {
     "title": "Credits",
+    "backgroundImage": "Background image (blurred):",
     "gameArt": "Cover art:",
     "artSource": "Public domain, from"
   },

@@ -1,3 +1,5 @@
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -10,6 +12,8 @@ export const waypoint: GameDefinition = {
     difficulty: 62,
     luck: 48,
   },
+  background: GAME_BACKGROUNDS.dirtRoad,
+  animation: GameAnimations.Leaves,
   thumbnail: "Waypoint.webp",
   thumbnailCredit: {
     title: "On the Road",

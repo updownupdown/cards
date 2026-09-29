@@ -1,3 +1,5 @@
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -16,6 +18,8 @@ export const spiderette: GameDefinition = {
     sourceLink:
       "https://artvee.com/dl/twee-tulpen-met-spin-en-vlieg-in-spinnenweb-a-secretarij-langschap/",
   },
+  background: GAME_BACKGROUNDS.forestGrasses,
+  animation: GameAnimations.Spiders,
   gameColorDark: "#202e27",
   gameColorPale: "#dae6cf",
   cardBack: CardBackColors.Rose,

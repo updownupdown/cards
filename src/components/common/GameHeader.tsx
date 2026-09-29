@@ -1,8 +1,13 @@
-import { glassEdge, glassFill } from "@/components/ui/FloatingBar";
-import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
+import { glassFill } from "@/components/ui/FloatingBar";
 import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
-import { LayerZIndexes, layoutDims, theme } from "@/styles/styles";
+import {
+  Colors,
+  LayerZIndexes,
+  layoutDims,
+  rgba,
+  theme,
+} from "@/styles/styles";
 import { memo } from "react";
 import { Animated, Platform, View } from "react-native";
 import { Button } from "../Button/Button";
@@ -83,9 +88,8 @@ export const GameHeader = memo(function GameHeader({
             // The tab bar's glass, corner and shadow.
             borderRadius: spacing(22),
             backgroundColor: glassFill(),
-            borderWidth: 1,
-            borderColor: glassEdge(),
-            ...homeSurfaceShadow(spacing, { translucent: true }),
+            // No edge; a soft, wide shadow lifts it off the game instead.
+            boxShadow: `0 ${spacing(10)}px ${spacing(36)}px ${rgba(Colors.black, 0.28)}`,
             ...(Platform.OS === "web"
               ? ({ backdropFilter: "blur(14px)" } as object)
               : null),
@@ -99,7 +103,6 @@ export const GameHeader = memo(function GameHeader({
           }
           onPress={onHome}
           iconName={isCampaignMode ? "milky-way" : "home"}
-          label={isCampaignMode ? t("menu.campaign") : t("menu.home")}
           iconColor={theme.ink}
           style={{ flex: 1, paddingHorizontal: 0 }}
         />
@@ -111,7 +114,7 @@ export const GameHeader = memo(function GameHeader({
             accessibilityLabel={t("menu.instantWin")}
             onPress={onInstantWin}
             iconName="trophy"
-            label={t("menu.win")}
+
             iconColor={theme.ink}
             disabled={ended}
             style={{ flex: 1, paddingHorizontal: 0 }}
@@ -166,7 +169,7 @@ export const GameHeader = memo(function GameHeader({
             headerButton
             onPress={onRules}
             iconName={"instructions"}
-            label={t("menu.rules")}
+            accessibilityLabel={t("menu.rules")}
             iconColor={theme.ink}
             style={{ width: "100%", paddingHorizontal: 0 }}
           />
@@ -176,7 +179,7 @@ export const GameHeader = memo(function GameHeader({
           headerButton
           onPress={onUndo}
           iconName="undo"
-          label={t("menu.undo")}
+          accessibilityLabel={t("menu.undo")}
           iconColor={!ended && canUndo ? theme.ink : theme.faint}
           disabled={undoDisabled}
           style={{ flex: 1, paddingHorizontal: 0 }}
@@ -193,7 +196,7 @@ export const GameHeader = memo(function GameHeader({
           headerButton
           onPress={onMenu}
           iconName="more"
-          label={t("menu.menu")}
+          accessibilityLabel={t("menu.menu")}
           iconColor={theme.ink}
           style={{ flex: 1, paddingHorizontal: 0 }}
         />

@@ -251,7 +251,7 @@ type CreditsSectionProps = {
 
 /** Whether a game has anything for CreditsSection to show. */
 export function hasCredits(gameInfo: GameMenuInfo) {
-  return Boolean(gameInfo.thumbnailCredit);
+  return Boolean(gameInfo.background?.authorName || gameInfo.thumbnailCredit);
 }
 
 type CreditLinkProps = {
@@ -280,6 +280,7 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
   const { spacing } = useResponsiveMetrics();
   const { t } = useTranslation("game");
 
+  const background = gameInfo.background;
   const art = gameInfo.thumbnailCredit;
   const thumbnail = gameInfo.thumbnail;
 
@@ -333,6 +334,16 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
               </Text>
             </View>
           </View>
+        )}
+
+        {background?.authorName && (
+          <Text size="xs" weight={400} color={theme.dim}>
+            {t("credits.backgroundImage")}{" "}
+            <CreditLink
+              name={background.authorName}
+              link={background.authorLink}
+            />
+          </Text>
         )}
       </View>
     </View>

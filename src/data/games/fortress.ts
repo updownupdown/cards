@@ -1,3 +1,5 @@
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -14,6 +16,8 @@ export const fortress: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/8097",
   },
+  background: GAME_BACKGROUNDS.fortress,
+  animation: GameAnimations.Clouds,
   gameColorDark: "#302a24",
   gameColorPale: "#ead9b8",
   cardBack: CardBackColors.Walnut,

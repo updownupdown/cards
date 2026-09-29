@@ -1,5 +1,7 @@
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
+import { GameAnimations } from "@/animations";
 export const congress: GameDefinition = {
   path: "/congress",
   title: "Congress",
@@ -17,6 +19,8 @@ export const congress: GameDefinition = {
     sourceName: "Cleveland Museum of Art",
     sourceLink: "https://www.clevelandart.org/art/1998.120",
   },
+  background: GAME_BACKGROUNDS.city3,
+  animation: GameAnimations.Mist,
   gameColorDark: "#292f38",
   gameColorPale: "#e9dfca",
   cardBack: CardBackColors.Bronze,

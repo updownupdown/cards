@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const blackHole: GameDefinition = {
   path: "/black-hole",
@@ -20,6 +22,8 @@ export const blackHole: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Hieronymus_Bosch_013.jpg",
   },
+  background: GAME_BACKGROUNDS.nightSky,
+  animation: GameAnimations.Stars,
   gameColorDark: "#150e25",
   gameColorPale: "#d4cbff",
   cardBack: CardBackColors.Violet,

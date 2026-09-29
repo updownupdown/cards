@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const glazier: GameDefinition = {
   path: "/glazier",
@@ -18,6 +20,8 @@ export const glazier: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/196278",
   },
+  background: GAME_BACKGROUNDS.geometricCeiling,
+  animation: GameAnimations.Embers,
   gameColorDark: "#1c2033",
   gameColorPale: "#f1d7a2",
   cardBack: CardBackColors.Indigo,

@@ -1,3 +1,5 @@
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -16,6 +18,8 @@ export const fifteenPuzzle: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/21405",
   },
+  background: GAME_BACKGROUNDS.bookstore,
+  animation: GameAnimations.Dust,
   gameColorDark: "#293b32",
   gameColorPale: "#f6edcf",
   cardBack: CardBackColors.Ocean,

@@ -1,5 +1,7 @@
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
+import { GameAnimations } from "@/animations";
 
 export const seahavenTowers: GameDefinition = {
   path: "/seahaven-towers",
@@ -15,6 +17,9 @@ export const seahavenTowers: GameDefinition = {
     sourceName: "Artvee",
     sourceLink: "https://artvee.com/dl/molo-z-widokiem-na-dwie-latarnie/",
   },
+  background: GAME_BACKGROUNDS.shipwreck,
+  animation: GameAnimations.Mist,
+  // animation: GameAnimations.Clouds,
   gameColorDark: "#173946",
   gameColorPale: "#dceff0",
   cardBack: CardBackColors.Teal,

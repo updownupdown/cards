@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const cabinSiege: GameDefinition = {
   path: "/cabin-siege",
@@ -18,6 +20,8 @@ export const cabinSiege: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/908836",
   },
+  background: GAME_BACKGROUNDS.dampForest,
+  animation: GameAnimations.Leaves,
   gameColorDark: "#201207",
   gameColorPale: "#e9f1d9",
   cardBack: CardBackColors.Slate,

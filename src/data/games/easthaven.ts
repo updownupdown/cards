@@ -1,5 +1,7 @@
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
+import { GameAnimations } from "@/animations";
 export const easthaven: GameDefinition = {
   path: "/easthaven",
   title: "Easthaven",
@@ -18,6 +20,8 @@ export const easthaven: GameDefinition = {
     sourceLink:
       "https://www.rijksmuseum.nl/en/collection/object/Haven-bij-eb--796a10bfb6b9d16e48fbcb7c754b1dde",
   },
+  background: GAME_BACKGROUNDS.stonyBeach,
+  animation: GameAnimations.Glints,
   gameColorDark: "#203638",
   gameColorPale: "#dcefed",
   cardBack: CardBackColors.Teal,

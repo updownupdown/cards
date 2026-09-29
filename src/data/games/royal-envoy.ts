@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const royalEnvoy: GameDefinition = {
   path: "/royal-envoy",
@@ -17,6 +19,8 @@ export const royalEnvoy: GameDefinition = {
     sourceName: "Artvee",
     sourceLink: "https://artvee.com/dl/arrival-of-the-messenger/",
   },
+  background: GAME_BACKGROUNDS.castle,
+  animation: GameAnimations.Birds,
   gameColorDark: "#241e33",
   gameColorPale: "#acdeff",
   cardBack: CardBackColors.Bicycle,

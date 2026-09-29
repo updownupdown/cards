@@ -1,3 +1,5 @@
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -10,6 +12,8 @@ export const shiftingSands: GameDefinition = {
     difficulty: 60,
     luck: 55,
   },
+  background: GAME_BACKGROUNDS.sahara,
+  animation: GameAnimations.Sand,
   thumbnail: "ShiftingSands.webp",
   thumbnailCredit: {
     title: "Sand Dunes, Harlech, North Wales",

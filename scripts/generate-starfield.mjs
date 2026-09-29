@@ -2,8 +2,8 @@
 
 // Draws the tiles of the Home starfield (src/components/Home/Starfield.tsx):
 // one seamless square per parallax layer, repeated and slid behind the tabs.
-// Stars are baked in rather than drawn as views, so hundreds of them, with
-// their glows and colours, cost a handful of images. Run:
+// Stars are baked in rather than drawn as views, so hundreds of them, each
+// a crisp point in its colour, cost a handful of images. Run:
 //   npm run starfield:generate
 
 import fs from "fs";
@@ -68,7 +68,7 @@ const LAYERS = {
     count: 170,
     radius: [0.4, 0.7],
     alpha: [0.4, 0.8],
-    glow: 0.25,
+    glow: 0,
     clusters: 2,
   },
   mid: {
@@ -76,7 +76,7 @@ const LAYERS = {
     count: 60,
     radius: [0.65, 0.95],
     alpha: [0.6, 0.95],
-    glow: 0.5,
+    glow: 0,
     clusters: 0,
   },
   bright: {
@@ -84,7 +84,7 @@ const LAYERS = {
     count: 16,
     radius: [0.95, 1.35],
     alpha: [0.8, 1],
-    glow: 0.8,
+    glow: 0,
     clusters: 0,
   },
   hero: {
@@ -92,16 +92,15 @@ const LAYERS = {
     count: 4,
     radius: [1.4, 1.9],
     alpha: [0.9, 1],
-    glow: 1,
+    glow: 0,
     clusters: 0,
-    spikes: true,
   },
   twinkleA: {
     tile: 700,
     count: 12,
     radius: [0.7, 1.1],
     alpha: [0.8, 1],
-    glow: 0.7,
+    glow: 0,
     clusters: 0,
   },
   twinkleB: {
@@ -109,7 +108,7 @@ const LAYERS = {
     count: 10,
     radius: [0.8, 1.2],
     alpha: [0.8, 1],
-    glow: 0.7,
+    glow: 0,
     clusters: 0,
   },
 };

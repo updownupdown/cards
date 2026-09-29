@@ -1,3 +1,5 @@
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -15,6 +17,8 @@ export const flowerGarden: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/11121",
   },
+  background: GAME_BACKGROUNDS.flowerGarden,
+  animation: GameAnimations.Pollen,
   gameColorDark: "#24402f",
   gameColorPale: "#f2e4c2",
   cardBack: CardBackColors.Olive,

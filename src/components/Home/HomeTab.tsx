@@ -104,11 +104,20 @@ export function HomeTab({
     ([, game]) => game.enabledOnLocalOnly,
   );
 
+  // Shelves scroll across the whole screen, not just the centred column,
+  // but start in line with it.
+  const shelfPadding =
+    (viewportWidth - renderedContentWidth) / 2 + scaledPageSidePadding;
   const section = (title: string, children: ReactNode) => (
-    <View
-      style={{ width: "100%", maxWidth: contentMaxWidth, alignSelf: "center" }}
-    >
-      <View style={{ paddingHorizontal: scaledPageSidePadding }}>
+    <View style={{ width: "100%" }}>
+      <View
+        style={{
+          width: "100%",
+          maxWidth: contentMaxWidth,
+          alignSelf: "center",
+          paddingHorizontal: scaledPageSidePadding,
+        }}
+      >
         <SectionTitle>{title}</SectionTitle>
       </View>
       {children}
@@ -165,7 +174,7 @@ export function HomeTab({
             t("sections.localOnly"),
             <ArtShelf
               games={localOnlyGames as HomeGameEntry[]}
-              pageSidePadding={scaledPageSidePadding}
+              pageSidePadding={shelfPadding}
               favorites={favorites}
               onToggleFavorite={onToggleFavorite}
             />,
@@ -176,7 +185,7 @@ export function HomeTab({
             t("sections.easyGames"),
             <ArtShelf
               games={easyGames}
-              pageSidePadding={scaledPageSidePadding}
+              pageSidePadding={shelfPadding}
               favorites={favorites}
               onToggleFavorite={onToggleFavorite}
             />,
@@ -187,7 +196,7 @@ export function HomeTab({
             t("sections.continue"),
             <ContinueShelf
               games={jumpBackInGames}
-              pageSidePadding={scaledPageSidePadding}
+              pageSidePadding={shelfPadding}
             />,
           )}
 
@@ -196,7 +205,7 @@ export function HomeTab({
             t("sections.favorites"),
             <ArtShelf
               games={favoriteGames}
-              pageSidePadding={scaledPageSidePadding}
+              pageSidePadding={shelfPadding}
               favorites={favorites}
               onToggleFavorite={onToggleFavorite}
             />,

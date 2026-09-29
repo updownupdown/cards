@@ -1,3 +1,5 @@
+import { GameAnimations } from "@/animations";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
 import { GameDefinition, GameTag } from "../games-data";
 
@@ -10,6 +12,8 @@ export const seer: GameDefinition = {
     difficulty: 55,
     luck: 65,
   },
+  background: GAME_BACKGROUNDS.nightSky,
+  animation: GameAnimations.Stars,
   thumbnail: "Seer.webp",
   thumbnailCredit: {
     title: "The Fortune Teller",

@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const labyrinth: GameDefinition = {
   path: "/labyrinth",
@@ -22,6 +24,8 @@ export const labyrinth: GameDefinition = {
     sourceName: "Art Institute of Chicago",
     sourceLink: "https://www.artic.edu/artworks/268119",
   },
+  background: GAME_BACKGROUNDS.stoneTunnel,
+  animation: GameAnimations.ManaDust,
   gameColorDark: "#1c1f26",
   gameColorPale: "#dde4f2",
   cardBack: CardBackColors.Slate,

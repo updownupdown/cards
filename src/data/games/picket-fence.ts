@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const picketFence: GameDefinition = {
   path: "/picket-fence",
@@ -24,6 +26,8 @@ export const picketFence: GameDefinition = {
     sourceLink:
       "https://www.rijksmuseum.nl/en/collection/object/Houses-at-the-Edge-of-a-Village-in-the-Dunes--c15df578ad9247d7f28afa1b153d02c5",
   },
+  background: GAME_BACKGROUNDS.oldPath,
+  animation: GameAnimations.Pollen,
   gameColorDark: "#1e2a1c",
   gameColorPale: "#e8efd9",
   cardBack: CardBackColors.Olive,

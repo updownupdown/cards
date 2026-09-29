@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const slyFox: GameDefinition = {
   path: "/sly-fox",
@@ -19,6 +21,8 @@ export const slyFox: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Red_Fox,_Carl_Rungius,_1933.jpg",
   },
+  background: GAME_BACKGROUNDS.forestGrasses,
+  animation: GameAnimations.Leaves,
   gameColorDark: "#2b1a10",
   gameColorPale: "#fde2cc",
   cardBack: CardBackColors.Copper,

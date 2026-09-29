@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const herbalist: GameDefinition = {
   path: "/herbalist",
@@ -19,6 +21,8 @@ export const herbalist: GameDefinition = {
     sourceName: "Cleveland Museum of Art",
     sourceLink: "https://www.clevelandart.org/art/1977.91",
   },
+  background: GAME_BACKGROUNDS.forest,
+  animation: GameAnimations.Firefly,
   gameColorDark: "#1b3a1f",
   gameColorPale: "#edffba",
   cardBack: CardBackColors.Olive,

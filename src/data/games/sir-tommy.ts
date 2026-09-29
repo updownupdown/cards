@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const sirTommy: GameDefinition = {
   path: "/sir-tommy",
@@ -20,6 +22,8 @@ export const sirTommy: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Hans_Holbein,_the_Younger_-_Sir_Thomas_More_-_Google_Art_Project.jpg",
   },
+  background: GAME_BACKGROUNDS.london,
+  animation: GameAnimations.Rain,
   gameColorDark: "#1a2c33",
   gameColorPale: "#fdf7d9",
   cardBack: CardBackColors.Teal,

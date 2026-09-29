@@ -1,5 +1,7 @@
 import { GameDefinition, GameTag } from "../games-data";
+import { GAME_BACKGROUNDS } from "../game-backgrounds";
 import { CardBackColors } from "../card-backs";
+import { GameAnimations } from "@/animations";
 
 export const cribbageSquares: GameDefinition = {
   path: "/cribbage-squares",
@@ -22,6 +24,8 @@ export const cribbageSquares: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/389106",
   },
+  background: GAME_BACKGROUNDS.cozyCabin,
+  animation: GameAnimations.Snow,
   gameColorDark: "#15221c",
   gameColorPale: "#d6f0ec",
   cardBack: CardBackColors.Forest,
