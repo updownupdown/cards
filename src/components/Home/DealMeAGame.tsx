@@ -246,7 +246,9 @@ function DealtCard({
     opacity: swipeOpacity(translateX.value, width),
   }));
   return (
-    <GestureDetector gesture={gesture}>
+    // On the web the detector blocks the browser's own touch scrolling
+    // unless told otherwise: vertical swipes are left to scroll the page.
+    <GestureDetector gesture={gesture} touchAction="pan-y">
       <Animated.View
         style={[
           {

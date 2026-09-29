@@ -117,10 +117,8 @@ jest.mock("@/components/Home/HomeArt", () => {
   );
   return {
     ArtShelf: Shelf,
-    ContinueShelf: Shelf,
     ShelfPlaceholder,
     TILE_SIZE: 140,
-    CONTINUE_HEIGHT: 200,
   };
 });
 

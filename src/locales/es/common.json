@@ -17,6 +17,6 @@
     "wins": "Victorias"
   },
   "undo": "Deshacer",
-  "collectFrom": "Consíguela en:",
-  "collectedFrom": "Conseguida en:"
+  "collectFrom": "Consíguela en",
+  "collectedFrom": "Conseguida en"
 }

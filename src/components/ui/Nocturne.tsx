@@ -10,8 +10,8 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, type IconName } from "@/icons";
 import { Colors, rgba, theme, transitionStyles } from "@/styles/styles";
 import { useState, type ReactNode } from "react";
+import { GlassBackdrop, glassBlurStyle, useNativeGlass } from "./Glass";
 import {
-  Platform,
   Pressable,
   View,
   type LayoutChangeEvent,
@@ -284,6 +284,11 @@ export function Pill({
 }) {
   const { spacing, font } = useResponsiveMetrics();
   const theme = usePalette();
+  const nativeGlass = useNativeGlass();
+  // Unselected, the tab bar's glass; selected, a tint of the accent over it.
+  const fill = selected
+    ? rgba(mix(theme.surface, theme.accent, 0.16), 0.8)
+    : rgba(theme.surface, 0.8);
   return (
     <Pressable
       onPress={onPress}
@@ -297,11 +302,9 @@ export function Pill({
         flexDirection: "row",
         alignItems: "center",
         gap: spacing(6),
-        // Unselected, the tab bar's glass; selected, a tint of the accent
-        // over it. A shadow lifts both off the sky.
-        backgroundColor: selected
-          ? rgba(mix(theme.surface, theme.accent, 0.16), 0.8)
-          : rgba(theme.surface, 0.8),
+        // Frosted, and a shadow lifts it off the sky.
+        backgroundColor: nativeGlass ? "transparent" : fill,
+        ...glassBlurStyle(),
         borderWidth: 1,
         borderColor: selected
           ? rgba(theme.accent, 0.45)
@@ -310,6 +313,7 @@ export function Pill({
         outline: "none",
       }}
     >
+      <GlassBackdrop fill={fill} radius={spacing(17)} />
       {iconName && (
         <Icon
           name={iconName}
@@ -362,6 +366,8 @@ export function RoundButton({
   const theme = usePalette();
   const diameter = spacing(size);
   const iconColor = color ?? (active ? theme.accent : theme.ink);
+  const nativeGlass = useNativeGlass();
+  const glassTint = rgba(theme.surface, 0.8);
   return (
     <Pressable
       onPress={onPress}
@@ -387,15 +393,16 @@ export function RoundButton({
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: glass
-            ? rgba(theme.surface, 0.85)
+            ? nativeGlass
+              ? "transparent"
+              : glassTint
             : rgba(theme.ink, 0.07),
           borderWidth: glass ? 1 : 0,
           borderColor: hairline(),
-          ...(glass && Platform.OS === "web"
-            ? ({ backdropFilter: "blur(10px)" } as ViewStyle)
-            : null),
+          ...(glass ? glassBlurStyle() : null),
         }}
       >
+        {glass && <GlassBackdrop fill={glassTint} radius={diameter / 2} />}
         <Icon
           name={iconName}
           size={Math.round(diameter * 0.48)}

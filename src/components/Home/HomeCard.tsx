@@ -12,6 +12,7 @@ import { type Href } from "expo-router";
 import { Pressable, StyleSheet, View, type ViewStyle } from "react-native";
 import { FavButton } from "./FavButton";
 import {
+  favCorner,
   gameArt,
   useCardFrame,
   useGameCategory,
@@ -133,7 +134,7 @@ export function HomeCard({
           </View>
         </Pressable>
         <FavButton
-          style={{ position: "absolute", top: spacing(4), right: spacing(4) }}
+          style={favCorner(spacing, spacing(40), spacing(22))}
           isFavorite={isFavorite}
           onToggleFavorite={() => onToggleFavorite?.(path)}
           size={spacing(40)}
@@ -142,6 +143,7 @@ export function HomeCard({
           activeColor={appTheme.accent}
           inactiveColor={theme.ink}
           disabled={!onToggleFavorite}
+          shadow={false}
         />
       </View>
     </PaletteContext.Provider>

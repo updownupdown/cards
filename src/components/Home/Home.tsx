@@ -23,6 +23,7 @@ import {
   type HomeTabIndex,
 } from "./home-view-state";
 import { HomeModal } from "@/components/Modals/HomeModal";
+import { GlassTarget, GlassTargetContext } from "@/components/ui/Glass";
 import { StatsModal } from "@/components/Modals/StatsModal";
 import { consumeReopenSettings } from "@/components/common/ThemePicker";
 import { useHomeData } from "@/hooks/useHomeData";
@@ -118,6 +119,8 @@ export default function Home() {
   const [ufo, setUfo] = useState<UfoRequest | null>(null);
 
   const [containerHeight, setContainerHeight] = useState(0);
+  const pageGlassRef = useRef<View>(null);
+  const skyGlassRef = useRef<View>(null);
 
   const {
     isLoaded: homeDataLoaded,
@@ -327,50 +330,64 @@ export default function Home() {
         <UfoContext.Provider value={setUfo}>
           <View style={containerStyle} onLayout={onContainerLayout}>
             {isScreenReady && (
-              <View
-                style={{
-                  flex: 1,
-                  height: screenHeight || undefined,
-                  // Clips the tabs moved aside, so they are skipped entirely.
-                  overflow: "hidden",
-                }}
-              >
-                {/* One sky behind every tab, moving as you go between them. */}
-                <StarfieldBackdrop
-                  motion={starfield}
-                  activeTab={activeTab}
-                  animated={settings.showAnimations}
-                  comets={isFocused}
-                />
+              // Everything the tab bar's glass blurs.
+              <GlassTarget targetRef={pageGlassRef} style={{ flex: 1 }}>
+                <View
+                  style={{
+                    flex: 1,
+                    height: screenHeight || undefined,
+                    // Clips the tabs moved aside, so they are skipped entirely.
+                    overflow: "hidden",
+                  }}
+                >
+                  {/* One sky behind every tab, moving as you go between them.
+                    The glass inside the tabs blurs the sky alone, since
+                    Android can't blur what the glass itself is in. */}
+                  <GlassTarget
+                    targetRef={skyGlassRef}
+                    style={StyleSheet.absoluteFill}
+                  >
+                    <StarfieldBackdrop
+                      motion={starfield}
+                      activeTab={activeTab}
+                      animated={settings.showAnimations}
+                      comets={isFocused}
+                    />
+                  </GlassTarget>
 
-                {HOME_TAB_INDICES.map((index) => {
-                  if (!mountedTabs.has(index)) return null;
-                  if (index === CAMPAIGN_HOME_TAB_INDEX && !isFocused)
-                    return null;
-                  return (
-                    <TabLayer
-                      key={index}
-                      state={
-                        index === shownTab
-                          ? "shown"
-                          : index === activeTab
-                            ? "preparing"
-                            : "away"
-                      }
-                      onReady={() => onTabReady(index)}
-                    >
-                      {tabContents[index]}
-                    </TabLayer>
-                  );
-                })}
+                  <GlassTargetContext.Provider value={skyGlassRef}>
+                    {HOME_TAB_INDICES.map((index) => {
+                      if (!mountedTabs.has(index)) return null;
+                      if (index === CAMPAIGN_HOME_TAB_INDEX && !isFocused)
+                        return null;
+                      return (
+                        <TabLayer
+                          key={index}
+                          state={
+                            index === shownTab
+                              ? "shown"
+                              : index === activeTab
+                                ? "preparing"
+                                : "away"
+                          }
+                          onReady={() => onTabReady(index)}
+                        >
+                          {tabContents[index]}
+                        </TabLayer>
+                      );
+                    })}
+                  </GlassTargetContext.Provider>
 
-                {shownTab === null && (
-                  <TabSpinner immediate={!mountedTabs.has(activeTab)} />
-                )}
-              </View>
+                  {shownTab === null && (
+                    <TabSpinner immediate={!mountedTabs.has(activeTab)} />
+                  )}
+                </View>
+              </GlassTarget>
             )}
 
-            <HomeTabBar activeIndex={activeTab} onSelectTab={onSelectTab} />
+            <GlassTargetContext.Provider value={pageGlassRef}>
+              <HomeTabBar activeIndex={activeTab} onSelectTab={onSelectTab} />
+            </GlassTargetContext.Provider>
 
             {/* Last, so it flies over the header and tab bar rather than under
             them. It only exists while the Campaign tab has asked for it. */}

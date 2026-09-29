@@ -17,6 +17,6 @@
     "wins": "Victoires"
   },
   "undo": "Annuler",
-  "collectFrom": "À gagner dans :",
-  "collectedFrom": "Gagnée dans :"
+  "collectFrom": "À gagner dans",
+  "collectedFrom": "Gagnée dans"
 }
