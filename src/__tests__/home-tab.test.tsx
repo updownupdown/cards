@@ -112,7 +112,16 @@ jest.mock("@/components/Home/HomeArt", () => {
       ))}
     </View>
   );
-  return { ArtShelf: Shelf, ContinueShelf: Shelf };
+  const ShelfPlaceholder = ({ testID }: { testID: string }) => (
+    <View testID={testID} />
+  );
+  return {
+    ArtShelf: Shelf,
+    ContinueShelf: Shelf,
+    ShelfPlaceholder,
+    TILE_SIZE: 140,
+    CONTINUE_HEIGHT: 200,
+  };
 });
 
 jest.mock("@/hooks/useResponsiveMetrics", () => ({
@@ -207,6 +216,17 @@ const sections = (renderer: ReactTestRenderer) => {
   return found;
 };
 
+/** The placeholders standing in for an empty section. */
+const placeholders = (
+  renderer: ReactTestRenderer,
+  section: "continue" | "favorites",
+) =>
+  renderer.root.findAll(
+    (node) =>
+      typeof node.type === "string" &&
+      node.props.testID === `placeholder ${section}`,
+  );
+
 /** The paths of the cards in the section with the given title. */
 const cardsUnder = (renderer: ReactTestRenderer, title: string) => {
   const isCard = (node: ReactTestInstance) =>
@@ -228,6 +248,8 @@ describe("Home tab", () => {
     const renderer = renderHomeTab();
     expect(sections(renderer)).toEqual([
       "sections.easyGames",
+      "sections.continue",
+      "sections.favorites",
       "sections.gameOfTheDay",
     ]);
     expect(cardsUnder(renderer, "sections.easyGames")).toEqual(
@@ -235,27 +257,35 @@ describe("Home tab", () => {
     );
   });
 
-  test("shows no easy games until favorites and recent games are in", () => {
+  test("shows none of the game sections until favorites and recent games are in", () => {
     const renderer = renderHomeTab({ dataLoaded: false });
-    expect(sections(renderer)).not.toContain("sections.easyGames");
+    expect(sections(renderer)).toEqual(["sections.gameOfTheDay"]);
   });
 
-  test("the easy games stay, above both, while either has no games", () => {
+  test("empty Continue and Favorites keep their place with a placeholder", () => {
+    const renderer = renderHomeTab();
+    expect(placeholders(renderer, "continue")).toHaveLength(1);
+    expect(placeholders(renderer, "favorites")).toHaveLength(1);
+  });
+
+  test("the easy games show, above both, while either has no games", () => {
     expect(sections(renderHomeTab({ recentPaths: ["/yukon"] }))).toEqual([
       "sections.easyGames",
       "sections.continue",
+      "sections.favorites",
       "sections.gameOfTheDay",
     ]);
     expect(
       sections(renderHomeTab({ favorites: new Set(["/klondike"]) })),
     ).toEqual([
       "sections.easyGames",
+      "sections.continue",
       "sections.favorites",
       "sections.gameOfTheDay",
     ]);
   });
 
-  test("the easy games go once both have games, Game of the Day after them", () => {
+  test("no easy games when both have games as Home opens", () => {
     const renderer = renderHomeTab({
       recentPaths: ["/yukon"],
       favorites: new Set(["/klondike"]),
@@ -265,6 +295,31 @@ describe("Home tab", () => {
       "sections.favorites",
       "sections.gameOfTheDay",
     ]);
+  });
+
+  test("sections never appear or vanish once loaded, whatever is starred", () => {
+    const renderer = renderHomeTab({ recentPaths: ["/yukon"] });
+    const before = sections(renderer);
+    act(() =>
+      renderer.update(
+        <HomeTab
+          {...homeTabProps({
+            recentPaths: ["/yukon"],
+            favorites: new Set(["/golf"]),
+          })}
+        />,
+      ),
+    );
+    expect(sections(renderer)).toEqual(before);
+    expect(placeholders(renderer, "favorites")).toHaveLength(0);
+    // And unstarring the last one brings the placeholder back, not a gap.
+    act(() =>
+      renderer.update(
+        <HomeTab {...homeTabProps({ recentPaths: ["/yukon"] })} />,
+      ),
+    );
+    expect(sections(renderer)).toEqual(before);
+    expect(placeholders(renderer, "favorites")).toHaveLength(1);
   });
 
   test("Favorites list the starred games by name, above Game of the Day", () => {
@@ -284,7 +339,7 @@ describe("Home tab", () => {
 
   test("a game starred on Home shows under Favorites straight away", () => {
     const renderer = renderHomeTab({ recentPaths: ["/yukon"] });
-    expect(sections(renderer)).not.toContain("sections.favorites");
+    expect(placeholders(renderer, "favorites")).toHaveLength(1);
     act(() =>
       renderer.update(
         <HomeTab

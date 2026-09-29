@@ -6,7 +6,8 @@
     "rules": "Aturan",
     "undo": "Urungkan",
     "reset": "Ulangi",
-    "menu": "Menu"
+    "menu": "Menu",
+    "infoAndSettings": "Info & Pengaturan"
   },
   "result": {
     "won": "Anda menang",

@@ -337,16 +337,23 @@ function ShelfWork({
       )}
       {/* Only an acquired work shows its label. */}
       <View style={{ gap: spacing(1) }}>
-        <Text
-          serif
-          italic
-          size="sm"
-          lineHeight={1.2}
-          color={collected ? theme.ink : theme.faint}
-          numberOfLines={1}
-        >
-          {collected ? credit?.title || gameTitle : t("gallery.notAcquired")}
-        </Text>
+        {collected ? (
+          <Text
+            serif
+            italic
+            size="sm"
+            lineHeight={1.2}
+            color={theme.ink}
+            numberOfLines={1}
+          >
+            {credit?.title || gameTitle}
+          </Text>
+        ) : (
+          // Interface text, so Outfit rather than the art's Garamond.
+          <Text size="xs" weight={400} color={theme.faint} numberOfLines={1}>
+            {t("gallery.notAcquired")}
+          </Text>
+        )}
         {collected && (
           <Text serif size="xs" color={theme.dim} numberOfLines={1}>
             {credit?.artistName || t("gallery.unknownArtist")}

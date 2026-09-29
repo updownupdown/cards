@@ -28,7 +28,11 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   const headingColor = theme.accent;
 
   return (
-    <ModalFull onClose={onClose} title={t("rules.title")}>
+    <ModalFull
+      onClose={onClose}
+      gameName={gameInfo.title}
+      title={t("rules.title")}
+    >
       <ScrollView
         contentContainerStyle={modalStyles.scrollContent}
         showsVerticalScrollIndicator={false}

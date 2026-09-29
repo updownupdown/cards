@@ -6,7 +6,8 @@
     "rules": "Rules",
     "undo": "Undo",
     "reset": "Reset",
-    "menu": "Menu"
+    "menu": "Menu",
+    "infoAndSettings": "Info & Settings"
   },
   "result": {
     "won": "You won",

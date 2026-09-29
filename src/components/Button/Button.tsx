@@ -10,7 +10,7 @@ import {
   transitionStyles,
 } from "@/styles/styles";
 import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Reanimated, {
   useAnimatedStyle,
   useSharedValue,
@@ -22,6 +22,7 @@ import {
   Pressable,
   processColor,
   StyleSheet,
+  Text as RNText,
   TextStyle,
   type StyleProp,
   ViewStyle,
@@ -90,6 +91,8 @@ function resolveButtonVariant(
 // Animated so state changes (e.g. enabled/disabled) fade on native, where the
 // CSS transition in transitionStyles is ignored.
 const AnimatedPressable = Reanimated.createAnimatedComponent(Pressable);
+/** How far a label may shrink to stay on one line. */
+const MIN_LABEL_SCALE = 0.7;
 const STATE_TRANSITION_MS = 400;
 
 interface Props {
@@ -206,10 +209,16 @@ export const Button = ({
   let height: number | undefined = roundToPixel(
     40 * uiScale * sizeScale * (taller ? 1.4 : halfTaller ? 1.2 : 1),
   );
-  let borderRadius = roundToPixel(height * 0.32);
+  // Fully round ends, as the header and tab bar have.
+  let borderRadius = roundToPixel(height / 2);
   let gap = height / 6;
   let paddingVertical = roundToPixel(6 * uiScale * sizeScale);
-  let paddingHorizontal = roundToPixel(20 * uiScale * sizeScale);
+  // A button sharing a row (flex) gets its width from the row, so it only
+  // needs its label kept off the round ends.
+  const sharesRow = StyleSheet.flatten(style)?.flex !== undefined;
+  let paddingHorizontal = roundToPixel(
+    (sharesRow ? 12 : 20) * uiScale * sizeScale,
+  );
   let fontFamily = textOnly ? FontWeight[500] : FontWeight[400];
   let lineHeightUpdated = fontSize * (lineHeight ?? 1.3);
 
@@ -281,6 +290,24 @@ export const Button = ({
     },
     style,
   ];
+
+  // Native shrinks a label that doesn't fit (adjustsFontSizeToFit); the web
+  // can't, so it measures the label and scales it down itself.
+  const labelRef = useRef<RNText>(null);
+  const [labelScale, setLabelScale] = useState(1);
+  useEffect(() => setLabelScale(1), [text, fontSize]);
+  const fitLabelOnWeb = () => {
+    if (Platform.OS !== "web") return;
+    // On the web, a Text's ref is its DOM element.
+    const element = labelRef.current as unknown as HTMLElement | null;
+    if (!element?.scrollWidth || !element.clientWidth) return;
+    const ratio = element.clientWidth / element.scrollWidth;
+    if (ratio < 1) {
+      setLabelScale((current) =>
+        Math.max(MIN_LABEL_SCALE, Math.floor(current * ratio * 100) / 100),
+      );
+    }
+  };
 
   const flatStyle = StyleSheet.flatten(pressableStyle);
   // Only animate colours native can parse: e.g. a disabled rgba() theme goes
@@ -384,10 +411,16 @@ export const Button = ({
       ) : null}
       {text && (
         <Text
+          ref={labelRef}
+          // One line, always: a long label shrinks to fit rather than wrap.
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={MIN_LABEL_SCALE}
+          onLayout={fitLabelOnWeb}
           style={[
             {
               ...transitionStyles.limited04sec,
-              fontSize,
+              fontSize: fontSize * labelScale,
               fontFamily,
               textTransform: uppercase ? "uppercase" : "none",
               color: textOnly ? themeColor : contentColor,

@@ -37,7 +37,9 @@
     "easyGames": "Permainan mudah untuk memulai",
     "favorites": "Favorit",
     "continue": "Lanjutkan",
-    "fact": "Tahukah Anda?"
+    "fact": "Tahukah Anda?",
+    "continueEmpty": "Game yang kamu mainkan akan muncul di sini.",
+    "favoritesEmpty": "Ketuk bintang pada game untuk menyimpannya di sini."
   },
   "gameOfTheDay": {
     "today": "Hari ini",

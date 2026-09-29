@@ -3,13 +3,7 @@ import { useTranslation } from "@/i18n";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { useGlassStyle } from "@/components/ui/FloatingBar";
-import {
-  Colors,
-  rgba,
-  layoutDims,
-  theme,
-  transitionStyles,
-} from "@/styles/styles";
+import { layoutDims, theme, transitionStyles } from "@/styles/styles";
 import {
   Animated as RNAnimated,
   Platform,
@@ -62,23 +56,6 @@ export function HomeTabBar({
         },
       ]}
     >
-      {/* On a phone, a veil of the night under the system navigation
-          buttons, never solid, so the starfield still shows faintly. */}
-      {insets.bottom > 0 && (
-        <View
-          testID="home-tab-bar-background"
-          style={{
-            position: "absolute",
-            pointerEvents: "none",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: insets.bottom,
-            backgroundColor: rgba(Colors.starfieldOverlay, 0.7),
-          }}
-        />
-      )}
-
       <View
         style={{
           width: "100%",

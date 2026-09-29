@@ -1,5 +1,5 @@
 import { launchGame } from "@/components/common/GameLaunchOverlay";
-import { Text } from "@/components/common/Text";
+import { Text, type TextSize, type TextWeight } from "@/components/common/Text";
 import { setLastPlayedGameDot } from "@/data/campaign-progress";
 import { GAMES_DATA } from "@/data/games-registry";
 import { useCampaignProgress } from "@/hooks/useCampaignProgress";
@@ -20,6 +20,8 @@ export function CollectFrom({
   collected = false,
   campaign = false,
   onLaunch,
+  size = "md",
+  weight = 700,
   style,
 }: {
   path: string;
@@ -28,6 +30,8 @@ export function CollectFrom({
   campaign?: boolean;
   /** Called as the game starts (a viewer can close). */
   onLaunch?: () => void;
+  size?: TextSize;
+  weight?: TextWeight;
   style?: TextStyle;
 }) {
   const { t } = useTranslation("common");
@@ -47,15 +51,15 @@ export function CollectFrom({
   };
   return (
     <Text
-      size="md"
-      weight={700}
+      size={size}
+      weight={weight}
       color={theme.dim}
       style={[{ textAlign: "center" }, style]}
     >
       {t(collected ? "collectedFrom" : "collectFrom")}{" "}
       <Text
-        size="md"
-        weight={700}
+        size={size}
+        weight={weight === 700 ? 700 : 500}
         color={theme.accent}
         accessibilityRole="link"
         onPress={play}

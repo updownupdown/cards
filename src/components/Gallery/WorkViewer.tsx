@@ -123,10 +123,26 @@ export function WorkViewer({
                       iconSize={spacing(48)}
                       radius={spacing(4)}
                     />
-                    <Text size="lg" weight={400} color={theme.dim}>
-                      {t("gallery.notAcquired")}
-                    </Text>
-                    <CollectFrom path={path} onLaunch={onClose} />
+                    <View
+                      style={{
+                        alignItems: "center",
+                        gap: spacing(6),
+                        paddingHorizontal: spacing(12),
+                      }}
+                    >
+                      <Kicker
+                        color={theme.dim}
+                        style={{ fontSize: font(12), lineHeight: font(16) }}
+                      >
+                        {t("gallery.notAcquired")}
+                      </Kicker>
+                      <CollectFrom
+                        path={path}
+                        onLaunch={onClose}
+                        size="sm"
+                        weight={400}
+                      />
+                    </View>
                   </View>
                 )}
           </View>
