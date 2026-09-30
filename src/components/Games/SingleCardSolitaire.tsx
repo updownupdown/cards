@@ -27,7 +27,12 @@ import {
   type CardRank,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
+import {
+  EXHAUSTED_PILE_PLACEHOLDER,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
@@ -734,7 +739,10 @@ export function SingleCardSolitaire({
         config.tableau.layout === "cross"
           ? { maxVisible: 1 }
           : { direction: "down", offset: pileOffset(pile.length) },
-      placeholder: {},
+      placeholder:
+        config.empty === "blocked" && pile.length === 0
+          ? EXHAUSTED_PILE_PLACEHOLDER
+          : {},
     }));
     const foundations: MapZone[] = game.foundations.map((pile, index) => ({
       id: `foundation-${index}`,

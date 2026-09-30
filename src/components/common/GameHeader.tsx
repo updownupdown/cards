@@ -1,13 +1,7 @@
 import { useTranslation } from "@/i18n";
 import { usePalette } from "@/styles/palette";
 import { flexStyles } from "@/styles/flexStyles";
-import {
-  Colors,
-  LayerZIndexes,
-  layoutDims,
-  rgba,
-  theme,
-} from "@/styles/styles";
+import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
 import { memo } from "react";
 import { Animated, View } from "react-native";
 import { GlassView } from "@/components/ui/Glass";
@@ -43,8 +37,6 @@ type Props = {
  */
 export const GameHeader = memo(function GameHeader({
   isCampaignMode,
-  titleColor,
-  backgroundColor,
   scale,
   contentMaxWidth,
   insetTop,
@@ -92,7 +84,7 @@ export const GameHeader = memo(function GameHeader({
             height: spacing(layoutDims.menuBarHeight),
             paddingHorizontal: spacing(layoutDims.pagePadding / 2),
             // No edge; a soft, wide shadow lifts it off the game instead.
-            boxShadow: `0 ${spacing(10)}px ${spacing(36)}px ${rgba(Colors.black, 0.28)}`,
+            boxShadow: `${spacing(2)}px ${spacing(4)}px ${spacing(30)}px ${rgba(Colors.black, 0.3)}`,
           },
         ]}
       >

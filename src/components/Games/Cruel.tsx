@@ -26,7 +26,12 @@ import {
   zoneFanOffset,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
+import {
+  EXHAUSTED_PILE_PLACEHOLDER,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { flexStyles } from "@/styles/flexStyles";
 
@@ -54,8 +59,7 @@ export type CruelGameState = GameState;
 
 type Source = { pile: number };
 type Target =
-  | { zone: "tableau"; pile: number }
-  | { zone: "foundation"; pile: number };
+  { zone: "tableau"; pile: number } | { zone: "foundation"; pile: number };
 
 function emptyPiles(count: number) {
   return Array.from({ length: count }, () => [] as PlayingCard[]);
@@ -321,7 +325,8 @@ export default function Cruel() {
       col: i % pilesPerRow,
       row: tableauRow + Math.floor(i / pilesPerRow) * (pileRows + pileRowGap),
       fan: { direction: "down", offset: pileOffset(pile.length) },
-      placeholder: {},
+      // No card is ever moved onto an empty pile.
+      placeholder: pile.length === 0 ? EXHAUSTED_PILE_PLACEHOLDER : {},
     }));
     return [
       ...foundationZones,

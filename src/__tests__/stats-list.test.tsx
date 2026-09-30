@@ -319,7 +319,7 @@ describe("StatsList", () => {
     const renderer = renderList();
     const all = texts(renderer);
     // 12 + 5 + 4 + 2 plays, 11 wins, 11 of 21 decided games won.
-    expect(all).toEqual(expect.arrayContaining(["23", "11", "52%", "4/5"]));
+    expect(all).toEqual(expect.arrayContaining(["23", "11", "52%", "4 / 5"]));
   });
 
   test("only played games are listed, and an unbeaten game shows 100%", () => {

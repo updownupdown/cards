@@ -152,8 +152,6 @@ function estates(street: Street): [number, number][] {
   return result;
 }
 
-type EstateStatus = "complete" | "open" | "blocked";
-
 /**
  * Whether an estate is built, can still be built, or never can: it is too
  * long, or a gap in it has more empty lots than numbers left to fill them.

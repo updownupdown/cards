@@ -112,6 +112,44 @@ function anyLegalMove(state: GameState, canStack = canStackDown) {
   return false;
 }
 
+/**
+ * Whether a position offers a move that leaves another move: a deal that
+ * doesn't is as good as lost.
+ */
+function hasTwoMoves(state: GameState, canStack = canStackDown) {
+  const after = (
+    from: number,
+    to: { column?: number; foundation?: number },
+  ) => {
+    const next: GameState = structuredClone(state);
+    const card = next.columns[from].pop()!;
+    if (to.column !== undefined) next.columns[to.column].push(card);
+    else next.foundations[to.foundation!].push(card);
+    return anyLegalMove(next, canStack);
+  };
+  for (let c = 0; c < state.columns.length; c += 1) {
+    const card = top(state.columns[c]);
+    if (!card) continue;
+    for (let f = 0; f < state.foundations.length; f += 1) {
+      if (canPlaceFoundation(card, top(state.foundations[f]))) {
+        if (after(c, { foundation: f })) return true;
+      }
+    }
+    for (let d = 0; d < state.columns.length; d += 1) {
+      if (d === c) continue;
+      const destTop = top(state.columns[d]);
+      const legal = destTop
+        ? canStack(card, destTop)
+        : state.columns[c].length > 1;
+      if (legal && after(c, { column: d })) return true;
+    }
+  }
+  return false;
+}
+
+/** Deals attempted before settling for one with a single move. */
+const MAX_DEAL_ATTEMPTS = 500;
+
 function evaluateEnd(
   state: GameState,
   isSettingUp = false,
@@ -130,6 +168,7 @@ export const beleagueredCastleRules = {
   canStackDown,
   canPlaceFoundation,
   anyLegalMove,
+  hasTwoMoves,
   evaluateEnd,
   createBeleagueredCastleState,
   dealBeleagueredCastle,
@@ -162,9 +201,25 @@ export function CastleBoard({
       const currentCards = [...game.columns.flat(), ...game.foundations.flat()];
       const isInitialDeal = currentCards.length === 0;
       const initialState = isInitialDeal ? createState() : undefined;
-      const cards = isInitialDeal
+      let cards = isInitialDeal
         ? [...initialState!.columns.flat(), ...initialState!.foundations.flat()]
         : shuffle(currentCards);
+      // Never a deal that is already lost: shuffle again until the dealt
+      // position offers two moves in a row.
+      for (let attempt = 0; attempt < MAX_DEAL_ATTEMPTS; attempt += 1) {
+        const trial: GameState = {
+          columns: Array.from({ length: columnCount }, () => []),
+          foundations: [
+            [...cards],
+            ...Array.from({ length: 3 }, () => [] as PlayingCard[]),
+          ],
+          ended: false,
+          won: false,
+        };
+        deal(trial);
+        if (hasTwoMoves(trial, canStack)) break;
+        cards = shuffle(cards);
+      }
 
       setGame((draft) => {
         draft.columns = Array.from({ length: columnCount }, () => []);

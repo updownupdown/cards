@@ -99,6 +99,15 @@ type MapConfig = {
 };
 
 /** Space a card map can use: the viewport below the header, above the nav bar. */
+/**
+ * The placeholder for an empty pile no card can ever be moved onto again (an
+ * emptied fan in La Belle Lucie, a closed column in Bisley), so the player
+ * stops looking at it. Only for piles the rules close for good.
+ */
+export const EXHAUSTED_PILE_PLACEHOLDER: NonNullable<MapZone["placeholder"]> = {
+  iconName: "unavailable-cell",
+};
+
 export function useBoardArea() {
   const insets = useSafeAreaInsets();
   const { width, height } = useViewportDimensions();
@@ -630,7 +639,13 @@ export function useCardMap({
         {mapVisualizer}
       </>
     ),
-    [cardImagesLoaded, gameColorDark, mapBackgrounds, mapVisualizer, mappedCards],
+    [
+      cardImagesLoaded,
+      gameColorDark,
+      mapBackgrounds,
+      mapVisualizer,
+      mappedCards,
+    ],
   );
 
   return {

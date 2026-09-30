@@ -19,7 +19,13 @@
 //     Records every game's place, links and rewards in
 //     src/data/campaign-map.lock.json. From then on --rebuild and
 //     --rebalance-rewards are refused, and a plain run fails rather than
-//     move, unlink, drop or re-reward a locked game.
+//     move, unlink, drop or re-reward a locked game. Run it again after
+//     adding a game to lock that one too; locked games can't change.
+//
+// Players' progress hangs on the map, so --rebuild and --rebalance-rewards
+// also refuse to replace an existing map, lock or no lock, unless given
+// --reset-player-progress. Ask the owner first: see "Locked: players' saved
+// data" in AGENTS.md.
 //
 // The galaxy's shape is tuned from the parameter block below.
 
@@ -35,6 +41,7 @@ const lockPath = path.join(root, "src/data/campaign-map.lock.json");
 const rebuild = process.argv.includes("--rebuild");
 const rebalance = process.argv.includes("--rebalance-rewards");
 const lockOnly = process.argv.includes("--lock");
+const resetConfirmed = process.argv.includes("--reset-player-progress");
 
 // ── Map parameters ───────────────────────────────────────────────────────────
 // Everything that shapes the galaxy lives here. Retune the map by editing this
@@ -105,7 +112,6 @@ const CONNECTIONS = {
    */
   lonelyTipReach: 0.34,
 };
-
 
 const REWARDS = {
   /** Every game has two or three rewards: a Tao chapter and one or two
@@ -372,26 +378,6 @@ function armOf(point) {
   const { arm, offset } = nearestArm(point.x, point.y);
   return offset <= armHalfWidth(nodeRadius) * GALAXY.armCore ? arm : null;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // ── Connections ──────────────────────────────────────────────────────────────
 
@@ -1322,15 +1308,23 @@ let summary;
 let unassigned = [];
 
 if (lockOnly) {
-  if (locked) throw new Error(`The map is already locked (${lockPath}).`);
   records = existing;
-  summary = `Locked ${records.length} nodes`;
+  const newlyLocked = locked
+    ? records.filter((record) => !locked.gameDots[record.path]).length
+    : records.length;
+  summary = `Locked ${newlyLocked} more nodes (${records.length} in all)`;
 } else if (locked && (rebuild || rebalance)) {
   throw new Error(
     `The map is locked (${path.relative(root, lockPath)}): players' progress ` +
       `depends on every game's place, links and rewards, so --rebuild and ` +
       `--rebalance-rewards are refused. New games can still be added with a ` +
       `plain run.`,
+  );
+} else if ((rebuild || rebalance) && existing.length > 0 && !resetConfirmed) {
+  throw new Error(
+    `--rebuild and --rebalance-rewards replace the map players' progress ` +
+      `depends on: their unlocks and collected rewards would no longer match. ` +
+      `Only with the owner's OK, run again with --reset-player-progress.`,
   );
 } else if (rebuild || existing.length === 0) {
   records = layoutAll(games);

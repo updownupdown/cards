@@ -229,10 +229,12 @@ export function WorksView({
               }}
             >
               <Text
-                size="lg"
+                size="md"
                 weight={500}
+                color={theme.accent}
+                textTransform="uppercase"
                 numberOfLines={1}
-                style={{ flex: 1 }}
+                style={{ flex: 1, letterSpacing: spacing(1.5) }}
               >
                 {title}
               </Text>
@@ -331,31 +333,25 @@ function ShelfWork({
         <WorkPlaceholder
           width={width}
           height={height}
-          iconSize={spacing(28)}
+          iconSize={spacing(48)}
           radius={spacing(3)}
         />
       )}
       {/* Only an acquired work shows its label. */}
-      <View style={{ gap: spacing(1) }}>
-        {collected ? (
+      <View>
+        {collected && (
           <Text
             serif
-            italic
-            size="sm"
-            lineHeight={1.2}
+            size="md"
+            lineHeight={1.4}
             color={theme.ink}
             numberOfLines={1}
           >
             {credit?.title || gameTitle}
           </Text>
-        ) : (
-          // Interface text, so Outfit rather than the art's Garamond.
-          <Text size="xs" weight={400} color={theme.faint} numberOfLines={1}>
-            {t("gallery.notAcquired")}
-          </Text>
         )}
         {collected && (
-          <Text serif size="xs" color={theme.dim} numberOfLines={1}>
+          <Text serif italic size="xs" color={theme.dim} numberOfLines={1}>
             {credit?.artistName || t("gallery.unknownArtist")}
           </Text>
         )}

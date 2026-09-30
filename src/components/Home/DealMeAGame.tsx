@@ -1,20 +1,21 @@
-import { Button } from "@/components/Button/Button";
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
-import { HOME_CARD_HEIGHT, HomeCard } from "@/components/Home/HomeCard";
+import {
+  HOME_CARD_HEIGHT,
+  HomeCard,
+  homeCardStarReach,
+} from "@/components/Home/HomeCard";
 import { SectionTitle } from "@/components/ui/Nocturne";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStableCallback } from "@/hooks/useStableCallback";
 import { useTranslation } from "@/i18n";
-import { flexStyles } from "@/styles/flexStyles";
 import { theme } from "@/styles/styles";
 import { type Href } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
-import { View, type ViewStyle } from "react-native";
+import { View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
-  type AnimatedStyle,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -53,6 +54,7 @@ type DealMeAGameProps = {
   allEnabledGames: HomeGameEntry[];
   unplayedGamePaths: string[];
   favorites: Set<string>;
+  onToggleFavorite: (path: string) => void;
   pageSidePadding: number;
   contentMaxWidth: number;
 };
@@ -65,6 +67,7 @@ export function DealMeAGame({
   allEnabledGames,
   unplayedGamePaths,
   favorites,
+  onToggleFavorite,
   pageSidePadding,
   contentMaxWidth,
 }: DealMeAGameProps) {
@@ -90,12 +93,10 @@ export function DealMeAGame({
   }, [allEnabledGames.length]);
 
   // Stable, since the card's gesture worklets hold on to it.
-  const onSwiped = useStableCallback(
-    (path: string, direction: SwipeDirection) => {
-      setFling(undefined);
-      setPosition((current) => current + 1);
-    },
-  );
+  const onSwiped = useStableCallback(() => {
+    setFling(undefined);
+    setPosition((current) => current + 1);
+  });
 
   if (deck.length === 0) return null;
 
@@ -144,6 +145,7 @@ export function DealMeAGame({
                   width={cardWidth}
                   height={cardHeight}
                   isFavorite={favorites.has(entry[0])}
+                  onToggleFavorite={onToggleFavorite}
                   fling={depth === 0 ? fling : undefined}
                   onSwiped={onSwiped}
                 />
@@ -160,6 +162,7 @@ type DealtCardProps = {
   width: number;
   height: number;
   isFavorite: boolean;
+  onToggleFavorite: (path: string) => void;
   fling?: { direction: SwipeDirection; id: number };
   onSwiped: (path: string, direction: SwipeDirection) => void;
 };
@@ -170,15 +173,16 @@ function DealtCard({
   width,
   height,
   isFavorite,
+  onToggleFavorite,
   fling,
   onSwiped,
 }: DealtCardProps) {
-  const { t } = useTranslation("home");
   const { spacing } = useResponsiveMetrics();
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const stackDepth = useSharedValue(depth);
   const stackOffset = spacing(18);
+  const star = homeCardStarReach(spacing);
   const isTop = depth === 0;
 
   useEffect(() => {
@@ -226,13 +230,20 @@ function DealtCard({
         }
       });
     const tap = Gesture.Tap()
+      .withTestId(`deal-tap ${path}`)
       .enabled(isTop)
-      .onEnd((_event, success) => {
+      .onEnd((event, success) => {
         "worklet";
-        if (success) scheduleOnRN(launchGame, path as Href);
+        if (!success) return;
+        // The card is only a picture, so its star is pressed from here too.
+        if (event.x >= width - star.fromRight && event.y <= star.fromTop) {
+          scheduleOnRN(onToggleFavorite, path);
+        } else {
+          scheduleOnRN(launchGame, path as Href);
+        }
       });
     return Gesture.Exclusive(pan, tap);
-  }, [isTop, path, width]);
+  }, [isTop, path, width, star.fromRight, star.fromTop, onToggleFavorite]);
 
   const cardStyle = useAnimatedStyle(() => ({
     transform: [

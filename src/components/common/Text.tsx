@@ -1,6 +1,6 @@
 import { HexColor } from "@/data/games-data";
 import { usePalette } from "@/styles/palette";
-import { FontWeight as FontFamilies, SerifFont, theme } from "@/styles/styles";
+import { FontWeight as FontFamilies, SerifFont } from "@/styles/styles";
 import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
 import { createElement, forwardRef, useMemo, type ReactNode } from "react";
 import { getDisplayLanguage } from "@/i18n";

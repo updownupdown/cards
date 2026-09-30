@@ -325,7 +325,7 @@ const gameStateInitial = createInitialState();
 
 export default function ShiftingSands() {
   const { colorDark, colorPale } = useGameColors();
-  const { spacing } = useResponsiveMetrics();
+  const { spacing, font } = useResponsiveMetrics();
   const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
     useStateManager({
       gameStateInitial,
@@ -612,7 +612,7 @@ export default function ShiftingSands() {
                       borderRadius: spacing(26),
                     }}
                     textStyle={{
-                      fontSize: spacing(20),
+                      fontSize: font(20),
                       fontFamily: FontWeight[500],
                     }}
                   />

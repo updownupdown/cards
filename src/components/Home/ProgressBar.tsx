@@ -196,7 +196,7 @@ export const ProgressBar = ({
           backgroundColor: backgroundColor ?? rgba(Colors.black, 0.35),
           borderRadius: radius,
           width: "100%",
-          boxShadow: `inset 0 0 0 ${hairline}px ${rgba(Colors.white, 0.1)}`,
+          boxShadow: `inset 0 0 0 ${hairline}px ${rgba(Colors.white, 0.1)}, ${1}px ${2}px ${12}px ${rgba(Colors.black, 0.4)}`,
         },
         style,
       ]}
@@ -220,7 +220,7 @@ export const ProgressBar = ({
           {
             zIndex: 2,
             backgroundColor: progressColor,
-            boxShadow: `inset 0 ${hairline}px 0 ${rgba(Colors.white, 0.22)}`,
+            boxShadow: `inset 0 0 ${12}px ${rgba(Colors.white, 0.3)}, ${1}px ${2}px ${12}px ${rgba(Colors.black, 0.4)}`,
           },
         ]}
       />
@@ -261,7 +261,7 @@ export const ProgressBar = ({
               width: iconWrapperSize,
               height: iconWrapperSize,
               borderRadius: roundToPixel(iconWrapperSize / 2),
-              backgroundColor: rgba(Colors.black, 0.45),
+              backgroundColor: rgba(Colors.black, 0.5),
             },
           ]}
         >
@@ -270,7 +270,7 @@ export const ProgressBar = ({
           >
             <Icon
               name={iconName}
-              color={heartbeatColor ? Colors.buttonRed : Colors.K100}
+              color={heartbeatColor ? Colors.accentRed : Colors.K100}
               style={[
                 {
                   width: iconSize,

@@ -13,7 +13,12 @@ import {
   top,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
+import {
+  EXHAUSTED_PILE_PLACEHOLDER,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
@@ -256,6 +261,8 @@ export default function BakersDozen() {
       row: 1.2,
       baseZIndex: 10 + columnIndex,
       fan: { direction: "down" as const, offset: cardDims.tableauOffset },
+      // Empty columns close for good.
+      placeholder: pile.length === 0 ? EXHAUSTED_PILE_PLACEHOLDER : undefined,
     }));
 
     return [

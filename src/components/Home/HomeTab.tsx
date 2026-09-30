@@ -26,7 +26,7 @@ import { useTabReadyHold } from "./TabReady";
 const EASY_GAME_COUNT = 6;
 const JUMP_BACK_IN_COUNT = 6;
 /** Stats and Settings: a fifth larger than a RoundButton's usual 40. */
-export const HEADER_BUTTON_SIZE = 48;
+export const HEADER_BUTTON_SIZE = 42;
 
 type HomeTabProps = {
   allEnabledGames: HomeGameEntry[];
@@ -160,7 +160,7 @@ export function HomeTab({
             paddingHorizontal: scaledPageSidePadding,
             flexDirection: "row",
             alignItems: "center",
-            gap: spacing(10),
+            gap: spacing(16),
           }}
         >
           <View style={{ flex: 1 }}>
@@ -259,6 +259,7 @@ export function HomeTab({
           allEnabledGames={allEnabledGames}
           unplayedGamePaths={unplayedGamePaths}
           favorites={favorites}
+          onToggleFavorite={onToggleFavorite}
           pageSidePadding={scaledPageSidePadding}
           contentMaxWidth={contentMaxWidth}
         />

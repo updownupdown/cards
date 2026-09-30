@@ -8,7 +8,6 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGame } from "@/i18n/content";
 import { flexStyles } from "@/styles/flexStyles";
-import { rgba, theme } from "@/styles/styles";
 import { View, ViewStyle } from "react-native";
 import { RichText } from "../common/RichText";
 import { ScrollView } from "react-native-gesture-handler";
@@ -25,7 +24,8 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   const { spacing } = useResponsiveMetrics();
   const theme = usePalette();
   const modalStyles = useModalStyles();
-  const headingColor = theme.accent;
+  // The game's own accent, as the game modal's headings.
+  const headingColor = theme.accent2;
 
   return (
     <ModalFull
@@ -48,7 +48,6 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
         >
           <QuickStart
             gameInfo={gameInfo}
-            headingColor={headingColor}
             style={{
               paddingLeft: spacing(16),
               paddingRight: spacing(20),
@@ -56,9 +55,6 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
               gap: spacing(8),
               borderRadius: spacing(14),
               backgroundColor: theme.raise,
-              // Edged, so the summary stands apart from the rules under it.
-              borderWidth: 1,
-              borderColor: rgba(theme.accent, 0.35),
             }}
           />
 
@@ -74,15 +70,10 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
 
 type QuickStartProps = {
   gameInfo: ReturnType<typeof getGameInfo>;
-  headingColor: string;
   style?: ViewStyle | ViewStyle[];
 };
 
-export const QuickStart = ({
-  gameInfo,
-  headingColor,
-  style,
-}: QuickStartProps) => {
+export const QuickStart = ({ gameInfo, style }: QuickStartProps) => {
   const { spacing } = useResponsiveMetrics();
   const theme = usePalette();
 
@@ -99,9 +90,9 @@ export const QuickStart = ({
             }}
           >
             <Text
-              size="sm"
-              weight={600}
-              color={headingColor}
+              size="xs"
+              weight={700}
+              color={theme.accent2}
               style={{ minWidth: spacing(14) }}
             >
               {itemIndex + 1}.

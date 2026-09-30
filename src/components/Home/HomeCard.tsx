@@ -32,6 +32,19 @@ type Props = {
 /** The height of a full-width game card, the same wherever it shows. */
 export const HOME_CARD_HEIGHT = 172;
 
+const FAV_SIZE = 40;
+const FAV_ICON_SIZE = 22;
+
+/**
+ * How far the favourite star reaches in from the card's top right corner, for
+ * cards whose taps are handled by a gesture above them (the Random Deal).
+ */
+export function homeCardStarReach(spacing: (value: number) => number) {
+  const size = spacing(FAV_SIZE);
+  const { top, right } = favCorner(spacing, size, spacing(FAV_ICON_SIZE));
+  return { fromRight: right + size, fromTop: top + size };
+}
+
 /**
  * A game at full width: its art on the right, melting into the card, with its
  * name, family and ratings at the foot on the left (Game of the Day, the
@@ -95,14 +108,10 @@ export function HomeCard({
               {...thumbnailReady}
             />
             <LinearGradient
-              colors={[
-                theme.surface,
-                rgba(theme.surface, 0.6),
-                rgba(theme.surface, 0),
-              ]}
-              locations={[0, 0.5, 1]}
-              start={{ x: 0, y: 0.5 }}
-              end={{ x: 1, y: 0.5 }}
+              colors={[rgba(theme.surface, 1), rgba(theme.surface, 0.6)]}
+              locations={[0, 1]}
+              start={{ x: 0, y: 1 }}
+              end={{ x: 1, y: 0.25 }}
               style={StyleSheet.absoluteFill}
             />
           </View>
@@ -112,7 +121,7 @@ export function HomeCard({
               width: "80%",
               justifyContent: "flex-end",
               padding: spacing(16),
-              gap: spacing(12),
+              gap: spacing(20),
             }}
           >
             <View style={{ gap: spacing(2), width: "78%" }}>
@@ -134,11 +143,11 @@ export function HomeCard({
           </View>
         </Pressable>
         <FavButton
-          style={favCorner(spacing, spacing(40), spacing(22))}
+          style={favCorner(spacing, spacing(FAV_SIZE), spacing(FAV_ICON_SIZE))}
           isFavorite={isFavorite}
           onToggleFavorite={() => onToggleFavorite?.(path)}
-          size={spacing(40)}
-          iconSize={spacing(22)}
+          size={spacing(FAV_SIZE)}
+          iconSize={spacing(FAV_ICON_SIZE)}
           // The app theme's accent, on every game card.
           activeColor={appTheme.accent}
           inactiveColor={theme.ink}

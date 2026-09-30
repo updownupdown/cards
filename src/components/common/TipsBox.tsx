@@ -5,7 +5,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGame } from "@/i18n/content";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, layoutDims, rgba, theme } from "@/styles/styles";
+import { Colors, layoutDims, rgba } from "@/styles/styles";
 import { GameHeading } from "@/components/Modals/ModalFull";
 import { useEffect, useRef, useState } from "react";
 import { Animated, LayoutChangeEvent, View } from "react-native";
@@ -94,8 +94,6 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
           // Frosted glass, as the header it grows out of.
           backgroundColor: nativeGlass ? "transparent" : glassTint,
           ...glassBlurStyle(),
-          borderWidth: 1,
-          borderColor: rgba(theme.ink, 0.14),
           transform: [
             {
               translateX: morphProgress.interpolate({
@@ -176,7 +174,6 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
 
           <QuickStart
             gameInfo={gameInfo}
-            headingColor={theme.accent}
             style={{
               gap: spacing(8),
               paddingRight: spacing(8),

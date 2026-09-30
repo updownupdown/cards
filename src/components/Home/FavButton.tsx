@@ -7,7 +7,6 @@ import {
   Easing,
   Platform,
   Pressable,
-  View,
   type ViewStyle,
 } from "react-native";
 

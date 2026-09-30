@@ -68,7 +68,15 @@ export function mockGameWrapperModule() {
   return {
     GameWrapper: (props: WrapperProps & { children?: React.ReactNode }) => {
       harness.wrapperProps = props;
-      return props.children ?? null;
+      // Like the real wrapper, marks the game's board for its buttons.
+      const { BoardButtonsContext } = jest.requireActual<
+        typeof import("@/components/Button/Button")
+      >("@/components/Button/Button");
+      return (
+        <BoardButtonsContext.Provider value={true}>
+          {props.children}
+        </BoardButtonsContext.Provider>
+      );
     },
   };
 }

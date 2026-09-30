@@ -59,7 +59,7 @@ export function ArtFade({ from = 0.35 }: { from?: number }) {
   const theme = usePalette();
   return (
     <LinearGradient
-      colors={[rgba(theme.night, 0.6), rgba(theme.night, 0.96)]}
+      colors={[rgba(theme.night, 0.5), rgba(theme.night, 0.96)]}
       locations={[from, 1]}
       style={StyleSheet.absoluteFill}
     />
@@ -73,7 +73,7 @@ const FAV_ICON_SIZE = 20;
  * How far the star sits in from a game card's top and right edges, the same
  * both ways, on every card from the shelves' tiles to Game of the Day.
  */
-const FAV_INSET = 10.5;
+const FAV_INSET = 10;
 
 /**
  * Where a game card's favourite button goes: its star FAV_INSET in from the

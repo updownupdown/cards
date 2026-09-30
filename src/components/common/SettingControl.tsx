@@ -3,8 +3,7 @@ import { useGameAccent, usePalette } from "@/styles/palette";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba, theme } from "@/styles/styles";
-import { darkenHexColor } from "@/utils/utils";
+import { Colors, rgba } from "@/styles/styles";
 import React from "react";
 import { Pressable, View } from "react-native";
 

@@ -12,3 +12,30 @@ veils or bars under the system bars. Before changing them — even when asked
 to — warn the owner that they are locked and confirm first. The cases they
 cover (native Android/iOS, web in a tab, installed web app) are listed in that
 file and pinned by `src/__tests__/system-bar-scrims.test.tsx`.
+
+# Locked: players' saved data
+
+Players keep favourites, settings, stats, campaign progress (unlocks and wins)
+and collectibles (quotes and Tao chapters) on their devices. They are stored
+under the keys in `src/data/storage-keys.ts` and `src/data/game-menu.ts`, and
+refer to games by path, to map nodes by the campaign map, and to quotes and Tao
+chapters by number. Renaming a key, a game path or a settings field, removing
+a game or a colour theme, inserting or reordering quotes, changing a loader, or
+regenerating the campaign map can wipe that data on their next launch.
+
+`src/__tests__/saved-data-guard.test.ts` pins all of this, loads a golden save
+(`src/__tests__/saved-data/golden-save.json`) through the real loaders, and runs
+the campaign map generator against its lock. If it fails, or before any change
+that could touch saved data, STOP: warn the owner and get their OK before going
+on, and prefer a migration (`MOVED_GAME_PATHS`, the campaign progress version
+migrations) over changing the pins. Never:
+
+- edit `golden-save.json`, remove anything from
+  `src/__tests__/saved-data/contract.json`, or delete or hand-edit
+  `src/data/campaign-map.lock.json` to make a test pass;
+- run the campaign generator with `--rebuild`, `--rebalance-rewards` or
+  `--reset-player-progress`.
+
+Adding things is safe: new games (then `npm run campaign:generate` and
+`npm run campaign:lock`), quotes appended at the end, new settings, themes or
+storage keys (then `npm run saved-data:pin`, which only ever adds).

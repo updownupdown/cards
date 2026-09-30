@@ -17,6 +17,5 @@
     "wins": "Galibiyet"
   },
   "undo": "Geri al",
-  "collectFrom": "Kazanılacağı oyun",
-  "collectedFrom": "Kazanıldığı oyun"
+  "winToCollect": "Toplamak için **{{game}}** oyununu kazan"
 }

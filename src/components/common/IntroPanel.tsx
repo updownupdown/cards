@@ -4,7 +4,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
-import { Colors, rgba, theme } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { Kicker } from "@/components/ui/Nocturne";
 import { Pressable, View } from "react-native";
 

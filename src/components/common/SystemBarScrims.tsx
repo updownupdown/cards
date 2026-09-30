@@ -14,11 +14,12 @@ const SCRIM_Z_INDEX = 1000;
  * The gradients under the system bars, over every screen (see
  * utils/system-bar-scrims for which case draws what). LOCKED: see there.
  */
-export function SystemBarScrims() {
+export function SystemBarScrims({ inGame = false }: { inGame?: boolean }) {
   const insets = useSafeAreaInsets();
   const { top, bottom } = getSystemBarScrims({
     platform: Platform.OS as ScrimPlatform,
     insets,
+    inGame,
   });
   return (
     <>

@@ -10,7 +10,6 @@ import {
 import { useCampaignProgress } from "@/hooks/useCampaignProgress";
 import { grantMercySkip } from "@/data/campaign-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { useTranslation } from "@/i18n";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Platform, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -19,7 +18,6 @@ import { CampaignMap } from "./CampaignMap";
 import { CampaignIntroPanel } from "./CampaignIntroPanel";
 import { UfoContext } from "./UfoContext";
 import { clearMercySkipVisit, isMercySkipVisitOwed } from "./ufo-visit";
-import { flexStyles } from "@/styles/flexStyles";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 
 type Props = {
@@ -28,7 +26,6 @@ type Props = {
 
 export function CampaignTab({ contentPaddingTop }: Props) {
   const { spacing, ui } = useResponsiveMetrics();
-  const { t } = useTranslation("campaign");
   const {
     progress,
     isLoading,

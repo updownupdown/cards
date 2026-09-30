@@ -116,7 +116,7 @@ export function GameInfoPanel({
         <View
           style={{
             flexDirection: "row",
-            alignItems: "center",
+            alignItems: "flex-start",
             gap: spacing(12),
           }}
         >
@@ -144,14 +144,14 @@ export function GameInfoPanel({
                     alignItems: "center",
                     justifyContent: "center",
                     backgroundColor: collected
-                      ? rgba(theme.accent, 0.16)
-                      : rgba(theme.ink, 0.06),
+                      ? rgba(theme.accent, 1)
+                      : rgba(theme.ink, 0.15),
                   }}
                 >
                   <Icon
                     name={reward.type === "tao" ? "tao" : "quote"}
                     size={spacing(16)}
-                    color={collected ? theme.accent : theme.faint}
+                    color={collected ? theme.accentInk : theme.accent}
                   />
                 </View>
               );

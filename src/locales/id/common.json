@@ -17,6 +17,5 @@
     "wins": "Menang"
   },
   "undo": "Urungkan",
-  "collectFrom": "Dapatkan dari",
-  "collectedFrom": "Didapat dari"
+  "winToCollect": "Menangkan **{{game}}** untuk mengoleksi"
 }

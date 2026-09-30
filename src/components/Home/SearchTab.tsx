@@ -330,7 +330,7 @@ export function SearchTab({
               justifyContent: "space-between",
             }}
           >
-            <Text size="xs" weight={400} color={theme.dim}>
+            <Text size="sm" weight={400} color={theme.dim}>
               {t("search.count", { count: games.length })}
             </Text>
             <Pressable
@@ -350,7 +350,7 @@ export function SearchTab({
               <Icon
                 name={sortOpen ? "expand-less" : "expand-more"}
                 size={spacing(16)}
-                color={theme.dim}
+                color={theme.accent}
               />
             </Pressable>
             {/* Hangs from the button, its right edge on the chevron's. */}
@@ -395,7 +395,6 @@ export function SearchTab({
                     <SortLabel
                       option={sortOptions[option]}
                       color={option === sort ? theme.accent : theme.ink}
-                      size="sm"
                     />
                   </Pressable>
                 ))}
@@ -426,18 +425,16 @@ export function SearchTab({
 function SortLabel({
   option,
   color,
-  size = "xs",
 }: {
   option: { label: string; icon?: IconName };
   color: string;
-  size?: "xs" | "sm";
 }) {
   const { spacing } = useResponsiveMetrics();
   return (
     <View
       style={{ flexDirection: "row", alignItems: "center", gap: spacing(4) }}
     >
-      <Text size={size} weight={400} color={color}>
+      <Text size="sm" weight={500} color={color}>
         {option.label}
       </Text>
       {option.icon && (
@@ -579,7 +576,7 @@ function IndexLetters({
                 weight={500}
                 color={theme.accent}
                 style={{
-                  fontSize: font(30),
+                  fontSize: font(22),
                   lineHeight: letterHeight,
                   paddingTop: spacing(6),
                 }}

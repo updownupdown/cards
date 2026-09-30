@@ -15,7 +15,12 @@ import {
   type CardSuit,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
+import {
+  EXHAUSTED_PILE_PLACEHOLDER,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
@@ -253,7 +258,8 @@ export default function Bisley() {
       col: index,
       row: 1.2,
       fan: { direction: "down" as const, offset: cardDims.tableauOffset },
-      placeholder: { hideBackground: pile.length === 0 },
+      // Empty columns close for good.
+      placeholder: pile.length === 0 ? EXHAUSTED_PILE_PLACEHOLDER : {},
     }));
     return [
       ...foundations,

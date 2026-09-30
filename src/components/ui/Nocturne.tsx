@@ -22,18 +22,6 @@ import {
 /** A hairline in the theme's ink. */
 export const hairline = () => rgba(theme.ink, 0.14);
 
-/** The panel look: a surface with a hairline edge. */
-export function useSurfaceStyle(radius = 18): ViewStyle {
-  const { spacing } = useResponsiveMetrics();
-  const theme = usePalette();
-  return {
-    backgroundColor: theme.surface,
-    borderRadius: spacing(radius),
-    borderWidth: 1,
-    borderColor: hairline(),
-  };
-}
-
 /** A small uppercase label over a section, in the accent. */
 export function Kicker({
   children,
@@ -86,28 +74,9 @@ export function Caps({
   );
 }
 
-/** A page's title: Home, Odyssey, Gallery, Search. */
-export function PageTitle({ children }: { children: ReactNode }) {
-  const { font } = useResponsiveMetrics();
-  const theme = usePalette();
-  return (
-    <Text
-      weight={500}
-      style={{
-        fontSize: font(32),
-        lineHeight: font(36),
-        letterSpacing: -0.5,
-      }}
-    >
-      {children}
-    </Text>
-  );
-}
-
 /** A section heading's size: the kicker's, 15% larger. */
 export function useSectionTitleStyle() {
   const { font } = useResponsiveMetrics();
-  const theme = usePalette();
   const size = font(11 * 1.15);
   return { fontSize: size, lineHeight: size * 1.3 };
 }
@@ -121,7 +90,6 @@ export function SectionTitle({
   action?: ReactNode;
 }) {
   const { spacing } = useResponsiveMetrics();
-  const theme = usePalette();
   const titleStyle = useSectionTitleStyle();
   return (
     <View
@@ -179,43 +147,6 @@ export function Meter({
 }
 
 /**
- * A progress strip of small segments, one per item (up to `max`), filled in
- * the accent: collected works, completed rooms.
- */
-export function SegmentBar({
-  done,
-  total,
-  max = 40,
-  style,
-}: {
-  done: number;
-  total: number;
-  max?: number;
-  style?: StyleProp<ViewStyle>;
-}) {
-  const { spacing } = useResponsiveMetrics();
-  const theme = usePalette();
-  const count = Math.max(1, Math.min(total, max));
-  const lit = total > 0 ? Math.round((done / total) * count) : 0;
-  const height = Math.max(2, spacing(3));
-  return (
-    <View style={[{ flexDirection: "row", gap: 2 }, style]}>
-      {Array.from({ length: count }, (_, index) => (
-        <View
-          key={index}
-          style={{
-            flex: 1,
-            height,
-            borderRadius: height,
-            backgroundColor: index < lit ? theme.accent : rgba(theme.ink, 0.18),
-          }}
-        />
-      ))}
-    </View>
-  );
-}
-
-/**
  * Three labelled meters: complexity, difficulty, luck. Side by side, or
  * stacked with the labels to the left where a card is too narrow for three
  * labels in a row.
@@ -223,47 +154,30 @@ export function SegmentBar({
 export function RatingMeters({
   rating,
   labels,
-  stacked = false,
+  color,
 }: {
   rating: { complexity: number; difficulty: number; luck: number };
   labels: { complexity: string; difficulty: string; luck: string };
   stacked?: boolean;
+  /** The meters' fill; the accent by default. */
+  color?: string;
 }) {
   const { spacing, font } = useResponsiveMetrics();
-  const theme = usePalette();
   const items = [
     [labels.complexity, rating.complexity],
     [labels.difficulty, rating.difficulty],
     [labels.luck, rating.luck],
   ] as const;
-  if (stacked) {
-    return (
-      <View style={{ gap: spacing(7) }}>
-        {items.map(([label, value]) => (
-          <View
-            key={label}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: spacing(10),
-            }}
-          >
-            <Caps style={{ width: spacing(84) }}>{label}</Caps>
-            <Meter value={value / 100} style={{ flex: 1 }} />
-          </View>
-        ))}
-      </View>
-    );
-  }
+
   return (
-    <View style={{ flexDirection: "row", gap: spacing(10) }}>
+    <View style={{ flexDirection: "row", gap: spacing(20) }}>
       {items.map(([label, value]) => (
-        <View key={label} style={{ flex: 1, gap: spacing(6) }}>
+        <View key={label} style={{ flex: 1, gap: spacing(4) }}>
           {/* Tighter than other caps, so COMPLEXITY fits a third of a card. */}
           <Caps style={{ fontSize: font(10), letterSpacing: spacing(0.7) }}>
             {label}
           </Caps>
-          <Meter value={value / 100} />
+          <Meter value={value / 100} color={color} />
         </View>
       ))}
     </View>
@@ -271,6 +185,7 @@ export function RatingMeters({
 }
 
 /** A filter pill; pressed, it takes a tint of the accent. */
+
 export function Pill({
   label,
   selected,
@@ -285,6 +200,8 @@ export function Pill({
   const { spacing, font } = useResponsiveMetrics();
   const theme = usePalette();
   const nativeGlass = useNativeGlass();
+  // Pills are 85% of their first size.
+  const size = (value: number) => spacing(value);
   // Unselected, the tab bar's glass; selected, a tint of the accent over it.
   const fill = selected
     ? rgba(mix(theme.surface, theme.accent, 0.16), 0.8)
@@ -296,12 +213,12 @@ export function Pill({
       accessibilityState={{ selected }}
       style={{
         ...transitionStyles.limited02sec,
-        height: spacing(34),
-        paddingHorizontal: spacing(14),
-        borderRadius: spacing(17),
+        height: size(34),
+        paddingHorizontal: size(14),
+        borderRadius: size(17),
         flexDirection: "row",
         alignItems: "center",
-        gap: spacing(6),
+        gap: size(6),
         // Frosted, and a shadow lifts it off the sky.
         backgroundColor: nativeGlass ? "transparent" : fill,
         ...glassBlurStyle(),
@@ -313,11 +230,11 @@ export function Pill({
         outline: "none",
       }}
     >
-      <GlassBackdrop fill={fill} radius={spacing(17)} />
+      <GlassBackdrop fill={fill} radius={size(17)} />
       {iconName && (
         <Icon
           name={iconName}
-          size={spacing(15)}
+          size={size(15)}
           color={selected ? theme.accent : theme.dim}
         />
       )}
@@ -325,9 +242,12 @@ export function Pill({
         size="xs"
         weight={400}
         color={selected ? theme.accent : theme.ink}
+        textTransform="uppercase"
         numberOfLines={1}
-        // A fifth larger than the xs size.
-        style={{ fontSize: font(13 * 1.2), lineHeight: font(13 * 1.2 * 1.3) }}
+        style={{
+          fontSize: font(11),
+          letterSpacing: 2,
+        }}
       >
         {label}
       </Text>
@@ -362,7 +282,7 @@ export function RoundButton({
   color?: string;
   style?: StyleProp<ViewStyle>;
 }) {
-  const { spacing } = useResponsiveMetrics();
+  const { spacing, font } = useResponsiveMetrics();
   const theme = usePalette();
   const diameter = spacing(size);
   const iconColor = color ?? (active ? theme.accent : theme.ink);
@@ -415,7 +335,7 @@ export function RoundButton({
           weight={400}
           color={active ? theme.accent : theme.dim}
           numberOfLines={1}
-          style={{ fontSize: spacing(10), lineHeight: spacing(12) }}
+          style={{ fontSize: font(10), lineHeight: font(12) }}
         >
           {label}
         </Text>

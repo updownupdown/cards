@@ -8,7 +8,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle, localizeSettingDefinitions } from "@/i18n/content";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors, rgba, theme } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { ActionButton, Caps, RatingMeters } from "@/components/ui/Nocturne";
 import {
   GAME_FULL_THUMBNAIL_ASSETS,
@@ -160,6 +160,22 @@ export default function GameModal({
             </View>
           </View>
 
+          {/* Ratings */}
+          <View style={{ width: "100%", gap: spacing(10) }}>
+            <ModalHeading title={t("rating.title")} color={theme.accent2} />
+            <View style={card}>
+              <RatingMeters
+                rating={gameInfo.rating}
+                color={theme.accent2}
+                labels={{
+                  complexity: tCommon("stats.complexity"),
+                  difficulty: tCommon("stats.difficulty"),
+                  luck: tCommon("stats.luck"),
+                }}
+              />
+            </View>
+          </View>
+
           {/* Game settings */}
           {gameSpecificSettings.length > 0 && (
             <View style={{ width: "100%", gap: spacing(10) }}>
@@ -188,21 +204,6 @@ export default function GameModal({
               ))}
             </View>
           )}
-
-          {/* Ratings */}
-          <View style={{ width: "100%", gap: spacing(10) }}>
-            <ModalHeading title={t("rating.title")} color={theme.accent2} />
-            <View style={card}>
-              <RatingMeters
-                rating={gameInfo.rating}
-                labels={{
-                  complexity: tCommon("stats.complexity"),
-                  difficulty: tCommon("stats.difficulty"),
-                  luck: tCommon("stats.luck"),
-                }}
-              />
-            </View>
-          </View>
 
           {/* Mercy Skip: only offered in Campaign mode, with a skip in hand.
               Only one can be held at a time for now, so no count is shown;

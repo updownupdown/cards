@@ -1,9 +1,9 @@
 import { Text } from "@/components/common/Text";
 import { GlassTargetContext } from "@/components/ui/Glass";
-import { useGameAccent, usePalette } from "@/styles/palette";
+import { usePalette } from "@/styles/palette";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors, rgba, layoutDims, theme } from "@/styles/styles";
+import { Colors, rgba, layoutDims } from "@/styles/styles";
 import React from "react";
 import { Modal, Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -153,15 +153,14 @@ export function GameHeading({
   gameName: string;
   title: string;
 }) {
-  const accent = useGameAccent();
   return (
     <View style={{ flexShrink: 1, alignItems: "flex-start" }}>
-      <Kicker color={accent} numberOfLines={1}>
-        {gameName}
-      </Kicker>
-      <Text size="xxl" weight={500} color={Colors.white} numberOfLines={1}>
+      <Text size="xl" weight={500} color={Colors.white} numberOfLines={1}>
         {title}
       </Text>
+      <Kicker color={rgba(Colors.white, 0.6)} numberOfLines={1}>
+        {gameName}
+      </Kicker>
     </View>
   );
 }

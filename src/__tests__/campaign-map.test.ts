@@ -223,34 +223,7 @@ describe("Campaign map", () => {
     expect(hardestWithTao).toBeLessThanOrEqual(easiestWithout);
   });
 
-  const lockPath = path.join(__dirname, "../data/campaign-map.lock.json");
-  (fs.existsSync(lockPath) ? test : test.skip)(
-    "locked games keep their place, links and rewards",
-    () => {
-      const lock = JSON.parse(fs.readFileSync(lockPath, "utf8")) as {
-        gameDots: Record<string, (typeof GAME_DOT_DEFINITIONS)[number]>;
-      };
-      const byPath = new Map(
-        GAME_DOT_DEFINITIONS.map((gameDot) => [gameDot.path, gameDot]),
-      );
-      for (const [gamePath, locked] of Object.entries(lock.gameDots)) {
-        const gameDot = byPath.get(gamePath);
-        expect(gameDot).toBeDefined();
-        expect({ path: gamePath, x: gameDot!.x, y: gameDot!.y }).toEqual({
-          path: gamePath,
-          x: locked.x,
-          y: locked.y,
-        });
-        expect(gameDot!.connections).toEqual(
-          expect.arrayContaining(locked.connections),
-        );
-        expect({ path: gamePath, rewards: gameDot!.rewards }).toEqual({
-          path: gamePath,
-          rewards: locked.rewards,
-        });
-      }
-    },
-  );
+  // The lock is checked in saved-data-guard.test.ts.
 
   test("no single game locks away much of the map", () => {
     const byPath = new Map(

@@ -1,9 +1,15 @@
+import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { DealMeAGame, swipeOpacity } from "@/components/Home/DealMeAGame";
 import { HomeTab } from "@/components/Home/HomeTab";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { describe, expect, jest, test } from "@jest/globals";
 import React from "react";
 import { StyleSheet, Text } from "react-native";
+import { State } from "react-native-gesture-handler";
+import {
+  fireGestureHandler,
+  getByGestureTestId,
+} from "react-native-gesture-handler/jest-utils";
 import {
   act,
   create,
@@ -79,9 +85,16 @@ jest.mock("@/components/Button/Button", () => {
   };
 });
 
+jest.mock("@/components/common/GameLaunchOverlay", () => {
+  const globals = require("@jest/globals") as typeof import("@jest/globals"); // eslint-disable-line @typescript-eslint/no-require-imports
+  return { launchGame: globals.jest.fn() };
+});
+
 jest.mock("@/components/Home/HomeCard", () => {
   const { View } = require("react-native") as typeof import("react-native"); // eslint-disable-line @typescript-eslint/no-require-imports
   return {
+    // The star is 40 wide, 12 in from the top right corner.
+    homeCardStarReach: () => ({ fromRight: 52, fromTop: 52 }),
     HomeCard: ({
       path,
       size,
@@ -184,11 +197,6 @@ function renderHomeTab(overrides: Partial<HomeTabProps> = {}) {
   });
   return renderer;
 }
-
-const texts = (node: ReactTestRenderer | ReactTestInstance) =>
-  ("root" in node ? node.root : node)
-    .findAllByType(Text)
-    .map((node) => React.Children.toArray(node.props.children).join(""));
 
 type RenderedNode = {
   type: string;
@@ -393,6 +401,7 @@ describe("Random Deal", () => {
           allEnabledGames={GAMES}
           unplayedGamePaths={[]}
           favorites={new Set()}
+          onToggleFavorite={() => undefined}
           pageSidePadding={16}
           contentMaxWidth={420}
         />,
@@ -419,5 +428,47 @@ describe("Random Deal", () => {
       expect(style).not.toHaveProperty("boxShadow");
       expect(style).not.toHaveProperty("elevation");
     }
+  });
+
+  test("tapping the star stars the game; tapping elsewhere plays it", async () => {
+    const onToggleFavorite = jest.fn();
+    let renderer!: ReactTestRenderer;
+    act(() => {
+      renderer = create(
+        <DealMeAGame
+          allEnabledGames={GAMES.slice(0, 1)}
+          unplayedGamePaths={[]}
+          favorites={new Set()}
+          onToggleFavorite={onToggleFavorite}
+          pageSidePadding={16}
+          contentMaxWidth={420}
+        />,
+      );
+    });
+    const stack = renderer.root.find(
+      (node) =>
+        typeof node.type === "string" &&
+        typeof node.props.onLayout === "function",
+    );
+    act(() =>
+      stack.props.onLayout({ nativeEvent: { layout: { width: 300 } } }),
+    );
+    // The handlers reach React through a microtask, as on the UI thread.
+    const tapAt = (x: number, y: number) =>
+      act(async () => {
+        fireGestureHandler(getByGestureTestId("deal-tap /hard"), [
+          { state: State.BEGAN, x, y },
+          { state: State.ACTIVE, x, y },
+          { state: State.END, x, y },
+        ]);
+      });
+
+    await tapAt(280, 20);
+    expect(onToggleFavorite).toHaveBeenCalledWith("/hard");
+    expect(launchGame).not.toHaveBeenCalled();
+
+    await tapAt(120, 100);
+    expect(launchGame).toHaveBeenCalledWith("/hard");
+    expect(onToggleFavorite).toHaveBeenCalledTimes(1);
   });
 });

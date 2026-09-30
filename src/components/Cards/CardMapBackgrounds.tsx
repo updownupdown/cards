@@ -11,12 +11,7 @@ import { CardOverlay, getCardShadow, getUnderlayStyle } from "./CardStyles";
 import { Icon, type IconName } from "@/icons";
 
 export type DeckFanDirection =
-  | "none"
-  | "up"
-  | "down"
-  | "left"
-  | "right"
-  | "diagonal-depth";
+  "none" | "up" | "down" | "left" | "right" | "diagonal-depth";
 
 export type DeckInfoPosition = "above" | "below" | "left" | "right";
 
@@ -295,7 +290,7 @@ const ZoneBackgroundComponent = ({
         {iconName && (
           <Icon
             name={iconName}
-            size={cardWidth * (iconSize ?? 0.7)}
+            size={cardWidth * (iconSize ?? 0.56)}
             color={rgba(
               forceOverlayColor ? (selectColor ?? colorPale) : colorPale,
               forceSelectColor ? 0.7 : (iconOpacity ?? 0.3),

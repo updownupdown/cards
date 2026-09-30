@@ -15,7 +15,12 @@ import {
   type CardSuit,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
+import {
+  EXHAUSTED_PILE_PLACEHOLDER,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "../Cards/CardMap";
 import { Button } from "../Button/Button";
 import { GameWrapper } from "../common/GameWrapper";
 import { View } from "react-native";
@@ -353,7 +358,8 @@ export default function Crescent() {
       col: index,
       row: 1.2,
       fan: { direction: "down" as const, offset: cardDims.tableauOffset },
-      placeholder: { hideBackground: pile.length === 0 },
+      // Empty piles are never filled.
+      placeholder: pile.length === 0 ? EXHAUSTED_PILE_PLACEHOLDER : {},
     }));
     return [
       {

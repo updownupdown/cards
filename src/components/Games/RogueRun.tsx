@@ -30,8 +30,8 @@ import { i18n } from "@/i18n";
 export type RogueRunCardType = "monster" | "weapon" | "potion";
 
 const MaxHealth = 20;
-const TotalRooms = 12;
 const EmptyRoom: (PlayingCard | null)[] = [null, null, null, null];
+const RoomSize = EmptyRoom.length;
 const MinHealthAfterSafeStart = 2;
 const MaxSafeShuffleAttempts = 20;
 
@@ -337,6 +337,23 @@ function countRemainingMonsterValue(game: GameState) {
   );
 }
 
+// The first room deals a full hand; every later room keeps the last card and
+// deals the rest, down to whatever is left in the deck. Running returns the
+// cards to the deck, so it adds a room without changing that count.
+function dungeonRoomCount(deckSize: number) {
+  return 1 + Math.ceil((deckSize - RoomSize) / (RoomSize - 1));
+}
+
+const RoomsWithoutRunning = dungeonRoomCount(createRogueRunDeck().length);
+
+function roomProgress(game: Pick<GameState, "roomNum" | "roomsSkipped">) {
+  const skipped = game.roomsSkipped ?? 0;
+  return {
+    current: game.roomNum + skipped,
+    total: RoomsWithoutRunning + skipped,
+  };
+}
+
 function refillRoom(game: GameState) {
   const currentRoomCards = validRoomCards(game.roomCards);
 
@@ -498,6 +515,8 @@ export const rogueRunRules = {
   canFightWithWeapon,
   damageWithWeapon,
   refillRoom,
+  dungeonRoomCount,
+  roomProgress,
   applyAction: applyRogueRunAction,
   advanceGame: advanceRogueRunGame,
 };
@@ -531,8 +550,9 @@ export default function RogueRun() {
     gameStateInitial,
   });
 
+  const rooms = roomProgress(game);
   const canRun =
-    validRoomCards(game.roomCards).length === 4 &&
+    validRoomCards(game.roomCards).length === RoomSize &&
     game.lastRoomNumRanFrom !== game.roomNum &&
     !game.ended;
 
@@ -861,10 +881,10 @@ export default function RogueRun() {
         {/* Room Bar */}
         <ProgressBar
           iconName="door"
-          totalValue={TotalRooms + (game.roomsSkipped ?? 0)}
-          progressValue={game.roomNum + (game.roomsSkipped ?? 0)}
+          totalValue={rooms.total}
+          progressValue={rooms.current}
           color="blue"
-          tallyText={game.roomNum + (game.roomsSkipped ?? 0)}
+          tallyText={rooms.current}
           scaledHeight={cardHeight * 0.3}
         />
 
@@ -939,7 +959,6 @@ export default function RogueRun() {
                   fullWidth
                   theme={action.color}
                   iconName={action.iconName}
-                  iconColor={Colors.white}
                   iconSize={spacing(24)}
                   taller
                   style={{
@@ -950,9 +969,6 @@ export default function RogueRun() {
                     fontSize: font(17),
                     lineHeight: font(17),
                     fontFamily: FontWeight[600],
-                    color: action.disabled
-                      ? rgba(Colors.white, 0.3)
-                      : Colors.white,
                     paddingRight: spacing(4),
                   }}
                 />

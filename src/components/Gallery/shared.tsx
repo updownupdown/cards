@@ -8,6 +8,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { Colors, rgba, theme } from "@/styles/styles";
+import { useTranslation } from "@/i18n";
 
 /**
  * A number kept across sessions (the chapter or quote last looked at).
@@ -218,6 +219,9 @@ export function WorkPlaceholder({
   iconSize: number;
   radius: number;
 }) {
+  const { t } = useTranslation("home");
+  const { spacing } = useResponsiveMetrics();
+
   return (
     <View
       style={{
@@ -228,9 +232,14 @@ export function WorkPlaceholder({
         alignItems: "center",
         justifyContent: "center",
         boxShadow: `0 ${radius + 1}px ${radius * 4}px ${rgba(Colors.black, 0.55)}`,
+        gap: spacing(12),
       }}
     >
       <Icon name="frame" size={iconSize} color={theme.faint} />
+
+      <Text size="xs" weight={400} color={theme.faint} numberOfLines={1}>
+        {t("gallery.notAcquired")}
+      </Text>
     </View>
   );
 }

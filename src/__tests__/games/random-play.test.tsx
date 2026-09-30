@@ -12,10 +12,12 @@ import {
   mappedCards,
   outcome,
   renderGame,
+  renderVariant,
   settle,
 } from "../../../jest/game-harness";
 import { getGameComponentByPath } from "@/data/games-router";
 import { GAME_DEFINITIONS } from "@/data/games-registry";
+import { GAME_VARIANTS } from "@/data/game-variants";
 import { act } from "react-test-renderer";
 import { i18n } from "@/i18n";
 
@@ -137,17 +139,33 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
-const cases = GAME_DEFINITIONS.flatMap(({ path }) =>
+// Every game, and each classic variant a game bundles beyond its default.
+const games: [string, string][] = [
+  ...GAME_DEFINITIONS.map(({ path }) => [path, ""] as [string, string]),
+  ...Object.entries(GAME_VARIANTS).flatMap(([path, variants]) =>
+    variants.slice(1).map((variant) => [path, variant] as [string, string]),
+  ),
+];
+const cases = games.flatMap(([path, variant]) =>
   Array.from(
     { length: SEEDS },
-    (_, index) => [path, FIRST_SEED + index] as [string, number],
+    (_, index) =>
+      [
+        `${path}${variant ? ` (${variant})` : ""}`,
+        FIRST_SEED + index,
+        path,
+        variant,
+      ] as [string, number, string, string],
   ),
 );
 
-describe.each(cases)("%s (seed %i)", (path, seed) => {
+describe.each(cases)("%s (seed %i)", (name, seed, path, variant) => {
   test("survives random play", async () => {
-    const random = seededRandom(`${path}:${seed}`);
-    const renderer = await renderGame(path, getGameComponentByPath(path)!);
+    const random = seededRandom(`${name}:${seed}`);
+    const Game = getGameComponentByPath(path)!;
+    const renderer = variant
+      ? await renderVariant(path, variant, Game)
+      : await renderGame(path, Game);
     const moves: string[] = [];
 
     for (let step = 0; step < STEPS && outcome() === "playing"; step += 1) {

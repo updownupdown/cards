@@ -1,3 +1,4 @@
+import { BoardButtonsContext } from "@/components/Button/Button";
 import { CARD_BACK_INKS } from "@/data/card-backs";
 import { BackgroundAnimation } from "@/animations/BackgroundAnimation";
 import {
@@ -662,7 +663,9 @@ export const GameWrapper = ({
             },
           ]}
         >
-          {children}
+          <BoardButtonsContext.Provider value={true}>
+            {children}
+          </BoardButtonsContext.Provider>
 
           {/* Swallows touches on the board while auto-complete plays. */}
           {autoCompleting && (

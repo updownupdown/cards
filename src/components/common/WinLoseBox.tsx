@@ -2,14 +2,7 @@ import { Text } from "@/components/common/Text";
 import { usePalette } from "@/styles/palette";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
-import { flexStyles } from "@/styles/flexStyles";
-import {
-  Colors,
-  LayerZIndexes,
-  layoutDims,
-  rgba,
-  theme,
-} from "@/styles/styles";
+import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
 import { ActionButton, Caps, Kicker } from "@/components/ui/Nocturne";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, Platform, View } from "react-native";

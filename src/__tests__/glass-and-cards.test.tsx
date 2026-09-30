@@ -1,4 +1,6 @@
+import { Button } from "@/components/Button/Button";
 import { CollectFrom } from "@/components/common/CollectFrom";
+import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { DealMeAGame } from "@/components/Home/DealMeAGame";
 import { FavButton } from "@/components/Home/FavButton";
 import {
@@ -46,8 +48,14 @@ jest.mock("@/hooks/useCampaignProgress", () => ({
   useCampaignProgress: () => ({ unlockedPaths: new Set<string>() }),
 }));
 
-jest.mock("@/components/common/GameLaunchOverlay", () => ({
-  launchGame: () => undefined,
+jest.mock("@/components/common/GameLaunchOverlay", () => {
+  const globals = require("@jest/globals") as typeof import("@jest/globals"); // eslint-disable-line @typescript-eslint/no-require-imports
+  return { launchGame: globals.jest.fn() };
+});
+
+// Only its props matter here.
+jest.mock("@/components/Button/Button", () => ({
+  Button: () => null,
 }));
 
 jest.mock("@/hooks/useResponsiveMetrics", () => ({
@@ -60,7 +68,10 @@ jest.mock("@/hooks/useResponsiveMetrics", () => ({
 
 jest.mock("@/i18n", () => ({
   useDisplayLanguage: () => "en",
-  useTranslation: () => ({ t: (key: string) => key }),
+  useTranslation: () => ({
+    t: (key: string, options?: { game?: string }) =>
+      key === "winToCollect" ? `Win **${options?.game}** to collect` : key,
+  }),
 }));
 
 jest.mock("@/i18n/content", () => ({
@@ -176,8 +187,7 @@ describe("game cards", () => {
     const starInset = (corner: { top: number }, size: number, icon: number) =>
       corner.top + (size - icon) / 2;
     expect(starInset(large, 40, 22)).toBe(starInset(small, 36, 20));
-    // Halfway between where the two used to sit (13 and 8 in).
-    expect(starInset(large, 40, 22)).toBe(10.5);
+    expect(starInset(large, 40, 22)).toBe(10);
   });
 
   test("every shelf card is the Favorites' height, at 4:3", () => {
@@ -221,6 +231,7 @@ describe("Random Deal", () => {
         allEnabledGames={[entry("/klondike")]}
         unplayedGamePaths={[]}
         favorites={new Set()}
+        onToggleFavorite={() => undefined}
         pageSidePadding={16}
         contentMaxWidth={420}
       />,
@@ -242,13 +253,20 @@ describe("Random Deal", () => {
 });
 
 describe("Collect from", () => {
-  test("a thin, capitalised label over the game's name, which starts it", () => {
-    const renderer = render(<CollectFrom path="/klondike" collected />);
-    const texts = renderer.root.findAllByType(Text);
-    const label = texts.find((node) => node.props.children === "collectedFrom");
-    const name = texts.find((node) => node.props.children === "Klondike");
-    expect(label?.props.accessibilityHint).toBe("uppercase");
-    expect(name?.props.accessibilityHint).toBe("uppercase");
-    expect(name?.props.accessibilityRole).toBe("link");
+  test("a button, Win <game> to collect, with the game's name in bold, starts it", () => {
+    const renderer = render(<CollectFrom path="/klondike" />);
+    const button = renderer.root.findAllByType(
+      Button as React.ComponentType,
+    )[0];
+    const [before, name, after] = button.props.text as [
+      string,
+      React.ReactElement<{ weight: number; children: string }>,
+      string,
+    ];
+    expect(before).toBe("Win ");
+    expect(name.props).toMatchObject({ weight: 600, children: "Klondike" });
+    expect(after).toBe(" to collect");
+    act(() => button.props.onPress());
+    expect(launchGame).toHaveBeenCalledWith("/klondike");
   });
 });

@@ -17,6 +17,5 @@
     "wins": "Victoires"
   },
   "undo": "Annuler",
-  "collectFrom": "À gagner dans",
-  "collectedFrom": "Gagnée dans"
+  "winToCollect": "Gagnez à **{{game}}** pour débloquer"
 }

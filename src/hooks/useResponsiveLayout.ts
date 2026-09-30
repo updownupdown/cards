@@ -22,14 +22,9 @@ export function getResponsiveUiLayout(
 ): ResponsiveUiLayout {
   const maxDim = Math.min(width, height);
   const isTablet = maxDim > TABLET_BREAKPOINT;
-  let scale = isTablet ? TABLET_SCALE : 1;
+  const scale = isTablet ? TABLET_SCALE : 1;
   // Keep text growth gentler than spacing/card surfaces for readability.
-  let textScale = 1 + (scale - 1) * 0.75;
-
-  // if (isTablet) {
-  //   scale = width / TABLET_BREAKPOINT;
-  //   textScale = width / TABLET_BREAKPOINT;
-  // }
+  const textScale = 1 + (scale - 1) * 0.75;
 
   return {
     isTablet,

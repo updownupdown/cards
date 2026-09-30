@@ -26,6 +26,7 @@ export function HomeCardFact({
         maxWidth: contentMaxWidth,
         alignSelf: "center",
         paddingHorizontal: pageSidePadding,
+        paddingVertical: pageSidePadding * 4,
       }}
     >
       <View
@@ -37,8 +38,8 @@ export function HomeCardFact({
       >
         {/* Twice a tab bar icon. */}
         <Icon
-          name="lightbulb"
-          size={spacing(48)}
+          name="fact"
+          size={spacing(60)}
           color={theme.accent}
           accessibilityLabel={t("sections.fact")}
         />

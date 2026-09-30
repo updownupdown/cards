@@ -4,19 +4,16 @@ import { Text } from "@/components/common/Text";
 import { ZoomableImage } from "@/components/common/ZoomableImage";
 import { StepperBar, useBarSideInset } from "@/components/ui/FloatingBar";
 import { GlassTargetContext } from "@/components/ui/Glass";
-import { ActionButton, Caps, Kicker, Meter } from "@/components/ui/Nocturne";
+import { Kicker } from "@/components/ui/Nocturne";
 import {
   GAME_FULL_THUMBNAIL_ASSETS,
   GAME_THUMBNAIL_ASPECTS,
 } from "@/data/game-thumbnails";
 import { GAMES_DATA } from "@/data/games-registry";
-import { useGameCategory, useGamePalette } from "@/components/Home/HomeArt";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
-import { PaletteContext } from "@/styles/palette";
-import { layoutDims, rgba, theme } from "@/styles/styles";
-import type { Href } from "expo-router";
+import { layoutDims, theme } from "@/styles/styles";
 import { useState } from "react";
 import { Modal, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -76,10 +73,6 @@ export function WorkViewer({
               gap: spacing(16),
             }}
           >
-            {/* Where the work came from, or where to win it: at the top
-                either way. */}
-            <CollectFrom path={path} collected={collected} onLaunch={onClose} />
-
             {/* Above the game and the label, which the work grows over when
               zoomed. */}
             <View
@@ -106,28 +99,23 @@ export function WorkViewer({
                     />
                   )
                 : artWidth > 0 && (
-                    <View style={{ alignItems: "center", gap: spacing(14) }}>
+                    <View style={{ alignItems: "center", gap: spacing(20) }}>
                       <WorkPlaceholder
-                        // Room kept under it for the line below.
+                        // Room kept under it for the button below.
                         width={Math.min(
                           artBox.width * 0.7,
-                          (artBox.height - spacing(40)) * aspect,
+                          (artBox.height - spacing(80)) * aspect,
                         )}
                         height={
                           Math.min(
                             artBox.width * 0.7,
-                            (artBox.height - spacing(40)) * aspect,
+                            (artBox.height - spacing(80)) * aspect,
                           ) / aspect
                         }
                         iconSize={spacing(48)}
                         radius={spacing(4)}
                       />
-                      <Kicker
-                        color={theme.dim}
-                        style={{ fontSize: font(12), lineHeight: font(16) }}
-                      >
-                        {t("gallery.notAcquired")}
-                      </Kicker>
+                      <CollectFrom path={path} onLaunch={onClose} />
                     </View>
                   )}
             </View>

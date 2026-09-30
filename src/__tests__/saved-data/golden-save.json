@@ -1,0 +1,97 @@
+{
+  "note": "A player's storage as the app wrote it in September 2026. Never edit this to make a test pass: saves like it are on players' devices. See src/__tests__/saved-data-guard.test.ts.",
+  "storage": {
+    "cards.globalSettings.v1": {
+      "language": "fr",
+      "translateCollectibles": false,
+      "discoverCardSize": "small",
+      "dismissHomeInstallPrompt": true,
+      "dismissCampaignIntro": true,
+      "dismissCollectIntro": true,
+      "resumeLastGame": false,
+      "showAnimations": false,
+      "showTipsForNewGames": false,
+      "hapticFeedback": true,
+      "keepScreenAwake": true,
+      "autoComplete": "always",
+      "crashReports": false,
+      "colorTheme": "ember"
+    },
+    "cards.gameSettings.v1": {
+      "/klondike": {
+        "isFavorite": true,
+        "drawCount": 1,
+        "stats": {
+          "attempts": 120,
+          "wins": 41,
+          "losses": 70,
+          "highestScore": 5120,
+          "fastestTimeMs": 143000
+        }
+      },
+      "/spider-solitaire": {
+        "isFavorite": true,
+        "spiderSuits": 2,
+        "stats": {
+          "attempts": 4,
+          "wins": 0,
+          "losses": 3,
+          "highestScore": null,
+          "fastestTimeMs": null
+        }
+      },
+      "/rogue-run": {
+        "isFavorite": true,
+        "dungeonLevel": 3,
+        "stats": {
+          "attempts": 9,
+          "wins": 2,
+          "losses": 7,
+          "highestScore": 14,
+          "fastestTimeMs": 300000
+        }
+      },
+      "/yukon": {
+        "stats": {
+          "attempts": 10,
+          "wins": 4,
+          "losses": 5,
+          "highestScore": null,
+          "fastestTimeMs": 250000
+        }
+      },
+      "/alaska": {
+        "isFavorite": true,
+        "stats": {
+          "attempts": 5,
+          "wins": 2,
+          "losses": 3,
+          "highestScore": null,
+          "fastestTimeMs": 200000
+        }
+      }
+    },
+    "cards.campaignProgress.v1": {
+      "version": 3,
+      "lastPlayedPath": "/beehive",
+      "winsByPath": {
+        "/klondike": 3,
+        "/beehive": 1,
+        "/memory": 2,
+        "/pocket-poker": 1,
+        "/alaska": 1
+      },
+      "collectedTaoIds": [1, 2, 3],
+      "collectedQuoteIds": [40, 84, 1, 170],
+      "lastResultSessionIds": { "/beehive": "session-7" },
+      "mercySkipCount": 1,
+      "mercySkipCollectibleCheckpoint": 6
+    },
+    "cards.recentGames.v1": [
+      { "path": "/klondike", "playedAt": 1790000000000 },
+      { "path": "/beehive", "playedAt": 1790000500000 },
+      { "path": "/alaska", "playedAt": 1789000000000 }
+    ],
+    "cards.dailyWins.v1": ["2026-09-20", "2026-09-27"]
+  }
+}

@@ -25,7 +25,6 @@ import { useMemo, useRef, useState } from "react";
 import {
   Pressable,
   ScrollView,
-  StyleSheet,
   View,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
@@ -439,7 +438,7 @@ export function StatsList({
       />
       <HeadlineStat
         isGrid={isHeadlineGrid}
-        iconName="star"
+        iconName="trophy"
         label={t("statsTab.headline.won")}
         value={totals.wins.toLocaleString(language)}
       />
@@ -453,7 +452,7 @@ export function StatsList({
         isGrid={isHeadlineGrid}
         iconName="games"
         label={t("statsTab.headline.tried")}
-        value={`${playedRows.length.toLocaleString(language)}/${orderedStatsRows.length.toLocaleString(language)}`}
+        value={`${playedRows.length.toLocaleString(language)} / ${orderedStatsRows.length.toLocaleString(language)}`}
       />
     </View>
   );
@@ -676,17 +675,17 @@ function HeadlineStat({
   isGrid: boolean;
 }) {
   const { spacing, textScale } = useResponsiveMetrics();
-  const labelLineHeight = getScaledTextSize("xxs", textScale) * 1.4;
+  const labelLineHeight = getScaledTextSize("xxs", textScale) * 1.2;
 
   return (
     <View
       style={[
         flexStyles.colCentered,
-        { minWidth: 0, gap: spacing(4) },
+        { minWidth: 0, gap: spacing(6) },
         isGrid ? { width: "50%" } : { flex: 1 },
       ]}
     >
-      <Icon name={iconName} size={spacing(22)} color={theme.accent} />
+      <Icon name={iconName} size={spacing(32)} color={theme.accent} />
       <Text size="xl" weight={600} lineHeight={1.1} numberOfLines={1}>
         {value}
       </Text>
@@ -737,14 +736,14 @@ function PersonaCard({
         gap: spacing(16),
         padding: spacing(14.4),
         borderRadius: spacing(14),
-        backgroundColor: rgba(theme.ink, 0.035),
+        backgroundColor: rgba(theme.ink, 0.1),
         borderWidth: 1,
         borderColor: hairline(),
       }}
     >
       {/* The award, its rule and the stats on the left; the game on the right. */}
       <View style={{ flex: 1, gap: spacing(14) }}>
-        <View style={{ gap: spacing(3) }}>
+        <View>
           <Text size="md" weight={600} color={theme.accent} lineHeight={1.2}>
             {title}
           </Text>

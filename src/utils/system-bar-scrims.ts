@@ -5,13 +5,20 @@
  * edges of the screen.
  *
  * ─── LOCKED ────────────────────────────────────────────────────────────────
- * These values were tuned and signed off. Do not change them as part of any
- * other UI work, and warn the owner before changing them even when asked to
- * (see AGENTS.md). src/__tests__/system-bar-scrims.test.ts pins them.
+ * These values were tuned and signed off (native softened and dropped from
+ * game screens on 2026-09-29, at the owner's request). Do not change them as
+ * part of any other UI work, and warn the owner before changing them even
+ * when asked to (see AGENTS.md). src/__tests__/system-bar-scrims.test.ts pins
+ * them.
  * ───────────────────────────────────────────────────────────────────────────
  *
  * Which case draws what. A scrim is only ever drawn over a safe-area inset,
  * which is where the system draws its bars over the app:
+ *
+ * Native draws a softer scrim than the web (NATIVE_SCRIM): one smooth fall
+ * from the screen's edge, with no band held at full strength, which read as
+ * a box with a shadow. Native game screens draw none: nothing of the game's
+ * interface sits under the bars, so their icons stay readable anyway.
  *
  * Native (Android, edge-to-edge is enforced; status and navigation bars are
  * transparent, see app.config.js):
@@ -32,7 +39,8 @@
  * Web app, installed (standalone PWA):
  *   - iOS: apple-mobile-web-app-status-bar-style is black-translucent, so the
  *     page runs under the status bar and home indicator and the insets come
- *     from env(safe-area-inset-*) -> the same scrims as native iOS.
+ *     from env(safe-area-inset-*) -> scrims in the same places as native
+ *     iOS, at the web's strength and shape (SYSTEM_BAR_SCRIM).
  *   - Android: Chrome paints the status and navigation bars itself (from
  *     theme-color and the page background), the insets are 0 -> no scrims.
  */
@@ -61,6 +69,17 @@ export const SYSTEM_BAR_SCRIM = {
   fadeRatio: 0.8,
   /** ...and at least this far, so a thin inset still fades gently. */
   minFade: 16,
+} as const;
+
+/** LOCKED: see the note at the top of this file. The native scrim. */
+export const NATIVE_SCRIM = {
+  topOpacity: 0.42,
+  buttonsOpacity: 0.48,
+  handleOpacity: 0.24,
+  /** The fade runs this far past the inset, as a share of it... */
+  fadeRatio: 1.5,
+  /** ...and at least this far. */
+  minFade: 24,
 } as const;
 
 /**
@@ -104,25 +123,46 @@ function scrim(inset: number, opacity: number): SystemBarScrim {
   };
 }
 
+/** Native: one smooth fall from the edge to clear, a smoothstep sampled. */
+function nativeScrim(inset: number, opacity: number): SystemBarScrim {
+  const height =
+    inset + Math.max(inset * NATIVE_SCRIM.fadeRatio, NATIVE_SCRIM.minFade);
+  const round = (value: number) => Math.round(value * 1000) / 1000;
+  const steps = 8;
+  const at = Array.from({ length: steps + 1 }, (_, index) => index / steps);
+  return {
+    height,
+    colors: at.map(
+      (t) => `rgba(0, 0, 0, ${round(opacity * (1 - t * t * (3 - 2 * t)))})`,
+    ),
+    locations: at.map(round),
+  };
+}
+
 export function getSystemBarScrims({
   platform,
   insets,
+  inGame = false,
 }: {
   platform: ScrimPlatform;
   insets: { top: number; bottom: number };
+  /** On a game's screen. */
+  inGame?: boolean;
 }): { top: SystemBarScrim | null; bottom: SystemBarScrim | null } {
-  const top =
-    insets.top > 0 ? scrim(insets.top, SYSTEM_BAR_SCRIM.topOpacity) : null;
+  const native = platform !== "web";
+  if (native && inGame) return { top: null, bottom: null };
+  const values = native ? NATIVE_SCRIM : SYSTEM_BAR_SCRIM;
+  const draw = native ? nativeScrim : scrim;
+
+  const top = insets.top > 0 ? draw(insets.top, values.topOpacity) : null;
   let bottom: SystemBarScrim | null = null;
   if (insets.bottom > 0) {
     const buttons =
       platform === "android" &&
       insets.bottom >= SYSTEM_BAR_SCRIM.buttonsMinInset;
-    bottom = scrim(
+    bottom = draw(
       insets.bottom,
-      buttons
-        ? SYSTEM_BAR_SCRIM.buttonsOpacity
-        : SYSTEM_BAR_SCRIM.handleOpacity,
+      buttons ? values.buttonsOpacity : values.handleOpacity,
     );
   }
   return { top, bottom };

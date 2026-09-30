@@ -17,6 +17,5 @@
     "wins": "Victorias"
   },
   "undo": "Deshacer",
-  "collectFrom": "Consíguela en",
-  "collectedFrom": "Conseguida en"
+  "winToCollect": "Gana en **{{game}}** para desbloquear"
 }

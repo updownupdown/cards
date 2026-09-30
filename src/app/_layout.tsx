@@ -199,7 +199,7 @@ function Layout() {
             <GameLaunchOverlay />
             {/* Keeps the system bars readable over every screen. LOCKED:
                 see utils/system-bar-scrims. */}
-            <SystemBarScrims />
+            <SystemBarScrims inGame={isGamePath(pathname)} />
           </View>
         </ToastProvider>
       </SafeAreaProvider>

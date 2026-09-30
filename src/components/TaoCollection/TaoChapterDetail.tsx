@@ -9,7 +9,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { isTaoChapterTranslated, localizeTaoChapter } from "@/i18n/content";
 import { parseChapterText } from "@/components/TaoReveal/timeline";
-import { theme } from "@/styles/styles";
+import { rgba, theme } from "@/styles/styles";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import Animated from "react-native-reanimated";
@@ -259,13 +259,13 @@ export function TaoChapterDetail({
           style={{
             width: contentWidth,
             marginTop: spacing(18),
-            gap: spacing(16),
+            gap: spacing(28),
           }}
         >
+          {/* Styled as the Gallery's uncollected quote. */}
           <Text
-            size="lg"
-            weight={400}
-            color={theme.dim}
+            size="md"
+            color={rgba(theme.dim, 0.7)}
             style={{ textAlign: "center" }}
           >
             {t("tao.uncollected")}

@@ -10,7 +10,15 @@ import {
   transitionStyles,
 } from "@/styles/styles";
 import { useResponsiveUiLayout } from "@/hooks/useResponsiveLayout";
-import { useEffect, useRef, useState } from "react";
+import { boardButtonColors } from "@/styles/button-colors";
+import {
+  createContext,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Reanimated, {
   useAnimatedStyle,
   useSharedValue,
@@ -88,6 +96,22 @@ function resolveButtonVariant(
   return "primary";
 }
 
+/**
+ * True on a game's board (set by GameWrapper around the game), where a button
+ * keeps the colour the game gives it. Everywhere else buttons follow the
+ * app's colour theme.
+ */
+export const BoardButtonsContext = createContext(false);
+
+/** A colour a game asked for by name or as #rrggbb, or undefined. */
+function requestedFill(requested: string | undefined) {
+  if (!requested) return undefined;
+  if (requested in THEME_COLORS) {
+    return THEME_COLORS[requested as keyof typeof THEME_COLORS];
+  }
+  return isHexColor(requested) ? requested : undefined;
+}
+
 // Animated so state changes (e.g. enabled/disabled) fade on native, where the
 // CSS transition in transitionStyles is ignored.
 const AnimatedPressable = Reanimated.createAnimatedComponent(Pressable);
@@ -110,7 +134,8 @@ interface Props {
   delayLongPress?: number;
   onPressIn?: () => void;
   onPressOut?: () => void;
-  text?: string;
+  /** The label: plain text, or spans of Text for mixed weights. */
+  text?: ReactNode;
   iconName?: IconName;
   iconColor?: string;
   iconSize?: number;
@@ -158,6 +183,7 @@ export const Button = ({
   const ui = useResponsiveUiLayout();
   // Inside a game, the game's palette.
   const appTheme = usePalette();
+  const onBoard = useContext(BoardButtonsContext);
   const uiScale = ui.scale;
   const textScale = ui.textScale;
 
@@ -186,12 +212,20 @@ export const Button = ({
         } as any)
       : undefined;
 
-  // Buttons follow the app's colour theme, whatever colour a screen asks
-  // for: bright requests become the accent-filled button, dark or
-  // translucent ones the quiet one, and "none" stays transparent.
-  const variant = resolveButtonVariant(theme, textOnly);
-  let themeColor: string =
-    variant === "primary"
+  // Off the board, buttons follow the app's colour theme, whatever colour a
+  // screen asks for: bright requests become the accent-filled button, dark
+  // or translucent ones the quiet one, and "none" stays transparent. On a
+  // game's board, a colour the game asks for is kept, with a label that
+  // reads on it.
+  const boardFill =
+    onBoard && !textOnly && !headerButton ? requestedFill(theme) : undefined;
+  const boardColors = boardFill ? boardButtonColors(boardFill) : undefined;
+  const variant = boardColors
+    ? "primary"
+    : resolveButtonVariant(theme, textOnly);
+  let themeColor: string = boardColors
+    ? boardColors.fill
+    : variant === "primary"
       ? appTheme.accent
       : variant === "secondary"
         ? rgba(appTheme.ink, 0.1)
@@ -199,7 +233,8 @@ export const Button = ({
           ? appTheme.accent
           : "none";
   const contentColor =
-    variant === "primary" ? appTheme.accentInk : appTheme.ink;
+    boardColors?.content ??
+    (variant === "primary" ? appTheme.accentInk : appTheme.ink);
   const borderColor = themeColor;
 
   const baseFontSize = Typography.size[size];

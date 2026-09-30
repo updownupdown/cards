@@ -90,7 +90,7 @@ export default function Home() {
   const isFocused = useIsFocused();
   const [initialActiveTab] = useState(getActiveHomeTab);
   const insets = useSafeAreaInsets();
-  const { ui, spacing } = useResponsiveMetrics();
+  const { spacing } = useResponsiveMetrics();
   const { width: viewportWidth, height: viewportHeight } =
     useViewportDimensions();
   const isWeb = Platform.OS === "web";
@@ -113,7 +113,7 @@ export default function Home() {
   const [mountedTabs, setMountedTabs] = useState<ReadonlySet<HomeTabIndex>>(
     () => new Set([initialActiveTab]),
   );
-  const { settings, updateSettings } = useGlobalSettings();
+  const { settings } = useGlobalSettings();
   const starfield = useStarfieldMotion(activeTab);
   // Set by the Campaign tab while the map is open; the UFO itself is drawn here.
   const [ufo, setUfo] = useState<UfoRequest | null>(null);

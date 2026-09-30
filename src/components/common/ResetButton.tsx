@@ -5,7 +5,7 @@ import { useFade } from "@/hooks/useFade";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
-import { layoutDims, Colors, rgba, theme } from "@/styles/styles";
+import { layoutDims, Colors, rgba } from "@/styles/styles";
 import React, { useRef, useState } from "react";
 import { Animated, Easing, Platform } from "react-native";
 

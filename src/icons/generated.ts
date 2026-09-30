@@ -29,6 +29,7 @@ import EqualOutlineIcon from "./EqualOutline.svg";
 import EquipIcon from "./Equip.svg";
 import ExpandLessIcon from "./ExpandLess.svg";
 import ExpandMoreIcon from "./ExpandMore.svg";
+import FactIcon from "./Fact.svg";
 import FastForwardIcon from "./FastForward.svg";
 import FistIcon from "./Fist.svg";
 import FrameIcon from "./Frame.svg";
@@ -74,6 +75,7 @@ import StarOutlineIcon from "./StarOutline.svg";
 import SwordIcon from "./Sword.svg";
 import TaoIcon from "./Tao.svg";
 import TrophyIcon from "./Trophy.svg";
+import UnavailableCellIcon from "./UnavailableCell.svg";
 import UndoIcon from "./Undo.svg";
 
 export type IconName =
@@ -101,6 +103,7 @@ export type IconName =
   | "equip"
   | "expand-less"
   | "expand-more"
+  | "fact"
   | "fast-forward"
   | "fist"
   | "frame"
@@ -146,77 +149,80 @@ export type IconName =
   | "sword"
   | "tao"
   | "trophy"
+  | "unavailable-cell"
   | "undo";
 
 export const icons: Record<IconName, ComponentType<SvgProps>> = {
-  ace: AceIcon,
+  "ace": AceIcon,
   "arrow-back": ArrowBackIcon,
   "arrow-down": ArrowDownIcon,
   "arrow-forward": ArrowForwardIcon,
   "arrow-up": ArrowUpIcon,
-  cancel: CancelIcon,
+  "cancel": CancelIcon,
   "card-column": CardColumnIcon,
   "card-row": CardRowIcon,
-  chart: ChartIcon,
+  "chart": ChartIcon,
   "check-box-off": CheckBoxOffIcon,
   "check-box-on": CheckBoxOnIcon,
   "check-circle": CheckCircleIcon,
   "chevron-left": ChevronLeftIcon,
   "chevron-right": ChevronRightIcon,
-  close: CloseIcon,
-  clubs: ClubsIcon,
-  diamonds: DiamondsIcon,
-  door: DoorIcon,
-  dragon: DragonIcon,
-  easy: EasyIcon,
+  "close": CloseIcon,
+  "clubs": ClubsIcon,
+  "diamonds": DiamondsIcon,
+  "door": DoorIcon,
+  "dragon": DragonIcon,
+  "easy": EasyIcon,
   "equal-outline": EqualOutlineIcon,
-  equip: EquipIcon,
+  "equip": EquipIcon,
   "expand-less": ExpandLessIcon,
   "expand-more": ExpandMoreIcon,
+  "fact": FactIcon,
   "fast-forward": FastForwardIcon,
-  fist: FistIcon,
-  frame: FrameIcon,
+  "fist": FistIcon,
+  "frame": FrameIcon,
   "free-cell": FreeCellIcon,
-  gallery: GalleryIcon,
-  games: GamesIcon,
+  "gallery": GalleryIcon,
+  "games": GamesIcon,
   "grapple-hook": GrappleHookIcon,
-  heart: HeartIcon,
-  hearts: HeartsIcon,
+  "heart": HeartIcon,
+  "hearts": HeartsIcon,
   "help-outline": HelpOutlineIcon,
-  herbs: HerbsIcon,
+  "herbs": HerbsIcon,
   "herbs-bowl": HerbsBowlIcon,
-  home: HomeIcon,
-  info: InfoIcon,
-  instructions: InstructionsIcon,
-  joker: JokerIcon,
-  king: KingIcon,
-  lightbulb: LightbulbIcon,
-  lock: LockIcon,
-  menu: MenuIcon,
+  "home": HomeIcon,
+  "info": InfoIcon,
+  "instructions": InstructionsIcon,
+  "joker": JokerIcon,
+  "king": KingIcon,
+  "lightbulb": LightbulbIcon,
+  "lock": LockIcon,
+  "menu": MenuIcon,
   "milky-way": MilkyWayIcon,
-  more: MoreIcon,
-  offer: OfferIcon,
-  play: PlayIcon,
+  "more": MoreIcon,
+  "offer": OfferIcon,
+  "play": PlayIcon,
   "play-hand": PlayHandIcon,
   "plus-outline": PlusOutlineIcon,
-  potion: PotionIcon,
-  quote: QuoteIcon,
-  recent: RecentIcon,
-  reset: ResetIcon,
+  "potion": PotionIcon,
+  "quote": QuoteIcon,
+  "recent": RecentIcon,
+  "reset": ResetIcon,
   "rotate-device": RotateDeviceIcon,
-  royal: RoyalIcon,
-  search: SearchIcon,
-  sequence: SequenceIcon,
-  settings: SettingsIcon,
-  shield: ShieldIcon,
-  shuffle: ShuffleIcon,
-  skull: SkullIcon,
+  "royal": RoyalIcon,
+  "search": SearchIcon,
+  "sequence": SequenceIcon,
+  "settings": SettingsIcon,
+  "shield": ShieldIcon,
+  "shuffle": ShuffleIcon,
+  "skull": SkullIcon,
   "smoke-bomb": SmokeBombIcon,
-  spades: SpadesIcon,
-  star: StarIcon,
+  "spades": SpadesIcon,
+  "star": StarIcon,
   "star-outline": StarOutlineIcon,
-  sword: SwordIcon,
-  tao: TaoIcon,
-  trophy: TrophyIcon,
-  undo: UndoIcon,
+  "sword": SwordIcon,
+  "tao": TaoIcon,
+  "trophy": TrophyIcon,
+  "unavailable-cell": UnavailableCellIcon,
+  "undo": UndoIcon,
 };

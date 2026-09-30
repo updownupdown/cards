@@ -37,6 +37,7 @@ export function AutoCompleteModeRadio({
       onChange={onChange}
       containerStyle={{ width: "100%", height: spacing(44) }}
       buttonStyle={{ flex: 1, paddingHorizontal: spacing(6) }}
+      selectedTextStyle={{ color: theme.accent }}
     />
   );
 }

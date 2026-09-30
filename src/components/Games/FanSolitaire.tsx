@@ -26,7 +26,12 @@ import {
   zoneFanOffset,
   type PlayingCard,
 } from "../Cards/card-utils";
-import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
+import {
+  EXHAUSTED_PILE_PLACEHOLDER,
+  MappedCard,
+  MapZone,
+  useCardMap,
+} from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
@@ -559,7 +564,10 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
       row: 1.2 + Math.floor(index / 6) * 2,
       baseZIndex: 10 + index,
       fan: { direction: "down", offset: fanOffset(pile.length, variant) },
-      placeholder: { hideBackground: pile.length === 0 },
+      placeholder:
+        config.emptyPile === "blocked" && pile.length === 0
+          ? EXHAUSTED_PILE_PLACEHOLDER
+          : { hideBackground: pile.length === 0 },
     }));
     const redealZone: MapZone[] = config.redeals
       ? [

@@ -1,10 +1,6 @@
-import { Text } from "@/components/common/Text";
-import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
-import { flexStyles } from "@/styles/flexStyles";
 import { delay } from "@/utils/utils";
 import { useMemo, useState } from "react";
-import { View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   cardDims,
@@ -21,7 +17,6 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
-import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 
 // Water Sort with cards: 13 jars of four mixed cards, sorted into one rank per
 // jar. Two spare jars and two one-card dishes give just enough room that
@@ -254,7 +249,6 @@ export const apothecaryRules = {
 
 // ========== Component ========== //
 export default function Apothecary() {
-  const { colorPale } = useGameColors();
   const [selected, setSelected] = useState<number | null>(null);
 
   const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
@@ -272,7 +266,6 @@ export default function Apothecary() {
   const won = isWon(game);
   const lost = isLost(game);
   const ended = won || lost;
-  const sealedCount = game.vessels.filter(isSealed).length;
 
   function onVesselPress(index: number) {
     if (ended) return;

@@ -139,15 +139,6 @@ function labelColor(state: GameDotState) {
   return state === "won" || state === "complete" ? theme.ink : theme.dim;
 }
 
-function hashUnit(input: string) {
-  let hash = 2166136261;
-  for (let index = 0; index < input.length; index += 1) {
-    hash ^= input.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return (hash >>> 0) / 0xffffffff;
-}
-
 function toWorld(coordinate: number) {
   return (coordinate + 1) * WORLD_SIZE * 0.5;
 }

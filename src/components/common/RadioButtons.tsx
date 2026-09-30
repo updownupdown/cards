@@ -4,7 +4,7 @@ import { segmentChosen, segmentTrack } from "@/components/ui/Nocturne";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
-import { FontWeight, transitionStyles, theme } from "@/styles/styles";
+import { FontWeight, transitionStyles } from "@/styles/styles";
 import {
   Pressable,
   type StyleProp,
@@ -60,7 +60,8 @@ export function RadioButtons<T extends string>({
           flexDirection: vertical ? "column" : "row",
           // The segmented toggle's look (see Segmented in Nocturne).
           ...segmentTrack(),
-          borderRadius: spacing(16),
+          // Fully round, the group and each button, like the app's buttons.
+          borderRadius: 999,
           padding: spacing(4),
           gap: spacing(4),
         },
@@ -89,7 +90,7 @@ export function RadioButtons<T extends string>({
               {
                 ...transitionStyles.limited04sec,
                 flex: flexAllButFirst && i !== 0 ? 1 : undefined,
-                borderRadius: spacing(12),
+                borderRadius: 999,
                 paddingVertical: spacing(2),
                 paddingHorizontal: spacing(12),
                 gap: spacing(8),

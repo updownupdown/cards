@@ -248,7 +248,7 @@ function QuoteDetail({
       showsVerticalScrollIndicator={false}
     >
       {/* Drawn afresh only when the author changes. */}
-      <Portrait key={author.name} path={author.portrait} size={spacing(170)} />
+      <Portrait key={author.name} path={author.portrait} size={spacing(150)} />
       <Text
         size="lg"
         weight={500}
@@ -287,8 +287,8 @@ function QuoteDetail({
               italic
               color={theme.ink}
               style={{
-                fontSize: font(28),
-                lineHeight: font(36),
+                fontSize: font(26),
+                lineHeight: font(30),
                 textAlign: "center",
                 maxWidth: spacing(560),
               }}
@@ -296,7 +296,7 @@ function QuoteDetail({
               “{quote.text}”
             </Text>
             <Text
-              size="md"
+              size="sm"
               weight={400}
               color={theme.dim}
               style={{ textAlign: "center" }}
@@ -306,44 +306,20 @@ function QuoteDetail({
           </>
         ) : (
           <>
-            {/* The quote's place kept for it: a faint quotation mark over
-                a line in the quotes' own italic. */}
-            <View style={{ alignItems: "center" }}>
+            {/* "This quote has not been collected yet.", and the button to
+                win it, well apart. */}
+            <View style={{ alignItems: "center", gap: spacing(28) }}>
               <Text
-                serif
-                color={rgba(theme.accent, 0.4)}
+                size="md"
+                color={rgba(theme.dim, 0.7)}
                 style={{
                   textAlign: "center",
-                  fontSize: font(76),
-                  lineHeight: font(76),
-                  // The mark sits high in its line: pulled down onto the
-                  // words.
-                  marginBottom: -font(34),
-                }}
-              >
-                “
-              </Text>
-              <Text
-                serif
-                italic
-                color={theme.dim}
-                style={{
-                  textAlign: "center",
-                  fontSize: font(22),
-                  lineHeight: font(30),
-                  maxWidth: spacing(360),
                 }}
               >
                 {t("quotes.uncollected")}
               </Text>
+              {source && <CollectFrom path={source} campaign />}
             </View>
-            {source && (
-              <CollectFrom
-                path={source}
-                campaign
-                style={{ marginTop: spacing(10) }}
-              />
-            )}
           </>
         )}
       </Animated.View>

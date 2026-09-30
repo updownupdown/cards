@@ -17,6 +17,5 @@
     "wins": "Wins"
   },
   "undo": "Undo",
-  "collectFrom": "Collect from",
-  "collectedFrom": "Collected from"
+  "winToCollect": "Win **{{game}}** to collect"
 }

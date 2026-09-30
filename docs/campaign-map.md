@@ -39,9 +39,12 @@ Once players have progress, the map must not change under them: which games are 
 
 - `--rebuild` and `--rebalance-rewards` are refused;
 - a plain run fails rather than move, unlink, drop or re-reward a locked game, so a new game can only be added around the locked ones;
-- a test checks the generated map against the lock, so a manual edit of a locked game fails too.
+- a test checks the generated map against the lock, so a manual edit of a locked game fails too;
+- `npm run campaign:lock` can be run again after adding a game: it locks the new game and fails if a locked one has changed.
 
-The map was locked on 2026-09-27, with the 170 hand-picked quotes. To change a locked map on purpose, delete the lock file, and migrate saved progress in `src/data/campaign-progress.ts` if it no longer fits.
+Even without the lock, `--rebuild` and `--rebalance-rewards` refuse to replace an existing map unless given `--reset-player-progress`, and `src/__tests__/saved-data-guard.test.ts` fails if the lock file is missing or a released game isn't in it.
+
+The map was locked on 2026-09-27, with the 170 hand-picked quotes. Changing a locked game's place, links or rewards needs the owner's OK first (see "Locked: players' saved data" in `AGENTS.md`), and a migration of saved progress in `src/data/campaign-progress.ts` if it no longer fits.
 
 On 2026-09-29 Klondike gained two links by hand, to Beehive and Pocket Poker (`HUB_EXTRA_LINKS` in `src/data/campaign-map.ts`), so the first win opens more of the map; the map was locked again with them. A new link only unlocks more, so saved progress needed no migration. The centre may hold up to six links like any node, and the rule that the first games are each of a different category leaves these two out.
 
@@ -57,7 +60,7 @@ Development validation in `src/data/campaign-map.ts` enforces:
 - Every node has two or three rewards, with at most one Tao chapter, and none on local-only games.
 - Tao and quote reward IDs are unique and exist in their catalogs, and every Tao chapter is awarded.
 
-`src/__tests__/campaign-map.test.ts` also checks the placement rules above, and the lock once it exists.
+`src/__tests__/campaign-map.test.ts` also checks the placement rules above, and `src/__tests__/saved-data-guard.test.ts` the lock.
 
 ## Quotes
 
