@@ -1029,4 +1029,64 @@ that reach out across the world.`,
     author: `Jack Kornfield`,
     source: `Buddha's Little Instruction Book (1994)`,
   },
+
+  {
+    text: `Nature uses only the longest threads to weave her patterns, so that each small piece of her fabric reveals the organization of the entire tapestry.`,
+    author: `Richard Feynman`,
+    source: `The Character of Physical Law (1965)`,
+  },
+
+  {
+    text: `You can know the name of a bird in all the languages of the world, but when you're finished, you'll know absolutely nothing whatever about the bird.`,
+    author: `Richard Feynman`,
+    source: `What Do You Care What Other People Think? (1988)`,
+  },
+
+  {
+    text: `Time is but the stream I go a-fishing in.`,
+    author: `Henry David Thoreau`,
+    source: `Walden, "Where I Lived, and What I Lived For" (1854)`,
+  },
+
+  {
+    text: `It is not that we have a short time to live, but that we waste a lot of it.`,
+    author: `Seneca`,
+    source: `On the Shortness of Life, Chapter 1, C. D. N. Costa translation (1997)`,
+  },
+
+  {
+    text: `When I play with my cat, who knows if I am not a pastime to her more than she is to me?`,
+    author: `Michel de Montaigne`,
+    source: `Essays, "Apology for Raymond Sebond," Donald M. Frame translation (1958)`,
+  },
+
+  {
+    text: `The only way to make sense out of change is to plunge into it, move with it, and join the dance.`,
+    author: `Alan Watts`,
+    source: `The Wisdom of Insecurity (1951)`,
+  },
+
+  {
+    text: `For small creatures such as we the vastness is bearable only through love.`,
+    author: `Carl Sagan`,
+    source: `Contact (1985)`,
+  },
+
+  {
+    text: `A man who dares to waste one hour of time has not discovered the value of life.`,
+    author: `Charles Darwin`,
+    source: `Letter to Susan Darwin (August 4, 1836)`,
+  },
+
+  {
+    text: `First say to yourself what you would be; and then do what you have to do.`,
+    author: `Epictetus`,
+    source: `Discourses, Book III, Chapter 23, George Long translation (1877)`,
+  },
+
+  {
+    text: `Walk as if you are kissing the Earth with your feet.`,
+    author: `Thich Nhat Hanh`,
+    source: `Peace Is Every Step (1991)`,
+  },
 ] as const satisfies readonly QuoteText[];

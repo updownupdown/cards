@@ -40,9 +40,14 @@ import { SettingControl } from "../common/SettingControl";
 import { AutoCompleteModeRadio } from "../common/AutoCompletePanel";
 import { Text } from "../common/Text";
 import ModalFull from "./ModalFull";
+import { useToast } from "../common/Toast";
+import { saveBetaGames, useBetaGamesEnabled } from "@/data/beta-games";
 
 /** App version and build type; not translated, since it's for bug reports. */
 const BUILD_LABEL = `v${Constants.expoConfig?.version ?? "?"} · ${__DEV__ ? "dev" : "release"}`;
+
+/** Taps on the version number that turn on beta games. */
+const BETA_UNLOCK_TAPS = 10;
 
 interface Props {
   onClose: () => void;
@@ -57,6 +62,19 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const [isResettingData, setIsResettingData] = React.useState(false);
   const [isPopulatingTestData, setIsPopulatingTestData] = React.useState(false);
   const { spacing } = useResponsiveMetrics();
+  const showToast = useToast();
+  const versionTaps = React.useRef(0);
+  const betaGamesEnabled = useBetaGamesEnabled();
+
+  const onVersionPress = () => {
+    versionTaps.current += 1;
+    if (versionTaps.current < BETA_UNLOCK_TAPS) return;
+    versionTaps.current = 0;
+    void saveBetaGames(true);
+    onHomeDataInvalidated();
+    onClose();
+    showToast(t("betaGames.enabled"));
+  };
   const { t } = useTranslation("settings");
   const { t: tCommon } = useTranslation("common");
   const language = useDisplayLanguage();
@@ -370,7 +388,25 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
           )}
 
           {/* Which build this is, since dev and release installs look alike. */}
-          <Text {...footerText} style={{ textAlign: "center" }}>
+          {betaGamesEnabled && (
+            <Text
+              {...footerLink}
+              style={{ textAlign: "center" }}
+              accessibilityRole="link"
+              onPress={() => {
+                void saveBetaGames(false);
+                onHomeDataInvalidated();
+              }}
+            >
+              {t("betaGames.hide")}
+            </Text>
+          )}
+          <Text
+            {...footerText}
+            style={{ textAlign: "center" }}
+            onPress={onVersionPress}
+            suppressHighlighting
+          >
             {BUILD_LABEL}
           </Text>
         </View>

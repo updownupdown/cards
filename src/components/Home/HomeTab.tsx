@@ -8,6 +8,7 @@ import { RoundButton, SectionTitle } from "@/components/ui/Nocturne";
 import { DealMeAGame } from "@/components/Home/DealMeAGame";
 import { GameOfTheDaySection } from "@/components/Home/GameOfTheDaySection";
 import { HomeCardFact } from "@/components/Home/HomeCardFact";
+import { areBetaGamesVisible, useBetaGamesEnabled } from "@/data/beta-games";
 import { isGameEnabled } from "@/data/games-data";
 import { GAMES_DATA } from "@/data/games-registry";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
@@ -16,7 +17,6 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
 import { layoutDims } from "@/styles/styles";
-import { isLocalDevEnvironment } from "@/utils/utils";
 import { type ReactNode, useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { HOME_HOME_TAB_INDEX } from "./home-view-state";
@@ -112,6 +112,8 @@ export function HomeTab({
     );
   }
 
+  // Re-renders Home when beta games are turned on or off in the settings.
+  useBetaGamesEnabled();
   const localOnlyGames = Object.entries(GAMES_DATA).filter(
     ([, game]) => game.enabledOnLocalOnly,
   );
@@ -182,8 +184,8 @@ export function HomeTab({
           />
         </View>
 
-        {/* Local-only games */}
-        {isLocalDevEnvironment() &&
+        {/* Beta (local-only) games */}
+        {areBetaGamesVisible() &&
           localOnlyGames.length > 0 &&
           section(
             t("sections.localOnly"),
