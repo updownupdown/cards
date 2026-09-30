@@ -30,6 +30,7 @@ import {
   EBGaramond_500Medium_Italic,
   EBGaramond_600SemiBold,
 } from "@expo-google-fonts/eb-garamond";
+import { BubblegumSans_400Regular } from "@expo-google-fonts/bubblegum-sans";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { loadBetaGames } from "@/data/beta-games";
 import { useFonts } from "expo-font";
@@ -73,6 +74,7 @@ function Layout() {
           EBGaramond_500Medium,
           EBGaramond_500Medium_Italic,
           EBGaramond_600SemiBold,
+          BubblegumSans_400Regular,
         },
   );
   const fontsLoaded = embedsFonts || fontsLoadedAtRuntime;

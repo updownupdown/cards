@@ -11,7 +11,8 @@
     "cards.gameSettings.v1",
     "cards.globalSettings.v1",
     "cards.recentGames.v1",
-    "cards.storeReviewPrompted.v1"
+    "cards.storeReviewPrompted.v1",
+    "cards.wildCards.v1"
   ],
   "gamePaths": [
     "/accordion",

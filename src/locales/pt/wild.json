@@ -1,0 +1,110 @@
+{
+  "section": {
+    "title": "Wild Cards",
+    "unlocked": "{{count}} de {{total}} desbloqueados",
+    "winsNeeded_one": "Falta {{count}} vitória para desbloquear o próximo jogo",
+    "winsNeeded_other": "Faltam {{count}} vitórias para desbloquear o próximo jogo",
+    "tapToUnlock_one": "Toque em um jogo para desbloquear! (resta {{count}} crédito)",
+    "tapToUnlock_other": "Toque em um jogo para desbloquear! (restam {{count}} créditos)",
+    "locked": "{{title}}, bloqueado",
+    "unlockedGame": "{{title}}, desbloqueado"
+  },
+  "toast": {
+    "justThisOnce": "Tá bom, só desta vez.",
+    "notToday": "Hoje não!"
+  },
+  "titles": {
+    "castle-demolition": "Demolição do castelo",
+    "hat-trick": "Truque da cartola",
+    "cutting-deck": "Corte certeiro",
+    "royal-flush": "Royal Flush",
+    "shuffleboard": "Shuffleboard",
+    "architect": "Arquiteto"
+  },
+  "screen": {
+    "back": "Voltar",
+    "score": "Pontos"
+  },
+  "praise": {
+    "nice": "Boa!",
+    "excellent": "Excelente!",
+    "sweet": "Show!",
+    "smashing": "Arrasou!",
+    "bravo": "Bravo!",
+    "timber": "Lá vai!",
+    "superb": "Soberbo!",
+    "splendid": "Esplêndido!",
+    "magnificent": "Magnífico!",
+    "crumbled": "Veio abaixo!"
+  },
+  "castle": {
+    "instructions": "Arraste uma pedra de um monte e arremesse",
+    "castle": "Castelo {{number}}",
+    "tooFast": "Com pressa não! Pedras pesadas pedem um arremesso suave",
+    "unsteady": "Calma: um empurrão lento e firme",
+    "slip": "Tire do monte devagar"
+  },
+  "hat": {
+    "instructions": "Arremesse uma carta na cartola",
+    "cardsLeft_one": "Resta {{count}} carta",
+    "cardsLeft_other": "Restam {{count}} cartas",
+    "tiltHint": "Incline o celular para guiá-la no ar",
+    "rim": "Na borda!",
+    "short": "Um pouco curta",
+    "long": "Um pouco longa",
+    "playAgain": "{{score}} na cartola. Jogar de novo?"
+  },
+  "cut": {
+    "instructions": "Arremesse cartas lá de baixo",
+    "keepGoing": "Corte as frutas, estoure os balões",
+    "best": "Recorde: {{combo}}"
+  },
+  "combo": {
+    "pair": "Par!",
+    "threeOfAKind": "Trinca!",
+    "straight": "Sequência!",
+    "flush": "Flush!",
+    "fullHouse": "Full House!",
+    "fourOfAKind": "Quadra!",
+    "straightFlush": "Straight Flush!",
+    "royalFlush": "Combo Royal Flush!"
+  },
+  "flush": {
+    "instructions": "Puxe o estilingue e solte",
+    "goal": "Faça um flush, uma sequência ou um full house",
+    "scored": "{{hand}}! +{{points}}",
+    "bust": "Estourou! Nenhuma mão possível"
+  },
+  "hand": {
+    "straight": "Sequência",
+    "flush": "Flush",
+    "fullHouse": "Full House",
+    "straightFlush": "Straight Flush",
+    "royalFlush": "Royal Flush"
+  },
+  "board": {
+    "instructions": "Deslize uma carta pela mesa até as zonas",
+    "sweepHint": "Esfregue à frente de uma carta deslizando para levá-la mais longe",
+    "status": "{{surface}} · carta {{card}} de {{total}}",
+    "round": "Rodada {{round}}: +{{points}}",
+    "gutter": "Na canaleta!"
+  },
+  "surface": {
+    "felt": "Feltro verde",
+    "mahogany": "Mogno polido",
+    "slate": "Ardósia gelada"
+  },
+  "architect": {
+    "instructions": "Pegue uma carta da bandeja; apoie duas juntas",
+    "turnHint": "Deite uma carta com um segundo dedo para fazer um andar",
+    "storeys_one": "{{count}} andar",
+    "storeys_other": "{{count}} andares",
+    "clear": "Limpar a mesa",
+    "fell": "Opa!",
+    "stability": "Estabilidade",
+    "difficulty": "Dificuldade",
+    "easy": "Fácil",
+    "medium": "Médio",
+    "hard": "Difícil"
+  }
+}

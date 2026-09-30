@@ -35,6 +35,9 @@ const config = {
       "android.permission.SYSTEM_ALERT_WINDOW",
       "android.permission.READ_EXTERNAL_STORAGE",
       "android.permission.WRITE_EXTERNAL_STORAGE",
+      // Added by expo-sensors for its step counter. Wild Cards only read the
+      // accelerometer, which needs no permission.
+      "android.permission.ACTIVITY_RECOGNITION",
     ],
   },
   androidStatusBar: {
@@ -112,10 +115,15 @@ const config = {
             "./node_modules/@expo-google-fonts/eb-garamond/500Medium/EBGaramond_500Medium.ttf",
             "./node_modules/@expo-google-fonts/eb-garamond/500Medium_Italic/EBGaramond_500Medium_Italic.ttf",
             "./node_modules/@expo-google-fonts/eb-garamond/600SemiBold/EBGaramond_600SemiBold.ttf",
+            // Wild Cards' playful face.
+            "./node_modules/@expo-google-fonts/bubblegum-sans/400Regular/BubblegumSans_400Regular.ttf",
           ],
         },
       },
     ],
+    // The accelerometer (Wild Cards' tilt) needs no permission; this leaves
+    // out the motion-activity prompt that only the step counter uses.
+    ["expo-sensors", { motionPermission: false }],
     [
       "expo-build-properties",
       {

@@ -6,6 +6,7 @@ import enHome from "@/locales/en/home.json";
 import enCampaign from "@/locales/en/campaign.json";
 import enPrivacy from "@/locales/en/privacy.json";
 import enSettings from "@/locales/en/settings.json";
+import enWild from "@/locales/en/wild.json";
 import esCards from "@/locales/es/cards.json";
 import esCommon from "@/locales/es/common.json";
 import esGame from "@/locales/es/game.json";
@@ -14,6 +15,7 @@ import esHome from "@/locales/es/home.json";
 import esCampaign from "@/locales/es/campaign.json";
 import esPrivacy from "@/locales/es/privacy.json";
 import esSettings from "@/locales/es/settings.json";
+import esWild from "@/locales/es/wild.json";
 import frCards from "@/locales/fr/cards.json";
 import frCommon from "@/locales/fr/common.json";
 import frGame from "@/locales/fr/game.json";
@@ -22,6 +24,7 @@ import frHome from "@/locales/fr/home.json";
 import frCampaign from "@/locales/fr/campaign.json";
 import frPrivacy from "@/locales/fr/privacy.json";
 import frSettings from "@/locales/fr/settings.json";
+import frWild from "@/locales/fr/wild.json";
 import idCards from "@/locales/id/cards.json";
 import idCommon from "@/locales/id/common.json";
 import idGame from "@/locales/id/game.json";
@@ -30,6 +33,7 @@ import idHome from "@/locales/id/home.json";
 import idCampaign from "@/locales/id/campaign.json";
 import idPrivacy from "@/locales/id/privacy.json";
 import idSettings from "@/locales/id/settings.json";
+import idWild from "@/locales/id/wild.json";
 import itCards from "@/locales/it/cards.json";
 import itCommon from "@/locales/it/common.json";
 import itGame from "@/locales/it/game.json";
@@ -38,6 +42,7 @@ import itHome from "@/locales/it/home.json";
 import itCampaign from "@/locales/it/campaign.json";
 import itPrivacy from "@/locales/it/privacy.json";
 import itSettings from "@/locales/it/settings.json";
+import itWild from "@/locales/it/wild.json";
 import ptCards from "@/locales/pt/cards.json";
 import ptCommon from "@/locales/pt/common.json";
 import ptGame from "@/locales/pt/game.json";
@@ -46,6 +51,7 @@ import ptHome from "@/locales/pt/home.json";
 import ptCampaign from "@/locales/pt/campaign.json";
 import ptPrivacy from "@/locales/pt/privacy.json";
 import ptSettings from "@/locales/pt/settings.json";
+import ptWild from "@/locales/pt/wild.json";
 import trCards from "@/locales/tr/cards.json";
 import trCommon from "@/locales/tr/common.json";
 import trGame from "@/locales/tr/game.json";
@@ -54,6 +60,7 @@ import trHome from "@/locales/tr/home.json";
 import trCampaign from "@/locales/tr/campaign.json";
 import trPrivacy from "@/locales/tr/privacy.json";
 import trSettings from "@/locales/tr/settings.json";
+import trWild from "@/locales/tr/wild.json";
 import type { AppLanguage } from "./languages";
 
 // UI text, one JSON file per language and namespace. English is edited by
@@ -69,6 +76,7 @@ export const NAMESPACES = [
   "campaign",
   "privacy",
   "settings",
+  "wild",
 ] as const;
 export type Namespace = (typeof NAMESPACES)[number];
 
@@ -81,6 +89,7 @@ const EN = {
   campaign: enCampaign,
   privacy: enPrivacy,
   settings: enSettings,
+  wild: enWild,
 };
 
 export const RESOURCES: Record<AppLanguage, Record<Namespace, object>> & {
@@ -96,6 +105,7 @@ export const RESOURCES: Record<AppLanguage, Record<Namespace, object>> & {
     campaign: frCampaign,
     privacy: frPrivacy,
     settings: frSettings,
+    wild: frWild,
   },
   es: {
     cards: esCards,
@@ -106,6 +116,7 @@ export const RESOURCES: Record<AppLanguage, Record<Namespace, object>> & {
     campaign: esCampaign,
     privacy: esPrivacy,
     settings: esSettings,
+    wild: esWild,
   },
   id: {
     cards: idCards,
@@ -116,6 +127,7 @@ export const RESOURCES: Record<AppLanguage, Record<Namespace, object>> & {
     campaign: idCampaign,
     privacy: idPrivacy,
     settings: idSettings,
+    wild: idWild,
   },
   it: {
     cards: itCards,
@@ -126,6 +138,7 @@ export const RESOURCES: Record<AppLanguage, Record<Namespace, object>> & {
     campaign: itCampaign,
     privacy: itPrivacy,
     settings: itSettings,
+    wild: itWild,
   },
   pt: {
     cards: ptCards,
@@ -136,6 +149,7 @@ export const RESOURCES: Record<AppLanguage, Record<Namespace, object>> & {
     campaign: ptCampaign,
     privacy: ptPrivacy,
     settings: ptSettings,
+    wild: ptWild,
   },
   tr: {
     cards: trCards,
@@ -146,5 +160,6 @@ export const RESOURCES: Record<AppLanguage, Record<Namespace, object>> & {
     campaign: trCampaign,
     privacy: trPrivacy,
     settings: trSettings,
+    wild: trWild,
   },
 };

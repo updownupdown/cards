@@ -8,7 +8,8 @@ import { RoundButton, SectionTitle } from "@/components/ui/Nocturne";
 import { DealMeAGame } from "@/components/Home/DealMeAGame";
 import { GameOfTheDaySection } from "@/components/Home/GameOfTheDaySection";
 import { HomeCardFact } from "@/components/Home/HomeCardFact";
-import { areBetaGamesVisible, useBetaGamesEnabled } from "@/data/beta-games";
+import { WildCardsSection } from "@/components/Home/WildCardsSection";
+import { useWildCardsVisible } from "@/hooks/useWildCards";
 import { isGameEnabled } from "@/data/games-data";
 import { GAMES_DATA } from "@/data/games-registry";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
@@ -17,6 +18,7 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
 import { layoutDims } from "@/styles/styles";
+import { areBetaGamesVisible, useBetaGamesEnabled } from "@/data/beta-games";
 import { type ReactNode, useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { HOME_HOME_TAB_INDEX } from "./home-view-state";
@@ -59,6 +61,7 @@ export function HomeTab({
   const { ui, spacing } = useResponsiveMetrics();
   const { width: viewportWidth } = useViewportDimensions();
   const starfield = useStarfield();
+  const wildCardsVisible = useWildCardsVisible();
   // Kept hidden until then, so the easy games never show and then vanish.
   useTabReadyHold(!dataLoaded);
 
@@ -270,6 +273,14 @@ export function HomeTab({
           pageSidePadding={scaledPageSidePadding}
           contentMaxWidth={contentMaxWidth}
         />
+
+        {wildCardsVisible && (
+          <WildCardsSection
+            shelfPadding={shelfPadding}
+            pageSidePadding={scaledPageSidePadding}
+            contentMaxWidth={contentMaxWidth}
+          />
+        )}
       </ScrollView>
     </View>
   );
