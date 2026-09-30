@@ -60,6 +60,24 @@ export const haptics = {
       (h) => h.performAndroidHapticsAsync(h.AndroidHaptics.Gesture_End),
       (h) => h.impactAsync(h.ImpactFeedbackStyle.Light),
     ),
+  /** The faintest tick: a card landing, a sweep, a slingshot stretching. */
+  tick: () =>
+    run(
+      (h) => h.performAndroidHapticsAsync(h.AndroidHaptics.Clock_Tick),
+      (h) => h.selectionAsync(),
+    ),
+  /** A light knock: a card slicing, a balloon popping, a pebble landing. */
+  tap: () =>
+    run(
+      (h) => h.performAndroidHapticsAsync(h.AndroidHaptics.Keyboard_Tap),
+      (h) => h.impactAsync(h.ImpactFeedbackStyle.Soft),
+    ),
+  /** Something heavy landing: a boulder, a collapsing tower. */
+  thud: () =>
+    run(
+      (h) => h.performAndroidHapticsAsync(h.AndroidHaptics.Virtual_Key),
+      (h) => h.impactAsync(h.ImpactFeedbackStyle.Light),
+    ),
   /** The game was won. */
   win: () =>
     run(

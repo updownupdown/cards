@@ -77,6 +77,7 @@ import TaoIcon from "./Tao.svg";
 import TrophyIcon from "./Trophy.svg";
 import UnavailableCellIcon from "./UnavailableCell.svg";
 import UndoIcon from "./Undo.svg";
+import UnlockIcon from "./Unlock.svg";
 
 export type IconName =
   | "ace"
@@ -150,7 +151,8 @@ export type IconName =
   | "tao"
   | "trophy"
   | "unavailable-cell"
-  | "undo";
+  | "undo"
+  | "unlock";
 
 export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "ace": AceIcon,
@@ -225,4 +227,5 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "trophy": TrophyIcon,
   "unavailable-cell": UnavailableCellIcon,
   "undo": UndoIcon,
+  "unlock": UnlockIcon,
 };

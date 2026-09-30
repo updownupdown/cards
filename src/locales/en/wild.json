@@ -1,0 +1,110 @@
+{
+  "section": {
+    "title": "Wild Cards",
+    "unlocked": "{{count}} of {{total}} unlocked",
+    "winsNeeded_one": "{{count}} more win needed to unlock the next game",
+    "winsNeeded_other": "{{count}} more wins needed to unlock the next game",
+    "tapToUnlock_one": "Tap a game to unlock! ({{count}} credit left)",
+    "tapToUnlock_other": "Tap a game to unlock! ({{count}} credits left)",
+    "locked": "{{title}}, locked",
+    "unlockedGame": "{{title}}, unlocked"
+  },
+  "toast": {
+    "justThisOnce": "Fine, just this once.",
+    "notToday": "Not today!"
+  },
+  "titles": {
+    "castle-demolition": "Castle Demolition",
+    "hat-trick": "Hat Trick",
+    "cutting-deck": "Cutting Deck",
+    "royal-flush": "Royal Flush",
+    "shuffleboard": "Shuffleboard",
+    "architect": "Architect"
+  },
+  "screen": {
+    "back": "Back",
+    "score": "Score"
+  },
+  "praise": {
+    "nice": "Nice!",
+    "excellent": "Excellent!",
+    "sweet": "Sweet!",
+    "smashing": "Smashing!",
+    "bravo": "Bravo!",
+    "timber": "Timber!",
+    "superb": "Superb!",
+    "splendid": "Splendid!",
+    "magnificent": "Magnificent!",
+    "crumbled": "Down it comes!"
+  },
+  "castle": {
+    "instructions": "Drag a rock off a pile, then flick it",
+    "castle": "Castle {{number}}",
+    "tooFast": "Too hasty! Heavy rocks need a gentler throw",
+    "unsteady": "Steady now: one slow, smooth push",
+    "slip": "Ease it off the pile, slowly"
+  },
+  "hat": {
+    "instructions": "Flick a card into the hat",
+    "cardsLeft_one": "{{count}} card left",
+    "cardsLeft_other": "{{count}} cards left",
+    "tiltHint": "Tilt your phone to steer it in the air",
+    "rim": "Off the rim!",
+    "short": "A little short",
+    "long": "A little long",
+    "playAgain": "{{score}} in the hat. Play again?"
+  },
+  "cut": {
+    "instructions": "Flick cards up from the bottom",
+    "keepGoing": "Slice the fruit, pop the balloons",
+    "best": "Best: {{combo}}"
+  },
+  "combo": {
+    "pair": "Pair!",
+    "threeOfAKind": "Three of a Kind!",
+    "straight": "Straight!",
+    "flush": "Flush!",
+    "fullHouse": "Full House!",
+    "fourOfAKind": "Four of a Kind!",
+    "straightFlush": "Straight Flush!",
+    "royalFlush": "Royal Flush Combo!"
+  },
+  "flush": {
+    "instructions": "Pull back the sling and let go",
+    "goal": "Land a flush, a straight or a full house",
+    "scored": "{{hand}}! +{{points}}",
+    "bust": "Bust! No hand left to make"
+  },
+  "hand": {
+    "straight": "Straight",
+    "flush": "Flush",
+    "fullHouse": "Full House",
+    "straightFlush": "Straight Flush",
+    "royalFlush": "Royal Flush"
+  },
+  "board": {
+    "instructions": "Push a card up the table into the zones",
+    "sweepHint": "Rub ahead of a sliding card to sweep it on",
+    "status": "{{surface}} · card {{card}} of {{total}}",
+    "round": "Round {{round}}: +{{points}}",
+    "gutter": "In the gutter!"
+  },
+  "surface": {
+    "felt": "Green felt",
+    "mahogany": "Polished mahogany",
+    "slate": "Icy slate"
+  },
+  "architect": {
+    "instructions": "Take a card from the tray; lean two together",
+    "turnHint": "Turn a card flat with a second finger for a floor",
+    "storeys_one": "{{count}} storey high",
+    "storeys_other": "{{count}} storeys high",
+    "clear": "Clear the table",
+    "fell": "Whoops!",
+    "stability": "Stability",
+    "difficulty": "Difficulty",
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard"
+  }
+}
