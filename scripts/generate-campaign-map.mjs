@@ -912,10 +912,20 @@ function layoutAll(games) {
 function rimPoint(game, records) {
   const random = makeRandom(`rim:${game.path}`);
   let fallback = null;
+  // Local-only games go out among the outermost games, where nothing else
+  // depends on them (see PLACEMENT.localOnlyRim).
+  const radii = records.map(radius).sort((left, right) => left - right);
+  const innerRadius = game.localOnly
+    ? Math.max(
+        0.55,
+        radii[Math.ceil(radii.length * (1 - PLACEMENT.localOnlyRim * 0.8))] ??
+          0.55,
+      )
+    : 0.55;
 
   for (let attempt = 0; attempt < 40000; attempt += 1) {
     const nodeRadius = Math.sqrt(
-      0.55 ** 2 + random() * (GALAXY.rimRadius ** 2 - 0.55 ** 2),
+      innerRadius ** 2 + random() * (GALAXY.rimRadius ** 2 - innerRadius ** 2),
     );
     const angle = random() * Math.PI * 2;
     const x = Number((Math.cos(angle) * nodeRadius).toFixed(4));

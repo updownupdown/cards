@@ -1138,7 +1138,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     x: 0.227,
     y: -0.576,
     arm: 2,
-    connections: ["/cribbage-squares", "/seer"],
+    connections: ["/cribbage-squares", "/crossword", "/seer"],
     rewards: [
       {
         type: "tao",
@@ -1344,7 +1344,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     x: 0.0937,
     y: -0.7046,
     arm: 2,
-    connections: ["/cafe-queue", "/cribbage-squares"],
+    connections: ["/cafe-queue", "/cribbage-squares", "/crossword"],
     rewards: [
       {
         type: "tao",
@@ -1633,7 +1633,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     x: -0.3456,
     y: -0.7298,
     arm: null,
-    connections: ["/accordion", "/scorpion"],
+    connections: ["/accordion", "/iris-garden", "/scorpion"],
     rewards: [
       {
         type: "quote",
@@ -1722,7 +1722,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     x: -0.7971,
     y: 0.2915,
     arm: 1,
-    connections: ["/chain-of-command", "/spiderette"],
+    connections: ["/chain-of-command", "/spiderette", "/stalactites"],
     rewards: [
       {
         type: "quote",
@@ -1756,7 +1756,13 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     x: 0.4043,
     y: 0.7801,
     arm: 0,
-    connections: ["/bristol", "/devils-grip", "/stalker"],
+    connections: [
+      "/augury",
+      "/bristol",
+      "/devils-grip",
+      "/ozanams-square",
+      "/stalker",
+    ],
     rewards: [
       {
         type: "quote",
@@ -1858,7 +1864,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     x: -0.8136,
     y: 0.3626,
     arm: 1,
-    connections: ["/dynasty", "/somnus"],
+    connections: ["/dynasty", "/somnus", "/stalactites"],
     rewards: [
       {
         type: "quote",
@@ -1947,7 +1953,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     x: -0.5196,
     y: -0.7728,
     arm: 2,
-    connections: ["/clock", "/ebb-and-flow"],
+    connections: ["/clock", "/ebb-and-flow", "/iris-garden"],
     rewards: [
       {
         type: "quote",
@@ -1968,7 +1974,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     x: 0.3037,
     y: 0.8938,
     arm: null,
-    connections: ["/bristol", "/pickpocket", "/poker-squares"],
+    connections: ["/augury", "/bristol", "/pickpocket", "/poker-squares"],
     rewards: [
       {
         type: "quote",
@@ -2019,7 +2025,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     x: 0.5684,
     y: 0.7717,
     arm: 0,
-    connections: ["/devils-grip", "/poker-squares"],
+    connections: ["/devils-grip", "/ozanams-square", "/poker-squares"],
     rewards: [
       {
         type: "quote",
@@ -2134,6 +2140,91 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       {
         type: "quote",
         id: 59,
+      },
+    ],
+  },
+  {
+    path: "/augury",
+    x: 0.346,
+    y: 0.8348,
+    arm: null,
+    connections: ["/devils-grip", "/poker-squares"],
+    rewards: [
+      {
+        type: "quote",
+        id: 171,
+      },
+      {
+        type: "quote",
+        id: 172,
+      },
+    ],
+  },
+  {
+    path: "/crossword",
+    x: 0.325,
+    y: -0.7723,
+    arm: null,
+    connections: ["/crazy-quilt", "/waypoint"],
+    rewards: [
+      {
+        type: "quote",
+        id: 173,
+      },
+      {
+        type: "quote",
+        id: 174,
+      },
+    ],
+  },
+  {
+    path: "/iris-garden",
+    x: -0.405,
+    y: -0.8106,
+    arm: 2,
+    connections: ["/accordion", "/clock"],
+    rewards: [
+      {
+        type: "quote",
+        id: 175,
+      },
+      {
+        type: "quote",
+        id: 176,
+      },
+    ],
+  },
+  {
+    path: "/ozanams-square",
+    x: 0.4774,
+    y: 0.7968,
+    arm: 0,
+    connections: ["/bristol", "/poker-squares"],
+    rewards: [
+      {
+        type: "quote",
+        id: 177,
+      },
+      {
+        type: "quote",
+        id: 178,
+      },
+    ],
+  },
+  {
+    path: "/stalactites",
+    x: -0.8924,
+    y: 0.3119,
+    arm: null,
+    connections: ["/chain-of-command", "/dynasty"],
+    rewards: [
+      {
+        type: "quote",
+        id: 179,
+      },
+      {
+        type: "quote",
+        id: 180,
       },
     ],
   },

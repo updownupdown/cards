@@ -1,6 +1,6 @@
 import { city, GameBackground } from "./game-backgrounds";
 import type { GameThumbnailName } from "./game-thumbnails";
-import { isLocalDevEnvironment } from "@/utils/utils";
+import { areBetaGamesVisible } from "./beta-games";
 import type { GameAnimation } from "@/animations/types";
 import type { CardBackColor } from "./card-backs";
 
@@ -114,7 +114,7 @@ export type GameDefinition = GameMenuInfo & {
 };
 
 export function isGameEnabled(game: GameMenuInfo | undefined) {
-  if (!game || (game.enabledOnLocalOnly && !isLocalDevEnvironment())) {
+  if (!game || (game.enabledOnLocalOnly && !areBetaGamesVisible())) {
     return false;
   }
 

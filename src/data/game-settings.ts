@@ -522,6 +522,30 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
+    "/ozanams-square": [
+      {
+        key: "difficulty",
+        label: "Difficulty",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          { label: "Easy (seven cards in place)", value: "easy" },
+          { label: "Difficult (fewest cards in place)", value: "difficult" },
+        ],
+      },
+    ],
+    "/augury": [
+      {
+        key: "difficulty",
+        label: "Difficulty",
+        type: "string",
+        applyBehavior: "next-game",
+        options: [
+          { label: "Easy (simple laws)", value: "easy" },
+          { label: "Difficult (subtle laws)", value: "difficult" },
+        ],
+      },
+    ],
     "/memory": [
       {
         key: "memoryDifficulty",

@@ -31,6 +31,7 @@ import {
   EBGaramond_600SemiBold,
 } from "@expo-google-fonts/eb-garamond";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
+import { loadBetaGames } from "@/data/beta-games";
 import { useFonts } from "expo-font";
 import { Stack, usePathname, SplashScreen } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -43,6 +44,8 @@ initCrashReporting();
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
+// Beta games turned on from the settings, read before Home lists games.
+void loadBetaGames();
 
 function Layout() {
   // The colour theme is applied before anything below renders, and the app

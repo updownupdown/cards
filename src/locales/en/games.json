@@ -719,5 +719,57 @@
     "cardsRemainGood": "{{count}} cards remain. Good!",
     "cardsRemainExcellent": "{{count}} cards remain. Excellent!",
     "cardsRemainBrilliant": "{{count}} cards remain. Brilliant!"
+  },
+  "stalactites": {
+    "allCardsHome": "All four foundations are complete.",
+    "full": "Complete",
+    "next": "Next: {{rank}}",
+    "nextEither": "{{one}} or {{two}}",
+    "byOnes": "Ones",
+    "byTwos": "Twos",
+    "buildingByOnes": "Building by ones",
+    "buildingByTwos": "Building by twos"
+  },
+  "crossword": {
+    "completed": "Every space is filled!",
+    "stuck": "The card has nowhere to go. {{placed}} of {{total}} cards placed.",
+    "placed": "placed"
+  },
+  "ozanamsSquare": {
+    "solved": "Every line holds each rank and each suit once."
+  },
+  "irisGarden": {
+    "cleared": "The garden is clear!",
+    "noMatches": "No pair can be taken. {{pairs}} pairs left.",
+    "pairsLeft_one": "{{count}} pair left",
+    "pairsLeft_other": "{{count}} pairs left",
+    "matchesOpen_one": "{{count}} pair can be taken",
+    "matchesOpen_other": "{{count}} pairs can be taken"
+  },
+  "augury": {
+    "streak": "Right calls",
+    "start": "Tap a card to play it, or declare that none fit.",
+    "noneFit": "None Fit",
+    "won": "You read the omens! The law: {{law}}",
+    "lost": "Your hand ran out. The law: {{law}}",
+    "verdict": {
+      "accepted": "The card is accepted.",
+      "rejected": "The card is turned away.",
+      "noneRight": "Right: no card fitted. A fresh hand.",
+      "noneWrong": "A card did fit, so it was played. Your run starts again."
+    },
+    "law": {
+      "alternateColours": "Each card must be the other colour from the last.",
+      "suitOrRank": "Each card must share the last card's suit or rank.",
+      "oddEven": "Odd and even ranks alternate (Jack 11, Queen 12, King 13).",
+      "higherUntilCourt": "Each card must be higher than the last, but anything may follow a court card.",
+      "withinTwo": "Each card must be within two ranks of the last (Ace low).",
+      "colourSteers": "After a red card play higher, after a black card lower; anything may follow a red King or a black Ace.",
+      "suitCycle": "Suits go round in order: hearts, clubs, diamonds, spades.",
+      "evenRedOddBlack": "Even ranks must be red and odd ranks black.",
+      "colourTwoBack": "Each card must be the same colour as the card two back.",
+      "blackClimbs": "A black card must be higher than the last card; red cards may follow anything.",
+      "sameColourClimbs": "A card of the last card's colour must be higher than it; the other colour may follow anything."
+    }
   }
 }

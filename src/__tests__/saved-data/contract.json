@@ -1,6 +1,7 @@
 {
   "note": "Pins what players' saves refer to. `npm run saved-data:pin` only adds to it; removing anything is a hand edit, made only with the owner's OK. See src/__tests__/saved-data-guard.test.ts.",
   "storageKeys": [
+    "cards.betaGames.v1",
     "cards.campaignProgress.v1",
     "cards.dailyWins.v1",
     "cards.gallery.lastChapter.v1",
@@ -289,7 +290,17 @@
     "167": "Elizabeth II",
     "168": "Thich Nhat Hanh",
     "169": "Pema Chödrön",
-    "170": "Jack Kornfield"
+    "170": "Jack Kornfield",
+    "171": "Richard Feynman",
+    "172": "Richard Feynman",
+    "173": "Henry David Thoreau",
+    "174": "Seneca",
+    "175": "Michel de Montaigne",
+    "176": "Alan Watts",
+    "177": "Carl Sagan",
+    "178": "Charles Darwin",
+    "179": "Epictetus",
+    "180": "Thich Nhat Hanh"
   },
   "taoChapterCount": 81,
   "colorThemes": [
