@@ -189,8 +189,8 @@ export const FontWeight = {
   700: "Outfit_700Bold",
 };
 
-/** Bubblegum Sans, only for the Wild Cards (one weight). */
-export const WILD_FONT = "BubblegumSans_400Regular";
+/** The Wild Cards' one face: Outfit, a little heavier than the rest. */
+export const WILD_FONT = "Outfit_600SemiBold";
 
 /**
  * EB Garamond, for everything that belongs to the art, the Tao or the

@@ -4,7 +4,9 @@ import { STEP_MS } from "@/components/WildCards/engine/loop";
 import {
   bestHand,
   canStillScore,
+  landsOn,
   MAX_PULL,
+  PLATE_WIDTH,
   RoyalFlushGame,
   stretchNotch,
 } from "@/components/WildCards/games/royal-flush";
@@ -33,13 +35,21 @@ describe("Royal Flush hands", () => {
     expect(bestHand(hand("JS QH KD AC 2S"))).toBeNull();
   });
 
-  test("a plate keeps its cards while a hand is still possible", () => {
-    expect(canStillScore(hand("2H 9H"))).toBe(true);
-    expect(canStillScore(hand("2S 7H KD"))).toBe(true); // three more: a full house
-    expect(canStillScore(hand("2S 2H 7D 9C"))).toBe(true); // 2 2 + 7 7 7? no: 2 2 2 7 7
-    // Four suits, four spread ranks, no pairs, two slots: nothing can come of it.
-    expect(canStillScore(hand("2S 7H QD 5C"))).toBe(false);
+  test("a plate of five keeps its cards only while a hand is still possible", () => {
+    expect(canStillScore(hand("2H 9H"))).toBe(true); // three more hearts
+    expect(canStillScore(hand("5S 6H 8D"))).toBe(true); // 4 and 7, or 7 and 9
+    expect(canStillScore(hand("2S 2H 7D"))).toBe(true); // 2 and 7: a full house
+    // Two slots can't turn three odd cards into a full house.
+    expect(canStillScore(hand("2S 7H KD"))).toBe(false);
+    expect(canStillScore(hand("2S 2H 7D 9C"))).toBe(false);
+    // Five cards and no hand: rejected at the fifth.
     expect(canStillScore(hand("2S 3H 4D 9C KS"))).toBe(false);
+  });
+
+  test("a card is only caught with at least half of it over the plate", () => {
+    expect(landsOn(100, 100)).toBe(true);
+    expect(landsOn(100 + PLATE_WIDTH / 2, 100)).toBe(true);
+    expect(landsOn(100 + PLATE_WIDTH / 2 + 1, 100)).toBe(false);
   });
 
   test("a pull's notches come closer as the band stretches", () => {
@@ -55,12 +65,27 @@ describe("Royal Flush hands", () => {
 });
 
 describe("Royal Flush stall", () => {
-  test("a marble knocks a belt card off, and it lands on a plate below", () => {
+  test("one plate runs edge to edge; two belts", () => {
     const game = new RoyalFlushGame(400, 850, 60, 820);
-    // Park the left plate and aim at the belt card nearest above it.
+    expect(game.plates).toHaveLength(1);
+    expect(new Set(game.cards.map((c) => c.belt))).toEqual(new Set([0, 1]));
+    let left = Infinity;
+    let right = -Infinity;
+    for (let t = 0; t < 30000; t += STEP_MS) {
+      game.step(STEP_MS);
+      left = Math.min(left, game.plates[0].x);
+      right = Math.max(right, game.plates[0].x);
+    }
+    expect(left - PLATE_WIDTH / 2).toBeLessThan(20);
+    expect(right + PLATE_WIDTH / 2).toBeGreaterThan(380);
+  });
+
+  test("a marble knocks a belt card off, and it lands on the plate below", () => {
+    const game = new RoyalFlushGame(400, 850, 60, 820);
+    // Park the plate and aim at the belt card nearest above it.
     const plate = game.plates[0];
     plate.speed = 0;
-    const lowestBelt = game.cards.filter((c) => c.belt === 2);
+    const lowestBelt = game.cards.filter((c) => c.belt === 1);
     const target = lowestBelt.reduce((a, b) =>
       Math.abs(a.body.position.x - plate.x) < Math.abs(b.body.position.x - plate.x) ? a : b,
     );

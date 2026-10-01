@@ -18,7 +18,6 @@
     "hat-trick": "Truque da cartola",
     "cutting-deck": "Corte certeiro",
     "royal-flush": "Royal Flush",
-    "shuffleboard": "Shuffleboard",
     "architect": "Arquiteto"
   },
   "screen": {
@@ -39,10 +38,7 @@
   },
   "castle": {
     "instructions": "Arraste uma pedra de um monte e arremesse",
-    "castle": "Castelo {{number}}",
-    "tooFast": "Com pressa não! Pedras pesadas pedem um arremesso suave",
-    "unsteady": "Calma: um empurrão lento e firme",
-    "slip": "Tire do monte devagar"
+    "castle": "Castelo {{number}}"
   },
   "hat": {
     "instructions": "Arremesse uma carta na cartola",
@@ -81,18 +77,6 @@
     "fullHouse": "Full House",
     "straightFlush": "Straight Flush",
     "royalFlush": "Royal Flush"
-  },
-  "board": {
-    "instructions": "Deslize uma carta pela mesa até as zonas",
-    "sweepHint": "Esfregue à frente de uma carta deslizando para levá-la mais longe",
-    "status": "{{surface}} · carta {{card}} de {{total}}",
-    "round": "Rodada {{round}}: +{{points}}",
-    "gutter": "Na canaleta!"
-  },
-  "surface": {
-    "felt": "Feltro verde",
-    "mahogany": "Mogno polido",
-    "slate": "Ardósia gelada"
   },
   "architect": {
     "instructions": "Pegue uma carta da bandeja; apoie duas juntas",

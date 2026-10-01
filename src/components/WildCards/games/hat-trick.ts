@@ -2,7 +2,7 @@ import Matter from "matter-js";
 import { shuffledDeck, type PlayingCard } from "../engine/cards";
 import { PointerTrack } from "../engine/pointer";
 import { clamp, random } from "../engine/stage";
-import type { Tilt } from "../engine/tilt";
+import { TILT_BOOST, type Tilt } from "../engine/tilt";
 import type { WorldTouch } from "../engine/touch";
 
 // Hat Trick: flicking cards into a top hat across the floor.
@@ -41,8 +41,8 @@ const MAX_WIND = 14;
 const FLUTTER = 30;
 const SPIN_CURVE = 0.25;
 /** Tilt (about the sine of the angle) to acceleration, sideways and forwards. */
-const TILT_SIDEWAYS = 90;
-const TILT_FORWARDS = 60;
+const TILT_SIDEWAYS = 90 * TILT_BOOST;
+const TILT_FORWARDS = 60 * TILT_BOOST;
 
 export const HAT = {
   brimRadius: 55,
@@ -84,6 +84,17 @@ export type FlyingCard = {
   restedFor: number;
 };
 
+/** A throw, read from a flick: see `HatTrickGame.aim`. */
+export type Throw = {
+  /** Where it leaves the hand, on the floor plan. */
+  x: number;
+  d: number;
+  speed: number;
+  /** Radians from straight ahead, positive to the right. */
+  heading: number;
+  spin: number;
+};
+
 export type HatTrickEvent =
   | { type: "throw" }
   | { type: "inHat"; score: number }
@@ -111,7 +122,7 @@ export class HatTrickGame {
   score = 0;
   cards: FlyingCard[] = [];
   motes: Mote[] = [];
-  /** The card in the hand, dragged a little by the finger before a flick. */
+  /** The card in the hand, carried by the finger around the mat. */
   hand: { pointerId: number; track: PointerTrack; dx: number; dy: number } | null =
     null;
   /** Seconds until the next card is in the hand. */
@@ -213,48 +224,99 @@ export class HatTrickGame {
     if (!hand || hand.pointerId !== touch.id) return;
     hand.track.add(touch.x, touch.y, touch.t);
     const start = hand.track.samples[0];
-    // The card follows the finger a little, so the flick feels held.
-    hand.dx = clamp((touch.x - start.x) * 0.35, -40, 40);
-    hand.dy = clamp((touch.y - start.y) * 0.35, -50, 30);
+    // The card goes where the finger goes, anywhere on the mat.
+    const home = this.handScreen;
+    const margin = CARD_W * 1.2;
+    hand.dx =
+      clamp(home.sx + touch.x - start.x, margin, this.W - margin) - home.sx;
+    hand.dy =
+      clamp(home.sy + touch.y - start.y, this.zoneTop + margin, this.H - margin) -
+      home.sy;
   }
 
   touchEnd(touch: WorldTouch, cancelled: boolean) {
     const hand = this.hand;
     if (!hand || hand.pointerId !== touch.id) return;
     this.hand = null;
-    if (cancelled || hand.track.stoppedBy(touch.t)) return;
+    if (cancelled) return;
     hand.track.add(touch.x, touch.y, touch.t);
+    const aimed = this.aim(touch.t, hand);
+    if (aimed) this.throwCard(aimed.speed, aimed.heading, aimed.spin, aimed);
+  }
+
+  /**
+   * The throw the card in the hand would make if let go at `t`: none while
+   * the finger is still, or moving anywhere but up the screen.
+   */
+  aim(t: number, hand = this.hand): Throw | null {
+    if (!hand || hand.track.stoppedBy(t)) return null;
     const { vx, vy } = hand.track.velocity(90);
     const fingerSpeed = Math.hypot(vx, vy);
     // Only a flick up the screen throws; anything else puts the card back.
-    if (fingerSpeed < 0.25 || vy > -0.1) return;
+    if (fingerSpeed < 0.25 || vy > -0.1) return null;
+
+    // It leaves the hand where the card is.
+    const home = this.handScreen;
+    const from = this.unprojectAt(home.sx + hand.dx, home.sy + hand.dy, HAND_Z);
 
     // The swipe's direction on screen, followed out across the floor from
-    // the hand: flicking at the hat on screen heads for the hat.
-    const hand0 = this.project(0, 0, 0);
-    const reach = Math.min(300, hand0.sy - this.view.horizon - 20);
-    const aim = this.unproject(
-      hand0.sx + (vx / -vy) * reach,
-      hand0.sy - reach,
+    // there: flicking at the hat on screen heads for the hat.
+    const origin = this.project(from.x, from.d, 0);
+    const reach = Math.min(300, origin.sy - this.view.horizon - 20);
+    const target = this.unproject(
+      origin.sx + (vx / -vy) * reach,
+      origin.sy - reach,
     );
-    const heading = clamp(Math.atan2(aim.x, aim.d), -1, 1);
-    const speed = Math.min(MAX_THROW_SPEED, fingerSpeed * THROW_SCALE);
-    const spin = clamp(hand.track.curl(160) * SPIN_SCALE, -MAX_SPIN, MAX_SPIN);
-
-    this.throwCard(speed, heading, spin);
+    const heading = clamp(
+      Math.atan2(target.x - from.x, target.d - from.d),
+      -1,
+      1,
+    );
+    return {
+      x: from.x,
+      d: from.d,
+      speed: Math.min(MAX_THROW_SPEED, fingerSpeed * THROW_SCALE),
+      heading,
+      spin: clamp(hand.track.curl(160) * SPIN_SCALE, -MAX_SPIN, MAX_SPIN),
+    };
   }
 
-  /** `heading` is radians from straight ahead, positive to the right. */
-  throwCard(speed: number, heading: number, spin: number) {
-    const face = this.deck[this.thrown];
-    if (!face) return;
-    this.thrown += 1;
-    this.reload = 0.45;
-    this.cards.push({
-      id: nextId++,
-      face,
-      x: 0,
-      d: 0,
+  /**
+   * Where `aimed` would fly with no wind or flutter: points along its flight
+   * (with how hard it was thrown, 0 to 1), to show before it's let go.
+   */
+  predict(aimed: Throw) {
+    const card = this.launch(aimed, aimed.speed, aimed.heading, aimed.spin);
+    const points: { x: number; d: number; z: number }[] = [];
+    const dt = 1 / 60;
+    for (let i = 0; i < 240 && card.z > 0; i++) {
+      this.integrate(card, this.spinCurve(card), dt);
+      if (i % 3 === 0) points.push({ x: card.x, d: card.d, z: Math.max(0, card.z) });
+    }
+    return { points, strength: aimed.speed / MAX_THROW_SPEED };
+  }
+
+  /** The floor plan point at height `z` that shows at a screen position. */
+  unprojectAt(sx: number, sy: number, z: number) {
+    const drop = Math.max(1, sy - this.view.horizon);
+    const depth = Math.max(60, (this.view.focal * (CAMERA_HEIGHT - z)) / drop);
+    return {
+      x: ((sx - this.view.cx) * depth) / this.view.focal,
+      d: Math.max(-120, depth - CAMERA_BACK),
+    };
+  }
+
+  private launch(
+    from: { x: number; d: number } | undefined,
+    speed: number,
+    heading: number,
+    spin: number,
+  ): FlyingCard {
+    return {
+      id: 0,
+      face: this.deck[this.thrown] ?? this.deck[0],
+      x: from?.x ?? 0,
+      d: from?.d ?? 0,
       z: HAND_Z,
       vx: Math.sin(heading) * speed,
       vd: Math.cos(heading) * speed,
@@ -266,6 +328,28 @@ export class HatTrickGame {
       flutterPhase: random(0, 100),
       state: "flying",
       restedFor: 0,
+    };
+  }
+
+  /**
+   * `heading` is radians from straight ahead, positive to the right; `from`
+   * is where it leaves the hand (the middle, by default).
+   */
+  throwCard(
+    speed: number,
+    heading: number,
+    spin: number,
+    from?: { x: number; d: number },
+  ) {
+    const face = this.deck[this.thrown];
+    if (!face) return;
+    const card = this.launch(from, speed, heading, spin);
+    this.thrown += 1;
+    this.reload = 0.45;
+    this.cards.push({
+      ...card,
+      id: nextId++,
+      face,
     });
     // Old cards on the floor make way.
     const resting = this.cards.filter((c) => c.state !== "flying");
@@ -339,8 +423,9 @@ export class HatTrickGame {
     ad += across.y * wobble * FLUTTER * (1 - steadiness);
 
     // Spin curls it a little, as a frisbee's does.
-    ax += across.x * card.spin * SPIN_CURVE;
-    ad += across.y * card.spin * SPIN_CURVE;
+    const curve = this.spinCurve(card);
+    ax += curve.ax;
+    ad += curve.ad;
 
     // Aftertouch: the phone's tilt since the throw.
     const tilt = this.tilt.current;
@@ -349,16 +434,8 @@ export class HatTrickGame {
       ad += clamp(tilt.y - card.tiltY, -0.5, 0.5) * TILT_FORWARDS;
     }
 
-    card.vx += (ax - card.vx * DRAG) * dt;
-    card.vd += (ad - card.vd * DRAG) * dt;
-    card.vz -= GRAVITY * dt;
-    card.spin *= 1 - 0.15 * dt;
-    card.angle += card.spin * dt;
-
     const previousZ = card.z;
-    card.x += card.vx * dt;
-    card.d += card.vd * dt;
-    card.z += card.vz * dt;
+    this.integrate(card, { ax, ad }, dt);
 
     this.collideWithHat(card, previousZ);
 
@@ -373,6 +450,26 @@ export class HatTrickGame {
       });
     }
     if (card.state !== "flying") this.maybeMoveHat();
+  }
+
+  /** The sideways pull of a card's spin, across its path. */
+  private spinCurve(card: FlyingCard) {
+    const speed = Math.hypot(card.vx, card.vd);
+    const across =
+      speed > 1 ? Vec.create(card.vd / speed, -card.vx / speed) : Vec.create(1, 0);
+    return { ax: across.x * card.spin * SPIN_CURVE, ad: across.y * card.spin * SPIN_CURVE };
+  }
+
+  /** Moves a card on by `dt` under `pull`, drag and gravity. */
+  private integrate(card: FlyingCard, pull: { ax: number; ad: number }, dt: number) {
+    card.vx += (pull.ax - card.vx * DRAG) * dt;
+    card.vd += (pull.ad - card.vd * DRAG) * dt;
+    card.vz -= GRAVITY * dt;
+    card.spin *= 1 - 0.15 * dt;
+    card.angle += card.spin * dt;
+    card.x += card.vx * dt;
+    card.d += card.vd * dt;
+    card.z += card.vz * dt;
   }
 
   /** The hat moves after every 13 cards, once they have all come down. */

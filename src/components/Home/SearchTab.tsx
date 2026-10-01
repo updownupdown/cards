@@ -1,7 +1,6 @@
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
 import { glassEdge, glassFill } from "@/components/ui/FloatingBar";
-import { GlassView } from "@/components/ui/Glass";
 import { hairline, Meter, Pill } from "@/components/ui/Nocturne";
 import type { GameSettingsMap } from "@/data/game-menu";
 import { isGameEnabled } from "@/data/games-data";
@@ -459,13 +458,13 @@ function SearchBox({
       ? ({ id: "home-tab-search", name: "home-tab-search" } as object)
       : undefined;
   return (
-    <GlassView
+    <View
       accessibilityRole="search"
-      // The glass of the floating bars, without their shadow, and round
+      // The fill of the floating bars, without their shadow, and round
       // ended like them.
-      fill={glassFill()}
-      radius={spacing(24)}
       style={{
+        backgroundColor: glassFill(),
+        borderRadius: spacing(24),
         height: spacing(48),
         borderWidth: 1,
         borderColor: query ? rgba(theme.accent, 0.5) : glassEdge(),
@@ -507,7 +506,7 @@ function SearchBox({
           <Icon name="close" size={spacing(20)} color={theme.dim} />
         </Pressable>
       ) : null}
-    </GlassView>
+    </View>
   );
 }
 

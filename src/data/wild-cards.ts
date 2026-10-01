@@ -12,12 +12,12 @@ export type WildGameId =
   | "hat-trick"
   | "cutting-deck"
   | "royal-flush"
-  | "shuffleboard"
   | "architect";
 
 export type WildGameDefinition = {
   id: WildGameId;
-  background: keyof typeof GAME_BACKGROUNDS;
+  /** A picture behind the game, or a plain colour. */
+  background: keyof typeof GAME_BACKGROUNDS | { color: string };
   /** The way the game is laid out; the other way shows the rotate hint. */
   orientation: "portrait" | "landscape";
 };
@@ -25,10 +25,9 @@ export type WildGameDefinition = {
 /** In shelf order. Ids are saved, so never rename one. */
 export const WILD_GAMES: readonly WildGameDefinition[] = [
   { id: "castle-demolition", background: "castle", orientation: "landscape" },
-  { id: "hat-trick", background: "oldRoom", orientation: "portrait" },
+  { id: "hat-trick", background: { color: "#2a211b" }, orientation: "portrait" },
   { id: "cutting-deck", background: "club", orientation: "portrait" },
   { id: "royal-flush", background: "nightCity", orientation: "portrait" },
-  { id: "shuffleboard", background: "cabinInterior", orientation: "portrait" },
   { id: "architect", background: "bookstore", orientation: "portrait" },
 ];
 

@@ -3,11 +3,11 @@ import { shuffledDeck, type PlayingCard } from "../engine/cards";
 import { clamp, random } from "../engine/stage";
 import type { WorldTouch } from "../engine/touch";
 
-// Royal Flush: a carnival stall. Cards ride three conveyor belts; a marble
-// shot from a slingshot knocks one off, and it drops onto one of two plates
-// sliding back and forth below. Each plate collects a hand: a flush, a
-// straight or a full house among its cards scores, and a plate whose cards
-// can no longer make any of them (or that fills up without one) dumps them.
+// Royal Flush: a carnival stall. Cards ride two conveyor belts, clipped on
+// by their bottom edge; a marble shot from a slingshot knocks one off, and it
+// drops onto a plate sliding from one side of the stall to the other below.
+// The plate collects a hand of five: a flush, a straight or a full house
+// scores, and a plate whose cards can no longer make any of them dumps them.
 //
 // The marble and the belt cards are Matter bodies (the belt cards static,
 // moved along each step, until the marble hits one). A card knocked off
@@ -17,10 +17,12 @@ export const CARD_W = 34;
 export const CARD_H = 48;
 export const MARBLE_RADIUS = 7;
 export const PLATE_WIDTH = 104;
-export const PLATE_SLOTS = 6;
-const BELT_SPEEDS = [42, 58, 36];
+export const PLATE_SLOTS = 5;
+const BELT_SPEEDS = [42, 58];
 const BELT_GAP = [78, 112];
-const PLATE_SPEEDS = [46, 38];
+const PLATE_SPEED = 32;
+/** Where a card's clip holds it, above the belt. */
+export const CLIP_HEIGHT = 6;
 export const MAX_PULL = 110;
 const MIN_PULL = 16;
 /** Marble speed (units a step) at full pull. */
@@ -181,30 +183,31 @@ export class RoyalFlushGame {
   score = 0;
   time = 0;
   private deck: PlayingCard[] = shuffledDeck();
-  private beltTimers = [0, 0, 0];
+  private beltTimers = [0, 0];
   onEvent: (event: RoyalFlushEvent) => void = () => {};
 
   constructor(W: number, H: number, top: number, bottom: number) {
     this.W = W;
     this.H = H;
     const span = bottom - top;
-    this.beltYs = [0.1, 0.22, 0.34].map((k) => top + span * k);
+    // The belts themselves: cards stand on them, clipped by their bottom.
+    this.beltYs = [0.17, 0.33].map((k) => top + span * k);
     this.plateY = top + span * 0.53;
     this.displayY = top + span * 0.61;
     this.sling = { x: W / 2, y: top + span * 0.8, forkHalf: 30 };
+    // One plate, from one edge of the stall to the other.
     this.plates = [
-      { x: W * 0.28, direction: 1, speed: PLATE_SPEEDS[0] },
-      { x: W * 0.72, direction: -1, speed: PLATE_SPEEDS[1] },
-    ].map((plate, i) => ({
-      ...plate,
-      direction: plate.direction as 1 | -1,
-      y: this.plateY,
-      // Each plate keeps to its own side, so the two never cross.
-      minX: i === 0 ? PLATE_WIDTH / 2 + 8 : W / 2 + PLATE_WIDTH / 2 + 4,
-      maxX: i === 0 ? W / 2 - PLATE_WIDTH / 2 - 4 : W - PLATE_WIDTH / 2 - 8,
-      cards: [],
-      verdict: null,
-    }));
+      {
+        x: W / 2,
+        direction: 1,
+        speed: PLATE_SPEED,
+        y: this.plateY,
+        minX: PLATE_WIDTH / 2 + 8,
+        maxX: W - PLATE_WIDTH / 2 - 8,
+        cards: [],
+        verdict: null,
+      },
+    ];
 
     this.engine = Matter.Engine.create();
     Matter.Events.on(this.engine, "collisionStart", (event) => {
@@ -228,8 +231,13 @@ export class RoyalFlushGame {
     return Math.sign(beltVelocity(belt));
   }
 
+  /** Where a card on `belt` rides: standing on it, held by its clip. */
+  cardY(belt: number) {
+    return this.beltYs[belt] - CLIP_HEIGHT - CARD_H / 2;
+  }
+
   private addBeltCard(belt: number, x: number) {
-    const body = Matter.Bodies.rectangle(x, this.beltYs[belt], CARD_W, CARD_H, {
+    const body = Matter.Bodies.rectangle(x, this.cardY(belt), CARD_W, CARD_H, {
       density: 0.004,
       frictionAir: 0.01,
       restitution: 0.2,
@@ -354,7 +362,7 @@ export class RoyalFlushGame {
       const speed = BELT_SPEEDS[card.belt] * this.beltDirection(card.belt);
       Matter.Body.setPosition(card.body, {
         x: card.body.position.x + speed * seconds,
-        y: this.beltYs[card.belt],
+        y: this.cardY(card.belt),
       });
     }
     this.beltTimers = this.beltTimers.map((timer, belt) => {
@@ -373,7 +381,7 @@ export class RoyalFlushGame {
       return next;
     });
 
-    // Plates slide back and forth.
+    // The plate slides back and forth.
     for (const plate of this.plates) {
       plate.x += plate.direction * plate.speed * seconds;
       if (plate.x > plate.maxX) plate.direction = -1;
@@ -384,14 +392,15 @@ export class RoyalFlushGame {
     const previous = new Map(this.cards.map((c) => [c.id, c.body.position.y]));
     Matter.Engine.update(this.engine, dt);
 
-    // Falling cards land on a plate they come down onto.
+    // Falling cards land on a plate they come down onto, at least half of
+    // them over it; anything less glances off and falls past.
     for (const card of this.cards) {
       if (!card.falling) continue;
       const before = previous.get(card.id) ?? card.body.position.y;
       const { x, y } = card.body.position;
       if (before < this.plateY - 6 && y >= this.plateY - 6 && card.body.velocity.y > 0) {
         const index = this.plates.findIndex(
-          (plate) => !plate.verdict && Math.abs(x - plate.x) < PLATE_WIDTH / 2 + 6,
+          (plate) => !plate.verdict && landsOn(x, plate.x),
         );
         if (index >= 0) this.catchCard(card, index);
       }
@@ -464,6 +473,10 @@ export class RoyalFlushGame {
     });
   }
 }
+
+/** Whether a card coming down with its middle at `x` is at least half on a plate. */
+export const landsOn = (x: number, plateX: number) =>
+  Math.abs(x - plateX) <= PLATE_WIDTH / 2;
 
 /** A belt's speed, units a second: alternate belts run opposite ways. */
 export const beltVelocity = (belt: number) =>

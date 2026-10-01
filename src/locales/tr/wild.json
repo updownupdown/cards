@@ -18,7 +18,6 @@
     "hat-trick": "Şapka Numarası",
     "cutting-deck": "Keskin Kartlar",
     "royal-flush": "Royal Flush",
-    "shuffleboard": "Masa Kaydırmaca",
     "architect": "Mimar"
   },
   "screen": {
@@ -39,10 +38,7 @@
   },
   "castle": {
     "instructions": "Bir yığından taş sürükle, sonra fırlat",
-    "castle": "Kale {{number}}",
-    "tooFast": "Acele etme! Ağır taşlar yavaşça atılır",
-    "unsteady": "Sakin ol: yavaş ve düzgün bir itiş",
-    "slip": "Yığından yavaşça çek"
+    "castle": "Kale {{number}}"
   },
   "hat": {
     "instructions": "Şapkaya bir kart fırlat",
@@ -81,18 +77,6 @@
     "fullHouse": "Full",
     "straightFlush": "Straight Flush",
     "royalFlush": "Royal Flush"
-  },
-  "board": {
-    "instructions": "Bir kartı masada bölgelere doğru kaydır",
-    "sweepHint": "Kayan kartın önünü ov, daha uzağa gitsin",
-    "status": "{{surface}} · kart {{card}}/{{total}}",
-    "round": "{{round}}. tur: +{{points}}",
-    "gutter": "Oluğa düştü!"
-  },
-  "surface": {
-    "felt": "Yeşil çuha",
-    "mahogany": "Cilalı maun",
-    "slate": "Buzlu arduvaz"
   },
   "architect": {
     "instructions": "Tepsiden bir kart al; iki kartı birbirine yasla",

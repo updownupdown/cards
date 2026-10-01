@@ -63,19 +63,32 @@ export function WildGameScreen({ game }: { game: WildGameDefinition }) {
       : null;
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#07080d", overflow: "hidden" }}>
-      <Image
-        source={GAME_BACKGROUNDS[game.background].source}
-        style={StyleSheet.absoluteFill}
-        contentFit="cover"
-        transition={200}
-      />
-      <View
-        style={[
-          StyleSheet.absoluteFill,
-          { backgroundColor: rgba("#07080d", 0.42) },
-        ]}
-      />
+    <View
+      style={{
+        flex: 1,
+        backgroundColor:
+          typeof game.background === "string"
+            ? "#07080d"
+            : game.background.color,
+        overflow: "hidden",
+      }}
+    >
+      {typeof game.background === "string" && (
+        <>
+          <Image
+            source={GAME_BACKGROUNDS[game.background].source}
+            style={StyleSheet.absoluteFill}
+            contentFit="cover"
+            transition={200}
+          />
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              { backgroundColor: rgba("#07080d", 0.42) },
+            ]}
+          />
+        </>
+      )}
       {stage && (
         // A new size (the phone turned) starts the game afresh.
         <GameComponent

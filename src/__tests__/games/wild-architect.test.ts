@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import { STEP_MS } from "@/components/WildCards/engine/loop";
-import type { Tilt } from "@/components/WildCards/engine/tilt";
+import { TILT_BOOST, type Tilt } from "@/components/WildCards/engine/tilt";
 import {
   ArchitectGame,
   CARD_LENGTH,
@@ -83,7 +83,8 @@ describe("Architect", () => {
     wall(game, 200);
     const floor = carryTurned(game, 175, game.groundY - CARD_LENGTH - 4);
     expect(floor.kind).toBe("floor");
-    tilt.current.jolt = 0.1;
+    // A hand's tremor, as the sensor reads it before the game's boost.
+    tilt.current.jolt = 0.1 / TILT_BOOST;
     run(game, 2000);
     expect(game.cards.every((card) => card.state === "placed")).toBe(true);
     tilt.current.jolt = 1.4;

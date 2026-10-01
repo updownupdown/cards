@@ -79,7 +79,7 @@ describe("Wild Cards progress", () => {
     await recordWildBypass("architect", today);
     const progress = await loadWildCardsProgress();
     expect(canBypassToday(progress, "architect", today)).toBe(false);
-    expect(canBypassToday(progress, "shuffleboard", today)).toBe(true);
+    expect(canBypassToday(progress, "hat-trick", today)).toBe(true);
     expect(canBypassToday(progress, "architect", tomorrow)).toBe(true);
   });
 
@@ -147,7 +147,7 @@ describe("Wild Cards shelf", () => {
   test("with too few wins, it says how many more are needed", async () => {
     mockWonCount = 4;
     const renderer = await render();
-    expect(texts(renderer)).toContain("0 of 6 unlocked");
+    expect(texts(renderer)).toContain("0 of 5 unlocked");
     expect(texts(renderer)).toContain("6 more wins needed to unlock the next game");
   });
 
@@ -187,7 +187,7 @@ describe("Wild Cards shelf", () => {
     mockWonCount = 80;
     for (const game of WILD_GAMES) await unlockWildGame(game.id);
     const renderer = await render();
-    expect(texts(renderer)).toContain("6 of 6 unlocked");
+    expect(texts(renderer)).toContain("5 of 5 unlocked");
     expect(texts(renderer).some((text) => text.includes("needed"))).toBe(false);
     expect(texts(renderer).some((text) => text.includes("credit"))).toBe(false);
   });

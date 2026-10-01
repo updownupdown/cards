@@ -10,7 +10,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, type IconName } from "@/icons";
 import { Colors, rgba, theme, transitionStyles } from "@/styles/styles";
 import { useState, type ReactNode } from "react";
-import { GlassBackdrop, glassBlurStyle, useNativeGlass } from "./Glass";
+import { SURFACE_OPACITY } from "./FloatingBar";
 import {
   Pressable,
   View,
@@ -199,13 +199,12 @@ export function Pill({
 }) {
   const { spacing, font } = useResponsiveMetrics();
   const theme = usePalette();
-  const nativeGlass = useNativeGlass();
   // Pills are 85% of their first size.
   const size = (value: number) => spacing(value);
-  // Unselected, the tab bar's glass; selected, a tint of the accent over it.
+  // Unselected, the tab bar's fill; selected, a tint of the accent over it.
   const fill = selected
-    ? rgba(mix(theme.surface, theme.accent, 0.16), 0.8)
-    : rgba(theme.surface, 0.8);
+    ? rgba(mix(theme.surface, theme.accent, 0.16), SURFACE_OPACITY)
+    : rgba(theme.surface, SURFACE_OPACITY);
   return (
     <Pressable
       onPress={onPress}
@@ -219,9 +218,8 @@ export function Pill({
         flexDirection: "row",
         alignItems: "center",
         gap: size(6),
-        // Frosted, and a shadow lifts it off the sky.
-        backgroundColor: nativeGlass ? "transparent" : fill,
-        ...glassBlurStyle(),
+        // A shadow lifts it off the sky.
+        backgroundColor: fill,
         borderWidth: 1,
         borderColor: selected
           ? rgba(theme.accent, 0.45)
@@ -230,7 +228,6 @@ export function Pill({
         outline: "none",
       }}
     >
-      <GlassBackdrop fill={fill} radius={size(17)} />
       {iconName && (
         <Icon
           name={iconName}
@@ -286,8 +283,7 @@ export function RoundButton({
   const theme = usePalette();
   const diameter = spacing(size);
   const iconColor = color ?? (active ? theme.accent : theme.ink);
-  const nativeGlass = useNativeGlass();
-  const glassTint = rgba(theme.surface, 0.8);
+  const glassTint = rgba(theme.surface, SURFACE_OPACITY);
   return (
     <Pressable
       onPress={onPress}
@@ -312,17 +308,11 @@ export function RoundButton({
           borderRadius: diameter / 2,
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: glass
-            ? nativeGlass
-              ? "transparent"
-              : glassTint
-            : rgba(theme.ink, 0.07),
+          backgroundColor: glass ? glassTint : rgba(theme.ink, 0.07),
           borderWidth: glass ? 1 : 0,
           borderColor: hairline(),
-          ...(glass ? glassBlurStyle() : null),
         }}
       >
-        {glass && <GlassBackdrop fill={glassTint} radius={diameter / 2} />}
         <Icon
           name={iconName}
           size={Math.round(diameter * 0.48)}

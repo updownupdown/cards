@@ -11,7 +11,9 @@ seedRandomForEachTest();
 /** A game with nothing spawning by itself. */
 function quietGame() {
   const game = new CuttingDeckGame(400, 850, 60);
-  (game as unknown as { spawnTimer: number }).spawnTimer = Infinity;
+  const timers = game as unknown as { fruitTimer: number; balloonTimer: number };
+  timers.fruitTimer = Infinity;
+  timers.balloonTimer = Infinity;
   return game;
 }
 
@@ -20,15 +22,36 @@ const run = (game: CuttingDeckGame, ms: number) => {
 };
 
 describe("Cutting Deck", () => {
-  test("fruit falls and balloons rise, in a few seconds", () => {
+  test("fruit floats down on a parachute, swaying, and balloons rise slowly", () => {
     const game = quietGame();
     const fruit = game.spawnFruit(200, 0);
     const balloon = game.spawnBalloon(200, 850);
-    run(game, 1500);
-    expect(fruit.body.position.y).toBeGreaterThan(250);
+    let leftmost = 200;
+    let rightmost = 200;
+    for (let t = 0; t < 4000; t += STEP_MS) {
+      game.step(STEP_MS);
+      leftmost = Math.min(leftmost, fruit.body.position.x);
+      rightmost = Math.max(rightmost, fruit.body.position.x);
+    }
+    // A steady fall of about 90 units a second, not a plunge.
+    expect(fruit.body.position.y).toBeGreaterThan(300);
+    expect(fruit.body.position.y).toBeLessThan(450);
+    expect(rightmost - leftmost).toBeGreaterThan(20);
     expect(balloon.body.position.y).toBeLessThan(700);
-    run(game, 5000);
+    run(game, 12000);
     expect(game.targets.size).toBe(0);
+  });
+
+  test("no more than three fruit float down at once", () => {
+    const game = new CuttingDeckGame(400, 850, 60);
+    let most = 0;
+    for (let t = 0; t < 60000; t += STEP_MS) {
+      game.step(STEP_MS);
+      const fruit = [...game.targets.values()].filter((t) => t.kind === "fruit");
+      most = Math.max(most, fruit.length);
+    }
+    expect(most).toBeGreaterThan(0);
+    expect(most).toBeLessThanOrEqual(3);
   });
 
   test("one card through a column of fruit makes a combo", () => {
@@ -38,8 +61,8 @@ describe("Cutting Deck", () => {
     game.onEvent = (event) => {
       if (event.type === "combo") combos.push(event.name);
     };
-    game.throwCard(200, 800, { x: 0, y: -28 });
-    run(game, 700);
+    game.throwCard(200, 800, { x: 0, y: -14 });
+    run(game, 1400);
     expect(game.targets.size).toBe(0);
     expect(game.halves.length).toBe(6);
     expect(combos).toEqual(["pair", "threeOfAKind"]);
@@ -56,7 +79,8 @@ describe("Cutting Deck", () => {
     game.touchMove({ id: 2, x: 205, y: 760, t: 1030 });
     game.touchEnd({ id: 2, x: 210, y: 720, t: 1060 }, false);
     expect(game.cards.length).toBe(1);
-    expect(game.cards[0].body.velocity.y).toBeLessThan(-10);
+    expect(game.cards[0].body.velocity.y).toBeLessThan(-5);
+    expect(game.cards[0].body.velocity.y).toBeGreaterThanOrEqual(-15);
   });
 
   test("combos are named like poker hands", () => {
