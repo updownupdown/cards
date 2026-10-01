@@ -18,7 +18,6 @@
     "hat-trick": "Trik Topi",
     "cutting-deck": "Kartu Tebas",
     "royal-flush": "Royal Flush",
-    "shuffleboard": "Shuffleboard",
     "architect": "Arsitek"
   },
   "screen": {
@@ -39,10 +38,7 @@
   },
   "castle": {
     "instructions": "Seret batu dari tumpukan, lalu lempar",
-    "castle": "Kastel {{number}}",
-    "tooFast": "Jangan buru-buru! Batu berat dilempar dengan pelan",
-    "unsteady": "Tenang: dorong pelan dan rata",
-    "slip": "Ambil dari tumpukan pelan-pelan"
+    "castle": "Kastel {{number}}"
   },
   "hat": {
     "instructions": "Lempar kartu ke dalam topi",
@@ -81,18 +77,6 @@
     "fullHouse": "Full House",
     "straightFlush": "Straight Flush",
     "royalFlush": "Royal Flush"
-  },
-  "board": {
-    "instructions": "Luncurkan kartu di meja ke zona skor",
-    "sweepHint": "Gosok di depan kartu yang meluncur agar melaju lebih jauh",
-    "status": "{{surface}} · kartu {{card}} dari {{total}}",
-    "round": "Ronde {{round}}: +{{points}}",
-    "gutter": "Masuk selokan!"
-  },
-  "surface": {
-    "felt": "Laken hijau",
-    "mahogany": "Mahoni mengilap",
-    "slate": "Batu sabak beku"
   },
   "architect": {
     "instructions": "Ambil kartu dari nampan; sandarkan dua kartu",

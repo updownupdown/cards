@@ -4,9 +4,10 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { View } from "react-native";
 import { CardSprite } from "../engine/cards";
 import { feel } from "../engine/feel";
-import { useGameLoop } from "../engine/loop";
+import { now, useGameLoop } from "../engine/loop";
 import { pick } from "../engine/stage";
 import { requestTiltPermission, useTilt } from "../engine/tilt";
+import { TiltGauge } from "../engine/TiltGauge";
 import { TouchSurface } from "../engine/touch";
 import { Dot, World } from "../engine/World";
 import { PRAISE } from "./CastleDemolition";
@@ -138,8 +139,19 @@ export function HatTrick({ stage, hud }: WildGameProps) {
   const hand = game.handScreen;
   const next = game.nextCard;
   const held = game.hand;
+  // The throw the card would make if let go now: its flight, dotted.
+  const aimed = held ? game.aim(now()) : null;
+  const preview = aimed ? game.predict(aimed) : null;
+  const previewColor = preview
+    ? preview.strength > 0.75
+      ? "#ef5a4f"
+      : preview.strength > 0.45
+        ? "#f0b44c"
+        : "#f3eee6"
+    : "";
 
   return (
+    <>
     <TouchSurface
       stage={stage}
       handlers={{
@@ -207,6 +219,18 @@ export function HatTrick({ stage, hud }: WildGameProps) {
           }}
         />
 
+        {preview?.points.map((point, i) => {
+          const fade = 0.85 - (0.6 * i) / preview.points.length;
+          const floor = game.project(point.x, point.d, 0);
+          const air = game.project(point.x, point.d, point.z);
+          return (
+            <View key={`aim${i}`} style={{ position: "absolute", left: 0, top: 0 }}>
+              <Dot x={floor.sx} y={floor.sy} r={Math.max(0.8, 2 * floor.scale)} color="#000000" opacity={fade * 0.35} />
+              <Dot x={air.sx} y={air.sy} r={Math.max(1.2, 3.2 * air.scale)} color={previewColor} opacity={fade} />
+            </View>
+          );
+        })}
+
         {next && (
           <CardSprite
             card={next}
@@ -220,6 +244,8 @@ export function HatTrick({ stage, hud }: WildGameProps) {
         )}
       </World>
     </TouchSurface>
+    <TiltGauge tilt={tilt} stage={stage} />
+    </>
   );
 }
 

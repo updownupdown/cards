@@ -2,7 +2,7 @@ import Matter from "matter-js";
 import { randomCard, type PlayingCard } from "../engine/cards";
 import { angleDelta } from "../engine/pointer";
 import { clamp, random } from "../engine/stage";
-import type { Tilt } from "../engine/tilt";
+import { TILT_BOOST, type Tilt } from "../engine/tilt";
 import type { WorldTouch } from "../engine/touch";
 
 // Architect: build a house of cards by hand.
@@ -668,7 +668,7 @@ export class ArchitectGame {
   step(dt: number) {
     this.time += dt;
     const seconds = dt / 1000;
-    const jolt = this.tilt.current.live ? this.tilt.current.jolt : 0;
+    const jolt = this.tilt.current.live ? this.tilt.current.jolt * TILT_BOOST : 0;
 
     if (this.difficulty === "medium") {
       const excess = Math.max(0, jolt - MEDIUM_JOLT_ALLOWANCE);

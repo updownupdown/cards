@@ -19,6 +19,13 @@ function getSensors(): SensorsModule | null {
   return sensorsModule;
 }
 
+/**
+ * How much more the games make of the phone's tilt and jolts than they were
+ * tuned for: six times while testing, so the effect is easy to notice. Back
+ * to 1 (or retune the games) before release.
+ */
+export const TILT_BOOST = 6;
+
 export type Tilt = {
   /** Whether readings are coming in at all. */
   live: boolean;

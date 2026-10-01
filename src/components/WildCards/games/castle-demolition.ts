@@ -1,71 +1,43 @@
 import Matter from "matter-js";
 import { randomCard, type PlayingCard } from "../engine/cards";
-import { PointerTrack } from "../engine/pointer";
 import { clamp, pick, random } from "../engine/stage";
 import type { WorldTouch } from "../engine/touch";
 
-// Castle Demolition: flick rocks at houses of cards.
+// Castle Demolition: a catapult against houses of cards.
 //
 // The castle stands perfectly still until it's hit: every card starts out
 // static, and only comes loose (a dynamic body the physics then topples) once
-// the damage done to it passes 1. Rocks do damage by their momentum, and the
-// bigger ones splash it around; a card that comes loose weakens the cards
+// the damage done to it passes 1. Stones do damage by their momentum, and
+// splash it around a little; a card that comes loose weakens the cards
 // resting on or against it, and brings down those that lose too much support.
-// That keeps castles sturdy enough to take a few pebbles, and still lets a
-// boulder or a well-placed shot bring half of one down.
+//
+// The catapult always fires at the same angle: the only skill is how far its
+// arm is wound back, which sets how hard (and so how far) it throws.
 
-export type RockKind = "pebble" | "stone" | "boulder";
-
-type RockSpec = {
-  radius: number;
-  density: number;
-  /** Throw speed (units a step) per finger speed (units a millisecond). */
-  throwScale: number;
-  maxSpeed: number;
-  /** A finger faster than this, drawing the rock off its pile, loses it. */
-  pickMaxSpeed: number;
+/** The catapult's stone. */
+export const STONE = {
+  radius: 12,
+  density: 0.007,
   /** How far the first hit's damage spreads. */
-  splash: number;
+  splash: 80,
 };
 
-export const ROCKS: Record<RockKind, RockSpec> = {
-  pebble: {
-    radius: 6,
-    density: 0.004,
-    throwScale: 17,
-    maxSpeed: 25,
-    pickMaxSpeed: Infinity,
-    splash: 0,
-  },
-  stone: {
-    radius: 11,
-    density: 0.004,
-    throwScale: 17,
-    maxSpeed: 20,
-    pickMaxSpeed: 2.2,
-    splash: 34,
-  },
-  boulder: {
-    radius: 21,
-    density: 0.005,
-    throwScale: 40,
-    maxSpeed: 17,
-    pickMaxSpeed: 1.1,
-    splash: 120,
-  },
-};
-export const ROCK_KINDS: RockKind[] = ["pebble", "stone", "boulder"];
-
-/** A boulder is only thrown by a steady, unhurried push. */
-const BOULDER_STEADY = {
-  minDuration: 130,
-  minSpeed: 0.18,
-  maxSpeed: 1.5,
-  maxVariation: 0.65,
-  maxTurn: 1.5,
-};
-/** A stone flung harder than this slips out of the hand. */
-const STONE_MAX_FLING = 2.8;
+/** The arm's angle at rest and fully wound (radians, up from the right). */
+const ARM_REST = (80 * Math.PI) / 180;
+const ARM_WOUND = (195 * Math.PI) / 180;
+export const ARM_LENGTH = 92;
+/** How far a finger drags to wind the arm all the way back. */
+const PULL_RANGE = 170;
+/** Less wound than this, and letting go fires nothing. */
+const MIN_PULL = 0.06;
+/** Launch speed (units a step) unwound and fully wound, and its angle. */
+const MIN_SPEED = 5;
+const MAX_SPEED = 16;
+const LAUNCH_ANGLE = (45 * Math.PI) / 180;
+/** How long the arm takes to swing back up once it has fired, ms. */
+const RELOAD_MS = 650;
+/** The stone leaves the bucket this long after letting go, as the arm comes up. */
+const RELEASE_MS = 90;
 
 // Card geometry. A card stood on edge is seen from the side, so it's drawn
 // narrow; one lying flat as a floor is drawn flat.
@@ -78,7 +50,7 @@ const FRAME_HEIGHT = CARD_LENGTH * Math.cos(LEAN_ANGLE);
 const FRAME_SPACING = 52;
 
 const CARD_DENSITY = 0.0015;
-/** Momentum per point of damage, for a rock... */
+/** Momentum per point of damage, for a stone... */
 const ROCK_DAMAGE_MOMENTUM = 8;
 /** ...and for a falling card, which does far less. */
 const CARD_DAMAGE_MOMENTUM = 40;
@@ -97,7 +69,7 @@ const SPLASH_SHARE = 0.7;
 const DESTROYED_SHARE = 0.75;
 /** How long "Nice!" shows before the next castle goes up. */
 export const NEXT_CASTLE_DELAY = 3000;
-const MAX_ROCKS = 12;
+const MAX_STONES = 12;
 
 export type CastleCard = {
   id: number;
@@ -119,7 +91,6 @@ export type CastleCard = {
 
 export type Rock = {
   id: number;
-  kind: RockKind;
   body: Matter.Body;
   splashed: boolean;
   /** How long it has lain still; it fades away after a while. */
@@ -129,23 +100,20 @@ export type Rock = {
 
 export type Dust = { x: number; y: number; age: number; size: number };
 
-export type HeldRock = {
+/** A finger winding the catapult back. */
+export type Winding = {
   pointerId: number;
-  kind: RockKind;
-  track: PointerTrack;
-  x: number;
-  y: number;
-  /** Still being drawn off its pile. */
-  picking: boolean;
+  startX: number;
+  startY: number;
+  /** How far it's wound, 0 to 1. */
+  pull: number;
 };
 
 export type CastleEvent =
-  | { type: "pick"; kind: RockKind }
-  | { type: "throw"; kind: RockKind }
-  | { type: "fumble"; kind: RockKind; reason: "tooFast" | "unsteady" }
-  | { type: "slip"; kind: RockKind }
+  | { type: "wind" }
+  | { type: "fire"; pull: number }
   | { type: "cardsDown"; count: number }
-  | { type: "landed"; kind: RockKind; hard: boolean }
+  | { type: "landed"; hard: boolean }
   | { type: "destroyed"; castle: number }
   | { type: "newCastle"; castle: number };
 
@@ -157,14 +125,23 @@ export class CastleGame {
   readonly W: number;
   readonly H: number;
   readonly groundY: number;
-  /** Rocks can be carried no further right than this before they're let go. */
-  readonly throwLineX: number;
-  readonly piles: { kind: RockKind; x: number; y: number }[];
+  /** Winding starts from a touch left of this. */
+  readonly controlX: number;
+  /** The arm's pivot. */
+  readonly pivot: { x: number; y: number };
   readonly engine: Matter.Engine;
   cards: CastleCard[] = [];
   rocks: Rock[] = [];
   dust: Dust[] = [];
-  held: HeldRock | null = null;
+  winding: Winding | null = null;
+  /** The arm's angle now (radians, up from the right). */
+  armAngle = ARM_REST;
+  /** How far it was wound for the last shot, to judge the next by. */
+  lastPull: number | null = null;
+  /** When the arm last fired: it can't fire again until it's back up. */
+  private firedAt = -Infinity;
+  /** A shot let go, still swinging up to throw its stone. */
+  private swinging: { pull: number; at: number } | null = null;
   time = 0;
   castleNumber = 0;
   /** When the current castle fell, while "Nice!" shows. */
@@ -177,13 +154,8 @@ export class CastleGame {
     this.W = W;
     this.H = H;
     this.groundY = H - 40;
-    this.throwLineX = W * 0.38;
-    const pileY = this.groundY;
-    this.piles = [
-      { kind: "pebble", x: 48, y: pileY },
-      { kind: "stone", x: 116, y: pileY },
-      { kind: "boulder", x: 214, y: pileY },
-    ];
+    this.controlX = W * 0.42;
+    this.pivot = { x: 120, y: this.groundY - 34 };
 
     this.engine = Matter.Engine.create({
       positionIterations: 8,
@@ -218,7 +190,7 @@ export class CastleGame {
 
     const build = layout ? LAYOUTS[layout] : chooseLayout(this.castleNumber);
     const builder = new CastleBuilder(this.groundY);
-    // Centred in the right part of the world, clear of the rock piles.
+    // Centred in the right part of the world, clear of the catapult.
     const left = this.W * 0.46;
     const right = this.W - 24;
     build(builder, 0);
@@ -343,8 +315,8 @@ export class CastleGame {
 
     if (target.label === "ground") {
       if (rock && speed > 3) {
-        this.onEvent({ type: "landed", kind: rock.kind, hard: speed > 7 });
-        this.puff(hitter.position.x, this.groundY, rock.kind === "boulder" ? 3 : 1);
+        this.onEvent({ type: "landed", hard: speed > 7 });
+        this.puff(hitter.position.x, this.groundY, 2);
       } else if (!rock && speed > 2.5) {
         this.puff(hitter.position.x, this.groundY, 1);
       }
@@ -361,7 +333,7 @@ export class CastleGame {
 
     if (rock && !rock.splashed) {
       rock.splashed = true;
-      const splash = ROCKS[rock.kind].splash;
+      const splash = STONE.splash;
       if (splash > 0) {
         for (const other of this.cards) {
           if (other === card || other.loose) continue;
@@ -411,6 +383,17 @@ export class CastleGame {
     this.time += dt;
     Matter.Engine.update(this.engine, dt);
 
+    // The arm follows the winding finger, and swings up fast once let go.
+    const target = this.winding
+      ? ARM_REST + (ARM_WOUND - ARM_REST) * this.winding.pull
+      : ARM_REST;
+    const ease = this.winding ? 0.5 : 0.35;
+    this.armAngle += (target - this.armAngle) * Math.min(1, ease * (dt / 16.7));
+    if (this.swinging && this.time >= this.swinging.at) {
+      this.fire(this.swinging.pull);
+      this.swinging = null;
+    }
+
     for (const card of this.cards) {
       if (card.fallsAt !== null && card.fallsAt <= this.time) this.loosen(card);
       if (card.loose && !card.gone && this.isOffWorld(card.body)) {
@@ -457,108 +440,74 @@ export class CastleGame {
     return y > this.H + 80 || x < -120 || x > this.W + 120;
   }
 
-  // ========== Throwing ========== //
+  // ========== The catapult ========== //
 
-  pileAt(x: number, y: number) {
-    return this.piles.find(
-      (pile) => Math.hypot(x - pile.x, y - (pile.y - 14)) < 34,
-    );
+  /** Whether the arm is back up, with a stone in its bucket. */
+  get loaded() {
+    return !this.swinging && this.time - this.firedAt >= RELOAD_MS;
+  }
+
+  /** Whether a stone sits in the bucket (loaded, or swinging up to throw). */
+  get stoneInBucket() {
+    return this.loaded || this.swinging !== null;
+  }
+
+  /** The bucket at the end of the arm, at `angle`. */
+  armTip(angle = this.armAngle) {
+    return {
+      x: this.pivot.x + Math.cos(angle) * ARM_LENGTH,
+      y: this.pivot.y - Math.sin(angle) * ARM_LENGTH,
+    };
+  }
+
+  /** The arm's angle wound to `pull`. */
+  armAngleFor(pull: number) {
+    return ARM_REST + (ARM_WOUND - ARM_REST) * pull;
   }
 
   touchStart(touch: WorldTouch) {
-    if (this.held) return;
-    const pile = this.pileAt(touch.x, touch.y);
-    if (!pile) return;
-    this.held = {
-      pointerId: touch.id,
-      kind: pile.kind,
-      track: new PointerTrack(touch.x, touch.y, touch.t),
-      x: touch.x,
-      y: touch.y,
-      picking: true,
-    };
-    this.onEvent({ type: "pick", kind: pile.kind });
+    if (this.winding || !this.loaded || touch.x > this.controlX) return;
+    this.winding = { pointerId: touch.id, startX: touch.x, startY: touch.y, pull: 0 };
+    this.onEvent({ type: "wind" });
   }
 
   touchMove(touch: WorldTouch) {
-    const held = this.held;
-    if (!held || held.pointerId !== touch.id) return;
-    held.track.add(touch.x, touch.y, touch.t);
-    held.x = Math.min(touch.x, this.throwLineX);
-    held.y = Math.min(touch.y, this.groundY - ROCKS[held.kind].radius);
-
-    if (held.picking) {
-      const pile = this.piles.find((p) => p.kind === held.kind)!;
-      const { vx, vy } = held.track.velocity(100);
-      if (Math.hypot(vx, vy) > ROCKS[held.kind].pickMaxSpeed) {
-        // Snatched too quickly: it tumbles off the pile.
-        this.launch(held.kind, held.x, held.y, { x: vx * 4, y: -2 });
-        this.held = null;
-        this.onEvent({ type: "slip", kind: pile.kind });
-        return;
-      }
-      if (Math.hypot(touch.x - pile.x, touch.y - pile.y) > 46) {
-        held.picking = false;
-      }
-    }
-    if (touch.x >= this.throwLineX) this.release(touch);
+    const winding = this.winding;
+    if (!winding || winding.pointerId !== touch.id) return;
+    // However the finger goes, the further it drags the more it winds.
+    const dragged = Math.hypot(touch.x - winding.startX, touch.y - winding.startY);
+    winding.pull = clamp(dragged / PULL_RANGE, 0, 1);
   }
 
   touchEnd(touch: WorldTouch) {
-    if (this.held?.pointerId === touch.id) this.release(touch);
+    const winding = this.winding;
+    if (!winding || winding.pointerId !== touch.id) return;
+    this.winding = null;
+    if (winding.pull < MIN_PULL) return;
+    this.swinging = { pull: winding.pull, at: this.time + RELEASE_MS };
   }
 
-  private release(touch: WorldTouch) {
-    const held = this.held;
-    if (!held) return;
-    this.held = null;
-    const stopped = held.track.stoppedBy(touch.t);
-    held.track.add(touch.x, touch.y, touch.t);
-    const spec = ROCKS[held.kind];
-    if (stopped) {
-      // Held still, then let go: it just drops.
-      this.launch(held.kind, held.x, held.y, { x: 0, y: 0 });
-      return;
-    }
-    const { vx, vy } = held.track.velocity(90);
-    const speed = Math.hypot(vx, vy);
-
-    let fumble: "tooFast" | "unsteady" | null = null;
-    if (held.kind === "stone" && speed > STONE_MAX_FLING) fumble = "tooFast";
-    if (held.kind === "boulder" && speed > 0.12) {
-      const steady = held.track.steadiness(260);
-      if (steady.meanSpeed > BOULDER_STEADY.maxSpeed || speed > BOULDER_STEADY.maxSpeed * 1.3) {
-        fumble = "tooFast";
-      } else if (
-        steady.duration < BOULDER_STEADY.minDuration ||
-        steady.meanSpeed < BOULDER_STEADY.minSpeed ||
-        steady.variation > BOULDER_STEADY.maxVariation ||
-        steady.turn > BOULDER_STEADY.maxTurn
-      ) {
-        fumble = "unsteady";
-      }
-    }
-
-    if (fumble) {
-      this.launch(held.kind, held.x, held.y, {
-        x: vx * 3 + random(-0.5, 0.5),
-        y: Math.min(vy * 3, 1),
-      });
-      this.onEvent({ type: "fumble", kind: held.kind, reason: fumble });
-      return;
-    }
-
-    const throwSpeed = Math.min(spec.maxSpeed, speed * spec.throwScale);
-    const scale = speed > 0 ? throwSpeed / speed : 0;
-    this.launch(held.kind, held.x, held.y, { x: vx * scale, y: vy * scale });
-    if (throwSpeed > 2) this.onEvent({ type: "throw", kind: held.kind });
+  /** Fires a stone, wound back `pull` (0 to 1). */
+  fire(pull: number) {
+    const speed = this.launchSpeed(pull);
+    const tip = this.armTip(ARM_REST);
+    this.launch(tip.x, tip.y, {
+      x: Math.cos(LAUNCH_ANGLE) * speed,
+      y: -Math.sin(LAUNCH_ANGLE) * speed,
+    });
+    this.firedAt = this.time;
+    this.lastPull = pull;
+    this.onEvent({ type: "fire", pull });
   }
 
-  /** Puts a rock into the world, moving at `velocity` (units a step). */
-  launch(kind: RockKind, x: number, y: number, velocity: Matter.Vector) {
-    const spec = ROCKS[kind];
-    const body = Matter.Bodies.circle(x, y, spec.radius, {
-      density: spec.density,
+  launchSpeed(pull: number) {
+    return MIN_SPEED + (MAX_SPEED - MIN_SPEED) * clamp(pull, 0, 1);
+  }
+
+  /** Puts a stone into the world, moving at `velocity` (units a step). */
+  launch(x: number, y: number, velocity: Matter.Vector) {
+    const body = Matter.Bodies.circle(x, y, STONE.radius, {
+      density: STONE.density,
       friction: 0.3,
       frictionAir: 0.002,
       restitution: 0.15,
@@ -566,9 +515,9 @@ export class CastleGame {
     });
     Matter.Body.setVelocity(body, velocity);
     Matter.Composite.add(this.engine.world, body);
-    const rock: Rock = { id: nextId++, kind, body, splashed: false, still: 0, gone: false };
+    const rock: Rock = { id: nextId++, body, splashed: false, still: 0, gone: false };
     this.rocks.push(rock);
-    while (this.rocks.length > MAX_ROCKS) {
+    while (this.rocks.length > MAX_STONES) {
       const oldest = this.rocks.shift()!;
       oldest.gone = true;
       Matter.Composite.remove(this.engine.world, oldest.body);

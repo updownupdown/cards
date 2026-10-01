@@ -18,7 +18,6 @@
     "hat-trick": "Tour de chapeau",
     "cutting-deck": "Coupe franche",
     "royal-flush": "Quinte flush royale",
-    "shuffleboard": "Palet de table",
     "architect": "Architecte"
   },
   "screen": {
@@ -39,10 +38,7 @@
   },
   "castle": {
     "instructions": "Tirez un caillou d'un tas, puis lancez-le d'une pichenette",
-    "castle": "Château {{number}}",
-    "tooFast": "Trop pressé ! Les grosses pierres se lancent en douceur",
-    "unsteady": "Doucement : une poussée lente et régulière",
-    "slip": "Tirez-le du tas, lentement"
+    "castle": "Château {{number}}"
   },
   "hat": {
     "instructions": "Lancez une carte dans le chapeau",
@@ -81,18 +77,6 @@
     "fullHouse": "Full",
     "straightFlush": "Quinte flush",
     "royalFlush": "Quinte flush royale"
-  },
-  "board": {
-    "instructions": "Faites glisser une carte jusqu'aux zones",
-    "sweepHint": "Frottez devant une carte qui glisse pour la porter",
-    "status": "{{surface}} · carte {{card}} sur {{total}}",
-    "round": "Manche {{round}} : +{{points}}",
-    "gutter": "Dans la gouttière !"
-  },
-  "surface": {
-    "felt": "Feutre vert",
-    "mahogany": "Acajou verni",
-    "slate": "Ardoise glacée"
   },
   "architect": {
     "instructions": "Prenez une carte du plateau ; appuyez-en deux l'une contre l'autre",

@@ -82,7 +82,7 @@ const useNativeDriver = Platform.OS !== "web";
 
 /**
  * No bar, just three things over the game: Back, the prompt and the score.
- * Bubblegum Sans throughout, as on the Wild Cards shelf.
+ * WILD_FONT throughout, as on the Wild Cards shelf.
  */
 export function WildHeader({
   hud,

@@ -40,7 +40,7 @@ type WildCardsSectionProps = {
  * Wild Cards, at the foot of the Home tab: the physics mini-games. Every
  * GAMES_PER_WILD_CARD campaign wins earn a credit, spent by tapping a locked
  * game. Tapping a locked one WILD_BYPASS_TAPS times in a row opens it anyway,
- * once a day. Only Bubblegum Sans is used here.
+ * once a day. Only WILD_FONT is used here.
  */
 export function WildCardsSection({
   shelfPadding,

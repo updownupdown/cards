@@ -18,7 +18,6 @@
     "hat-trick": "El truco del sombrero",
     "cutting-deck": "Corte de baraja",
     "royal-flush": "Escalera real",
-    "shuffleboard": "Tejo de mesa",
     "architect": "Arquitecto"
   },
   "screen": {
@@ -39,10 +38,7 @@
   },
   "castle": {
     "instructions": "Arrastra una piedra de un montón y lánzala",
-    "castle": "Castillo {{number}}",
-    "tooFast": "¡Con prisas no! Las piedras pesadas se lanzan con suavidad",
-    "unsteady": "Con calma: un empujón lento y uniforme",
-    "slip": "Sácala del montón, despacio"
+    "castle": "Castillo {{number}}"
   },
   "hat": {
     "instructions": "Lanza una carta dentro del sombrero",
@@ -81,18 +77,6 @@
     "fullHouse": "Full",
     "straightFlush": "Escalera de color",
     "royalFlush": "Escalera real"
-  },
-  "board": {
-    "instructions": "Desliza una carta por la mesa hasta las zonas",
-    "sweepHint": "Frota delante de una carta que se desliza para llevarla más lejos",
-    "status": "{{surface}} · carta {{card}} de {{total}}",
-    "round": "Ronda {{round}}: +{{points}}",
-    "gutter": "¡Al canal!"
-  },
-  "surface": {
-    "felt": "Fieltro verde",
-    "mahogany": "Caoba pulida",
-    "slate": "Pizarra helada"
   },
   "architect": {
     "instructions": "Toma una carta de la bandeja; apoya dos juntas",

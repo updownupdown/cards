@@ -18,7 +18,6 @@
     "hat-trick": "Hat Trick",
     "cutting-deck": "Cutting Deck",
     "royal-flush": "Royal Flush",
-    "shuffleboard": "Shuffleboard",
     "architect": "Architect"
   },
   "screen": {
@@ -38,11 +37,8 @@
     "crumbled": "Down it comes!"
   },
   "castle": {
-    "instructions": "Drag a rock off a pile, then flick it",
-    "castle": "Castle {{number}}",
-    "tooFast": "Too hasty! Heavy rocks need a gentler throw",
-    "unsteady": "Steady now: one slow, smooth push",
-    "slip": "Ease it off the pile, slowly"
+    "instructions": "Drag back to wind up the catapult, then let go",
+    "castle": "Castle {{number}}"
   },
   "hat": {
     "instructions": "Flick a card into the hat",
@@ -81,18 +77,6 @@
     "fullHouse": "Full House",
     "straightFlush": "Straight Flush",
     "royalFlush": "Royal Flush"
-  },
-  "board": {
-    "instructions": "Push a card up the table into the zones",
-    "sweepHint": "Rub ahead of a sliding card to sweep it on",
-    "status": "{{surface}} · card {{card}} of {{total}}",
-    "round": "Round {{round}}: +{{points}}",
-    "gutter": "In the gutter!"
-  },
-  "surface": {
-    "felt": "Green felt",
-    "mahogany": "Polished mahogany",
-    "slate": "Icy slate"
   },
   "architect": {
     "instructions": "Take a card from the tray; lean two together",

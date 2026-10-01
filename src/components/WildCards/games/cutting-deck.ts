@@ -5,10 +5,12 @@ import { clamp, pick, random } from "../engine/stage";
 import type { WorldTouch } from "../engine/touch";
 
 // Cutting Deck: flick cards from the bottom of the screen to slice fruit
-// falling from the top and pop balloons rising from the bottom.
+// floating down from the top on parachutes and pop balloons rising from the
+// bottom.
 //
-// Everything is a Matter body. Fruit falls under gravity; balloons are held
-// up by their own lift and blown sideways by a wind they all share. Thrown
+// Everything is a Matter body. Fruit drifts down at a parachute's steady
+// speed, swaying; balloons are held up by their own lift and blown sideways
+// by a wind they all share. Thrown
 // cards are sensors: they fly straight through whatever they cut, so one well
 // aimed card can take several in a row, which counts towards a combo.
 
@@ -16,13 +18,20 @@ export const CARD_W = 26;
 export const CARD_H = 36;
 const GRAVITY = 0.35;
 /** Card speed (units a step) per finger speed (units a millisecond). */
-const THROW_SCALE = 22;
-const MIN_THROW_SPEED = 13;
-const MAX_THROW_SPEED = 30;
+const THROW_SCALE = 11;
+const MIN_THROW_SPEED = 6.5;
+const MAX_THROW_SPEED = 15;
 /** Hits closer together than this keep a combo going. */
 const COMBO_MS = 750;
-const BALLOON_LIFT = 1.8;
-const MAX_WIND = 0.00006;
+const BALLOON_LIFT = 1.4;
+const MAX_WIND = 0.00012;
+/** A parachute's steady fall, in units a step. */
+const FRUIT_DESCENT = 1.6;
+/** How far (units) and how fast (radians a second) fruit sways under its chute. */
+const SWAY = 22;
+const SWAY_RATE = 1.6;
+/** The most fruit floating down at once. */
+const MAX_FRUIT = 3;
 
 const CATEGORY_CARD = 0x0002;
 const CATEGORY_TARGET = 0x0004;
@@ -71,6 +80,17 @@ export type Target = {
   body: Matter.Body;
   radius: number;
   look: string;
+  /** Where a fruit is in its sway, radians. */
+  swayPhase: number;
+};
+
+/** The parachute of a cut fruit, floating off. */
+export type LooseChute = {
+  x: number;
+  y: number;
+  angle: number;
+  radius: number;
+  age: number;
 };
 
 export type Thrown = {
@@ -108,6 +128,9 @@ export type CuttingDeckEvent =
   | { type: "slice"; kind: "fruit" | "balloon"; combo: number; points: number }
   | { type: "combo"; name: ComboName; hits: number };
 
+/** How long a cut fruit's parachute takes to float off. */
+export const CHUTE_MS = 1200;
+
 let nextId = 1;
 
 export class CuttingDeckGame {
@@ -121,10 +144,12 @@ export class CuttingDeckGame {
   halves: Half[] = [];
   sparks: Spark[] = [];
   pops: Pop[] = [];
+  chutes: LooseChute[] = [];
   wind = 0;
   private windTarget = 0;
   private windTimer = 0;
-  private spawnTimer = 800;
+  private fruitTimer = 800;
+  private balloonTimer = 3000;
   time = 0;
   score = 0;
   combo = 0;
@@ -148,17 +173,26 @@ export class CuttingDeckGame {
 
   // ========== Spawning ========== //
 
-  /** Waves come quicker the longer the game goes on. */
+  /** Things come quicker the longer the game goes on. */
   private spawnInterval() {
     return clamp(1700 - this.time / 60, 750, 1700);
   }
 
-  private spawnWave() {
-    const fruitWave = Math.random() < 0.55;
-    const count = 1 + Math.floor(Math.random() * (this.time > 30000 ? 3 : 2));
-    for (let i = 0; i < count; i++) {
-      if (fruitWave) this.spawnFruit(random(40, this.W - 40), -40 - i * 70);
-      else this.spawnBalloon(random(50, this.W - 50), this.H + 50 + i * 60);
+  private stepSpawning(dt: number) {
+    this.fruitTimer -= dt;
+    if (this.fruitTimer <= 0) {
+      const floating = [...this.targets.values()].filter((t) => t.kind === "fruit");
+      if (floating.length < MAX_FRUIT) {
+        this.spawnFruit(random(50, this.W - 50), -50);
+        this.fruitTimer = this.spawnInterval() * 3.5 * random(0.8, 1.2);
+      } else {
+        this.fruitTimer = 500;
+      }
+    }
+    this.balloonTimer -= dt;
+    if (this.balloonTimer <= 0) {
+      this.spawnBalloon(random(50, this.W - 50), this.H + 50);
+      this.balloonTimer = this.spawnInterval() * 5 * random(0.8, 1.2);
     }
   }
 
@@ -170,8 +204,7 @@ export class CuttingDeckGame {
       collisionFilter: { category: CATEGORY_TARGET, mask: CATEGORY_CARD },
       label: "fruit",
     });
-    Matter.Body.setVelocity(body, { x: 0, y: random(0.2, 1.2) });
-    Matter.Body.setAngularVelocity(body, random(-0.03, 0.03));
+    Matter.Body.setVelocity(body, { x: 0, y: FRUIT_DESCENT });
     return this.addTarget("fruit", body, radius, pick(FRUITS));
   }
 
@@ -186,7 +219,14 @@ export class CuttingDeckGame {
   }
 
   private addTarget(kind: Target["kind"], body: Matter.Body, radius: number, look: string) {
-    const target: Target = { id: body.id, kind, body, radius, look };
+    const target: Target = {
+      id: body.id,
+      kind,
+      body,
+      radius,
+      look,
+      swayPhase: random(0, Math.PI * 2),
+    };
     this.targets.set(body.id, target);
     Matter.Composite.add(this.engine.world, body);
     return target;
@@ -259,7 +299,11 @@ export class CuttingDeckGame {
     this.score += points;
 
     const cut = Math.atan2(card.velocity.y, card.velocity.x);
-    if (target.kind === "fruit") this.slice(target, cut);
+    if (target.kind === "fruit") {
+      this.slice(target, cut);
+      const { x, y } = target.body.position;
+      this.chutes.push({ x, y, angle: target.body.angle, radius: target.radius, age: 0 });
+    }
     else this.pop(target);
 
     this.onEvent({ type: "slice", kind: target.kind, combo: this.combo, points });
@@ -321,16 +365,23 @@ export class CuttingDeckGame {
     this.time += dt;
     this.stepWind(dt);
 
-    this.spawnTimer -= dt;
-    if (this.spawnTimer <= 0) {
-      this.spawnWave();
-      this.spawnTimer = this.spawnInterval() * random(0.8, 1.2);
-    }
+    this.stepSpawning(dt);
 
     const gravity = this.engine.gravity.y * this.engine.gravity.scale;
     for (const target of this.targets.values()) {
-      if (target.kind !== "balloon") continue;
       const body = target.body;
+      if (target.kind === "fruit") {
+        // Under a parachute: a steady fall, swaying from side to side, the
+        // chute leaning the way it swings.
+        target.swayPhase += (SWAY_RATE * dt) / 1000;
+        Matter.Body.applyForce(body, body.position, { x: 0, y: -gravity * body.mass });
+        Matter.Body.setVelocity(body, {
+          x: SWAY * SWAY_RATE * Math.cos(target.swayPhase) * (dt / 1000),
+          y: FRUIT_DESCENT,
+        });
+        Matter.Body.setAngle(body, 0.25 * Math.cos(target.swayPhase));
+        continue;
+      }
       // Lift a little more than its weight, and the shared breeze.
       Matter.Body.applyForce(body, body.position, {
         x: this.wind * body.mass,
@@ -371,6 +422,12 @@ export class CuttingDeckGame {
       spark.vy += (420 * dt) / 1000;
     }
     this.sparks = this.sparks.filter((spark) => spark.age < spark.life);
+    for (const chute of this.chutes) {
+      chute.age += dt;
+      chute.y -= (40 * dt) / 1000;
+      chute.angle += (0.8 * dt) / 1000;
+    }
+    this.chutes = this.chutes.filter((chute) => chute.age < CHUTE_MS);
     for (const pop of this.pops) pop.age += dt;
     this.pops = this.pops.filter((pop) => pop.age < 320);
 

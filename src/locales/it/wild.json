@@ -18,7 +18,6 @@
     "hat-trick": "Il trucco del cilindro",
     "cutting-deck": "Taglio netto",
     "royal-flush": "Scala reale massima",
-    "shuffleboard": "Shuffleboard",
     "architect": "Architetto"
   },
   "screen": {
@@ -39,10 +38,7 @@
   },
   "castle": {
     "instructions": "Trascina un sasso da un mucchio, poi lancialo",
-    "castle": "Castello {{number}}",
-    "tooFast": "Troppa fretta! Le pietre pesanti vanno lanciate con calma",
-    "unsteady": "Piano: una spinta lenta e regolare",
-    "slip": "Toglilo dal mucchio, piano"
+    "castle": "Castello {{number}}"
   },
   "hat": {
     "instructions": "Lancia una carta nel cilindro",
@@ -81,18 +77,6 @@
     "fullHouse": "Full",
     "straightFlush": "Scala reale",
     "royalFlush": "Scala reale massima"
-  },
-  "board": {
-    "instructions": "Fai scivolare una carta sul tavolo fino alle zone",
-    "sweepHint": "Strofina davanti a una carta che scivola per spingerla oltre",
-    "status": "{{surface}} · carta {{card}} di {{total}}",
-    "round": "Turno {{round}}: +{{points}}",
-    "gutter": "Nella canaletta!"
-  },
-  "surface": {
-    "felt": "Panno verde",
-    "mahogany": "Mogano lucido",
-    "slate": "Ardesia ghiacciata"
   },
   "architect": {
     "instructions": "Prendi una carta dal vassoio; appoggiane due insieme",

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import { STEP_MS } from "@/components/WildCards/engine/loop";
-import type { Tilt } from "@/components/WildCards/engine/tilt";
+import { TILT_BOOST, type Tilt } from "@/components/WildCards/engine/tilt";
 import {
   DECK_SIZE,
   HatTrickGame,
@@ -55,7 +55,9 @@ describe("Hat Trick", () => {
       expect(speeds.length).toBeGreaterThan(0);
       // Some margin for a finger: at least ±5% of the right speed.
       const middle = (speeds[0] + speeds[speeds.length - 1]) / 2;
-      expect(speeds[speeds.length - 1] - speeds[0]).toBeGreaterThanOrEqual(middle * 0.1);
+      expect(speeds[speeds.length - 1] - speeds[0]).toBeGreaterThanOrEqual(
+        middle * 0.1,
+      );
     }
   });
 
@@ -74,7 +76,10 @@ describe("Hat Trick", () => {
         const game = calmGame();
         game.hat = { x: 0, d: 5000 };
         game.wind = { x: 12, d: 0 };
-        (game as unknown as { windTarget: object }).windTarget = { x: 12, d: 0 };
+        (game as unknown as { windTarget: object }).windTarget = {
+          x: 12,
+          d: 0,
+        };
         total += flight(game, 300, 0, spin).card.x;
       }
       return total / 12;
@@ -94,7 +99,7 @@ describe("Hat Trick", () => {
     tilt.current.x = 0.26; // about 15°
     while (card.state === "flying") game.step(STEP_MS);
     expect(card.x).toBeGreaterThan(30);
-    expect(card.x).toBeLessThan(140);
+    expect(card.x).toBeLessThan(140 * TILT_BOOST);
   });
 
   test("after 52 cards the deck is done", () => {

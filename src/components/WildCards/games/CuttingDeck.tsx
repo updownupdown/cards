@@ -11,7 +11,9 @@ import { Dot, Line, World } from "../engine/World";
 import {
   CARD_H,
   CARD_W,
+  CHUTE_MS,
   comboName,
+  FRUIT_JUICE,
   CuttingDeckGame,
   type CuttingDeckEvent,
   type Half,
@@ -93,6 +95,22 @@ export function CuttingDeck({ stage, hud }: WildGameProps) {
 
         {game.halves.map((half) => (
           <FruitHalf key={half.id} half={half} />
+        ))}
+
+        {game.chutes.map((chute, i) => (
+          <View
+            key={`chute${i}`}
+            style={{ opacity: 1 - chute.age / CHUTE_MS }}
+          >
+            <Parachute
+              x={chute.x}
+              y={chute.y}
+              radius={chute.radius}
+              angle={chute.angle}
+              color="#f3eee6"
+              lines={false}
+            />
+          </View>
         ))}
 
         {game.pops.map((pop, i) => {
@@ -214,10 +232,101 @@ export function CuttingDeck({ stage, hud }: WildGameProps) {
   );
 }
 
+/**
+ * A parachute over a fruit at (x, y): a striped canopy and its lines, all
+ * turned about the fruit by `angle`.
+ */
+function Parachute({
+  x,
+  y,
+  radius,
+  angle,
+  color,
+  lines = true,
+}: {
+  x: number;
+  y: number;
+  radius: number;
+  angle: number;
+  color: string;
+  lines?: boolean;
+}) {
+  const box = radius * 8;
+  const c = box / 2;
+  const canopyW = radius * 3.4;
+  const canopyH = radius * 1.4;
+  const canopyTop = c - radius * 3.6;
+  const rim = canopyTop + canopyH;
+  return (
+    <View
+      pointerEvents="none"
+      style={{
+        position: "absolute",
+        left: x - c,
+        top: y - c,
+        width: box,
+        height: box,
+        transform: [{ rotate: `${angle}rad` }],
+      }}
+    >
+      {lines &&
+        [-0.5, -0.17, 0.17, 0.5].map((k) => (
+          <Line
+            key={k}
+            x1={c + k * canopyW}
+            y1={rim - 1}
+            x2={c + k * radius * 0.6}
+            y2={c - radius * 0.7}
+            width={1}
+            color="rgba(240, 235, 225, 0.7)"
+          />
+        ))}
+      <View
+        style={{
+          position: "absolute",
+          left: c - canopyW / 2,
+          top: canopyTop,
+          width: canopyW,
+          height: canopyH,
+          borderTopLeftRadius: canopyW / 2,
+          borderTopRightRadius: canopyW / 2,
+          borderBottomLeftRadius: radius * 0.3,
+          borderBottomRightRadius: radius * 0.3,
+          backgroundColor: "#efe7d8",
+          overflow: "hidden",
+          boxShadow: "inset 0 -4px 6px rgba(0, 0, 0, 0.18)",
+        }}
+      >
+        {[-1, 1].map((side) => (
+          <View
+            key={side}
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: canopyW / 2 + side * canopyW * 0.25 - canopyW * 0.09,
+              width: canopyW * 0.18,
+              backgroundColor: color,
+            }}
+          />
+        ))}
+      </View>
+    </View>
+  );
+}
+
 function Fruit({ target }: { target: Target }) {
   const { x, y } = target.body.position;
   const size = target.radius * 2;
   return (
+    <>
+    <Parachute
+      x={x}
+      y={y}
+      radius={target.radius}
+      angle={target.body.angle}
+      color={FRUIT_JUICE[target.look] ?? "#e0413a"}
+    />
     <View
       style={{
         position: "absolute",
@@ -234,6 +343,7 @@ function Fruit({ target }: { target: Target }) {
         {target.look}
       </RNText>
     </View>
+    </>
   );
 }
 
@@ -290,7 +400,7 @@ function Balloon({ target, wind }: { target: Target; wind: number }) {
   const w = r * 1.8;
   const h = r * 2.2;
   // The string trails away from the breeze.
-  const sway = -wind * 400000;
+  const sway = -wind * 200000;
   return (
     <>
       <Line

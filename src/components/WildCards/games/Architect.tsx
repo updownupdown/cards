@@ -6,6 +6,7 @@ import { CardSprite, EDGE_THICKNESS, EdgeCard } from "../engine/cards";
 import { feel } from "../engine/feel";
 import { useGameLoop } from "../engine/loop";
 import { requestTiltPermission, useTilt } from "../engine/tilt";
+import { TiltGauge } from "../engine/TiltGauge";
 import { TouchSurface } from "../engine/touch";
 import { Dot, Line, World } from "../engine/World";
 import {
@@ -324,6 +325,8 @@ export function Architect({ stage, hud }: WildGameProps) {
           </View>
         </View>
       </View>
+
+      <TiltGauge tilt={tilt} stage={stage} />
     </>
   );
 }

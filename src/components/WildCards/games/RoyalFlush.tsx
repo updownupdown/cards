@@ -11,6 +11,7 @@ import {
   BLINK_MS,
   CARD_H,
   CARD_W,
+  CLIP_HEIGHT,
   MARBLE_RADIUS,
   MAX_PULL,
   PLATE_WIDTH,
@@ -21,11 +22,11 @@ import {
 } from "./royal-flush";
 import type { WildGameProps } from "./types";
 
-const PLATE_COLORS = ["#d9a441", "#4fb8ac"];
+const PLATE_COLOR = "#d9a441";
 const LED = { idle: "#ffb347", good: "#6cf59a", bad: "#ff5a52" };
-/** Three cards to a line of the readout: "AS TD 9H". */
-const READOUT_COLUMNS = columnsFor(8);
-const BELT_HEIGHT = CARD_H + 14;
+/** A whole hand on one line of the readout: "10S 10H 10D 10C 10S" at most. */
+const READOUT_COLUMNS = columnsFor(19);
+const BELT_HEIGHT = 10;
 
 export function RoyalFlush({ stage, hud }: WildGameProps) {
   "use no memo";
@@ -118,9 +119,28 @@ export function RoyalFlush({ stage, hud }: WildGameProps) {
             shadow={card.falling}
           />
         ))}
+        {/* The clips holding each card on by its bottom edge. */}
+        {game.cards.map((card) =>
+          card.falling ? null : (
+            <View
+              key={`clip${card.id}`}
+              style={{
+                position: "absolute",
+                left: card.body.position.x - 5,
+                top: game.beltYs[card.belt] - CLIP_HEIGHT - 5,
+                width: 10,
+                height: CLIP_HEIGHT + 7,
+                borderRadius: 2,
+                backgroundColor: "#9aa3ad",
+                borderWidth: 1,
+                borderColor: "#5d646c",
+              }}
+            />
+          ),
+        )}
 
         {game.plates.map((plate, i) => (
-          <PlateView key={i} plate={plate} color={PLATE_COLORS[i]} />
+          <PlateView key={i} plate={plate} color={PLATE_COLOR} />
         ))}
 
         {game.plates.map((plate, i) => (
@@ -128,14 +148,13 @@ export function RoyalFlush({ stage, hud }: WildGameProps) {
             key={`readout${i}`}
             text={readout(plate, game.time)}
             columns={READOUT_COLUMNS}
-            lines={2}
-            x={stage.W * (i === 0 ? 0.26 : 0.74)}
+            x={stage.W / 2}
             y={game.displayY}
-            width={stage.W * 0.4}
+            width={stage.W - 32}
             color={
               plate.verdict ? (plate.verdict.hand ? LED.good : LED.bad) : LED.idle
             }
-            frame={PLATE_COLORS[i]}
+            frame={PLATE_COLOR}
           />
         ))}
 
@@ -206,17 +225,16 @@ export function RoyalFlush({ stage, hud }: WildGameProps) {
   );
 }
 
-/** A plate's cards as "AS TD 9H", three to a line, blinking at a verdict. */
+/** A plate's cards as "AS 10D 9H", on one line, blinking at a verdict. */
 function readout(plate: Plate, time: number) {
   if (plate.verdict && Math.floor((time - plate.verdict.at) / 170) % 2 === 1) {
     return "";
   }
   if (plate.verdict && time - plate.verdict.at > BLINK_MS - 100) return "";
-  const tokens = plate.cards.map(cardToken);
-  return [tokens.slice(0, 3).join(" "), tokens.slice(3).join(" ")].join("\n");
+  return plate.cards.map(cardToken).join(" ");
 }
 
-const RANK_GLYPHS: Record<number, string> = { 1: "A", 10: "T", 11: "J", 12: "Q", 13: "K" };
+const RANK_GLYPHS: Record<number, string> = { 1: "A", 11: "J", 12: "Q", 13: "K" };
 const cardToken = (card: PlayingCard) =>
   `${RANK_GLYPHS[card.rank] ?? String(card.rank)}${card.suit}`;
 
@@ -276,12 +294,12 @@ function Belt({ y, width, offset }: { y: number; width: number; offset: number }
           position: "absolute",
           left: -10,
           width: width + 20,
-          top: y - BELT_HEIGHT / 2 + 8,
-          height: BELT_HEIGHT - 8,
-          backgroundColor: "rgba(20, 16, 22, 0.78)",
-          borderTopWidth: 2,
-          borderBottomWidth: 2,
-          borderColor: "rgba(210, 200, 220, 0.25)",
+          top: y,
+          height: BELT_HEIGHT,
+          borderRadius: BELT_HEIGHT / 2,
+          backgroundColor: "rgba(20, 16, 22, 0.85)",
+          borderWidth: 1.5,
+          borderColor: "rgba(210, 200, 220, 0.3)",
         }}
       />
       {/* Treads moving along with the belt. */}
@@ -291,10 +309,10 @@ function Belt({ y, width, offset }: { y: number; width: number; offset: number }
           style={{
             position: "absolute",
             left: i * spacing - spacing + shift,
-            top: y + BELT_HEIGHT / 2 - 4,
+            top: y + BELT_HEIGHT / 2 - 1,
             width: 8,
             height: 2,
-            backgroundColor: "rgba(210, 200, 220, 0.3)",
+            backgroundColor: "rgba(210, 200, 220, 0.35)",
           }}
         />
       ))}

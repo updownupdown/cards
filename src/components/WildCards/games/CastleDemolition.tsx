@@ -6,13 +6,12 @@ import { feel } from "../engine/feel";
 import { useGameLoop } from "../engine/loop";
 import { pick } from "../engine/stage";
 import { TouchSurface } from "../engine/touch";
-import { Dot, World } from "../engine/World";
+import { Dot, Line, World } from "../engine/World";
 import {
   CARD_LENGTH,
   CastleGame,
-  ROCKS,
+  STONE,
   type CastleEvent,
-  type RockKind,
 } from "./castle-demolition";
 import type { WildGameProps } from "./types";
 
@@ -29,21 +28,9 @@ export const PRAISE = [
   "crumbled",
 ] as const;
 
-const ROCK_COLORS: Record<RockKind, { fill: string; light: string; edge: string }> = {
-  pebble: { fill: "#b8b0a3", light: "#d9d2c6", edge: "#7d766c" },
-  stone: { fill: "#8f887e", light: "#b3ab9f", edge: "#5b554d" },
-  boulder: { fill: "#6d665d", light: "#8e867b", edge: "#3e3a34" },
-};
-
-/** Heaped rocks on each pile, as offsets in radii from the pile's foot. */
-const HEAP = [
-  [-1.9, -1],
-  [0, -1],
-  [1.9, -1],
-  [-0.95, -2.6],
-  [0.95, -2.6],
-  [0, -4.1],
-];
+const STONE_COLORS = { fill: "#8f887e", light: "#b3ab9f", edge: "#5b554d" };
+const WOOD = "#8a5a33";
+const WOOD_DARK = "#5e3b20";
 
 export function CastleDemolition({ stage, hud }: WildGameProps) {
   "use no memo";
@@ -66,28 +53,19 @@ export function CastleDemolition({ stage, hud }: WildGameProps) {
 
   game.onEvent = (event: CastleEvent) => {
     switch (event.type) {
-      case "pick":
+      case "wind":
         feel("tick");
         break;
-      case "throw":
+      case "fire":
         feel("tap");
         setThrown(true);
-        break;
-      case "fumble":
-        feel("tick");
-        hud.flash(t(event.reason === "tooFast" ? "castle.tooFast" : "castle.unsteady"), 2400);
-        break;
-      case "slip":
-        hud.flash(t("castle.slip"), 2200);
         break;
       case "cardsDown":
         setScore((current) => current + event.count);
         feel("tick", 90);
         break;
       case "landed":
-        if (event.kind === "boulder") feel("thud", 150);
-        else if (event.kind === "stone") feel("tap", 100);
-        else feel("tick", 100);
+        feel(event.hard ? "thud" : "tap", 150);
         break;
       case "destroyed":
         setScore((current) => current + 10);
@@ -101,7 +79,6 @@ export function CastleDemolition({ stage, hud }: WildGameProps) {
 
   useGameLoop((dt) => game.step(dt));
 
-  const held = game.held;
   const destroyed = game.destroyedAt !== null;
 
   return (
@@ -128,32 +105,7 @@ export function CastleDemolition({ stage, hud }: WildGameProps) {
           }}
         />
 
-        {/* How far a rock can be carried before it's let go. */}
-        {held && !held.picking && (
-          <View
-            style={{
-              position: "absolute",
-              left: game.throwLineX - 1,
-              top: stage.topClear,
-              width: 2,
-              bottom: stage.H - game.groundY,
-              backgroundColor: "rgba(255, 255, 255, 0.12)",
-            }}
-          />
-        )}
-
-        {game.piles.map((pile) => {
-          const r = ROCKS[pile.kind].radius;
-          return HEAP.map(([dx, dy], i) => (
-            <Rock
-              key={`${pile.kind}${i}`}
-              kind={pile.kind}
-              x={pile.x + dx * r * (pile.kind === "pebble" ? 1.3 : 1)}
-              y={pile.y + dy * r * 0.9}
-              angle={i * 1.7}
-            />
-          ));
-        })}
+        <Catapult game={game} />
 
         {game.cards.map((card) =>
           card.gone ? null : (
@@ -172,17 +124,12 @@ export function CastleDemolition({ stage, hud }: WildGameProps) {
         {game.rocks.map((rock) => (
           <Rock
             key={rock.id}
-            kind={rock.kind}
             x={rock.body.position.x}
             y={rock.body.position.y}
             angle={rock.body.angle}
             opacity={Math.min(1, (2600 - rock.still) / 500)}
           />
         ))}
-
-        {held && (
-          <Rock kind={held.kind} x={held.x} y={held.y} angle={0} lifted />
-        )}
 
         {game.dust.map((puff, i) => (
           <Dot
@@ -199,23 +146,78 @@ export function CastleDemolition({ stage, hud }: WildGameProps) {
   );
 }
 
+/**
+ * The catapult: a wheeled frame, and an arm that winds back as the finger
+ * drags and swings up when let go. A faint mark shows where it was wound
+ * for the last shot.
+ */
+function Catapult({ game }: { game: CastleGame }) {
+  const { pivot, groundY } = game;
+  const tip = game.armTip();
+  const stopY = pivot.y - 66;
+  const last = game.lastPull !== null ? game.armTip(game.armAngleFor(game.lastPull)) : null;
+  return (
+    <>
+      {/* The rope to the winch, taut while winding. */}
+      {game.winding && (
+        <Line
+          x1={tip.x}
+          y1={tip.y}
+          x2={pivot.x - 44}
+          y2={groundY - 16}
+          width={1.5}
+          color="rgba(230, 214, 180, 0.8)"
+        />
+      )}
+      {last && (
+        <Dot x={last.x} y={last.y} r={6} color="#ffffff" opacity={0.22} />
+      )}
+
+      {/* The frame: posts up to the pivot, and the stop the arm hits. */}
+      <Line x1={pivot.x - 22} y1={groundY - 12} x2={pivot.x} y2={pivot.y} width={6} color={WOOD_DARK} />
+      <Line x1={pivot.x + 22} y1={groundY - 12} x2={pivot.x} y2={pivot.y} width={6} color={WOOD_DARK} />
+      <Line x1={pivot.x + 24} y1={groundY - 12} x2={pivot.x + 22} y2={stopY} width={6} color={WOOD_DARK} />
+      <Line x1={pivot.x + 6} y1={stopY} x2={pivot.x + 32} y2={stopY} width={6} color={WOOD_DARK} />
+      <View
+        style={{
+          position: "absolute",
+          left: pivot.x - 58,
+          top: groundY - 20,
+          width: 104,
+          height: 10,
+          borderRadius: 3,
+          backgroundColor: WOOD,
+        }}
+      />
+      {/* The winch. */}
+      <Dot x={pivot.x - 44} y={groundY - 16} r={6} color={WOOD_DARK} borderColor={WOOD} />
+
+      {/* The arm and its bucket. */}
+      <Line x1={pivot.x} y1={pivot.y} x2={tip.x} y2={tip.y} width={8} color={WOOD} />
+      <Dot x={tip.x} y={tip.y} r={STONE.radius + 4} color={WOOD_DARK} />
+      {game.stoneInBucket && <Rock x={tip.x} y={tip.y} angle={0} />}
+      <Dot x={pivot.x} y={pivot.y} r={5} color="#3a2616" />
+
+      {[pivot.x - 40, pivot.x + 30].map((x) => (
+        <Dot key={x} x={x} y={groundY - 12} r={12} color="#4a2f1a" borderColor={WOOD} />
+      ))}
+    </>
+  );
+}
+
 function Rock({
-  kind,
   x,
   y,
   angle,
   opacity = 1,
-  lifted = false,
 }: {
-  kind: RockKind;
   x: number;
   y: number;
   angle: number;
   opacity?: number;
-  lifted?: boolean;
 }) {
-  const r = ROCKS[kind].radius;
-  const colors = ROCK_COLORS[kind];
+  const r = STONE.radius;
+  const colors = STONE_COLORS;
   return (
     <View
       style={{
@@ -233,8 +235,7 @@ function Rock({
         borderWidth: Math.max(1, r * 0.12),
         borderColor: colors.edge,
         opacity,
-        transform: [{ rotate: `${angle}rad` }, { scale: lifted ? 1.12 : 1 }],
-        ...(lifted ? { boxShadow: "0px 6px 10px rgba(0, 0, 0, 0.45)" } : null),
+        transform: [{ rotate: `${angle}rad` }],
       }}
     >
       <View

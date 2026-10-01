@@ -115,8 +115,6 @@ const config = {
             "./node_modules/@expo-google-fonts/eb-garamond/500Medium/EBGaramond_500Medium.ttf",
             "./node_modules/@expo-google-fonts/eb-garamond/500Medium_Italic/EBGaramond_500Medium_Italic.ttf",
             "./node_modules/@expo-google-fonts/eb-garamond/600SemiBold/EBGaramond_600SemiBold.ttf",
-            // Wild Cards' playful face.
-            "./node_modules/@expo-google-fonts/bubblegum-sans/400Regular/BubblegumSans_400Regular.ttf",
           ],
         },
       },
