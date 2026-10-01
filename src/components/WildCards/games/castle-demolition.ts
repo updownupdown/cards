@@ -1,6 +1,7 @@
 import Matter from "matter-js";
 import { randomCard, type PlayingCard } from "../engine/cards";
 import { clamp, pick, random } from "../engine/stage";
+import { STEP_MS } from "../engine/loop";
 import type { WorldTouch } from "../engine/touch";
 
 // Castle Demolition: a catapult against houses of cards.
@@ -12,7 +13,9 @@ import type { WorldTouch } from "../engine/touch";
 // resting on or against it, and brings down those that lose too much support.
 //
 // The catapult always fires at the same angle: the only skill is how far its
-// arm is wound back, which sets how hard (and so how far) it throws.
+// arm is pulled back, which sets how hard (and so how far) it throws. The arm
+// follows the finger around its pivot, and a dashed line shows where the
+// stone would fly if it were let go now.
 
 /** The catapult's stone. */
 export const STONE = {
@@ -26,8 +29,8 @@ export const STONE = {
 const ARM_REST = (80 * Math.PI) / 180;
 const ARM_WOUND = (195 * Math.PI) / 180;
 export const ARM_LENGTH = 92;
-/** How far a finger drags to wind the arm all the way back. */
-const PULL_RANGE = 170;
+/** A finger has to drag this far before it takes hold of the arm. */
+const GRAB_DISTANCE = 10;
 /** Less wound than this, and letting go fires nothing. */
 const MIN_PULL = 0.06;
 /** Launch speed (units a step) unwound and fully wound, and its angle. */
@@ -70,6 +73,9 @@ const DESTROYED_SHARE = 0.75;
 /** How long "Nice!" shows before the next castle goes up. */
 export const NEXT_CASTLE_DELAY = 3000;
 const MAX_STONES = 12;
+/** What a stone in flight gains in speed each step, and keeps of it. */
+const STONE_GRAVITY = 0.001 * STEP_MS * STEP_MS;
+const STONE_AIR = 1 - 0.002;
 
 export type CastleCard = {
   id: number;
@@ -100,11 +106,13 @@ export type Rock = {
 
 export type Dust = { x: number; y: number; age: number; size: number };
 
-/** A finger winding the catapult back. */
+/** A finger pulling the catapult's arm back. */
 export type Winding = {
   pointerId: number;
   startX: number;
   startY: number;
+  /** Whether it has dragged far enough to take hold of the arm. */
+  grabbed: boolean;
   /** How far it's wound, 0 to 1. */
   pull: number;
 };
@@ -305,7 +313,11 @@ export class CastleGame {
   }
 
   /** `hitter` ran into `target`. */
-  private onContact(pair: Matter.Pair, hitter: Matter.Body, target: Matter.Body) {
+  private onContact(
+    pair: Matter.Pair,
+    hitter: Matter.Body,
+    target: Matter.Body,
+  ) {
     if (hitter.isStatic) return;
     const speed = Math.hypot(
       hitter.velocity.x - target.velocity.x,
@@ -403,7 +415,8 @@ export class CastleGame {
     }
 
     for (const rock of this.rocks) {
-      const moving = Math.hypot(rock.body.velocity.x, rock.body.velocity.y) > 0.25;
+      const moving =
+        Math.hypot(rock.body.velocity.x, rock.body.velocity.y) > 0.25;
       rock.still = moving ? 0 : rock.still + dt;
       if (!rock.gone && (rock.still > 2600 || this.isOffWorld(rock.body))) {
         rock.gone = true;
@@ -467,16 +480,37 @@ export class CastleGame {
 
   touchStart(touch: WorldTouch) {
     if (this.winding || !this.loaded || touch.x > this.controlX) return;
-    this.winding = { pointerId: touch.id, startX: touch.x, startY: touch.y, pull: 0 };
+    this.winding = {
+      pointerId: touch.id,
+      startX: touch.x,
+      startY: touch.y,
+      grabbed: false,
+      pull: 0,
+    };
     this.onEvent({ type: "wind" });
   }
 
   touchMove(touch: WorldTouch) {
     const winding = this.winding;
     if (!winding || winding.pointerId !== touch.id) return;
-    // However the finger goes, the further it drags the more it winds.
-    const dragged = Math.hypot(touch.x - winding.startX, touch.y - winding.startY);
-    winding.pull = clamp(dragged / PULL_RANGE, 0, 1);
+    const dragged = Math.hypot(
+      touch.x - winding.startX,
+      touch.y - winding.startY,
+    );
+    if (dragged >= GRAB_DISTANCE) winding.grabbed = true;
+    if (!winding.grabbed) return;
+    // The arm points at the finger, as far round as it can go: pulled back
+    // and down to wind it, eased back up to take some off.
+    let angle = Math.atan2(this.pivot.y - touch.y, touch.x - this.pivot.x);
+    // Below and behind the pivot is further round, not the other way.
+    if (angle < -Math.PI / 2) angle += Math.PI * 2;
+    winding.pull = clamp((angle - ARM_REST) / (ARM_WOUND - ARM_REST), 0, 1);
+  }
+
+  /** How far the arm is pulled back now, if far enough to fire. */
+  get aimPull() {
+    const pull = this.winding?.pull ?? 0;
+    return pull >= MIN_PULL ? pull : null;
   }
 
   touchEnd(touch: WorldTouch) {
@@ -489,12 +523,8 @@ export class CastleGame {
 
   /** Fires a stone, wound back `pull` (0 to 1). */
   fire(pull: number) {
-    const speed = this.launchSpeed(pull);
     const tip = this.armTip(ARM_REST);
-    this.launch(tip.x, tip.y, {
-      x: Math.cos(LAUNCH_ANGLE) * speed,
-      y: -Math.sin(LAUNCH_ANGLE) * speed,
-    });
+    this.launch(tip.x, tip.y, this.launchVelocity(pull));
     this.firedAt = this.time;
     this.lastPull = pull;
     this.onEvent({ type: "fire", pull });
@@ -502,6 +532,39 @@ export class CastleGame {
 
   launchSpeed(pull: number) {
     return MIN_SPEED + (MAX_SPEED - MIN_SPEED) * clamp(pull, 0, 1);
+  }
+
+  private launchVelocity(pull: number) {
+    const speed = this.launchSpeed(pull);
+    return {
+      x: Math.cos(LAUNCH_ANGLE) * speed,
+      y: -Math.sin(LAUNCH_ANGLE) * speed,
+    };
+  }
+
+  /**
+   * The path a stone fired wound back `pull` takes to the ground, as if
+   * nothing stood in its way: a point `spacing` apart along it.
+   */
+  trajectory(pull: number, spacing = 10) {
+    let { x, y } = this.armTip(ARM_REST);
+    const velocity = this.launchVelocity(pull);
+    const points = [{ x, y }];
+    const floor = this.groundY - STONE.radius;
+    let since = 0;
+    // The physics' own steps, so the line is the flight.
+    for (let step = 0; step < 600 && y < floor && x < this.W + 120; step++) {
+      velocity.x *= STONE_AIR;
+      velocity.y = velocity.y * STONE_AIR + STONE_GRAVITY;
+      x += velocity.x;
+      y += velocity.y;
+      since += Math.hypot(velocity.x, velocity.y);
+      if (since >= spacing) {
+        since -= spacing;
+        points.push({ x, y: Math.min(y, floor) });
+      }
+    }
+    return points;
   }
 
   /** Puts a stone into the world, moving at `velocity` (units a step). */
@@ -515,7 +578,13 @@ export class CastleGame {
     });
     Matter.Body.setVelocity(body, velocity);
     Matter.Composite.add(this.engine.world, body);
-    const rock: Rock = { id: nextId++, body, splashed: false, still: 0, gone: false };
+    const rock: Rock = {
+      id: nextId++,
+      body,
+      splashed: false,
+      still: 0,
+      gone: false,
+    };
     this.rocks.push(rock);
     while (this.rocks.length > MAX_STONES) {
       const oldest = this.rocks.shift()!;
@@ -617,7 +686,11 @@ export class CastleBuilder {
       const firstX = centerX - ((count - 1) * FRAME_SPACING) / 2;
       const frames = Array.from({ length: count }, (_, i) => {
         const base = row === 0 ? null : bases[i];
-        return this.frame(firstX + i * FRAME_SPACING, base ? base.topY : baseY, base ? base.id : null);
+        return this.frame(
+          firstX + i * FRAME_SPACING,
+          base ? base.topY : baseY,
+          base ? base.id : null,
+        );
       });
       if (count === 1) {
         this.floor([frames[0]]);
@@ -633,7 +706,11 @@ export class CastleBuilder {
   tower(centerX: number, storeys: number) {
     let base: { id: number; topY: number } | null = null;
     for (let storey = 0; storey < storeys; storey++) {
-      const frame = this.frame(centerX, base ? base.topY : this.groundY, base ? base.id : null);
+      const frame = this.frame(
+        centerX,
+        base ? base.topY : this.groundY,
+        base ? base.id : null,
+      );
       base = this.floor([frame]);
     }
   }

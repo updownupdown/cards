@@ -37,7 +37,7 @@
     "crumbled": "Down it comes!"
   },
   "castle": {
-    "instructions": "Drag back to wind up the catapult, then let go",
+    "instructions": "Pull the catapult's arm back, then let go",
     "castle": "Castle {{number}}"
   },
   "hat": {

@@ -227,14 +227,18 @@ const ZoneBackgroundComponent = ({
           justifyContent: "center",
           alignItems: "center",
           zIndex,
-          boxShadow: hideShadow
-            ? undefined
-            : getCardShadow({
-                cardWidth,
-                selectColor,
-                forceSelectColor,
-                isPlaceholder: true,
-              }),
+          // A zone with no background draws no edge either: the hairline ring
+          // would outline an empty box (around a game's buttons, say). A
+          // highlight a game forces on still shows.
+          boxShadow:
+            hideShadow || (hideBackground && !forceSelectColor)
+              ? undefined
+              : getCardShadow({
+                  cardWidth,
+                  selectColor,
+                  forceSelectColor,
+                  isPlaceholder: true,
+                }),
           outline: "none",
         },
       ]}

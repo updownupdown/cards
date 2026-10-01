@@ -276,7 +276,6 @@ export function HomeTab({
 
         {wildCardsVisible && (
           <WildCardsSection
-            shelfPadding={shelfPadding}
             pageSidePadding={scaledPageSidePadding}
             contentMaxWidth={contentMaxWidth}
           />
