@@ -7,7 +7,6 @@ import {
   useBarSideInset,
   useGlassStyle,
 } from "@/components/ui/FloatingBar";
-import { GlassView } from "@/components/ui/Glass";
 import { QUOTE_COUNT, TAO_CHAPTER_COUNT } from "@/data/collectibles";
 import type { GameSettingsMap } from "@/data/game-menu";
 import { useCampaignProgress } from "@/hooks/useCampaignProgress";
@@ -93,16 +92,16 @@ export function GalleryTab({
           },
         ]}
       >
-        <GlassView
+        <View
           onLayout={(event) =>
             setSwitchHeight(Math.ceil(event.nativeEvent.layout.height))
           }
-          fill={glassFill()}
-          // Round ends, like the choices inside.
-          radius={switchHeight > 0 ? switchHeight / 2 : spacing(18)}
           style={[
             glass,
             {
+              backgroundColor: glassFill(),
+              // Round ends, like the choices inside.
+              borderRadius: spacing(18),
               width: "100%",
               maxWidth: ui.contentMaxWidth - side * 2,
               padding: spacing(4),
@@ -129,7 +128,7 @@ export function GalleryTab({
               backgroundColor: "transparent",
             }}
           />
-        </GlassView>
+        </View>
       </View>
 
       {open && (

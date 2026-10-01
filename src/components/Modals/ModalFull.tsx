@@ -1,5 +1,4 @@
 import { Text } from "@/components/common/Text";
-import { GlassTargetContext } from "@/components/ui/Glass";
 import { usePalette } from "@/styles/palette";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
@@ -48,83 +47,79 @@ export default function ModalFull({
   return (
     <Modal visible transparent animationType="fade" onRequestClose={onClose}>
       {/* A native Modal is its own root, so gesture-handler scroll views
-          inside it need their own GestureHandlerRootView. Nor can it blur
-          the screen under it, so any glass in it is left plain. */}
-      <GlassTargetContext.Provider value={null}>
-        <GestureHandlerRootView
+          inside it need their own GestureHandlerRootView. */}
+      <GestureHandlerRootView
+        style={[
+          modalStyles.modalBackdrop,
+          {
+            paddingTop: spacing(layoutDims.pagePadding / 2) + insets.top,
+            paddingBottom: spacing(layoutDims.pagePadding / 2) + insets.bottom,
+            backgroundColor: rgba(theme.night, 0.82),
+          },
+        ]}
+      >
+        {/* The backdrop press sits behind the card instead of wrapping it, so
+            it never competes with scrolling inside the card. */}
+        <Pressable onPress={onClose} style={StyleSheet.absoluteFill} />
+        <View
           style={[
-            modalStyles.modalBackdrop,
+            modalStyles.modalCard,
             {
-              paddingTop: spacing(layoutDims.pagePadding / 2) + insets.top,
-              paddingBottom:
-                spacing(layoutDims.pagePadding / 2) + insets.bottom,
-              backgroundColor: rgba(theme.night, 0.82),
+              backgroundColor,
+              borderWidth: 1,
+              borderColor: rgba(theme.ink, 0.14),
+              borderRadius: spacing(22),
             },
           ]}
         >
-          {/* The backdrop press sits behind the card instead of wrapping it, so
-            it never competes with scrolling inside the card. */}
-          <Pressable onPress={onClose} style={StyleSheet.absoluteFill} />
           <View
             style={[
-              modalStyles.modalCard,
+              modalStyles.modalHeader,
               {
-                backgroundColor,
-                borderWidth: 1,
-                borderColor: rgba(theme.ink, 0.14),
-                borderRadius: spacing(22),
+                boxShadow: `0 0 ${spacing(6)}px ${spacing(6)}px ${rgba(backgroundColor, 1)}`,
               },
             ]}
           >
-            <View
-              style={[
-                modalStyles.modalHeader,
-                {
-                  boxShadow: `0 0 ${spacing(6)}px ${spacing(6)}px ${rgba(backgroundColor, 1)}`,
-                },
-              ]}
-            >
-              {/* Logo */}
-              {showLogo && <Logo height={spacing(26)} />}
+            {/* Logo */}
+            {showLogo && <Logo height={spacing(26)} />}
 
-              {/* Icon */}
-              {iconName && (
-                <Icon
-                  name={iconName}
-                  size={32}
-                  color={titleColor}
-                  style={{ marginRight: spacing(12) }}
-                />
-              )}
-
-              {/* Title */}
-              {title && gameName ? (
-                <GameHeading gameName={gameName} title={title} />
-              ) : title ? (
-                <View style={[flexStyles.colStart]}>
-                  <Text size="xl" color={titleColor} weight={500}>
-                    {title}
-                  </Text>
-                  {subtitle && (
-                    <Text size="sm" color={theme.dim} weight={400}>
-                      {subtitle}
-                    </Text>
-                  )}
-                </View>
-              ) : null}
-
-              {/* Close button */}
-              <RoundButton
-                iconName="close"
-                onPress={onClose}
-                style={{ marginLeft: "auto" }}
+            {/* Icon */}
+            {iconName && (
+              <Icon
+                name={iconName}
+                size={32}
+                color={titleColor}
+                style={{ marginRight: spacing(12) }}
               />
-            </View>
+            )}
 
-            {children}
+            {/* Title */}
+            {title && gameName ? (
+              <GameHeading gameName={gameName} title={title} />
+            ) : title ? (
+              <View style={[flexStyles.colStart]}>
+                <Text size="xl" color={titleColor} weight={500}>
+                  {title}
+                </Text>
+                {subtitle && (
+                  <Text size="sm" color={theme.dim} weight={400}>
+                    {subtitle}
+                  </Text>
+                )}
+              </View>
+            ) : null}
+
+            {/* Close button */}
+            <RoundButton
+              iconName="close"
+              onPress={onClose}
+              style={{ marginLeft: "auto" }}
+            />
           </View>
-        </GestureHandlerRootView>
-      </GlassTargetContext.Provider>
+
+          {children}
+        </View>
+      </GestureHandlerRootView>
     </Modal>
   );
 }

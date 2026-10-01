@@ -4,7 +4,7 @@ import { flexStyles } from "@/styles/flexStyles";
 import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
 import { memo } from "react";
 import { Animated, View } from "react-native";
-import { GlassView } from "@/components/ui/Glass";
+import { SURFACE_OPACITY } from "@/components/ui/FloatingBar";
 import { Button } from "../Button/Button";
 import { ResetButton } from "./ResetButton";
 
@@ -73,13 +73,13 @@ export const GameHeader = memo(function GameHeader({
         paddingBottom: spacing(layoutDims.pagePadding / 2),
       }}
     >
-      <GlassView
-        fill={rgba(theme.surface, 0.8)}
-        // Round ends, as the tab bar has.
-        radius={spacing(layoutDims.menuBarHeight / 2)}
+      <View
         style={[
           flexStyles.rowCentered,
           {
+            backgroundColor: rgba(theme.surface, SURFACE_OPACITY),
+            // Round ends, as the tab bar has.
+            borderRadius: spacing(layoutDims.menuBarHeight / 2),
             width: "100%",
             height: spacing(layoutDims.menuBarHeight),
             paddingHorizontal: spacing(layoutDims.pagePadding / 2),
@@ -191,7 +191,7 @@ export const GameHeader = memo(function GameHeader({
           iconColor={theme.accent}
           style={{ flex: 1, paddingHorizontal: 0 }}
         />
-      </GlassView>
+      </View>
     </Animated.View>
   );
 });

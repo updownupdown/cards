@@ -9,17 +9,12 @@ import {
   TILE_SIZE,
   TILE_WIDTH,
 } from "@/components/Home/HomeArt";
-import {
-  GlassTargetContext,
-  GlassView,
-  hasNativeGlass,
-} from "@/components/ui/Glass";
+import { SURFACE_OPACITY } from "@/components/ui/FloatingBar";
 import { Pill } from "@/components/ui/Nocturne";
 import type { HomeGameEntry } from "@/hooks/useHomeData";
 import { describe, expect, jest, test } from "@jest/globals";
-import { BlurView } from "expo-blur";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { GestureDetector } from "react-native-gesture-handler";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 
@@ -118,61 +113,21 @@ function render(element: React.ReactElement) {
   return renderer;
 }
 
-describe("frosted glass", () => {
-  test("blurs natively on iOS, on Android 12+ with a target, never on the web", () => {
-    expect(hasNativeGlass("ios", "17.0", false)).toBe(true);
-    expect(hasNativeGlass("android", 31, true)).toBe(true);
-    expect(hasNativeGlass("android", 34, true)).toBe(true);
-    // Nothing to blur, or too slow to blur: the plain tint.
-    expect(hasNativeGlass("android", 34, false)).toBe(false);
-    expect(hasNativeGlass("android", 30, true)).toBe(false);
-    // The web blurs with CSS.
-    expect(hasNativeGlass("web", 0, true)).toBe(false);
-  });
-
-  test("native glass draws its tint over a blur, under its content", () => {
-    const renderer = render(
-      <GlassView fill="rgba(1, 2, 3, 0.8)" radius={20}>
-        <Text>content</Text>
-      </GlassView>,
-    );
-    // The glass itself (the View holding the content) is clear; its tint is
-    // drawn over the blur instead.
-    const glass = renderer.root.find(
-      (node) =>
-        node.type === View &&
-        node.findAll((child) => child.props.children === "content").length >
-          0 &&
-        StyleSheet.flatten(node.props.style)?.borderRadius === 20,
-    );
-    expect(StyleSheet.flatten(glass.props.style).backgroundColor).toBe(
-      "transparent",
-    );
-    // The blur waits a render for its target, then comes first.
-    expect(renderer.root.findAllByType(BlurView)).toHaveLength(1);
-    const tint = renderer.root.findAll(
-      (node) =>
-        typeof node.type === "string" &&
-        StyleSheet.flatten(node.props.style)?.backgroundColor ===
-          "rgba(1, 2, 3, 0.8)",
-    );
-    expect(tint.length).toBeGreaterThan(0);
-  });
-
-  test("pills are frosted glass too", () => {
+describe("floating surfaces", () => {
+  test("pills are a plain, nearly opaque fill, with no blur", () => {
+    expect(SURFACE_OPACITY).toBeGreaterThanOrEqual(0.8);
+    expect(SURFACE_OPACITY).toBeLessThan(1);
     const renderer = render(
       <Pill label="All" selected={false} onPress={() => {}} />,
     );
-    expect(renderer.root.findAllByType(BlurView)).toHaveLength(1);
-  });
-
-  test("on iOS glass blurs with no target at all, as in a modal", () => {
-    const renderer = render(
-      <GlassTargetContext.Provider value={null}>
-        <GlassView fill="red" radius={4} />
-      </GlassTargetContext.Provider>,
+    const filled = renderer.root.findAll(
+      (node) =>
+        typeof node.type === "string" &&
+        String(StyleSheet.flatten(node.props.style)?.backgroundColor ?? "").endsWith(
+          `, ${SURFACE_OPACITY})`,
+        ),
     );
-    expect(renderer.root.findAllByType(BlurView)).toHaveLength(1);
+    expect(filled.length).toBeGreaterThan(0);
   });
 });
 

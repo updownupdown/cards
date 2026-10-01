@@ -3,7 +3,6 @@ import { WorkPlaceholder } from "./shared";
 import { Text } from "@/components/common/Text";
 import { ZoomableImage } from "@/components/common/ZoomableImage";
 import { StepperBar, useBarSideInset } from "@/components/ui/FloatingBar";
-import { GlassTargetContext } from "@/components/ui/Glass";
 import { Kicker } from "@/components/ui/Nocturne";
 import {
   GAME_FULL_THUMBNAIL_ASSETS,
@@ -54,136 +53,131 @@ export function WorkViewer({
   return (
     <Modal visible transparent animationType="fade" onRequestClose={onClose}>
       {/* A native Modal is its own root, so its gestures need their own
-          GestureHandlerRootView. Its window can't blur the Home screen's,
-          so its glass is left plain (there's only the night behind it). */}
-      <GlassTargetContext.Provider value={null}>
-        <GestureHandlerRootView
-          style={{ flex: 1, backgroundColor: theme.night }}
+          GestureHandlerRootView. */}
+      <GestureHandlerRootView style={{ flex: 1, backgroundColor: theme.night }}>
+        <View
+          style={{
+            flex: 1,
+            width: "100%",
+            maxWidth: ui.contentMaxWidth,
+            alignSelf: "center",
+            paddingTop: insets.top + barInset,
+            paddingBottom: bottomReserve,
+            paddingLeft: insets.left + barInset,
+            paddingRight: insets.right + barInset,
+            gap: spacing(16),
+          }}
         >
+          {/* Above the game and the label, which the work grows over when
+              zoomed. */}
           <View
             style={{
               flex: 1,
-              width: "100%",
-              maxWidth: ui.contentMaxWidth,
-              alignSelf: "center",
-              paddingTop: insets.top + barInset,
-              paddingBottom: bottomReserve,
-              paddingLeft: insets.left + barInset,
-              paddingRight: insets.right + barInset,
-              gap: spacing(16),
+              zIndex: 1,
+              alignItems: "center",
+              justifyContent: "center",
             }}
+            onLayout={(event) =>
+              setArtBox({
+                width: event.nativeEvent.layout.width,
+                height: event.nativeEvent.layout.height,
+              })
+            }
           >
-            {/* Above the game and the label, which the work grows over when
-              zoomed. */}
-            <View
-              style={{
-                flex: 1,
-                zIndex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              onLayout={(event) =>
-                setArtBox({
-                  width: event.nativeEvent.layout.width,
-                  height: event.nativeEvent.layout.height,
-                })
-              }
-            >
-              {collected && game.thumbnail
-                ? artWidth > 0 && (
-                    <ZoomableImage
-                      key={path}
-                      source={GAME_FULL_THUMBNAIL_ASSETS[game.thumbnail]}
-                      width={artWidth}
-                      height={artWidth / aspect}
-                    />
-                  )
-                : artWidth > 0 && (
-                    <View style={{ alignItems: "center", gap: spacing(20) }}>
-                      <WorkPlaceholder
-                        // Room kept under it for the button below.
-                        width={Math.min(
+            {collected && game.thumbnail
+              ? artWidth > 0 && (
+                  <ZoomableImage
+                    key={path}
+                    source={GAME_FULL_THUMBNAIL_ASSETS[game.thumbnail]}
+                    width={artWidth}
+                    height={artWidth / aspect}
+                  />
+                )
+              : artWidth > 0 && (
+                  <View style={{ alignItems: "center", gap: spacing(20) }}>
+                    <WorkPlaceholder
+                      // Room kept under it for the button below.
+                      width={Math.min(
+                        artBox.width * 0.7,
+                        (artBox.height - spacing(80)) * aspect,
+                      )}
+                      height={
+                        Math.min(
                           artBox.width * 0.7,
                           (artBox.height - spacing(80)) * aspect,
-                        )}
-                        height={
-                          Math.min(
-                            artBox.width * 0.7,
-                            (artBox.height - spacing(80)) * aspect,
-                          ) / aspect
-                        }
-                        iconSize={spacing(48)}
-                        radius={spacing(4)}
-                      />
-                      <CollectFrom path={path} onLaunch={onClose} />
-                    </View>
-                  )}
-            </View>
-
-            {/* The work's label. */}
-            {collected && credit ? (
-              <View
-                style={{
-                  alignItems: "center",
-                  gap: spacing(2),
-                  paddingHorizontal: spacing(12),
-                }}
-              >
-                <Text
-                  serif
-                  italic
-                  style={{
-                    textAlign: "center",
-                    fontSize: font(25),
-                    // Tall enough for the italic's descenders, which two
-                    // clipped lines would otherwise cut off.
-                    lineHeight: font(34),
-                  }}
-                  numberOfLines={2}
-                >
-                  {credit.title || localizeGameTitle(game, path, language)}
-                </Text>
-                <Text
-                  serif
-                  color={theme.dim}
-                  style={{
-                    textAlign: "center",
-                    fontSize: font(15.2),
-                    lineHeight: font(19.2),
-                  }}
-                >
-                  {[credit.artistName, credit.date].filter(Boolean).join(", ")}
-                </Text>
-                {credit.sourceName ? (
-                  <Kicker
-                    color={theme.faint}
-                    style={{
-                      marginTop: spacing(4),
-                      fontSize: font(8.8),
-                      lineHeight: font(11),
-                    }}
-                  >
-                    {credit.sourceName}
-                  </Kicker>
-                ) : null}
-              </View>
-            ) : null}
+                        ) / aspect
+                      }
+                      iconSize={spacing(48)}
+                      radius={spacing(4)}
+                    />
+                    <CollectFrom path={path} onLaunch={onClose} />
+                  </View>
+                )}
           </View>
 
-          <StepperBar
-            placement="tabBar"
-            action={{
-              iconName: "arrow-back",
-              label: t("gallery.back"),
-              onPress: onClose,
-            }}
-            onPrevious={() => onStep(-1)}
-            onNext={() => onStep(1)}
-            previousLabel={t("gallery.previous")}
-            nextLabel={t("gallery.next")}
-          />
-        </GestureHandlerRootView>
-      </GlassTargetContext.Provider>
+          {/* The work's label. */}
+          {collected && credit ? (
+            <View
+              style={{
+                alignItems: "center",
+                gap: spacing(2),
+                paddingHorizontal: spacing(12),
+              }}
+            >
+              <Text
+                serif
+                italic
+                style={{
+                  textAlign: "center",
+                  fontSize: font(25),
+                  // Tall enough for the italic's descenders, which two
+                  // clipped lines would otherwise cut off.
+                  lineHeight: font(34),
+                }}
+                numberOfLines={2}
+              >
+                {credit.title || localizeGameTitle(game, path, language)}
+              </Text>
+              <Text
+                serif
+                color={theme.dim}
+                style={{
+                  textAlign: "center",
+                  fontSize: font(15.2),
+                  lineHeight: font(19.2),
+                }}
+              >
+                {[credit.artistName, credit.date].filter(Boolean).join(", ")}
+              </Text>
+              {credit.sourceName ? (
+                <Kicker
+                  color={theme.faint}
+                  style={{
+                    marginTop: spacing(4),
+                    fontSize: font(8.8),
+                    lineHeight: font(11),
+                  }}
+                >
+                  {credit.sourceName}
+                </Kicker>
+              ) : null}
+            </View>
+          ) : null}
+        </View>
+
+        <StepperBar
+          placement="tabBar"
+          action={{
+            iconName: "arrow-back",
+            label: t("gallery.back"),
+            onPress: onClose,
+          }}
+          onPrevious={() => onStep(-1)}
+          onNext={() => onStep(1)}
+          previousLabel={t("gallery.previous")}
+          nextLabel={t("gallery.next")}
+        />
+      </GestureHandlerRootView>
     </Modal>
   );
 }

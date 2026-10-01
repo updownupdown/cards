@@ -6,7 +6,6 @@ import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { layoutDims, rgba, theme } from "@/styles/styles";
 import type { ReactNode } from "react";
 import { Pressable, View, type ViewStyle } from "react-native";
-import { GlassView } from "./Glass";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 /** The gap between a bar and the tab bar under it. */
@@ -42,14 +41,20 @@ export function useStackedBarHeight() {
   return useTabBarTop() + spacing(STACKED_HEIGHT + STACK_GAP * 2);
 }
 
-/** The glass's fill and edge, shared with the game header. */
-export const glassFill = () => rgba(theme.surface, 0.8);
+/**
+ * How opaque the floating bars, buttons and panels are over what's behind
+ * them. They were frosted glass once; the blur made Android crawl.
+ */
+export const SURFACE_OPACITY = 0.92;
+
+/** The floating surfaces' fill and edge, shared with the game header. */
+export const glassFill = () => rgba(theme.surface, SURFACE_OPACITY);
 export const glassEdge = () => rgba(theme.ink, 0.16);
 
 /**
- * The edge and shadow of the glassy pill every floating bar and panel shares
- * with the tab bar and the search field: a thin, visible edge. The frosted
- * fill itself is a GlassView's (see Glass), with `glassFill()`.
+ * The edge and shadow of the pill every floating bar and panel shares with
+ * the tab bar and the search field: a thin, visible edge. The fill is
+ * `glassFill()`.
  */
 export function useGlassStyle(radius = 22): ViewStyle {
   const { spacing } = useResponsiveMetrics();
@@ -98,13 +103,11 @@ export function FloatingBar({
         },
       ]}
     >
-      <GlassView
-        fill={glassFill()}
-        // Round ends, as the tab bar has.
-        radius={radius}
+      <View
         style={[
           glass,
           {
+            backgroundColor: glassFill(),
             width: "100%",
             maxWidth: ui.contentMaxWidth - side * 2,
             height: spacing(stacked ? STACKED_HEIGHT : layoutDims.tabBarHeight),
@@ -115,7 +118,7 @@ export function FloatingBar({
         ]}
       >
         {children}
-      </GlassView>
+      </View>
     </View>
   );
 }

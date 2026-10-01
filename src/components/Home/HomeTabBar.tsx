@@ -3,7 +3,6 @@ import { useTranslation } from "@/i18n";
 import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { glassFill, useGlassStyle } from "@/components/ui/FloatingBar";
-import { GlassView } from "@/components/ui/Glass";
 import { layoutDims, theme, transitionStyles } from "@/styles/styles";
 import {
   Animated as RNAnimated,
@@ -71,16 +70,15 @@ export function HomeTabBar({
           paddingRight: insets.right + spacing(layoutDims.pagePadding * 0.5),
         }}
       >
-        <GlassView
-          fill={glassFill()}
-          // Round ends.
-          radius={spacing(layoutDims.tabBarHeight / 2)}
+        <View
           style={[
             flexStyles.rowCentered,
             {
               width: "100%",
               height: spacing(layoutDims.tabBarHeight),
               ...glass,
+              backgroundColor: glassFill(),
+              // Round ends.
               borderRadius: spacing(layoutDims.tabBarHeight / 2),
             },
           ]}
@@ -126,7 +124,7 @@ export function HomeTabBar({
               </Pressable>
             );
           })}
-        </GlassView>
+        </View>
       </View>
     </RNAnimated.View>
   );
