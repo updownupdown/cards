@@ -114,6 +114,38 @@ describe("Castle Demolition", () => {
     expect(game.lastPull).toBeGreaterThan(0.5);
   });
 
+  test("the arm follows the finger round its pivot", () => {
+    const game = new CastleGame(860, 450);
+    const { pivot } = game;
+    game.touchStart({ id: 1, x: pivot.x, y: pivot.y - 90, t: 0 });
+    // Not yet hold of it: a few units of drift wind nothing.
+    game.touchMove({ id: 1, x: pivot.x - 4, y: pivot.y - 90, t: 10 });
+    expect(game.winding?.pull).toBe(0);
+    expect(game.aimPull).toBeNull();
+    // Straight behind the pivot: most of the way back.
+    game.touchMove({ id: 1, x: pivot.x - 90, y: pivot.y, t: 20 });
+    const behind = game.winding!.pull;
+    expect(behind).toBeGreaterThan(0.8);
+    expect(behind).toBeLessThan(1);
+    // Below and behind: all the way.
+    game.touchMove({ id: 1, x: pivot.x - 80, y: pivot.y + 30, t: 30 });
+    expect(game.winding?.pull).toBe(1);
+    // Eased back up: some of it comes off.
+    game.touchMove({ id: 1, x: pivot.x - 60, y: pivot.y - 60, t: 40 });
+    expect(game.winding!.pull).toBeLessThan(behind);
+    expect(game.aimPull).toBe(game.winding!.pull);
+  });
+
+  test("the dashed line ends where the stone lands", () => {
+    const game = new CastleGame(860, 450);
+    for (const pull of [0.2, 0.5, 0.9]) {
+      const path = game.trajectory(pull);
+      const end = path[path.length - 1];
+      expect(Math.abs(end.x - landingX(pull))).toBeLessThan(12);
+      expect(end.y).toBeLessThanOrEqual(game.groundY);
+    }
+  });
+
   test("the next castle goes up after a pause", () => {
     const game = new CastleGame(860, 450);
     throwsToDestroy(game, 12);

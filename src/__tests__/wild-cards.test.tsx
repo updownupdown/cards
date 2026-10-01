@@ -98,7 +98,7 @@ describe("Wild Cards progress", () => {
   });
 });
 
-describe("Wild Cards shelf", () => {
+describe("Wild Cards list", () => {
   // Imported late, after the mocks above are in place.
   const { WildCardsSection } =
     // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -114,7 +114,7 @@ describe("Wild Cards shelf", () => {
     let renderer!: ReactTestRenderer;
     await act(async () => {
       renderer = create(
-        <WildCardsSection shelfPadding={20} pageSidePadding={20} contentMaxWidth={600} />,
+        <WildCardsSection pageSidePadding={20} contentMaxWidth={600} />,
       );
     });
     mounted = renderer;

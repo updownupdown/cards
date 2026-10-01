@@ -1,7 +1,7 @@
-import { WILD_FONT , rgba, theme } from "@/styles/styles";
+import { WILD_FONT, rgba, theme } from "@/styles/styles";
 import { Text } from "@/components/common/Text";
 import { useToast } from "@/components/common/Toast";
-import { CARD_RADIUS } from "@/components/Home/HomeArt";
+import { hairline } from "@/components/ui/Nocturne";
 import {
   canBypassToday,
   grantWildPass,
@@ -19,31 +19,25 @@ import { Icon } from "@/icons";
 import { haptics } from "@/utils/haptics";
 import { router } from "expo-router";
 import { useEffect, useRef } from "react";
-import { Animated, Platform, Pressable, ScrollView, View } from "react-native";
+import { Animated, Platform, Pressable, View } from "react-native";
 
-/** Tiles are card-shaped, as tall as the art shelves' tiles. */
-const TILE_HEIGHT = 140;
-const TILE_WIDTH = (TILE_HEIGHT * 5) / 7;
-const TILE_GAP = 12;
-/** Room for the tiles' shadows, taken back from the layout. */
-const SHADOW_ROOM = 20;
+/** As tall as a row of the Search tab's list. */
+const ROW_HEIGHT = 52;
 const useNativeDriver = Platform.OS !== "web";
 
 type WildCardsSectionProps = {
-  /** Where the shelf starts, in line with the page's column. */
-  shelfPadding: number;
   pageSidePadding: number;
   contentMaxWidth: number;
 };
 
 /**
- * Wild Cards, at the foot of the Home tab: the physics mini-games. Every
+ * Wild Cards, at the foot of the Home tab: the physics mini-games, listed
+ * one to a row like the Search tab's games, with a lock for a star. Every
  * GAMES_PER_WILD_CARD campaign wins earn a credit, spent by tapping a locked
  * game. Tapping a locked one WILD_BYPASS_TAPS times in a row opens it anyway,
  * once a day. Only WILD_FONT is used here.
  */
 export function WildCardsSection({
-  shelfPadding,
   pageSidePadding,
   contentMaxWidth,
 }: WildCardsSectionProps) {
@@ -56,7 +50,7 @@ export function WildCardsSection({
   const open = (game: WildGameDefinition) =>
     router.push({ pathname: "/wild/[game]", params: { game: game.id } });
 
-  const onPressTile = async (game: WildGameDefinition) => {
+  const onPressRow = async (game: WildGameDefinition) => {
     if (isLoading) return;
     if (progress.unlockedIds.includes(game.id)) {
       open(game);
@@ -104,26 +98,17 @@ export function WildCardsSection({
         </Text>
       </View>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{ marginVertical: -spacing(SHADOW_ROOM) }}
-        contentContainerStyle={{
-          paddingHorizontal: shelfPadding,
-          paddingVertical: spacing(SHADOW_ROOM),
-          gap: spacing(TILE_GAP),
-        }}
-      >
+      <View style={column}>
         {WILD_GAMES.map((game) => (
-          <WildTile
+          <WildRow
             key={game.id}
             title={t(`titles.${game.id}`)}
             unlocked={progress.unlockedIds.includes(game.id)}
             canUnlock={status.credits > 0}
-            onPress={() => void onPressTile(game)}
+            onPress={() => void onPressRow(game)}
           />
         ))}
-      </ScrollView>
+      </View>
 
       {!isLoading && (
         <View style={[column, { marginTop: spacing(14), gap: spacing(2) }]}>
@@ -134,12 +119,20 @@ export function WildCardsSection({
             })}
           </Text>
           {status.credits > 0 ? (
-            <Text size="md" color={theme.accent} style={{ fontFamily: WILD_FONT }}>
+            <Text
+              size="md"
+              color={theme.accent}
+              style={{ fontFamily: WILD_FONT }}
+            >
               {t("section.tapToUnlock", { count: status.credits })}
             </Text>
           ) : (
             !status.allUnlocked && (
-              <Text size="md" color={theme.dim} style={{ fontFamily: WILD_FONT }}>
+              <Text
+                size="md"
+                color={theme.dim}
+                style={{ fontFamily: WILD_FONT }}
+              >
                 {t("section.winsNeeded", { count: status.winsNeeded })}
               </Text>
             )
@@ -150,7 +143,8 @@ export function WildCardsSection({
   );
 }
 
-function WildTile({
+/** A game in the list: its name, then its lock. */
+function WildRow({
   title,
   unlocked,
   canUnlock,
@@ -167,7 +161,7 @@ function WildTile({
   const pop = useRef(new Animated.Value(1)).current;
   const wasUnlocked = useRef(unlocked);
 
-  // The lock springs open when the tile is unlocked.
+  // The lock springs open when the game is unlocked.
   useEffect(() => {
     if (unlocked && !wasUnlocked.current) {
       pop.setValue(0.4);
@@ -183,7 +177,7 @@ function WildTile({
 
   const onPressIn = () => {
     if (unlocked || canUnlock) return;
-    // A locked tile only wobbles: a hint that something may give.
+    // A locked game's lock only rattles: a hint that something may give.
     shake.setValue(0);
     Animated.sequence([
       Animated.timing(shake, { toValue: 1, duration: 45, useNativeDriver }),
@@ -191,8 +185,6 @@ function WildTile({
       Animated.timing(shake, { toValue: 0, duration: 45, useNativeDriver }),
     ]).start();
   };
-
-  const ink = unlocked ? theme.ink : theme.dim;
 
   return (
     <Pressable
@@ -203,52 +195,47 @@ function WildTile({
         unlocked ? "section.unlockedGame" : "section.locked",
         { title },
       )}
+      style={({ pressed }) => ({
+        height: spacing(ROW_HEIGHT),
+        flexDirection: "row",
+        alignItems: "center",
+        gap: spacing(12),
+        borderBottomWidth: 1,
+        borderBottomColor: hairline(),
+        opacity: pressed ? 0.7 : 1,
+        outline: "none",
+      })}
     >
-      {({ pressed }) => (
-        <Animated.View
-          style={{
-            width: spacing(TILE_WIDTH),
-            height: spacing(TILE_HEIGHT),
-            borderRadius: spacing(CARD_RADIUS),
-            padding: spacing(10),
-            justifyContent: "space-between",
-            backgroundColor: unlocked
-              ? rgba(theme.raise, 0.92)
-              : rgba(theme.night, 0.6),
-            borderWidth: 1,
-            borderColor: rgba(theme.ink, unlocked ? 0.16 : 0.1),
-            boxShadow: `0 ${spacing(6)}px ${spacing(18)}px ${rgba("#000000", 0.45)}`,
-            opacity: pressed ? 0.8 : 1,
-            transform: [
-              {
-                translateX: shake.interpolate({
-                  inputRange: [-1, 1],
-                  outputRange: [-spacing(3), spacing(3)],
-                }),
-              },
-              {
-                rotate: shake.interpolate({
-                  inputRange: [-1, 1],
-                  outputRange: ["-1.5deg", "1.5deg"],
-                }),
-              },
-            ],
-          }}
-        >
-          <Animated.View
-            style={{ alignSelf: "flex-end", transform: [{ scale: pop }] }}
-          >
-            <Icon
-              name={unlocked ? "unlock" : "lock"}
-              size={spacing(18)}
-              color={unlocked ? theme.accent : rgba(theme.ink, 0.45)}
-            />
-          </Animated.View>
-          <Text size="md" lineHeight={1.1} color={ink} style={{ fontFamily: WILD_FONT }}>
-            {title}
-          </Text>
-        </Animated.View>
-      )}
+      <Text
+        size="md"
+        numberOfLines={1}
+        color={unlocked ? theme.ink : theme.dim}
+        style={{ flex: 1, fontFamily: WILD_FONT }}
+      >
+        {title}
+      </Text>
+      {/* As wide as the Search tab's star button, the icon centred in it. */}
+      <Animated.View
+        style={{
+          width: spacing(36),
+          alignItems: "center",
+          transform: [
+            { scale: pop },
+            {
+              rotate: shake.interpolate({
+                inputRange: [-1, 1],
+                outputRange: ["-14deg", "14deg"],
+              }),
+            },
+          ],
+        }}
+      >
+        <Icon
+          name={unlocked ? "unlock" : "lock"}
+          size={spacing(20)}
+          color={unlocked ? theme.accent : rgba(theme.ink, 0.45)}
+        />
+      </Animated.View>
     </Pressable>
   );
 }
