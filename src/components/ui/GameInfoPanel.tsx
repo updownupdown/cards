@@ -11,7 +11,6 @@ import { GAMES_DATA } from "@/data/games-registry";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
-import { Icon } from "@/icons";
 import { gamePalette, PaletteContext } from "@/styles/palette";
 import { rgba, theme as appTheme } from "@/styles/styles";
 import { Image } from "expo-image";
@@ -24,6 +23,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { ActionButton, RatingMeters } from "./Nocturne";
+import { GameCollectibleIcons } from "./GameCollectibleIcons";
 
 /** How much of the game's colour lies over its art. */
 const OVERLAY_OPACITY = 0.92;
@@ -128,35 +128,11 @@ export function GameInfoPanel({
               {category(game)}
             </Text>
           </View>
-          <View style={{ flexDirection: "row", gap: spacing(6) }}>
-            {rewards.map((reward) => {
-              const collected =
-                reward.type === "tao"
-                  ? collectedTaoIds.has(reward.id)
-                  : collectedQuoteIds.has(reward.id);
-              return (
-                <View
-                  key={`${reward.type}-${reward.id}`}
-                  style={{
-                    width: spacing(30),
-                    height: spacing(30),
-                    borderRadius: spacing(15),
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: collected
-                      ? rgba(theme.accent, 1)
-                      : rgba(theme.ink, 0.15),
-                  }}
-                >
-                  <Icon
-                    name={reward.type === "tao" ? "tao" : "quote"}
-                    size={spacing(16)}
-                    color={collected ? theme.accentInk : theme.accent}
-                  />
-                </View>
-              );
-            })}
-          </View>
+          <GameCollectibleIcons
+            rewards={rewards}
+            collectedTaoIds={collectedTaoIds}
+            collectedQuoteIds={collectedQuoteIds}
+          />
         </View>
 
         <View

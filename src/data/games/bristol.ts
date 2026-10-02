@@ -6,7 +6,6 @@ import { GameDefinition, GameTag } from "../games-data";
 export const bristol: GameDefinition = {
   path: "/bristol",
   title: "Bristol",
-  enabledOnLocalOnly: true,
   tags: [GameTag.CastlesAndFans, GameTag.TableauBuilding],
   rating: { complexity: 25, difficulty: 60, luck: 40 },
   thumbnail: "Bristol.webp",

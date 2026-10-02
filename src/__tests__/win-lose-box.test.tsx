@@ -10,6 +10,7 @@ import React from "react";
 import { Text } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { WinLoseBox } from "@/components/common/WinLoseBox";
+import { GameCollectibleIcons } from "@/components/ui/GameCollectibleIcons";
 import { ActionButton } from "@/components/ui/Nocturne";
 
 jest.mock("@/hooks/useGamePath", () => ({ useGamePath: () => "/klondike" }));
@@ -38,6 +39,7 @@ async function render(
         gameEnded
         headerBottom={0}
         won={won}
+        title="Klondike"
         winTimes={{ timeMs: 185_000, bestMs: 92_000 }}
         score={120}
         message="All four suits are complete!"
@@ -67,6 +69,37 @@ describe("WinLoseBox", () => {
     expect(shown).toContain("YOU LOST");
     expect(shown).not.toContain("3:05");
     expect(shown.some((text) => text.startsWith("Best"))).toBe(false);
+  });
+
+  test("the loss undo button hides its label and keeps its accessible name", async () => {
+    const box = await render(false, { handleUndo: () => {} });
+    const undoButton = box.root
+      .findAllByType(ActionButton)
+      .find((button) => button.props.iconName === "undo");
+
+    expect(undoButton?.props.label).toBe("");
+    expect(undoButton?.props.accessibilityLabel).toBeTruthy();
+  });
+
+  test("campaign collectibles appear in the header and glow when newly earned", async () => {
+    const rewards = [
+      { type: "tao" as const, id: 1 },
+      { type: "quote" as const, id: 1 },
+    ];
+    const box = await render(true, {
+      isCampaignMode: true,
+      collectibleRewards: rewards,
+      collectedTaoIds: new Set([1]),
+      collectedQuoteIds: new Set([1]),
+      newlyEarnedReward: rewards[1],
+    });
+    const collectibleIcons = box.root.findAll(
+      (node) => node.type === GameCollectibleIcons,
+    );
+
+    expect(collectibleIcons).toHaveLength(1);
+    expect(collectibleIcons[0]?.props.rewards).toEqual(rewards);
+    expect(collectibleIcons[0]?.props.glowingReward).toEqual(rewards[1]);
   });
 
   test("hidden actions can't be pressed", async () => {

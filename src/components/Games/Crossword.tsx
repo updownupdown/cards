@@ -8,13 +8,13 @@ import {
 import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useGameColors } from "@/hooks/useGameColors";
+import { ProgressBar } from "@/components/Home/ProgressBar";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { flexStyles } from "@/styles/flexStyles";
 import { rgba } from "@/styles/styles";
-import { Text } from "@/components/common/Text";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   collectCards,
@@ -40,7 +40,9 @@ const SIZE = 7;
 const CELLS = SIZE * SIZE;
 const CENTRE = Math.floor(CELLS / 2);
 const FINAL_CHOICES = 4;
-const HAND_ROW = SIZE + 0.35;
+const HAND_ROW = 0;
+const CONTROLS_GAP = 0.15;
+const GRID_ROW_START = 1 + CONTROLS_GAP;
 
 type GameState = {
   stock: PlayingCard[];
@@ -50,6 +52,7 @@ type GameState = {
   grid: (PlayingCard | null)[];
   ended: boolean;
   won: boolean;
+  lossReason: "oddRun" | null;
 };
 
 export type CrosswordGameState = GameState;
@@ -84,6 +87,57 @@ function lineCells(cell: number, direction: "row" | "col") {
   return Array.from({ length: SIZE }, (_, i) =>
     direction === "row" ? rowOf(cell) * SIZE + i : i * SIZE + colOf(cell),
   );
+}
+
+function numberRunAt(
+  grid: (PlayingCard | null)[],
+  cell: number,
+  direction: "row" | "col",
+) {
+  const cells = lineCells(cell, direction);
+  const index = cells.indexOf(cell);
+  const card = grid[cell];
+  if (!card || isFace(card)) return null;
+
+  let sum = 0;
+  let canExtend = false;
+  for (let i = index; i >= 0; i--) {
+    const neighbour = grid[cells[i]];
+    if (!neighbour) {
+      canExtend = true;
+      break;
+    }
+    if (isFace(neighbour)) break;
+    sum += rankValue(neighbour);
+  }
+  for (let i = index + 1; i < cells.length; i++) {
+    const neighbour = grid[cells[i]];
+    if (!neighbour) {
+      canExtend = true;
+      break;
+    }
+    if (isFace(neighbour)) break;
+    sum += rankValue(neighbour);
+  }
+  return { isEven: sum % 2 === 0, canExtend };
+}
+
+function numberRunIsEvenAt(
+  grid: (PlayingCard | null)[],
+  cell: number,
+  direction: "row" | "col",
+) {
+  return numberRunAt(grid, cell, direction)?.isEven ?? null;
+}
+
+function numberCellParityColor(grid: (PlayingCard | null)[], cell: number) {
+  const rowRun = numberRunAt(grid, cell, "row");
+  const colRun = numberRunAt(grid, cell, "col");
+  if (!rowRun || !colRun) return undefined;
+  if (!rowRun.isEven && !colRun.isEven) return "red";
+  if (!rowRun.isEven || !colRun.isEven) return "orange";
+  if (!rowRun.canExtend && !colRun.canExtend) return "green";
+  return undefined;
 }
 
 /**
@@ -122,12 +176,7 @@ function canPlace(
     });
     if (touchesCourt) return false;
   }
-  const next = [...grid];
-  next[cell] = card;
-  return (
-    lineIsEven(next, lineCells(cell, "row")) &&
-    lineIsEven(next, lineCells(cell, "col"))
-  );
+  return true;
 }
 
 function legalCells(grid: (PlayingCard | null)[], card: PlayingCard) {
@@ -149,6 +198,14 @@ function placeCard(state: GameState, handIndex: number, cell: number) {
   if (!card || state.ended || !canPlace(state.grid, cell, card)) return false;
   state.grid[cell] = card;
   state.hand.splice(handIndex, 1);
+  if (
+    !lineIsEven(state.grid, lineCells(cell, "row")) ||
+    !lineIsEven(state.grid, lineCells(cell, "col"))
+  ) {
+    state.ended = true;
+    state.lossReason = "oddRun";
+    return true;
+  }
   const placed = placedCount(state.grid);
   if (placed === CELLS) {
     state.ended = true;
@@ -171,7 +228,14 @@ function createInitialState(): GameState {
   const grid: (PlayingCard | null)[] = Array(CELLS).fill(null);
   grid[CENTRE] = flipToFace(deck.pop()!);
   const hand = [flipToFace(deck.pop()!)];
-  return { stock: deck, hand, grid, ended: false, won: false };
+  return {
+    stock: deck,
+    hand,
+    grid,
+    ended: false,
+    won: false,
+    lossReason: null,
+  };
 }
 
 function gatherState(state: GameState): GameState {
@@ -181,6 +245,7 @@ function gatherState(state: GameState): GameState {
     grid: Array(CELLS).fill(null),
     ended: false,
     won: false,
+    lossReason: null,
   };
 }
 
@@ -196,13 +261,15 @@ export const crosswordRules = {
   placeCard,
   placedCount,
   hasMove,
+  numberRunIsEvenAt,
+  numberCellParityColor,
   createInitialState,
 };
 
 const gameStateInitial = createInitialState();
 
 export default function Crossword() {
-  const { colorPale } = useGameColors();
+  const { colorDark } = useGameColors();
   const [selected, setSelected] = useState(0);
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
   const dropHitAreasRef = useRef<DropHitArea<Target>[]>([]);
@@ -273,17 +340,16 @@ export default function Crossword() {
       pileIndex: cell,
       cards: card ? [card] : [],
       col: colOf(cell),
-      row: rowOf(cell),
+      row: rowOf(cell) + GRID_ROW_START,
       baseZIndex: 10,
       placeholder: { showCount: false },
     }));
-    const handStart = (SIZE - game.hand.length) / 2;
     const handZones: MapZone[] = game.hand.map((card, i) => ({
       id: `hand-${i}`,
       name: "hand",
       pileIndex: i,
       cards: [card],
-      col: game.hand.length === 1 ? (SIZE - 1) / 2 : handStart + i,
+      col: 1 + CONTROLS_GAP + i,
       row: HAND_ROW,
       baseZIndex: 30,
     }));
@@ -302,9 +368,16 @@ export default function Crossword() {
       ...handZones,
       {
         id: "progress",
-        col: SIZE - 2,
+        col:
+          game.hand.length > 1
+            ? SIZE - 2 + 2 * CONTROLS_GAP
+            : 2 + 2 * CONTROLS_GAP,
         row: HAND_ROW,
-        width: 2,
+        width:
+          SIZE -
+          (game.hand.length > 1
+            ? SIZE - 2 + 2 * CONTROLS_GAP
+            : 2 + 2 * CONTROLS_GAP),
       },
     ];
   }, [game]);
@@ -314,14 +387,29 @@ export default function Crossword() {
     const animDuration = justDroppedCardIds.current?.has(card.card.id)
       ? 0
       : undefined;
+    if (card.zoneName === "cell" && card.pileIndex !== undefined) {
+      const isCourt = isFace(card.card);
+      const selectColor = isCourt
+        ? "grey"
+        : numberCellParityColor(game.grid, card.pileIndex);
+      return {
+        isVisible: !isBeingDragged,
+        animDuration,
+        isDisabled: true,
+        selectColor,
+        forceOverlayColor: isCourt || selectColor !== undefined,
+      };
+    }
     if (card.zoneName === "hand") {
       const choosing = game.hand.length > 1;
+      const isCourt = isFace(card.card);
       return {
         isVisible: !isBeingDragged,
         animDuration,
         isDisabled: game.ended,
         isSelected: choosing && card.pileIndex === handIndex,
-        selectColor: "blue",
+        selectColor: isCourt ? "grey" : "blue",
+        forceOverlayColor: isCourt,
       };
     }
     return { isVisible: !isBeingDragged, animDuration, isDisabled: true };
@@ -349,7 +437,7 @@ export default function Crossword() {
       zoneMapper,
       cardSize: "small",
       fixedCols: SIZE,
-      fixedRows: HAND_ROW + 1,
+      fixedRows: SIZE + GRID_ROW_START,
       gap: 0.08,
     });
 
@@ -449,7 +537,9 @@ export default function Crossword() {
       winLoseMessage={
         game.won
           ? i18n.t("games:crossword.completed")
-          : i18n.t("games:crossword.stuck", { placed, total: CELLS })
+          : game.lossReason === "oddRun"
+            ? i18n.t("games:crossword.oddRunLost")
+            : i18n.t("games:crossword.stuck", { placed, total: CELLS })
       }
     >
       <View
@@ -464,22 +554,23 @@ export default function Crossword() {
       >
         {cardMap}
 
-        {game.hand.length === 1 && (
-          <View
-            style={[
-              pointerEventsStyles.none,
-              getZoneStylesById("progress"),
-              flexStyles.colCentered,
-            ]}
-          >
-            <Text size="lg" weight={700} color={colorPale}>
-              {`${placed}/${CELLS}`}
-            </Text>
-            <Text size="xs" weight={500} color={rgba(colorPale, 0.75)}>
-              {i18n.t("games:crossword.placed")}
-            </Text>
-          </View>
-        )}
+        <View
+          style={[
+            pointerEventsStyles.none,
+            getZoneStylesById("progress"),
+            flexStyles.rowCentered,
+          ]}
+        >
+          <ProgressBar
+            progressValue={placed}
+            totalValue={CELLS}
+            color="orange"
+            backgroundColor={rgba(colorDark, 0.7)}
+            scaledHeight={cardHeight * 0.4}
+            tallyText={`${placed}/${CELLS}`}
+            style={{ width: "100%" }}
+          />
+        </View>
 
         <View
           style={[

@@ -724,7 +724,7 @@
     "allCardsHome": "All four foundations are complete.",
     "full": "Complete",
     "next": "Next: {{rank}}",
-    "nextEither": "{{one}} or {{two}}",
+    "nextEither": "{{one}} • {{two}}",
     "byOnes": "Ones",
     "byTwos": "Twos",
     "buildingByOnes": "Building by ones",
@@ -733,6 +733,7 @@
   "crossword": {
     "completed": "Every space is filled!",
     "stuck": "The card has nowhere to go. {{placed}} of {{total}} cards placed.",
+    "oddRunLost": "A completed number run added up to an odd number. You lose.",
     "placed": "placed"
   },
   "ozanamsSquare": {

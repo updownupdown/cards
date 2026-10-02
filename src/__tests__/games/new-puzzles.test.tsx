@@ -75,9 +75,47 @@ describe("Stalactites", () => {
 });
 
 describe("Crossword", () => {
-  const { SIZE, CELLS, CENTRE, canPlace, lineIsEven, placeCard } =
-    crosswordRules;
+  const {
+    SIZE,
+    CELLS,
+    CENTRE,
+    canPlace,
+    lineIsEven,
+    placeCard,
+    numberRunIsEvenAt,
+    numberCellParityColor,
+  } = crosswordRules;
   const empty = () => Array<PlayingCard | null>(CELLS).fill(null);
+
+  test("odd number runs are tinted even when incomplete", () => {
+    const grid = empty();
+    grid[0] = card("3", "clubs");
+    grid[1] = card("4", "clubs");
+    grid[2] = card("5", "clubs");
+    grid[3] = card("K", "clubs");
+
+    expect(numberRunIsEvenAt(grid, 0, "row")).toBe(true);
+    expect(numberRunIsEvenAt(grid, 0, "col")).toBe(false);
+    expect(numberCellParityColor(grid, 0)).toBe("orange");
+    expect(numberCellParityColor(grid, 1)).toBeUndefined();
+    expect(numberCellParityColor(grid, 2)).toBe("orange");
+
+    grid[CENTRE] = card("3", "clubs");
+    expect(numberRunIsEvenAt(grid, CENTRE, "row")).toBe(false);
+    expect(numberRunIsEvenAt(grid, CENTRE, "col")).toBe(false);
+    expect(numberCellParityColor(grid, CENTRE)).toBe("red");
+
+    grid[CENTRE] = card("2", "clubs");
+    expect(numberRunIsEvenAt(grid, CENTRE, "row")).toBe(true);
+    expect(numberRunIsEvenAt(grid, CENTRE, "col")).toBe(true);
+    expect(numberCellParityColor(grid, CENTRE)).toBeUndefined();
+
+    grid[CENTRE - 1] = card("K", "clubs");
+    grid[CENTRE + 1] = card("Q", "hearts");
+    grid[CENTRE - SIZE] = card("J", "spades");
+    grid[CENTRE + SIZE] = card("K", "diamonds");
+    expect(numberCellParityColor(grid, CENTRE)).toBe("green");
+  });
 
   test("only complete runs between court cards must be even", () => {
     const grid = empty();
@@ -91,6 +129,25 @@ describe("Crossword", () => {
     // The run after the King has gaps, so it isn't checked yet.
     grid[2] = card("5", "clubs");
     expect(lineIsEven(grid, row)).toBe(true);
+  });
+
+  test("completing an odd-sum run loses immediately", () => {
+    const state = crosswordRules.createInitialState();
+    state.grid = empty();
+    state.grid[0] = card("3", "clubs");
+    state.grid[1] = card("4", "clubs");
+    state.grid[3] = card("K", "clubs");
+    state.hand = [card("2", "hearts")];
+    state.stock = [card("5", "spades")];
+
+    expect(canPlace(state.grid, 2, state.hand[0])).toBe(true);
+    expect(placeCard(state, 0, 2)).toBe(true);
+    expect(state.ended).toBe(true);
+    expect(state.won).toBe(false);
+    expect(state.lossReason).toBe("oddRun");
+    expect(state.hand).toHaveLength(0);
+    expect(state.stock).toHaveLength(1);
+    expect(crosswordRules.placedCount(state.grid)).toBe(4);
   });
 
   test("cards go next to a card already down, and courts never touch side by side", () => {
@@ -120,6 +177,25 @@ describe("Crossword", () => {
     expect(state.stock).toHaveLength(0);
     expect(placeCard(state, 1, CELLS - 1)).toBe(true);
     expect(state.won).toBe(true);
+  });
+
+  test("loses when the revealed card has no legal space, before the grid is full", () => {
+    const state = crosswordRules.createInitialState();
+    state.grid = Array.from({ length: CELLS }, (_, cell) => {
+      const row = Math.floor(cell / SIZE);
+      const col = cell % SIZE;
+      if (row === 0 && [1, 3, 5].includes(col)) return null;
+      if (row === 0 && col % 2 === 0) return card("K", "clubs");
+      if ([0, 2, 4].includes(row) && col === 0) return card("Q", "hearts");
+      return card("2", "diamonds");
+    });
+    state.hand = [card("2", "clubs")];
+    state.stock = [card("J", "spades")];
+
+    expect(placeCard(state, 0, 1)).toBe(true);
+    expect(state.ended).toBe(true);
+    expect(state.won).toBe(false);
+    expect(crosswordRules.placedCount(state.grid)).toBeLessThan(CELLS);
   });
 });
 

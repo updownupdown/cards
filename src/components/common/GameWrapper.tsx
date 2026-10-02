@@ -14,6 +14,7 @@ import {
   spendMercySkip,
   type CampaignWinResult,
 } from "@/data/campaign-progress";
+import { getGameDotDefinition } from "@/data/campaign-map";
 import { useCampaignProgress } from "@/hooks/useCampaignProgress";
 import { recordDailyWin } from "@/data/game-of-the-day";
 import { DEFAULT_GAME_BACKGROUND } from "@/data/games-data";
@@ -50,7 +51,13 @@ import {
 } from "@/styles/styles";
 import { router, useLocalSearchParams } from "expo-router";
 import { useGamePath } from "@/hooks/useGamePath";
-import React, { useEffect, useEffectEvent, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useEffectEvent,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Animated,
   BackHandler,
@@ -203,6 +210,15 @@ export const GameWrapper = ({
   const [showRulesModal, setShowRulesModal] = useState(false);
   const [campaignWinResult, setCampaignWinResult] =
     useState<CampaignWinResult | null>(null);
+  const collectibleProgress = campaignWinResult?.progress ?? campaignProgress;
+  const collectedTaoIds = useMemo(
+    () => new Set(collectibleProgress.collectedTaoIds),
+    [collectibleProgress.collectedTaoIds],
+  );
+  const collectedQuoteIds = useMemo(
+    () => new Set(collectibleProgress.collectedQuoteIds),
+    [collectibleProgress.collectedQuoteIds],
+  );
   // A newly earned Tao chapter or quote is revealed over the whole screen,
   // which locks the game (and leaves out the win box's buttons) until it
   // finishes.
@@ -511,6 +527,10 @@ export const GameWrapper = ({
         message={winLoseMessage}
         handleUndo={handleLossUndo}
         isCampaignMode={isCampaignMode}
+        collectibleRewards={getGameDotDefinition(pathname)?.rewards}
+        collectedTaoIds={collectedTaoIds}
+        collectedQuoteIds={collectedQuoteIds}
+        newlyEarnedReward={campaignWinResult?.awardedReward}
         title={localizeGameTitle(gameInfo, pathname, displayLanguage)}
         winCount={won ? winCount : undefined}
         actionsDisabled={revealing && uncoveredWinResult !== campaignWinResult}

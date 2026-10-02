@@ -22,7 +22,7 @@ export const stalactites: GameDefinition = {
     sourceLink: "https://commons.wikimedia.org/wiki/File:Coves_de_Mallorca.jpg",
   },
   background: GAME_BACKGROUNDS.stoneTunnel,
-  animation: GameAnimations.Mist,
+  animation: GameAnimations.CandleMotes,
   gameColorDark: "#1d2329",
   gameColorPale: "#e6e1d6",
   gameColorAccent: "#9cc3d6",

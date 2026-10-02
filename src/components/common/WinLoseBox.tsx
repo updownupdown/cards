@@ -4,12 +4,14 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
 import { ActionButton, Caps, Kicker } from "@/components/ui/Nocturne";
+import { GameCollectibleIcons } from "@/components/ui/GameCollectibleIcons";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, Platform, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { ReactNode } from "react";
 import { formatPlayTime } from "@/data/game-menu";
+import type { CollectibleReward } from "@/data/collectibles";
 
 export type WinTimes = { timeMs: number; bestMs: number };
 
@@ -26,13 +28,15 @@ interface Props {
   reset: () => void;
   handleUndo?: () => void;
   isCampaignMode?: boolean;
+  collectibleRewards?: readonly CollectibleReward[];
+  collectedTaoIds?: ReadonlySet<number>;
+  collectedQuoteIds?: ReadonlySet<number>;
+  newlyEarnedReward?: CollectibleReward;
   rewardPreview?: ReactNode;
   /** Show the buttons faded and disabled, e.g. until a reward has played. */
   actionsDisabled?: boolean;
-  /** @deprecated The old name of actionsDisabled. */
-  actionsHidden?: boolean;
   /** The game's name, large at the top. */
-  title?: string;
+  title: string;
   /** How many times the game has been won, this win included. */
   winCount?: number;
   onExit?: () => void;
@@ -49,22 +53,24 @@ export const WinLoseBox = ({
   reset,
   handleUndo,
   isCampaignMode = false,
+  collectibleRewards,
+  collectedTaoIds,
+  collectedQuoteIds,
+  newlyEarnedReward,
   rewardPreview,
-  actionsDisabled: actionsDisabledProp = false,
-  actionsHidden = false,
+  actionsDisabled = false,
   title,
   winCount,
   onExit,
 }: Props) => {
   const { ui, spacing } = useResponsiveMetrics();
   const theme = usePalette();
-  const actionsDisabled = actionsDisabledProp || actionsHidden;
   const { t } = useTranslation("game");
   const { t: tCommon } = useTranslation("common");
   const stat = (label: string, value: string) => (
     <View style={{ gap: spacing(2) }}>
       <Text
-        size="xl"
+        size="lg"
         weight={500}
         style={{ fontVariant: ["tabular-nums", "lining-nums"] }}
       >
@@ -183,30 +189,32 @@ export const WinLoseBox = ({
           }}
         >
           {rewardPreview}
-          <View style={{ gap: spacing(4) }}>
-            <Kicker color={won ? theme.accent : theme.dim}>
-              {won ? t("result.won") : t("result.lost")}
-            </Kicker>
-            {title ? (
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-start",
+              justifyContent: "space-between",
+              gap: spacing(12),
+            }}
+          >
+            <View style={{ flex: 1, minWidth: 0 }}>
+              <Kicker color={won ? theme.accent : theme.dim}>{title}</Kicker>
               <Text weight={500} size="xxxl" numberOfLines={2}>
-                {title}
+                {won ? t("result.won") : t("result.lost")}
               </Text>
-            ) : null}
-          </View>
-
-          {won && (winTimes || winCount !== undefined) && (
-            <View style={{ flexDirection: "row", gap: spacing(24) }}>
-              {winTimes &&
-                stat(tCommon("stats.time"), formatPlayTime(winTimes.timeMs))}
-              {winTimes &&
-                stat(
-                  tCommon("stats.bestTimeLabel"),
-                  formatPlayTime(winTimes.bestMs),
-                )}
-              {winCount !== undefined &&
-                stat(tCommon("stats.wins"), String(winCount))}
             </View>
-          )}
+            {isCampaignMode &&
+              collectibleRewards &&
+              collectedTaoIds &&
+              collectedQuoteIds && (
+                <GameCollectibleIcons
+                  rewards={collectibleRewards}
+                  collectedTaoIds={collectedTaoIds}
+                  collectedQuoteIds={collectedQuoteIds}
+                  glowingReward={newlyEarnedReward}
+                />
+              )}
+          </View>
 
           {message || (!hideScore && score !== undefined) ? (
             <View style={{ gap: spacing(4) }}>
@@ -223,6 +231,21 @@ export const WinLoseBox = ({
             </View>
           ) : null}
 
+          {/* Time, Best Time, Wins */}
+          {won && (winTimes || winCount !== undefined) && (
+            <View style={{ flexDirection: "row", gap: spacing(24) }}>
+              {winTimes &&
+                stat(tCommon("stats.time"), formatPlayTime(winTimes.timeMs))}
+              {winTimes &&
+                stat(
+                  tCommon("stats.bestTimeLabel"),
+                  formatPlayTime(winTimes.bestMs),
+                )}
+              {winCount !== undefined &&
+                stat(tCommon("stats.wins"), String(winCount))}
+            </View>
+          )}
+
           <View
             style={{
               flexDirection: "row",
@@ -236,7 +259,8 @@ export const WinLoseBox = ({
                 small
                 secondary
                 iconName="undo"
-                label={tCommon("undo")}
+                label=""
+                accessibilityLabel={tCommon("undo")}
                 disabled={actionsDisabled}
                 onPress={() => fadeOutWLM(handleUndo)}
               />

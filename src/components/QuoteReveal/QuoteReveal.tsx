@@ -51,7 +51,7 @@ type Props = {
 };
 
 export const INK = "#f7f3ea";
-const OVERLAY_OPACITY = 0.85;
+const OVERLAY_OPACITY = 0.86;
 
 // --- Timeline (ms) -------------------------------------------------------------
 

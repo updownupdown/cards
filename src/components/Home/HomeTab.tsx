@@ -212,23 +212,15 @@ export function HomeTab({
           )}
 
         {dataLoaded &&
+          jumpBackInGames.length > 0 &&
           section(
             t("sections.continue"),
-            jumpBackInGames.length > 0 ? (
-              <ArtShelf
-                games={jumpBackInGames}
-                pageSidePadding={shelfPadding}
-                favorites={favorites}
-                onToggleFavorite={onToggleFavorite}
-              />
-            ) : (
-              <ShelfPlaceholder
-                testID="placeholder continue"
-                height={spacing(TILE_SIZE)}
-                pageSidePadding={shelfPadding}
-                text={t("sections.continueEmpty")}
-              />
-            ),
+            <ArtShelf
+              games={jumpBackInGames}
+              pageSidePadding={shelfPadding}
+              favorites={favorites}
+              onToggleFavorite={onToggleFavorite}
+            />,
           )}
 
         {dataLoaded &&

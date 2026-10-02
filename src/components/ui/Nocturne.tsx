@@ -337,6 +337,7 @@ export function RoundButton({
 /** The accent-filled button, and its quiet sibling. */
 export function ActionButton({
   label,
+  accessibilityLabel,
   onPress,
   iconName,
   secondary = false,
@@ -347,6 +348,7 @@ export function ActionButton({
   style,
 }: {
   label: string;
+  accessibilityLabel?: string;
   onPress: () => void;
   iconName?: IconName;
   secondary?: boolean;
@@ -367,6 +369,7 @@ export function ActionButton({
       disabled={disabled}
       onLayout={onLayout}
       accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel ?? label}
       style={[
         {
           ...transitionStyles.limited02sec,

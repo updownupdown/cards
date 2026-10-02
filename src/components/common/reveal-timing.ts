@@ -6,11 +6,11 @@
  */
 export const REVEAL_TIMING = {
   /** The win box shows alone this long before the reveal starts. */
-  delayMs: 2000,
+  delayMs: 1000,
   /** The reveal's backdrop fades in over this. */
-  fadeInMs: 1500,
+  fadeInMs: 1000,
   /** Everything stays up this long after the last animation ends. */
-  holdMs: 4000,
+  holdMs: 3500,
   /** And fades out over this. */
-  fadeOutMs: 2400,
+  fadeOutMs: 2000,
 } as const;

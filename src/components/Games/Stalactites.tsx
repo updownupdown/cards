@@ -69,9 +69,11 @@ type GameState = {
 export type StalactitesGameState = GameState;
 
 type Source =
-  { zone: "tableau"; pile: number } | { zone: "cell"; pile: number };
+  | { zone: "tableau"; pile: number }
+  | { zone: "cell"; pile: number };
 type Target =
-  { zone: "foundation"; pile: number } | { zone: "cell"; pile: number };
+  | { zone: "foundation"; pile: number }
+  | { zone: "cell"; pile: number };
 
 function emptyPiles(count: number) {
   return Array.from({ length: count }, () => [] as PlayingCard[]);
@@ -602,8 +604,8 @@ export default function Stalactites() {
               >
                 <Text
                   size="xs"
-                  weight={600}
-                  color={rgba(colorPale, 0.85)}
+                  weight={400}
+                  color={rgba(colorPale, 0.9)}
                   numberOfLines={1}
                 >
                   {label}
