@@ -135,7 +135,7 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
               style={[
                 flexStyles.colCentered,
                 flexStyles.flex1,
-                { alignItems: "flex-start" },
+                { alignItems: "stretch", minWidth: 0, overflow: "hidden" },
               ]}
             >
               <GameHeading

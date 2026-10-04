@@ -1,8 +1,10 @@
-import { GLOBAL_SETTINGS_STORAGE_KEY } from "./storage-keys";
+import {
+  GLOBAL_SETTINGS_STORAGE_KEY,
+  CAMPAIGN_PROGRESS_STORAGE_KEY,
+} from "./storage-keys";
 import { DEFAULT_COLOR_THEME } from "@/styles/themes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
-import { CAMPAIGN_PROGRESS_STORAGE_KEY } from "./storage-keys";
 import { formatPercent } from "@/i18n/format";
 import {
   isLanguagePreference,
@@ -122,6 +124,8 @@ export type GlobalSettings = {
   language: LanguagePreference;
   /** Show quotes and Tao Te Ching chapters translated, when a translation exists. */
   translateCollectibles: boolean;
+  /** Game titles stay in English, whatever the language. */
+  useEnglishGameTitles: boolean;
   discoverCardSize: "small" | "medium" | "large";
   dismissHomeInstallPrompt: boolean;
   /** The intro panel on the Campaign tab was closed. */
@@ -186,6 +190,7 @@ export type SavedGameSession<T = unknown> = {
 export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
   language: "system",
   translateCollectibles: true,
+  useEnglishGameTitles: false,
   discoverCardSize: "large",
   dismissHomeInstallPrompt: false,
   dismissCampaignIntro: false,
@@ -362,6 +367,7 @@ async function readGlobalSettings(): Promise<GlobalSettings> {
         ? merged.language
         : DEFAULT_GLOBAL_SETTINGS.language,
       translateCollectibles: merged.translateCollectibles !== false,
+      useEnglishGameTitles: merged.useEnglishGameTitles === true,
       discoverCardSize:
         merged.discoverCardSize === "small" ||
         merged.discoverCardSize === "medium" ||

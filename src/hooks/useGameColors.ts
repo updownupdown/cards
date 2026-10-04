@@ -12,6 +12,7 @@ export function useGameColors(opacity = 0.7) {
     colorZone: rgba(gameInfo?.gameColorDark ?? fallbackColor, opacity),
     colorDark: gameInfo?.gameColorDark ?? fallbackColor,
     colorPale: gameInfo?.gameColorPale ?? Colors.K100,
+    colorAccent: gameInfo?.gameColorAccent ?? Colors.K100,
     /** Image key for this game's card back, shared with games using the same ink. */
     cardBackKey: (gameInfo?.cardBack ?? DEFAULT_CARD_BACK).toLowerCase(),
   };

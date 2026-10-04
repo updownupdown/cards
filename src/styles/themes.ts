@@ -15,8 +15,7 @@
  *
  * Text contrast: dim holds at least 7.8:1 on the surface (6.8:1 on raise) and
  * faint at least 4.6:1, so secondary text stays readable. The high-contrast
- * themes (highContrast, listed last and under their own heading in Settings)
- * are black, white and one strong accent.
+ * themes (Beacon, Signal, Flare) are black, white and one strong accent.
  */
 type Hex = `#${string}`;
 
@@ -37,7 +36,6 @@ export type ColorTheme = {
   id: string;
   name: string;
   colors: ThemeColors;
-  highContrast?: boolean;
 };
 
 export const COLOR_THEMES = [
@@ -282,9 +280,88 @@ export const COLOR_THEMES = [
     },
   },
   {
+    id: "sand",
+    name: "Sand",
+    colors: {
+      night: "#0d0b08",
+      surface: "#1c1914",
+      raise: "#2a251d",
+      ink: "#f1eadc",
+      dim: "#c4baa6",
+      faint: "#938a77",
+      accent: "#e6cf9f",
+      accentInk: "#2a2108",
+      accent2: "#d98a64",
+      sky: "#221b10",
+    },
+  },
+  {
+    id: "indigo",
+    name: "Indigo",
+    colors: {
+      night: "#07071a",
+      surface: "#161733",
+      raise: "#232550",
+      ink: "#e9eaff",
+      dim: "#b5b8e6",
+      faint: "#8486b8",
+      accent: "#8b8cff",
+      accentInk: "#0c0c3a",
+      accent2: "#ffd36e",
+      sky: "#14154a",
+    },
+  },
+  {
+    id: "mint",
+    name: "Mint",
+    colors: {
+      night: "#06100c",
+      surface: "#14241d",
+      raise: "#203529",
+      ink: "#e8f6ee",
+      dim: "#b0cbbb",
+      faint: "#7fa08e",
+      accent: "#7dfbb8",
+      accentInk: "#032013",
+      accent2: "#f6a8d4",
+      sky: "#0e2a1e",
+    },
+  },
+  {
+    id: "rosewood",
+    name: "Rosewood",
+    colors: {
+      night: "#100a0a",
+      surface: "#241818",
+      raise: "#352424",
+      ink: "#f5e8e6",
+      dim: "#cdb1ad",
+      faint: "#a08582",
+      accent: "#d98f8f",
+      accentInk: "#2e0b0b",
+      accent2: "#e8c9a0",
+      sky: "#2e1414",
+    },
+  },
+  {
+    id: "steel",
+    name: "Steel",
+    colors: {
+      night: "#08090b",
+      surface: "#181b1f",
+      raise: "#262b31",
+      ink: "#e8ecf0",
+      dim: "#b3bcc6",
+      faint: "#838d98",
+      accent: "#aebfd3",
+      accentInk: "#0f1a27",
+      accent2: "#e0b36a",
+      sky: "#161c24",
+    },
+  },
+  {
     id: "beacon",
     name: "Beacon",
-    highContrast: true,
     colors: {
       night: "#000000",
       surface: "#0f0f0f",
@@ -301,7 +378,6 @@ export const COLOR_THEMES = [
   {
     id: "signal",
     name: "Signal",
-    highContrast: true,
     colors: {
       night: "#000000",
       surface: "#0c0f12",
@@ -318,7 +394,6 @@ export const COLOR_THEMES = [
   {
     id: "flare",
     name: "Flare",
-    highContrast: true,
     colors: {
       night: "#000000",
       surface: "#110c10",

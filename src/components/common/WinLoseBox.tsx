@@ -251,12 +251,11 @@ export const WinLoseBox = ({
               flexDirection: "row",
               gap: spacing(10),
               opacity: actionsDisabled ? 0.2 : 1,
+              pointerEvents: actionsDisabled ? "none" : "auto",
             }}
-            pointerEvents={actionsDisabled ? "none" : "auto"}
           >
             {handleUndo && !won && (
               <ActionButton
-                small
                 secondary
                 iconName="undo"
                 label=""
@@ -266,7 +265,6 @@ export const WinLoseBox = ({
               />
             )}
             <ActionButton
-              small
               secondary
               iconName="reset"
               label={won ? t("result.playAgain") : t("result.tryAgain")}
@@ -275,14 +273,12 @@ export const WinLoseBox = ({
               style={{ flex: 1 }}
             />
             <ActionButton
-              small
               iconName={isCampaignMode ? "milky-way" : "home"}
               label={
                 isCampaignMode ? t("result.continueOdyssey") : t("result.home")
               }
               disabled={actionsDisabled}
               onPress={() => fadeOutWLM(onExit)}
-              style={{ flex: 1.2 }}
             />
           </View>
         </View>

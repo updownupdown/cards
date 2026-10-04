@@ -212,12 +212,7 @@
     "youRanOutOfCards": "You ran out of cards before defeating all twelve royals."
   },
   "ebbAndFlow": {
-    "rising": "Rising",
-    "falling": "Falling",
-    "playMore_one": "Play {{count}} more card",
-    "playMore_other": "Play {{count}} more cards",
-    "playOrDraw": "Play on, or tap the deck to draw",
-    "deckEmpty": "Deck empty: play every card you can",
+    "stock": "Stock",
     "allPlayed": "Every card is played!",
     "stuck_one": "No card can be played. {{count}} card left.",
     "stuck_other": "No card can be played. {{count}} cards left."
@@ -748,29 +743,50 @@
     "matchesOpen_other": "{{count}} pairs can be taken"
   },
   "augury": {
-    "streak": "Right calls",
-    "start": "Tap a card to play it, or declare that none fit.",
+    "streak": "Correct",
     "noneFit": "None Fit",
-    "won": "You read the omens! The law: {{law}}",
-    "lost": "Your hand ran out. The law: {{law}}",
-    "verdict": {
-      "accepted": "The card is accepted.",
-      "rejected": "The card is turned away.",
-      "noneRight": "Right: no card fitted. A fresh hand.",
-      "noneWrong": "A card did fit, so it was played. Your run starts again."
-    },
+    "won": "You read the omens! The law: {{law}}.",
+    "lost": "Your hand ran out. The law: {{law}}.",
     "law": {
-      "alternateColours": "Each card must be the other colour from the last.",
-      "suitOrRank": "Each card must share the last card's suit or rank.",
-      "oddEven": "Odd and even ranks alternate (Jack 11, Queen 12, King 13).",
-      "higherUntilCourt": "Each card must be higher than the last, but anything may follow a court card.",
-      "withinTwo": "Each card must be within two ranks of the last (Ace low).",
-      "colourSteers": "After a red card play higher, after a black card lower; anything may follow a red King or a black Ace.",
-      "suitCycle": "Suits go round in order: hearts, clubs, diamonds, spades.",
-      "evenRedOddBlack": "Even ranks must be red and odd ranks black.",
-      "colourTwoBack": "Each card must be the same colour as the card two back.",
-      "blackClimbs": "A black card must be higher than the last card; red cards may follow anything.",
-      "sameColourClimbs": "A card of the last card's colour must be higher than it; the other colour may follow anything."
+      "alternateColours": "Must alternate color",
+      "suitOrRank": "Must be same suit or rank",
+      "oddEven": "Must alternate between odd/even ranks",
+      "higherUntilCourt": "Must be higher rank; anything can follow J/Q/K",
+      "withinTwo": "Must be within two ranks",
+      "colourSteers": "After red must be higher, after black must be lower; anything can follow a red K or black A",
+      "suitCycle": "Must follow suits in order: hearts, clubs, diamonds, spades",
+      "evenRedOddBlack": "Even ranks must be red, odd ranks must be black",
+      "colourTwoBack": "Must be same colour as two cards back",
+      "blackClimbs": "Black must be higher rank; red can follow anything",
+      "sameColourClimbs": "Same colour as last must be higher; other colour can follow anything",
+      "sameColour": "Must be same colour",
+      "differentSuit": "Must be different suit",
+      "highLowAlternate": "Must alternate between high (8-K) and low (A-7)",
+      "courtAlternate": "Must alternate between court and number cards",
+      "lowerUntilAce": "Must be lower rank; anything can follow A",
+      "farApart": "Must be at least three ranks apart",
+      "colourTwoBackDiffers": "Must be opposite colour to two cards back",
+      "suitTwoBack": "Must be same suit as two cards back",
+      "freshSuit": "Must be different suit from both of the last two cards",
+      "zigzag": "Must zigzag: higher after a fall, lower after a rise; anything can follow equal ranks",
+      "afterRedLow": "After red must be 7 or lower, after black must be 8 or higher",
+      "heartsWild": "Hearts can follow anything; other cards must be higher rank",
+      "sumAtMost14": "Two ranks must add up to 14 or less",
+      "parityLock": "Odds must follow odd, evens must follow even",
+      "withinTwoWrap": "Must be within two ranks (Ace and King are neighbours)",
+      "suitSequence": "Must follow suits in order: spades, hearts, diamonds, clubs",
+      "sameSuitAscender": "Same suit as last must be higher; other suit of same colour must be lower; other colour can follow anything",
+      "redHighBlackLow": "Red cards must be 8 or higher; black cards must be 7 or lower",
+      "royalCommand": "After court must be same suit, after number must be different suit",
+      "rangeFlip": "After high (8-K) must be other colour, after low (A-7) must be same colour",
+      "suitSwitcher": "Must be same colour but different suit",
+      "suitSuperiority": "Must be higher suit (clubs, diamonds, hearts, spades) or higher rank; anything can follow K of spades",
+      "rankSandwich": "Must be between the last two ranks, or equal to one",
+      "colourBalance": "Must not make three of the same colour in a row",
+      "distanceMirroring": "After a rise must be same suit as two back, after a fall must be same colour; anything can follow equal ranks"
     }
+  },
+  "elevens": {
+    "noMorePairsOrFaceTriplets": "No more pairs or face-card triplets can be made."
   }
 }

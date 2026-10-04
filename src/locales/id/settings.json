@@ -52,9 +52,15 @@
     "confirm": "Hapus semua progres dan pengaturan?"
   },
   "colorTheme": {
-    "label": "Tema warna",
-    "expand": "Tampilkan semua",
-    "collapse": "Ciutkan",
-    "highContrast": "Kontras tinggi"
+    "label": "Tema warna"
+  },
+  "tabs": {
+    "display": "Tampilan",
+    "theme": "Tema",
+    "other": "Lainnya"
+  },
+  "useEnglishGameTitles": {
+    "label": "Gunakan judul game dalam bahasa Inggris",
+    "description": "Selalu tampilkan nama game dalam bahasa Inggris, apa pun bahasanya."
   }
 }

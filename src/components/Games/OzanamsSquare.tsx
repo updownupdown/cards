@@ -423,6 +423,25 @@ export default function OzanamsSquare() {
           selected.cell === source.cell;
   }
 
+  // Whether dropping the dragged card on the hovered cell leaves it (and any
+  // card it swaps places with) free of conflicts.
+  const hoverFits = (() => {
+    if (!dragGhost || hoverTarget?.zone !== "cell") return true;
+    const source = dragGhost.source as Source;
+    const card = sourceCard(game, source);
+    if (!card) return true;
+    const grid = [...game.grid];
+    const displaced = grid[hoverTarget.cell];
+    if (source.zone === "cell") grid[source.cell] = displaced;
+    grid[hoverTarget.cell] = card;
+    return (
+      fits(grid, hoverTarget.cell, card) &&
+      (source.zone !== "cell" ||
+        !displaced ||
+        fits(grid, source.cell, displaced))
+    );
+  })();
+
   const cardMapper = (card: MappedCard): AnimatedCardMapping | undefined => {
     const isBeingDragged = draggedCardIds?.has(card.card.id) ?? false;
     const animDuration = justDroppedCardIds.current?.has(card.card.id)
@@ -430,7 +449,7 @@ export default function OzanamsSquare() {
       : undefined;
     if (card.zoneName === "cell" && card.pileIndex !== undefined) {
       const cell = card.pileIndex;
-      const conflict = conflicts.has(cell);
+      const conflict = conflicts.has(cell) && !game.given[cell];
       const isHover =
         !!dragGhost &&
         hoverTarget?.zone === "cell" &&
@@ -439,10 +458,19 @@ export default function OzanamsSquare() {
         isVisible: !isBeingDragged,
         animDuration,
         isDisabled: true,
-        isSelected:
-          conflict || isHover || isSelectedSource({ zone: "cell", cell }),
-        selectColor: isHover ? "green" : conflict ? "red" : "blue",
-        forceSelectColor: conflict && !isHover,
+        isSelected: isSelectedSource({ zone: "cell", cell }),
+        selectColor: game.given[cell]
+          ? "lightGrey"
+          : isHover
+            ? hoverFits
+              ? "blue"
+              : "red"
+            : conflict
+              ? "red"
+              : "blue",
+        // Overlay shows state (hover, conflict, given); only the selected
+        // card gets the coloured border.
+        forceOverlayColor: isHover || conflict || game.given[cell],
       };
     }
     if (card.zoneName === "tray") {
@@ -472,7 +500,7 @@ export default function OzanamsSquare() {
         onPress: () => onCellPress(cell),
         isDisabled: solved || !!dragGhost || !selected,
         isSelected: isHover,
-        selectColor: "green",
+        selectColor: hoverFits ? "green" : "red",
       };
     }
     if (zone.name === "tray") {
@@ -658,6 +686,7 @@ export default function OzanamsSquare() {
             cardHeight={cardHeight}
             cardSize="regular"
             isValidDrop={hoverTarget !== null}
+            validDropColor={hoverFits ? "green" : "red"}
           />
         )}
       </View>

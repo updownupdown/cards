@@ -4,5 +4,11 @@
     // "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
   },
-  "github.copilot.llm-gateway.serverUrl": "http://localhost:9999/v1"
+  "github.copilot.llm-gateway.serverUrl": "http://localhost:9999/v1",
+  "chat.tools.terminal.autoApprove": {
+    "/^grep -n \"export\\\\\\|Language\\\\\\|language\" src/i18n/content\\.ts \\| sed -n 1,80p; grep -rn \"translateGame\\\\\\|useTranslatedGame\\\\\\|localizeGame\" src --include=\\*\\.tsx --include=\\*\\.ts -l \\| head -30$/": {
+      "approve": true,
+      "matchCommandLine": true
+    }
+  }
 }

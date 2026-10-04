@@ -52,9 +52,15 @@
     "confirm": "Cancellare tutti i progressi e le impostazioni?"
   },
   "colorTheme": {
-    "label": "Tema colori",
-    "expand": "Mostra tutti",
-    "collapse": "Comprimi",
-    "highContrast": "Contrasto elevato"
+    "label": "Tema colori"
+  },
+  "tabs": {
+    "display": "Schermo",
+    "theme": "Tema",
+    "other": "Altro"
+  },
+  "useEnglishGameTitles": {
+    "label": "Usa i titoli dei giochi in inglese",
+    "description": "Mostra sempre i nomi dei giochi in inglese, qualunque sia la lingua."
   }
 }

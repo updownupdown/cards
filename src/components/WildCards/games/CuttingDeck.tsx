@@ -259,8 +259,8 @@ function Parachute({
   const rim = canopyTop + canopyH;
   return (
     <View
-      pointerEvents="none"
       style={{
+        pointerEvents: "none",
         position: "absolute",
         left: x - c,
         top: y - c,

@@ -64,9 +64,9 @@ function RewardIcon({
     >
       {glowing && (
         <Animated.View
-          pointerEvents="none"
           style={[
             {
+              pointerEvents: "none",
               position: "absolute",
               width: size,
               height: size,

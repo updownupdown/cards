@@ -71,11 +71,7 @@ const CONTENT: Record<Exclude<AppLanguage, "en">, LanguageContent> = {
   tr: { games: trGames, settings: trSettings, quotes: trQuotes, tao: trTao },
 };
 
-const GAME_TEXT_FIELDS: GameTextField[] = [
-  "title",
-  "quickStart",
-  "howToPlay",
-];
+const GAME_TEXT_FIELDS: GameTextField[] = ["title", "quickStart", "howToPlay"];
 
 /**
  * FNV-1a hash of an English value, as JSON. The translation script must hash
@@ -119,7 +115,13 @@ function contentFor(language: DisplayLanguage) {
 
 // Localized copies are cached per English object and language, so hashes are
 // only computed once.
-const cache = new WeakMap<object, Map<DisplayLanguage, unknown>>();
+const cache = new WeakMap<object, Map<string, unknown>>();
+
+let englishGameTitles = false;
+/** Keeps game titles in English, whatever the display language. */
+export function setEnglishGameTitles(value: boolean) {
+  englishGameTitles = value;
+}
 
 function cached<T extends object>(
   english: T,
@@ -132,8 +134,10 @@ function cached<T extends object>(
     byLanguage = new Map();
     cache.set(english, byLanguage);
   }
-  if (!byLanguage.has(language)) byLanguage.set(language, localize());
-  return byLanguage.get(language) as T;
+  // Game titles depend on the English-titles flag, so it is part of the key.
+  const key = englishGameTitles ? `${language}:en-titles` : language;
+  if (!byLanguage.has(key)) byLanguage.set(key, localize());
+  return byLanguage.get(key) as T;
 }
 
 const slugOf = (path: string) => path.replace(/^\//, "");
@@ -149,6 +153,7 @@ export function localizeGame<T extends GameMenuInfo>(
     const localized = { ...game };
     for (const field of GAME_TEXT_FIELDS) {
       if (game[field] === undefined) continue;
+      if (field === "title" && englishGameTitles) continue;
       (localized as GameMenuInfo)[field] = translate(
         language,
         translations?.[field],

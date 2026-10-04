@@ -31,10 +31,10 @@ export function TiltGauge({
 
   return (
     <View
-      pointerEvents="none"
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
       style={{
+        pointerEvents: "none",
         position: "absolute",
         top: stage.offsetY + stage.topClear * stage.scale + 4,
         right: stage.offsetX + 12,

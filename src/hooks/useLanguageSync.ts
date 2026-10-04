@@ -1,4 +1,5 @@
 import { applyLanguagePreference } from "@/i18n";
+import { setEnglishGameTitles } from "@/i18n/content";
 import type { LanguagePreference } from "@/i18n/languages";
 import { useEffect, useState } from "react";
 import { AppState } from "react-native";
@@ -13,6 +14,8 @@ import { useGlobalSettings } from "./useGlobalSettings";
 export function useLanguageSync() {
   const { settings, isLoading } = useGlobalSettings();
   const preference = settings.language;
+  // Set while rendering, so every title drawn after this is already right.
+  setEnglishGameTitles(settings.useEnglishGameTitles);
   const [appliedPreference, setAppliedPreference] =
     useState<LanguagePreference | null>(null);
 

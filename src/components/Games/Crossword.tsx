@@ -7,14 +7,10 @@ import {
 } from "@/hooks/useDragDrop";
 import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { useGameColors } from "@/hooks/useGameColors";
-import { ProgressBar } from "@/components/Home/ProgressBar";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
-import { flexStyles } from "@/styles/flexStyles";
-import { rgba } from "@/styles/styles";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   collectCards,
@@ -269,7 +265,6 @@ export const crosswordRules = {
 const gameStateInitial = createInitialState();
 
 export default function Crossword() {
-  const { colorDark } = useGameColors();
   const [selected, setSelected] = useState(0);
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
   const dropHitAreasRef = useRef<DropHitArea<Target>[]>([]);
@@ -349,7 +344,7 @@ export default function Crossword() {
       name: "hand",
       pileIndex: i,
       cards: [card],
-      col: 1 + CONTROLS_GAP + i,
+      col: 2 + i,
       row: HAND_ROW,
       baseZIndex: 30,
     }));
@@ -358,27 +353,19 @@ export default function Crossword() {
       {
         id: "stock",
         name: "stock",
+
         cards: game.stock,
         col: 0,
         row: HAND_ROW,
         baseZIndex: 20,
         fan: { maxVisible: 3 },
-        placeholder: { showCount: false },
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          showCount: true,
+          infoPos: "right",
+        },
       },
       ...handZones,
-      {
-        id: "progress",
-        col:
-          game.hand.length > 1
-            ? SIZE - 2 + 2 * CONTROLS_GAP
-            : 2 + 2 * CONTROLS_GAP,
-        row: HAND_ROW,
-        width:
-          SIZE -
-          (game.hand.length > 1
-            ? SIZE - 2 + 2 * CONTROLS_GAP
-            : 2 + 2 * CONTROLS_GAP),
-      },
     ];
   }, [game]);
 
@@ -429,17 +416,16 @@ export default function Crossword() {
     };
   };
 
-  const { cardMap, getZoneBasePos, cardWidth, cardHeight, getZoneStylesById } =
-    useCardMap({
-      game,
-      zones,
-      cardMapper,
-      zoneMapper,
-      cardSize: "small",
-      fixedCols: SIZE,
-      fixedRows: SIZE + GRID_ROW_START,
-      gap: 0.08,
-    });
+  const { cardMap, getZoneBasePos, cardWidth, cardHeight } = useCardMap({
+    game,
+    zones,
+    cardMapper,
+    zoneMapper,
+    cardSize: "small",
+    fixedCols: SIZE,
+    fixedRows: SIZE + GRID_ROW_START,
+    gap: 0.08,
+  });
 
   function getSourceRect(source: Source) {
     const zone = zones.find(
@@ -553,24 +539,6 @@ export default function Crossword() {
         }}
       >
         {cardMap}
-
-        <View
-          style={[
-            pointerEventsStyles.none,
-            getZoneStylesById("progress"),
-            flexStyles.rowCentered,
-          ]}
-        >
-          <ProgressBar
-            progressValue={placed}
-            totalValue={CELLS}
-            color="orange"
-            backgroundColor={rgba(colorDark, 0.7)}
-            scaledHeight={cardHeight * 0.4}
-            tallyText={`${placed}/${CELLS}`}
-            style={{ width: "100%" }}
-          />
-        </View>
 
         <View
           style={[

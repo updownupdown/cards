@@ -86,8 +86,8 @@ export function CardSprite({
     back || !card ? getCardBackImage() : getCardImageSource("small", cardName(card));
   return (
     <View
-      pointerEvents="none"
       style={{
+        pointerEvents: "none",
         position: "absolute",
         left: x - w / 2,
         top: y - h / 2,
@@ -143,8 +143,8 @@ export function EdgeCard({
   const w = EDGE_THICKNESS;
   return (
     <View
-      pointerEvents="none"
       style={{
+        pointerEvents: "none",
         position: "absolute",
         left: x - w / 2,
         top: y - length / 2,
