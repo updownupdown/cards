@@ -102,19 +102,32 @@ function refillGrid(draft: GameState) {
   }
 }
 
-/** A deal is playable if some move leaves another move to make. */
-function isPlayableDeal(draft: GameState) {
-  return removableSets(draft.grid).some((set) => {
+const MIN_PLAYABLE_MOVES = 4;
+const DEAL_ATTEMPTS = 100;
+
+/** Whether at least `moves` consecutive moves can be made from this position. */
+function canPlayMoves(
+  grid: (PlayingCard | null)[],
+  stock: PlayingCard[],
+  moves: number,
+): boolean {
+  if (moves === 0) return true;
+  return removableSets(grid).some((set) => {
     const next: GameState = {
-      grid: draft.grid.map((card, index) =>
-        set.includes(index) ? null : card,
-      ),
-      stock: [...draft.stock],
+      grid: grid.map((card, index) => (set.includes(index) ? null : card)),
+      stock: [...stock],
       discard: [],
     };
     refillGrid(next);
-    return hasAvailableMove(next.grid);
+    const cleared =
+      next.stock.length === 0 && next.grid.every((card) => card === null);
+    return cleared || canPlayMoves(next.grid, next.stock, moves - 1);
   });
+}
+
+/** A deal is playable if it allows at least four moves in a row. */
+function isPlayableDeal(draft: GameState) {
+  return canPlayMoves(draft.grid, draft.stock, MIN_PLAYABLE_MOVES);
 }
 
 async function resetAndSetup(
@@ -134,8 +147,8 @@ async function resetAndSetup(
 
   setGame((draft) => {
     const cards = draft.stock;
-    // Never open on a position that is already lost.
-    for (let attempt = 0; attempt < 200; attempt += 1) {
+    // Only keep deals that allow at least four moves in a row.
+    for (let attempt = 0; attempt < DEAL_ATTEMPTS; attempt += 1) {
       draft.stock = shuffle(cards);
       draft.grid = Array.from({ length: GRID_SIZE }, () => null);
       refillGrid(draft);
