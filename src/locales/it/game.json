@@ -10,8 +10,8 @@
     "infoAndSettings": "Info e impostazioni"
   },
   "result": {
-    "won": "Hai vinto",
-    "lost": "Hai perso",
+    "won": "Hai vinto!",
+    "lost": "Hai perso.",
     "score": "Punteggio: {{score}}",
     "playAgain": "Gioca ancora",
     "tryAgain": "Riprova",

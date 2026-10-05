@@ -262,7 +262,6 @@ describe("Home tab", () => {
     const renderer = renderHomeTab();
     expect(sections(renderer)).toEqual([
       "sections.easyGames",
-      "sections.continue",
       "sections.favorites",
       "sections.gameOfTheDay",
     ]);
@@ -276,9 +275,10 @@ describe("Home tab", () => {
     expect(sections(renderer)).toEqual(["sections.gameOfTheDay"]);
   });
 
-  test("empty Continue and Favorites keep their place with a placeholder", () => {
+  test("Continue is left out until a game is played; empty Favorites keep a placeholder", () => {
     const renderer = renderHomeTab();
-    expect(placeholders(renderer, "continue")).toHaveLength(1);
+    expect(sections(renderer)).not.toContain("sections.continue");
+    expect(placeholders(renderer, "continue")).toHaveLength(0);
     expect(placeholders(renderer, "favorites")).toHaveLength(1);
   });
 
@@ -293,7 +293,6 @@ describe("Home tab", () => {
       sections(renderHomeTab({ favorites: new Set(["/klondike"]) })),
     ).toEqual([
       "sections.easyGames",
-      "sections.continue",
       "sections.favorites",
       "sections.gameOfTheDay",
     ]);

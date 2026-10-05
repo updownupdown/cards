@@ -60,13 +60,20 @@ describe("WinLoseBox", () => {
   test("a win shows its time, with the best time beside it", async () => {
     const shown = texts(await render(true));
     expect(shown).toEqual(
-      expect.arrayContaining(["YOU WON", "3:05", "TIME", "1:32", "BEST TIME"]),
+      expect.arrayContaining([
+        "KLONDIKE",
+        "You won!",
+        "3:05",
+        "TIME",
+        "1:32",
+        "BEST TIME",
+      ]),
     );
   });
 
   test("a loss shows no time", async () => {
     const shown = texts(await render(false));
-    expect(shown).toContain("YOU LOST");
+    expect(shown).toContain("You lost.");
     expect(shown).not.toContain("3:05");
     expect(shown.some((text) => text.startsWith("Best"))).toBe(false);
   });
@@ -102,8 +109,8 @@ describe("WinLoseBox", () => {
     expect(collectibleIcons[0]?.props.glowingReward).toEqual(rewards[1]);
   });
 
-  test("hidden actions can't be pressed", async () => {
-    const hidden = await render(true, { actionsHidden: true });
+  test("disabled actions can't be pressed", async () => {
+    const hidden = await render(true, { actionsDisabled: true });
     const buttons = hidden.root.findAll((node) => node.type === ActionButton);
     expect(buttons.length).toBeGreaterThan(0);
     for (const button of buttons) expect(button.props.disabled).toBe(true);

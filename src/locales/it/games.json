@@ -719,5 +719,58 @@
     "cardsRemainGood": "Restano {{count}} carte. Bene!",
     "cardsRemainExcellent": "Restano {{count}} carte. Ottimo!",
     "cardsRemainBrilliant": "Restano {{count}} carte. Eccezionale!"
+  },
+  "stalactites": {
+    "allCardsHome": "Tutte e quattro le fondazioni sono complete.",
+    "full": "Completa",
+    "next": "Prossima: {{rank}}",
+    "nextEither": "{{one}} • {{two}}",
+    "byOnes": "Di uno in uno",
+    "byTwos": "Di due in due",
+    "buildingByOnes": "Si sale di uno in uno",
+    "buildingByTwos": "Si sale di due in due"
+  },
+  "crossword": {
+    "completed": "Tutte le caselle sono piene!",
+    "stuck": "La carta non ha dove andare. {{placed}} carte su {{total}} posate.",
+    "oddRunLost": "Una serie di numeri completa ha dato una somma dispari. Hai perso.",
+    "placed": "posate"
+  },
+  "ozanamsSquare": {
+    "solved": "Ogni linea contiene ogni valore e ogni seme una volta sola."
+  },
+  "irisGarden": {
+    "cleared": "Il giardino è sgombro!",
+    "noMatches": "Nessuna coppia si può prendere. Restano {{pairs}} coppie.",
+    "pairsLeft_one": "Resta {{count}} coppia",
+    "pairsLeft_other": "Restano {{count}} coppie",
+    "matchesOpen_one": "Si può prendere {{count}} coppia",
+    "matchesOpen_other": "Si possono prendere {{count}} coppie"
+  },
+  "augury": {
+    "streak": "Risposte giuste",
+    "start": "Tocca una carta per giocarla, o dichiara che nessuna va bene.",
+    "noneFit": "Nessuna va bene",
+    "won": "Hai letto i presagi! La legge: {{law}}",
+    "lost": "La tua mano è finita. La legge: {{law}}",
+    "verdict": {
+      "accepted": "La carta è accettata.",
+      "rejected": "La carta è respinta.",
+      "noneRight": "Giusto: nessuna carta andava bene. Una mano nuova.",
+      "noneWrong": "Una carta andava bene, quindi è stata giocata. La tua serie ricomincia."
+    },
+    "law": {
+      "alternateColours": "Ogni carta deve essere dell’altro colore rispetto alla precedente.",
+      "suitOrRank": "Ogni carta deve avere il seme o il valore della precedente.",
+      "oddEven": "Valori pari e dispari si alternano (Fante 11, Donna 12, Re 13).",
+      "higherUntilCourt": "Ogni carta deve essere più alta della precedente, ma dopo una figura va bene tutto.",
+      "withinTwo": "Ogni carta deve stare entro due valori dalla precedente (Asso basso).",
+      "colourSteers": "Dopo una carta rossa gioca più alto, dopo una nera più basso; dopo un Re rosso o un Asso nero va bene tutto.",
+      "suitCycle": "I semi girano in ordine: cuori, fiori, quadri, picche.",
+      "evenRedOddBlack": "I valori pari devono essere rossi e quelli dispari neri.",
+      "colourTwoBack": "Ogni carta deve essere dello stesso colore di quella di due carte prima.",
+      "blackClimbs": "Una carta nera deve essere più alta della precedente; le rosse possono seguire qualsiasi carta.",
+      "sameColourClimbs": "Una carta dello stesso colore della precedente deve essere più alta; l’altro colore può seguire qualsiasi carta."
+    }
   }
 }

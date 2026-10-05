@@ -56,5 +56,9 @@
     "expand": "Tümünü göster",
     "collapse": "Daralt",
     "highContrast": "Yüksek kontrast"
+  },
+  "betaGames": {
+    "enabled": "Beta oyunlar açık",
+    "hide": "Beta oyunları gizle"
   }
 }

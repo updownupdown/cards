@@ -10,8 +10,8 @@
     "infoAndSettings": "Infos et réglages"
   },
   "result": {
-    "won": "Vous avez gagné",
-    "lost": "Vous avez perdu",
+    "won": "Vous avez gagné !",
+    "lost": "Vous avez perdu.",
     "score": "Score : {{score}}",
     "playAgain": "Rejouer",
     "tryAgain": "Réessayer",

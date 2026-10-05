@@ -10,8 +10,8 @@
     "infoAndSettings": "Bilgi ve Ayarlar"
   },
   "result": {
-    "won": "Kazandınız",
-    "lost": "Kaybettin",
+    "won": "Kazandın!",
+    "lost": "Kaybettin.",
     "score": "Puan: {{score}}",
     "playAgain": "Tekrar oyna",
     "tryAgain": "Tekrar dene",

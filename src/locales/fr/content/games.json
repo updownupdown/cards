@@ -135,6 +135,46 @@
       "value": "Ascension"
     }
   },
+  "augury": {
+    "howToPlay": {
+      "hash": "392b4bab",
+      "value": [
+        "## Objectif",
+        "Percez la **loi cachée** assez bien pour faire **huit bonnes réponses d'affilée**.",
+        "## La loi",
+        "- Chaque partie a une loi secrète sur les cartes qui peuvent suivre la **dernière carte du chemin**. Par exemple, elle peut n'autoriser qu'une carte de l'autre couleur.",
+        "- La première carte commence le chemin.",
+        "## Jouer",
+        "- Vous avez quatre cartes en main. Touchez-en une pour la jouer.",
+        "- Si la loi l'autorise, la carte rejoint le chemin et compte comme une bonne réponse.",
+        "- Sinon, elle est refusée\u00a0: elle reste grisée dans la grille, et votre série de bonnes réponses repart de zéro.",
+        "- Vous complétez votre main à quatre cartes après chaque coup.",
+        "## Aucune ne convient",
+        "- Si vous pensez qu'aucune carte de votre main ne convient, touchez **Aucune ne convient**.",
+        "- Si vous avez raison, cela compte comme une bonne réponse et vous recevez une nouvelle main.",
+        "- Si une carte convenait, elle est jouée pour vous (en violet), et votre série repart de zéro.",
+        "- Les cartes plus anciennes et les mains écartées vont face cachée dans la **défausse**\u00a0; touchez-la pour les voir.",
+        "## Fin",
+        "- Vous gagnez avec huit bonnes réponses d'affilée.",
+        "- Vous perdez si votre main est épuisée. La loi est révélée dans les deux cas.",
+        "## Difficulté",
+        "- **Facile\u00a0:** des lois simples sur la couleur, la famille ou la valeur de la dernière carte.",
+        "- **Difficile\u00a0:** des lois plus subtiles, dont certaines regardent deux cartes en arrière ou mêlent couleur et valeur."
+      ]
+    },
+    "quickStart": {
+      "hash": "5de8e5b8",
+      "value": [
+        "Une loi cachée décide quelles cartes peuvent suivre la dernière carte du chemin.",
+        "Jouez une carte qui vous semble convenir, ou déclarez qu'aucune carte de votre main ne convient.",
+        "Faites huit bonnes réponses d'affilée pour gagner."
+      ]
+    },
+    "title": {
+      "hash": "f453f554",
+      "value": "Augure"
+    }
+  },
   "australian-patience": {
     "howToPlay": {
       "hash": "1faa036d",
@@ -648,6 +688,51 @@
       "value": "Chapitre et verset"
     }
   },
+  "charlatan": {
+    "howToPlay": {
+      "hash": "ea9ac512",
+      "value": [
+        "## Objectif",
+        "Marquez **150 points** ou plus en **9 manches** de préparation.",
+        "## Votre paquet",
+        "- Vous commencez avec 11 cartes\u00a0: six **ratés** (les A, 2 et 3 noirs) et cinq ingrédients (2♥ 3♥ 4♥ 2♦ 3♦).",
+        "- Au début de chaque manche, toutes vos cartes sont mélangées dans votre paquet.",
+        "## Préparer",
+        "- Touchez votre paquet pour ajouter sa carte du dessus au chaudron.",
+        "- Chaque ingrédient ajoute sa valeur à la **force** de la potion (As 1, Valets 11, Dames 12 et Rois 13).",
+        "- Si les ratés du chaudron dépassent **7 au total**, la potion déborde.",
+        "- Le risque affiché indique la probabilité que la carte suivante fasse déborder la potion.",
+        "## Effets",
+        "- **♥ Cœur\u00a0:** aucun effet.",
+        "- **♦ Carreau\u00a0:** si vous vous arrêtez sur un carreau, il compte double.",
+        "- **♣ Trèfle\u00a0:** si la carte précédente est un raté, ce raté retourne dans votre paquet.",
+        "- **♠ Pique\u00a0:** la carte suivante de votre paquet est retournée face visible.",
+        "## S'arrêter",
+        "- Arrêtez-vous quand vous voulez pour marquer la force de la potion en points, et en recevoir la moitié (arrondie au supérieur) en pièces.",
+        "- Si la potion déborde, choisissez soit les points, soit les pièces.",
+        "## Marché",
+        "- Dépensez vos pièces pour acheter jusqu'à **2 cartes de couleurs différentes**. Elles rejoignent votre paquet.",
+        "- Un cœur coûte sa valeur. Les carreaux, trèfles et piques coûtent 1 de plus.",
+        "- Les pièces non dépensées sont perdues.",
+        "## Rangs",
+        "- 150+\u00a0: Guérisseur de village",
+        "- 200+\u00a0: Alchimiste de la cour",
+        "- 250+\u00a0: Faiseur de miracles"
+      ]
+    },
+    "quickStart": {
+      "hash": "8bdb8a52",
+      "value": [
+        "Touchez votre paquet pour ajouter sa carte du dessus au chaudron.",
+        "Arrêtez-vous avant que les ratés (A, 2 et 3 noirs) dépassent 7 au total.",
+        "Dépensez vos pièces en meilleures cartes pour votre paquet, puis préparez une nouvelle potion."
+      ]
+    },
+    "title": {
+      "hash": "a18289b9",
+      "value": "Charlatan"
+    }
+  },
   "city-grid": {
     "howToPlay": {
       "hash": "316682c7",
@@ -826,6 +911,46 @@
     "title": {
       "hash": "f080a538",
       "value": "Carrés de cribbage"
+    }
+  },
+  "crossword": {
+    "howToPlay": {
+      "hash": "240983c3",
+      "value": [
+        "## Objectif",
+        "Remplissez la **grille de 7×7**, comme des mots croisés, avec 49 des 52 cartes.",
+        "## Poser les cartes",
+        "- La première carte est posée au centre pour vous.",
+        "- Posez chaque carte retournée sur une case vide **à côté d'une carte déjà posée**, côte à côte ou en diagonale. Les cases possibles sont mises en évidence.",
+        "- Les Valets, Dames et Rois sont les **cases noires**. Deux d'entre elles ne peuvent jamais se toucher côte à côte (en diagonale, c'est permis).",
+        "## Mots pairs",
+        "- Les cartes numérotées sont les lettres. Les As valent 1, les autres leur nombre.",
+        "- Dès qu'une suite de cartes numérotées entre deux cases noires, ou entre une case noire et le bord, est complète, elle doit **faire une somme paire**.",
+        "- Une ligne ou une colonne entière sans case noire doit aussi faire une somme paire.",
+        "- Les cartes numérotées sont teintées en orange quand exactement une de leurs suites (ligne ou colonne) a une somme impaire, et en rouge quand les deux en ont une. Les cartes des suites paires ne sont teintées en vert que si leurs deux suites sont fermées à d'autres cartes numérotées\u00a0; sinon, elles ne sont pas teintées.",
+        "- Les figures sont teintées en gris pour montrer les cases noires.",
+        "## La dernière case",
+        "Quand 48 cases sont remplies, les quatre dernières cartes sont retournées, et vous en choisissez une pour remplir la dernière case.",
+        "## Fin",
+        "- Vous gagnez quand les 49 cases sont remplies.",
+        "- Compléter une suite numérotée de somme impaire termine aussitôt la partie.",
+        "- La partie s'arrête dès que la carte à poser n'a aucune place. Votre score est le nombre de cartes posées.",
+        "## Conseils",
+        "- Une case noire peut clore une suite plus tôt, quelle que soit sa somme jusque-là.",
+        "- Gardez quelques suites ouvertes, pour qu'une carte impaire ait toujours une place."
+      ]
+    },
+    "quickStart": {
+      "hash": "5b847a72",
+      "value": [
+        "Posez chaque carte à côté d'une carte déjà posée, côte à côte ou en diagonale.",
+        "Les figures sont des cases noires\u00a0: deux d'entre elles ne peuvent pas se toucher côte à côte.",
+        "Les cartes numérotées entre deux cases noires ou le bord doivent faire une somme paire."
+      ]
+    },
+    "title": {
+      "hash": "6c831cdf",
+      "value": "Mots croisés"
     }
   },
   "crownslayer": {
@@ -1115,6 +1240,46 @@
     "title": {
       "hash": "33fffba2",
       "value": "Easthaven"
+    }
+  },
+  "ebb-and-flow": {
+    "howToPlay": {
+      "hash": "2ae1fc74",
+      "value": [
+        "## Objectif",
+        "Jouez les **52 cartes** sur les quatre piles.",
+        "## Piles",
+        "- **Piles montantes\u00a0:** jouez une carte de même valeur que la carte du dessus, ou plus haute.",
+        "- **Piles descendantes\u00a0:** jouez une carte de même valeur que la carte du dessus, ou plus basse.",
+        "- N'importe quelle carte peut commencer une pile vide. Les As sont bas et les Rois hauts.",
+        "## Faire reculer",
+        "- Une carte **d'un rang en arrière dans la même couleur** peut toujours être jouée\u00a0: un 7♥ sur un 8♥ montant, ou un 9♠ sur un 8♠ descendant.",
+        "- Gardez ces cartes\u00a0: elles redonnent de la marge à une pile.",
+        "## Tours",
+        "- Jouez au moins **deux cartes** à chaque tour. Vous pouvez en jouer plus.",
+        "- Touchez ensuite la pioche pour compléter votre main.",
+        "- Une fois la pioche vide, jouez toutes les cartes possibles.",
+        "- La partie est perdue quand vous ne pouvez pas jouer les cartes obligatoires.",
+        "## Taille de la main",
+        "- Facile\u00a0: **8** cartes",
+        "- Normal\u00a0: **7** cartes",
+        "- Difficile\u00a0: **6** cartes",
+        "## Conseils",
+        "- Chaque saut gaspille des valeurs. Jouez des cartes proches, quitte à en jouer plus de deux.",
+        "- Gardez les cartes qui font reculer une pile jusqu'à ce que la pile en ait besoin."
+      ]
+    },
+    "quickStart": {
+      "hash": "f7f08849",
+      "value": [
+        "Jouez les cartes de votre main\u00a0: les piles montantes montent, les piles descendantes descendent.",
+        "Jouez au moins deux cartes, puis touchez la pioche pour compléter votre main.",
+        "Une carte d'un rang en arrière dans la même couleur fait reculer une pile."
+      ]
+    },
+    "title": {
+      "hash": "6cff71c4",
+      "value": "Flux et reflux"
     }
   },
   "eight-off": {
@@ -1795,6 +1960,38 @@
       "value": "Envahisseurs"
     }
   },
+  "iris-garden": {
+    "howToPlay": {
+      "hash": "745e02ea",
+      "value": [
+        "## Objectif",
+        "Retirez du jardin les **48 cartes** (de l'As à la Dame) par paires.",
+        "## Paires",
+        "- Deux cartes de **même valeur** forment une paire, quelles que soient leurs couleurs.",
+        "- Une paire peut être prise quand un chemin les relie à travers des **cases vides**, fait d'au plus trois lignes droites, donc avec **au plus deux virages**. Le chemin reste dans le jardin.",
+        "- Des cartes côte à côte, ou séparées seulement par des cases vides sur une ligne, peuvent toujours être prises.",
+        "- Touchez une carte, puis sa partenaire. Le chemin s'affiche quand elles partent.",
+        "## Fin",
+        "- Chaque jardin peut être dégagé.",
+        "- Vous perdez si aucune paire ne peut être prise. Annuler vous permet d'essayer autrement.",
+        "## Conseils",
+        "- Chaque valeur a quatre cartes\u00a0: réfléchissez aux deux à apparier en premier.",
+        "- Retirer les cartes du milieu ouvre des chemins pour les autres."
+      ]
+    },
+    "quickStart": {
+      "hash": "0cda1b1b",
+      "value": [
+        "Touchez deux cartes de même valeur pour les prendre.",
+        "Elles doivent être reliées par un chemin à travers des cases vides, avec au plus deux virages.",
+        "Dégagez tout le jardin pour gagner."
+      ]
+    },
+    "title": {
+      "hash": "b023f43f",
+      "value": "Jardin d'iris"
+    }
+  },
   "jailbreak": {
     "howToPlay": {
       "hash": "aad3689d",
@@ -2278,6 +2475,38 @@
       "value": "Ouroboros"
     }
   },
+  "ozanams-square": {
+    "howToPlay": {
+      "hash": "c30557f7",
+      "value": [
+        "## Objectif",
+        "Disposez les **As, Rois, Dames et Valets** dans un carré de 4×4 de sorte que chaque **ligne**, chaque **colonne** et les deux **grandes diagonales** contiennent une carte de chaque valeur et une carte de chaque couleur.",
+        "## Jouer",
+        "- Certaines cartes sont distribuées en place et ne peuvent pas bouger. Les autres attendent sur le plateau, par couleur.",
+        "- Faites glisser une carte du plateau vers une case vide, ou touchez-la puis touchez la case.",
+        "- Les cartes que vous posez peuvent être déplacées vers une autre case, échangées, ou renvoyées sur le plateau.",
+        "- Une carte qui répète une valeur ou une couleur sur l'une de ses lignes est marquée en rouge.",
+        "- Chaque donne a **exactement une** solution.",
+        "## Difficulté",
+        "- **Facile\u00a0:** sept cartes commencent en place.",
+        "- **Difficile\u00a0:** seules les cartes nécessaires à la solution commencent en place.",
+        "## Histoire",
+        "Jacques Ozanam a posé ce problème avec des cartes à jouer dans ses *Récréations mathématiques et physiques* (1725). Leonhard Euler a ensuite étudié des carrés semblables, qu'il appelait carrés gréco-latins."
+      ]
+    },
+    "quickStart": {
+      "hash": "c309afcc",
+      "value": [
+        "Remplissez le carré avec les seize As, Rois, Dames et Valets.",
+        "Aucune ligne, colonne ou grande diagonale ne peut contenir deux cartes de même valeur ou de même couleur.",
+        "Faites glisser les cartes depuis le plateau. Les cartes distribuées en place ne peuvent pas bouger."
+      ]
+    },
+    "title": {
+      "hash": "e2c5ab80",
+      "value": "Carré d'Ozanam"
+    }
+  },
   "pagoda": {
     "howToPlay": {
       "hash": "5eb45815",
@@ -2360,6 +2589,82 @@
     "title": {
       "hash": "a09162a7",
       "value": "Pingouin"
+    }
+  },
+  "picket-fence": {
+    "howToPlay": {
+      "hash": "1fbe71b9",
+      "value": [
+        "## Objectif",
+        "Marquez **60 points** ou plus en construisant des maisons, des parcs et des piscines, et en clôturant des lotissements.",
+        "## Construire",
+        "- Vous avez trois cartes en main. À chaque tour, construisez l'une d'elles comme maison sur un terrain vide.",
+        "- Les numéros des maisons doivent monter de gauche à droite le long d'une rue (As 1, Valets 11, Dames 12 et Rois 13). Les terrains vides ne comptent pas.",
+        "- Utilisez ensuite l'une de vos autres cartes pour son effet, et complétez votre main à trois cartes.",
+        "- La partie s'arrête quand aucune de vos cartes ne peut être construite, ou quand tous les terrains sont construits.",
+        "## Effets",
+        "- **♥ Parc\u00a0:** le cœur est glissé sous la nouvelle maison, comme parc de sa rue.",
+        "- **♦ Piscine\u00a0:** si la nouvelle maison est sur un terrain à piscine, le carreau est glissé dessous comme piscine. Sinon, il est défaussé.",
+        "- **♠ Clôture\u00a0:** posez une clôture entre deux terrains, dans n'importe quelle rue.",
+        "- **♣ Seconde maison\u00a0:** construisez aussi le trèfle comme maison.",
+        "## Score",
+        "- **Parcs\u00a0:** 2 points chacun. Les rues accueillent jusqu'à 3, 4 et 5 parcs, et une rue pleine de parcs rapporte 10, 14 ou 18 points à la place.",
+        "- **Piscines\u00a0:** 3, 6, 9, 13, 17, 21 et 26 points pour 1 à 7 piscines.",
+        "- **Lotissements\u00a0:** les clôtures et les bouts de rue divisent chaque rue en lotissements. Un lotissement entièrement construit rapporte 1, 3, 5, 7, 9 ou 11 points pour 1 à 6 maisons. Les lotissements plus longs ne rapportent rien.",
+        "## Rangs",
+        "- 60+\u00a0: Bons voisins",
+        "- 70+\u00a0: Quartier modèle",
+        "- 80+\u00a0: Carte postale",
+        "## Conseils",
+        "- Laissez de la marge entre les numéros\u00a0: un terrain entre un 5 et un 6 ne pourra jamais être construit.",
+        "- L'étiquette au-dessus de chaque lotissement indique ce qu'il rapportera, ou ✕ s'il ne peut plus être complété."
+      ]
+    },
+    "quickStart": {
+      "hash": "15a8cad5",
+      "value": [
+        "À chaque tour, construisez une carte comme maison et utilisez la couleur d'une autre carte comme effet.",
+        "Les numéros des maisons doivent monter de gauche à droite dans chaque rue.",
+        "La partie s'arrête quand aucune de vos cartes ne trouve de terrain."
+      ]
+    },
+    "title": {
+      "hash": "63ac8afa",
+      "value": "Palissade"
+    }
+  },
+  "pickpocket": {
+    "howToPlay": {
+      "hash": "1ef6bb8f",
+      "value": [
+        "## Objectif",
+        "Volez **750 pièces** ou plus en cinq manches.",
+        "## Manches",
+        "- Chaque manche distribue 25 cartes face cachée\u00a0: des As, des Deux, des Trois et des figures (Valets, Dames et Rois).",
+        "- À côté de chaque ligne et sous chaque colonne figurent son **total de pièces** (As 1, Deux 2, Trois 3) et son **nombre de figures**.",
+        "- Chaque manche cache plus de figures que la précédente.",
+        "## Retourner",
+        "- Touchez une carte pour la retourner. Votre bourse démarre à la valeur de la première carte, et chaque carte suivante la multiplie\u00a0: un Deux la double, un Trois la triple.",
+        "- Retournez tous les Deux et les Trois pour faire table rase, et gardez la bourse.",
+        "- Retournez une figure et vous êtes pris\u00a0: la bourse de la manche est perdue.",
+        "- Vous pouvez partir à tout moment et garder le contenu de votre bourse.",
+        "## Rangs",
+        "- 750+\u00a0: Doigts agiles",
+        "- 850+\u00a0: Coupe-bourse",
+        "- 950+\u00a0: Prince des voleurs"
+      ]
+    },
+    "quickStart": {
+      "hash": "c66bbe79",
+      "value": [
+        "Retournez des cartes\u00a0: les As, les Deux et les Trois multiplient votre bourse.",
+        "Chaque ligne et chaque colonne indique son total de pièces et le nombre de figures qu'elle cache.",
+        "Retournez une figure et la bourse de la manche est perdue. Partez à temps pour la garder."
+      ]
+    },
+    "title": {
+      "hash": "7ea3b108",
+      "value": "Pickpocket"
     }
   },
   "pocket-poker": {
@@ -2993,6 +3298,41 @@
     "title": {
       "hash": "dac6b9bc",
       "value": "Petite Araignée"
+    }
+  },
+  "stalactites": {
+    "howToPlay": {
+      "hash": "4c72e1d1",
+      "value": [
+        "## Objectif",
+        "Montez les quatre **fondations** jusqu'à treize cartes chacune.",
+        "## Donne",
+        "- Les quatre premières cartes commencent les quatre fondations.",
+        "- Les 48 autres cartes sont distribuées en huit colonnes de six.",
+        "## Fondations",
+        "- Les fondations montent soit **de un en un** (7, 8, 9…), soit **de deux en deux** (7, 9, V…), de la même façon pour les quatre. Choisissez avec les boutons, ou jouez une carte d'une ou deux valeurs au-dessus d'une fondation et elle choisit pour vous.",
+        "- Les fondations montent **sans tenir compte de la couleur**, en repassant du Roi à l'As, jusqu'à ce que chacune ait treize cartes.",
+        "## Coups",
+        "- Déplacez la carte du dessus d'une colonne vers une fondation ou vers l'une des **deux cellules**.",
+        "- Une carte en cellule ne peut aller que sur une fondation.",
+        "- On ne construit jamais sur les colonnes, et une colonne vide reste vide.",
+        "- Touchez une carte pour l'envoyer sur une fondation, ou dans une cellule si elle n'y va pas, ou faites-la glisser où vous voulez. Tant que le pas n'est pas choisi, une carte qui pourrait aller dans les deux sens doit être glissée.",
+        "## Conseils",
+        "- Regardez toute la donne avant de choisir un en un ou deux en deux.",
+        "- Les cellules se remplissent vite\u00a0: gardez-en une libre pour la carte qui débloque une colonne."
+      ]
+    },
+    "quickStart": {
+      "hash": "1e22b470",
+      "value": [
+        "Les fondations montent sans tenir compte de la couleur, en repassant du Roi à l'As.",
+        "Choisissez si elles montent de un en un ou de deux en deux, ou laissez votre premier coup sur une fondation décider.",
+        "Les cartes du dessus ne vont que sur les fondations, ou dans les deux cellules."
+      ]
+    },
+    "title": {
+      "hash": "3b78dd2a",
+      "value": "Stalactites"
     }
   },
   "stalker": {

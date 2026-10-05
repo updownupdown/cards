@@ -135,6 +135,46 @@
       "value": "Escalada"
     }
   },
+  "augury": {
+    "howToPlay": {
+      "hash": "392b4bab",
+      "value": [
+        "## Objetivo",
+        "Descubra a **lei oculta** bem o bastante para acertar **oito vezes seguidas**.",
+        "## A lei",
+        "- Cada partida tem uma lei secreta sobre quais cartas podem seguir a **última carta do caminho**. Por exemplo, ela pode permitir só uma carta da outra cor.",
+        "- A primeira carta começa o caminho.",
+        "## Jogando",
+        "- Você tem quatro cartas. Toque em uma para jogá-la.",
+        "- Se a lei permitir, a carta entra no caminho e conta como acerto.",
+        "- Se não, ela é recusada: fica acinzentada na grade, e sua sequência de acertos recomeça.",
+        "- Depois de cada jogada, você compra até ter quatro cartas de novo.",
+        "## Nenhuma serve",
+        "- Se você acha que nenhuma carta da sua mão serve, toque em **Nenhuma serve**.",
+        "- Se você tiver razão, conta como acerto e você recebe uma mão nova.",
+        "- Se alguma carta servia, ela é jogada por você (em roxo), e sua sequência recomeça.",
+        "- As cartas mais antigas e as mãos descartadas vão viradas para baixo para o **lixo**; toque nele para vê-las.",
+        "## Fim",
+        "- Você vence com oito acertos seguidos.",
+        "- Você perde se sua mão acabar. A lei é revelada nos dois casos.",
+        "## Dificuldade",
+        "- **Fácil:** leis simples sobre a cor, o naipe ou o valor da última carta.",
+        "- **Difícil:** leis mais sutis, algumas olhando duas cartas para trás ou misturando cor e valor."
+      ]
+    },
+    "quickStart": {
+      "hash": "5de8e5b8",
+      "value": [
+        "Uma lei oculta decide quais cartas podem seguir a última carta do caminho.",
+        "Jogue uma carta que você acha que serve, ou declare que nenhuma da sua mão serve.",
+        "Acerte oito vezes seguidas para vencer."
+      ]
+    },
+    "title": {
+      "hash": "f453f554",
+      "value": "Augúrio"
+    }
+  },
   "australian-patience": {
     "howToPlay": {
       "hash": "1faa036d",
@@ -648,6 +688,51 @@
       "value": "Capítulo e versículo"
     }
   },
+  "charlatan": {
+    "howToPlay": {
+      "hash": "ea9ac512",
+      "value": [
+        "## Objetivo",
+        "Faça **150 pontos** ou mais em **9 rodadas** de preparo.",
+        "## Seu monte",
+        "- Você começa com 11 cartas: seis **falhas** (os A, 2 e 3 pretos) e cinco ingredientes (2♥ 3♥ 4♥ 2♦ 3♦).",
+        "- No início de cada rodada, todas as suas cartas são embaralhadas no seu monte.",
+        "## Preparando",
+        "- Toque no seu monte para colocar a carta de cima no caldeirão.",
+        "- Cada ingrediente soma seu valor à **força** da poção (Ases valem 1, Valetes 11, Damas 12 e Reis 13).",
+        "- Se as falhas no caldeirão somarem **mais de 7**, a poção transborda.",
+        "- O risco mostra a chance de a próxima carta fazer a poção transbordar.",
+        "## Efeitos",
+        "- **♥ Copas:** sem efeito.",
+        "- **♦ Ouros:** se você parar com um ouros como última carta, ele conta em dobro.",
+        "- **♣ Paus:** se a carta anterior for uma falha, a falha volta para o seu monte.",
+        "- **♠ Espadas:** a próxima carta do seu monte é virada para cima.",
+        "## Parando",
+        "- Pare quando quiser para marcar a força da poção em pontos e receber metade dela (arredondada para cima) em moedas.",
+        "- Se a poção transbordar, escolha os pontos ou as moedas.",
+        "## Mercado",
+        "- Gaste suas moedas em até **2 cartas de naipes diferentes**. Elas entram no seu monte.",
+        "- Uma carta de copas custa seu valor. Ouros, paus e espadas custam 1 a mais.",
+        "- As moedas que você não gastar são perdidas.",
+        "## Classificações",
+        "- 150+: Curandeiro da aldeia",
+        "- 200+: Alquimista da corte",
+        "- 250+: Fazedor de milagres"
+      ]
+    },
+    "quickStart": {
+      "hash": "8bdb8a52",
+      "value": [
+        "Toque no seu monte para colocar a carta de cima no caldeirão.",
+        "Pare antes que as falhas (A, 2 e 3 pretos) somem mais de 7.",
+        "Gaste suas moedas em cartas melhores para o seu monte e prepare de novo."
+      ]
+    },
+    "title": {
+      "hash": "a18289b9",
+      "value": "Charlatão"
+    }
+  },
   "city-grid": {
     "howToPlay": {
       "hash": "316682c7",
@@ -826,6 +911,46 @@
     "title": {
       "hash": "f080a538",
       "value": "Quadrados de cribbage"
+    }
+  },
+  "crossword": {
+    "howToPlay": {
+      "hash": "240983c3",
+      "value": [
+        "## Objetivo",
+        "Preencha a **grade de 7×7**, como palavras cruzadas, com 49 das 52 cartas.",
+        "## Colocando cartas",
+        "- A primeira carta é colocada no centro para você.",
+        "- Coloque cada carta que virar em uma casa vazia **ao lado de uma carta já posta**, lado a lado ou na diagonal. As casas possíveis ficam destacadas.",
+        "- Valetes, Damas e Reis são as **casas pretas**. Duas delas nunca podem se tocar lado a lado (na diagonal pode).",
+        "## Palavras pares",
+        "- As cartas numéricas são as letras. Ases valem 1, e as outras o seu número.",
+        "- Quando uma sequência de cartas numéricas entre duas casas pretas, ou entre uma casa preta e a borda, está completa, ela deve **somar um número par**.",
+        "- Uma linha ou coluna inteira sem casas pretas também deve somar um número par.",
+        "- As cartas numéricas ficam laranja quando exatamente uma de suas sequências (linha ou coluna) tem soma ímpar, e vermelhas quando as duas têm. As cartas de sequências pares só ficam verdes quando suas duas sequências estão fechadas para outras cartas numéricas; senão, ficam sem cor.",
+        "- As figuras ficam cinza para mostrar as casas pretas.",
+        "## A última casa",
+        "Quando 48 casas estão preenchidas, as quatro últimas cartas são viradas, e você escolhe uma para preencher a última casa.",
+        "## Fim",
+        "- Você vence quando as 49 casas estão preenchidas.",
+        "- Completar uma sequência numérica com soma ímpar encerra a partida na hora.",
+        "- A partida acaba assim que a carta a colocar não tem para onde ir. Sua pontuação é o número de cartas colocadas.",
+        "## Dicas",
+        "- Uma casa preta pode fechar uma sequência mais cedo, seja qual for a soma até ali.",
+        "- Deixe algumas sequências abertas, para que uma carta ímpar tenha para onde ir."
+      ]
+    },
+    "quickStart": {
+      "hash": "5b847a72",
+      "value": [
+        "Coloque cada carta ao lado de uma já posta, lado a lado ou na diagonal.",
+        "As figuras são casas pretas: duas delas não podem se tocar lado a lado.",
+        "Cartas numéricas entre casas pretas ou a borda devem somar um número par."
+      ]
+    },
+    "title": {
+      "hash": "6c831cdf",
+      "value": "Palavras Cruzadas"
     }
   },
   "crownslayer": {
@@ -1115,6 +1240,46 @@
     "title": {
       "hash": "33fffba2",
       "value": "Easthaven"
+    }
+  },
+  "ebb-and-flow": {
+    "howToPlay": {
+      "hash": "2ae1fc74",
+      "value": [
+        "## Objetivo",
+        "Jogue todas as **52 cartas** nas quatro pilhas.",
+        "## Pilhas",
+        "- **Pilhas crescentes:** jogue uma carta do mesmo valor que a de cima, ou mais alta.",
+        "- **Pilhas decrescentes:** jogue uma carta do mesmo valor que a de cima, ou mais baixa.",
+        "- Qualquer carta pode começar uma pilha vazia. Ases são baixos e Reis são altos.",
+        "## Voltando",
+        "- Uma carta **um valor para trás do mesmo naipe** sempre pode ser jogada: um 7♥ sobre um 8♥ crescente, ou um 9♠ sobre um 8♠ decrescente.",
+        "- Guarde essas cartas: elas devolvem espaço a uma pilha.",
+        "## Turnos",
+        "- Jogue pelo menos **duas cartas** a cada turno. Você pode jogar mais.",
+        "- Depois toque no monte para completar a mão.",
+        "- Quando o monte acabar, jogue todas as cartas que puder.",
+        "- A partida está perdida quando você não consegue jogar as cartas obrigatórias.",
+        "## Tamanho da mão",
+        "- Fácil: **8** cartas",
+        "- Normal: **7** cartas",
+        "- Difícil: **6** cartas",
+        "## Dicas",
+        "- Cada salto desperdiça valores. Jogue cartas próximas, mesmo que isso signifique jogar mais de duas.",
+        "- Guarde as cartas que fazem uma pilha voltar até a pilha precisar delas."
+      ]
+    },
+    "quickStart": {
+      "hash": "f7f08849",
+      "value": [
+        "Jogue cartas da sua mão: pilhas crescentes sobem, pilhas decrescentes descem.",
+        "Jogue pelo menos duas cartas e depois toque no monte para completar a mão.",
+        "Uma carta um valor abaixo do mesmo naipe faz uma pilha voltar."
+      ]
+    },
+    "title": {
+      "hash": "6cff71c4",
+      "value": "Fluxo e Refluxo"
     }
   },
   "eight-off": {
@@ -1795,6 +1960,38 @@
       "value": "Invasores"
     }
   },
+  "iris-garden": {
+    "howToPlay": {
+      "hash": "745e02ea",
+      "value": [
+        "## Objetivo",
+        "Retire do jardim todas as **48 cartas** (do Ás à Dama) em pares.",
+        "## Pares",
+        "- Duas cartas do **mesmo valor** formam um par, sejam quais forem os naipes.",
+        "- Um par pode ser retirado quando um caminho os liga por **casas vazias**, feito de no máximo três linhas retas, ou seja, com **no máximo duas curvas**. O caminho fica dentro do jardim.",
+        "- Cartas lado a lado, ou com só casas vazias entre elas em linha, sempre podem ser retiradas.",
+        "- Toque em uma carta e depois no seu par. O caminho é desenhado quando elas saem.",
+        "## Fim",
+        "- Todo jardim pode ser limpo.",
+        "- Você perde se nenhum par puder ser retirado. Desfazer deixa você tentar outro caminho.",
+        "## Dicas",
+        "- Cada valor tem quatro cartas: pense em quais duas parear primeiro.",
+        "- Retirar cartas do meio abre caminhos para as outras."
+      ]
+    },
+    "quickStart": {
+      "hash": "0cda1b1b",
+      "value": [
+        "Toque em duas cartas do mesmo valor para retirá-las.",
+        "Elas devem ser ligadas por um caminho por casas vazias com no máximo duas curvas.",
+        "Limpe o jardim inteiro para vencer."
+      ]
+    },
+    "title": {
+      "hash": "b023f43f",
+      "value": "Jardim de Íris"
+    }
+  },
   "jailbreak": {
     "howToPlay": {
       "hash": "aad3689d",
@@ -2278,6 +2475,38 @@
       "value": "Ouroboros"
     }
   },
+  "ozanams-square": {
+    "howToPlay": {
+      "hash": "c30557f7",
+      "value": [
+        "## Objetivo",
+        "Organize os **Ases, Reis, Damas e Valetes** em um quadrado 4×4 de modo que cada **linha**, cada **coluna** e as duas **diagonais principais** tenham uma carta de cada valor e uma de cada naipe.",
+        "## Jogando",
+        "- Algumas cartas são distribuídas no lugar e não podem ser movidas. As outras esperam na bandeja, por naipe.",
+        "- Arraste uma carta da bandeja para uma casa vazia, ou toque nela e depois na casa.",
+        "- As cartas que você coloca podem ser movidas para outra casa, trocadas ou arrastadas de volta para a bandeja.",
+        "- Uma carta que repete um valor ou naipe em uma de suas linhas fica marcada em vermelho.",
+        "- Cada distribuição tem **exatamente uma** solução.",
+        "## Dificuldade",
+        "- **Fácil:** sete cartas começam no lugar.",
+        "- **Difícil:** só começam no lugar as cartas de que a solução precisa.",
+        "## História",
+        "Jacques Ozanam propôs este quebra-cabeça com cartas de baralho em suas *Récréations mathématiques et physiques* (1725). Mais tarde, Leonhard Euler estudou quadrados assim, que chamou de quadrados greco-latinos."
+      ]
+    },
+    "quickStart": {
+      "hash": "c309afcc",
+      "value": [
+        "Preencha o quadrado com os dezesseis Ases, Reis, Damas e Valetes.",
+        "Nenhuma linha, coluna ou diagonal principal pode ter duas cartas do mesmo valor ou naipe.",
+        "Arraste as cartas da bandeja. As cartas distribuídas no lugar não podem ser movidas."
+      ]
+    },
+    "title": {
+      "hash": "e2c5ab80",
+      "value": "Quadrado de Ozanam"
+    }
+  },
   "pagoda": {
     "howToPlay": {
       "hash": "5eb45815",
@@ -2360,6 +2589,82 @@
     "title": {
       "hash": "a09162a7",
       "value": "Pinguim"
+    }
+  },
+  "picket-fence": {
+    "howToPlay": {
+      "hash": "1fbe71b9",
+      "value": [
+        "## Objetivo",
+        "Faça **60 pontos** ou mais construindo casas, parques e piscinas, e cercando condomínios.",
+        "## Construindo",
+        "- Você tem três cartas. A cada turno, construa uma delas como casa em um terreno vazio.",
+        "- Os números das casas devem subir da esquerda para a direita ao longo de uma rua (Ases valem 1, Valetes 11, Damas 12 e Reis 13). Terrenos vazios não contam.",
+        "- Depois use uma das suas outras cartas pelo efeito e compre até ter três cartas.",
+        "- A partida acaba quando nenhuma das suas cartas pode ser construída, ou quando todos os terrenos estão construídos.",
+        "## Efeitos",
+        "- **♥ Parque:** a carta de copas vai para baixo da nova casa, como parque da rua.",
+        "- **♦ Piscina:** se a nova casa estiver em um terreno de piscina, a carta de ouros vai para baixo dela como piscina. Senão, é descartada.",
+        "- **♠ Cerca:** coloque uma cerca entre dois terrenos, em qualquer rua.",
+        "- **♣ Segunda casa:** construa a carta de paus como casa também.",
+        "## Pontuação",
+        "- **Parques:** 2 pontos cada. As ruas comportam até 3, 4 e 5 parques, e uma rua cheia de parques vale 10, 14 ou 18 pontos em vez disso.",
+        "- **Piscinas:** 3, 6, 9, 13, 17, 21 e 26 pontos para 1 a 7 piscinas.",
+        "- **Condomínios:** cercas e pontas de rua dividem cada rua em condomínios. Um condomínio com todos os terrenos construídos vale 1, 3, 5, 7, 9 ou 11 pontos para 1 a 6 casas. Condomínios mais longos não pontuam.",
+        "## Classificações",
+        "- 60+: Bons vizinhos",
+        "- 70+: Bairro modelo",
+        "- 80+: Cartão-postal",
+        "## Dicas",
+        "- Deixe espaço entre os números: um terreno entre um 5 e um 6 nunca poderá ser construído.",
+        "- O rótulo acima de cada condomínio mostra quanto ele vai valer, ou ✕ se ele não pode mais ser completado."
+      ]
+    },
+    "quickStart": {
+      "hash": "15a8cad5",
+      "value": [
+        "A cada turno, construa uma carta como casa e use o naipe de outra carta como efeito.",
+        "Os números das casas devem subir da esquerda para a direita em cada rua.",
+        "A partida acaba quando nenhuma das suas cartas cabe em um terreno."
+      ]
+    },
+    "title": {
+      "hash": "63ac8afa",
+      "value": "Cerca Branca"
+    }
+  },
+  "pickpocket": {
+    "howToPlay": {
+      "hash": "1ef6bb8f",
+      "value": [
+        "## Objetivo",
+        "Roube **750 moedas** ou mais em cinco rodadas.",
+        "## Rodadas",
+        "- Cada rodada distribui 25 cartas viradas para baixo: Ases, Dois, Três e figuras (Valetes, Damas e Reis).",
+        "- Ao lado de cada linha e abaixo de cada coluna aparecem seu **total de moedas** (Ases 1, Dois 2, Três 3) e seu **número de figuras**.",
+        "- Cada rodada esconde mais figuras que a anterior.",
+        "## Virando",
+        "- Toque em uma carta para virá-la. Sua bolsa começa com o valor da primeira carta, e cada carta seguinte a multiplica: um Dois a dobra, um Três a triplica.",
+        "- Vire todos os Dois e Três para limpar a mesa e ficar com a bolsa.",
+        "- Vire uma figura e você é pego: a bolsa da rodada se perde.",
+        "- Você pode sair a qualquer momento e ficar com o que tem na bolsa.",
+        "## Classificações",
+        "- 750+: Dedos leves",
+        "- 850+: Punguista",
+        "- 950+: Príncipe dos ladrões"
+      ]
+    },
+    "quickStart": {
+      "hash": "c66bbe79",
+      "value": [
+        "Vire cartas: Ases, Dois e Três multiplicam sua bolsa.",
+        "Cada linha e coluna mostra seu total de moedas e quantas figuras esconde.",
+        "Vire uma figura e a bolsa da rodada se perde. Saia a tempo para ficar com ela."
+      ]
+    },
+    "title": {
+      "hash": "7ea3b108",
+      "value": "Batedor de Carteiras"
     }
   },
   "pocket-poker": {
@@ -2993,6 +3298,41 @@
     "title": {
       "hash": "dac6b9bc",
       "value": "Aranhinha"
+    }
+  },
+  "stalactites": {
+    "howToPlay": {
+      "hash": "4c72e1d1",
+      "value": [
+        "## Objetivo",
+        "Suba as quatro **fundações** até treze cartas cada.",
+        "## Distribuição",
+        "- As quatro primeiras cartas começam as quatro fundações.",
+        "- As outras 48 cartas são distribuídas em oito colunas de seis.",
+        "## Fundações",
+        "- As fundações sobem **de um em um** (7, 8, 9…) ou **de dois em dois** (7, 9, J…), igual para as quatro. Escolha com os botões, ou jogue uma carta um ou dois valores acima de uma fundação e ela escolhe por você.",
+        "- As fundações sobem **sem considerar o naipe**, passando do Rei ao Ás, até cada uma ter treze cartas.",
+        "## Jogadas",
+        "- Mova a carta de cima de uma coluna para uma fundação ou para uma das **duas células**.",
+        "- Uma carta numa célula só pode ir para uma fundação.",
+        "- Nunca se constrói sobre as colunas, e uma coluna vazia continua vazia.",
+        "- Toque em uma carta para mandá-la a uma fundação, ou a uma célula se não couber, ou arraste-a para onde quiser. Enquanto o passo não for escolhido, uma carta que poderia ir dos dois jeitos precisa ser arrastada.",
+        "## Dicas",
+        "- Olhe a distribuição inteira antes de escolher de um em um ou de dois em dois.",
+        "- As células enchem rápido: deixe uma livre para a carta que desbloqueia uma coluna."
+      ]
+    },
+    "quickStart": {
+      "hash": "1e22b470",
+      "value": [
+        "As fundações sobem sem considerar o naipe, passando do Rei ao Ás.",
+        "Escolha se elas sobem de um em um ou de dois em dois, ou deixe sua primeira jogada numa fundação decidir.",
+        "As cartas de cima só vão para as fundações ou para as duas células."
+      ]
+    },
+    "title": {
+      "hash": "3b78dd2a",
+      "value": "Estalactites"
     }
   },
   "stalker": {

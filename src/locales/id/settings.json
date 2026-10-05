@@ -56,5 +56,9 @@
     "expand": "Tampilkan semua",
     "collapse": "Ciutkan",
     "highContrast": "Kontras tinggi"
+  },
+  "betaGames": {
+    "enabled": "Game beta aktif",
+    "hide": "Sembunyikan game beta"
   }
 }

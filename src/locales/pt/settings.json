@@ -56,5 +56,9 @@
     "expand": "Mostrar todos",
     "collapse": "Recolher",
     "highContrast": "Alto contraste"
+  },
+  "betaGames": {
+    "enabled": "Jogos beta ativados",
+    "hide": "Ocultar jogos beta"
   }
 }

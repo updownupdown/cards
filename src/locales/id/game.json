@@ -10,8 +10,8 @@
     "infoAndSettings": "Info & Pengaturan"
   },
   "result": {
-    "won": "Anda menang",
-    "lost": "Kamu kalah",
+    "won": "Kamu menang!",
+    "lost": "Kamu kalah.",
     "score": "Skor: {{score}}",
     "playAgain": "Main lagi",
     "tryAgain": "Coba lagi",
