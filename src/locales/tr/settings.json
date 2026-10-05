@@ -19,6 +19,10 @@
     "label": "İpuçlarını göster",
     "description": "Yeni oyunlarda hızlı başlangıç özeti gösterir."
   },
+  "showHintButton": {
+    "label": "İpucu düğmesini göster",
+    "description": "Oyun başlığında iyi bir hamleyi vurgulayan bir ampul."
+  },
   "keepScreenAwake": {
     "label": "Ekranı açık tut",
     "description": "Son dokunuşundan sonra ekranı 10 dakika açık tutar."

@@ -36,6 +36,9 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { findClassicHint, type ClassicSource } from "@/hints/classic";
+import { cardTarget, makeHint } from "@/hints/hint";
 
 /**
  * Patiences where every move is a single card: the top of a tableau pile, the
@@ -82,7 +85,8 @@ type Config = {
    * foundations. Piles: the stock deals a card onto each of them.
    */
   reserve?:
-    { kind: "terrace"; size: number } | { kind: "piles"; count: number };
+    | { kind: "terrace"; size: number }
+    | { kind: "piles"; count: number };
 };
 
 const CONFIGS: Record<SingleCardVariant, Config> = {
@@ -177,7 +181,8 @@ type Selection =
 type MoveSource = Exclude<Selection, null>;
 
 type DropTarget =
-  { zone: "tableau"; pile: number } | { zone: "foundation"; pile: number };
+  | { zone: "tableau"; pile: number }
+  | { zone: "foundation"; pile: number };
 
 // ─── Rules ────────────────────────────────────────────────────────────────────
 
@@ -367,7 +372,80 @@ function deal(stock: PlayingCard[], config: Config): SingleCardState {
   };
 }
 
+/**
+ * Choosing the base, the hint picks the rank the terrace (the cards that can
+ * only go home) wants soonest. After, it ranks the single-card moves on view,
+ * and once the stock is spent, searches for a win.
+ */
+function findSingleCardHint(
+  state: SingleCardState,
+  variant: SingleCardVariant,
+) {
+  const config = CONFIGS[variant];
+  if (state.baseRank === null) {
+    const terrace = state.reserves.flat();
+    const choices = state.tableau
+      .slice(0, BASE_CHOICES)
+      .map((pile) => top(pile))
+      .filter((card): card is PlayingCard => !!card);
+    const soonness = (base: PlayingCard) =>
+      terrace.reduce(
+        (sum, card) => sum + Math.max(0, 6 - order(card, base.rank)),
+        0,
+      );
+    const best = choices.reduce<PlayingCard | null>(
+      (pick, card) => (!pick || soonness(card) > soonness(pick) ? card : pick),
+      null,
+    );
+    return best ? makeHint("tapCard", cardTarget(best)) : null;
+  }
+
+  // The waste comes first among the piles whose top card plays.
+  const sourceOf = (from: ClassicSource): MoveSource =>
+    from.kind === "reserve"
+      ? from.pile === 0
+        ? { zone: "waste" }
+        : { zone: "reserve", pile: from.pile - 1 }
+      : { zone: "tableau", pile: from.kind === "tableau" ? from.pile : 0 };
+  const canDrawNow = canDraw(state);
+  return findClassicHint(
+    {
+      tableau: state.tableau,
+      foundations: state.foundations,
+      reserves: [state.waste, ...state.reserves],
+    },
+    {
+      toFoundation: (card, pile) =>
+        canBuildFoundation(card, top(pile), state.baseRank, config),
+      toTableau: (cards, pile, _index, _board, from) =>
+        cards.length === 1 &&
+        canBuildTableau(cards[0], sourceOf(from), top(pile), state, config),
+      canLift: (pile, index) => index === pile.length - 1,
+      buildQuality: (card, base) =>
+        isOneBelow(card, base, state.baseRank, config) &&
+        (config.tableauBuild === "any" || isRed(card.suit) !== isRed(base.suit))
+          ? 2
+          : 0,
+      decks: config.decks,
+    },
+    {
+      tableau: (pile) => `tableau-${pile}`,
+      foundation: (pile) => `foundation-${pile}`,
+    },
+    {
+      stock: canDrawNow
+        ? {
+            zone: "stock",
+            message: config.reserve?.kind === "piles" ? "dealRow" : "draw",
+          }
+        : null,
+      search: canDrawNow ? undefined : `single-card:${variant}`,
+    },
+  );
+}
+
 export const singleCardRules = {
+  findHint: findSingleCardHint,
   configs: CONFIGS,
   canBuildFoundation,
   canBuildTableau,
@@ -565,6 +643,11 @@ export function SingleCardSolitaire({
     getFoundations: (state) => state.foundations,
     canPlaceOnFoundation: placeOnFoundation,
     onStart: () => setSelected(null),
+  });
+
+  useHint(() => findSingleCardHint(game, variant), {
+    game,
+    enabled: !isSettingUp && !game.ended && !isAutoCompleting,
   });
 
   useEffect(() => {

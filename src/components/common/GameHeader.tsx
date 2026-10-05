@@ -23,9 +23,14 @@ type Props = {
   ended: boolean;
   canUndo: boolean;
   undoDisabled: boolean;
+  /** "Show hint button" is on. */
+  showHint: boolean;
+  /** No hint to ask for: the game has none, has ended, or is busy. */
+  hintDisabled: boolean;
   onHome: () => void;
   onInstantWin: () => void;
   onRules: () => void;
+  onHint: () => void;
   onUndo: () => void;
   onReset: () => void;
   onMenu: () => void;
@@ -46,9 +51,12 @@ export const GameHeader = memo(function GameHeader({
   ended,
   canUndo,
   undoDisabled,
+  showHint,
+  hintDisabled,
   onHome,
   onInstantWin,
   onRules,
+  onHint,
   onUndo,
   onReset,
   onMenu,
@@ -165,6 +173,18 @@ export const GameHeader = memo(function GameHeader({
             style={{ width: "100%", paddingHorizontal: 0 }}
           />
         </View>
+
+        {showHint && (
+          <Button
+            headerButton
+            onPress={onHint}
+            iconName="hint"
+            accessibilityLabel={t("menu.hint")}
+            iconColor={hintDisabled ? theme.faint : theme.accent}
+            disabled={hintDisabled}
+            style={{ flex: 1, paddingHorizontal: 0 }}
+          />
+        )}
 
         <Button
           headerButton

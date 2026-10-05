@@ -4,6 +4,7 @@
     "campaign": "Yolculuk",
     "instantWin": "Anında kazan",
     "rules": "Kurallar",
+    "hint": "İpucu",
     "undo": "Geri al",
     "reset": "Yeniden başlat",
     "menu": "Menü",
@@ -26,7 +27,8 @@
   },
   "rules": {
     "title": "Kurallar",
-    "unavailable": "Bu oyun için talimat yok."
+    "unavailable": "Bu oyun için talimat yok.",
+    "hintTip": "Geçerli bir hamleyi vurgulamak için İpucu düğmesine dokunun."
   },
   "mercySkip": {
     "title": "Af kullan"
@@ -60,5 +62,21 @@
     "start": "Otomatik tamamla",
     "settings": "Otomatik tamamlama ayarları",
     "dismiss": "Kapat"
+  },
+  "hint": {
+    "none": "İpucu yok",
+    "toFoundation": "Bu kartı bir temele taşıyın",
+    "moveCard": "Bu kartı buraya taşıyın",
+    "moveCards": "Bu kartları buraya taşıyın",
+    "toCell": "Bu kartı boş bir hücreye taşıyın",
+    "draw": "Desteden kart çekin",
+    "redeal": "Desteyi yeniden dolaşmak için atılanları çevirin",
+    "dealRow": "Yeni bir sıra dağıtın",
+    "toWaste": "Bu kartı atılanların üzerine oynayın",
+    "removeCard": "Bu kartı kaldırın",
+    "removeCards": "Bu kartları kaldırın",
+    "swapCards": "Bu kartların yerini değiştirin",
+    "tapCard": "Bu karta dokunun",
+    "press": "{{label}} düğmesine dokunun"
   }
 }

@@ -14,6 +14,9 @@ import { GameWrapper } from "../common/GameWrapper";
 import { delay } from "@/utils/utils";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
+import { planMove } from "@/hints/lookahead";
 const ROW_LAYOUT: readonly (readonly number[])[] = [
   [1.5, 4.5, 7.5],
   [1, 2, 4, 5, 7, 8],
@@ -136,7 +139,42 @@ function hasAvailableMoves(snapshot: GameState) {
   });
 }
 
+/**
+ * The longest run onto the waste from the cards on view, preferring runs that
+ * uncover face-down cards; cards it uncovers stay unknown. Draws when
+ * nothing plays.
+ */
+function findThreePeaksHint(state: GameState) {
+  const uncovered = (current: GameState) =>
+    current.tableau.filter(
+      (card) => card && !card.faceUp && isExposed(card, current.tableau),
+    ).length;
+  const move = planMove<GameState, number>(state, {
+    key: (current) =>
+      `peaks:${current.tableau.map((card) => (card ? 1 : 0)).join("")}:${current.waste.at(-1)?.id}`,
+    moves: (current) =>
+      current.tableau.flatMap((_, index) =>
+        canMoveToWaste(index, current) ? [index] : [],
+      ),
+    apply: (current, index) => ({
+      ...current,
+      tableau: current.tableau.map((card, at) => (at === index ? null : card)),
+      waste: [...current.waste, current.tableau[index]!],
+    }),
+    score: (current, depth) => depth * 100 + uncovered(current) * 60,
+  });
+  if (move !== null) {
+    return makeHint(
+      "toWaste",
+      cardTarget(state.tableau[move]!),
+      zoneTarget("waste"),
+    );
+  }
+  return state.draw.length > 0 ? makeHint("draw", zoneTarget("draw")) : null;
+}
+
 export const threePeaksRules = {
+  findHint: findThreePeaksHint,
   isAdjacentRank,
   tableauIndex,
   blockersFor,
@@ -239,6 +277,11 @@ export default function ThreePeaks() {
   }, [game, won, isSettingUp]);
 
   const ended = !isSettingUp && (won || lost);
+
+  useHint(() => findThreePeaksHint(game), {
+    game,
+    enabled: !isSettingUp && !ended,
+  });
 
   const zones: MapZone[] = useMemo(() => {
     const tableauZones: MapZone[] = Array.from({

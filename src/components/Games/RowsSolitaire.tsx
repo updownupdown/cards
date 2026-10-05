@@ -16,6 +16,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 export type RowsVariant = "labyrinth" | "parallels";
 
 type Config = {
@@ -158,7 +160,49 @@ function evaluateEnd(state: RowsState, config: Config, isSettingUp = false) {
   return hasMove ? playing : { ended: true, won: false };
 }
 
+/**
+ * Play a free card home, choosing the one that frees the most cards that can
+ * follow it; deal only when no card on the table can go up.
+ */
+function findRowsHint(state: RowsState, variant: RowsVariant) {
+  const config = CONFIGS[variant];
+  const playable = (current: RowsState) =>
+    current.rows.flatMap((row, r) =>
+      row.flatMap((card, c) =>
+        card &&
+        isAvailable(current, config, r, c) &&
+        foundationFor(current, card) >= 0
+          ? [{ card, r, c }]
+          : [],
+      ),
+    );
+  let best: { card: PlayingCard; home: number; worth: number } | null = null;
+  for (const { card, r, c } of playable(state)) {
+    const home = foundationFor(state, card);
+    const after: RowsState = {
+      ...state,
+      rows: state.rows.map((row, index) =>
+        index === r ? row.map((cell, col) => (col === c ? null : cell)) : row,
+      ),
+      foundations: state.foundations.map((pile, index) =>
+        index === home ? [...pile, card] : pile,
+      ),
+    };
+    const worth = playable(after).length;
+    if (!best || worth > best.worth) best = { card, home, worth };
+  }
+  if (best) {
+    return makeHint(
+      "toFoundation",
+      cardTarget(best.card),
+      zoneTarget(`foundation-${best.home}`),
+    );
+  }
+  return state.stock.length > 0 ? makeHint("draw", zoneTarget("stock")) : null;
+}
+
 export const rowsRules = {
+  findHint: findRowsHint,
   configs: CONFIGS,
   canBuildFoundation,
   isAvailable,
@@ -213,6 +257,11 @@ export function RowsSolitaire({ variant }: { variant: RowsVariant }) {
       });
     }
   }, [config, game, isSettingUp, setGame]);
+
+  useHint(() => findRowsHint(game, variant), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   function playCard(row: number, col: number) {
     const card = game.rows[row]?.[col];

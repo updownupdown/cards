@@ -19,6 +19,10 @@
     "label": "Afficher les conseils",
     "description": "Affiche un résumé de démarrage rapide pour les nouveaux jeux."
   },
+  "showHintButton": {
+    "label": "Afficher le bouton Indice",
+    "description": "Une ampoule dans l’en-tête du jeu qui met en évidence un bon coup."
+  },
   "keepScreenAwake": {
     "label": "Garder l'écran allumé",
     "description": "L'écran reste allumé 10 minutes après votre dernière action."

@@ -18,6 +18,9 @@ import { GameWrapper } from "../common/GameWrapper";
 import { flexStyles } from "@/styles/flexStyles";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, pressHint, zoneTarget } from "@/hints/hint";
+import { planMove } from "@/hints/lookahead";
 const tableauSize = {
   rows: 5,
   cols: 7,
@@ -129,7 +132,46 @@ function evaluateEnd(
   return { ended: true, won: false };
 }
 
+/**
+ * Looks through the cards on view for the longest run onto the waste,
+ * taking from the tallest columns when runs tie; draws when nothing plays.
+ */
+function findGolfHint(state: GameState, difficulty: GolfDifficulty = "hard") {
+  const move = planMove<GameState, number>(state, {
+    key: (current) =>
+      `golf:${current.piles.map((pile) => pile.length).join(",")}:${top(current.waste)?.id}`,
+    moves: (current) =>
+      current.piles.flatMap((pile, index) => {
+        const card = top(pile);
+        return card && canDiscard(card, top(current.waste), difficulty)
+          ? [index]
+          : [];
+      }),
+    apply: (current, index) => ({
+      ...current,
+      piles: current.piles.map((pile, at) =>
+        at === index ? pile.slice(0, -1) : pile,
+      ),
+      waste: [...current.waste, top(current.piles[index])!],
+    }),
+    score: (current, depth) =>
+      depth * 100 -
+      current.piles.reduce((sum, pile) => sum + pile.length ** 2, 0) / 10,
+  });
+  if (move !== null) {
+    return makeHint(
+      "toWaste",
+      cardTarget(top(state.piles[move])!),
+      zoneTarget("waste"),
+    );
+  }
+  return state.stock.length > 0
+    ? pressHint("button", i18n.t("cards:draw"))
+    : null;
+}
+
 export const golfRules = {
+  findHint: findGolfHint,
   canDiscard,
   hasAnyMove,
   evaluateEnd,
@@ -165,6 +207,11 @@ export default function Golf() {
       draft.won = result.won;
     });
   }, [difficulty, game, isSettingUp, setGame]);
+
+  useHint(() => findGolfHint(game, difficulty), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   async function playCard(pileIndex: number, cardIndex: number) {
     if (game.ended) return;
@@ -278,8 +325,7 @@ export default function Golf() {
     const isBottomCard =
       mappedCard.refIndex === game.piles[mappedCard.pileIndex].length - 1;
     const canPlay =
-      isBottomCard &&
-      canDiscard(mappedCard.card, top(game.waste), difficulty);
+      isBottomCard && canDiscard(mappedCard.card, top(game.waste), difficulty);
 
     return {
       isDisabled: game.ended || !isBottomCard || !canPlay,

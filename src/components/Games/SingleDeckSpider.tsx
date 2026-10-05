@@ -28,6 +28,8 @@ import {
 import { delay } from "@/utils/utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { useHint } from "@/hints/hint-store";
+import { findSpiderHint } from "@/hints/spider";
 
 import { i18n } from "@/i18n";
 export type SingleDeckSpiderVariant = "simple-simon" | "spiderette";
@@ -159,7 +161,31 @@ function gatherState(state: SingleDeckSpiderState): SingleDeckSpiderState {
   };
 }
 
+/** Simple Simon deals every card face up, so its hints search for a win. */
+function findSingleDeckSpiderHint(
+  state: SingleDeckSpiderState,
+  variant: SingleDeckSpiderVariant,
+) {
+  const canDeal =
+    state.stock.length > 0 && state.tableau.every((pile) => pile.length > 0);
+  const allOnView =
+    state.stock.length === 0 &&
+    state.tableau.every((pile) => pile.every((card) => card.faceUp));
+  return findSpiderHint(
+    { tableau: state.tableau, foundations: [state.discard] },
+    {
+      canLift: (pile, index) => isSuitedRun(pile.slice(index)),
+      canBuild,
+      isComplete,
+      stock: canDeal ? { zone: "stock", message: "dealRow" } : null,
+      search: allOnView ? `single-deck-spider:${variant}` : undefined,
+      tableauZone: (pile) => `tableau-${pile}`,
+    },
+  );
+}
+
 export const singleDeckSpiderRules = {
+  findHint: findSingleDeckSpiderHint,
   canBuild,
   createInitialState,
   isComplete,
@@ -179,22 +205,28 @@ export function SingleDeckSpider({
     [variant],
   );
   const [selected, setSelected] = useState<Selection>(null);
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<SingleDeckSpiderState>({
-      gameStateInitial: initial,
-      resetNonGameStates: () => {
-        setSelected(null);
-        clearDragGhost();
-      },
-      resetAndSetup: async () => {
-        // Gather every card into the stock, then deal them back out.
-        setGame((draft) => gatherState(draft));
-        await delay();
-        setGame((draft) =>
-          redealWith(createInitialState(variant), draft.stock),
-        );
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<SingleDeckSpiderState>({
+    gameStateInitial: initial,
+    resetNonGameStates: () => {
+      setSelected(null);
+      clearDragGhost();
+    },
+    resetAndSetup: async () => {
+      // Gather every card into the stock, then deal them back out.
+      setGame((draft) => gatherState(draft));
+      await delay();
+      setGame((draft) => redealWith(createInitialState(variant), draft.stock));
+    },
+  });
 
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
@@ -221,6 +253,11 @@ export function SingleDeckSpider({
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
     getTapHandler,
+  });
+
+  useHint(() => findSingleDeckSpiderHint(game, variant), {
+    game,
+    enabled: !isSettingUp && !game.ended,
   });
 
   useEffect(() => {

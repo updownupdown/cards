@@ -19,6 +19,10 @@
     "label": "Mostra suggerimenti",
     "description": "Mostra una guida rapida per i giochi nuovi."
   },
+  "showHintButton": {
+    "label": "Mostra pulsante suggerimento",
+    "description": "Una lampadina nell’intestazione del gioco che evidenzia una buona mossa."
+  },
   "keepScreenAwake": {
     "label": "Mantieni lo schermo acceso",
     "description": "Lo schermo resta acceso per 10 minuti dopo l'ultimo tocco."

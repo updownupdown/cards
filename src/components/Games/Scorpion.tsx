@@ -25,6 +25,8 @@ import {
 } from "../Cards/card-utils";
 import { delay } from "@/utils/utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { useHint } from "@/hints/hint-store";
+import { findSpiderHint } from "@/hints/spider";
 
 import { i18n } from "@/i18n";
 const TABLEAU_FAN_OFFSET = 0.35;
@@ -156,7 +158,27 @@ function moveCompletedRunsToFoundations(
   }
 }
 
+/** Any face-up card moves with the cards on it, onto the next higher of its suit. */
+function findScorpionHint(state: ScorpionState, anyCardToEmpty: boolean) {
+  const canDeal = !state.stockDealt && state.stock.length > 0;
+  const allOnView =
+    !canDeal &&
+    state.tableau.every((pile) => pile.every((card) => card.faceUp));
+  return findSpiderHint(
+    { tableau: state.tableau, foundations: state.foundations },
+    {
+      canLift: (pile, index) => pile[index].faceUp,
+      canBuild: (card, base) => canAttachToTableau(card, base, anyCardToEmpty),
+      isComplete: isCompleteSuitRun,
+      stock: canDeal ? { zone: "stock", message: "dealRow" } : null,
+      search: allOnView ? `scorpion:${anyCardToEmpty}` : undefined,
+      tableauZone: (pile) => `tableau-${pile}`,
+    },
+  );
+}
+
 export const scorpionRules = {
+  findHint: findScorpionHint,
   createInitialState,
   normalizeColumn,
   canAttachToTableau,
@@ -187,20 +209,28 @@ export default function Scorpion() {
 function ScorpionBoard({ anyCardToEmpty }: { anyCardToEmpty: boolean }) {
   const [selected, setSelected] = useState<Selection>(null);
 
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<ScorpionState>({
-      gameStateInitial,
-      resetNonGameStates: () => {
-        setSelected(null);
-        clearDragGhost();
-      },
-      resetAndSetup: async () => {
-        // Gather every card into the stock, then deal them back out.
-        setGame((draft) => gatherState(draft));
-        await delay();
-        setGame((draft) => redealWith(createInitialState(), draft.stock));
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<ScorpionState>({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelected(null);
+      clearDragGhost();
+    },
+    resetAndSetup: async () => {
+      // Gather every card into the stock, then deal them back out.
+      setGame((draft) => gatherState(draft));
+      await delay();
+      setGame((draft) => redealWith(createInitialState(), draft.stock));
+    },
+  });
 
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
@@ -496,6 +526,11 @@ function ScorpionBoard({ anyCardToEmpty }: { anyCardToEmpty: boolean }) {
     () => game.foundations.every((pile) => pile.length === 13),
     [game.foundations],
   );
+
+  useHint(() => findScorpionHint(game, anyCardToEmpty), {
+    game,
+    enabled: !isSettingUp && !won,
+  });
 
   function clearSelection() {
     setSelected(null);

@@ -81,6 +81,10 @@ import { GameHeader } from "./GameHeader";
 import { useStableCallback } from "@/hooks/useStableCallback";
 import { requestMercySkipVisit } from "@/components/Campaign/ufo-visit";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
+import { requestHint, useHasHintFinder } from "@/hints/hint-store";
+import { useHintButtonShown } from "@/data/hint-button";
+import { useTranslation } from "@/i18n";
+import { useToast } from "./Toast";
 
 const TIPS_MORPH_DURATION = 350;
 const KEEP_AWAKE_TAG = "solitarius-game";
@@ -186,6 +190,21 @@ export const GameWrapper = ({
   });
   const onHeaderInstantWin = useStableCallback(() => setIsDevWin(true));
   const onHeaderRules = useStableCallback(() => setShowRulesModal(true));
+  const hintButtonShown = useHintButtonShown();
+  const hasHints = useHasHintFinder();
+  const showToast = useToast();
+  const { t } = useTranslation("game");
+  // The same position always gets the same hint, so pressing again replays it.
+  const onHeaderHint = useStableCallback(() => {
+    const hint = requestHint();
+    addGameBreadcrumb("hint", { found: !!hint });
+    showToast(
+      hint
+        ? t(`hint.${hint.message.key}`, hint.message.values)
+        : t("hint.none"),
+      { icon: "hint", placement: "belowHeader", duration: 3500 },
+    );
+  });
   const onHeaderUndo = useStableCallback(() => {
     addGameBreadcrumb("undo");
     handleUndo?.();
@@ -644,6 +663,9 @@ export const GameWrapper = ({
           onHome={onHeaderHome}
           onInstantWin={onHeaderInstantWin}
           onRules={onHeaderRules}
+          showHint={hintButtonShown}
+          hintDisabled={!hasHints || ended || autoCompleting}
+          onHint={onHeaderHint}
           onUndo={onHeaderUndo}
           onReset={onHeaderReset}
           onMenu={onHeaderMenu}

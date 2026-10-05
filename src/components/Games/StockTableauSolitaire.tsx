@@ -33,6 +33,8 @@ import {
   useCardMap,
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { useHint } from "@/hints/hint-store";
+import { findClassicHint, type StockAction } from "@/hints/classic";
 
 import { i18n } from "@/i18n";
 export type StockTableauVariant =
@@ -57,7 +59,11 @@ export type StockTableauVariant =
   | "giant";
 
 type BuildRule =
-  "alternating" | "same-color" | "same-suit" | "not-same-suit" | "rank";
+  | "alternating"
+  | "same-color"
+  | "same-suit"
+  | "not-same-suit"
+  | "rank";
 type MoveRule = "single" | "suited-run" | "built-run" | "any-tail";
 type DealConfig = {
   columns: number;
@@ -522,7 +528,67 @@ function hasMove(state: StockTableauState, config: Config) {
   });
 }
 
+/**
+ * The stock's cards are unknown, so until it's gone hints rank the moves on
+ * view; once every card is face up and the stock spent, they search for a
+ * win. (Setting cards aside in Miss Milligan's pocket isn't hinted.)
+ */
+function findStockTableauHint(
+  state: StockTableauState,
+  config: Config,
+  game: string,
+) {
+  const stock: StockAction | null =
+    state.stock.length > 0
+      ? {
+          zone: "stock",
+          message: config.stock === "row" ? "dealRow" : "draw",
+        }
+      : state.waste.length > 0 && state.redealsUsed < config.redeals
+        ? { zone: "stock", message: "redeal" }
+        : null;
+  const allOnView = state.tableau.every((pile) =>
+    pile.every((card) => card.faceUp),
+  );
+  return findClassicHint(
+    {
+      tableau: state.tableau,
+      foundations: state.foundations,
+      reserves: [state.waste],
+    },
+    {
+      toFoundation: (card, pile) => canBuildFoundation(card, top(pile)),
+      toTableau: (cards, pile) =>
+        isMovableRun(cards, config.move, config) &&
+        canBuildTableau(cards[0], top(pile), config),
+      canLift: (pile, index) =>
+        isMovableRun(pile.slice(index), config.move, config),
+      decks: config.decks,
+    },
+    {
+      tableau: (pile) => `tableau-${pile}`,
+      foundation: (pile) => `foundation-${pile}`,
+    },
+    {
+      stock,
+      search: !stock && allOnView ? game : undefined,
+    },
+  );
+}
+
 export const stockTableauRules = {
+  findHint: (
+    state: StockTableauState,
+    variant: StockTableauVariant,
+    redeals?: number,
+  ) =>
+    findStockTableauHint(
+      state,
+      redeals === undefined
+        ? CONFIGS[variant]
+        : { ...CONFIGS[variant], redeals },
+      `stock-tableau:${variant}`,
+    ),
   configs: CONFIGS,
   canBuildFoundation,
   canBuildTableau,
@@ -657,6 +723,11 @@ export function StockTableauSolitaire({
     canPlaceOnFoundation: canBuildFoundation,
     onStart: () => setSelected(null),
   });
+
+  useHint(
+    () => findStockTableauHint(game, config, `stock-tableau:${variant}`),
+    { game, enabled: !isSettingUp && !game.ended && !isAutoCompleting },
+  );
 
   useEffect(() => {
     const won = game.foundations.every((pile) => pile.length === 13);

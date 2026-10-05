@@ -24,6 +24,8 @@ import {
   zoneFanOffset,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { useHint } from "@/hints/hint-store";
+import { findSpiderHint } from "@/hints/spider";
 
 import { i18n } from "@/i18n";
 const TABLEAU_FAN_OFFSET = 0.26;
@@ -230,7 +232,28 @@ function isWon(snapshot: SpiderState) {
   return snapshot.foundations.every((foundation) => foundation.length === 13);
 }
 
+function findSpiderSolitaireHint(state: SpiderState) {
+  return findSpiderHint(
+    { tableau: state.tableau, foundations: state.foundations },
+    {
+      // A run of more than one card moves only if it's all one suit.
+      canLift: (pile, index) => {
+        const cards = pile.slice(index);
+        return (
+          isValidDescendingRun(cards) &&
+          cards.every((card) => card.suit === cards[0].suit)
+        );
+      },
+      canBuild: canPlaceOnTableau,
+      isComplete: isCompleteRun,
+      stock: canDealStock(state) ? { zone: "stock", message: "dealRow" } : null,
+      tableauZone: (pile) => `tableau-${pile}`,
+    },
+  );
+}
+
 export const spiderRules = {
+  findHint: findSpiderSolitaireHint,
   createInitialState,
   dealSpider,
   revealLastIfNeeded,
@@ -250,17 +273,25 @@ export default function SpiderSolitaire() {
   const [selected, setSelected] = useState<Selection>(null);
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<SpiderState>({
-      gameStateInitial,
-      resetNonGameStates: () => {
-        setSelected(null);
-        clearDragGhost();
-      },
-      resetAndSetup: async () => {
-        await resetAndSetup(setGame, suits);
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<SpiderState>({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelected(null);
+      clearDragGhost();
+    },
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame, suits);
+    },
+  });
 
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
 
@@ -291,6 +322,11 @@ export default function SpiderSolitaire() {
   const canDeal = useMemo(() => canDealStock(game), [game]);
 
   const won = useMemo(() => isWon(game), [game]);
+
+  useHint(() => findSpiderSolitaireHint(game), {
+    game,
+    enabled: !isSettingUp && !won,
+  });
 
   const zones: MapZone[] = useMemo(() => {
     const tableauZones: MapZone[] = game.tableau.map((pile, pileIndex) => ({

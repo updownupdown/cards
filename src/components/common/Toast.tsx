@@ -1,8 +1,10 @@
 import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { Icon, type IconName } from "@/icons";
 import {
   Colors,
   FontWeight,
+  getHeaderHeightWithInset,
   LayerZIndexes,
   layoutDims,
   rgba,
@@ -15,11 +17,25 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Animated, Platform } from "react-native";
+import { Animated, Platform, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+export type ToastOptions = {
+  duration?: number;
+  /** Shown before the message. */
+  icon?: IconName;
+  /**
+   * "top" slides in over the top of the screen; "belowHeader" sits under a
+   * game's header, leaving its buttons in reach.
+   */
+  placement?: "top" | "belowHeader";
+};
+
 // Define the type for the function our hook will return
-type ShowToastFn = (message: string, duration?: number) => void;
+type ShowToastFn = (
+  message: string,
+  durationOrOptions?: number | ToastOptions,
+) => void;
 
 const ToastContext = createContext<ShowToastFn | null>(null);
 
@@ -30,20 +46,35 @@ interface ToastProviderProps {
 interface ToastState {
   visible: boolean;
   message: string;
+  icon?: IconName;
+  placement: "top" | "belowHeader";
 }
 
+const HIDDEN_TOAST: ToastState = {
+  visible: false,
+  message: "",
+  placement: "top",
+};
+
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
-  const { spacing } = useResponsiveMetrics();
+  const { spacing, scale } = useResponsiveMetrics();
   const insets = useSafeAreaInsets();
-  const [toast, setToast] = useState<ToastState>({
-    visible: false,
-    message: "",
-  });
+  const [toast, setToast] = useState<ToastState>(HIDDEN_TOAST);
   const opacity = useRef(new Animated.Value(0)).current;
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const showToast = useCallback(
-    (message: string, duration: number = 2500) => {
-      setToast({ visible: true, message });
+    (message: string, durationOrOptions?: number | ToastOptions) => {
+      const options =
+        typeof durationOrOptions === "number"
+          ? { duration: durationOrOptions }
+          : (durationOrOptions ?? {});
+      const { duration = 2500, icon, placement = "top" } = options;
+      setToast({ visible: true, message, icon, placement });
+
+      // A new toast replaces the one showing, and gets its full time.
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+      opacity.stopAnimation();
 
       // Fade In
       Animated.timing(opacity, {
@@ -53,16 +84,25 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
       }).start();
 
       // Auto-hide after duration
-      setTimeout(() => {
+      hideTimerRef.current = setTimeout(() => {
+        hideTimerRef.current = null;
         Animated.timing(opacity, {
           toValue: 0,
           duration: 300,
           useNativeDriver: Platform.OS !== "web",
-        }).start(() => setToast({ visible: false, message: "" }));
+        }).start(({ finished }) => {
+          if (finished) setToast(HIDDEN_TOAST);
+        });
       }, duration);
     },
     [opacity],
   );
+
+  const restingTop =
+    toast.placement === "belowHeader"
+      ? getHeaderHeightWithInset(insets.top, scale) + spacing(4)
+      : insets.top +
+        spacing(layoutDims.pagePadding * 0.5 + layoutDims.menuBarPadding);
 
   return (
     <ToastContext.Provider value={showToast}>
@@ -74,14 +114,13 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
               opacity,
               top: opacity.interpolate({
                 inputRange: [0, 1],
-                outputRange: [
-                  spacing(-100),
-                  insets.top +
-                    spacing(
-                      layoutDims.pagePadding * 0.5 + layoutDims.menuBarPadding,
-                    ),
-                ], // Slide in from top, below the status bar
+                outputRange:
+                  toast.placement === "belowHeader"
+                    ? [restingTop - spacing(12), restingTop]
+                    : [spacing(-100), restingTop], // Slide in from top, below the status bar
               }),
+              // Only a message: taps go through to what's underneath.
+              pointerEvents: "none",
               position: "absolute",
               minHeight: spacing(
                 layoutDims.menuBarHeight - layoutDims.menuBarPadding * 2,
@@ -97,16 +136,29 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
             },
           ]}
         >
-          <Text
+          <View
             style={{
-              color: Colors.K100,
-              fontSize: 16,
-              fontFamily: FontWeight[400],
-              textAlign: "center",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: spacing(8),
             }}
           >
-            {toast.message}
-          </Text>
+            {toast.icon && (
+              <Icon name={toast.icon} size={spacing(22)} color={Colors.K100} />
+            )}
+            <Text
+              style={{
+                color: Colors.K100,
+                fontSize: 16,
+                fontFamily: FontWeight[400],
+                textAlign: "center",
+                flexShrink: 1,
+              }}
+            >
+              {toast.message}
+            </Text>
+          </View>
         </Animated.View>
       )}
     </ToastContext.Provider>

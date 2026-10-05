@@ -25,6 +25,8 @@ import {
 } from "../Cards/card-utils";
 import { delay } from "@/utils/utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { useHint } from "@/hints/hint-store";
+import { findClassicHint } from "@/hints/classic";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const TABLEAU_FAN_OFFSET = 0.35;
@@ -280,7 +282,40 @@ function gatherState(state: GameState): GameState {
   };
 }
 
+/**
+ * Every card is on view: the hint searches for a win. Runs of a suit move
+ * together; the seven flipper cells hold one card each.
+ */
+function findPenguinHint(state: GameState) {
+  const suits = SUITS as readonly CardSuit[];
+  return findClassicHint(
+    {
+      tableau: state.tableau,
+      foundations: suits.map((suit) => state.foundations[suit]),
+      cells: state.reserves,
+    },
+    {
+      toFoundation: (card, pile, index) =>
+        card.suit === suits[index] &&
+        canStartFoundation(card, pile, state.beakRank),
+      toTableau: (cards, pile) =>
+        canPlaceOnTableau(cards[0], pile.at(-1) ?? null, state.beakRank),
+      canLift: (pile, index) => isValidRun(pile.slice(index)),
+      buildQuality: (card, base) =>
+        canPlaceOnTableau(card, base, state.beakRank) ? 2 : 0,
+      pilesDiffer: false,
+    },
+    {
+      tableau: (pile) => `tableau-${pile}`,
+      foundation: (pile) => `foundation-${suits[pile]}`,
+      cell: (cell) => `reserve-${cell}`,
+    },
+    { search: "penguin" },
+  );
+}
+
 export const penguinRules = {
+  findHint: findPenguinHint,
   prevRankVal,
   nextRankVal,
   canPlaceOnFoundation,
@@ -301,20 +336,33 @@ const gameStateInitial = gatherState(createInitialState());
 export default function Penguin() {
   const [selected, setSelected] = useState<Selection>(null);
 
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<GameState>({
-      gameStateInitial,
-      resetNonGameStates: () => {
-        setSelected(null);
-        clearDragGhost();
-      },
-      resetAndSetup: async () => {
-        // Gather every card into the deal pile, then deal them back out.
-        setGame((draft) => gatherState(draft));
-        await delay();
-        setGame((draft) => redealWith(createInitialState(), draft.deal));
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<GameState>({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelected(null);
+      clearDragGhost();
+    },
+    resetAndSetup: async () => {
+      // Gather every card into the deal pile, then deal them back out.
+      setGame((draft) => gatherState(draft));
+      await delay();
+      setGame((draft) => redealWith(createInitialState(), draft.deal));
+    },
+  });
+
+  useHint(() => findPenguinHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended && !game.deal.length,
+  });
 
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 

@@ -31,6 +31,12 @@ import {
   zoneFanOffset,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { useHint } from "@/hints/hint-store";
+import {
+  findClassicHint,
+  type ClassicBoard,
+  type ClassicRules,
+} from "@/hints/classic";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -165,7 +171,75 @@ function applyAutoCompleteMove(
   );
 }
 
+// ─── Hints ────────────────────────────────────────────────────────────────────
+
+type ReserveCellHintOptions = {
+  canPlaceOnCascade?: (
+    card: PlayingCard,
+    destinationTop?: PlayingCard,
+  ) => boolean;
+  singleCardMoves?: boolean;
+  cellsAcceptCards?: boolean;
+};
+
+/**
+ * Every card is on view, so the hint searches ahead for a winning line. A
+ * reserve that takes no cards back (King Albert) plays like waste piles.
+ */
+function findReserveCellHint(
+  state: GameState,
+  {
+    canPlaceOnCascade: canPlaceOnCascadeRule = canPlaceOnCascade,
+    singleCardMoves = false,
+    cellsAcceptCards = true,
+  }: ReserveCellHintOptions = {},
+) {
+  const board: ClassicBoard = {
+    tableau: state.cascades,
+    foundations: state.foundations,
+    ...(cellsAcceptCards
+      ? { cells: state.freeCells }
+      : { reserves: state.freeCells.map((card) => (card ? [card] : [])) }),
+  };
+  const maxRun = (current: ClassicBoard, target: number) =>
+    singleCardMoves
+      ? 1
+      : ((current.cells ?? []).filter((card) => card === null).length + 1) *
+        2 **
+          current.tableau.filter(
+            (pile, index) => pile.length === 0 && index !== target,
+          ).length;
+  const rules: ClassicRules = {
+    toFoundation: (card, pile) =>
+      canPlaceOnFoundation(card, pile[pile.length - 1]),
+    toTableau: (cards, pile, pileIndex, current) =>
+      cards.length <= maxRun(current, pileIndex) &&
+      canPlaceOnCascadeRule(cards[0], pile[pile.length - 1]),
+    canLift: (pile, index) => {
+      const cards = pile.slice(index);
+      return singleCardMoves
+        ? cards.length === 1
+        : cards.every(
+            (card, cardIndex) =>
+              cardIndex === 0 ||
+              canPlaceOnCascadeRule(card, cards[cardIndex - 1]),
+          );
+    },
+  };
+  return findClassicHint(
+    board,
+    rules,
+    {
+      tableau: (pile) => `cascade-${pile}`,
+      foundation: (pile) => `foundation-${pile}`,
+      cell: (cell) => `free-${cell}`,
+    },
+    { search: "reserve-cell" },
+  );
+}
+
 export const eightOffRules = {
+  findHint: findReserveCellHint,
   applyAutoCompleteMove,
   canPlaceOnCascade,
   canPlaceOnFoundation,
@@ -289,6 +363,16 @@ export function ReserveCellBoard({
   const won = useMemo(
     () => game.foundations.every((pile) => pile.length === 13),
     [game.foundations],
+  );
+
+  useHint(
+    () =>
+      findReserveCellHint(game, {
+        canPlaceOnCascade: canPlaceOnCascadeRule,
+        singleCardMoves,
+        cellsAcceptCards,
+      }),
+    { game, enabled: !isSettingUp && !won && !game.deal?.length },
   );
   const cascadeHeight = fixedRows - cascadeRow;
   // Empty columns show a King when nothing else may start one.
