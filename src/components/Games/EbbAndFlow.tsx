@@ -1,4 +1,3 @@
-import { Text } from "@/components/common/Text";
 import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import type { GameSettings } from "@/data/game-menu";
 import {
@@ -11,8 +10,9 @@ import { useGameColors } from "@/hooks/useGameColors";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { flexStyles } from "@/styles/flexStyles";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
+import { Icon } from "@/icons";
+import { rgba } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -31,8 +31,9 @@ import {
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
-
 import { i18n } from "@/i18n";
+
+const cardSize = "small";
 
 // The Game (Steffen Benndorf) in playing cards: two piles climb, two fall, and
 // at least two cards go down each turn. The Game's jump back by exactly ten
@@ -48,11 +49,23 @@ const MIN_PLAYS = 2;
 type Direction = "up" | "down";
 const PILE_DIRECTIONS: Direction[] = ["up", "up", "down", "down"];
 
+const GROUP_DIRECTIONS: Direction[] = ["up", "down"];
 const COLS = PILE_DIRECTIONS.length;
 const GAP = 0.14;
-const PILE_ROW = 0;
-const HAND_ROW = PILE_ROW + 1.5;
-const DECK_ROW = HAND_ROW + 1.3;
+// Space between the rising and falling groups, in card widths.
+const GROUP_GAP = 0.4;
+const TOTAL_COLS = COLS + GROUP_GAP;
+const ARROW_ROW = 0.4;
+const DECK_ROW = 0;
+const GROUP_PAD = 0.1;
+const GROUP_ROW = 1.25;
+const PILE_ROW = ARROW_ROW + GROUP_ROW;
+const HAND_ROW = PILE_ROW + 1.25;
+
+/** Column of a pile; the falling piles sit past the gap between groups. */
+function pileCol(index: number) {
+  return index < 2 ? index : index + GROUP_GAP;
+}
 // Let the played card land before the hand fills up again.
 const AUTO_DRAW_DELAY = 350;
 
@@ -167,7 +180,7 @@ function gatherState(
 const gameStateInitial = createInitialState(HAND_SIZES.normal);
 
 function handOffset(count: number) {
-  return zoneFanOffset(count, COLS * (1 + GAP) - GAP, 0.3, 1 + GAP);
+  return zoneFanOffset(count, TOTAL_COLS * (1 + GAP) - GAP, 0.3, 1 + GAP);
 }
 
 export const ebbAndFlowRules = {
@@ -190,7 +203,7 @@ export const ebbAndFlowRules = {
 // ========== Component ========== //
 export default function EbbAndFlow() {
   const difficulty = useGameSettingValue("ebbAndFlowDifficulty");
-  const { colorPale } = useGameColors();
+  const { colorPale, colorZone } = useGameColors();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
   const dropHitAreasRef = useRef<DropHitArea<Target>[]>([]);
@@ -297,23 +310,42 @@ export default function EbbAndFlow() {
       name: "pile",
       pileIndex: index,
       cards: pile,
-      col: index,
+      col: pileCol(index),
       row: PILE_ROW,
       baseZIndex: 10,
       fan: { maxVisible: 2 },
-      placeholder: {
-        text: i18n.t(
-          PILE_DIRECTIONS[index] === "up"
-            ? "games:ebbAndFlow.rising"
-            : "games:ebbAndFlow.falling",
-        ),
-        infoPos: "below",
-        showCount: false,
-        iconName: PILE_DIRECTIONS[index] === "up" ? "arrow-up" : "arrow-down",
-      },
+      placeholder: { showCount: false, hideShadow: true },
     }));
 
     return [
+      {
+        id: "deck",
+        name: "deck",
+        cards: game.stock,
+        col: 1.7,
+        row: DECK_ROW,
+        baseZIndex: 20,
+        fan: { maxVisible: 3 },
+        placeholder: {
+          text: i18n.t("games:ebbAndFlow.stock"),
+          infoPos: "above",
+          showCount: true,
+        },
+      },
+      {
+        id: "group-up",
+        col: 0,
+        row: GROUP_ROW,
+        width: 2,
+        height: ARROW_ROW + 1,
+      },
+      {
+        id: "group-down",
+        col: pileCol(2),
+        row: GROUP_ROW,
+        width: 2,
+        height: ARROW_ROW + 1,
+      },
       ...pileZones,
       {
         id: "hand",
@@ -321,26 +353,9 @@ export default function EbbAndFlow() {
         cards: game.hand,
         col: 0,
         row: HAND_ROW,
-        width: COLS,
+        width: TOTAL_COLS,
         baseZIndex: 40,
         fan: { direction: "right", offset: handOffset(game.hand.length) },
-      },
-      {
-        id: "status",
-        col: 0,
-        row: DECK_ROW,
-        width: COLS - 1,
-        height: 1,
-      },
-      {
-        id: "deck",
-        name: "deck",
-        cards: game.stock,
-        col: COLS - 1,
-        row: DECK_ROW,
-        baseZIndex: 20,
-        fan: { maxVisible: 3 },
-        placeholder: { infoPos: "below", showCount: true },
       },
     ];
   }, [game]);
@@ -377,17 +392,14 @@ export default function EbbAndFlow() {
       return {
         onPress: draw,
         isDisabled: !drawable,
-        isSelected: drawable && mappedCard.topOfZone,
-        selectColor: "green",
       };
     }
     return { isDisabled: true };
   };
 
-  /** A tapped card shows every pile it fits; a dragged one, the pile below it. */
+  /** Only the pile a dragged card hovers over is highlighted. */
   function pileHighlighted(pile: number) {
-    if (dragGhost) return hoverTarget?.pile === pile;
-    return selected !== null && canPlayOn(game, selected, pile);
+    return !!dragGhost && hoverTarget?.pile === pile;
   }
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
@@ -416,10 +428,11 @@ export default function EbbAndFlow() {
     zones,
     cardMapper,
     zoneMapper,
-    cardSize: "regular",
+    cardSize,
     gap: GAP,
   });
 
+  const groupPad = cardWidth * GROUP_PAD;
   const handZone = zones.find((zone) => zone.name === "hand");
 
   function getSourceRect(source: Source) {
@@ -508,15 +521,6 @@ export default function EbbAndFlow() {
     [cardHitAreas],
   );
 
-  const owed = playsOwed(game);
-  const status = ended
-    ? null
-    : owed > 0
-      ? i18n.t("games:ebbAndFlow.playMore", { count: owed })
-      : game.stock.length > 0
-        ? i18n.t("games:ebbAndFlow.playOrDraw")
-        : i18n.t("games:ebbAndFlow.deckEmpty");
-
   return (
     <GameWrapper
       outcome={won ? "won" : lost ? "lost" : "playing"}
@@ -533,24 +537,33 @@ export default function EbbAndFlow() {
       <View ref={boardRef} style={styles.board}>
         {cardMap}
 
-        {status && (
-          <View
-            style={[
-              pointerEventsStyles.none,
-              getZoneStylesById("status"),
-              flexStyles.colCentered,
-            ]}
-          >
-            <Text
-              size="sm"
-              weight={500}
-              color={colorPale}
-              style={{ textAlign: "center" }}
+        {GROUP_DIRECTIONS.map((direction) => {
+          const box = getZoneStylesById(`group-${direction}`);
+          return (
+            <View
+              key={direction}
+              style={[
+                pointerEventsStyles.none,
+                box,
+                {
+                  backgroundColor: colorZone,
+                  borderRadius: cardWidth * 0.12,
+                  marginLeft: -groupPad,
+                  width: (box.width as number) + groupPad * 2,
+                  height: (box.height as number) + groupPad,
+                  alignItems: "center",
+                  paddingTop: cardHeight * ARROW_ROW * 0.2,
+                },
+              ]}
             >
-              {status}
-            </Text>
-          </View>
-        )}
+              <Icon
+                name={direction === "up" ? "arrow-up" : "arrow-down"}
+                size={cardWidth * 0.4}
+                color={rgba(colorPale, 0.7)}
+              />
+            </View>
+          );
+        })}
 
         <View style={[pointerEventsStyles.boxNone, styles.interactionLayer]}>
           {interactionTargets}
@@ -562,7 +575,7 @@ export default function EbbAndFlow() {
             translate={dragTranslate}
             cardWidth={cardWidth}
             cardHeight={cardHeight}
-            cardSize="regular"
+            cardSize={cardSize}
             isValidDrop={hoverTarget !== null}
           />
         )}

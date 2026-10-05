@@ -149,7 +149,7 @@ export function GameHeading({
   title: string;
 }) {
   return (
-    <View style={{ flexShrink: 1, alignItems: "flex-start" }}>
+    <View style={{ flexShrink: 1, minWidth: 0, alignItems: "stretch" }}>
       <Text size="xl" weight={500} color={Colors.white} numberOfLines={1}>
         {title}
       </Text>

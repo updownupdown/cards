@@ -176,7 +176,7 @@ function Layout() {
         <StatusBar style="light" />
         <ToastProvider>
           <View
-            key={settings.colorTheme}
+            key={`${settings.colorTheme}:${settings.useEnglishGameTitles}`}
             style={[
               {
                 flex: 1,

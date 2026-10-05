@@ -240,8 +240,8 @@ export function Architect({ stage, hud }: WildGameProps) {
 
       {/* Difficulty and the stability meter, just under the header. */}
       <View
-        pointerEvents="box-none"
         style={{
+          pointerEvents: "box-none",
           position: "absolute",
           top: top + 4,
           left: 0,

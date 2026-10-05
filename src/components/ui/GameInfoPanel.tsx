@@ -99,7 +99,7 @@ export function GameInfoPanel({
             // The game cards' frame: their corners and shadow.
             ...frame,
             padding: spacing(16),
-            gap: spacing(14),
+            gap: spacing(4),
             backgroundColor: theme.surface,
           },
           style,

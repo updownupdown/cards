@@ -1,4 +1,3 @@
-import { Text } from "@/components/common/Text";
 import { Button } from "@/components/Button/Button";
 import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
@@ -20,6 +19,7 @@ import {
   rankValue,
   redealWith,
   shuffle,
+  sortCardsBySuit,
   SUITS,
   type PlayingCard,
 } from "../Cards/card-utils";
@@ -33,23 +33,21 @@ import { i18n } from "@/i18n";
 // Eleusis (Robert Abbott, 1956) for one: a hidden law decides which cards
 // may follow the path. Tapping a card plays it; cards that break the law are
 // turned away and lie greyed in the grid. Read the law well enough to make
-// eight right calls in a row, playing a card that fits or declaring that none
-// in hand does (a card that did fit is then played for you, in purple).
+// eight correct guesses in a row, playing a card that fits or declaring that none
+// in hand does (a card that did fit is then played for you, in red).
 const HAND_SIZE = 4;
 const TARGET = 8;
 const PATH_COLS = 6;
 const PATH_ROWS = 4;
-const SHOWN_CELLS = PATH_COLS * PATH_ROWS;
-const GROUP_GAP = 0.15;
-const BOARD_COLS = PATH_COLS + 2 * GROUP_GAP;
-const STATUS_ROW = 0;
-const STATUS_HEIGHT = 0.36;
-const HUD_ROW = STATUS_ROW + STATUS_HEIGHT + 0.05;
-const HUD_HEIGHT = 0.42;
-const PATH_ROW = HUD_ROW + HUD_HEIGHT + 0.2;
-const CELL_ROWS = 1.1;
-const HAND_ROW = PATH_ROW + CELL_ROWS * PATH_ROWS + 0.1;
-const BUTTON_ROW = HAND_ROW + 1.08;
+const BOARD_COLS = PATH_COLS;
+const TOP_ROW = 0;
+// Row units are card height + grid gap (0.1 card width); this widens the gap
+// above and below the cells from that to 0.1 * card height.
+const EDGE_GAP_EXTRA = 0.2;
+const PATH_ROW = TOP_ROW + 1 + EDGE_GAP_EXTRA;
+const CELL_ROWS = 1;
+const PATH_SPAN = (PATH_ROWS - 1) * CELL_ROWS;
+const HAND_ROW = PATH_ROW + CELL_ROWS * PATH_ROWS + EDGE_GAP_EXTRA;
 
 export type Difficulty = "easy" | "difficult";
 
@@ -67,11 +65,43 @@ export type LawId =
   | "evenRedOddBlack"
   | "colourTwoBack"
   | "blackClimbs"
-  | "sameColourClimbs";
+  | "sameColourClimbs"
+  | "sameColour"
+  | "differentSuit"
+  | "highLowAlternate"
+  | "courtAlternate"
+  | "lowerUntilAce"
+  | "farApart"
+  | "colourTwoBackDiffers"
+  | "suitTwoBack"
+  | "freshSuit"
+  | "zigzag"
+  | "afterRedLow"
+  | "heartsWild"
+  | "sumAtMost14"
+  | "parityLock"
+  | "withinTwoWrap"
+  | "suitSequence"
+  | "sameSuitAscender"
+  | "redHighBlackLow"
+  | "royalCommand"
+  | "rangeFlip"
+  | "suitSwitcher"
+  | "suitSuperiority"
+  | "rankSandwich"
+  | "colourBalance"
+  | "distanceMirroring";
 
 type Law = { id: LawId; level: Difficulty; test: LawTest };
 
 const last = (path: PlayingCard[]) => path[path.length - 1];
+const isHigh = (card: PlayingCard) => rankValue(card) >= 8;
+const SPADE_FIRST_CYCLE = ["spades", "hearts", "diamonds", "clubs"];
+const SUIT_POWER = ["clubs", "diamonds", "hearts", "spades"];
+const circularGap = (a: PlayingCard, b: PlayingCard) => {
+  const gap = Math.abs(rankValue(a) - rankValue(b));
+  return Math.min(gap, 13 - gap);
+};
 const isOdd = (card: PlayingCard) => rankValue(card) % 2 === 1;
 
 export const LAWS: Law[] = [
@@ -146,11 +176,179 @@ export const LAWS: Law[] = [
       rankValue(last(path)) === 13 ||
       rankValue(card) > rankValue(last(path)),
   },
+  {
+    id: "sameColour",
+    level: "easy",
+    test: (path, card) => isRed(card.suit) === isRed(last(path).suit),
+  },
+  {
+    id: "differentSuit",
+    level: "easy",
+    test: (path, card) => card.suit !== last(path).suit,
+  },
+  {
+    id: "highLowAlternate",
+    level: "easy",
+    test: (path, card) => isHigh(card) !== isHigh(last(path)),
+  },
+  {
+    id: "courtAlternate",
+    level: "easy",
+    test: (path, card) => isFace(card) !== isFace(last(path)),
+  },
+  {
+    id: "lowerUntilAce",
+    level: "easy",
+    test: (path, card) =>
+      rankValue(last(path)) === 1 || rankValue(card) < rankValue(last(path)),
+  },
+  {
+    id: "farApart",
+    level: "easy",
+    test: (path, card) =>
+      Math.abs(rankValue(card) - rankValue(last(path))) >= 3,
+  },
+  {
+    id: "colourTwoBackDiffers",
+    level: "difficult",
+    test: (path, card) =>
+      path.length < 2 || isRed(card.suit) !== isRed(path[path.length - 2].suit),
+  },
+  {
+    id: "suitTwoBack",
+    level: "difficult",
+    test: (path, card) =>
+      path.length < 2 || card.suit === path[path.length - 2].suit,
+  },
+  {
+    id: "freshSuit",
+    level: "difficult",
+    test: (path, card) => path.slice(-2).every((p) => p.suit !== card.suit),
+  },
+  {
+    id: "zigzag",
+    level: "difficult",
+    test: (path, card) => {
+      if (path.length < 2) return true;
+      const prev = rankValue(last(path));
+      const before = rankValue(path[path.length - 2]);
+      if (prev === before) return true;
+      return prev > before ? rankValue(card) < prev : rankValue(card) > prev;
+    },
+  },
+  {
+    id: "afterRedLow",
+    level: "difficult",
+    test: (path, card) => isRed(last(path).suit) === rankValue(card) <= 7,
+  },
+  {
+    id: "heartsWild",
+    level: "difficult",
+    test: (path, card) =>
+      card.suit === "hearts" || rankValue(card) > rankValue(last(path)),
+  },
+  {
+    id: "sumAtMost14",
+    level: "difficult",
+    test: (path, card) => rankValue(card) + rankValue(last(path)) <= 14,
+  },
+  {
+    id: "parityLock",
+    level: "easy",
+    test: (path, card) => isOdd(card) === isOdd(last(path)),
+  },
+  {
+    id: "withinTwoWrap",
+    level: "easy",
+    test: (path, card) => circularGap(card, last(path)) <= 2,
+  },
+  {
+    id: "suitSequence",
+    level: "easy",
+    test: (path, card) =>
+      SPADE_FIRST_CYCLE.indexOf(card.suit) ===
+      (SPADE_FIRST_CYCLE.indexOf(last(path).suit) + 1) %
+        SPADE_FIRST_CYCLE.length,
+  },
+  {
+    id: "sameSuitAscender",
+    level: "easy",
+    test: (path, card) => {
+      const prev = last(path);
+      if (card.suit === prev.suit) return rankValue(card) > rankValue(prev);
+      if (isRed(card.suit) === isRed(prev.suit))
+        return rankValue(card) < rankValue(prev);
+      return true;
+    },
+  },
+  {
+    id: "redHighBlackLow",
+    level: "easy",
+    test: (path, card) => isRed(card.suit) === rankValue(card) >= 8,
+  },
+  {
+    id: "royalCommand",
+    level: "difficult",
+    test: (path, card) =>
+      isFace(last(path)) === (card.suit === last(path).suit),
+  },
+  {
+    id: "rangeFlip",
+    level: "difficult",
+    test: (path, card) =>
+      isHigh(last(path))
+        ? isRed(card.suit) !== isRed(last(path).suit)
+        : isRed(card.suit) === isRed(last(path).suit),
+  },
+  {
+    id: "suitSwitcher",
+    level: "difficult",
+    test: (path, card) =>
+      card.suit !== last(path).suit &&
+      isRed(card.suit) === isRed(last(path).suit),
+  },
+  {
+    id: "suitSuperiority",
+    level: "difficult",
+    test: (path, card) =>
+      SUIT_POWER.indexOf(card.suit) > SUIT_POWER.indexOf(last(path).suit) ||
+      rankValue(card) > rankValue(last(path)) ||
+      (last(path).suit === "spades" && rankValue(last(path)) === 13),
+  },
+  {
+    id: "rankSandwich",
+    level: "difficult",
+    test: (path, card) => {
+      if (path.length < 2) return true;
+      const a = rankValue(last(path));
+      const b = rankValue(path[path.length - 2]);
+      const r = rankValue(card);
+      return r >= Math.min(a, b) && r <= Math.max(a, b);
+    },
+  },
+  {
+    id: "colourBalance",
+    level: "difficult",
+    test: (path, card) =>
+      path.length < 2 ||
+      !path.slice(-2).every((p) => isRed(p.suit) === isRed(card.suit)),
+  },
+  {
+    id: "distanceMirroring",
+    level: "difficult",
+    test: (path, card) => {
+      if (path.length < 2) return true;
+      const prev = last(path);
+      const before = path[path.length - 2];
+      if (rankValue(prev) > rankValue(before)) return card.suit === before.suit;
+      if (rankValue(prev) < rankValue(before))
+        return isRed(card.suit) === isRed(before.suit);
+      return true;
+    },
+  },
 ];
 
 type PathEntry = { card: PlayingCard; rejected: PlayingCard[] };
-
-type Verdict = "accepted" | "rejected" | "noneRight" | "noneWrong";
 
 type GameState = {
   deck: PlayingCard[];
@@ -160,7 +358,6 @@ type GameState = {
   discard: PlayingCard[];
   lawId: LawId;
   streak: number;
-  verdict: Verdict | null;
   /** The card that would have fitted, after a wrong declaration. */
   missedId: string | null;
   ended: boolean;
@@ -187,6 +384,7 @@ function refill(state: GameState) {
   while (state.hand.length < HAND_SIZE && state.deck.length > 0) {
     state.hand.push(flipToFace(state.deck.pop()!));
   }
+  sortCardsBySuit(state.hand);
 }
 
 function checkEnd(state: GameState) {
@@ -207,11 +405,9 @@ function playCard(state: GameState, handIndex: number) {
   if (fitsLaw(state, card)) {
     state.path.push({ card, rejected: [] });
     state.streak += 1;
-    state.verdict = "accepted";
   } else {
     state.path[state.path.length - 1].rejected.push(card);
     state.streak = 0;
-    state.verdict = "rejected";
   }
   refill(state);
   checkEnd(state);
@@ -226,12 +422,10 @@ function declareNone(state: GameState) {
     state.hand.splice(state.hand.indexOf(fitting), 1);
     state.path.push({ card: fitting, rejected: [] });
     state.streak = 0;
-    state.verdict = "noneWrong";
     state.missedId = fitting.id;
     refill(state);
   } else {
     state.streak += 1;
-    state.verdict = "noneRight";
     state.missedId = null;
     state.discard.push(...flipAllToBack(state.hand));
     state.hand = [];
@@ -242,7 +436,9 @@ function declareNone(state: GameState) {
 }
 
 function pickLaw(difficulty: Difficulty, random = Math.random) {
-  const pool = LAWS.filter((law) => law.level === difficulty);
+  const pool = LAWS.filter(
+    (law) => difficulty === "difficult" || law.level === "easy",
+  );
   return pool[Math.floor(random() * pool.length)].id;
 }
 
@@ -255,7 +451,6 @@ function createInitialState(difficulty: Difficulty): GameState {
     discard: [],
     lawId: pickLaw(difficulty),
     streak: 0,
-    verdict: null,
     missedId: null,
     ended: false,
     won: false,
@@ -272,7 +467,6 @@ function gatherState(state: GameState): GameState {
     path: [],
     discard: [],
     streak: 0,
-    verdict: null,
     missedId: null,
     ended: false,
     won: false,
@@ -294,7 +488,7 @@ export const auguryRules = {
 const gameStateInitial = createInitialState("easy");
 
 export default function Augury() {
-  const { colorPale, colorDark } = useGameColors();
+  const { colorDark, colorAccent } = useGameColors();
   const difficulty = useGameSettingValue("difficulty");
   const [showDiscard, setShowDiscard] = useState(false);
 
@@ -317,8 +511,8 @@ export default function Augury() {
     });
   }
 
-  // Every card played lies in one grid cell, in order. The latest cells are
-  // shown; older ones go face down to the discard pile.
+  // Every card played lies in one grid cell, in order. When the grid gets
+  // taller than its space, the rows close up instead of dropping cards.
   const cells = useMemo<Cell[]>(
     () =>
       game.path.flatMap((entry) => [
@@ -330,54 +524,49 @@ export default function Augury() {
       ]),
     [game.path, game.missedId],
   );
-  const shownStart = Math.max(0, cells.length - SHOWN_CELLS);
-  const discard = useMemo(
-    () => [
-      ...game.discard,
-      ...flipAllToBack(cells.slice(0, shownStart).map((cell) => cell.card)),
-    ],
-    [game.discard, cells, shownStart],
-  );
+  const pathRows = Math.ceil(cells.length / PATH_COLS);
+  const rowPitch =
+    pathRows > PATH_ROWS ? PATH_SPAN / (pathRows - 1) : CELL_ROWS;
+  const discard = game.discard;
 
   const zones: MapZone[] = useMemo(() => {
-    const cellZones: MapZone[] = cells.slice(shownStart).map((cell, i) => ({
+    const cellZones: MapZone[] = cells.map((cell, i) => ({
       id: `cell-${i}`,
       name: "cell",
-      pileIndex: shownStart + i,
+      pileIndex: i,
       cards: [cell.card],
-      col: GROUP_GAP + (i % PATH_COLS),
-      row: PATH_ROW + Math.floor(i / PATH_COLS) * CELL_ROWS,
+      col: i % PATH_COLS,
+      row: PATH_ROW + Math.floor(i / PATH_COLS) * rowPitch,
       baseZIndex: 10 + i,
     }));
-    const handStart = 1 + GROUP_GAP + (HAND_SIZE - game.hand.length) / 2;
+
     const handZones: MapZone[] = game.hand.map((card, i) => ({
       id: `hand-${i}`,
       name: "hand",
       pileIndex: i,
       cards: [card],
-      col: handStart + i,
+      col: i + 2,
       row: HAND_ROW,
       baseZIndex: 80,
     }));
     return [
       {
-        id: "status",
-        col: 0,
-        row: STATUS_ROW,
-        width: "full",
-        height: STATUS_HEIGHT,
+        id: "hud",
+        col: 1.6,
+        row: TOP_ROW,
+        width: BOARD_COLS - 3.2,
+        height: 1,
       },
-      { id: "hud", col: 0, row: HUD_ROW, width: "full", height: HUD_HEIGHT },
       ...cellZones,
       {
         id: "deck",
         name: "deck",
         cards: game.deck,
         col: 0,
-        row: HAND_ROW,
+        row: TOP_ROW,
         baseZIndex: 60,
         fan: { maxVisible: 3 },
-        placeholder: { text: i18n.t("cards:stock"), infoPos: "above" },
+        placeholder: { text: i18n.t("cards:stock"), infoPos: "right" },
       },
       ...handZones,
       {
@@ -385,14 +574,20 @@ export default function Augury() {
         name: "discard",
         cards: discard,
         col: BOARD_COLS - 1,
-        row: HAND_ROW,
+        row: TOP_ROW,
         baseZIndex: 60,
         fan: { maxVisible: 3 },
-        placeholder: { text: i18n.t("cards:discard"), infoPos: "above" },
+        placeholder: { text: i18n.t("cards:discard"), infoPos: "left" },
       },
-      { id: "buttons", col: 0, row: BUTTON_ROW, width: "full", height: 0.5 },
+      {
+        id: "buttons",
+        col: 0,
+        row: HAND_ROW,
+        width: 1.75,
+        height: 1,
+      },
     ];
-  }, [game.deck, game.hand, cells, shownStart, discard]);
+  }, [game.deck, game.hand, cells, discard, rowPitch]);
 
   const cardMapper = (card: MappedCard): AnimatedCardMapping | undefined => {
     if (card.zoneName === "hand") {
@@ -402,12 +597,12 @@ export default function Augury() {
       };
     }
     if (card.zoneName === "cell") {
-      // Turned-away cards are greyed, a card missed by "None Fit" is purple.
+      // Turned-away cards are greyed, a card missed by "None Fit" is red.
       const kind = cells[card.pileIndex ?? 0]?.kind;
       return {
         isDisabled: true,
         forceOverlayColor: kind !== "played",
-        selectColor: kind === "missed" ? "purple" : "grey",
+        selectColor: kind === "missed" ? "red" : "grey",
       };
     }
     return { isDisabled: true };
@@ -430,14 +625,11 @@ export default function Augury() {
     zoneMapper,
     cardSize: "small",
     fixedCols: BOARD_COLS,
-    fixedRows: BUTTON_ROW + 0.5,
+    fixedRows: HAND_ROW + 1,
     gap: 0.1,
   });
 
   const lawText = i18n.t(`games:augury.law.${game.lawId}`);
-  const status = game.verdict
-    ? i18n.t(`games:augury.verdict.${game.verdict}`)
-    : i18n.t("games:augury.start");
 
   return (
     <GameWrapper
@@ -462,18 +654,6 @@ export default function Augury() {
       <View
         style={[
           pointerEventsStyles.none,
-          getZoneStylesById("status"),
-          flexStyles.colCentered,
-        ]}
-      >
-        <Text size="sm" weight={400} color={colorPale} numberOfLines={1}>
-          {status}
-        </Text>
-      </View>
-
-      <View
-        style={[
-          pointerEventsStyles.none,
           getZoneStylesById("hud"),
           flexStyles.rowCentered,
         ]}
@@ -481,11 +661,11 @@ export default function Augury() {
         <ProgressBar
           progressValue={game.streak}
           totalValue={TARGET}
-          color={game.streak > 0 ? "green" : "blue"}
+          color={colorAccent}
           backgroundColor={rgba(colorDark, 0.7)}
           labelText={i18n.t("games:augury.streak")}
           tallyText={`${game.streak}/${TARGET}`}
-          scaledHeight={cardHeight * 0.36}
+          scaledHeight={cardHeight * 0.4}
           style={{ flex: 1 }}
         />
       </View>
@@ -500,8 +680,12 @@ export default function Augury() {
             })
           }
           disabled={game.ended || game.hand.length === 0}
-          theme="blue"
-          style={{ flex: 1 }}
+          theme={colorAccent}
+          style={{
+            flex: 1,
+            height: cardHeight,
+            borderRadius: cardHeight * 0.1,
+          }}
         />
       </View>
     </GameWrapper>

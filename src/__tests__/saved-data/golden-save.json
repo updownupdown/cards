@@ -4,6 +4,7 @@
     "cards.globalSettings.v1": {
       "language": "fr",
       "translateCollectibles": false,
+      "useEnglishGameTitles": true,
       "discoverCardSize": "small",
       "dismissHomeInstallPrompt": true,
       "dismissCampaignIntro": true,

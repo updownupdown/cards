@@ -49,6 +49,7 @@ const NOT_COUNTED: Record<string, string> = {
   "/invaders": "attacks pick an attacker and a defender, then confirm",
   "/ouroboros":
     "hasSafeLoopStart guarantees a viable second turn; later turns pick a path, then act",
+  "/royal-marriage": "a move selects a run of cards, then presses Discard",
   "/triple-stack": "a move picks three cards",
   "/fortress":
     "a tap picks a column first, which a leftover pick can turn into another move; castle-deals.test.tsx checks its deals with the game's own rules",

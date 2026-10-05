@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
 import "../../../jest/game-mocks";
 import { card } from "../../../jest/game-harness";
+import { elevensRules } from "@/components/Games/Elevens";
 import { stalactitesRules } from "@/components/Games/Stalactites";
 import { crosswordRules } from "@/components/Games/Crossword";
 import { ozanamsSquareRules } from "@/components/Games/OzanamsSquare";
@@ -338,7 +339,6 @@ describe("Augury", () => {
     const wrong = stateWith([card("7", "clubs"), card("8", "diamonds")]);
     const fitting = wrong.hand[0].id;
     declareNone(wrong);
-    expect(wrong.verdict).toBe("noneWrong");
     expect(wrong.missedId).toBe(fitting);
     expect(wrong.path[wrong.path.length - 1].card.id).toBe(wrong.missedId);
     expect(wrong.hand).toHaveLength(3);
@@ -346,7 +346,23 @@ describe("Augury", () => {
     const right = stateWith([card("8", "diamonds"), card("9", "hearts")]);
     right.streak = TARGET - 1;
     declareNone(right);
-    expect(right.verdict).toBe("noneRight");
     expect(right.won).toBe(true);
+  });
+});
+
+describe("Elevens", () => {
+  const c = (rank: PlayingCard["rank"]) => card(rank, "spades");
+
+  test("pairs total 11 and royals come in threes", () => {
+    const { isRemovableSet, isPartialSet, hasAvailableMove } = elevensRules;
+    expect(isRemovableSet([c("A"), c("10")])).toBe(true);
+    expect(isRemovableSet([c("5"), c("6")])).toBe(true);
+    expect(isRemovableSet([c("5"), c("7")])).toBe(false);
+    expect(isRemovableSet([c("J"), c("Q"), c("K")])).toBe(true);
+    expect(isRemovableSet([c("J"), c("J"), c("K")])).toBe(false);
+    expect(isPartialSet([c("J"), c("Q")])).toBe(true);
+    expect(isPartialSet([c("J"), c("J")])).toBe(false);
+    expect(hasAvailableMove([c("J"), c("Q"), null, c("K")])).toBe(true);
+    expect(hasAvailableMove([c("J"), c("Q"), c("2"), c("3")])).toBe(false);
   });
 });

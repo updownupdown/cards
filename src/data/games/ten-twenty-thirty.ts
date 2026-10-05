@@ -5,7 +5,7 @@ import { GameAnimations } from "@/animations";
 
 export const tenTwentyThirty: GameDefinition = {
   path: "/ten-twenty-thirty",
-  title: "Ten Twenty Thirty",
+  title: "Ten-Twenty-Thirty",
   aliases: ["Decade"],
   tags: [GameTag.PairMatching],
   rating: {

@@ -1089,4 +1089,26 @@ that reach out across the world.`,
     author: `Thich Nhat Hanh`,
     source: `Peace Is Every Step (1991)`,
   },
+  {
+    text: `Men are disturbed not by things, but by the views which they take of them.`,
+    author: `Epictetus`,
+    source: `Enchiridion, Chapter 5, George Long translation (1877)`,
+  },
+
+  {
+    text: `It is not because things are difficult that we do not dare; it is because we do not dare that things are difficult.`,
+    author: `Seneca`,
+    source: `Letters to Lucilius, Letter 104, Richard Gummere translation (1925)`,
+  },
+  {
+    text: `Placeholder quote one.`,
+    author: `Epictetus`,
+    source: `Placeholder`,
+  },
+
+  {
+    text: `Placeholder quote two.`,
+    author: `Seneca`,
+    source: `Placeholder`,
+  },
 ] as const satisfies readonly QuoteText[];
