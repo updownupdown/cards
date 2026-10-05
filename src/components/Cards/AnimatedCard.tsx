@@ -126,13 +126,18 @@ const AnimatedCardComponent = ({
   const currentVisualYOffset = useSharedValue(initialYOffset + zIndexOffset);
   const currentRotation = useSharedValue(targetState.rotation);
 
-  // While moving, a card sits above resting cards but keeps its target order
-  // among other moving cards (e.g. a whole deal in flight), then settles to its
-  // target zIndex on landing. The zIndex is set through React, not the animated
-  // style: on Android, Reanimated's synchronous prop updates change a view's
-  // zIndex without re-sorting it among its siblings, so moving cards were drawn
-  // in the wrong order until the animation's end was committed.
+  // While flying to another pile, a card sits above resting cards but keeps
+  // its target order among other moving cards (e.g. a whole deal in flight),
+  // then settles to its target zIndex on landing. A card that moves within its
+  // own pile, like a selected hand card lifting, a highlighted card nudged out
+  // of a fan or a loop turning, takes its target zIndex at once, so it never
+  // passes over the cards stacked on it. The zIndex is set through
+  // React, not the animated style: on Android, Reanimated's synchronous prop
+  // updates change a view's zIndex without re-sorting it among its siblings,
+  // so moving cards were drawn in the wrong order until the animation's end
+  // was committed.
   const targetZ = targetState.zIndex + zIndexOffset;
+  const [lastZoneId, setLastZoneId] = useState(targetState.zoneId);
   const moveKey = [
     targetState.zoneId,
     targetState.x,
@@ -146,8 +151,19 @@ const AnimatedCardComponent = ({
   const [movingKey, setMovingKey] = useState<string | null>(null);
   if (lastMoveKey !== moveKey) {
     setLastMoveKey(moveKey);
+    setLastZoneId(targetState.zoneId);
     // Mirrors the reaction below: only a drop flight or a timed move animates.
-    setMovingKey(dropOffset !== undefined || duration !== 0 ? moveKey : null);
+    const animates = dropOffset !== undefined || duration !== 0;
+    // Orbiting from one place on a loop to the next stays within the loop.
+    const orbits =
+      !!orbitConfig?.enabled &&
+      lastZoneId.startsWith("loop-") &&
+      targetState.zoneId.startsWith("loop-");
+    // A card still in flight to its new pile stays above until it lands.
+    const changesPile =
+      (lastZoneId !== targetState.zoneId && !orbits) ||
+      movingKey === lastMoveKey;
+    setMovingKey(animates && changesPile ? moveKey : null);
   }
   const endMove = useCallback((key: string) => {
     setMovingKey((current) => (current === key ? null : current));

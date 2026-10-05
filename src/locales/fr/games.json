@@ -719,5 +719,58 @@
     "cardsRemainGood": "Il reste {{count}} cartes. Bien !",
     "cardsRemainExcellent": "Il reste {{count}} cartes. Excellent !",
     "cardsRemainBrilliant": "Il reste {{count}} cartes. Brillant !"
+  },
+  "stalactites": {
+    "allCardsHome": "Les quatre fondations sont complètes.",
+    "full": "Complète",
+    "next": "Suivante : {{rank}}",
+    "nextEither": "{{one}} • {{two}}",
+    "byOnes": "De un en un",
+    "byTwos": "De deux en deux",
+    "buildingByOnes": "Montée de un en un",
+    "buildingByTwos": "Montée de deux en deux"
+  },
+  "crossword": {
+    "completed": "Toutes les cases sont remplies !",
+    "stuck": "La carte ne peut aller nulle part. {{placed}} cartes posées sur {{total}}.",
+    "oddRunLost": "Une suite de chiffres complète a une somme impaire. Vous avez perdu.",
+    "placed": "posées"
+  },
+  "ozanamsSquare": {
+    "solved": "Chaque ligne contient chaque valeur et chaque couleur une seule fois."
+  },
+  "irisGarden": {
+    "cleared": "Le jardin est dégagé !",
+    "noMatches": "Aucune paire ne peut être prise. Il reste {{pairs}} paires.",
+    "pairsLeft_one": "{{count}} paire restante",
+    "pairsLeft_other": "{{count}} paires restantes",
+    "matchesOpen_one": "{{count}} paire peut être prise",
+    "matchesOpen_other": "{{count}} paires peuvent être prises"
+  },
+  "augury": {
+    "streak": "Bonnes réponses",
+    "start": "Touchez une carte pour la jouer, ou déclarez qu’aucune ne convient.",
+    "noneFit": "Aucune ne convient",
+    "won": "Vous avez lu les présages ! La loi : {{law}}",
+    "lost": "Votre main est épuisée. La loi : {{law}}",
+    "verdict": {
+      "accepted": "La carte est acceptée.",
+      "rejected": "La carte est refusée.",
+      "noneRight": "Exact : aucune carte ne convenait. Nouvelle main.",
+      "noneWrong": "Une carte convenait, elle a donc été jouée. Votre série repart de zéro."
+    },
+    "law": {
+      "alternateColours": "Chaque carte doit être de l’autre couleur que la précédente.",
+      "suitOrRank": "Chaque carte doit avoir la couleur ou la valeur de la précédente.",
+      "oddEven": "Valeurs paires et impaires alternent (Valet 11, Dame 12, Roi 13).",
+      "higherUntilCourt": "Chaque carte doit être plus haute que la précédente, mais tout peut suivre une figure.",
+      "withinTwo": "Chaque carte doit être à deux rangs au plus de la précédente (As bas).",
+      "colourSteers": "Après une carte rouge, jouez plus haut ; après une noire, plus bas ; tout peut suivre un Roi rouge ou un As noir.",
+      "suitCycle": "Les couleurs tournent dans l’ordre : cœur, trèfle, carreau, pique.",
+      "evenRedOddBlack": "Les valeurs paires doivent être rouges et les impaires noires.",
+      "colourTwoBack": "Chaque carte doit être de la même couleur que celle d’il y a deux cartes.",
+      "blackClimbs": "Une carte noire doit être plus haute que la précédente ; une rouge peut suivre n’importe quoi.",
+      "sameColourClimbs": "Une carte de la même couleur que la précédente doit être plus haute ; l’autre couleur peut suivre n’importe quoi."
+    }
   }
 }

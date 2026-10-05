@@ -81,27 +81,33 @@
     "personas": {
       "comfort": {
         "title": "The Comfort Pick",
-        "subtitle": "Your highest win rate"
+        "subtitle": "Your highest win rate",
+        "requirement": "Win two games at least 3 times each."
       },
       "nemesis": {
         "title": "The Nemesis",
-        "subtitle": "Your lowest win rate"
+        "subtitle": "Your lowest win rate",
+        "requirement": "Win two games at least 3 times each."
       },
       "whale": {
         "title": "The White Whale",
-        "subtitle": "Most plays without a win"
+        "subtitle": "Most plays without a win",
+        "requirement": "Lose a game 3 times without ever winning it."
       },
       "faithful": {
         "title": "Old Faithful",
-        "subtitle": "Your most played game"
+        "subtitle": "Your most played game",
+        "requirement": "Play two different games."
       },
       "rivalry": {
         "title": "The Rivalry",
-        "subtitle": "Closest to a 50/50 split"
+        "subtitle": "Closest to a 50/50 split",
+        "requirement": "Win and lose one game at least 3 times each, winning 40% to 60% of the time."
       },
       "natural": {
         "title": "The Natural",
-        "subtitle": "3+ wins in the fewest plays"
+        "subtitle": "3+ wins in the fewest plays",
+        "requirement": "Win a game 3 times."
       }
     },
     "sortBy": "Sort by {{column}}",
@@ -134,10 +140,59 @@
       "tried": "games tried"
     },
     "top": "Top",
-    "backToTop": "Back to top"
+    "backToTop": "Back to top",
+    "personasNote": "A game can hold only one title, so a title may wait for another game to earn it.",
+    "streaks": {
+      "title": "Game of the Day streaks",
+      "current": "Current streak",
+      "longest": "Longest streak",
+      "days_one": "{{count}} day",
+      "days_other": "{{count}} days"
+    },
+    "achievements": {
+      "title": "Achievements",
+      "count": "{{achieved}} of {{total}} achievements",
+      "wins50": {
+        "title": "50 total wins",
+        "description": "Win 50 games in all."
+      },
+      "wins100": {
+        "title": "100 total wins",
+        "description": "Win 100 games in all."
+      },
+      "wins500": {
+        "title": "500 total wins",
+        "description": "Win 500 games in all."
+      },
+      "triedAll": {
+        "title": "Tried every game",
+        "description": "Play each game at least once."
+      },
+      "wonAll": {
+        "title": "Won every game",
+        "description": "Win each game at least once."
+      },
+      "mastery": {
+        "title": "Mastery",
+        "description": "Win one game 10 times."
+      },
+      "allQuotes": {
+        "title": "Collected all quotes",
+        "description": "Collect every quote in the Odyssey."
+      },
+      "allTao": {
+        "title": "Collected all Tao Te Ching chapters",
+        "description": "Collect every chapter of the Tao Te Ching in the Odyssey."
+      }
+    }
   },
   "statsModal": {
-    "title": "Stats"
+    "title": "Stats",
+    "tabs": {
+      "progress": "Progress",
+      "personas": "Personas",
+      "games": "Games"
+    }
   },
   "install": {
     "titleIos": "Add Solitarius to your Home Screen",

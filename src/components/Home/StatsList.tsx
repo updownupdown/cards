@@ -2,7 +2,8 @@ import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Button } from "@/components/Button/Button";
 import { getScaledTextSize, Text } from "@/components/common/Text";
 import { GameTile } from "@/components/Home/HomeArt";
-import { Caps, hairline } from "@/components/ui/Nocturne";
+import { Caps, hairline, Meter, SectionTitle } from "@/components/ui/Nocturne";
+import { getAchievements, type Achievement } from "@/data/achievements";
 import {
   formatPlayTime,
   getGameSettings,
@@ -10,8 +11,11 @@ import {
   type GameSettingsMap,
   type GameStats,
 } from "@/data/game-menu";
+import { getDailyStreak, getLongestDailyStreak } from "@/data/game-of-the-day";
 import { isGameEnabled, type GameMenuInfo } from "@/data/games-data";
 import { GAMES_DATA } from "@/data/games-registry";
+import { useCampaignProgress } from "@/hooks/useCampaignProgress";
+import { useDailyWins } from "@/hooks/useDailyWins";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
@@ -26,11 +30,18 @@ import {
   Pressable,
   ScrollView,
   View,
+  type StyleProp,
+  type ViewStyle,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
 } from "react-native";
 
+/** The Stats modal's tabs. */
+export type StatsTab = "progress" | "personas" | "games";
+
 type StatsListProps = {
+  /** Which part of the stats to show. */
+  tab: StatsTab;
   settingsMap: GameSettingsMap;
   favorites: Set<string>;
   onToggleFavorite: (path: string) => void;
@@ -46,8 +57,17 @@ export type StatsRow = {
   stats: GameStats;
 };
 
-type PersonaKey =
-  "comfort" | "nemesis" | "whale" | "faithful" | "rivalry" | "natural";
+/** Every award, in the order they are decided and shown. */
+export const PERSONA_KEYS = [
+  "comfort",
+  "nemesis",
+  "whale",
+  "faithful",
+  "rivalry",
+  "natural",
+] as const;
+
+type PersonaKey = (typeof PERSONA_KEYS)[number];
 
 export type Persona = {
   key: PersonaKey;
@@ -200,6 +220,7 @@ export function pickPersonas(playedRows: StatsRow[]): Persona[] {
 const gameTitleFlex = 2.4;
 
 export function StatsList({
+  tab,
   settingsMap,
   favorites,
   onToggleFavorite,
@@ -213,6 +234,13 @@ export function StatsList({
   });
   const [showTopButton, setShowTopButton] = useState(false);
   const [isHeaderStuck, setIsHeaderStuck] = useState(false);
+  // Each tab starts at its top.
+  const [shownTab, setShownTab] = useState(tab);
+  if (shownTab !== tab) {
+    setShownTab(tab);
+    setShowTopButton(false);
+    setIsHeaderStuck(false);
+  }
   // Where the table header sits in the scroll content; it's stuck once the
   // scroll passes it.
   const tableHeaderY = useRef<number | null>(null);
@@ -390,8 +418,8 @@ export function StatsList({
     paddingHorizontal: scaledPageSidePadding,
   } as const;
 
-  // No stats to show
-  if (playedRows.length === 0) {
+  // No games in the table yet
+  if (tab === "games" && playedRows.length === 0) {
     return (
       <View
         style={[
@@ -457,33 +485,43 @@ export function StatsList({
     </View>
   );
 
-  const awards =
-    personas.length > 0 ? (
-      <View key="awards" style={[sectionStyle, { marginBottom: sectionGap }]}>
-        <View
-          style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing(10) }}
-        >
-          {personas.map((persona) => {
-            const game = GAMES_DATA[persona.row.path];
-            if (!game) return null;
-
-            return (
-              <PersonaCard
-                key={persona.key}
-                title={t(`statsTab.personas.${persona.key}.title`)}
-                subtitle={t(`statsTab.personas.${persona.key}.subtitle`)}
-                row={persona.row}
-                game={game}
-                isFavorite={favorites.has(persona.row.path)}
-                onToggleFavorite={onToggleFavorite}
-                onOpenGame={onOpenGame}
-                cardWidth={awardCardWidth}
-              />
-            );
-          })}
-        </View>
+  // Every award has its place: the game that holds it, or what it takes.
+  const awards = (
+    <View key="awards" style={[sectionStyle, { gap: spacing(14) }]}>
+      <View
+        style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing(10) }}
+      >
+        {PERSONA_KEYS.map((key) => {
+          const persona = personas.find((held) => held.key === key);
+          const game = persona && GAMES_DATA[persona.row.path];
+          return persona && game ? (
+            <PersonaCard
+              key={key}
+              title={t(`statsTab.personas.${key}.title`)}
+              subtitle={t(`statsTab.personas.${key}.subtitle`)}
+              row={persona.row}
+              game={game}
+              isFavorite={favorites.has(persona.row.path)}
+              onToggleFavorite={onToggleFavorite}
+              onOpenGame={onOpenGame}
+              cardWidth={awardCardWidth}
+            />
+          ) : (
+            <PersonaPlaceholder
+              key={key}
+              title={t(`statsTab.personas.${key}.title`)}
+              subtitle={t(`statsTab.personas.${key}.subtitle`)}
+              requirement={t(`statsTab.personas.${key}.requirement`)}
+              cardWidth={awardCardWidth}
+            />
+          );
+        })}
       </View>
-    ) : null;
+      <Text size="xs" weight={400} color={theme.dim}>
+        {t("statsTab.personasNote")}
+      </Text>
+    </View>
+  );
 
   // Sticks to the top of the modal while the rows scroll under it, so it
   // needs a solid background.
@@ -594,22 +632,34 @@ export function StatsList({
     </View>
   );
 
-  // Sticky headers are found by child index, so leave out missing sections
-  // rather than rendering null in their place.
-  const sections = [headline, awards, tableHeader, tableBody].filter(
-    (section) => section !== null,
+  const progress = (
+    <ProgressSections
+      key="progress"
+      rows={orderedStatsRows}
+      sectionStyle={sectionStyle}
+      sectionGap={sectionGap}
+    />
   );
+
+  const sections = {
+    progress: [headline, progress],
+    personas: [awards],
+    games: [tableHeader, tableBody],
+  }[tab];
 
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
+        // A fresh scroll for each tab.
+        key={tab}
         ref={scrollRef}
         style={{ flex: 1 }}
         contentContainerStyle={{
           paddingTop: contentPaddingTop,
           paddingBottom: contentPaddingBottom * 1.4,
         }}
-        stickyHeaderIndices={[sections.indexOf(tableHeader)]}
+        // The table header sticks while the rows scroll under it.
+        stickyHeaderIndices={tab === "games" ? [0] : undefined}
         onScroll={onScroll}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
@@ -802,6 +852,238 @@ function PersonaStat({
         {value}
       </Text>
       <Caps>{label}</Caps>
+    </View>
+  );
+}
+
+/**
+ * The Progress tab below the totals: Game of the Day streaks, then the
+ * achievements, done ones first.
+ */
+function ProgressSections({
+  rows,
+  sectionStyle,
+  sectionGap,
+}: {
+  /** Every game that can be played, played or not. */
+  rows: StatsRow[];
+  sectionStyle: StyleProp<ViewStyle>;
+  sectionGap: number;
+}) {
+  const { spacing } = useResponsiveMetrics();
+  const { t } = useTranslation("home");
+  const language = useDisplayLanguage();
+  const dailyWins = useDailyWins();
+  const { collectedQuoteIds, collectedTaoIds } = useCampaignProgress();
+
+  const achievements = useMemo(() => {
+    const title = (achievement: Achievement) =>
+      t(`statsTab.achievements.${achievement.key}.title`);
+    return getAchievements({
+      stats: rows.map((row) => row.stats),
+      collectedQuotes: collectedQuoteIds.size,
+      collectedTaoChapters: collectedTaoIds.size,
+    }).sort(
+      (a, b) =>
+        Number(b.achieved) - Number(a.achieved) ||
+        title(a).localeCompare(title(b), language, { numeric: true }),
+    );
+  }, [collectedQuoteIds, collectedTaoIds, language, rows, t]);
+  const achievedCount = achievements.filter((entry) => entry.achieved).length;
+
+  const days = (count: number) => t("statsTab.streaks.days", { count });
+
+  return (
+    <View style={{ gap: sectionGap }}>
+      <View style={sectionStyle}>
+        <SectionTitle>{t("statsTab.streaks.title")}</SectionTitle>
+        <View style={{ flexDirection: "row", gap: spacing(10) }}>
+          <StreakStat
+            label={t("statsTab.streaks.current")}
+            value={days(getDailyStreak(dailyWins))}
+          />
+          <StreakStat
+            label={t("statsTab.streaks.longest")}
+            value={days(getLongestDailyStreak(dailyWins))}
+          />
+        </View>
+      </View>
+
+      <View style={sectionStyle}>
+        <SectionTitle
+          action={
+            <Text
+              size="sm"
+              weight={500}
+              color={theme.dim}
+              accessibilityLabel={t("statsTab.achievements.count", {
+                achieved: achievedCount,
+                total: achievements.length,
+              })}
+              style={{ fontVariant: ["tabular-nums", "lining-nums"] }}
+            >
+              {`${achievedCount}/${achievements.length}`}
+            </Text>
+          }
+        >
+          {t("statsTab.achievements.title")}
+        </SectionTitle>
+        {achievements.map((achievement) => (
+          <AchievementRow
+            key={achievement.key}
+            achievement={achievement}
+            title={t(`statsTab.achievements.${achievement.key}.title`)}
+            description={t(
+              `statsTab.achievements.${achievement.key}.description`,
+            )}
+          />
+        ))}
+      </View>
+    </View>
+  );
+}
+
+function StreakStat({ label, value }: { label: string; value: string }) {
+  const { spacing } = useResponsiveMetrics();
+  return (
+    <View
+      style={{
+        flex: 1,
+        gap: spacing(4),
+        padding: spacing(14),
+        borderRadius: spacing(14),
+        backgroundColor: rgba(theme.ink, 0.06),
+        borderWidth: 1,
+        borderColor: hairline(),
+      }}
+    >
+      <Text size="lg" weight={600} lineHeight={1.1} numberOfLines={1}>
+        {value}
+      </Text>
+      <Caps>{label}</Caps>
+    </View>
+  );
+}
+
+/** One achievement: done, or how far along it is. */
+function AchievementRow({
+  achievement,
+  title,
+  description,
+}: {
+  achievement: Achievement;
+  title: string;
+  description: string;
+}) {
+  const { spacing } = useResponsiveMetrics();
+  const language = useDisplayLanguage();
+  const { achieved, current, target } = achievement;
+  return (
+    <View
+      accessibilityState={{ checked: achieved }}
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        gap: spacing(12),
+        paddingVertical: spacing(12),
+        borderBottomWidth: 1,
+        borderBottomColor: hairline(),
+      }}
+    >
+      <Icon
+        name={achieved ? "check-circle" : "lock"}
+        size={spacing(22)}
+        color={achieved ? theme.accent : theme.faint}
+      />
+      <View style={{ flex: 1, minWidth: 0, gap: spacing(2) }}>
+        <Text
+          size="md"
+          weight={500}
+          color={achieved ? theme.ink : theme.dim}
+          numberOfLines={2}
+        >
+          {title}
+        </Text>
+        <Text size="sm" weight={400} color={theme.dim}>
+          {description}
+        </Text>
+      </View>
+      {!achieved && (
+        <View style={{ alignItems: "flex-end", gap: spacing(6) }}>
+          <Text
+            size="xs"
+            weight={500}
+            color={theme.dim}
+            style={{ fontVariant: ["tabular-nums", "lining-nums"] }}
+          >
+            {`${current.toLocaleString(language)}/${target.toLocaleString(language)}`}
+          </Text>
+          <Meter
+            value={target > 0 ? current / target : 0}
+            style={{ width: spacing(48) }}
+          />
+        </View>
+      )}
+    </View>
+  );
+}
+
+/** An award no game holds yet: its name, and what it takes. */
+function PersonaPlaceholder({
+  title,
+  subtitle,
+  requirement,
+  cardWidth,
+}: {
+  title: string;
+  subtitle: string;
+  requirement: string;
+  cardWidth: number;
+}) {
+  const { spacing } = useResponsiveMetrics();
+  return (
+    <View
+      testID="persona placeholder"
+      style={{
+        flexGrow: 1,
+        flexBasis: spacing(300),
+        flexDirection: "row",
+        alignItems: "center",
+        gap: spacing(16),
+        padding: spacing(14.4),
+        borderRadius: spacing(14),
+        borderWidth: 1,
+        borderStyle: "dashed",
+        borderColor: hairline(),
+      }}
+    >
+      <View style={{ flex: 1, gap: spacing(14) }}>
+        <View>
+          <Text size="md" weight={600} color={theme.dim} lineHeight={1.2}>
+            {title}
+          </Text>
+          <Text size="sm" weight={400} color={theme.faint} lineHeight={1.25}>
+            {subtitle}
+          </Text>
+        </View>
+        <Text size="sm" weight={400} color={theme.dim} lineHeight={1.3}>
+          {requirement}
+        </Text>
+      </View>
+      <View
+        style={{
+          width: cardWidth,
+          height: cardWidth,
+          borderRadius: spacing(12),
+          borderWidth: 1,
+          borderStyle: "dashed",
+          borderColor: hairline(),
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Icon name="lock" size={spacing(24)} color={theme.faint} />
+      </View>
     </View>
   );
 }

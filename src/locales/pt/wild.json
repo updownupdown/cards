@@ -37,7 +37,7 @@
     "crumbled": "Veio abaixo!"
   },
   "castle": {
-    "instructions": "Arraste uma pedra de um monte e arremesse",
+    "instructions": "Puxe o braço da catapulta para trás e solte",
     "castle": "Castelo {{number}}"
   },
   "hat": {

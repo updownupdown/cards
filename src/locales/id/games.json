@@ -719,5 +719,58 @@
     "cardsRemainGood": "Tersisa {{count}} kartu. Bagus!",
     "cardsRemainExcellent": "Tersisa {{count}} kartu. Sangat bagus!",
     "cardsRemainBrilliant": "Tersisa {{count}} kartu. Luar biasa!"
+  },
+  "stalactites": {
+    "allCardsHome": "Keempat fondasi sudah lengkap.",
+    "full": "Lengkap",
+    "next": "Berikutnya: {{rank}}",
+    "nextEither": "{{one}} • {{two}}",
+    "byOnes": "Satu-satu",
+    "byTwos": "Dua-dua",
+    "buildingByOnes": "Naik satu-satu",
+    "buildingByTwos": "Naik dua-dua"
+  },
+  "crossword": {
+    "completed": "Semua kotak sudah terisi!",
+    "stuck": "Kartu tidak punya tempat. {{placed}} dari {{total}} kartu sudah ditaruh.",
+    "oddRunLost": "Deret angka yang lengkap berjumlah ganjil. Kamu kalah.",
+    "placed": "ditaruh"
+  },
+  "ozanamsSquare": {
+    "solved": "Setiap garis berisi setiap nilai dan setiap jenis tepat sekali."
+  },
+  "irisGarden": {
+    "cleared": "Tamannya sudah bersih!",
+    "noMatches": "Tidak ada pasangan yang bisa diambil. Tersisa {{pairs}} pasangan.",
+    "pairsLeft_one": "Tersisa {{count}} pasangan",
+    "pairsLeft_other": "Tersisa {{count}} pasangan",
+    "matchesOpen_one": "{{count}} pasangan bisa diambil",
+    "matchesOpen_other": "{{count}} pasangan bisa diambil"
+  },
+  "augury": {
+    "streak": "Tebakan benar",
+    "start": "Ketuk kartu untuk memainkannya, atau nyatakan tidak ada yang cocok.",
+    "noneFit": "Tak ada yang cocok",
+    "won": "Kamu berhasil membaca pertanda! Hukumnya: {{law}}",
+    "lost": "Kartu di tanganmu habis. Hukumnya: {{law}}",
+    "verdict": {
+      "accepted": "Kartu diterima.",
+      "rejected": "Kartu ditolak.",
+      "noneRight": "Benar: tidak ada kartu yang cocok. Tangan baru.",
+      "noneWrong": "Ada kartu yang cocok, jadi kartu itu dimainkan. Rentetanmu mulai lagi."
+    },
+    "law": {
+      "alternateColours": "Setiap kartu harus berwarna lain dari kartu sebelumnya.",
+      "suitOrRank": "Setiap kartu harus sama jenis atau nilainya dengan kartu sebelumnya.",
+      "oddEven": "Nilai ganjil dan genap bergantian (Jack 11, Queen 12, King 13).",
+      "higherUntilCourt": "Setiap kartu harus lebih tinggi dari sebelumnya, tetapi apa saja boleh setelah kartu bergambar.",
+      "withinTwo": "Setiap kartu harus berjarak paling banyak dua nilai dari sebelumnya (As rendah).",
+      "colourSteers": "Setelah kartu merah mainkan yang lebih tinggi, setelah kartu hitam yang lebih rendah; apa saja boleh setelah King merah atau As hitam.",
+      "suitCycle": "Jenis kartu berputar berurutan: hati, keriting, wajik, sekop.",
+      "evenRedOddBlack": "Nilai genap harus merah dan nilai ganjil harus hitam.",
+      "colourTwoBack": "Setiap kartu harus sewarna dengan kartu dua langkah sebelumnya.",
+      "blackClimbs": "Kartu hitam harus lebih tinggi dari kartu sebelumnya; kartu merah boleh setelah apa saja.",
+      "sameColourClimbs": "Kartu yang sewarna dengan kartu sebelumnya harus lebih tinggi; warna lain boleh setelah apa saja."
+    }
   }
 }

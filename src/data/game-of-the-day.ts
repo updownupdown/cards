@@ -105,3 +105,27 @@ export function getDailyStreak(
   }
   return streak;
 }
+
+/** Days since 1970 for a date key, so consecutive days differ by one. */
+function dayNumber(dateKey: string) {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  return Math.round(Date.UTC(year, month - 1, day) / 86_400_000);
+}
+
+/**
+ * The most days in a row the daily game was ever won, among the days kept
+ * (see MAX_DAILY_WINS).
+ */
+export function getLongestDailyStreak(wins: ReadonlySet<string>) {
+  const days = [...wins]
+    .map(dayNumber)
+    .filter(Number.isFinite)
+    .sort((a, b) => a - b);
+  let longest = 0;
+  let run = 0;
+  days.forEach((day, index) => {
+    run = index > 0 && day === days[index - 1] + 1 ? run + 1 : 1;
+    longest = Math.max(longest, run);
+  });
+  return longest;
+}

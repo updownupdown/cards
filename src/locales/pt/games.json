@@ -719,5 +719,58 @@
     "cardsRemainGood": "Restam {{count}} cartas. Bom!",
     "cardsRemainExcellent": "Restam {{count}} cartas. Excelente!",
     "cardsRemainBrilliant": "Restam {{count}} cartas. Brilhante!"
+  },
+  "stalactites": {
+    "allCardsHome": "As quatro fundações estão completas.",
+    "full": "Completa",
+    "next": "Próxima: {{rank}}",
+    "nextEither": "{{one}} • {{two}}",
+    "byOnes": "De um em um",
+    "byTwos": "De dois em dois",
+    "buildingByOnes": "Subindo de um em um",
+    "buildingByTwos": "Subindo de dois em dois"
+  },
+  "crossword": {
+    "completed": "Todos os espaços estão preenchidos!",
+    "stuck": "A carta não tem para onde ir. {{placed}} de {{total}} cartas colocadas.",
+    "oddRunLost": "Uma sequência de números completa somou um número ímpar. Você perdeu.",
+    "placed": "colocadas"
+  },
+  "ozanamsSquare": {
+    "solved": "Cada linha tem cada valor e cada naipe uma única vez."
+  },
+  "irisGarden": {
+    "cleared": "O jardim está limpo!",
+    "noMatches": "Nenhum par pode ser retirado. Restam {{pairs}} pares.",
+    "pairsLeft_one": "Resta {{count}} par",
+    "pairsLeft_other": "Restam {{count}} pares",
+    "matchesOpen_one": "{{count}} par pode ser retirado",
+    "matchesOpen_other": "{{count}} pares podem ser retirados"
+  },
+  "augury": {
+    "streak": "Acertos",
+    "start": "Toque em uma carta para jogá-la, ou declare que nenhuma serve.",
+    "noneFit": "Nenhuma serve",
+    "won": "Você leu os presságios! A lei: {{law}}",
+    "lost": "Sua mão acabou. A lei: {{law}}",
+    "verdict": {
+      "accepted": "A carta é aceita.",
+      "rejected": "A carta é recusada.",
+      "noneRight": "Certo: nenhuma carta servia. Uma nova mão.",
+      "noneWrong": "Uma carta servia, então foi jogada. Sua sequência recomeça."
+    },
+    "law": {
+      "alternateColours": "Cada carta deve ser da outra cor da anterior.",
+      "suitOrRank": "Cada carta deve ter o naipe ou o valor da anterior.",
+      "oddEven": "Valores pares e ímpares se alternam (Valete 11, Dama 12, Rei 13).",
+      "higherUntilCourt": "Cada carta deve ser mais alta que a anterior, mas qualquer uma pode seguir uma figura.",
+      "withinTwo": "Cada carta deve estar a no máximo dois valores da anterior (Ás baixo).",
+      "colourSteers": "Depois de uma carta vermelha jogue mais alto, depois de uma preta mais baixo; qualquer uma pode seguir um Rei vermelho ou um Ás preto.",
+      "suitCycle": "Os naipes seguem em ordem: copas, paus, ouros, espadas.",
+      "evenRedOddBlack": "Valores pares devem ser vermelhos e ímpares, pretos.",
+      "colourTwoBack": "Cada carta deve ser da mesma cor da carta de duas jogadas atrás.",
+      "blackClimbs": "Uma carta preta deve ser mais alta que a anterior; as vermelhas podem seguir qualquer uma.",
+      "sameColourClimbs": "Uma carta da cor da anterior deve ser mais alta que ela; a outra cor pode seguir qualquer uma."
+    }
   }
 }

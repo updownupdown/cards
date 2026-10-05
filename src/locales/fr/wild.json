@@ -37,7 +37,7 @@
     "crumbled": "Tout s'écroule !"
   },
   "castle": {
-    "instructions": "Tirez un caillou d'un tas, puis lancez-le d'une pichenette",
+    "instructions": "Tirez le bras de la catapulte en arrière, puis lâchez",
     "castle": "Château {{number}}"
   },
   "hat": {

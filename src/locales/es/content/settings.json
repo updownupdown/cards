@@ -90,6 +90,22 @@
       }
     }
   },
+  "augury": {
+    "difficulty": {
+      "hash": "946f322b",
+      "value": {
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Fácil (leyes sencillas)"
+          },
+          {
+            "label": "Difícil (leyes sutiles)"
+          }
+        ]
+      }
+    }
+  },
   "baroness": {
     "difficulty": {
       "hash": "9cf97680",
@@ -200,6 +216,26 @@
           },
           {
             "label": "2 Comodines (más difícil)"
+          }
+        ]
+      }
+    }
+  },
+  "ebb-and-flow": {
+    "ebbAndFlowDifficulty": {
+      "hash": "11a42223",
+      "value": {
+        "description": "Controla cuántas cartas tienes en la mano.",
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Fácil (8 cartas)"
+          },
+          {
+            "label": "Normal (7 cartas)"
+          },
+          {
+            "label": "Difícil (6 cartas)"
           }
         ]
       }
@@ -520,6 +556,22 @@
           {
             "label": "Ciudad en sombras",
             "description": "Las Reinas causan 1 y los Reyes 2 de daño adicional."
+          }
+        ]
+      }
+    }
+  },
+  "ozanams-square": {
+    "difficulty": {
+      "hash": "ea2fa3d5",
+      "value": {
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Fácil (siete cartas en su sitio)"
+          },
+          {
+            "label": "Difícil (las mínimas cartas en su sitio)"
           }
         ]
       }

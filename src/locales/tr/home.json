@@ -32,14 +32,14 @@
     "sortBy": "Sırala"
   },
   "sections": {
-    "localOnly": "Yalnızca yerel oyunlar",
+    "localOnly": "Beta oyunlar",
     "gameOfTheDay": "Günün oyunu",
     "easyGames": "Başlamak için kolay oyunlar",
     "favorites": "Favoriler",
     "continue": "Devam et",
     "fact": "Biliyor muydunuz?",
     "continueEmpty": "Oynadığın oyunlar burada görünecek.",
-    "favoritesEmpty": "Bir oyunu burada tutmak için yıldızına dokun."
+    "favoritesEmpty": "Henüz favorin yok."
   },
   "gameOfTheDay": {
     "today": "Bugün",
@@ -81,27 +81,33 @@
     "personas": {
       "comfort": {
         "title": "Güvenli liman",
-        "subtitle": "En yüksek kazanma oranın"
+        "subtitle": "En yüksek kazanma oranın",
+        "requirement": "İki oyunu en az üçer kez kazan."
       },
       "nemesis": {
         "title": "Baş düşman",
-        "subtitle": "En düşük kazanma oranın"
+        "subtitle": "En düşük kazanma oranın",
+        "requirement": "İki oyunu en az üçer kez kazan."
       },
       "whale": {
         "title": "Beyaz balina",
-        "subtitle": "Hiç kazanmadan en çok oynanan"
+        "subtitle": "Hiç kazanmadan en çok oynanan",
+        "requirement": "Bir oyunu hiç kazanmadan 3 kez kaybet."
       },
       "faithful": {
         "title": "Eski dost",
-        "subtitle": "En çok oynadığın oyun"
+        "subtitle": "En çok oynadığın oyun",
+        "requirement": "İki farklı oyun oyna."
       },
       "rivalry": {
         "title": "Kıyasıya rekabet",
-        "subtitle": "50/50'ye en yakın"
+        "subtitle": "50/50'ye en yakın",
+        "requirement": "Aynı oyunu en az üçer kez kazan ve kaybet; kazanma oranın %40 ile %60 arasında olsun."
       },
       "natural": {
         "title": "Doğuştan yetenek",
-        "subtitle": "En az oyunda 3+ galibiyet"
+        "subtitle": "En az oyunda 3+ galibiyet",
+        "requirement": "Bir oyunu 3 kez kazan."
       }
     },
     "sortBy": "Sırala: {{column}}",
@@ -134,10 +140,59 @@
       "tried": "denenen oyunlar"
     },
     "top": "Yukarı",
-    "backToTop": "Başa dön"
+    "backToTop": "Başa dön",
+    "personasNote": "Bir oyun yalnızca tek bir unvan taşıyabilir; bu yüzden bir unvan, onu kazanacak başka bir oyunu bekleyebilir.",
+    "streaks": {
+      "title": "Günün oyunu serileri",
+      "current": "Şu anki seri",
+      "longest": "En uzun seri",
+      "days_one": "{{count}} gün",
+      "days_other": "{{count}} gün"
+    },
+    "achievements": {
+      "title": "Başarımlar",
+      "count": "{{total}} başarımdan {{achieved}} tanesi",
+      "wins50": {
+        "title": "Toplam 50 galibiyet",
+        "description": "Toplam 50 oyun kazan."
+      },
+      "wins100": {
+        "title": "Toplam 100 galibiyet",
+        "description": "Toplam 100 oyun kazan."
+      },
+      "wins500": {
+        "title": "Toplam 500 galibiyet",
+        "description": "Toplam 500 oyun kazan."
+      },
+      "triedAll": {
+        "title": "Bütün oyunlar denendi",
+        "description": "Her oyunu en az bir kez oyna."
+      },
+      "wonAll": {
+        "title": "Bütün oyunlar kazanıldı",
+        "description": "Her oyunu en az bir kez kazan."
+      },
+      "mastery": {
+        "title": "Ustalık",
+        "description": "Aynı oyunu 10 kez kazan."
+      },
+      "allQuotes": {
+        "title": "Bütün alıntılar toplandı",
+        "description": "Yolculuk'taki bütün alıntıları topla."
+      },
+      "allTao": {
+        "title": "Tao Te Ching'in bütün bölümleri toplandı",
+        "description": "Yolculuk'ta Tao Te Ching'in bütün bölümlerini topla."
+      }
+    }
   },
   "statsModal": {
-    "title": "İstatistikler"
+    "title": "İstatistikler",
+    "tabs": {
+      "progress": "İlerleme",
+      "personas": "Kişilikler",
+      "games": "Oyunlar"
+    }
   },
   "install": {
     "titleIos": "Solitarius'yı ana ekranına ekle",

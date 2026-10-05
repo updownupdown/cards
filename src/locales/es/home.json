@@ -32,14 +32,14 @@
     "sortBy": "Ordenar"
   },
   "sections": {
-    "localOnly": "Juegos solo locales",
+    "localOnly": "Juegos en beta",
     "gameOfTheDay": "Juego del día",
     "easyGames": "Juegos fáciles para empezar",
     "favorites": "Favoritos",
     "continue": "Continuar",
     "fact": "¿Sabías que…?",
     "continueEmpty": "Los juegos que juegues aparecerán aquí.",
-    "favoritesEmpty": "Toca la estrella de un juego para guardarlo aquí."
+    "favoritesEmpty": "Todavía no tienes favoritos."
   },
   "gameOfTheDay": {
     "today": "Hoy",
@@ -81,27 +81,33 @@
     "personas": {
       "comfort": {
         "title": "La Apuesta Segura",
-        "subtitle": "Tu tasa de victorias más alta"
+        "subtitle": "Tu tasa de victorias más alta",
+        "requirement": "Gana dos juegos al menos 3 veces cada uno."
       },
       "nemesis": {
         "title": "El Némesis",
-        "subtitle": "Tu tasa de victorias más baja"
+        "subtitle": "Tu tasa de victorias más baja",
+        "requirement": "Gana dos juegos al menos 3 veces cada uno."
       },
       "whale": {
         "title": "La Ballena Blanca",
-        "subtitle": "Más partidas sin una victoria"
+        "subtitle": "Más partidas sin una victoria",
+        "requirement": "Pierde un juego 3 veces sin haberlo ganado nunca."
       },
       "faithful": {
         "title": "El Fiel Compañero",
-        "subtitle": "Tu juego más jugado"
+        "subtitle": "Tu juego más jugado",
+        "requirement": "Juega a dos juegos distintos."
       },
       "rivalry": {
         "title": "La Rivalidad",
-        "subtitle": "Lo más cerca de un 50/50"
+        "subtitle": "Lo más cerca de un 50/50",
+        "requirement": "Gana y pierde un mismo juego al menos 3 veces cada cosa, ganando entre el 40 % y el 60 % de las veces."
       },
       "natural": {
         "title": "El Talento Natural",
-        "subtitle": "3+ victorias en el menor número de partidas"
+        "subtitle": "3+ victorias en el menor número de partidas",
+        "requirement": "Gana un juego 3 veces."
       }
     },
     "sortBy": "Ordenar por {{column}}",
@@ -134,10 +140,59 @@
       "tried": "juegos probados"
     },
     "top": "Arriba",
-    "backToTop": "Volver arriba"
+    "backToTop": "Volver arriba",
+    "personasNote": "Cada juego solo puede tener un título, así que un título puede esperar a que otro juego se lo gane.",
+    "streaks": {
+      "title": "Rachas del juego del día",
+      "current": "Racha actual",
+      "longest": "Racha más larga",
+      "days_one": "{{count}} día",
+      "days_other": "{{count}} días"
+    },
+    "achievements": {
+      "title": "Logros",
+      "count": "{{achieved}} de {{total}} logros",
+      "wins50": {
+        "title": "50 victorias en total",
+        "description": "Gana 50 partidas en total."
+      },
+      "wins100": {
+        "title": "100 victorias en total",
+        "description": "Gana 100 partidas en total."
+      },
+      "wins500": {
+        "title": "500 victorias en total",
+        "description": "Gana 500 partidas en total."
+      },
+      "triedAll": {
+        "title": "Todos los juegos probados",
+        "description": "Juega cada juego al menos una vez."
+      },
+      "wonAll": {
+        "title": "Todos los juegos ganados",
+        "description": "Gana cada juego al menos una vez."
+      },
+      "mastery": {
+        "title": "Maestría",
+        "description": "Gana un mismo juego 10 veces."
+      },
+      "allQuotes": {
+        "title": "Todas las citas reunidas",
+        "description": "Reúne todas las citas de la Odisea."
+      },
+      "allTao": {
+        "title": "Todos los capítulos del Tao Te Ching reunidos",
+        "description": "Reúne todos los capítulos del Tao Te Ching en la Odisea."
+      }
+    }
   },
   "statsModal": {
-    "title": "Estadísticas"
+    "title": "Estadísticas",
+    "tabs": {
+      "progress": "Progreso",
+      "personas": "Personajes",
+      "games": "Juegos"
+    }
   },
   "install": {
     "titleIos": "Añade Solitarius a tu pantalla de inicio",

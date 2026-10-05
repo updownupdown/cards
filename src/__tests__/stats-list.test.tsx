@@ -4,9 +4,11 @@ import {
   pickPersonas,
   StatsList,
   type StatsRow,
+  type StatsTab,
 } from "@/components/Home/StatsList";
 import { Colors, rgba, theme } from "@/styles/styles";
 import type { GameSettingsMap, GameStats } from "@/data/game-menu";
+import { QUOTE_COUNT, TAO_CHAPTER_COUNT } from "@/data/collectibles";
 import { describe, expect, jest, test } from "@jest/globals";
 import React from "react";
 import { ScrollView, StyleSheet, Text } from "react-native";
@@ -24,6 +26,7 @@ function mockLaunchGame(...args: unknown[]) {
 const launchCalls: unknown[][] = [];
 
 jest.mock("@/data/games-registry", () => ({
+  GAME_DEFINITIONS: [],
   GAMES_DATA: {
     "/alpha": mockGame("Alpha"),
     "/bravo": mockGame("Bravo", "#aabbcc"),
@@ -102,8 +105,26 @@ jest.mock("@/components/Home/HomeArt", () => {
 jest.mock("@/hooks/useResponsiveMetrics", () => ({
   useResponsiveMetrics: () => ({
     spacing: (value: number) => value,
+    font: (value: number) => value,
     textScale: 1,
     ui: { contentMaxWidth: 420 },
+  }),
+}));
+
+let mockDailyWins = new Set<string>();
+jest.mock("@/hooks/useDailyWins", () => ({
+  useDailyWins: () => mockDailyWins,
+}));
+
+let mockCollected = { quotes: 0, tao: 0 };
+jest.mock("@/hooks/useCampaignProgress", () => ({
+  useCampaignProgress: () => ({
+    collectedQuoteIds: new Set(
+      Array.from({ length: mockCollected.quotes }, (_, index) => index + 1),
+    ),
+    collectedTaoIds: new Set(
+      Array.from({ length: mockCollected.tao }, (_, index) => index + 1),
+    ),
   }),
 }));
 
@@ -287,15 +308,24 @@ const tableRowTitles = (renderer: ReactTestRenderer) => [
   ),
 ];
 
+const placeholders = (renderer: ReactTestRenderer) =>
+  renderer.root.findAll(
+    (node) =>
+      typeof node.type !== "string" &&
+      node.props.testID === "persona placeholder",
+  );
+
 const renderList = (
   map = settingsMap,
   onOpenGame = jest.fn(),
   onToggleFavorite = jest.fn(),
+  tab: StatsTab = "games",
 ) => {
   let renderer!: ReactTestRenderer;
   act(() => {
     renderer = create(
       <StatsList
+        tab={tab}
         settingsMap={map}
         favorites={new Set(["/bravo"])}
         onToggleFavorite={onToggleFavorite}
@@ -309,14 +339,44 @@ const renderList = (
 };
 
 describe("StatsList", () => {
-  test("shows the empty state when nothing has been played", () => {
+  test("the games table shows the empty state when nothing has been played", () => {
     const renderer = renderList({} as GameSettingsMap);
     expect(texts(renderer)).toContain("statsTab.empty.title");
     expect(byType(renderer, ScrollView)).toHaveLength(0);
   });
 
+  test("progress and personas are there before anything is played", () => {
+    const empty = {} as GameSettingsMap;
+    const progress = texts(renderList(empty, jest.fn(), jest.fn(), "progress"));
+    expect(progress).toContain("statsTab.achievements.title");
+    expect(progress).not.toContain("statsTab.empty.title");
+    const personas = renderList(empty, jest.fn(), jest.fn(), "personas");
+    expect(placeholders(personas)).toHaveLength(6);
+  });
+
+  test("each tab shows only its own part", () => {
+    const progress = texts(
+      renderList(settingsMap, jest.fn(), jest.fn(), "progress"),
+    );
+    expect(progress).toContain("statsTab.streaks.title");
+    expect(progress).not.toContain("statsTab.total");
+    expect(progress).not.toContain("statsTab.personas.comfort.title");
+
+    const personas = texts(
+      renderList(settingsMap, jest.fn(), jest.fn(), "personas"),
+    );
+    expect(personas).toContain("statsTab.personas.comfort.title");
+    expect(personas).not.toContain("statsTab.total");
+    expect(personas).not.toContain("statsTab.achievements.title");
+
+    const games = texts(renderList());
+    expect(games).toContain("statsTab.total");
+    expect(games).not.toContain("statsTab.achievements.title");
+    expect(games).not.toContain("statsTab.personas.comfort.title");
+  });
+
   test("headline totals count every played game", () => {
-    const renderer = renderList();
+    const renderer = renderList(settingsMap, jest.fn(), jest.fn(), "progress");
     const all = texts(renderer);
     // 12 + 5 + 4 + 2 plays, 11 wins, 11 of 21 decided games won.
     expect(all).toEqual(expect.arrayContaining(["23", "11", "52%", "4 / 5"]));
@@ -388,13 +448,16 @@ describe("StatsList", () => {
     act(() => findByLabel(renderer, "Charlie").props.onPress());
     expect(launchCalls.at(-1)).toEqual(["/charlie"]);
 
-    act(() => findByLabel(renderer, "card /alpha").props.onPress());
+    const awards = renderList(settingsMap, onOpenGame, jest.fn(), "personas");
+    act(() => findByLabel(awards, "card /alpha").props.onPress());
     expect(launchCalls.at(-1)).toEqual(["/alpha"]);
     expect(onOpenGame).toHaveBeenCalledTimes(2);
   });
 
   test("awards show their name and rule separately, with no heading", () => {
-    const all = texts(renderList());
+    const all = texts(
+      renderList(settingsMap, jest.fn(), jest.fn(), "personas"),
+    );
     expect(all).toContain("statsTab.personas.comfort.title");
     expect(all).toContain("statsTab.personas.comfort.subtitle");
     expect(all.some((text) => text.includes("personas.title"))).toBe(false);
@@ -402,7 +465,12 @@ describe("StatsList", () => {
 
   test("each award shows the game's tile, which can be favourited", () => {
     const onToggleFavorite = jest.fn();
-    const renderer = renderList(settingsMap, jest.fn(), onToggleFavorite);
+    const renderer = renderList(
+      settingsMap,
+      jest.fn(),
+      onToggleFavorite,
+      "personas",
+    );
     // Awards: Bravo (comfort), Alpha (nemesis), Charlie (whale).
     const bravo = findByLabel(renderer, "card /bravo");
     expect(bravo.props.accessibilityState).toEqual({ selected: true });
@@ -484,10 +552,10 @@ describe("StatsList", () => {
   });
 
   describe("narrow screens", () => {
-    const renderAtWidth = (width: number) => {
+    const renderAtWidth = (width: number, tab: StatsTab) => {
       mockViewportWidth = width;
       try {
-        return renderList();
+        return renderList(settingsMap, jest.fn(), jest.fn(), tab);
       } finally {
         mockViewportWidth = 400;
       }
@@ -506,26 +574,112 @@ describe("StatsList", () => {
     };
 
     test("award cards get narrower so their stats have room", () => {
-      expect(awardCardWidth(renderAtWidth(NARROW_AWARD_SCREEN_WIDTH))).toBe(
-        120,
-      );
-      expect(awardCardWidth(renderAtWidth(NARROW_AWARD_SCREEN_WIDTH - 1))).toBe(
-        104,
-      );
+      expect(
+        awardCardWidth(renderAtWidth(NARROW_AWARD_SCREEN_WIDTH, "personas")),
+      ).toBe(120);
+      expect(
+        awardCardWidth(
+          renderAtWidth(NARROW_AWARD_SCREEN_WIDTH - 1, "personas"),
+        ),
+      ).toBe(104);
     });
 
     test("headline stats become a 2x2 grid", () => {
       const wide = headlineTileStyle(
-        renderAtWidth(NARROW_HEADLINE_SCREEN_WIDTH),
+        renderAtWidth(NARROW_HEADLINE_SCREEN_WIDTH, "progress"),
       );
       expect(wide.flex).toBe(1);
       expect(wide.width).toBeUndefined();
 
       const narrow = headlineTileStyle(
-        renderAtWidth(NARROW_HEADLINE_SCREEN_WIDTH - 1),
+        renderAtWidth(NARROW_HEADLINE_SCREEN_WIDTH - 1, "progress"),
       );
       expect(narrow.width).toBe("50%");
       expect(narrow.flex).toBeUndefined();
     });
+  });
+});
+
+describe("Stats: Personas", () => {
+  test("every award not yet held keeps its place, with what it takes", () => {
+    const renderer = renderList(settingsMap, jest.fn(), jest.fn(), "personas");
+    // Held: Bravo (comfort), Alpha (nemesis), Charlie (whale).
+    expect(placeholders(renderer)).toHaveLength(3);
+    const all = texts(renderer);
+    expect(all).toContain("statsTab.personas.faithful.requirement");
+    expect(all).toContain("statsTab.personas.rivalry.requirement");
+    expect(all).toContain("statsTab.personas.natural.requirement");
+    expect(all).not.toContain("statsTab.personas.comfort.requirement");
+    expect(all).toContain("statsTab.personasNote");
+  });
+
+  test("awards and placeholders keep the awards' order", () => {
+    const all = texts(
+      renderList(settingsMap, jest.fn(), jest.fn(), "personas"),
+    );
+    const titles = all.filter((text) =>
+      /^statsTab\.personas\.\w+\.title$/.test(text),
+    );
+    expect(titles).toEqual([
+      "statsTab.personas.comfort.title",
+      "statsTab.personas.nemesis.title",
+      "statsTab.personas.whale.title",
+      "statsTab.personas.faithful.title",
+      "statsTab.personas.rivalry.title",
+      "statsTab.personas.natural.title",
+    ]);
+  });
+});
+
+describe("Stats: Progress", () => {
+  const renderProgress = () =>
+    renderList(settingsMap, jest.fn(), jest.fn(), "progress");
+
+  test("shows the current and longest Game of the Day streaks", () => {
+    const today = new Date();
+    const key = (daysAgo: number) => {
+      const date = new Date(today);
+      date.setDate(date.getDate() - daysAgo);
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    };
+    // Yesterday and the day before; and four days in a row a while ago.
+    mockDailyWins = new Set([1, 2, 10, 11, 12, 13].map(key));
+    try {
+      const all = texts(renderProgress());
+      expect(all).toContain('statsTab.streaks.days {"count":2}');
+      expect(all).toContain('statsTab.streaks.days {"count":4}');
+    } finally {
+      mockDailyWins = new Set();
+    }
+  });
+
+  test("achievements list the done ones first, then by name, with a count", () => {
+    // Two quotes short of all of them; Tao chapters all collected.
+    mockCollected = { quotes: QUOTE_COUNT - 2, tao: TAO_CHAPTER_COUNT };
+    try {
+      const all = texts(renderProgress());
+      const titles = all.filter((text) =>
+        /^statsTab\.achievements\.\w+\.title$/.test(text),
+      );
+      // Keys come back as-is, so "by name" is by key here.
+      expect(titles).toEqual([
+        "statsTab.achievements.allTao.title",
+        "statsTab.achievements.allQuotes.title",
+        "statsTab.achievements.mastery.title",
+        "statsTab.achievements.triedAll.title",
+        // Numbers in names sort by value.
+        "statsTab.achievements.wins50.title",
+        "statsTab.achievements.wins100.title",
+        "statsTab.achievements.wins500.title",
+        "statsTab.achievements.wonAll.title",
+      ]);
+      expect(all).toContain("1/8");
+      // How far along the rest are.
+      expect(all).toContain(`${QUOTE_COUNT - 2}/${QUOTE_COUNT}`);
+      expect(all).toContain("11/50");
+      expect(all).toContain("4/5");
+    } finally {
+      mockCollected = { quotes: 0, tao: 0 };
+    }
   });
 });

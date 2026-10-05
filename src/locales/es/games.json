@@ -719,5 +719,58 @@
     "cardsRemainGood": "Quedan {{count}} cartas. ¡Bien!",
     "cardsRemainExcellent": "Quedan {{count}} cartas. ¡Excelente!",
     "cardsRemainBrilliant": "Quedan {{count}} cartas. ¡Brillante!"
+  },
+  "stalactites": {
+    "allCardsHome": "Las cuatro fundaciones están completas.",
+    "full": "Completa",
+    "next": "Siguiente: {{rank}}",
+    "nextEither": "{{one}} • {{two}}",
+    "byOnes": "De uno en uno",
+    "byTwos": "De dos en dos",
+    "buildingByOnes": "Subiendo de uno en uno",
+    "buildingByTwos": "Subiendo de dos en dos"
+  },
+  "crossword": {
+    "completed": "¡Todas las casillas están llenas!",
+    "stuck": "La carta no tiene dónde ir. {{placed}} de {{total}} cartas colocadas.",
+    "oddRunLost": "Una serie de números completa sumó un número impar. Has perdido.",
+    "placed": "colocadas"
+  },
+  "ozanamsSquare": {
+    "solved": "Cada línea tiene cada valor y cada palo una sola vez."
+  },
+  "irisGarden": {
+    "cleared": "¡El jardín está despejado!",
+    "noMatches": "No se puede tomar ninguna pareja. Quedan {{pairs}} parejas.",
+    "pairsLeft_one": "Queda {{count}} pareja",
+    "pairsLeft_other": "Quedan {{count}} parejas",
+    "matchesOpen_one": "Se puede tomar {{count}} pareja",
+    "matchesOpen_other": "Se pueden tomar {{count}} parejas"
+  },
+  "augury": {
+    "streak": "Aciertos",
+    "start": "Toca una carta para jugarla, o declara que ninguna encaja.",
+    "noneFit": "Ninguna encaja",
+    "won": "¡Has leído los augurios! La ley: {{law}}",
+    "lost": "Se te acabó la mano. La ley: {{law}}",
+    "verdict": {
+      "accepted": "La carta es aceptada.",
+      "rejected": "La carta es rechazada.",
+      "noneRight": "Correcto: ninguna carta encajaba. Mano nueva.",
+      "noneWrong": "Una carta sí encajaba, así que se jugó. Tu racha vuelve a empezar."
+    },
+    "law": {
+      "alternateColours": "Cada carta debe ser del otro color que la anterior.",
+      "suitOrRank": "Cada carta debe compartir el palo o el valor de la anterior.",
+      "oddEven": "Los valores pares e impares se alternan (Jota 11, Reina 12, Rey 13).",
+      "higherUntilCourt": "Cada carta debe ser más alta que la anterior, pero cualquiera puede seguir a una figura.",
+      "withinTwo": "Cada carta debe estar a dos valores como mucho de la anterior (As bajo).",
+      "colourSteers": "Tras una carta roja juega más alto, tras una negra más bajo; cualquiera puede seguir a un Rey rojo o a un As negro.",
+      "suitCycle": "Los palos van en orden: corazones, tréboles, diamantes, picas.",
+      "evenRedOddBlack": "Los valores pares deben ser rojos y los impares negros.",
+      "colourTwoBack": "Cada carta debe ser del mismo color que la de dos cartas atrás.",
+      "blackClimbs": "Una carta negra debe ser más alta que la anterior; las rojas pueden seguir a cualquiera.",
+      "sameColourClimbs": "Una carta del color de la anterior debe ser más alta que ella; el otro color puede seguir a cualquiera."
+    }
   }
 }

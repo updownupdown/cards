@@ -719,5 +719,58 @@
     "cardsRemainGood": "{{count}} kart kaldı. İyi!",
     "cardsRemainExcellent": "{{count}} kart kaldı. Çok iyi!",
     "cardsRemainBrilliant": "{{count}} kart kaldı. Harika!"
+  },
+  "stalactites": {
+    "allCardsHome": "Dört temelin hepsi tamamlandı.",
+    "full": "Tamam",
+    "next": "Sıradaki: {{rank}}",
+    "nextEither": "{{one}} • {{two}}",
+    "byOnes": "Birer",
+    "byTwos": "İkişer",
+    "buildingByOnes": "Birer birer diziliyor",
+    "buildingByTwos": "İkişer ikişer diziliyor"
+  },
+  "crossword": {
+    "completed": "Bütün kareler doldu!",
+    "stuck": "Kartın gidecek yeri yok. {{total}} karttan {{placed}} tanesi yerleştirildi.",
+    "oddRunLost": "Tamamlanan bir sayı dizisinin toplamı tek çıktı. Kaybettin.",
+    "placed": "yerleştirildi"
+  },
+  "ozanamsSquare": {
+    "solved": "Her çizgide her değer ve her takım birer kez var."
+  },
+  "irisGarden": {
+    "cleared": "Bahçe temizlendi!",
+    "noMatches": "Alınabilecek çift yok. Kalan çift: {{pairs}}.",
+    "pairsLeft_one": "{{count}} çift kaldı",
+    "pairsLeft_other": "{{count}} çift kaldı",
+    "matchesOpen_one": "{{count}} çift alınabilir",
+    "matchesOpen_other": "{{count}} çift alınabilir"
+  },
+  "augury": {
+    "streak": "Doğru tahmin",
+    "start": "Oynamak için bir karta dokun ya da hiçbirinin uymadığını söyle.",
+    "noneFit": "Hiçbiri uymuyor",
+    "won": "Kehanetleri okudun! Kural: {{law}}",
+    "lost": "Elindeki kartlar bitti. Kural: {{law}}",
+    "verdict": {
+      "accepted": "Kart kabul edildi.",
+      "rejected": "Kart reddedildi.",
+      "noneRight": "Doğru: hiçbir kart uymuyordu. Yeni bir el.",
+      "noneWrong": "Bir kart uyuyordu, o yüzden oynandı. Serin baştan başlıyor."
+    },
+    "law": {
+      "alternateColours": "Her kart bir öncekinden farklı renkte olmalı.",
+      "suitOrRank": "Her kart bir öncekiyle aynı takımdan ya da aynı değerde olmalı.",
+      "oddEven": "Tek ve çift değerler sırayla gelir (Vale 11, Kız 12, Papaz 13).",
+      "higherUntilCourt": "Her kart bir öncekinden yüksek olmalı, ama resimli bir karttan sonra her şey gelebilir.",
+      "withinTwo": "Her kart bir öncekinden en fazla iki değer uzakta olmalı (As düşük).",
+      "colourSteers": "Kırmızı karttan sonra daha yüksek, siyahtan sonra daha düşük oyna; kırmızı Papaz ya da siyah As'tan sonra her şey gelebilir.",
+      "suitCycle": "Takımlar sırayla gelir: kupa, sinek, karo, maça.",
+      "evenRedOddBlack": "Çift değerler kırmızı, tek değerler siyah olmalı.",
+      "colourTwoBack": "Her kart iki önceki kartla aynı renkte olmalı.",
+      "blackClimbs": "Siyah bir kart bir öncekinden yüksek olmalı; kırmızılar her şeyin ardından gelebilir.",
+      "sameColourClimbs": "Bir öncekiyle aynı renkteki kart ondan yüksek olmalı; öbür renk her şeyin ardından gelebilir."
+    }
   }
 }

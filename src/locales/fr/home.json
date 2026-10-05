@@ -32,14 +32,14 @@
     "sortBy": "Trier"
   },
   "sections": {
-    "localOnly": "Jeux locaux uniquement",
+    "localOnly": "Jeux en bêta",
     "gameOfTheDay": "Jeu du jour",
     "easyGames": "Des jeux faciles pour commencer",
     "favorites": "Favoris",
     "continue": "Continuer",
     "fact": "Le saviez-vous",
     "continueEmpty": "Les jeux auxquels vous jouez apparaîtront ici.",
-    "favoritesEmpty": "Touchez l’étoile d’un jeu pour le garder ici."
+    "favoritesEmpty": "Vous n'avez pas encore de favoris."
   },
   "gameOfTheDay": {
     "today": "Aujourd'hui",
@@ -81,27 +81,33 @@
     "personas": {
       "comfort": {
         "title": "La Valeur sûre",
-        "subtitle": "Votre meilleur taux de victoire"
+        "subtitle": "Votre meilleur taux de victoire",
+        "requirement": "Gagnez deux jeux au moins 3 fois chacun."
       },
       "nemesis": {
         "title": "La Bête noire",
-        "subtitle": "Votre pire taux de victoire"
+        "subtitle": "Votre pire taux de victoire",
+        "requirement": "Gagnez deux jeux au moins 3 fois chacun."
       },
       "whale": {
         "title": "La Baleine blanche",
-        "subtitle": "Le plus de parties sans victoire"
+        "subtitle": "Le plus de parties sans victoire",
+        "requirement": "Perdez un jeu 3 fois sans jamais le gagner."
       },
       "faithful": {
         "title": "Le Fidèle",
-        "subtitle": "Votre jeu le plus joué"
+        "subtitle": "Votre jeu le plus joué",
+        "requirement": "Jouez à deux jeux différents."
       },
       "rivalry": {
         "title": "Le Duel serré",
-        "subtitle": "Le plus proche du 50/50"
+        "subtitle": "Le plus proche du 50/50",
+        "requirement": "Gagnez et perdez un même jeu au moins 3 fois chacun, avec 40 à 60 % de victoires."
       },
       "natural": {
         "title": "Le Don naturel",
-        "subtitle": "3 victoires ou plus en un minimum de parties"
+        "subtitle": "3 victoires ou plus en un minimum de parties",
+        "requirement": "Gagnez un jeu 3 fois."
       }
     },
     "sortBy": "Trier par {{column}}",
@@ -134,10 +140,59 @@
       "tried": "jeux essayés"
     },
     "top": "Haut",
-    "backToTop": "Revenir en haut"
+    "backToTop": "Revenir en haut",
+    "personasNote": "Un jeu ne peut porter qu'un seul titre : un titre peut donc attendre qu'un autre jeu le mérite.",
+    "streaks": {
+      "title": "Séries du jeu du jour",
+      "current": "Série en cours",
+      "longest": "Plus longue série",
+      "days_one": "{{count}} jour",
+      "days_other": "{{count}} jours"
+    },
+    "achievements": {
+      "title": "Succès",
+      "count": "{{achieved}} succès sur {{total}}",
+      "wins50": {
+        "title": "50 victoires au total",
+        "description": "Gagnez 50 parties en tout."
+      },
+      "wins100": {
+        "title": "100 victoires au total",
+        "description": "Gagnez 100 parties en tout."
+      },
+      "wins500": {
+        "title": "500 victoires au total",
+        "description": "Gagnez 500 parties en tout."
+      },
+      "triedAll": {
+        "title": "Tous les jeux essayés",
+        "description": "Jouez au moins une fois à chaque jeu."
+      },
+      "wonAll": {
+        "title": "Tous les jeux gagnés",
+        "description": "Gagnez chaque jeu au moins une fois."
+      },
+      "mastery": {
+        "title": "Maîtrise",
+        "description": "Gagnez un même jeu 10 fois."
+      },
+      "allQuotes": {
+        "title": "Toutes les citations réunies",
+        "description": "Réunissez toutes les citations de l'Odyssée."
+      },
+      "allTao": {
+        "title": "Tous les chapitres du Tao Te King réunis",
+        "description": "Réunissez tous les chapitres du Tao Te King dans l'Odyssée."
+      }
+    }
   },
   "statsModal": {
-    "title": "Statistiques"
+    "title": "Statistiques",
+    "tabs": {
+      "progress": "Progression",
+      "personas": "Personas",
+      "games": "Jeux"
+    }
   },
   "install": {
     "titleIos": "Ajouter Solitarius à votre écran d'accueil",

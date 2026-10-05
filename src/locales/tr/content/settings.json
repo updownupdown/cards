@@ -90,6 +90,22 @@
       }
     }
   },
+  "augury": {
+    "difficulty": {
+      "hash": "946f322b",
+      "value": {
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay (basit kurallar)"
+          },
+          {
+            "label": "Zor (ince kurallar)"
+          }
+        ]
+      }
+    }
+  },
   "baroness": {
     "difficulty": {
       "hash": "9cf97680",
@@ -200,6 +216,26 @@
           },
           {
             "label": "2 Joker (Daha zor)"
+          }
+        ]
+      }
+    }
+  },
+  "ebb-and-flow": {
+    "ebbAndFlowDifficulty": {
+      "hash": "11a42223",
+      "value": {
+        "description": "Elinde kaç kart tutacağını belirler.",
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay (8 kart)"
+          },
+          {
+            "label": "Normal (7 kart)"
+          },
+          {
+            "label": "Zor (6 kart)"
           }
         ]
       }
@@ -520,6 +556,22 @@
           {
             "label": "Gölgedeki şehir",
             "description": "Kızlar 1, Papazlar 2 fazla hasar verir."
+          }
+        ]
+      }
+    }
+  },
+  "ozanams-square": {
+    "difficulty": {
+      "hash": "ea2fa3d5",
+      "value": {
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay (yedi kart yerinde)"
+          },
+          {
+            "label": "Zor (en az kart yerinde)"
           }
         ]
       }
