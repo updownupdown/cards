@@ -67,3 +67,9 @@ export function makeHint(
 export function pressHint(zoneId: string, label: string): Hint {
   return makeHint({ key: "press", values: { label } }, zoneTarget(zoneId));
 }
+
+/**
+ * Names for arrow buttons that show only an icon, so a "press" hint can name
+ * them (and screen readers read them).
+ */
+export const ARROW_LABELS = { back: "←", forward: "→" } as const;

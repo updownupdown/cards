@@ -20,6 +20,9 @@ import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 
 import { i18n } from "@/i18n";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
+import { useHint } from "@/hints/hint-store";
+import { planMove } from "@/hints/lookahead";
 const cardSize = "regular";
 
 const layout = {
@@ -241,6 +244,182 @@ function scoreTier(score: number) {
   return i18n.t("games:delta21.ratingLittle");
 }
 
+type RiverMove =
+  | { kind: "release"; card: string; col: number }
+  | { kind: "catch"; card: string; col: number; entry: number }
+  | { kind: "transfer"; discard: string; from: number; to: number };
+
+type River = {
+  segments: SchoolEntry[][];
+  hand: PlayingCard[];
+  breakthroughs: string[];
+  flooded: boolean;
+};
+
+function riverMoves(river: River) {
+  const moves: RiverMove[] = [];
+  if (river.flooded) return moves;
+  for (const card of river.hand) {
+    river.segments.forEach((column, col) => {
+      if (isSchool(card)) {
+        moves.push({ kind: "release", card: card.id, col });
+        return;
+      }
+      column.forEach((entry, index) => {
+        if (!entry.fisherman && schoolFish(entry.school) > 0) {
+          moves.push({ kind: "catch", card: card.id, col, entry: index });
+        }
+      });
+    });
+  }
+  // Moving a school costs a card: which one hardly matters, so the least
+  // useful (the lowest school, else the smallest fisher).
+  const spare = [...river.hand].sort(
+    (a, b) =>
+      Number(isFisherman(a)) - Number(isFisherman(b)) ||
+      RANK_VALUE[a.rank] - RANK_VALUE[b.rank],
+  )[0];
+  if (spare) {
+    river.segments.forEach((column, from) => {
+      if (column.length < 2 || bottomEntry(column).fisherman) return;
+      river.segments.forEach((_, to) => {
+        if (to !== from) {
+          moves.push({ kind: "transfer", discard: spare.id, from, to });
+        }
+      });
+    });
+  }
+  return moves;
+}
+
+function applyRiverMove(river: River, move: RiverMove): River {
+  const segments = river.segments.map((column) => [...column]);
+  const used = move.kind === "transfer" ? move.discard : move.card;
+  const card = river.hand.find((entry) => entry.id === used)!;
+  const hand = river.hand.filter((entry) => entry.id !== used);
+  if (move.kind === "release") {
+    segments[move.col].push({ school: card, fisherman: null });
+  } else if (move.kind === "catch") {
+    segments[move.col][move.entry] = {
+      ...segments[move.col][move.entry],
+      fisherman: card,
+    };
+  } else {
+    segments[move.to].push(segments[move.from].pop()!);
+  }
+  return {
+    segments,
+    hand,
+    breakthroughs: river.breakthroughs,
+    flooded: segments.some(
+      (column) => columnTotal(column) >= params.collapseFish,
+    ),
+  };
+}
+
+function riverKey(river: River) {
+  return (
+    river.hand
+      .map((card) => card.id)
+      .sort()
+      .join(",") +
+    "|" +
+    river.segments
+      .map((column) =>
+        column
+          .map((entry) => `${entry.school.id}+${entry.fisherman?.id ?? ""}`)
+          .join(","),
+      )
+      .join("|")
+  );
+}
+
+/**
+ * How good the river is once the hand is spent: studies of 21 (and the
+ * breakthroughs they bring) first, then columns a single school completes,
+ * and never a flood.
+ */
+function riverWorth(river: River) {
+  if (river.flooded) return -1e6;
+  if (river.hand.length > 0) return -1e5 - river.hand.length;
+  const breakthroughs = [...river.breakthroughs];
+  let worth = 0;
+  for (const column of river.segments) {
+    const total = columnTotal(column);
+    if (total === params.targetFish) {
+      const before = breakthroughs.length;
+      evaluateStudy(column, breakthroughs);
+      worth += 100 + 40 * (breakthroughs.length - before);
+    } else if (total > params.targetFish) {
+      worth += 5 - 10 * (total - params.targetFish);
+    } else if (total >= params.targetFish - 10) {
+      worth += 15 + total - (params.targetFish - 10);
+    } else {
+      worth += total;
+    }
+  }
+  return worth;
+}
+
+/**
+ * The hint: the next card of the best way to spend the whole hand (every
+ * card it touches is on view), shown as the taps it takes from what's
+ * selected.
+ */
+function findDelta21Hint(state: GameState, selection: Selection | null) {
+  if (state.ended || state.hand.length === 0) return null;
+  const river: River = {
+    segments: state.segments,
+    hand: state.hand,
+    breakthroughs: state.breakthroughs,
+    flooded: false,
+  };
+  const move =
+    planMove(river, {
+      moves: riverMoves,
+      apply: applyRiverMove,
+      score: riverWorth,
+      key: riverKey,
+      positionKey: riverKey,
+      budget: 5000,
+      maxDepth: state.hand.length,
+    }) ?? riverMoves(river)[0];
+  if (!move) return null;
+
+  const transferring = selection && "transfer" in selection;
+  if (move.kind === "transfer") {
+    const lifted =
+      transferring && selection.transfer === move.from ? selection : null;
+    if (transferring && !lifted) {
+      const column = state.segments[selection.transfer];
+      return makeHint("tapCard", cardTarget(bottomEntry(column).school));
+    }
+    return makeHint(
+      "moveCard",
+      lifted ? [] : cardTarget(bottomEntry(state.segments[move.from]).school),
+      lifted?.target === move.to ? [] : zoneTarget(`estuary-${move.to}`),
+      cardTarget(move.discard),
+    );
+  }
+
+  if (transferring) {
+    // Put the lifted school back first.
+    const column = state.segments[selection.transfer];
+    return makeHint("tapCard", cardTarget(bottomEntry(column).school));
+  }
+  const chosen =
+    selection &&
+    "hand" in selection &&
+    state.hand[selection.hand]?.id === move.card;
+  return makeHint(
+    "moveCard",
+    chosen ? [] : cardTarget(move.card),
+    move.kind === "release"
+      ? zoneTarget(`estuary-${move.col}`)
+      : cardTarget(state.segments[move.col][move.entry].school),
+  );
+}
+
 export const delta21Rules = {
   isFisherman,
   isSchool,
@@ -255,6 +434,7 @@ export const delta21Rules = {
   scoreTier,
   targetFish: params.targetFish,
   collapseFish: params.collapseFish,
+  findHint: findDelta21Hint,
 };
 
 // ========== Component ========== //
@@ -263,16 +443,29 @@ export default function Delta21() {
   const { colorPale } = useGameColors();
   const [selection, setSelection] = useState<Selection | null>(null);
 
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      resetAndSetup: async () => {
-        await resetAndSetup(setGame);
-      },
-      gameStateInitial,
-      resetNonGameStates: () => {
-        setSelection(null);
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelection(null);
+    },
+  });
+
+  useHint(() => findDelta21Hint(game, selection), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   const score = game.studyCount + 2 * game.breakthroughs.length;
 

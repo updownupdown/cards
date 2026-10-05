@@ -294,14 +294,16 @@ function restScore(state: RoyalRestGameState) {
  * most pillows and pillow-Jack-pillow columns, gathering cards of a rank on
  * the way.
  */
+function royalRestKey(current: RoyalRestGameState) {
+  return `royal-rest:${current.tableau
+    .map((pile) => pile.map((c) => `${c.id}${c.faceUp ? "" : "?"}`).join("."))
+    .join("|")}:${current.hand.map((c) => c?.id ?? "-").join(",")}`;
+}
+
 function findRoyalRestHint(state: RoyalRestGameState, hardMode: boolean) {
   const move = planMove<RoyalRestGameState, RoyalRestMove>(state, {
-    key: (current) =>
-      `royal-rest:${current.tableau
-        .map((pile) =>
-          pile.map((c) => `${c.id}${c.faceUp ? "" : "?"}`).join("."),
-        )
-        .join("|")}:${current.hand.map((c) => c?.id ?? "-").join(",")}`,
+    key: royalRestKey,
+    positionKey: royalRestKey,
     moves: (current) => {
       const sources: RoyalRestMoveSource[] = [
         ...current.hand.flatMap((card, pileIndex) =>

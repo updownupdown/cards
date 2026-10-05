@@ -20,13 +20,16 @@ import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
 import { delay } from "@/utils/utils";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
+import { useHint } from "@/hints/hint-store";
 const cardSize = "tableau";
 const BERRY_COUNT = 10;
 const HAND_LIMIT = 3;
 const BOTTOM_ROW = 3.6;
 
 type CardSource =
-  { type: "hand"; cardId: string } | { type: "retainer"; cardId: string };
+  | { type: "hand"; cardId: string }
+  | { type: "retainer"; cardId: string };
 
 export type BlackberryPieGameState = {
   queen: PlayingCard[];
@@ -159,27 +162,160 @@ function scoreGame(state: Readonly<BlackberryPieGameState>) {
   return berryScore + (state.won ? 5 : 0) + state.hand.length;
 }
 
+/**
+ * How far a pile is towards a set for its berry, 0 to 3: the most cards it
+ * holds of one run or one suit that could take in the berry's rank.
+ */
+function berryProgress(berry: PlayingCard, pile: readonly PlayingCard[]) {
+  if (hasBerrySet(berry, pile)) return 3;
+  const rank = rankValue(berry);
+  const cards = pile.filter((card) => card.rank !== "Joker");
+  let best = 0;
+  for (let low = rank - 2; low <= rank; low += 1) {
+    if (low < 1 || low + 2 > 13) continue;
+    const ranks = new Set(
+      cards
+        .map((card) => rankValue(card))
+        .filter((value) => value >= low && value <= low + 2),
+    );
+    best = Math.max(best, ranks.size);
+  }
+  for (const suit of ["hearts", "diamonds", "spades"] as const) {
+    const ofSuit = cards.filter((card) => card.suit === suit);
+    const hasRank = ofSuit.some((card) => rankValue(card) === rank);
+    const others = ofSuit.filter((card) => rankValue(card) !== rank).length;
+    best = Math.max(best, (hasRank ? 1 : 0) + Math.min(2, others));
+  }
+  return Math.min(best, 2);
+}
+
+/** What putting this card under this berry is worth. */
+function placementWorth(
+  state: Readonly<BlackberryPieGameState>,
+  card: PlayingCard,
+  column: number,
+) {
+  const berry = state.berries[column];
+  if (!berry) return 0;
+  const pile = [...state.piles[column], card];
+  if (hasBerrySet(berry, pile)) return 1000 + 10 * rankValue(berry);
+  return (
+    100 *
+    (berryProgress(berry, pile) - berryProgress(berry, state.piles[column]))
+  );
+}
+
+/**
+ * The hint: the card and berry that best build towards sets, weighing what
+ * the card could do elsewhere and what the cards on view can play next.
+ */
+function findBlackberryPieHint(
+  state: Readonly<BlackberryPieGameState>,
+  selected: CardSource | null,
+) {
+  if (state.ended) return null;
+  const sources: { card: PlayingCard; source: CardSource }[] = [
+    ...state.hand.map((card) => ({
+      card,
+      source: { type: "hand" as const, cardId: card.id },
+    })),
+    ...state.retainers.flatMap((card) =>
+      card
+        ? [{ card, source: { type: "retainer" as const, cardId: card.id } }]
+        : [],
+    ),
+  ];
+  const columns = state.piles.map((_, column) => column);
+  let best: { card: PlayingCard; column: number; worth: number } | null = null;
+  for (const { card, source } of sources) {
+    const bestElsewhere = Math.max(
+      0,
+      ...columns.map((column) => placementWorth(state, card, column)),
+    );
+    for (const column of columns) {
+      if (!canPlaceInColumn(state, column)) continue;
+      const gain = placementWorth(state, card, column);
+      const after = {
+        ...state,
+        piles: state.piles.map((pile, index) =>
+          index === column ? [...pile, card] : pile,
+        ),
+        berries:
+          gain >= 1000
+            ? state.berries.map((berry, index) =>
+                index === column ? null : berry,
+              )
+            : state.berries,
+      };
+      const nextColumns =
+        card.rank === "Joker"
+          ? columns
+          : [column - 1, column + 1].filter(
+              (next) => next >= 0 && next < columns.length,
+            );
+      const followUp = Math.max(
+        0,
+        ...sources
+          .filter((other) => other.card.id !== card.id)
+          .flatMap((other) =>
+            nextColumns.map((next) => placementWorth(after, other.card, next)),
+          ),
+      );
+      const worth =
+        gain +
+        0.8 * followUp -
+        0.3 * Math.max(0, bestElsewhere - gain) -
+        (source.type === "retainer" ? 5 : 0);
+      if (!best || worth > best.worth) best = { card, column, worth };
+    }
+  }
+  if (!best) return null;
+  return makeHint(
+    "moveCard",
+    selected?.cardId === best.card.id ? [] : cardTarget(best.card),
+    zoneTarget(
+      state.berries[best.column]
+        ? `berry-${best.column}`
+        : `pile-${best.column}`,
+    ),
+  );
+}
+
 export const blackberryPieRules = {
   createGame,
   isRun,
   hasBerrySet,
   canPlaceInColumn,
   scoreGame,
+  findHint: findBlackberryPieHint,
 };
 
 export default function BlackberryPie() {
   const [selected, setSelected] = useState<CardSource | null>(null);
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      resetAndSetup: async () => {
-        // Gather every card into the stock, then deal them back out.
-        setGame((draft) => gatherState(collectCards(draft)));
-        await delay();
-        setGame((draft) => createGame(draft.stock));
-      },
-      gameStateInitial: gatheredInitial,
-      resetNonGameStates: () => setSelected(null),
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      // Gather every card into the stock, then deal them back out.
+      setGame((draft) => gatherState(collectCards(draft)));
+      await delay();
+      setGame((draft) => createGame(draft.stock));
+    },
+    gameStateInitial: gatheredInitial,
+    resetNonGameStates: () => setSelected(null),
+  });
+
+  useHint(() => findBlackberryPieHint(game, selected), {
+    game,
+    enabled: !isSettingUp && !game.ended && game.hand.length > 0,
+  });
 
   function selectCard(source: CardSource) {
     if (game.ended) return;

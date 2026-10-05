@@ -12,6 +12,7 @@ export function bestLine<S, M>(
     score,
     budget = 4000,
     maxDepth = 60,
+    positionKey,
   }: {
     moves: (state: S) => M[];
     apply: (state: S, move: M) => S;
@@ -19,6 +20,8 @@ export function bestLine<S, M>(
     score: (state: S, depth: number) => number;
     budget?: number;
     maxDepth?: number;
+    /** Names positions, so one reached again by another way isn't searched twice. */
+    positionKey?: (state: S) => string;
   },
 ): M[] {
   let best: { line: M[]; score: number } = {
@@ -27,9 +30,15 @@ export function bestLine<S, M>(
   };
   let visited = 0;
   const line: M[] = [];
+  const seen = new Set<string>();
 
   const visit = (state: S, depth: number) => {
     if (visited >= budget) return;
+    if (positionKey) {
+      const key = positionKey(state);
+      if (seen.has(key)) return;
+      seen.add(key);
+    }
     visited += 1;
     const value = score(state, depth);
     if (line.length > 0 && value > best.score) {
@@ -73,7 +82,9 @@ export function planMove<S, M>(
   memory = new Map();
   let state = root;
   for (const move of line) {
-    memory.set(options.key(state), JSON.stringify(move));
+    // A line may pass a position twice: the hint there is its first move.
+    const key = options.key(state);
+    if (!memory.has(key)) memory.set(key, JSON.stringify(move));
     state = options.apply(state, move);
   }
   return line[0];
