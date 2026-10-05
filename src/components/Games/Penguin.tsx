@@ -361,7 +361,7 @@ export default function Penguin() {
 
   useHint(() => findPenguinHint(game), {
     game,
-    enabled: !isSettingUp && !game.ended && !game.deal.length,
+    enabled: !isSettingUp && !game.ended && !game.deal?.length,
   });
 
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();

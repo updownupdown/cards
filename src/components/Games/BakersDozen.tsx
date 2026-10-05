@@ -192,7 +192,7 @@ export default function BakersDozen() {
   useHint(() => findBakersDozenHint(game), {
     game,
     enabled:
-      !isSettingUp && !won && !isAutoCompleting && !game.shuffleZone.length,
+      !isSettingUp && !won && !isAutoCompleting && !game.shuffleZone?.length,
   });
 
   function moveToFoundation(columnIndex: number) {

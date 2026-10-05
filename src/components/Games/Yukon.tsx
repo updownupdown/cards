@@ -305,7 +305,7 @@ export function YukonBoard({
   useHint(() => findYukonHint(game, canStack), {
     game,
     enabled:
-      !isSettingUp && !won && !isAutoCompleting && !game.setupPile.length,
+      !isSettingUp && !won && !isAutoCompleting && !game.setupPile?.length,
   });
 
   // ── Zones ─────────────────────────────────────────────────────────────────

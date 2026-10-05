@@ -264,7 +264,7 @@ export default function Crescent() {
 
   useHint(() => findCrescentHint(game), {
     game,
-    enabled: !isSettingUp && !game.ended && !game.setupPile.length,
+    enabled: !isSettingUp && !game.ended && !game.setupPile?.length,
   });
 
   useEffect(() => {

@@ -80,22 +80,22 @@ function HintGlow({ spot, delay }: { spot: HintSpot; delay: number }) {
           width: ringSize,
           height: ringSize,
           borderRadius: ringSize / 2,
-          borderWidth: Math.max(2, ringSize * 0.05),
+          borderWidth: Math.max(3, ringSize * 0.07),
           borderColor: GLOW_COLOR,
-          backgroundColor: rgba(GLOW_COLOR, 0.3),
+          backgroundColor: rgba(GLOW_COLOR, 0.35),
           boxShadow: `0 0 ${Math.round(ringSize * 0.25)}px ${rgba(GLOW_COLOR, 0.8)}`,
           opacity: Animated.multiply(
             presence,
             pulse.interpolate({
-              inputRange: [0, 0.15, 1],
-              outputRange: [0, 0.95, 0],
+              inputRange: [0, 0.1, 0.6, 1],
+              outputRange: [0, 1, 0.75, 0],
             }),
           ),
           transform: [
             {
               scale: pulse.interpolate({
                 inputRange: [0, 1],
-                outputRange: [0.3, 1.3],
+                outputRange: [0.4, 1.4],
               }),
             },
           ],

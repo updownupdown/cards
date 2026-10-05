@@ -202,7 +202,7 @@ export default function TowerOfHanoi() {
 
   useHint(() => findTowerOfHanoiHint(game), {
     game,
-    enabled: !isSettingUp && !game.deal.length,
+    enabled: !isSettingUp && !game.deal?.length,
   });
 
   const zones = useMemo<MapZone[]>(() => {

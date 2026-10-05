@@ -198,7 +198,7 @@ export default function Bisley() {
 
   useHint(() => findBisleyHint(game), {
     game,
-    enabled: !isSettingUp && !game.ended && !game.deal.length,
+    enabled: !isSettingUp && !game.ended && !game.deal?.length,
   });
 
   useEffect(() => {

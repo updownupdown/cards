@@ -302,7 +302,8 @@ function findMonteCarloHint(state: GameState) {
     budget: 3000,
     maxDepth: 20,
   });
-  if (move === "consolidate") {
+  const canConsolidate = state.grid.some((card) => card && !card.faceUp);
+  if (move === "consolidate" || (!move && canConsolidate)) {
     return pressHint("button", i18n.t("games:monteCarlo.consolidate"));
   }
   if (move) {

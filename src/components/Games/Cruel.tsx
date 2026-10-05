@@ -287,7 +287,7 @@ export default function Cruel() {
   useHint(() => findCruelHint(game), {
     game,
     enabled:
-      !isSettingUp && !game.ended && !isAutoCompleting && !game.deck.length,
+      !isSettingUp && !game.ended && !isAutoCompleting && !game.deck?.length,
   });
 
   useEffect(() => {

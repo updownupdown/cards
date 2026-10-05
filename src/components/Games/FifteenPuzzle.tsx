@@ -234,7 +234,7 @@ export default function FifteenPuzzle() {
 
   useHint(() => findFifteenPuzzleHint(game), {
     game,
-    enabled: !isSettingUp && !game.won && !game.deal.length,
+    enabled: !isSettingUp && !game.won && !game.deal?.length,
   });
 
   const emptyIndex = game.cells.indexOf(null);

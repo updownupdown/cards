@@ -177,7 +177,7 @@ export default function LightsOut() {
 
   useHint(() => findLightsOutHint(game), {
     game,
-    enabled: !isSettingUp && !game.won && !game.deal.length,
+    enabled: !isSettingUp && !game.won && !game.deal?.length,
   });
 
   const zones = useMemo<MapZone[]>(

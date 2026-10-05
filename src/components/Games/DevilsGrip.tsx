@@ -24,6 +24,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { delay } from "@/utils/utils";
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 
 const GRID_SIZE = 24;
 
@@ -274,7 +276,74 @@ function scoreRating(score: number) {
   return null;
 }
 
+/**
+ * Builds come first, onto piles already in their row; then the waste's card;
+ * then a swap that brings a 2, 3 or 4 into its own row. Drawing (or turning
+ * the waste over) when nothing else helps.
+ */
+function findDevilsGripHint(state: DevilsGripGameState) {
+  const sources: DevilsGripMoveSource[] = [
+    ...state.grid.flatMap((pile, pileIndex) =>
+      pile.flatMap((_, cardIndex) =>
+        isMovableGridSource(pile, cardIndex)
+          ? [{ zone: "grid" as const, pileIndex, cardIndex }]
+          : [],
+      ),
+    ),
+    ...(state.waste.length ? [{ zone: "waste" as const }] : []),
+  ];
+  let best: {
+    source: DevilsGripMoveSource;
+    target: number;
+    worth: number;
+  } | null = null;
+  for (const source of sources) {
+    for (let target = 0; target < state.grid.length; target += 1) {
+      const type = getMoveType(source, target, state);
+      if (!type) continue;
+      let worth = 0;
+      const inRow = pileIsInValidRow(state.grid[target], target);
+      if (type === "build") {
+        worth = (source.zone === "waste" ? 80 : 100) + (inRow ? 50 : 0);
+        if (
+          source.zone === "grid" &&
+          source.cardIndex === 0 &&
+          !pileIsInValidRow(state.grid[source.pileIndex], source.pileIndex)
+        ) {
+          worth += 20; // Empties a cell, which takes a new card.
+        }
+      } else if (source.zone === "grid") {
+        const pile = state.grid[source.pileIndex];
+        const base = pile[0];
+        const fits =
+          ["2", "3", "4"].includes(base.rank) &&
+          isValidStack(pile) &&
+          rowForRank(base) === Math.floor(target / 8) &&
+          !pileIsInValidRow(pile, source.pileIndex) &&
+          !inRow;
+        worth = fits ? 60 : 0;
+      }
+      if (worth > 0 && (!best || worth > best.worth)) {
+        best = { source, target, worth };
+      }
+    }
+  }
+  if (best) {
+    const cards = getSourceCards(best.source, state);
+    return makeHint(
+      cards.length > 1 ? "moveCards" : "moveCard",
+      cardTarget(cards[0]),
+      zoneTarget(`grid-${best.target}`),
+    );
+  }
+  if (state.stock.length > 0) return makeHint("draw", zoneTarget("stock"));
+  return state.waste.length > 0
+    ? makeHint("redeal", zoneTarget("stock"))
+    : null;
+}
+
 export const devilsGripRules = {
+  findHint: findDevilsGripHint,
   rowForRank,
   isValidStack,
   canBuild,
@@ -652,6 +721,11 @@ export default function DevilsGrip() {
 
   const won = game.stock.length === 0 && game.waste.length === 0;
   const ended = !isSettingUp && (won || !hasAnyProgressMove(game));
+
+  useHint(() => findDevilsGripHint(game), {
+    game,
+    enabled: !isSettingUp && !ended,
+  });
   const score = game.stock.length + game.waste.length;
   const rating = scoreRating(score);
   const hoverMoveType =

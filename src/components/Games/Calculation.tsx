@@ -252,7 +252,7 @@ export default function Calculation() {
 
     // Turn over draw card
     turnOverDrawCard();
-  }, [game]);
+  }, [game, isSettingUp]);
 
   // Move from draw to waste pile
   async function moveDrawToWaste(wastePileIndex: number) {
@@ -439,7 +439,8 @@ export default function Calculation() {
             if (thisIsSelected) {
               setSelectedCard(undefined);
             } else if (drawIsSelected) {
-              mappedCard.pileIndex && moveDrawToWaste(mappedCard.pileIndex);
+              mappedCard.pileIndex !== undefined &&
+                moveDrawToWaste(mappedCard.pileIndex);
             } else if (anotherWasteCardIsSelected || topWasteCard) {
               setSelectedCard(topWasteCard);
             }

@@ -24,7 +24,7 @@ import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { TaoReveal } from "@/components/TaoReveal/TaoReveal";
 import { QuoteReveal } from "@/components/QuoteReveal/QuoteReveal";
 import { getQuote, getTaoChapter } from "@/data/collectibles";
-import { useDisplayLanguage } from "@/i18n";
+import { useDisplayLanguage, useTranslation } from "@/i18n";
 import {
   isQuoteTranslated,
   isTaoChapterTranslated,
@@ -83,7 +83,6 @@ import { requestMercySkipVisit } from "@/components/Campaign/ufo-visit";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { requestHint, useHasHintFinder } from "@/hints/hint-store";
 import { useHintButtonShown } from "@/data/hint-button";
-import { useTranslation } from "@/i18n";
 import { useToast } from "./Toast";
 
 const TIPS_MORPH_DURATION = 350;

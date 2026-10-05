@@ -276,7 +276,7 @@ export default function GrandfathersClock() {
 
   useHint(() => findGrandfathersClockHint(game), {
     game,
-    enabled: !isSettingUp && !game.ended && !game.deck.length,
+    enabled: !isSettingUp && !game.ended && !game.deck?.length,
   });
 
   useEffect(() => {

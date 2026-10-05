@@ -277,7 +277,7 @@ export default function Pagoda() {
 
   useHint(() => findPagodaHint(game), {
     game,
-    enabled: !isSettingUp && !ended && !busy && !game.deal.length,
+    enabled: !isSettingUp && !ended && !busy && !game.deal?.length,
   });
 
   async function onCardPress(index: number) {

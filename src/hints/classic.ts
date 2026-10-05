@@ -397,6 +397,20 @@ function scoreMove(
   return score > 0 ? score : null;
 }
 
+/** Moving a whole pile into an empty one changes nothing. */
+function isShuffle(move: ClassicMove, board: ClassicBoard) {
+  return (
+    move.from.kind === "tableau" &&
+    move.from.index === 0 &&
+    move.to.kind === "tableau" &&
+    board.tableau[move.to.pile].length === 0
+  );
+}
+
+function hasRealMove(board: ClassicBoard, rules: ClassicRules) {
+  return listClassicMoves(board, rules).some((move) => !isShuffle(move, board));
+}
+
 // ── Searching ahead (all cards on view) ─────────────────────────────────────
 
 const cardKeys = new Map<string, string>();
@@ -596,14 +610,7 @@ export function solveClassic(
   const expand = (node: SearchNode): SearchNode | null => {
     for (const move of listClassicMoves(node.board, rules)) {
       // Nothing comes of moving a whole pile into an empty one.
-      if (
-        move.from.kind === "tableau" &&
-        move.from.index === 0 &&
-        move.to.kind === "tableau" &&
-        node.board.tableau[move.to.pile].length === 0
-      ) {
-        continue;
-      }
+      if (isShuffle(move, node.board)) continue;
       const played = playSafeMoves(
         applyClassicMove(node.board, move, rules),
         rules,
@@ -666,8 +673,7 @@ export function solveClassic(
   // The best position seen that isn't a dead end, if it beats this one.
   candidates.sort((a, b) => b.value - a.value);
   const found = candidates.find(
-    (node) =>
-      node.value > rootValue && listClassicMoves(node.board, rules).length > 0,
+    (node) => node.value > rootValue && hasRealMove(node.board, rules),
   );
   return { win: null, toward: found ? lineTo(found) : null };
 }
@@ -776,14 +782,7 @@ export function planClassicProgress(
     let best: { moves: ClassicMove[]; worth: number } | null = null;
     for (const node of layer) {
       for (const move of listClassicMoves(node.board, rules)) {
-        if (
-          move.from.kind === "tableau" &&
-          move.from.index === 0 &&
-          move.to.kind === "tableau" &&
-          node.board.tableau[move.to.pile].length === 0
-        ) {
-          continue;
-        }
+        if (isShuffle(move, node.board)) continue;
         const after = applyClassicMove(node.board, move, rules);
         const key = boardKey(after, rules);
         if (seen.has(key)) continue;

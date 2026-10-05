@@ -346,7 +346,7 @@ export default function Stalactites() {
 
   useHint(() => findStalactitesHint(game), {
     game,
-    enabled: !isSettingUp && !game.ended && !game.deck.length,
+    enabled: !isSettingUp && !game.ended && !game.deck?.length,
   });
 
   function moveCard(source: Source, target: Target) {
