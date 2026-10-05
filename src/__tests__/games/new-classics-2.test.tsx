@@ -17,6 +17,7 @@ import {
   pressZone,
   renderGame,
   run,
+  settle,
 } from "../../../jest/game-harness";
 import type { PlayingCard } from "@/components/Cards/card-utils";
 import type { ComponentType } from "react";
@@ -85,10 +86,11 @@ describe("Ten Twenty Thirty", () => {
   test("a run between two taps is discarded, and no sum left loses", async () => {
     const two = card("2", "hearts");
     const five = card("5", "diamonds");
+    const three = card("3", "clubs");
     const nine = card("9", "spades");
     await renderGame("/ten-twenty-thirty", TenTwentyThirty, {
       stock: [],
-      line: [two, card("3", "clubs"), five, nine],
+      line: [two, three, five, nine],
       discard: [],
       ended: false,
       won: false,
@@ -96,8 +98,10 @@ describe("Ten Twenty Thirty", () => {
     expect(outcome()).toBe("playing");
 
     await pressCardId(two.id);
+    await pressCardId(three.id);
     await pressCardId(five.id);
 
+    await settle();
     expect(zoneCardIds("line-0")).toEqual([nine.id]);
     expect(outcome()).toBe("lost");
   });

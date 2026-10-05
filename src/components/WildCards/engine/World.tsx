@@ -9,8 +9,8 @@ import type { Stage } from "./stage";
 export function World({ stage, children }: { stage: Stage; children: ReactNode }) {
   return (
     <View
-      pointerEvents="none"
       style={{
+        pointerEvents: "none",
         position: "absolute",
         left: stage.offsetX,
         top: stage.offsetY,

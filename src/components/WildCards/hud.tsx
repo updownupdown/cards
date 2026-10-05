@@ -100,8 +100,8 @@ export function WildHeader({
 
   return (
     <View
-      pointerEvents="box-none"
       style={{
+        pointerEvents: "box-none",
         position: "absolute",
         top: 0,
         left: 0,

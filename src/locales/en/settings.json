@@ -16,7 +16,7 @@
     "description": "Weather and scenery behind the cards, and moving stars in the menus."
   },
   "showTips": {
-    "label": "Show tips",
+    "label": "Show game tips",
     "description": "Show a quick start summary for new games."
   },
   "keepScreenAwake": {
@@ -52,13 +52,19 @@
     "confirm": "Erase all progress and settings?"
   },
   "colorTheme": {
-    "label": "Colour theme",
-    "expand": "Expand",
-    "collapse": "Collapse",
-    "highContrast": "High contrast"
+    "label": "Colour theme"
   },
   "betaGames": {
     "enabled": "Beta games enabled",
     "hide": "Hide beta games"
+  },
+  "tabs": {
+    "display": "Display",
+    "theme": "Theme",
+    "other": "Other"
+  },
+  "useEnglishGameTitles": {
+    "label": "Use English game titles",
+    "description": "Always show game names in English, whatever the language."
   }
 }

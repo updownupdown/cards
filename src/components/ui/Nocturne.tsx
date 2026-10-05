@@ -170,7 +170,7 @@ export function RatingMeters({
   ] as const;
 
   return (
-    <View style={{ flexDirection: "row", gap: spacing(20) }}>
+    <View style={{ flexDirection: "row", gap: spacing(12) }}>
       {items.map(([label, value]) => (
         <View key={label} style={{ flex: 1, gap: spacing(4) }}>
           {/* Tighter than other caps, so COMPLEXITY fits a third of a card. */}
@@ -336,7 +336,7 @@ export function RoundButton({
 
 /** The accent-filled button, and its quiet sibling. */
 export function ActionButton({
-  label,
+  label = "",
   accessibilityLabel,
   onPress,
   iconName,
@@ -347,7 +347,8 @@ export function ActionButton({
   onLayout,
   style,
 }: {
-  label: string;
+  /** Optional: an icon-only button needs an accessibilityLabel instead. */
+  label?: string;
   accessibilityLabel?: string;
   onPress: () => void;
   iconName?: IconName;
@@ -391,14 +392,16 @@ export function ActionButton({
       ]}
     >
       {iconName && <Icon name={iconName} size={spacing(16)} color={ink} />}
-      <Text
-        size={small ? "sm" : "md"}
-        weight={600}
-        color={ink}
-        numberOfLines={1}
-      >
-        {label}
-      </Text>
+      {label ? (
+        <Text
+          size={small ? "sm" : "md"}
+          weight={600}
+          color={ink}
+          numberOfLines={1}
+        >
+          {label}
+        </Text>
+      ) : null}
     </Pressable>
   );
 }

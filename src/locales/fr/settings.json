@@ -52,13 +52,19 @@
     "confirm": "Effacer toute la progression et tous les réglages ?"
   },
   "colorTheme": {
-    "label": "Thème de couleurs",
-    "expand": "Afficher tout",
-    "collapse": "Réduire",
-    "highContrast": "Contraste élevé"
+    "label": "Thème de couleurs"
   },
   "betaGames": {
     "enabled": "Jeux bêta activés",
     "hide": "Masquer les jeux bêta"
+  },
+  "tabs": {
+    "display": "Affichage",
+    "theme": "Thème",
+    "other": "Autre"
+  },
+  "useEnglishGameTitles": {
+    "label": "Utiliser les titres de jeux en anglais",
+    "description": "Toujours afficher les noms des jeux en anglais, quelle que soit la langue."
   }
 }

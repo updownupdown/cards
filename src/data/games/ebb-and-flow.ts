@@ -6,7 +6,6 @@ import { GameAnimations } from "@/animations";
 export const ebbAndFlow: GameDefinition = {
   path: "/ebb-and-flow",
   title: "Ebb & Flow",
-  enabledOnLocalOnly: true,
   tags: [GameTag.ModernMechanics, GameTag.SequenceBuilding],
   rating: {
     complexity: 30,
@@ -29,35 +28,22 @@ export const ebbAndFlow: GameDefinition = {
   cardBack: CardBackColors.Navy,
   quickStart: [
     "Play cards from your hand: rising piles go up, falling piles go down.",
-    "Play at least two cards, then tap the deck to draw back up.",
+    "You may refill your hand from the stock when your hand is 2 cards short.",
     "A card one rank back in the same suit turns a pile back.",
   ],
   howToPlay: [
     "## Objective",
     "Play all **52 cards** onto the four piles.",
 
-    "## Piles",
+    "## Gameplay",
+    "Any card can start an empty pile. Aces are low and Kings are high.",
     "- **Rising piles:** play a card of the same rank as the top card, or higher.",
     "- **Falling piles:** play a card of the same rank as the top card, or lower.",
-    "- Any card can start an empty pile. Aces are low and Kings are high.",
 
-    "## Turning back",
-    "- A card **one rank back in the same suit** can always be played: a 7♥ on a rising 8♥, or a 9♠ on a falling 8♠.",
-    "- Save these cards: they win back room on a pile.",
+    "A card **one rank back in the same suit** can always be played:",
+    "- a {7H} on a rising {8H},",
+    "- a {9S} on a falling {8S}, etc.",
 
-    "## Turns",
-    "- Play at least **two cards** each turn. You may play more.",
-    "- Then tap the deck to draw back up to a full hand.",
-    "- Once the deck is empty, play every card you can.",
-    "- The game is lost when you can't play the cards you must.",
-
-    "## Hand size",
-    "- Easy: **8** cards",
-    "- Normal: **7** cards",
-    "- Hard: **6** cards",
-
-    "## Tips",
-    "- Every jump wastes ranks. Play cards that fit closely, even if it means playing more than two.",
-    "- Hold on to cards that can turn a pile back until the pile needs them.",
+    "You may refill your hand from the stock whenever your hand is 2 cards short.",
   ],
 };

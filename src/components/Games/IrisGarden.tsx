@@ -1,19 +1,12 @@
-import { Text } from "@/components/common/Text";
-import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
-import { flexStyles } from "@/styles/flexStyles";
-import { rgba } from "@/styles/styles";
-import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { delay } from "@/utils/utils";
 import { useMemo, useState } from "react";
-import { View } from "react-native";
-import Svg, { Polyline } from "react-native-svg";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
 import {
   collectCards,
   createDeck,
   flipAllToBack,
-  flipToFace,
+  flipToBack,
   redealWith,
   shuffle,
   type CardRank,
@@ -45,7 +38,6 @@ const RANKS_USED: CardRank[] = [
   "Q",
 ];
 const GRID_ROW = 1.15;
-const PATH_SHOW_MS = 380;
 // Neighbouring pairs make a deal too easy, so the deal-builder favours others.
 const NEIGHBOUR_WEIGHT = 0.15;
 
@@ -270,10 +262,7 @@ export const irisGardenRules = {
 const gameStateInitial = createInitialState();
 
 export default function IrisGarden() {
-  const { colorPale } = useGameColors();
   const [selected, setSelected] = useState<number | null>(null);
-  const [shownPath, setShownPath] = useState<Point[] | null>(null);
-  const [busy, setBusy] = useState(false);
 
   const {
     isLoaded,
@@ -288,8 +277,6 @@ export default function IrisGarden() {
     gameStateInitial,
     resetNonGameStates: () => {
       setSelected(null);
-      setShownPath(null);
-      setBusy(false);
     },
     resetAndSetup: async () => {
       setGame((draft) => gatherState(draft));
@@ -306,8 +293,8 @@ export default function IrisGarden() {
   const won = dealt && !isSettingUp && game.cleared.length === CELLS;
   const lost = dealt && !isSettingUp && !won && matches.length === 0;
 
-  async function onCardPress(cell: number) {
-    if (busy || won || lost) return;
+  function onCardPress(cell: number) {
+    if (won || lost) return;
     if (selected === null || selected === cell) {
       setSelected(selected === cell ? null : cell);
       return;
@@ -319,22 +306,17 @@ export default function IrisGarden() {
       setSelected(cell);
       return;
     }
-    setBusy(true);
-    setShownPath(path);
-    await delay(PATH_SHOW_MS);
     const from = selected;
     saveUndoState(structuredClone(game));
     setGame((draft) => {
       const a = draft.grid[from];
       const b = draft.grid[cell];
       if (!a || !b) return;
-      draft.cleared.push(flipToFace(a), flipToFace(b));
+      draft.cleared.push(flipToBack(a), flipToBack(b));
       draft.grid[from] = null;
       draft.grid[cell] = null;
     });
-    setShownPath(null);
     setSelected(null);
-    setBusy(false);
   }
 
   const zones: MapZone[] = useMemo(() => {
@@ -349,12 +331,11 @@ export default function IrisGarden() {
       placeholder: { showCount: false, hideBackground: true, hideShadow: true },
     }));
     return [
-      { id: "status", col: 0, row: 0, width: COLS - 1.2 },
       {
         id: "cleared",
         name: "cleared",
         cards: game.cleared,
-        col: COLS - 1,
+        col: (COLS - 1) / 2,
         row: 0,
         baseZIndex: 5,
         fan: { maxVisible: 3 },
@@ -379,36 +360,22 @@ export default function IrisGarden() {
     }
     const cell = card.pileIndex;
     return {
-      onPress: () => void onCardPress(cell),
-      isDisabled: busy || won || lost,
+      onPress: () => onCardPress(cell),
+      isDisabled: won || lost,
       isSelected: selected === cell,
       selectColor: "blue",
     };
   };
 
-  const { cardMap, getZoneBasePos, getZoneStylesById, cardWidth, cardHeight } =
-    useCardMap({
-      game,
-      zones,
-      cardMapper,
-      cardSize: "small",
-      fixedCols: COLS,
-      fixedRows: GRID_ROW + ROWS,
-      gap: 0.06,
-    });
-
-  function centreOf([x, y]: Point) {
-    const zone = zones.find((z) => z.id === `cell-${y * COLS + x}`);
-    if (!zone) return null;
-    const base = getZoneBasePos(zone);
-    return { x: base.x + cardWidth / 2, y: base.y + cardHeight / 2 };
-  }
-
-  const pathPoints = shownPath
-    ?.map(centreOf)
-    .filter((point): point is { x: number; y: number } => !!point)
-    .map((point) => `${point.x},${point.y}`)
-    .join(" ");
+  const { cardMap } = useCardMap({
+    game,
+    zones,
+    cardMapper,
+    cardSize: "small",
+    fixedCols: COLS,
+    fixedRows: GRID_ROW + ROWS,
+    gap: 0.1,
+  });
 
   const pairsLeft = (CELLS - game.cleared.length) / 2;
 
@@ -426,43 +393,6 @@ export default function IrisGarden() {
       }
     >
       {cardMap}
-
-      {pathPoints && (
-        <Svg
-          style={[
-            pointerEventsStyles.none,
-            { position: "absolute", left: 0, top: 0, zIndex: 2000 },
-          ]}
-          width="100%"
-          height="100%"
-        >
-          <Polyline
-            points={pathPoints}
-            fill="none"
-            stroke={colorPale}
-            strokeWidth={Math.max(3, cardWidth * 0.08)}
-            strokeLinejoin="round"
-            strokeLinecap="round"
-            opacity={0.9}
-          />
-        </Svg>
-      )}
-
-      <View
-        style={[
-          pointerEventsStyles.none,
-          getZoneStylesById("status"),
-          flexStyles.colCentered,
-          { alignItems: "flex-start" },
-        ]}
-      >
-        <Text size="md" weight={600} color={colorPale}>
-          {i18n.t("games:irisGarden.pairsLeft", { count: pairsLeft })}
-        </Text>
-        <Text size="sm" weight={500} color={rgba(colorPale, 0.75)}>
-          {i18n.t("games:irisGarden.matchesOpen", { count: matches.length })}
-        </Text>
-      </View>
     </GameWrapper>
   );
 }

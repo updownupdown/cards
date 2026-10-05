@@ -7,7 +7,6 @@ export const ozanamsSquare: GameDefinition = {
   path: "/ozanams-square",
   title: "Ozanam's Square",
   aliases: ["Graeco-Latin Square"],
-  enabledOnLocalOnly: true,
   tags: [GameTag.Puzzles, GameTag.GridPlacement],
   rating: {
     complexity: 15,
@@ -32,22 +31,16 @@ export const ozanamsSquare: GameDefinition = {
   quickStart: [
     "Fill the square with the sixteen Aces, Kings, Queens and Jacks.",
     "No row, column or long diagonal may hold two cards of the same rank or suit.",
-    "Drag cards from the tray. Cards dealt into place can't be moved.",
   ],
   howToPlay: [
     "## Objective",
-    "Arrange the **Aces, Kings, Queens and Jacks** in a 4×4 square so that every **row**, every **column** and both **long diagonals** hold one card of each rank and one card of each suit.",
+    "Fill the grid such that each **row, column, and diagonal** hold **one card of each rank and one card of each suit**.",
 
-    "## Play",
-    "- Some cards are dealt into place, and can't be moved. The rest wait in the tray, by suit.",
-    "- Drag a card from the tray to an empty space, or tap it and then tap the space.",
-    "- Cards you place can be moved to another space, swapped, or dragged back to the tray.",
+    "## Gameplay",
+    "- Some cards are dealt into place at the start, and can't be moved.",
+    "- Move cards from the tray to an empty space; cards you place can be moved to another space, swapped, or dragged back to the tray.",
     "- A card that repeats a rank or suit in one of its lines is marked in red.",
     "- Every deal has **exactly one** solution.",
-
-    "## Difficulty",
-    "- **Easy:** seven cards start in place.",
-    "- **Difficult:** only as many cards start in place as the solution needs.",
 
     "## History",
     "Jacques Ozanam set this puzzle with playing cards in his *Récréations mathématiques et physiques* (1725). Leonhard Euler later studied squares like it, which he called Graeco-Latin squares.",

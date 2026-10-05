@@ -52,13 +52,19 @@
     "confirm": "Tüm ilerleme ve ayarlar silinsin mi?"
   },
   "colorTheme": {
-    "label": "Renk teması",
-    "expand": "Tümünü göster",
-    "collapse": "Daralt",
-    "highContrast": "Yüksek kontrast"
+    "label": "Renk teması"
   },
   "betaGames": {
     "enabled": "Beta oyunlar açık",
     "hide": "Beta oyunları gizle"
+  },
+  "tabs": {
+    "display": "Ekran",
+    "theme": "Tema",
+    "other": "Diğer"
+  },
+  "useEnglishGameTitles": {
+    "label": "Oyun adlarını İngilizce kullan",
+    "description": "Dilden bağımsız olarak oyun adlarını her zaman İngilizce göster."
   }
 }

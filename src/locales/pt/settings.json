@@ -52,13 +52,19 @@
     "confirm": "Apagar todo o progresso e as configurações?"
   },
   "colorTheme": {
-    "label": "Tema de cores",
-    "expand": "Mostrar todos",
-    "collapse": "Recolher",
-    "highContrast": "Alto contraste"
+    "label": "Tema de cores"
   },
   "betaGames": {
     "enabled": "Jogos beta ativados",
     "hide": "Ocultar jogos beta"
+  },
+  "tabs": {
+    "display": "Ecrã",
+    "theme": "Tema",
+    "other": "Outros"
+  },
+  "useEnglishGameTitles": {
+    "label": "Usar títulos de jogos em inglês",
+    "description": "Mostrar sempre os nomes dos jogos em inglês, seja qual for o idioma."
   }
 }
