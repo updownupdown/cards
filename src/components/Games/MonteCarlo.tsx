@@ -25,6 +25,9 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, pressHint } from "@/hints/hint";
+import { planMove } from "@/hints/lookahead";
 type GameState = {
   grid: (PlayingCard | null)[];
   stock: PlayingCard[];
@@ -225,7 +228,95 @@ function consolidateAndDealAction(draft: GameState) {
   return true;
 }
 
+/** A cell when looking ahead: a card, a gap, or a card not dealt yet. */
+type MonteCarloCell = PlayingCard | null | "unknown";
+type MonteCarloLook = { grid: MonteCarloCell[]; stock: number; paired: number };
+type MonteCarloMove = [number, number] | "consolidate";
+
+/**
+ * Looks ahead through pairs and consolidations for the line that pairs off
+ * the most cards: which pair to take when a card has two neighbours, and when
+ * to close up. Cards still to be dealt stay unknown.
+ */
+function findMonteCarloHint(state: GameState) {
+  const root: MonteCarloLook = {
+    grid: state.grid,
+    stock: state.stock.length,
+    paired: 0,
+  };
+  const known = (cell: MonteCarloCell): cell is PlayingCard =>
+    !!cell && cell !== "unknown";
+  const move = planMove<MonteCarloLook, MonteCarloMove>(root, {
+    key: (look) =>
+      `monte-carlo:${look.grid
+        .map((cell) =>
+          known(cell) ? `${cell.id}${cell.faceUp ? "" : "?"}` : cell,
+        )
+        .join(",")}`,
+    moves: (look) => {
+      const pairs: MonteCarloMove[] = [];
+      look.grid.forEach((first, a) => {
+        if (!known(first) || !first.faceUp) return;
+        look.grid.forEach((second, b) => {
+          if (
+            b > a &&
+            known(second) &&
+            second.faceUp &&
+            second.rank === first.rank &&
+            isAdjacent(a, b)
+          ) {
+            pairs.push([a, b]);
+          }
+        });
+      });
+      const canConsolidate = look.grid.some(
+        (cell) => known(cell) && !cell.faceUp,
+      );
+      return canConsolidate ? [...pairs, "consolidate"] : pairs;
+    },
+    apply: (look, move) => {
+      if (move === "consolidate") {
+        const kept = look.grid.filter(
+          (cell) => cell === "unknown" || (known(cell) && cell.faceUp),
+        );
+        const dealt = Math.min(look.stock, 25 - kept.length);
+        return {
+          grid: [
+            ...kept,
+            ...Array<MonteCarloCell>(dealt).fill("unknown"),
+            ...Array<MonteCarloCell>(25 - kept.length - dealt).fill(null),
+          ],
+          stock: look.stock - dealt,
+          paired: look.paired,
+        };
+      }
+      return {
+        ...look,
+        grid: look.grid.map((cell, index) =>
+          known(cell) && move.includes(index) ? flipToBack(cell) : cell,
+        ),
+        paired: look.paired + 2,
+      };
+    },
+    score: (look, depth) => look.paired * 100 - depth,
+    budget: 3000,
+    maxDepth: 20,
+  });
+  if (move === "consolidate") {
+    return pressHint("button", i18n.t("games:monteCarlo.consolidate"));
+  }
+  if (move) {
+    return makeHint(
+      "removeCards",
+      cardTarget(state.grid[move[0]]!),
+      cardTarget(state.grid[move[1]]!),
+    );
+  }
+  return null;
+}
+
 export const monteCarloRules = {
+  findHint: findMonteCarloHint,
   isAdjacent,
   countCards,
   countFaceDownCardsInGrid,
@@ -242,16 +333,29 @@ export const monteCarloRules = {
 export default function MonteCarlo() {
   const [selected, setSelected] = useImmer<number[] | null>(null);
 
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      resetAndSetup: async () => {
-        await resetAndSetup(setGame);
-      },
-      gameStateInitial,
-      resetNonGameStates: () => {
-        setSelected(null);
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelected(null);
+    },
+  });
+
+  useHint(() => findMonteCarloHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   function selectCell(index: number) {
     if (game.ended) return;

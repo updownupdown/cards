@@ -15,6 +15,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 const colStep = 1.1;
 const rowStep = 1.1;
 // Grid cells as [col, row] in a 5x5 cross: two sails on each side of the
@@ -157,7 +159,43 @@ const sourceKey = (source: Source) =>
 const destinationKey = (destination: Destination) =>
   destination.zone === "center" ? "center" : `corner-${destination.index}`;
 
+/**
+ * The centre first, from the sails or the waste before the corners (a corner
+ * card going in rules out the next one); then cards onto the corners, the
+ * waste's first so the stock's cards keep moving; draw when nothing plays.
+ */
+function findWindmillHint(state: GameState) {
+  let best: { source: Source; destination: Destination; worth: number } | null =
+    null;
+  for (const source of allSources(state)) {
+    for (const destination of destinationsFor(state, source)) {
+      const worth =
+        destination.zone === "center"
+          ? source.zone === "corner"
+            ? 60
+            : 100
+          : source.zone === "waste"
+            ? 50
+            : source.zone === "sail"
+              ? 40
+              : 0;
+      if (worth > 0 && (!best || worth > best.worth)) {
+        best = { source, destination, worth };
+      }
+    }
+  }
+  if (best) {
+    return makeHint(
+      best.destination.zone === "center" ? "toFoundation" : "moveCard",
+      cardTarget(sourceCard(state, best.source)!),
+      zoneTarget(destinationKey(best.destination)),
+    );
+  }
+  return state.stock.length > 0 ? makeHint("draw", zoneTarget("stock")) : null;
+}
+
 export const windmillRules = {
+  findHint: findWindmillHint,
   canBuildCenter,
   canBuildCorner,
   destinationsFor,
@@ -209,6 +247,11 @@ export default function Windmill() {
         });
       });
     },
+  });
+
+  useHint(() => findWindmillHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended,
   });
 
   useEffect(() => {

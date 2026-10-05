@@ -21,6 +21,9 @@ import { GameWrapper } from "../common/GameWrapper";
 import { flexStyles } from "@/styles/flexStyles";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, pressHint, zoneTarget } from "@/hints/hint";
+import { planMove } from "@/hints/lookahead";
 const pileCount = 5;
 
 type GameState = {
@@ -115,7 +118,72 @@ function evaluateEnd(
   return { ended: false, won: false };
 }
 
+type BaronessMove = { remove: number[] } | { from: number; to: number };
+
+/**
+ * Looks through the piles' cards (all on view) for the line that removes
+ * the most, so a card with two partners goes with the one that frees more;
+ * deals when nothing helps.
+ */
+function findBaronessHint(state: GameState, allowMoveToEmptyPile: boolean) {
+  const move = planMove<PlayingCard[][], BaronessMove>(state.piles, {
+    key: (piles) =>
+      `baroness:${piles.map((pile) => pile.map((card) => card.id).join(".")).join("|")}`,
+    moves: (piles) => {
+      const moves: BaronessMove[] = [];
+      piles.forEach((pile, a) => {
+        const card = top(pile);
+        if (!card) return;
+        if (rankValue(card) === 13) moves.push({ remove: [a] });
+        piles.forEach((other, b) => {
+          const partner = top(other);
+          if (b > a && partner && rankValue(card) + rankValue(partner) === 13) {
+            moves.push({ remove: [a, b] });
+          }
+        });
+      });
+      const empty = piles.findIndex((pile) => pile.length === 0);
+      if (allowMoveToEmptyPile && empty >= 0) {
+        piles.forEach((pile, from) => {
+          if (pile.length > 1) moves.push({ from, to: empty });
+        });
+      }
+      return moves;
+    },
+    apply: (piles, move) =>
+      piles.map((pile, index) => {
+        if ("remove" in move) {
+          return move.remove.includes(index) ? pile.slice(0, -1) : pile;
+        }
+        if (index === move.from) return pile.slice(0, -1);
+        if (index === move.to) return [...pile, top(piles[move.from])!];
+        return pile;
+      }),
+    score: (piles, depth) =>
+      -piles.reduce((sum, pile) => sum + pile.length, 0) * 100 - depth,
+    budget: 2000,
+    maxDepth: 16,
+  });
+  if (move && "remove" in move) {
+    return makeHint(
+      move.remove.length === 1 ? "removeCard" : "removeCards",
+      ...move.remove.map((pile) => cardTarget(top(state.piles[pile])!)),
+    );
+  }
+  if (move) {
+    return makeHint(
+      "moveCard",
+      cardTarget(top(state.piles[move.from])!),
+      zoneTarget(`pile-${move.to}`),
+    );
+  }
+  return state.draw.length > 0
+    ? pressHint("button", i18n.t("cards:deal"))
+    : null;
+}
+
 export const baronessRules = {
+  findHint: findBaronessHint,
   evaluateEnd,
 };
 
@@ -151,6 +219,11 @@ export default function Baroness() {
       });
     }
   }, [allowMoveToEmptyPile, game, isSettingUp, setGame]);
+
+  useHint(() => findBaronessHint(game, allowMoveToEmptyPile), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   function dealRow() {
     if (game.ended || game.draw.length === 0) return;

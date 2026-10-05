@@ -24,6 +24,8 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { findClassicHint } from "@/hints/classic";
 const cardSize = "tableau";
 const COLUMN_SIZES = [3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4];
 
@@ -129,7 +131,39 @@ function hasMove(state: BisleyGameState) {
   });
 }
 
+/** Every card is on view: the hint searches for a win, one card at a time. */
+function findBisleyHint(state: BisleyGameState) {
+  const directions = [
+    ...SUITS.map(() => "ascending" as const),
+    ...SUITS.map(() => "descending" as const),
+  ];
+  return findClassicHint(
+    {
+      tableau: state.columns,
+      foundations: [...state.ascending, ...state.descending],
+    },
+    {
+      toFoundation: (card, pile, index) =>
+        canBuildFoundation(
+          card,
+          top(pile),
+          directions[index],
+          SUITS[index % 4],
+        ),
+      toTableau: (cards, pile) =>
+        cards.length === 1 && canBuildTableau(cards[0], top(pile)),
+      canLift: (pile, index) => index === pile.length - 1,
+    },
+    {
+      tableau: (pile) => `column-${pile}`,
+      foundation: (pile) => `${directions[pile]}-${pile % 4}`,
+    },
+    { search: "bisley" },
+  );
+}
+
 export const bisleyRules = {
+  findHint: findBisleyHint,
   canBuildFoundation,
   canBuildTableau,
   createInitialState,
@@ -141,18 +175,31 @@ export default function Bisley() {
   const [lastTap, setLastTap] = useState<{ column: number; at: number } | null>(
     null,
   );
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<BisleyGameState>({
-      // Starts with every card in the deal pile, to be dealt out from there.
-      gameStateInitial: gatherState(createInitialState()),
-      resetNonGameStates: () => setSelectedColumn(null),
-      resetAndSetup: async () => {
-        // Gather every card into the deal pile, then deal them back out.
-        setGame((draft) => gatherState(draft));
-        await delay();
-        setGame((draft) => redealWith(createInitialState(), draft.deal));
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<BisleyGameState>({
+    // Starts with every card in the deal pile, to be dealt out from there.
+    gameStateInitial: gatherState(createInitialState()),
+    resetNonGameStates: () => setSelectedColumn(null),
+    resetAndSetup: async () => {
+      // Gather every card into the deal pile, then deal them back out.
+      setGame((draft) => gatherState(draft));
+      await delay();
+      setGame((draft) => redealWith(createInitialState(), draft.deal));
+    },
+  });
+
+  useHint(() => findBisleyHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended && !game.deal.length,
+  });
 
   useEffect(() => {
     // Nothing is decided while the cards are gathered up for a deal.

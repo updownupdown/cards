@@ -23,6 +23,9 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, pressHint, zoneTarget } from "@/hints/hint";
+import { planMove } from "@/hints/lookahead";
 const numberOfPiles = 4;
 
 type GameState = {
@@ -109,7 +112,75 @@ function evaluateEndState(draw: PlayingCard[], piles: PlayingCard[][]) {
   return { ended: true, won };
 }
 
+type AcesUpMove = { discard: number } | { from: number; to: number };
+
+/**
+ * Looks through the cards on view for the line that discards the most,
+ * moving cards into empty piles where that uncovers a discard (an Ace
+ * belongs at the bottom of its own pile); deals when nothing helps.
+ */
+function findAcesUpHint(state: GameState) {
+  const move = planMove<PlayingCard[][], AcesUpMove>(state.piles, {
+    key: (piles) =>
+      `aces-up:${piles.map((pile) => pile.map((card) => card.id).join(".")).join("|")}`,
+    moves: (piles) => {
+      const discards = [...getDiscardablePileIndexes(piles)].map((pile) => ({
+        discard: pile,
+      }));
+      const empty = piles.findIndex((pile) => pile.length === 0);
+      const relocations =
+        empty < 0
+          ? []
+          : piles.flatMap((pile, from) =>
+              // A lone card gains nothing from a gap.
+              pile.length > 1 ? [{ from, to: empty }] : [],
+            );
+      return [...discards, ...relocations];
+    },
+    apply: (piles, move) =>
+      piles.map((pile, index) => {
+        if ("discard" in move) {
+          return index === move.discard ? pile.slice(0, -1) : pile;
+        }
+        if (index === move.from) return pile.slice(0, -1);
+        if (index === move.to) return [...pile, top(piles[move.from])!];
+        return pile;
+      }),
+    score: (piles, depth) =>
+      -piles.reduce((sum, pile) => sum + pile.length, 0) * 100 -
+      depth -
+      // Aces buried under other cards hold the game up.
+      piles.reduce(
+        (sum, pile) =>
+          sum +
+          pile.filter((card, index) => card.rank === "A" && index > 0).length,
+        0,
+      ) *
+        20,
+    budget: 2000,
+    maxDepth: 16,
+  });
+  if (move && "discard" in move) {
+    return makeHint(
+      "removeCard",
+      cardTarget(top(state.piles[move.discard])!),
+      zoneTarget("discard"),
+    );
+  }
+  if (move) {
+    return makeHint(
+      "moveCard",
+      cardTarget(top(state.piles[move.from])!),
+      zoneTarget(`pile-${move.to}`),
+    );
+  }
+  return state.draw.length > 0
+    ? pressHint("button", i18n.t("cards:deal"))
+    : null;
+}
+
 export const acesUpRules = {
+  findHint: findAcesUpHint,
   getDiscardablePileIndexes,
   hasRelocateMove,
   evaluateEndState,
@@ -121,24 +192,37 @@ export default function AcesUp() {
     undefined,
   );
 
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      resetAndSetup: async () => {
-        await resetAndSetup(setGame);
-      },
-      gameStateInitial,
-      resetNonGameStates: () => {
-        setSelectedPile(undefined);
-      },
-      postSetupAction: async () => {
-        await dealCards();
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelectedPile(undefined);
+    },
+    postSetupAction: async () => {
+      await dealCards();
+    },
+  });
 
   const discardable = useMemo(
     () => getDiscardablePileIndexes(game.piles),
     [game.piles],
   );
+
+  useHint(() => findAcesUpHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   async function dealCards() {
     setSelectedPile(undefined);
