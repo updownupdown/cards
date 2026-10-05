@@ -32,6 +32,8 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 
 const cardSize = "small";
 
@@ -183,7 +185,50 @@ function handOffset(count: number) {
   return zoneFanOffset(count, TOTAL_COLS * (1 + GAP) - GAP, 0.3, 1 + GAP);
 }
 
+/**
+ * How much room a play spends: how far it moves a pile on. A step back in
+ * suit wins room back, so it's the best play there is.
+ */
+function playCost(
+  card: PlayingCard,
+  pile: PlayingCard[],
+  direction: Direction,
+) {
+  const pileTop = top(pile);
+  if (!pileTop)
+    return direction === "up" ? rankValue(card) - 1 : 13 - rankValue(card);
+  const rise = rankValue(card) - rankValue(pileTop);
+  return direction === "up" ? rise : -rise;
+}
+
+/**
+ * As an expert plays The Game: the play that spends the least room, steps
+ * back first. Once the turn's plays are made, keep going only while a play
+ * is cheap; otherwise refill the hand.
+ */
+function findEbbAndFlowHint(state: EbbAndFlowGameState) {
+  let best: { card: PlayingCard; pile: number; cost: number } | null = null;
+  for (const card of state.hand) {
+    state.piles.forEach((pile, index) => {
+      const direction = PILE_DIRECTIONS[index];
+      if (!canPlay(card, pile, direction)) return;
+      const cost = playCost(card, pile, direction);
+      if (!best || cost < best.cost) best = { card, pile: index, cost };
+    });
+  }
+  const play = best as { card: PlayingCard; pile: number; cost: number } | null;
+  if (play && (playsOwed(state) > 0 || !canDraw(state) || play.cost <= 2)) {
+    return makeHint(
+      "moveCard",
+      cardTarget(play.card),
+      zoneTarget(`pile-${play.pile}`),
+    );
+  }
+  return canDraw(state) ? makeHint("draw", zoneTarget("deck")) : null;
+}
+
 export const ebbAndFlowRules = {
+  findHint: findEbbAndFlowHint,
   HAND_SIZES,
   MIN_PLAYS,
   PILE_DIRECTIONS,
@@ -239,6 +284,11 @@ export default function EbbAndFlow() {
   const selected = game.hand.some((c) => c.id === selectedId)
     ? selectedId
     : null;
+
+  useHint(() => findEbbAndFlowHint(game), {
+    game,
+    enabled: !isSettingUp && !ended,
+  });
 
   // With every card that must be played down and nothing left to play, the
   // only move is to draw.

@@ -43,10 +43,18 @@ type DragOptions = {
 
 function boardSnapshot() {
   return JSON.stringify(
-    (harness.mapConfig?.zones ?? []).map((zone) => [
-      zone.id,
-      (zone.cards ?? []).map((card) => `${card.id}${card.faceUp ? "" : "?"}`),
-    ]),
+    // Cards only: zones that appear empty (where a picked card may go) are
+    // no change to the game.
+    (harness.mapConfig?.zones ?? []).flatMap((zone) =>
+      zone.cards?.length
+        ? [
+            [
+              zone.id,
+              zone.cards.map((card) => `${card.id}${card.faceUp ? "" : "?"}`),
+            ],
+          ]
+        : [],
+    ),
   );
 }
 
@@ -58,19 +66,21 @@ function cardExists(id: string) {
   return mappedCards().some((card) => card.card.id === id);
 }
 
-/** Problems with where the hint points, if any. */
+/**
+ * Problems with where the hint's first step points, if any. Later steps may
+ * point at places that only appear once the first is tapped (where a picked
+ * card can go); playing the hint checks those.
+ */
 function badTargets(hint: Hint) {
-  return hint.steps
-    .flat()
-    .flatMap((target) =>
-      "card" in target
-        ? cardExists(target.card)
-          ? []
-          : [`card ${target.card}`]
-        : zoneExists(target.zone)
-          ? []
-          : [`zone ${target.zone}`],
-    );
+  return hint.steps[0].flatMap((target) =>
+    "card" in target
+      ? cardExists(target.card)
+        ? []
+        : [`card ${target.card}`]
+      : zoneExists(target.zone)
+        ? []
+        : [`zone ${target.zone}`],
+  );
 }
 
 /** Does the drop target sit in the zone with this id ("cascade-3")? */
