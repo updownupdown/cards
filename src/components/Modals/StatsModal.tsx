@@ -36,6 +36,8 @@ export function StatsModal({
           maxWidth: ui.contentMaxWidth,
           alignSelf: "center",
           paddingHorizontal: spacing(layoutDims.pagePadding),
+          // Clear of the header's shadow, which would cut the track's edge.
+          paddingTop: spacing(8),
           paddingBottom: spacing(4),
         }}
       >
