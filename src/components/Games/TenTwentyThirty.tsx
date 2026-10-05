@@ -13,6 +13,9 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
+import { planMove } from "@/hints/lookahead";
 
 const lineCols = 7;
 const startCards = 3;
@@ -71,7 +74,42 @@ function evaluateEnd(state: GameState, isSettingUp = false) {
   return { ended: true, won: false };
 }
 
+/**
+ * Looks ahead through the runs on the line for the line of removals that
+ * clears the most cards (a run can join two others once gone); draws when
+ * none adds up. The hint lights a run's first and last cards, the two taps.
+ */
+function findTenTwentyThirtyHint(state: GameState) {
+  const move = planMove<PlayingCard[], [number, number]>(state.line, {
+    key: (line) => `ten-twenty-thirty:${line.map((card) => card.id).join(",")}`,
+    moves: (line) => {
+      const runs: [number, number][] = [];
+      for (let start = 0; start < line.length; start += 1) {
+        for (let end = start + 1; end < line.length; end += 1) {
+          if (isDecade(line.slice(start, end + 1))) runs.push([start, end]);
+        }
+      }
+      return runs;
+    },
+    apply: (line, [start, end]) => [
+      ...line.slice(0, start),
+      ...line.slice(end + 1),
+    ],
+    score: (line, depth) => -line.length * 10 - depth,
+    budget: 3000,
+  });
+  if (move) {
+    return makeHint(
+      "removeCards",
+      cardTarget(state.line[move[0]]),
+      cardTarget(state.line[move[1]]),
+    );
+  }
+  return state.stock.length > 0 ? makeHint("draw", zoneTarget("stock")) : null;
+}
+
 export const tenTwentyThirtyRules = {
+  findHint: findTenTwentyThirtyHint,
   points,
   isDecade,
   hasDecade,
@@ -122,6 +160,11 @@ export default function TenTwentyThirty() {
       });
     }
   }, [game, isSettingUp, setGame]);
+
+  useHint(() => findTenTwentyThirtyHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   /** Tap the first and last cards of a run; a run totalling 10, 20 or 30 goes. */
   function onLinePress(index: number) {

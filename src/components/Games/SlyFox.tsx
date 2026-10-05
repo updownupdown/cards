@@ -18,6 +18,8 @@ import { GameWrapper } from "../common/GameWrapper";
 import { ProgressBar } from "../Home/ProgressBar";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 const reserveCount = 20;
 const reserveCols = 5;
 const dealSize = 20;
@@ -101,7 +103,62 @@ function settleDeal(draft: GameState) {
   draft.toPlace = 0;
 }
 
-export const slyFoxRules = { foundationFor, evaluateEnd };
+/**
+ * Playing: reserve cards go home, else deal the next batch. Dealing: a card
+ * that can go home goes home; else it goes on the reserve whose top card the
+ * foundations will want after it, as soon after as possible, so the piles
+ * come back off in order.
+ */
+function findSlyFoxHint(state: GameState) {
+  const home = (card: PlayingCard) =>
+    makeHint(
+      "toFoundation",
+      cardTarget(card),
+      zoneTarget(`foundation-${foundationFor(state, card)}`),
+    );
+  if (state.phase !== "dealing") {
+    const playable = state.reserves
+      .map((pile) => top(pile))
+      .find((card) => card && foundationFor(state, card) >= 0);
+    if (playable) return home(playable);
+    return state.stock.length > 0
+      ? makeHint("draw", zoneTarget("stock"))
+      : null;
+  }
+
+  const card = top(state.dealing);
+  if (!card) return null;
+  if (foundationFor(state, card) >= 0) return home(card);
+  // How many cards of its suit must go up before this one is wanted.
+  const wait = (candidate: PlayingCard) =>
+    Math.min(
+      ...state.foundations.map((pile, index) => {
+        const pileTop = top(pile);
+        if (!pileTop || pileTop.suit !== candidate.suit) return 26;
+        const steps =
+          (rankValue(candidate) - rankValue(pileTop)) * (index < 4 ? 1 : -1);
+        return steps > 0 ? steps : 26;
+      }),
+    );
+  const fit = (pile: PlayingCard[]) => {
+    const pileTop = top(pile);
+    if (!pileTop) return 50;
+    const gap = wait(pileTop) - wait(card);
+    return gap >= 0 ? 100 - gap : gap * 4;
+  };
+  const best = state.reserves.reduce(
+    (pick, pile, index) =>
+      fit(pile) > fit(state.reserves[pick]) ? index : pick,
+    0,
+  );
+  return makeHint("moveCard", cardTarget(card), zoneTarget(`reserve-${best}`));
+}
+
+export const slyFoxRules = {
+  findHint: findSlyFoxHint,
+  foundationFor,
+  evaluateEnd,
+};
 
 export default function SlyFox() {
   const {
@@ -167,6 +224,11 @@ export default function SlyFox() {
       });
     }
   }, [game, isSettingUp, setGame]);
+
+  useHint(() => findSlyFoxHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   function onReservePress(index: number) {
     if (game.ended) return;

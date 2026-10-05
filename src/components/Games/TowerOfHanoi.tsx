@@ -20,6 +20,8 @@ import {
   zoneFanOffset,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 
 const PILE_COUNT = 3;
 const CARDS_PER_PILE = 3;
@@ -78,7 +80,88 @@ function isWinningPile(pile: PlayingCard[]) {
   );
 }
 
-export const towerOfHanoiRules = { canPlaceOnPile, isWinningPile };
+// The solution the last hint found, by position, so the hints that follow it
+// come at once.
+let solutionPath = new Map<string, [number, number]>();
+
+/**
+ * The first move of a shortest solution, found by searching every position
+ * reachable from here (there are few enough): the optimal hint.
+ */
+function findTowerOfHanoiHint(state: GameState) {
+  type Piles = number[][];
+  const start: Piles = state.piles.map((pile) =>
+    pile.map((card) => RANK_VALUE[card.rank]),
+  );
+  const key = (piles: Piles) => piles.map((pile) => pile.join(".")).join("|");
+  const solved = (piles: Piles) =>
+    piles.some(
+      (pile) =>
+        pile.length === PILE_COUNT * CARDS_PER_PILE &&
+        pile.every((rank, index) => rank === 9 - index),
+    );
+  if (solved(start)) return null;
+  const hintFor = ([from, to]: [number, number]) =>
+    makeHint(
+      "moveCard",
+      cardTarget(state.piles[from][state.piles[from].length - 1]),
+      zoneTarget(`pile-${to}`),
+    );
+  const known = solutionPath.get(key(start));
+  if (known) return hintFor(known);
+
+  const parent = new Map<string, { from: string; move: [number, number] }>();
+  const seen = new Set([key(start)]);
+  let layer: Piles[] = [start];
+  while (layer.length > 0 && seen.size < 200000) {
+    const next: Piles[] = [];
+    for (const piles of layer) {
+      for (let from = 0; from < piles.length; from += 1) {
+        const rank = piles[from][piles[from].length - 1];
+        if (rank === undefined) continue;
+        for (let to = 0; to < piles.length; to += 1) {
+          const destination = piles[to][piles[to].length - 1];
+          if (to === from || (destination !== undefined && rank >= destination))
+            continue;
+          const moved = piles.map((pile, index) =>
+            index === from
+              ? pile.slice(0, -1)
+              : index === to
+                ? [...pile, rank]
+                : pile,
+          );
+          const movedKey = key(moved);
+          if (seen.has(movedKey)) continue;
+          seen.add(movedKey);
+          parent.set(movedKey, { from: key(piles), move: [from, to] });
+          if (solved(moved)) {
+            // Walk back to the start, remembering each position's move.
+            solutionPath = new Map();
+            let first: [number, number] = [from, to];
+            for (
+              let step = parent.get(movedKey);
+              step;
+              step = parent.get(step.from)
+            ) {
+              solutionPath.set(step.from, step.move);
+              first = step.move;
+            }
+            return hintFor(first);
+          }
+          next.push(moved);
+        }
+      }
+    }
+    layer = next;
+  }
+  return null;
+}
+
+export const towerOfHanoiRules = {
+  findHint: findTowerOfHanoiHint,
+  canPlaceOnPile,
+  isWinningPile,
+};
 
 const gameStateInitial = createInitialState();
 
@@ -86,28 +169,41 @@ export default function TowerOfHanoi() {
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
 
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<GameState>({
-      gameStateInitial,
-      resetNonGameStates: () => {
-        clearDragGhost();
-      },
-      resetAndSetup: async () => {
-        setGame((draft) => {
-          draft.deal = shuffle([...draft.deal, ...draft.piles.flat()]).map(
-            (card) => ({ ...card, faceUp: false }),
-          );
-          draft.piles = Array.from({ length: PILE_COUNT }, () => []);
-          draft.moves = 0;
-        });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<GameState>({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      clearDragGhost();
+    },
+    resetAndSetup: async () => {
+      setGame((draft) => {
+        draft.deal = shuffle([...draft.deal, ...draft.piles.flat()]).map(
+          (card) => ({ ...card, faceUp: false }),
+        );
+        draft.piles = Array.from({ length: PILE_COUNT }, () => []);
+        draft.moves = 0;
+      });
 
-        await delay(1000);
-        setGame((draft) => {
-          draft.piles = dealCards(draft.deal);
-          draft.deal = [];
-        });
-      },
-    });
+      await delay(1000);
+      setGame((draft) => {
+        draft.piles = dealCards(draft.deal);
+        draft.deal = [];
+      });
+    },
+  });
+
+  useHint(() => findTowerOfHanoiHint(game), {
+    game,
+    enabled: !isSettingUp && !game.deal.length,
+  });
 
   const zones = useMemo<MapZone[]>(() => {
     const pileZones: MapZone[] = game.piles.map((pile, pileIndex) => ({

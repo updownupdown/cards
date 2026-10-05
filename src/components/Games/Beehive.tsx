@@ -14,6 +14,8 @@ import {
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 
 const TABLEAU_COUNT = 6;
 const BEEHIVE_SIZE = 10;
@@ -272,7 +274,51 @@ const gameStateInitial: BeehiveGameState = {
   discard: [],
 };
 
+/**
+ * Gather same ranks together, tableau piles first (four of a kind leave the
+ * table), then the beehive's cards (emptying it wins), then the waste's;
+ * deal three more when nothing matches. The hint points where a tap sends
+ * the card.
+ */
+function findBeehiveHint(state: BeehiveGameState) {
+  for (let source = 0; source < state.tableau.length; source += 1) {
+    const destination = state.tableau.findIndex((_, index) =>
+      canMoveTableauToTableau(state, source, index),
+    );
+    if (destination >= 0) {
+      return makeHint(
+        "moveCards",
+        cardTarget(topCard(state.tableau[source])),
+        zoneTarget(`tableau-${destination}`),
+      );
+    }
+  }
+  for (const source of ["beehive", "waste"] as const) {
+    const card = topCard(source === "beehive" ? state.beehive : state.waste);
+    if (!card?.faceUp) continue;
+    const matching = findMatchingTableau(state, card);
+    // The waste only fills a gap once the beehive is empty.
+    const empty =
+      source === "beehive" || state.beehive.length === 0
+        ? findEmptyTableau(state)
+        : -1;
+    const destination = matching >= 0 ? matching : empty;
+    if (destination >= 0) {
+      return makeHint(
+        "moveCard",
+        cardTarget(card),
+        zoneTarget(`tableau-${destination}`),
+      );
+    }
+  }
+  if (state.stock.length > 0) return makeHint("draw", zoneTarget("stock"));
+  return state.waste.length > 0
+    ? makeHint("redeal", zoneTarget("stock"))
+    : null;
+}
+
 export const beehiveRules = {
+  findHint: findBeehiveHint,
   createInitialState,
   dealFromDraw,
   normalizeState,
@@ -290,13 +336,26 @@ export const beehiveRules = {
 };
 
 export default function Beehive() {
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<BeehiveGameState>({
-      gameStateInitial,
-      resetAndSetup: async (): Promise<void> => resetAndSetup(setGame),
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<BeehiveGameState>({
+    gameStateInitial,
+    resetAndSetup: async (): Promise<void> => resetAndSetup(setGame),
+  });
   const won = isWon(game);
   const lost = !won && isLost(game);
+
+  useHint(() => findBeehiveHint(game), {
+    game,
+    enabled: !isSettingUp && !won && !lost,
+  });
 
   function commit(action: (draft: BeehiveGameState) => boolean) {
     if (won || lost) return;

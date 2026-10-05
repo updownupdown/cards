@@ -38,6 +38,14 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { pressHint } from "@/hints/hint";
+import {
+  findClassicHint,
+  solveClassic,
+  type ClassicBoard,
+  type ClassicRules,
+} from "@/hints/classic";
 
 // Stalactites: four foundation cards and eight columns of six. Top cards go
 // only to the foundations, which build up regardless of suit by ones or by
@@ -193,7 +201,53 @@ function columnOffset(count: number) {
   return zoneFanOffset(count, COLUMN_ROWS, 0.12, cardDims.tableauOffset);
 }
 
+/**
+ * Every card is on view: the hint searches for a win. Before the step is
+ * chosen, it tries both and suggests the one that goes further.
+ */
+function findStalactitesHint(state: GameState) {
+  const board: ClassicBoard = {
+    tableau: state.tableau,
+    foundations: state.foundations,
+    cells: state.cells.map((cell) => cell[0] ?? null),
+  };
+  const rulesFor = (step: Step): ClassicRules => ({
+    toFoundation: (card, pile) => foundationStep(card, pile, step) !== null,
+    toTableau: () => false,
+    canLift: (pile, index) => index === pile.length - 1,
+  });
+  if (!state.step) {
+    const outcomes = ([1, 2] as const).map((step) => {
+      const { win, toward } = solveClassic(board, rulesFor(step), {
+        budget: 1500,
+      });
+      return { step, worth: win ? 1000 : (toward?.length ?? 0) };
+    });
+    const best =
+      outcomes[1].worth > outcomes[0].worth ? outcomes[1] : outcomes[0];
+    return pressHint(
+      "step",
+      i18n.t(
+        best.step === 1
+          ? "games:stalactites.byOnes"
+          : "games:stalactites.byTwos",
+      ),
+    );
+  }
+  return findClassicHint(
+    board,
+    rulesFor(state.step),
+    {
+      tableau: (pile) => `tableau-${pile}`,
+      foundation: (pile) => `foundation-${pile}`,
+      cell: (cell) => `cell-${cell}`,
+    },
+    { search: `stalactites:${state.step}` },
+  );
+}
+
 export const stalactitesRules = {
+  findHint: findStalactitesHint,
   FOUNDATION_SIZE,
   createInitialState,
   dealFrom,
@@ -289,6 +343,11 @@ export default function Stalactites() {
       });
     }
   }, [game, isSettingUp, setGame]);
+
+  useHint(() => findStalactitesHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended && !game.deck.length,
+  });
 
   function moveCard(source: Source, target: Target) {
     if (!canMove(game, source, target)) return false;

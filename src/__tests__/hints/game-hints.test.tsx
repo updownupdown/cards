@@ -261,7 +261,12 @@ describe.each(games)("%s %s", (path, variant) => {
       if (process.env.HINT_DEBUG && name.includes(process.env.HINT_DEBUG)) {
         console.log(step, JSON.stringify(shown));
       }
-      const changed = await followHint(shown);
+      let changed = await followHint(shown);
+      // A button that changes no cards (a setting, a choice) moves the game
+      // on all the same: the next hint is a different one.
+      if (!changed && shown.message.key === "press") {
+        changed = JSON.stringify(requestHint()) !== JSON.stringify(shown);
+      }
       expect({ step, hint: shown, changed }).toEqual({
         step,
         hint: shown,
