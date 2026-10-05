@@ -37,7 +37,7 @@
     "crumbled": "Runtuh semua!"
   },
   "castle": {
-    "instructions": "Seret batu dari tumpukan, lalu lempar",
+    "instructions": "Tarik lengan pelontar ke belakang, lalu lepaskan",
     "castle": "Kastel {{number}}"
   },
   "hat": {

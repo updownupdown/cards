@@ -16,7 +16,12 @@
     "playAgain": "Main lagi",
     "tryAgain": "Coba lagi",
     "continueOdyssey": "Lanjutkan",
-    "home": "Beranda"
+    "home": "Beranda",
+    "share": "Bagikan",
+    "shareText": "Aku memenangkan {{game}} dalam {{time}}! Coba juga di Solitarius.",
+    "shareTextNoTime": "Aku memenangkan {{game}}! Coba juga di Solitarius.",
+    "shareCopied": "Disalin ke papan klip",
+    "shareFailed": "Kemenangan ini tidak bisa dibagikan"
   },
   "reset": {
     "hold": "Tahan untuk mengulang permainan"

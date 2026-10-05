@@ -16,7 +16,12 @@
     "playAgain": "Jogar de novo",
     "tryAgain": "Tentar de novo",
     "continueOdyssey": "Continuar",
-    "home": "Início"
+    "home": "Início",
+    "share": "Compartilhar",
+    "shareText": "Venci {{game}} em {{time}}! Experimente no Solitarius.",
+    "shareTextNoTime": "Venci {{game}}! Experimente no Solitarius.",
+    "shareCopied": "Copiado para a área de transferência",
+    "shareFailed": "Não foi possível compartilhar esta vitória"
   },
   "reset": {
     "hold": "Segure para reiniciar a partida"

@@ -32,14 +32,14 @@
     "sortBy": "Ordina"
   },
   "sections": {
-    "localOnly": "Giochi solo in locale",
+    "localOnly": "Giochi in beta",
     "gameOfTheDay": "Gioco del giorno",
     "easyGames": "Giochi facili per iniziare",
     "favorites": "Preferiti",
     "continue": "Continua",
     "fact": "Lo sapevi?",
     "continueEmpty": "I giochi a cui giochi appariranno qui.",
-    "favoritesEmpty": "Tocca la stella di un gioco per tenerlo qui."
+    "favoritesEmpty": "Non hai ancora preferiti."
   },
   "gameOfTheDay": {
     "today": "Oggi",
@@ -81,27 +81,33 @@
     "personas": {
       "comfort": {
         "title": "La Scelta Sicura",
-        "subtitle": "La tua percentuale di vittorie più alta"
+        "subtitle": "La tua percentuale di vittorie più alta",
+        "requirement": "Vinci due giochi almeno 3 volte ciascuno."
       },
       "nemesis": {
         "title": "La Nemesi",
-        "subtitle": "La tua percentuale di vittorie più bassa"
+        "subtitle": "La tua percentuale di vittorie più bassa",
+        "requirement": "Vinci due giochi almeno 3 volte ciascuno."
       },
       "whale": {
         "title": "La Balena Bianca",
-        "subtitle": "Più partite senza una vittoria"
+        "subtitle": "Più partite senza una vittoria",
+        "requirement": "Perdi un gioco 3 volte senza mai vincerlo."
       },
       "faithful": {
         "title": "Il Fedelissimo",
-        "subtitle": "Il tuo gioco più giocato"
+        "subtitle": "Il tuo gioco più giocato",
+        "requirement": "Gioca a due giochi diversi."
       },
       "rivalry": {
         "title": "La Rivalità",
-        "subtitle": "Il più vicino al 50/50"
+        "subtitle": "Il più vicino al 50/50",
+        "requirement": "Vinci e perdi uno stesso gioco almeno 3 volte ciascuna, vincendo dal 40% al 60% delle volte."
       },
       "natural": {
         "title": "Il Talento Naturale",
-        "subtitle": "3+ vittorie nel minor numero di partite"
+        "subtitle": "3+ vittorie nel minor numero di partite",
+        "requirement": "Vinci un gioco 3 volte."
       }
     },
     "sortBy": "Ordina per {{column}}",
@@ -134,10 +140,59 @@
       "tried": "giochi provati"
     },
     "top": "Su",
-    "backToTop": "Torna su"
+    "backToTop": "Torna su",
+    "personasNote": "Ogni gioco può avere un solo titolo, quindi un titolo può aspettare che se lo guadagni un altro gioco.",
+    "streaks": {
+      "title": "Serie del gioco del giorno",
+      "current": "Serie attuale",
+      "longest": "Serie più lunga",
+      "days_one": "{{count}} giorno",
+      "days_other": "{{count}} giorni"
+    },
+    "achievements": {
+      "title": "Traguardi",
+      "count": "{{achieved}} traguardi su {{total}}",
+      "wins50": {
+        "title": "50 vittorie in tutto",
+        "description": "Vinci 50 partite in tutto."
+      },
+      "wins100": {
+        "title": "100 vittorie in tutto",
+        "description": "Vinci 100 partite in tutto."
+      },
+      "wins500": {
+        "title": "500 vittorie in tutto",
+        "description": "Vinci 500 partite in tutto."
+      },
+      "triedAll": {
+        "title": "Tutti i giochi provati",
+        "description": "Gioca a ogni gioco almeno una volta."
+      },
+      "wonAll": {
+        "title": "Tutti i giochi vinti",
+        "description": "Vinci ogni gioco almeno una volta."
+      },
+      "mastery": {
+        "title": "Maestria",
+        "description": "Vinci uno stesso gioco 10 volte."
+      },
+      "allQuotes": {
+        "title": "Tutte le citazioni raccolte",
+        "description": "Raccogli tutte le citazioni dell'Odissea."
+      },
+      "allTao": {
+        "title": "Tutti i capitoli del Tao Te Ching raccolti",
+        "description": "Raccogli tutti i capitoli del Tao Te Ching nell'Odissea."
+      }
+    }
   },
   "statsModal": {
-    "title": "Statistiche"
+    "title": "Statistiche",
+    "tabs": {
+      "progress": "Progressi",
+      "personas": "Personaggi",
+      "games": "Giochi"
+    }
   },
   "install": {
     "titleIos": "Aggiungi Solitarius alla schermata Home",

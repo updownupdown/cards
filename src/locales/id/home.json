@@ -32,14 +32,14 @@
     "sortBy": "Urutkan"
   },
   "sections": {
-    "localOnly": "Permainan khusus lokal",
+    "localOnly": "Permainan beta",
     "gameOfTheDay": "Permainan hari ini",
     "easyGames": "Permainan mudah untuk memulai",
     "favorites": "Favorit",
     "continue": "Lanjutkan",
     "fact": "Tahukah Anda?",
     "continueEmpty": "Game yang kamu mainkan akan muncul di sini.",
-    "favoritesEmpty": "Ketuk bintang pada game untuk menyimpannya di sini."
+    "favoritesEmpty": "Kamu belum punya favorit."
   },
   "gameOfTheDay": {
     "today": "Hari ini",
@@ -81,27 +81,33 @@
     "personas": {
       "comfort": {
         "title": "Pilihan nyaman",
-        "subtitle": "Tingkat menang tertinggimu"
+        "subtitle": "Tingkat menang tertinggimu",
+        "requirement": "Menangkan dua permainan masing-masing setidaknya 3 kali."
       },
       "nemesis": {
         "title": "Musuh bebuyutan",
-        "subtitle": "Tingkat menang terendahmu"
+        "subtitle": "Tingkat menang terendahmu",
+        "requirement": "Menangkan dua permainan masing-masing setidaknya 3 kali."
       },
       "whale": {
         "title": "Paus putih",
-        "subtitle": "Paling sering dimainkan tanpa menang"
+        "subtitle": "Paling sering dimainkan tanpa menang",
+        "requirement": "Kalah di satu permainan 3 kali tanpa pernah memenangkannya."
       },
       "faithful": {
         "title": "Sahabat setia",
-        "subtitle": "Gim yang paling sering kamu mainkan"
+        "subtitle": "Gim yang paling sering kamu mainkan",
+        "requirement": "Mainkan dua permainan yang berbeda."
       },
       "rivalry": {
         "title": "Persaingan ketat",
-        "subtitle": "Paling mendekati 50/50"
+        "subtitle": "Paling mendekati 50/50",
+        "requirement": "Menang dan kalah di satu permainan masing-masing setidaknya 3 kali, dengan tingkat menang 40% sampai 60%."
       },
       "natural": {
         "title": "Bakat alami",
-        "subtitle": "3+ kemenangan dengan permainan paling sedikit"
+        "subtitle": "3+ kemenangan dengan permainan paling sedikit",
+        "requirement": "Menangkan satu permainan 3 kali."
       }
     },
     "sortBy": "Urutkan menurut {{column}}",
@@ -134,10 +140,59 @@
       "tried": "gim dicoba"
     },
     "top": "Atas",
-    "backToTop": "Kembali ke atas"
+    "backToTop": "Kembali ke atas",
+    "personasNote": "Satu permainan hanya bisa memegang satu gelar, jadi sebuah gelar mungkin menunggu permainan lain untuk meraihnya.",
+    "streaks": {
+      "title": "Rentetan permainan hari ini",
+      "current": "Rentetan saat ini",
+      "longest": "Rentetan terpanjang",
+      "days_one": "{{count}} hari",
+      "days_other": "{{count}} hari"
+    },
+    "achievements": {
+      "title": "Pencapaian",
+      "count": "{{achieved}} dari {{total}} pencapaian",
+      "wins50": {
+        "title": "Total 50 kemenangan",
+        "description": "Menangkan 50 permainan seluruhnya."
+      },
+      "wins100": {
+        "title": "Total 100 kemenangan",
+        "description": "Menangkan 100 permainan seluruhnya."
+      },
+      "wins500": {
+        "title": "Total 500 kemenangan",
+        "description": "Menangkan 500 permainan seluruhnya."
+      },
+      "triedAll": {
+        "title": "Semua permainan sudah dicoba",
+        "description": "Mainkan setiap permainan setidaknya sekali."
+      },
+      "wonAll": {
+        "title": "Semua permainan sudah dimenangkan",
+        "description": "Menangkan setiap permainan setidaknya sekali."
+      },
+      "mastery": {
+        "title": "Penguasaan",
+        "description": "Menangkan satu permainan 10 kali."
+      },
+      "allQuotes": {
+        "title": "Semua kutipan terkumpul",
+        "description": "Kumpulkan semua kutipan di Pengembaraan."
+      },
+      "allTao": {
+        "title": "Semua bab Tao Te Ching terkumpul",
+        "description": "Kumpulkan semua bab Tao Te Ching di Pengembaraan."
+      }
+    }
   },
   "statsModal": {
-    "title": "Statistik"
+    "title": "Statistik",
+    "tabs": {
+      "progress": "Kemajuan",
+      "personas": "Persona",
+      "games": "Permainan"
+    }
   },
   "install": {
     "titleIos": "Tambahkan Solitarius ke Layar Utama",

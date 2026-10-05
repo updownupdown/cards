@@ -16,7 +16,12 @@
     "playAgain": "Rejouer",
     "tryAgain": "Réessayer",
     "continueOdyssey": "Continuer",
-    "home": "Accueil"
+    "home": "Accueil",
+    "share": "Partager",
+    "shareText": "J'ai gagné à {{game}} en {{time}} ! Essayez-le dans Solitarius.",
+    "shareTextNoTime": "J'ai gagné à {{game}} ! Essayez-le dans Solitarius.",
+    "shareCopied": "Copié dans le presse-papiers",
+    "shareFailed": "Impossible de partager cette victoire"
   },
   "reset": {
     "hold": "Maintenez pour recommencer"

@@ -37,7 +37,7 @@
     "crumbled": "Yerle bir!"
   },
   "castle": {
-    "instructions": "Bir yığından taş sürükle, sonra fırlat",
+    "instructions": "Mancınığın kolunu geri çek, sonra bırak",
     "castle": "Kale {{number}}"
   },
   "hat": {

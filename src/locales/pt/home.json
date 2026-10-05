@@ -32,14 +32,14 @@
     "sortBy": "Ordenar"
   },
   "sections": {
-    "localOnly": "Jogos só locais",
+    "localOnly": "Jogos em beta",
     "gameOfTheDay": "Jogo do dia",
     "easyGames": "Jogos fáceis para começar",
     "favorites": "Favoritos",
     "continue": "Continuar",
     "fact": "Você sabia?",
     "continueEmpty": "Os jogos que você jogar aparecerão aqui.",
-    "favoritesEmpty": "Toque na estrela de um jogo para guardá-lo aqui."
+    "favoritesEmpty": "Você ainda não tem favoritos."
   },
   "gameOfTheDay": {
     "today": "Hoje",
@@ -81,27 +81,33 @@
     "personas": {
       "comfort": {
         "title": "A Escolha Segura",
-        "subtitle": "Sua maior taxa de vitórias"
+        "subtitle": "Sua maior taxa de vitórias",
+        "requirement": "Vença dois jogos pelo menos 3 vezes cada."
       },
       "nemesis": {
         "title": "A Nêmesis",
-        "subtitle": "Sua menor taxa de vitórias"
+        "subtitle": "Sua menor taxa de vitórias",
+        "requirement": "Vença dois jogos pelo menos 3 vezes cada."
       },
       "whale": {
         "title": "A Baleia Branca",
-        "subtitle": "Mais partidas sem uma vitória"
+        "subtitle": "Mais partidas sem uma vitória",
+        "requirement": "Perca um jogo 3 vezes sem nunca vencê-lo."
       },
       "faithful": {
         "title": "O Velho Fiel",
-        "subtitle": "Seu jogo mais jogado"
+        "subtitle": "Seu jogo mais jogado",
+        "requirement": "Jogue dois jogos diferentes."
       },
       "rivalry": {
         "title": "A Rivalidade",
-        "subtitle": "O mais perto de 50/50"
+        "subtitle": "O mais perto de 50/50",
+        "requirement": "Vença e perca um mesmo jogo pelo menos 3 vezes cada, vencendo de 40% a 60% das vezes."
       },
       "natural": {
         "title": "O Talento Natural",
-        "subtitle": "3+ vitórias no menor número de partidas"
+        "subtitle": "3+ vitórias no menor número de partidas",
+        "requirement": "Vença um jogo 3 vezes."
       }
     },
     "sortBy": "Ordenar por {{column}}",
@@ -134,10 +140,59 @@
       "tried": "jogos testados"
     },
     "top": "Topo",
-    "backToTop": "Voltar ao topo"
+    "backToTop": "Voltar ao topo",
+    "personasNote": "Cada jogo só pode ter um título, então um título pode esperar outro jogo conquistá-lo.",
+    "streaks": {
+      "title": "Sequências do jogo do dia",
+      "current": "Sequência atual",
+      "longest": "Maior sequência",
+      "days_one": "{{count}} dia",
+      "days_other": "{{count}} dias"
+    },
+    "achievements": {
+      "title": "Conquistas",
+      "count": "{{achieved}} de {{total}} conquistas",
+      "wins50": {
+        "title": "50 vitórias no total",
+        "description": "Vença 50 partidas ao todo."
+      },
+      "wins100": {
+        "title": "100 vitórias no total",
+        "description": "Vença 100 partidas ao todo."
+      },
+      "wins500": {
+        "title": "500 vitórias no total",
+        "description": "Vença 500 partidas ao todo."
+      },
+      "triedAll": {
+        "title": "Todos os jogos experimentados",
+        "description": "Jogue cada jogo pelo menos uma vez."
+      },
+      "wonAll": {
+        "title": "Todos os jogos vencidos",
+        "description": "Vença cada jogo pelo menos uma vez."
+      },
+      "mastery": {
+        "title": "Maestria",
+        "description": "Vença um mesmo jogo 10 vezes."
+      },
+      "allQuotes": {
+        "title": "Todas as citações coletadas",
+        "description": "Colete todas as citações da Odisseia."
+      },
+      "allTao": {
+        "title": "Todos os capítulos do Tao Te Ching coletados",
+        "description": "Colete todos os capítulos do Tao Te Ching na Odisseia."
+      }
+    }
   },
   "statsModal": {
-    "title": "Estatísticas"
+    "title": "Estatísticas",
+    "tabs": {
+      "progress": "Progresso",
+      "personas": "Personas",
+      "games": "Jogos"
+    }
   },
   "install": {
     "titleIos": "Adicione o Solitarius à Tela de Início",

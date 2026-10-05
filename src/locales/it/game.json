@@ -16,7 +16,12 @@
     "playAgain": "Gioca ancora",
     "tryAgain": "Riprova",
     "continueOdyssey": "Continua",
-    "home": "Home"
+    "home": "Home",
+    "share": "Condividi",
+    "shareText": "Ho vinto a {{game}} in {{time}}! Provalo su Solitarius.",
+    "shareTextNoTime": "Ho vinto a {{game}}! Provalo su Solitarius.",
+    "shareCopied": "Copiato negli appunti",
+    "shareFailed": "Impossibile condividere questa vittoria"
   },
   "reset": {
     "hold": "Tieni premuto per ricominciare la partita"
