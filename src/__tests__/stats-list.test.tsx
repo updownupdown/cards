@@ -8,6 +8,7 @@ import {
 } from "@/components/Home/StatsList";
 import { Colors, rgba, theme } from "@/styles/styles";
 import type { GameSettingsMap, GameStats } from "@/data/game-menu";
+import { QUOTE_COUNT, TAO_CHAPTER_COUNT } from "@/data/collectibles";
 import { describe, expect, jest, test } from "@jest/globals";
 import React from "react";
 import { ScrollView, StyleSheet, Text } from "react-native";
@@ -654,7 +655,7 @@ describe("Stats: Progress", () => {
 
   test("achievements list the done ones first, then by name, with a count", () => {
     // Two quotes short of all of them; Tao chapters all collected.
-    mockCollected = { quotes: 178, tao: 81 };
+    mockCollected = { quotes: QUOTE_COUNT - 2, tao: TAO_CHAPTER_COUNT };
     try {
       const all = texts(renderProgress());
       const titles = all.filter((text) =>
@@ -674,7 +675,7 @@ describe("Stats: Progress", () => {
       ]);
       expect(all).toContain("1/8");
       // How far along the rest are.
-      expect(all).toContain("178/180");
+      expect(all).toContain(`${QUOTE_COUNT - 2}/${QUOTE_COUNT}`);
       expect(all).toContain("11/50");
       expect(all).toContain("4/5");
     } finally {
