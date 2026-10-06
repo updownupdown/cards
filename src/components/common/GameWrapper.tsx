@@ -545,13 +545,8 @@ export const GameWrapper = ({
         score={score}
         hideScore={hideScore}
         reset={handleReset}
-        message={
-          autopilotWin
-            ? [winLoseMessage, t("result.autopilotWin")]
-                .filter(Boolean)
-                .join("\n")
-            : winLoseMessage
-        }
+        message={winLoseMessage}
+        ufoNote={autopilotWin ? t("result.autopilotWin") : undefined}
         handleUndo={handleLossUndo}
         isCampaignMode={isCampaignMode}
         collectibleRewards={getGameDotDefinition(pathname)?.rewards}

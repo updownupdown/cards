@@ -8,7 +8,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle, localizeSettingDefinitions } from "@/i18n/content";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors, rgba } from "@/styles/styles";
+import { Colors, rgba, UfoColors } from "@/styles/styles";
 import { ActionButton, Caps, RatingMeters } from "@/components/ui/Nocturne";
 import {
   GAME_FULL_THUMBNAIL_ASSETS,
@@ -211,8 +211,9 @@ export default function GameModal({
           {onMercySkip && mercySkipsAvailable > 0 && (
             <ActionButton
               label={t("mercySkip.title")}
-              iconName="fast-forward"
-              secondary
+              iconName="ufo"
+              color={UfoColors.green}
+              ink={UfoColors.black}
               onPress={() => {
                 handleClose();
                 onMercySkip();

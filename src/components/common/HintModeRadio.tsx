@@ -3,13 +3,20 @@ import { Text } from "@/components/common/Text";
 import { HINT_MODES, type HintMode } from "@/data/hint-mode";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
-import { useGameAccent, usePalette } from "@/styles/palette";
-import { theme as appTheme } from "@/styles/styles";
+import { usePalette } from "@/styles/palette";
+import { FontWeight, rgba, UfoColors } from "@/styles/styles";
 import { View } from "react-native";
+
+/** Each choice lights up in its own UFO ink. */
+const MODE_INKS: Record<HintMode, string> = {
+  off: UfoColors.blue,
+  beacons: UfoColors.green,
+  autopilot: UfoColors.purple,
+};
 
 /**
  * The "Help from Above" choices side by side, with what the chosen one does
- * underneath. In the settings and in the Rules modal's introduction.
+ * underneath, in the UFO's colours. In the settings and in the Rules modal.
  */
 export function HintModeRadio({
   value,
@@ -21,22 +28,25 @@ export function HintModeRadio({
   const { spacing } = useResponsiveMetrics();
   const { t } = useTranslation("settings");
   const palette = usePalette();
-  const accent = useGameAccent();
+  const ink = MODE_INKS[value];
   return (
     <View style={{ width: "100%", gap: spacing(8) }}>
       <RadioButtons
         options={HINT_MODES.map((option) => ({
           value: option,
           label: t(`helpFromAbove.${option}`),
+          // The chosen one lifts, as in the app's other toggles, and takes
+          // its own ink.
+          selectedBackgroundColor: rgba(MODE_INKS[option], 0.16),
         }))}
         selectedValue={value}
         onChange={onChange}
         containerStyle={{ width: "100%", height: spacing(44) }}
         buttonStyle={{ flex: 1, paddingHorizontal: spacing(6) }}
-        selectedTextStyle={{ color: appTheme.accent }}
+        selectedTextStyle={{ color: ink, fontFamily: FontWeight[600] }}
       />
       <Text size="sm" weight={400} color={palette.dim} lineHeight={1.3}>
-        {/* **Bold** runs (what happens to wins) stand out in the accent. */}
+        {/* **Bold** runs (what happens to wins) stand out in the choice's ink. */}
         {t(`helpFromAbove.${value}Description`)
           .split("**")
           .map((run, index) =>
@@ -45,7 +55,7 @@ export function HintModeRadio({
                 key={index}
                 size="sm"
                 weight={700}
-                color={accent}
+                color={ink}
                 lineHeight={1.3}
               >
                 {run}

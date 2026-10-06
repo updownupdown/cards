@@ -8,6 +8,7 @@ import { useToast } from "@/components/common/Toast";
 import { useGamePath } from "@/hooks/useGamePath";
 import { gameShareUrl, shareWin } from "@/utils/share-win";
 import { GameCollectibleIcons } from "@/components/ui/GameCollectibleIcons";
+import { UfoNote } from "@/components/common/UfoNote";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, Platform, Pressable, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -25,6 +26,8 @@ interface Props {
   /** Suppress the default "Score: {{score}}" line, e.g. when the message already includes it. */
   hideScore?: boolean;
   message?: string;
+  /** A word from the UFO (it helped with this one), above the box. */
+  ufoNote?: string;
   won: boolean;
   /** How long this win took, and the fastest win so far. */
   winTimes?: WinTimes | null;
@@ -50,6 +53,7 @@ export const WinLoseBox = ({
   score,
   hideScore = false,
   message,
+  ufoNote,
   won,
   winTimes,
   gameEnded,
@@ -195,9 +199,11 @@ export const WinLoseBox = ({
             maxWidth: ui.contentMaxWidth - spacing(layoutDims.pagePadding) * 2,
             // Clear of the bottom safe area (Android's navigation bar).
             bottom: restingBottom,
+            gap: spacing(14),
           },
         ]}
       >
+        {ufoNote ? <UfoNote text={ufoNote} /> : null}
         <View
           style={{
             padding: spacing(20),

@@ -36,8 +36,7 @@
     "helpIntro": {
       "title": "Un coup de main d'en haut",
       "body": "Bloqué ? Touchez l'OVNI en haut de l'écran : il vous aidera. Choisissez comment :",
-      "done": "Compris",
-      "later": "Vous pouvez changer cela à tout moment dans les Réglages, depuis l'écran d'accueil."
+      "done": "Compris"
     }
   },
   "mercySkip": {

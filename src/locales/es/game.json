@@ -36,8 +36,7 @@
     "helpIntro": {
       "title": "Ayuda de las alturas",
       "body": "¿Atascado? Toca el ovni en la parte de arriba de la pantalla y te ayudará. Elige cómo:",
-      "done": "Entendido",
-      "later": "Puedes cambiarlo cuando quieras en Ajustes, desde la pantalla de inicio."
+      "done": "Entendido"
     }
   },
   "mercySkip": {

@@ -21,8 +21,6 @@ const BASE_COLORS = {
   brightOrange: "#ff8b2d",
   brightYellow: "#ffea2d",
   brightGreen: "#26ff93",
-  /** The UFO and its Mercy Skip: a calmer green than brightGreen. */
-  ufoGreen: "#4fb381",
 
   // Accents
   accentBlue: "#86e5fd",
@@ -87,6 +85,37 @@ const BASE_COLORS = {
 export const Colors = { ...BASE_COLORS } as {
   -readonly [K in keyof typeof BASE_COLORS]: `#${string}`;
 };
+
+/**
+ * The UFO's colours, for everything it touches in the interface: Mercy Skip,
+ * Help from Above, its alien script. Soft, so they sit calmly on screen, and
+ * the same in every colour theme. Green leads, purple follows, blue comes
+ * third.
+ */
+export const UfoColors = {
+  green: "#7dffb0",
+  purple: "#c79bff",
+  blue: "#6ee7ff",
+  /** The UFO's boxes are pure black, whatever the theme. */
+  black: "#000000",
+} as const;
+
+/** The UFO's three interface inks, in order: green, purple, blue. */
+export const UFO_INKS = [UfoColors.green, UfoColors.purple, UfoColors.blue];
+
+/**
+ * The same three, deeper and richer, for the UFO's moving effects only (hint
+ * beacons, beams and zaps): saturated enough to stand out, dark enough to
+ * read on white cards. Each `glow` is a deeper shade of its ink, for halos.
+ */
+export const UfoEffectColors = {
+  green: "#00c46a",
+  pink: "#c03ff0",
+  blue: "#14a8e6",
+  greenGlow: "#00944f",
+  pinkGlow: "#8e1fc4",
+  blueGlow: "#0a7cb3",
+} as const;
 
 /**
  * Converts a hex colour (e.g. from the Colors object) into an rgba string.

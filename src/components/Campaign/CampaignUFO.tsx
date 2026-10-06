@@ -1,6 +1,14 @@
 import { useTranslation } from "@/i18n";
 import { Icon } from "@/icons/Icon";
-import { Colors, FontWeight, rgba, textShadow } from "@/styles/styles";
+import { UfoFrame } from "@/components/common/UfoFrame";
+import {
+  Colors,
+  FontWeight,
+  rgba,
+  textShadow,
+  UFO_INKS,
+  UfoColors,
+} from "@/styles/styles";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated as RNAnimated,
@@ -34,8 +42,8 @@ function randomBetween(min: number, max: number) {
   return min + Math.random() * (max - min);
 }
 
-/** Neon inks for the alien script; each glyph takes one at random. */
-const ALIEN_INKS = ["#7dffb0", "#6ee7ff", "#c79bff"];
+/** The alien script takes the UFO's own colours, a random ink per glyph. */
+const ALIEN_INKS = UFO_INKS;
 /** Roughly this share of glyphs glow in their own ink. */
 const ALIEN_GLOW_SHARE = 0.3;
 /** Roughly this share of glyphs flicker; the rest hold steady. */
@@ -596,7 +604,7 @@ export function CampaignUFO({
         <Text
           style={{
             fontSize: caught || visiting ? 32 : 26,
-            ...textShadow(rgba(Colors.ufoGreen, 0.55), 8),
+            ...textShadow(rgba(UfoColors.green, 0.55), 8),
           }}
         >
           🛸
@@ -605,7 +613,7 @@ export function CampaignUFO({
 
       {caught && (
         <View style={bubbleContainerStyle}>
-          <View style={bubbleStyle}>
+          <UfoFrame radius={BUBBLE_RADIUS} style={bubbleStyle}>
             <AlienLine message={message} shimmer={shimmer} />
             <Text style={bubbleCaptionStyle}>
               {boldRuns(t("mercySkip.granted")).map(({ text, bold }, index) =>
@@ -618,7 +626,7 @@ export function CampaignUFO({
                 ),
               )}
             </Text>
-          </View>
+          </UfoFrame>
           {/* Outside the bubble's corner and in the ship's own green, so it
               reads as the one way to close the message. Nothing else does:
               the UFO stays until this is pressed. */}
@@ -637,9 +645,12 @@ export function CampaignUFO({
       {visiting && showVisitBubble && (
         <View style={bubbleContainerStyle}>
           {/* Just the short alien line, so the bubble shrinks to fit it. */}
-          <View style={[bubbleStyle, { alignSelf: "center" }]}>
+          <UfoFrame
+            radius={BUBBLE_RADIUS}
+            style={[bubbleStyle, { alignSelf: "center" }]}
+          >
             <AlienLine message={message} shimmer={shimmer} />
-          </View>
+          </UfoFrame>
         </View>
       )}
     </RNAnimated.View>
@@ -668,12 +679,9 @@ const bubbleContainerStyle = {
   alignItems: "stretch" as const,
 };
 
+const BUBBLE_RADIUS = 20;
+
 const bubbleStyle = {
-  backgroundColor: rgba(Colors.K950, 0.95),
-  borderColor: rgba(Colors.ufoGreen, 0.5),
-  borderWidth: 1,
-  borderRadius: 20,
-  boxShadow: `0 0 24px 6px ${rgba(Colors.ufoGreen, 0.3)}`,
   paddingHorizontal: 12,
   paddingTop: 10,
   paddingBottom: 8,
@@ -708,7 +716,7 @@ const bubbleCaptionStyle = {
 
 const bubbleCaptionBoldStyle = {
   fontFamily: FontWeight[700],
-  color: Colors.ufoGreen,
+  color: UfoColors.green,
 };
 
 /** Big enough to find at a glance on a small, moving, scaled-up ship. */
@@ -724,7 +732,7 @@ const dismissButtonStyle = {
   borderRadius: DISMISS_SIZE / 2,
   alignItems: "center" as const,
   justifyContent: "center" as const,
-  backgroundColor: Colors.ufoGreen,
+  backgroundColor: UfoColors.green,
   borderWidth: 2,
   borderColor: Colors.K950,
 };

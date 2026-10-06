@@ -344,6 +344,7 @@ export function ActionButton({
   small = false,
   disabled = false,
   color,
+  ink: inkColor,
   onLayout,
   style,
 }: {
@@ -355,6 +356,8 @@ export function ActionButton({
   secondary?: boolean;
   /** Its fill, in place of the accent (a game's own accent, say). */
   color?: string;
+  /** Its label and icon colour, for a fill the accent's ink won't suit. */
+  ink?: string;
   small?: boolean;
   disabled?: boolean;
   onLayout?: (event: LayoutChangeEvent) => void;
@@ -363,7 +366,7 @@ export function ActionButton({
   const { spacing } = useResponsiveMetrics();
   const theme = usePalette();
   const height = spacing(small ? 38 : 46);
-  const ink = secondary ? theme.ink : theme.accentInk;
+  const ink = inkColor ?? (secondary ? theme.ink : theme.accentInk);
   return (
     <Pressable
       onPress={onPress}
