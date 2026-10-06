@@ -122,7 +122,7 @@ export function useActiveHint() {
 }
 
 /**
- * Gives the game's hints to the Hint button. `findHint` reads the game as it
+ * Gives the game's hints to the header's UFO. `findHint` reads the game as it
  * is when the button is pressed, so nothing runs on ordinary moves. Return
  * null when there's no move worth showing. The hint on screen goes away as
  * soon as `game` changes (a move, undo or a new deal).
