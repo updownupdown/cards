@@ -30,7 +30,6 @@ import {
   HINT_BUTTON_STORAGE_KEY,
   HINT_INTRO_STORAGE_KEY,
 } from "@/data/storage-keys";
-import { isAutopilotSession, markAutopilotSession } from "@/hints/hint-store";
 import { act, create } from "react-test-renderer";
 
 let cardCount = 0;
