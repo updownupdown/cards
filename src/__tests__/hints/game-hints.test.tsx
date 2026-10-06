@@ -42,6 +42,16 @@ type DragOptions = {
 };
 
 function boardSnapshot() {
+  // A card the game hides stays in its zone (Cabin Siege's dead zombies):
+  // hiding it is a change too.
+  const hidden = new Set(
+    mappedCards().flatMap((card) =>
+      (harness.mapConfig?.cardMapper(card) as { isVisible?: boolean } | null)
+        ?.isVisible === false
+        ? [card.card.id]
+        : [],
+    ),
+  );
   return JSON.stringify(
     // Cards only: zones that appear empty (where a picked card may go) are
     // no change to the game.
@@ -49,8 +59,14 @@ function boardSnapshot() {
       zone.cards?.length
         ? [
             [
-              zone.id,
-              zone.cards.map((card) => `${card.id}${card.faceUp ? "" : "?"}`),
+              // Ouroboros turns its loop to where the player stands.
+              zone.rotation === undefined
+                ? zone.id
+                : `${zone.id}@${Math.round(zone.rotation)}`,
+              zone.cards.map(
+                (card) =>
+                  `${card.id}${card.faceUp ? "" : "?"}${hidden.has(card.id) ? "!" : ""}`,
+              ),
             ],
           ]
         : [],

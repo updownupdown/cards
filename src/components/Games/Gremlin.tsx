@@ -21,6 +21,14 @@ import { GameWrapper } from "../common/GameWrapper";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import {
+  cardTarget,
+  makeHint,
+  pressHint,
+  withNote,
+  zoneTarget,
+} from "@/hints/hint";
 const MAX_COLUMNS = 12;
 const HAND_SIZE_BY_DIFFICULTY = {
   easy: 5,
@@ -138,7 +146,145 @@ function finishCompletedGame(draft: GameState) {
   }
 }
 
+// —— Hints ——
+
+/**
+ * The columns the game will end with, as things stand: those in use, one
+ * for each King still to come (a King only ever starts one), and one for
+ * each suit with cards that no column of theirs could take (a column the
+ * highest of them starts takes the rest, if they come in order).
+ */
+function expectedColumns(columns: (PlayingCard[] | null)[]) {
+  // By suit and rank: every deck has its own card ids.
+  const key = (card: PlayingCard) => `${card.suit}-${card.rank}`;
+  const placed = new Set(columns.flatMap((column) => column ?? []).map(key));
+  const tops = columns.flatMap((column) =>
+    column && column.length > 0 ? [top(column)!] : [],
+  );
+  let total = usedColumnCount(columns);
+  const homeless = new Map<string, number>();
+  for (const card of createDeck()) {
+    if (placed.has(key(card))) continue;
+    if (card.rank === "K") {
+      total += 1;
+      continue;
+    }
+    const home = tops.some(
+      (t) => t.suit === card.suit && rankValue(t) > rankValue(card),
+    );
+    if (!home) homeless.set(card.suit, (homeless.get(card.suit) ?? 0) + 1);
+  }
+  homeless.forEach((count) => {
+    total += 1 + 0.05 * count;
+  });
+  return total;
+}
+
+/**
+ * What the gremlin's next card costs on average, placed as well as it can
+ * be: it's any card not yet seen in a column or the hand.
+ */
+function helperRisk(
+  columns: (PlayingCard[] | null)[],
+  unseen: PlayingCard[],
+): number {
+  if (unseen.length === 0) return 0;
+  return (
+    unseen.reduce(
+      (sum, card) => sum + (bestFit(card, columns)?.cost ?? 12),
+      0,
+    ) / unseen.length
+  );
+}
+
+/** Where a card does least harm, and how many columns that costs. */
+function bestFit(card: PlayingCard, columns: (PlayingCard[] | null)[]) {
+  let best: { column: number; cost: number } | null = null;
+  const before = expectedColumns(columns);
+  for (const column of canPlayCard(card, columns)) {
+    // Empty columns are all alike: try the first.
+    if (!columns[column]?.length && best && !columns[best.column]?.length) {
+      continue;
+    }
+    const next = columns.map((pile, index) =>
+      index === column ? [...(pile ?? []), card] : pile,
+    );
+    const cost = expectedColumns(next) - before;
+    if (!best || cost < best.cost) best = { column, cost };
+  }
+  return best;
+}
+
+function findGremlinHint(state: GameState) {
+  if (state.ended) return null;
+  if (state.awaitingHelperPlacement && state.currentHelperCard) {
+    const fit = bestFit(state.currentHelperCard, state.columns);
+    return fit
+      ? withNote(
+          makeHint("moveCard", zoneTarget(`column-${fit.column}`)),
+          i18n.t("games:gremlin.hint.helper"),
+        )
+      : null;
+  }
+  if (state.playerTurnEnded || state.currentHelperCard) return null;
+
+  const hand = state.hand.filter((card): card is PlayingCard => !!card);
+  const unseen = [...state.deck, ...state.discard];
+  // A move also changes what the gremlin's next card will cost.
+  const risk = helperRisk(state.columns, unseen);
+  const fits = hand.map((card) => {
+    const fit = bestFit(card, state.columns);
+    if (!fit) return { card, fit };
+    const next = state.columns.map((pile, index) =>
+      index === fit.column ? [...(pile ?? []), card] : pile,
+    );
+    return {
+      card,
+      fit: {
+        ...fit,
+        cost: fit.cost + helperRisk(next, unseen) - risk,
+      },
+    };
+  });
+  const select = (card: PlayingCard) =>
+    state.selectedHandCardId === card.id ? [] : cardTarget(card);
+
+  // A card that costs no column, Kings (which only ever start one)
+  // included. Any other card is better discarded, to come round again,
+  // than held: a full hand draws nothing new.
+  const play = fits
+    .filter(({ fit }) => fit && fit.cost <= 0)
+    .sort((a, b) => a.fit!.cost - b.fit!.cost)[0];
+  if (play?.fit) {
+    const hint = makeHint(
+      "moveCard",
+      select(play.card),
+      zoneTarget(`column-${play.fit.column}`),
+    );
+    return play.card.rank === "K" && !state.columns[play.fit.column]?.length
+      ? withNote(hint, i18n.t("games:gremlin.hint.king"))
+      : hint;
+  }
+
+  const discard = fits.sort(
+    (a, b) => (b.fit?.cost ?? 99) - (a.fit?.cost ?? 99),
+  )[0];
+  if (discard) {
+    return withNote(
+      makeHint(
+        { key: "press", values: { label: i18n.t("cards:discard") } },
+        select(discard.card),
+        zoneTarget("actions"),
+      ),
+      i18n.t("games:gremlin.hint.discard"),
+    );
+  }
+  return pressHint("actions", i18n.t("games:gremlin.endTurn"));
+}
+
 export const gremlinRules = {
+  findHint: findGremlinHint,
+  bestFit,
   getWinTier,
   canPlayCard,
   allCardsPlaced,
@@ -346,6 +492,8 @@ export default function Gremlin() {
     game.playerTurnEnded,
     setGame,
   ]);
+
+  useHint(() => findGremlinHint(game), { game });
 
   function handleSelectHandCard(cardId: string) {
     if (game.ended || game.playerTurnEnded || game.awaitingHelperPlacement) {

@@ -65,7 +65,12 @@
     "pins": "Pin",
     "ball": "Bola",
     "throw": "Lempar",
-    "finalScore": "Skor: {{score}} (butuh {{target}} untuk menang)"
+    "finalScore": "Skor: {{score}} (butuh {{target}} untuk menang)",
+    "hint": {
+      "throw_one": "Bola ini bisa merobohkan sekitar {{count}} pin",
+      "throw_other": "Bola ini bisa merobohkan sekitar {{count}} pin",
+      "endBall": "Tidak ada lemparan lagi: akhiri bola ini"
+    }
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Kamu membunuh semua zombi!",
@@ -75,14 +80,24 @@
     "revealAZombie": "Buka satu zombi",
     "placeACard": "Tempatkan satu kartu",
     "killAZombie": "Bunuh satu zombi",
-    "noKillableZombies": "Tidak ada zombi yang bisa dibunuh!"
+    "noKillableZombies": "Tidak ada zombi yang bisa dibunuh!",
+    "hint": {
+      "kill": "Bunuh zombi ini",
+      "playToKill": "Mainkan di sini untuk membunuh zombi",
+      "prepareKill": "Siapkan pembunuhan zombi"
+    }
   },
   "cafeQueue": {
     "discardedTheFourthCardOf": "Kartu keempat dari satu nilai terbuang.",
     "selectQueuePositionForNext": "Pilih posisi antrean untuk pelanggan berikutnya",
     "revealNextCustomer": "Buka pelanggan berikutnya",
     "letThemStay": "Biarkan tinggal",
-    "kickThemOut": "Usir"
+    "kickThemOut": "Usir",
+    "hint": {
+      "slot": "Pelanggan berikutnya muat di sini {{chance}}% dari waktu",
+      "letThemStay": "Biarkan tinggal: kehilangan antrean ini adalah buangan yang lebih aman",
+      "kickThemOut": "Usir mereka: lebih aman daripada kehilangan antrean ini"
+    }
   },
   "calculation": {
     "all52CardsAreOn": "Ke-52 kartu ada di fondasi."
@@ -176,7 +191,13 @@
   },
   "cribbageSquares": {
     "youScoredPoints": "Kamu mencetak {{score}} poin!",
-    "youScoredReachToWin": "Skormu {{score}}. Capai {{TARGET_SCORE}} untuk menang."
+    "youScoredReachToWin": "Skormu {{score}}. Capai {{TARGET_SCORE}} untuk menang.",
+    "hint": {
+      "fifteens": "Buat lima belas di sini",
+      "pairs": "Buat pasangan di sini",
+      "runs": "Bangun urutan di sini",
+      "flush": "Bangun menuju flush di sini"
+    }
   },
   "crownslayer": {
     "castle": "Kastel",
@@ -305,7 +326,12 @@
     "tierEpic": "EPIK",
     "columnsUsedWin": "{{count}} kolom terpakai. Kemenangan {{tier}}.",
     "allCardsPlayedInColumns": "Semua kartu dimainkan dalam {{count}} kolom.",
-    "noRoomForHelper": "Tidak ada tempat untuk kartu pembantu di {{count}} kolom."
+    "noRoomForHelper": "Tidak ada tempat untuk kartu pembantu di {{count}} kolom.",
+    "hint": {
+      "helper": "Taruh kartu pembantu di tempat yang paling sedikit memakan kolom",
+      "king": "Mulai kolom dengan King ini",
+      "discard": "Buang kartu ini: sekarang akan memakan satu kolom, dan nanti kembali lagi"
+    }
   },
   "herbalist": {
     "noble": "Bangsawan",
@@ -422,7 +448,16 @@
     "landedOnTrap": "Kamu mendarat di perangkap!",
     "gotAllJewels": "Kamu mendapat keempat permata dan menemukan pintu keluar!",
     "lostWithLoot": "Kamu tersesat di dungeon tanpa jalan keluar! Kamu mati bersama jarahanmu.",
-    "lostInDungeon": "Kamu tersesat di dungeon tanpa jalan keluar!"
+    "lostInDungeon": "Kamu tersesat di dungeon tanpa jalan keluar!",
+    "markPathNumber": "Tandai jalan {{number}}",
+    "hint": {
+      "lookAround": "Lihat sekitar untuk tahu apa yang ada di depan",
+      "explore": "Jelajahi ke depan",
+      "jewel": "Jelajahi ke depan untuk mengambil permata",
+      "escape": "Kabur lewat pintu keluar!",
+      "markPath": "Tandai jalan: jalan keluar dari jalan buntu",
+      "returnToPath": "Kembali ke jalan untuk memilih tempat mendarat"
+    }
   },
   "pagoda": {
     "shrine": "Kuil",
@@ -477,12 +512,28 @@
       "fullHouse": "Full House",
       "fourOfAKind": "Four of a Kind",
       "straightFlush": "Straight Flush"
+    },
+    "hint": {
+      "play": "Main: taruhan satu poin tidak lebih berisiko daripada menyerah",
+      "standPat": "Pertahankan kartumu: tangan ini kuat",
+      "keepSets": "Simpan kartu yang sama, ambil sisanya",
+      "keepFlushDraw": "Simpan empat kartu menuju flush",
+      "keepPair": "Simpan pasangan, ambil tiga",
+      "keepStraightDraw": "Simpan empat kartu menuju straight",
+      "keepHighCards": "Simpan kartu tinggi, ambil sisanya",
+      "odds": "Tangan ini menang sekitar {{chance}}% dari waktu"
     }
   },
   "pokerSquares": {
     "greatHandYouScored": "Kartu hebat! Skormu {{score}}.",
     "youScoredTryForNext": "Skormu {{score}}. Coba capai {{TARGET_SCORE}} lain kali.",
-    "noHand": "Tidak ada"
+    "noHand": "Tidak ada",
+    "hint": {
+      "sets": "Cocokkan nilai di sini untuk pasangan dan lebih",
+      "flush": "Bangun menuju flush di sini",
+      "straight": "Bangun menuju straight di sini",
+      "park": "Taruh kartu ini di tempat yang paling sedikit merugikan"
+    }
   },
   "pyramid": {
     "noMoreMovesAndThe": "Tidak ada langkah lagi dan dek sudah habis."
@@ -493,11 +544,27 @@
   "redDiamond": {
     "diamonds": "Wajik",
     "allBlackCardsHaveBeen": "Semua kartu hitam sudah dimainkan.",
-    "thereAreNotEnoughDiamond": "Kartu wajik tidak cukup untuk mengisi ulang tumpukan."
+    "thereAreNotEnoughDiamond": "Kartu wajik tidak cukup untuk mengisi ulang tumpukan.",
+    "hint": {
+      "fillPile": "Penuhi tumpukan ini untuk mendatangkan wajik baru",
+      "clearPile": "Kosongkan tumpukan ini untuk wajik baru",
+      "replaceDiamond": "Tukar wajik ini dengan yang baru"
+    }
   },
   "rogueRun": {
     "youMadeItThroughThe": "Kamu berhasil melewati dungeon.",
-    "run": "Kabur"
+    "run": "Kabur",
+    "actions": {
+      "heal": "Minum {{card}}",
+      "equip": "Pakai {{card}}",
+      "fightWeapon": "Lawan {{card}} dengan senjatamu",
+      "fightBare": "Lawan {{card}} dengan tangan kosong"
+    },
+    "hint": {
+      "run": "Kabur: ruangan ini akan membunuhmu",
+      "fightWeapon": "Lawan monster ini dengan senjatamu",
+      "fightBare": "Lawan yang ini dengan tangan kosong: simpan senjatamu untuk monster yang lebih besar"
+    }
   },
   "royalCotillion": {
     "theLastDanceIsDone": "Dansa terakhir selesai!"

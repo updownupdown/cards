@@ -65,7 +65,12 @@
     "pins": "Birilli",
     "ball": "Palla",
     "throw": "Tira",
-    "finalScore": "Punteggio: {{score}} (serve {{target}} per vincere)"
+    "finalScore": "Punteggio: {{score}} (serve {{target}} per vincere)",
+    "hint": {
+      "throw_one": "Questa palla può abbattere circa {{count}} birillo",
+      "throw_other": "Questa palla può abbattere circa {{count}} birilli",
+      "endBall": "Nessun tiro rimasto: chiudi questa palla"
+    }
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Hai ucciso tutti gli zombie!",
@@ -75,14 +80,24 @@
     "revealAZombie": "Rivela uno zombie",
     "placeACard": "Piazza una carta",
     "killAZombie": "Uccidi uno zombie",
-    "noKillableZombies": "Nessuno zombie da uccidere!"
+    "noKillableZombies": "Nessuno zombie da uccidere!",
+    "hint": {
+      "kill": "Uccidi questo zombie",
+      "playToKill": "Gioca qui per uccidere uno zombie",
+      "prepareKill": "Prepara l'uccisione di uno zombie"
+    }
   },
   "cafeQueue": {
     "discardedTheFourthCardOf": "Hai scartato la quarta carta di un valore.",
     "selectQueuePositionForNext": "Scegli un posto in coda per il prossimo cliente",
     "revealNextCustomer": "Rivela il prossimo cliente",
     "letThemStay": "Fallo restare",
-    "kickThemOut": "Mandalo via"
+    "kickThemOut": "Mandalo via",
+    "hint": {
+      "slot": "Il prossimo cliente ci sta qui il {{chance}}% delle volte",
+      "letThemStay": "Fallo restare: perdere questa fila è lo scarto più sicuro",
+      "kickThemOut": "Mandali via: è più sicuro che perdere questa fila"
+    }
   },
   "calculation": {
     "all52CardsAreOn": "Tutte le 52 carte sono sulle fondazioni."
@@ -176,7 +191,13 @@
   },
   "cribbageSquares": {
     "youScoredPoints": "Hai fatto {{score}} punti!",
-    "youScoredReachToWin": "Hai fatto {{score}} punti. Raggiungi {{TARGET_SCORE}} per vincere."
+    "youScoredReachToWin": "Hai fatto {{score}} punti. Raggiungi {{TARGET_SCORE}} per vincere.",
+    "hint": {
+      "fifteens": "Fai dei quindici qui",
+      "pairs": "Forma una coppia qui",
+      "runs": "Costruisci una scala qui",
+      "flush": "Punta a un colore qui"
+    }
   },
   "crownslayer": {
     "castle": "Castello",
@@ -305,7 +326,12 @@
     "tierEpic": "EPICO",
     "columnsUsedWin": "{{count}} colonne usate. Vittoria {{tier}}.",
     "allCardsPlayedInColumns": "Tutte le carte giocate in {{count}} colonne.",
-    "noRoomForHelper": "Nessun posto per la carta dell'aiutante nelle {{count}} colonne."
+    "noRoomForHelper": "Nessun posto per la carta dell'aiutante nelle {{count}} colonne.",
+    "hint": {
+      "helper": "Metti la carta dell'aiutante dove costa meno colonne",
+      "king": "Inizia una colonna con questo Re",
+      "discard": "Scarta questa carta: ora costerebbe una colonna, e tornerà più tardi"
+    }
   },
   "herbalist": {
     "noble": "Nobile",
@@ -422,7 +448,16 @@
     "landedOnTrap": "Sei finito in una trappola!",
     "gotAllJewels": "Hai preso tutti e quattro i gioielli e trovato l'uscita!",
     "lostWithLoot": "Ti sei perso nel dungeon senza via d'uscita! Muori con il tuo bottino.",
-    "lostInDungeon": "Ti sei perso nel dungeon senza via d'uscita!"
+    "lostInDungeon": "Ti sei perso nel dungeon senza via d'uscita!",
+    "markPathNumber": "Segna il sentiero {{number}}",
+    "hint": {
+      "lookAround": "Guardati intorno per vedere cosa ti aspetta",
+      "explore": "Esplora più avanti",
+      "jewel": "Esplora più avanti per prendere un gioiello",
+      "escape": "Fuggi dall'uscita!",
+      "markPath": "Segna un sentiero: una via d'uscita dai vicoli ciechi",
+      "returnToPath": "Torna a un sentiero per scegliere dove atterri"
+    }
   },
   "pagoda": {
     "shrine": "Santuario",
@@ -477,12 +512,28 @@
       "fullHouse": "Full",
       "fourOfAKind": "Poker",
       "straightFlush": "Scala reale"
+    },
+    "hint": {
+      "play": "Gioca: una puntata di un punto non rischia più di un abbandono",
+      "standPat": "Tieni la mano: è forte",
+      "keepSets": "Tieni le carte uguali e pesca le altre",
+      "keepFlushDraw": "Tieni le quattro carte per il colore",
+      "keepPair": "Tieni la coppia e pescane tre",
+      "keepStraightDraw": "Tieni le quattro carte per la scala",
+      "keepHighCards": "Tieni le carte alte e pesca le altre",
+      "odds": "Questa mano vince circa il {{chance}}% delle volte"
     }
   },
   "pokerSquares": {
     "greatHandYouScored": "Bella mano! Hai fatto {{score}} punti.",
     "youScoredTryForNext": "Hai fatto {{score}} punti. La prossima volta punta a {{TARGET_SCORE}}.",
-    "noHand": "Nessuna mano"
+    "noHand": "Nessuna mano",
+    "hint": {
+      "sets": "Abbina i valori qui per coppie e oltre",
+      "flush": "Punta a un colore qui",
+      "straight": "Punta a una scala qui",
+      "park": "Lascia questa carta dove dà meno fastidio"
+    }
   },
   "pyramid": {
     "noMoreMovesAndThe": "Nessuna mossa rimasta e il mazzo è vuoto."
@@ -493,11 +544,27 @@
   "redDiamond": {
     "diamonds": "Quadri",
     "allBlackCardsHaveBeen": "Tutte le carte nere sono state giocate.",
-    "thereAreNotEnoughDiamond": "Non ci sono abbastanza carte di quadri per rifornire la pila."
+    "thereAreNotEnoughDiamond": "Non ci sono abbastanza carte di quadri per rifornire la pila.",
+    "hint": {
+      "fillPile": "Completa questa pila per far arrivare nuovi quadri",
+      "clearPile": "Svuota questa pila per nuovi quadri",
+      "replaceDiamond": "Scambia questo quadri con uno nuovo"
+    }
   },
   "rogueRun": {
     "youMadeItThroughThe": "Sei uscito dal dungeon.",
-    "run": "Fuggi"
+    "run": "Fuggi",
+    "actions": {
+      "heal": "Bevi {{card}}",
+      "equip": "Equipaggia {{card}}",
+      "fightWeapon": "Combatti {{card}} con la tua arma",
+      "fightBare": "Combatti {{card}} a mani nude"
+    },
+    "hint": {
+      "run": "Fuggi: questa stanza ti ucciderebbe",
+      "fightWeapon": "Combatti questo mostro con la tua arma",
+      "fightBare": "Combatti questo a mani nude: tieni l'arma per mostri più grossi"
+    }
   },
   "royalCotillion": {
     "theLastDanceIsDone": "L'ultimo ballo è finito!"
