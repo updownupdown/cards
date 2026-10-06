@@ -65,7 +65,12 @@
     "pins": "Lobut",
     "ball": "Top",
     "throw": "At",
-    "finalScore": "Puan: {{score}} (kazanmak için {{target}} gerekli)"
+    "finalScore": "Puan: {{score}} (kazanmak için {{target}} gerekli)",
+    "hint": {
+      "throw_one": "Bu top yaklaşık {{count}} lobut devirebilir",
+      "throw_other": "Bu top yaklaşık {{count}} lobut devirebilir",
+      "endBall": "Atış kalmadı: bu topu bitir"
+    }
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Bütün zombileri öldürdün!",
@@ -75,14 +80,24 @@
     "revealAZombie": "Bir zombi aç",
     "placeACard": "Bir kart yerleştir",
     "killAZombie": "Bir zombi öldür",
-    "noKillableZombies": "Öldürülebilecek zombi yok!"
+    "noKillableZombies": "Öldürülebilecek zombi yok!",
+    "hint": {
+      "kill": "Bu zombiyi öldür",
+      "playToKill": "Bir zombiyi öldürmek için buraya oyna",
+      "prepareKill": "Bir zombi öldürmeye hazırlan"
+    }
   },
   "cafeQueue": {
     "discardedTheFourthCardOf": "Bir değerin dördüncü kartı ıskartaya gitti.",
     "selectQueuePositionForNext": "Sıradaki müşteri için kuyrukta bir yer seç",
     "revealNextCustomer": "Sıradaki müşteriyi aç",
     "letThemStay": "Kalsın",
-    "kickThemOut": "Gönder"
+    "kickThemOut": "Gönder",
+    "hint": {
+      "slot": "Sıradaki müşteri buraya %{{chance}} oranında sığar",
+      "letThemStay": "Kalsın: bu sırayı kaybetmek daha güvenli atış",
+      "kickThemOut": "Gönder: bu sırayı kaybetmekten daha güvenli"
+    }
   },
   "calculation": {
     "all52CardsAreOn": "52 kartın hepsi temellerde."
@@ -176,7 +191,13 @@
   },
   "cribbageSquares": {
     "youScoredPoints": "{{score}} puan aldın!",
-    "youScoredReachToWin": "Puanın: {{score}}. Kazanmak için hedef: {{TARGET_SCORE}}."
+    "youScoredReachToWin": "Puanın: {{score}}. Kazanmak için hedef: {{TARGET_SCORE}}.",
+    "hint": {
+      "fifteens": "Burada on beşler yap",
+      "pairs": "Burada çift yap",
+      "runs": "Burada bir seri kur",
+      "flush": "Burada floşa git"
+    }
   },
   "crownslayer": {
     "castle": "Kale",
@@ -305,7 +326,12 @@
     "tierEpic": "DESTANSI",
     "columnsUsedWin": "{{count}} sütun kullanıldı. {{tier}} zafer.",
     "allCardsPlayedInColumns": "Bütün kartlar {{count}} sütunda oynandı.",
-    "noRoomForHelper": "Yardımcının kartına {{count}} sütunda yer yok."
+    "noRoomForHelper": "Yardımcının kartına {{count}} sütunda yer yok.",
+    "hint": {
+      "helper": "Yardımcının kartını en az sütun harcayacağı yere koy",
+      "king": "Bu Papazla bir sütun başlat",
+      "discard": "Bu kartı at: şimdi bir sütuna mal olur, sonra geri gelir"
+    }
   },
   "herbalist": {
     "noble": "Soylu",
@@ -422,7 +448,16 @@
     "landedOnTrap": "Bir tuzağa bastın!",
     "gotAllJewels": "Dört mücevheri de aldın ve çıkışı buldun!",
     "lostWithLoot": "Zindanda çıkışsız kayboldun! Ganimetinle birlikte öldün.",
-    "lostInDungeon": "Zindanda çıkışsız kayboldun!"
+    "lostInDungeon": "Zindanda çıkışsız kayboldun!",
+    "markPathNumber": "{{number}}. yolu işaretle",
+    "hint": {
+      "lookAround": "Önünde ne olduğunu görmek için etrafa bak",
+      "explore": "İleriyi keşfet",
+      "jewel": "Bir mücevher almak için ileriyi keşfet",
+      "escape": "Çıkıştan kaç!",
+      "markPath": "Bir yol işaretle: çıkmazlardan bir çıkış",
+      "returnToPath": "Nereye ineceğini seçmek için bir yola dön"
+    }
   },
   "pagoda": {
     "shrine": "Tapınak",
@@ -477,12 +512,28 @@
       "fullHouse": "Full",
       "fourOfAKind": "Kare",
       "straightFlush": "Straight Flush"
+    },
+    "hint": {
+      "play": "Oyna: bir puanlık bahis, pas geçmekten fazlasını riske atmaz",
+      "standPat": "Elini koru: bu el güçlü",
+      "keepSets": "Eşleşen kartlarını tut, gerisini çek",
+      "keepFlushDraw": "Floşa giden dört kartı tut",
+      "keepPair": "Çifti tut, üç kart çek",
+      "keepStraightDraw": "Kentiye giden dört kartı tut",
+      "keepHighCards": "Yüksek kartları tut, gerisini çek",
+      "odds": "Bu el yaklaşık %{{chance}} oranında kazanır"
     }
   },
   "pokerSquares": {
     "greatHandYouScored": "Harika el! Puanın: {{score}}.",
     "youScoredTryForNext": "Puanın: {{score}}. Bir dahaki sefere hedef: {{TARGET_SCORE}}.",
-    "noHand": "El yok"
+    "noHand": "El yok",
+    "hint": {
+      "sets": "Çiftler ve fazlası için değerleri burada eşleştir",
+      "flush": "Burada floşa git",
+      "straight": "Burada kentiye git",
+      "park": "Bu kartı en az zarar vereceği yere bırak"
+    }
   },
   "pyramid": {
     "noMoreMovesAndThe": "Hamle kalmadı ve deste boş."
@@ -493,11 +544,28 @@
   "redDiamond": {
     "diamonds": "Karolar",
     "allBlackCardsHaveBeen": "Bütün siyah kartlar oynandı.",
-    "thereAreNotEnoughDiamond": "Yığını yenilemeye yetecek karo kartı yok."
+    "thereAreNotEnoughDiamond": "Yığını yenilemeye yetecek karo kartı yok.",
+    "noMovesLeft": "Hiçbir siyah kart bir yığına uymuyor ve karo kartı kalmadı.",
+    "hint": {
+      "fillPile": "Yeni karolar getirmek için bu desteyi doldur",
+      "clearPile": "Yeni karolar için bu desteyi boşalt",
+      "replaceDiamond": "Bu karoyu yenisiyle değiştir"
+    }
   },
   "rogueRun": {
     "youMadeItThroughThe": "Zindandan çıkmayı başardın.",
-    "run": "Kaç"
+    "run": "Kaç",
+    "actions": {
+      "heal": "{{card}} iç",
+      "equip": "{{card}} kuşan",
+      "fightWeapon": "{{card}} ile silahınla dövüş",
+      "fightBare": "{{card}} ile çıplak elle dövüş"
+    },
+    "hint": {
+      "run": "Kaç: bu oda seni öldürür",
+      "fightWeapon": "Bu canavarla silahınla dövüş",
+      "fightBare": "Bununla çıplak elle dövüş: silahını daha büyük canavarlara sakla"
+    }
   },
   "royalCotillion": {
     "theLastDanceIsDone": "Son dans bitti!"

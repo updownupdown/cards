@@ -65,7 +65,12 @@
     "pins": "Quilles",
     "ball": "Boule",
     "throw": "Lancer",
-    "finalScore": "Score : {{score}} ({{target}} nécessaires pour gagner)"
+    "finalScore": "Score : {{score}} ({{target}} nécessaires pour gagner)",
+    "hint": {
+      "throw_one": "Cette boule peut faire tomber environ {{count}} quille",
+      "throw_other": "Cette boule peut faire tomber environ {{count}} quilles",
+      "endBall": "Plus aucun lancer : terminez cette boule"
+    }
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Vous avez tué tous les zombies !",
@@ -75,14 +80,24 @@
     "revealAZombie": "Révélez un zombie",
     "placeACard": "Placez une carte",
     "killAZombie": "Tuez un zombie",
-    "noKillableZombies": "Aucun zombie à tuer !"
+    "noKillableZombies": "Aucun zombie à tuer !",
+    "hint": {
+      "kill": "Tuez ce zombie",
+      "playToKill": "Jouez ici pour tuer un zombie",
+      "prepareKill": "Préparez la mise à mort d'un zombie"
+    }
   },
   "cafeQueue": {
     "discardedTheFourthCardOf": "Vous avez défaussé la quatrième carte d'un rang.",
     "selectQueuePositionForNext": "Choisissez une place dans la file pour le prochain client",
     "revealNextCustomer": "Révéler le client suivant",
     "letThemStay": "Le laisser rester",
-    "kickThemOut": "Le mettre dehors"
+    "kickThemOut": "Le mettre dehors",
+    "hint": {
+      "slot": "Le prochain client tient ici {{chance}} % du temps",
+      "letThemStay": "Laissez-le rester : perdre cette file est le moindre mal",
+      "kickThemOut": "Renvoyez-les : plus sûr que de perdre cette file"
+    }
   },
   "calculation": {
     "all52CardsAreOn": "Les 52 cartes sont sur les fondations."
@@ -176,7 +191,13 @@
   },
   "cribbageSquares": {
     "youScoredPoints": "Vous avez marqué {{score}} points !",
-    "youScoredReachToWin": "Vous avez marqué {{score}}. Atteignez {{TARGET_SCORE}} pour gagner."
+    "youScoredReachToWin": "Vous avez marqué {{score}}. Atteignez {{TARGET_SCORE}} pour gagner.",
+    "hint": {
+      "fifteens": "Faites des quinze ici",
+      "pairs": "Formez une paire ici",
+      "runs": "Construisez une suite ici",
+      "flush": "Visez une couleur ici"
+    }
   },
   "crownslayer": {
     "castle": "Château",
@@ -305,7 +326,12 @@
     "tierEpic": "ÉPIQUE",
     "columnsUsedWin": "{{count}} colonnes utilisées. Victoire {{tier}}.",
     "allCardsPlayedInColumns": "Toutes les cartes jouées en {{count}} colonnes.",
-    "noRoomForHelper": "Plus de place pour la carte de l'assistant dans les {{count}} colonnes."
+    "noRoomForHelper": "Plus de place pour la carte de l'assistant dans les {{count}} colonnes.",
+    "hint": {
+      "helper": "Placez la carte de l'assistant là où elle coûte le moins de colonnes",
+      "king": "Commencez une colonne avec ce Roi",
+      "discard": "Défaussez cette carte : elle coûterait une colonne maintenant, et elle reviendra"
+    }
   },
   "herbalist": {
     "noble": "Noble",
@@ -422,7 +448,16 @@
     "landedOnTrap": "Vous êtes tombé dans un piège !",
     "gotAllJewels": "Vous avez les quatre joyaux et avez trouvé la sortie !",
     "lostWithLoot": "Vous êtes perdu dans le donjon sans issue ! Vous mourez avec votre butin.",
-    "lostInDungeon": "Vous êtes perdu dans le donjon sans issue !"
+    "lostInDungeon": "Vous êtes perdu dans le donjon sans issue !",
+    "markPathNumber": "Marquer le chemin {{number}}",
+    "hint": {
+      "lookAround": "Regardez autour pour voir ce qui vous attend",
+      "explore": "Explorez plus loin",
+      "jewel": "Explorez plus loin pour prendre un joyau",
+      "escape": "Fuyez par la sortie !",
+      "markPath": "Marquez un chemin : une issue en cas d'impasse",
+      "returnToPath": "Revenez à un chemin pour choisir où vous atterrissez"
+    }
   },
   "pagoda": {
     "shrine": "Sanctuaire",
@@ -477,12 +512,28 @@
       "fullHouse": "Full",
       "fourOfAKind": "Carré",
       "straightFlush": "Quinte flush"
+    },
+    "hint": {
+      "play": "Jouez : une mise d'un point ne risque pas plus qu'un abandon",
+      "standPat": "Gardez votre main : elle est forte",
+      "keepSets": "Gardez vos cartes assorties, tirez les autres",
+      "keepFlushDraw": "Gardez les quatre cartes à la couleur",
+      "keepPair": "Gardez la paire, tirez-en trois",
+      "keepStraightDraw": "Gardez les quatre cartes à la quinte",
+      "keepHighCards": "Gardez les hautes cartes, tirez les autres",
+      "odds": "Cette main gagne environ {{chance}} % du temps"
     }
   },
   "pokerSquares": {
     "greatHandYouScored": "Belle main ! Vous avez marqué {{score}}.",
     "youScoredTryForNext": "Vous avez marqué {{score}}. Visez {{TARGET_SCORE}} la prochaine fois.",
-    "noHand": "Aucune main"
+    "noHand": "Aucune main",
+    "hint": {
+      "sets": "Assortissez les rangs ici pour des paires et mieux",
+      "flush": "Visez une couleur ici",
+      "straight": "Visez une quinte ici",
+      "park": "Placez cette carte là où elle gêne le moins"
+    }
   },
   "pyramid": {
     "noMoreMovesAndThe": "Plus aucun coup et la pioche est vide."
@@ -493,11 +544,28 @@
   "redDiamond": {
     "diamonds": "Carreaux",
     "allBlackCardsHaveBeen": "Toutes les cartes noires ont été jouées.",
-    "thereAreNotEnoughDiamond": "Il n'y a pas assez de carreaux pour regarnir la pile."
+    "thereAreNotEnoughDiamond": "Il n'y a pas assez de carreaux pour regarnir la pile.",
+    "noMovesLeft": "Aucune carte noire ne va sur une pile, et il ne reste plus de carreaux.",
+    "hint": {
+      "fillPile": "Complétez cette pile pour faire venir de nouveaux carreaux",
+      "clearPile": "Videz cette pile pour de nouveaux carreaux",
+      "replaceDiamond": "Échangez ce carreau contre un nouveau"
+    }
   },
   "rogueRun": {
     "youMadeItThroughThe": "Vous avez traversé le donjon.",
-    "run": "Fuir"
+    "run": "Fuir",
+    "actions": {
+      "heal": "Boire {{card}}",
+      "equip": "Équiper {{card}}",
+      "fightWeapon": "Combattre {{card}} avec votre arme",
+      "fightBare": "Combattre {{card}} à mains nues"
+    },
+    "hint": {
+      "run": "Fuyez : cette salle vous tuerait",
+      "fightWeapon": "Combattez ce monstre avec votre arme",
+      "fightBare": "Combattez celui-ci à mains nues : gardez votre arme pour de plus gros monstres"
+    }
   },
   "royalCotillion": {
     "theLastDanceIsDone": "La dernière danse est terminée !"

@@ -17,5 +17,9 @@
     "wins": "Wins"
   },
   "undo": "Undo",
-  "winToCollect": "Win **{{game}}** to collect"
+  "winToCollect": "Win **{{game}}** to collect",
+  "errors": {
+    "appCrashed": "Something went wrong.",
+    "tryAgain": "Try again"
+  }
 }

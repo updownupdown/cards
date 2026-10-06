@@ -29,6 +29,8 @@ import {
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
 import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, withNote, zoneTarget } from "@/hints/hint";
 
 import { i18n } from "@/i18n";
 const zombieZonesColRows: ColRows[] = [
@@ -300,7 +302,100 @@ function evaluateOutcome(snapshot: GameState) {
   return null;
 }
 
+// Kings ask most of their supports, so take one whenever the board allows.
+const ZOMBIE_PRIORITY: Record<string, number> = { K: 3, Q: 2, J: 1 };
+
+function zombiePriority(zombie: Zombie) {
+  return ZOMBIE_PRIORITY[zombie.card.rank] ?? 0;
+}
+
+/** How many of the draw's possible cards could follow this one. */
+function openness(top: PlayingCard) {
+  return createDeck({ includeJokers: true }).filter((card) =>
+    canPlayOn(top, card),
+  ).length;
+}
+
+/**
+ * Kills the next card could make: for each zombie on view, each pile beside
+ * it whose supports already kill it, weighted by the zombie and by how many
+ * cards that pile takes.
+ */
+function setUpKills(state: GameState) {
+  let value = 0;
+  state.zombies.forEach((zombie, zombieIndex) => {
+    if (zombie.dead || !zombie.card.faceUp) return;
+    state.piles.forEach((pile, pileIndex) => {
+      if (!(PILE_TO_ZOMBIES[pileIndex] ?? []).includes(zombieIndex)) return;
+      const supports = supportIndicesForAttack(pileIndex, zombieIndex).map(
+        (index) => state.piles[index].at(-1)!,
+      );
+      if (supports.length === 2 && canKillZombie(zombie.card, supports)) {
+        value += zombiePriority(zombie) * openness(pile.at(-1)!);
+      }
+    });
+  });
+  return value;
+}
+
+/**
+ * The draw is face down past its top card, so the hint looks one card
+ * ahead: place it where it kills a zombie (the most demanding first), else
+ * where it sets up kills for the cards to come, keeping piles open to them.
+ */
+function findCabinSiegeHint(state: GameState) {
+  if (state.ended) return null;
+  if (state.phase === "reveal") {
+    const hidden = state.zombies.find((z) => !z.dead && !z.card.faceUp);
+    return hidden ? makeHint("tapCard", cardTarget(hidden.card)) : null;
+  }
+  if (state.phase === "kill") {
+    const best = getAvailableAttacks(state)
+      .map((index) => state.zombies[index])
+      .sort((a, b) => zombiePriority(b) - zombiePriority(a))[0];
+    return best
+      ? withNote(
+          makeHint("tapCard", cardTarget(best.card)),
+          i18n.t("games:cabinSiege.hint.kill"),
+        )
+      : null;
+  }
+  const before = setUpKills(state);
+  const options = state.piles.flatMap((_, pileIndex) => {
+    const next: GameState = { ...state, piles: [...state.piles] };
+    if (!playPileAction(next, pileIndex)) return [];
+    const kills = getAvailableAttacks(next).map((index) =>
+      zombiePriority(next.zombies[index]),
+    );
+    const setUp = setUpKills(next);
+    return [
+      {
+        pileIndex,
+        kills: kills.length > 0,
+        setUp: setUp > before,
+        value:
+          (kills.length > 0 ? 10000 + 1000 * Math.max(...kills) : 0) +
+          setUp +
+          openness(next.piles[pileIndex].at(-1)!),
+      },
+    ];
+  });
+  const best = options.reduce<(typeof options)[number] | null>(
+    (top, option) => (!top || option.value > top.value ? option : top),
+    null,
+  );
+  if (!best) return null;
+  // The draw card takes no tap; the pile it goes on does.
+  const hint = makeHint("moveCard", zoneTarget(`pile-${best.pileIndex}`));
+  return best.kills
+    ? withNote(hint, i18n.t("games:cabinSiege.hint.playToKill"))
+    : best.setUp
+      ? withNote(hint, i18n.t("games:cabinSiege.hint.prepareKill"))
+      : hint;
+}
+
 export const cabinSiegeRules = {
+  findHint: findCabinSiegeHint,
   canPlayOn,
   supportIndicesForAttack,
   canKillZombie,
@@ -332,6 +427,8 @@ export default function CabinSiege() {
     },
     gameStateInitial,
   });
+
+  useHint(() => findCabinSiegeHint(game), { game, enabled: !isSettingUp });
 
   async function revealZombie(index: number) {
     if (game.ended || game.phase !== "reveal") return;

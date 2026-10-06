@@ -27,6 +27,8 @@ import { Text } from "../common/Text";
 import { useGameColors } from "@/hooks/useGameColors";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { makeHint, pressHint, withNote, zoneTarget } from "@/hints/hint";
 const GRID_SIZE = 4;
 const GRID_CELLS = GRID_SIZE * GRID_SIZE;
 const TARGET_SCORE = 61;
@@ -202,7 +204,123 @@ function gatherCards(state: GameState) {
   return shuffle((cards.length === 52 ? cards : createDeck()).map(flipToBack));
 }
 
+// —— Hints ——
+
+type LineAim = "fifteens" | "pairs" | "runs" | "flush";
+
+// What a flush in the making is worth, by cards of one suit so far.
+const FLUSH_ODDS = [0, 0, 1, 2, 4];
+
+function lineCells(index: number) {
+  return index < GRID_SIZE
+    ? Array.from({ length: GRID_SIZE }, (_, col) => index * GRID_SIZE + col)
+    : Array.from(
+        { length: GRID_SIZE },
+        (_, row) => row * GRID_SIZE + (index - GRID_SIZE),
+      );
+}
+
+/**
+ * What a row or column's cards are worth so far, the starter still to come:
+ * the fifteens, pairs and runs they make, a flush in the making, and ranks
+ * one apart that a run may join.
+ */
+function lineParts(cards: PlayingCard[]): Record<LineAim, number> {
+  const ranks = [...new Set(cards.map((card) => rankValue(card)))];
+  const neighbours = ranks.filter((rank) => ranks.includes(rank + 1)).length;
+  // Sets of cards that the starter (still face down) may make fifteen with:
+  // by the share of the deck that has the value missing.
+  let starterFifteens = 0;
+  for (let mask = 1; mask < 1 << cards.length; mask += 1) {
+    let total = 0;
+    cards.forEach((card, index) => {
+      if (mask & (1 << index)) total += cribbageValue(card);
+    });
+    const missing = 15 - total;
+    if (missing >= 1 && missing <= 10) {
+      starterFifteens += (2 * (missing === 10 ? 16 : 4)) / 52;
+    }
+  }
+  return {
+    fifteens: countFifteens(cards) + starterFifteens,
+    pairs: countPairs(cards),
+    runs: countRuns(cards) + neighbours * 0.5,
+    flush:
+      cards.length > 0 && cards.every((card) => card.suit === cards[0].suit)
+        ? FLUSH_ODDS[cards.length]
+        : 0,
+  };
+}
+
+function lineValue(cards: PlayingCard[]) {
+  const parts = lineParts(cards);
+  return parts.fifteens + parts.pairs + parts.runs + parts.flush;
+}
+
+function lineCards(grid: (PlayingCard | null)[], line: number) {
+  return lineCells(line).flatMap((cell) => (grid[cell] ? [grid[cell]!] : []));
+}
+
+function gridValue(grid: (PlayingCard | null)[]) {
+  let total = 0;
+  for (let line = 0; line < GRID_SIZE * 2; line += 1) {
+    total += lineValue(lineCards(grid, line));
+  }
+  return total;
+}
+
+/**
+ * The legal space where the grid gains most; the note names what the card
+ * mostly adds (fifteens, pairs, a run or a flush) where it adds anything.
+ */
+function bestPlacement(state: GameState) {
+  const card = state.current;
+  if (!card) return null;
+  let best: { cell: number; value: number } | null = null;
+  for (const cell of getLegalCells(state.grid)) {
+    const grid = [...state.grid];
+    grid[cell] = card;
+    const value = gridValue(grid);
+    if (!best || value > best.value) best = { cell, value };
+  }
+  if (!best) return null;
+  const { cell } = best as { cell: number; value: number };
+  const gains: Record<LineAim, number> = {
+    fifteens: 0,
+    pairs: 0,
+    runs: 0,
+    flush: 0,
+  };
+  for (const line of [
+    Math.floor(cell / GRID_SIZE),
+    GRID_SIZE + (cell % GRID_SIZE),
+  ]) {
+    const before = lineParts(lineCards(state.grid, line));
+    const after = lineParts([...lineCards(state.grid, line), card]);
+    (Object.keys(gains) as LineAim[]).forEach((aim) => {
+      gains[aim] += after[aim] - before[aim];
+    });
+  }
+  const [aim, gain] = (Object.entries(gains) as [LineAim, number][]).reduce(
+    (top, entry) => (entry[1] > top[1] ? entry : top),
+  );
+  return { cell, aim: gain >= 1 ? aim : null };
+}
+
+function findCribbageSquaresHint(state: GameState) {
+  if (state.ended || state.isTransitioning) return null;
+  if (state.scoresReady) return pressHint("end-game", i18n.t("cards:endGame"));
+  const placement = bestPlacement(state);
+  if (!placement) return null;
+  const hint = makeHint("moveCard", zoneTarget(`grid-${placement.cell}`));
+  return placement.aim
+    ? withNote(hint, i18n.t(`games:cribbageSquares.hint.${placement.aim}`))
+    : hint;
+}
+
 export const cribbageSquaresRules = {
+  findHint: findCribbageSquaresHint,
+  bestPlacement,
   countFifteens,
   countPairs,
   countRuns,
@@ -272,6 +390,8 @@ export default function CribbageSquares() {
     [lineScores],
   );
   const scoreFade = useFade(game.scoresReady, 1000);
+
+  useHint(() => findCribbageSquaresHint(game), { game });
 
   function placeCard(index: number) {
     if (

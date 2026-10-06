@@ -13,6 +13,9 @@ import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, withNote, zoneTarget } from "@/hints/hint";
+import { seededRandom, shuffledWith } from "@/hints/random";
 type AnchorIndex = 0 | 1 | 2 | 3;
 
 type PileDefinition = {
@@ -189,11 +192,183 @@ function refillHand(draft: GameState) {
   }
 }
 
+// —— Hints ——
+
+type RedDiamondMove =
+  | { kind: "place"; hand: number; pile: number }
+  | { kind: "clear"; pile: number }
+  | { kind: "replace"; anchor: AnchorIndex };
+
+// Diamond stocks tried for a move that draws new diamonds (the stock is
+// face down: its order is unknown).
+const DIAMOND_SAMPLES = 8;
+
+function legalPiles(card: PlayingCard, state: GameState) {
+  return PILE_DEFINITIONS.filter((definition, index) =>
+    canPlaceCard(card, state.piles[index], definition, state.diamonds),
+  ).length;
+}
+
+/**
+ * How well placed the game is: the hand's other card and the black cards
+ * still to come (in no known order) want piles to go on, and every diamond
+ * in stock is a pile cleared later.
+ */
+function positionValue(state: GameState) {
+  if (state.lost) return -1e6;
+  const waiting = [...state.hand, ...state.blackStock];
+  if (waiting.length === 0) return 1e6;
+  const open =
+    waiting.reduce(
+      (sum, card) => sum + Math.min(legalPiles(card, state), 3),
+      0,
+    ) / waiting.length;
+  const handStuck = state.hand.filter((card) => legalPiles(card, state) === 0);
+  const room = state.piles.reduce(
+    (sum, pile, index) => sum + PILE_DEFINITIONS[index].capacity - pile.length,
+    0,
+  );
+  return (
+    6 * open - 8 * handStuck.length + 2 * state.diamondStock.length + 0.5 * room
+  );
+}
+
+function applyRedDiamondMove(state: GameState, move: RedDiamondMove) {
+  const next = structuredClone(state);
+  if (move.kind === "place") {
+    const [card] = next.hand.splice(move.hand, 1);
+    next.piles[move.pile].push(card);
+    if (next.piles[move.pile].length === PILE_DEFINITIONS[move.pile].capacity) {
+      replenishPile(next, move.pile);
+    }
+    // The next hand comes from the face-down stock: judge by what's left.
+  } else if (move.kind === "clear") {
+    replenishPile(next, move.pile);
+  } else {
+    const replacement = next.diamondStock.pop();
+    if (!replacement) next.lost = true;
+    else {
+      next.discard.push(next.diamonds[move.anchor]);
+      next.diamonds[move.anchor] = { ...replacement, faceUp: true };
+    }
+  }
+  return next;
+}
+
+function moveValue(state: GameState, move: RedDiamondMove) {
+  const random = seededRandom(
+    [
+      move.kind,
+      ...state.diamondStock.map((card) => card.id),
+      ...state.hand.map((card) => card.id),
+    ].join(","),
+  );
+  let total = 0;
+  for (let sample = 0; sample < DIAMOND_SAMPLES; sample += 1) {
+    const shuffled = {
+      ...state,
+      diamondStock: shuffledWith(state.diamondStock, random),
+    };
+    total += positionValue(applyRedDiamondMove(shuffled, move));
+  }
+  return total / DIAMOND_SAMPLES;
+}
+
+function redDiamondMoves(state: GameState): RedDiamondMove[] {
+  const places = state.hand.flatMap((card, hand) =>
+    PILE_DEFINITIONS.flatMap((definition, pile) =>
+      canPlaceCard(card, state.piles[pile], definition, state.diamonds)
+        ? [{ kind: "place" as const, hand, pile }]
+        : [],
+    ),
+  );
+  const blocked = state.hand.some(
+    (card) => !hasLegalPlacement(card, state.piles, state.diamonds),
+  );
+  if (!blocked) return places;
+  const clears = PILE_DEFINITIONS.flatMap((definition, pile) =>
+    state.piles[pile].length > 0 &&
+    canReplenish(definition, state.diamondStock.length)
+      ? [{ kind: "clear" as const, pile }]
+      : [],
+  );
+  const replaces =
+    state.diamondStock.length > 0
+      ? ([0, 1, 2, 3] as AnchorIndex[]).map((anchor) => ({
+          kind: "replace" as const,
+          anchor,
+        }))
+      : [];
+  return [...places, ...clears, ...replaces];
+}
+
+/**
+ * Nothing left to do: no hand card fits a pile, and there are no diamonds to
+ * clear a pile with or to swap in.
+ */
+function isDeadPosition(state: GameState) {
+  return (
+    !state.lost && state.hand.length > 0 && redDiamondMoves(state).length === 0
+  );
+}
+
+function bestRedDiamondMove(state: GameState) {
+  let best: { move: RedDiamondMove; value: number } | null = null;
+  for (const move of redDiamondMoves(state)) {
+    const value = moveValue(state, move);
+    if (!best || value > best.value) best = { move, value };
+  }
+  return best?.move ?? null;
+}
+
+function findRedDiamondHint(
+  state: GameState,
+  selectedHand: number | null,
+  placingDiamond: boolean,
+) {
+  const move = bestRedDiamondMove(state);
+  if (!move) return null;
+  if (move.kind === "place") {
+    const pile = PILE_DEFINITIONS[move.pile];
+    const hint = makeHint(
+      "moveCard",
+      selectedHand === move.hand ? [] : cardTarget(state.hand[move.hand]),
+      zoneTarget(pile.id),
+    );
+    return state.piles[move.pile].length + 1 === pile.capacity
+      ? withNote(hint, i18n.t("games:redDiamond.hint.fillPile"))
+      : hint;
+  }
+  // Clearing and replacing want no hand card picked.
+  const unpick =
+    selectedHand !== null ? cardTarget(state.hand[selectedHand]) : [];
+  if (move.kind === "clear") {
+    return withNote(
+      makeHint("tapCard", unpick, zoneTarget(PILE_DEFINITIONS[move.pile].id)),
+      i18n.t("games:redDiamond.hint.clearPile"),
+    );
+  }
+  return withNote(
+    makeHint(
+      "tapCard",
+      unpick,
+      placingDiamond ? [] : zoneTarget("diamond-stock"),
+      cardTarget(state.diamonds[move.anchor]),
+    ),
+    i18n.t("games:redDiamond.hint.replaceDiamond"),
+  );
+}
+
 export const redDiamondRules = {
+  findHint: findRedDiamondHint,
+  bestMove: bestRedDiamondMove,
+  replenishPile,
+  refillHand,
   isArithmeticMatch,
   canPlaceCard,
   canReplenish,
   hasLegalPlacement,
+  isDeadPosition,
   pileDefinitions: PILE_DEFINITIONS,
 };
 
@@ -228,10 +403,16 @@ export default function RedDiamond() {
     !game.lost &&
     game.blackStock.length === 0 &&
     game.hand.length === 0;
-  const ended = !isSettingUp && (won || game.lost);
+  const stuck = !isSettingUp && isDeadPosition(game);
+  const ended = !isSettingUp && (won || game.lost || stuck);
   const hasBlockedCard = game.hand.some(
     (card) => !hasLegalPlacement(card, game.piles, game.diamonds),
   );
+
+  useHint(() => findRedDiamondHint(game, selectedHandIndex, placingDiamond), {
+    game,
+    enabled: !ended && !isSettingUp,
+  });
 
   function placeBlackCard(pileIndex: number) {
     if (ended || selectedHandIndex === null) return;
@@ -467,7 +648,9 @@ export default function RedDiamond() {
           ? i18n.t("games:redDiamond.allBlackCardsHaveBeen")
           : game.lost
             ? i18n.t("games:redDiamond.thereAreNotEnoughDiamond")
-            : undefined
+            : stuck
+              ? i18n.t("games:redDiamond.noMovesLeft")
+              : undefined
       }
       reset={reset}
       undo={undo}

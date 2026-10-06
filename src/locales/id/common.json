@@ -17,5 +17,9 @@
     "wins": "Menang"
   },
   "undo": "Urungkan",
-  "winToCollect": "Menangkan **{{game}}** untuk mengoleksi"
+  "winToCollect": "Menangkan **{{game}}** untuk mengoleksi",
+  "errors": {
+    "appCrashed": "Terjadi kesalahan.",
+    "tryAgain": "Coba lagi"
+  }
 }

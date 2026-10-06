@@ -65,7 +65,12 @@
     "pins": "Bolos",
     "ball": "Bola",
     "throw": "Lanzar",
-    "finalScore": "Puntuación: {{score}} (se necesitan {{target}} para ganar)"
+    "finalScore": "Puntuación: {{score}} (se necesitan {{target}} para ganar)",
+    "hint": {
+      "throw_one": "Esta bola puede derribar unos {{count}} bolo",
+      "throw_other": "Esta bola puede derribar unos {{count}} bolos",
+      "endBall": "No quedan tiros: termina esta bola"
+    }
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "¡Has matado a todos los zombis!",
@@ -75,14 +80,24 @@
     "revealAZombie": "Descubre un zombi",
     "placeACard": "Coloca una carta",
     "killAZombie": "Mata un zombi",
-    "noKillableZombies": "¡No hay zombis que matar!"
+    "noKillableZombies": "¡No hay zombis que matar!",
+    "hint": {
+      "kill": "Mata a este zombi",
+      "playToKill": "Juega aquí para matar a un zombi",
+      "prepareKill": "Prepara la muerte de un zombi"
+    }
   },
   "cafeQueue": {
     "discardedTheFourthCardOf": "Has descartado la cuarta carta de un valor.",
     "selectQueuePositionForNext": "Elige un lugar en la cola para el siguiente cliente",
     "revealNextCustomer": "Mostrar el siguiente cliente",
     "letThemStay": "Dejar que se quede",
-    "kickThemOut": "Echarlo"
+    "kickThemOut": "Echarlo",
+    "hint": {
+      "slot": "El próximo cliente cabe aquí el {{chance}} % de las veces",
+      "letThemStay": "Deja que se quede: perder esta fila es el descarte más seguro",
+      "kickThemOut": "Échalos: es más seguro que perder esta fila"
+    }
   },
   "calculation": {
     "all52CardsAreOn": "Las 52 cartas están en las fundaciones."
@@ -176,7 +191,13 @@
   },
   "cribbageSquares": {
     "youScoredPoints": "¡Has conseguido {{score}} puntos!",
-    "youScoredReachToWin": "Has conseguido {{score}}. Llega a {{TARGET_SCORE}} para ganar."
+    "youScoredReachToWin": "Has conseguido {{score}}. Llega a {{TARGET_SCORE}} para ganar.",
+    "hint": {
+      "fifteens": "Haz quinces aquí",
+      "pairs": "Forma una pareja aquí",
+      "runs": "Arma una escalera aquí",
+      "flush": "Busca un color aquí"
+    }
   },
   "crownslayer": {
     "castle": "Castillo",
@@ -305,7 +326,12 @@
     "tierEpic": "ÉPICO",
     "columnsUsedWin": "{{count}} columnas usadas. Victoria {{tier}}.",
     "allCardsPlayedInColumns": "Todas las cartas jugadas en {{count}} columnas.",
-    "noRoomForHelper": "No hay sitio para la carta del ayudante en {{count}} columnas."
+    "noRoomForHelper": "No hay sitio para la carta del ayudante en {{count}} columnas.",
+    "hint": {
+      "helper": "Coloca la carta del ayudante donde cueste menos columnas",
+      "king": "Empieza una columna con este Rey",
+      "discard": "Descarta esta carta: ahora costaría una columna, y volverá más tarde"
+    }
   },
   "herbalist": {
     "noble": "Noble",
@@ -422,7 +448,16 @@
     "landedOnTrap": "¡Has caído en una trampa!",
     "gotAllJewels": "¡Tienes las cuatro joyas y has encontrado la salida!",
     "lostWithLoot": "¡Te has perdido en la mazmorra sin salida! Mueres con tu botín.",
-    "lostInDungeon": "¡Te has perdido en la mazmorra sin salida!"
+    "lostInDungeon": "¡Te has perdido en la mazmorra sin salida!",
+    "markPathNumber": "Marcar camino {{number}}",
+    "hint": {
+      "lookAround": "Mira alrededor para ver qué hay delante",
+      "explore": "Explora más adelante",
+      "jewel": "Explora más adelante para tomar una joya",
+      "escape": "¡Escapa por la salida!",
+      "markPath": "Marca un camino: una salida de los callejones sin salida",
+      "returnToPath": "Vuelve a un camino para elegir dónde caes"
+    }
   },
   "pagoda": {
     "shrine": "Santuario",
@@ -477,12 +512,28 @@
       "fullHouse": "Full",
       "fourOfAKind": "Póker",
       "straightFlush": "Escalera de color"
+    },
+    "hint": {
+      "play": "Juega: una apuesta de un punto no arriesga más que retirarse",
+      "standPat": "Quédate con tu mano: es fuerte",
+      "keepSets": "Guarda tus cartas iguales y roba el resto",
+      "keepFlushDraw": "Guarda las cuatro cartas al color",
+      "keepPair": "Guarda la pareja y roba tres",
+      "keepStraightDraw": "Guarda las cuatro cartas a la escalera",
+      "keepHighCards": "Guarda las cartas altas y roba el resto",
+      "odds": "Esta mano gana alrededor del {{chance}} % de las veces"
     }
   },
   "pokerSquares": {
     "greatHandYouScored": "¡Gran mano! Has conseguido {{score}}.",
     "youScoredTryForNext": "Has conseguido {{score}}. Intenta llegar a {{TARGET_SCORE}} la próxima vez.",
-    "noHand": "Sin jugada"
+    "noHand": "Sin jugada",
+    "hint": {
+      "sets": "Junta rangos aquí para parejas y más",
+      "flush": "Busca un color aquí",
+      "straight": "Busca una escalera aquí",
+      "park": "Deja esta carta donde menos estorbe"
+    }
   },
   "pyramid": {
     "noMoreMovesAndThe": "No quedan movimientos y el mazo está vacío."
@@ -493,11 +544,28 @@
   "redDiamond": {
     "diamonds": "Diamantes",
     "allBlackCardsHaveBeen": "Se han jugado todas las cartas negras.",
-    "thereAreNotEnoughDiamond": "No hay suficientes diamantes para reponer la pila."
+    "thereAreNotEnoughDiamond": "No hay suficientes diamantes para reponer la pila.",
+    "noMovesLeft": "Ninguna carta negra cabe en una pila y no quedan diamantes.",
+    "hint": {
+      "fillPile": "Llena esta pila para traer diamantes nuevos",
+      "clearPile": "Vacía esta pila para traer diamantes nuevos",
+      "replaceDiamond": "Cambia este diamante por uno nuevo"
+    }
   },
   "rogueRun": {
     "youMadeItThroughThe": "Has atravesado la mazmorra.",
-    "run": "Huir"
+    "run": "Huir",
+    "actions": {
+      "heal": "Beber {{card}}",
+      "equip": "Equipar {{card}}",
+      "fightWeapon": "Luchar contra {{card}} con tu arma",
+      "fightBare": "Luchar contra {{card}} a mano limpia"
+    },
+    "hint": {
+      "run": "Huye: esta sala te mataría",
+      "fightWeapon": "Lucha contra este monstruo con tu arma",
+      "fightBare": "Lucha contra este a mano limpia: guarda tu arma para monstruos más grandes"
+    }
   },
   "royalCotillion": {
     "theLastDanceIsDone": "¡El último baile ha terminado!"

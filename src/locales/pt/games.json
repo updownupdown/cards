@@ -65,7 +65,12 @@
     "pins": "Pinos",
     "ball": "Bola",
     "throw": "Lançar",
-    "finalScore": "Pontuação: {{score}} (é necessário {{target}} para vencer)"
+    "finalScore": "Pontuação: {{score}} (é necessário {{target}} para vencer)",
+    "hint": {
+      "throw_one": "Esta bola pode derrubar cerca de {{count}} pino",
+      "throw_other": "Esta bola pode derrubar cerca de {{count}} pinos",
+      "endBall": "Não há mais jogadas: encerre esta bola"
+    }
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Você matou todos os zumbis!",
@@ -75,14 +80,24 @@
     "revealAZombie": "Revele um zumbi",
     "placeACard": "Coloque uma carta",
     "killAZombie": "Mate um zumbi",
-    "noKillableZombies": "Nenhum zumbi para matar!"
+    "noKillableZombies": "Nenhum zumbi para matar!",
+    "hint": {
+      "kill": "Mate este zumbi",
+      "playToKill": "Jogue aqui para matar um zumbi",
+      "prepareKill": "Prepare a morte de um zumbi"
+    }
   },
   "cafeQueue": {
     "discardedTheFourthCardOf": "Você descartou a quarta carta de um valor.",
     "selectQueuePositionForNext": "Escolha um lugar na fila para o próximo cliente",
     "revealNextCustomer": "Revelar o próximo cliente",
     "letThemStay": "Deixar ficar",
-    "kickThemOut": "Mandar embora"
+    "kickThemOut": "Mandar embora",
+    "hint": {
+      "slot": "O próximo cliente cabe aqui {{chance}}% das vezes",
+      "letThemStay": "Deixe ficar: perder esta fila é o descarte mais seguro",
+      "kickThemOut": "Mande embora: é mais seguro que perder esta fila"
+    }
   },
   "calculation": {
     "all52CardsAreOn": "Todas as 52 cartas estão nas fundações."
@@ -176,7 +191,13 @@
   },
   "cribbageSquares": {
     "youScoredPoints": "Você fez {{score}} pontos!",
-    "youScoredReachToWin": "Você fez {{score}}. Chegue a {{TARGET_SCORE}} para vencer."
+    "youScoredReachToWin": "Você fez {{score}}. Chegue a {{TARGET_SCORE}} para vencer.",
+    "hint": {
+      "fifteens": "Faça quinzes aqui",
+      "pairs": "Forme um par aqui",
+      "runs": "Monte uma sequência aqui",
+      "flush": "Busque um flush aqui"
+    }
   },
   "crownslayer": {
     "castle": "Castelo",
@@ -305,7 +326,12 @@
     "tierEpic": "ÉPICO",
     "columnsUsedWin": "{{count}} colunas usadas. Vitória {{tier}}.",
     "allCardsPlayedInColumns": "Todas as cartas jogadas em {{count}} colunas.",
-    "noRoomForHelper": "Não há lugar para a carta do ajudante em {{count}} colunas."
+    "noRoomForHelper": "Não há lugar para a carta do ajudante em {{count}} colunas.",
+    "hint": {
+      "helper": "Coloque a carta do ajudante onde ela custa menos colunas",
+      "king": "Comece uma coluna com este Rei",
+      "discard": "Descarte esta carta: agora ela custaria uma coluna, e volta mais tarde"
+    }
   },
   "herbalist": {
     "noble": "Nobre",
@@ -422,7 +448,16 @@
     "landedOnTrap": "Você caiu numa armadilha!",
     "gotAllJewels": "Você pegou as quatro joias e achou a saída!",
     "lostWithLoot": "Você se perdeu na masmorra sem saída! Você morre com o seu tesouro.",
-    "lostInDungeon": "Você se perdeu na masmorra sem saída!"
+    "lostInDungeon": "Você se perdeu na masmorra sem saída!",
+    "markPathNumber": "Marcar caminho {{number}}",
+    "hint": {
+      "lookAround": "Olhe em volta para ver o que vem pela frente",
+      "explore": "Explore adiante",
+      "jewel": "Explore adiante para pegar uma joia",
+      "escape": "Fuja pela saída!",
+      "markPath": "Marque um caminho: uma saída para becos sem saída",
+      "returnToPath": "Volte a um caminho para escolher onde cair"
+    }
   },
   "pagoda": {
     "shrine": "Santuário",
@@ -477,12 +512,28 @@
       "fullHouse": "Full House",
       "fourOfAKind": "Quadra",
       "straightFlush": "Straight Flush"
+    },
+    "hint": {
+      "play": "Jogue: uma aposta de um ponto não arrisca mais do que desistir",
+      "standPat": "Fique com a mão: ela é forte",
+      "keepSets": "Fique com as cartas iguais e compre o resto",
+      "keepFlushDraw": "Fique com as quatro cartas para o flush",
+      "keepPair": "Fique com o par e compre três",
+      "keepStraightDraw": "Fique com as quatro cartas para a sequência",
+      "keepHighCards": "Fique com as cartas altas e compre o resto",
+      "odds": "Esta mão vence cerca de {{chance}}% das vezes"
     }
   },
   "pokerSquares": {
     "greatHandYouScored": "Ótima mão! Você fez {{score}}.",
     "youScoredTryForNext": "Você fez {{score}}. Tente chegar a {{TARGET_SCORE}} da próxima vez.",
-    "noHand": "Nada"
+    "noHand": "Nada",
+    "hint": {
+      "sets": "Junte valores aqui para pares e mais",
+      "flush": "Busque um flush aqui",
+      "straight": "Busque uma sequência aqui",
+      "park": "Deixe esta carta onde ela atrapalha menos"
+    }
   },
   "pyramid": {
     "noMoreMovesAndThe": "Não há mais jogadas e o monte está vazio."
@@ -493,11 +544,28 @@
   "redDiamond": {
     "diamonds": "Ouros",
     "allBlackCardsHaveBeen": "Todas as cartas pretas foram jogadas.",
-    "thereAreNotEnoughDiamond": "Não há cartas de ouros suficientes para repor a pilha."
+    "thereAreNotEnoughDiamond": "Não há cartas de ouros suficientes para repor a pilha.",
+    "noMovesLeft": "Nenhuma carta preta cabe em uma pilha e não restam cartas de ouros.",
+    "hint": {
+      "fillPile": "Complete esta pilha para trazer novos ouros",
+      "clearPile": "Esvazie esta pilha para trazer novos ouros",
+      "replaceDiamond": "Troque este ouro por um novo"
+    }
   },
   "rogueRun": {
     "youMadeItThroughThe": "Você atravessou a masmorra.",
-    "run": "Fugir"
+    "run": "Fugir",
+    "actions": {
+      "heal": "Beber {{card}}",
+      "equip": "Equipar {{card}}",
+      "fightWeapon": "Lutar contra {{card}} com sua arma",
+      "fightBare": "Lutar contra {{card}} de mãos vazias"
+    },
+    "hint": {
+      "run": "Fuja: esta sala mataria você",
+      "fightWeapon": "Lute contra este monstro com sua arma",
+      "fightBare": "Lute contra este de mãos vazias: guarde sua arma para monstros maiores"
+    }
   },
   "royalCotillion": {
     "theLastDanceIsDone": "A última dança terminou!"

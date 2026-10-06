@@ -28,6 +28,12 @@ export type HintMessage = {
   key: HintMessageKey;
   /** Interpolated into the message, e.g. { label: "Draw" } for "press". */
   values?: Record<string, string | number>;
+  /**
+   * Words for a move whose point isn't plain from the board ("Set up a
+   * zombie kill"), already translated. The UFO always says a note; the
+   * plain messages above stay unsaid (see SHOW_HINT_TEXT in HintUfo).
+   */
+  note?: string;
 };
 
 export type Hint = {
@@ -61,6 +67,11 @@ export function makeHint(
       .map((step) => (Array.isArray(step) ? step : [step]))
       .filter((step) => step.length > 0),
   };
+}
+
+/** The same hint, with words for the UFO to say (see HintMessage.note). */
+export function withNote<H extends Hint | null>(hint: H, note: string): H {
+  return (hint && { ...hint, message: { ...hint.message, note } }) as H;
 }
 
 /** "Press <button>": a button the game places in a card-map zone. */

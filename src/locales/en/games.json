@@ -65,7 +65,12 @@
     "pins": "Pins",
     "ball": "Ball",
     "throw": "Throw",
-    "finalScore": "Score: {{score}} ({{target}} needed to win)"
+    "finalScore": "Score: {{score}} ({{target}} needed to win)",
+    "hint": {
+      "throw_one": "This ball can knock down about {{count}} pin",
+      "throw_other": "This ball can knock down about {{count}} pins",
+      "endBall": "No throw left: end this ball"
+    }
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "You killed all the zombies!",
@@ -75,14 +80,24 @@
     "revealAZombie": "Reveal a zombie",
     "placeACard": "Place a card",
     "killAZombie": "Kill a zombie",
-    "noKillableZombies": "No killable zombies!"
+    "noKillableZombies": "No killable zombies!",
+    "hint": {
+      "kill": "Kill this zombie",
+      "playToKill": "Play here to kill a zombie",
+      "prepareKill": "Prepare a zombie kill"
+    }
   },
   "cafeQueue": {
     "discardedTheFourthCardOf": "Discarded the fourth card of a rank.",
     "selectQueuePositionForNext": "Select queue position for next customer",
     "revealNextCustomer": "Reveal next customer",
     "letThemStay": "Let them stay",
-    "kickThemOut": "Kick them out"
+    "kickThemOut": "Kick them out",
+    "hint": {
+      "slot": "The next customer fits here {{chance}}% of the time",
+      "letThemStay": "Let them stay: losing this queue is the safer discard",
+      "kickThemOut": "Turn them away: safer than losing this queue"
+    }
   },
   "calculation": {
     "all52CardsAreOn": "All 52 cards are on the foundations."
@@ -176,7 +191,13 @@
   },
   "cribbageSquares": {
     "youScoredPoints": "You scored {{score}} points!",
-    "youScoredReachToWin": "You scored {{score}}. Reach {{TARGET_SCORE}} to win."
+    "youScoredReachToWin": "You scored {{score}}. Reach {{TARGET_SCORE}} to win.",
+    "hint": {
+      "fifteens": "Make fifteens here",
+      "pairs": "Pair it up here",
+      "runs": "Build a run here",
+      "flush": "Build toward a flush here"
+    }
   },
   "crownslayer": {
     "castle": "Castle",
@@ -305,7 +326,12 @@
     "tierEpic": "EPIC",
     "columnsUsedWin": "{{count}} columns used. {{tier}} win.",
     "allCardsPlayedInColumns": "All cards played in {{count}} columns.",
-    "noRoomForHelper": "No room for the helper's card in {{count}} columns."
+    "noRoomForHelper": "No room for the helper's card in {{count}} columns.",
+    "hint": {
+      "helper": "Place the helper's card where it costs the fewest columns",
+      "king": "Start a column with this King",
+      "discard": "Discard this card: it would cost a column now, and comes back later"
+    }
   },
   "herbalist": {
     "noble": "Noble",
@@ -416,13 +442,22 @@
     "jewels": "Jewels",
     "trinkets": "Trinkets",
     "markPath": "Mark Path",
+    "markPathNumber": "Mark Path {{number}}",
     "explore": "Explore",
     "returnToPath": "Return to Path",
     "lookAround": "Look Around",
     "landedOnTrap": "You landed on a trap!",
     "gotAllJewels": "You got all four jewels and found the exit!",
     "lostWithLoot": "You got lost in the dungeon with no way out! You die with your loot.",
-    "lostInDungeon": "You got lost in the dungeon with no way out!"
+    "lostInDungeon": "You got lost in the dungeon with no way out!",
+    "hint": {
+      "lookAround": "Look around to see what's ahead",
+      "explore": "Explore ahead",
+      "jewel": "Explore ahead to grab a jewel",
+      "escape": "Escape through the exit!",
+      "markPath": "Mark a path: a way out of dead ends",
+      "returnToPath": "Return to a path to steer where you land"
+    }
   },
   "pagoda": {
     "shrine": "Shrine",
@@ -477,12 +512,28 @@
       "fullHouse": "Full House",
       "fourOfAKind": "Four of a Kind",
       "straightFlush": "Straight Flush"
+    },
+    "hint": {
+      "play": "Play: a one-point bet risks no more than a fold",
+      "standPat": "Stand pat: this hand is strong",
+      "keepSets": "Keep your matched cards, draw the rest",
+      "keepFlushDraw": "Keep the four to a flush",
+      "keepPair": "Keep the pair, draw three",
+      "keepStraightDraw": "Keep the four to a straight",
+      "keepHighCards": "Keep the high cards, draw the rest",
+      "odds": "This hand wins about {{chance}}% of the time"
     }
   },
   "pokerSquares": {
     "greatHandYouScored": "Great hand! You scored {{score}}.",
     "youScoredTryForNext": "You scored {{score}}. Try for {{TARGET_SCORE}} next time.",
-    "noHand": "No hand"
+    "noHand": "No hand",
+    "hint": {
+      "sets": "Match ranks here for pairs and more",
+      "flush": "Build toward a flush here",
+      "straight": "Build toward a straight here",
+      "park": "Park this card where it hurts least"
+    }
   },
   "pyramid": {
     "noMoreMovesAndThe": "No more moves and the stock is empty."
@@ -493,11 +544,28 @@
   "redDiamond": {
     "diamonds": "Diamonds",
     "allBlackCardsHaveBeen": "All black cards have been played.",
-    "thereAreNotEnoughDiamond": "There are not enough Diamond cards to replenish the pile."
+    "thereAreNotEnoughDiamond": "There are not enough Diamond cards to replenish the pile.",
+    "noMovesLeft": "No black card fits a pile, and no diamonds are left.",
+    "hint": {
+      "fillPile": "Fill this pile to bring in new diamonds",
+      "clearPile": "Clear this pile for new diamonds",
+      "replaceDiamond": "Swap this diamond for a new one"
+    }
   },
   "rogueRun": {
     "youMadeItThroughThe": "You made it through the dungeon.",
-    "run": "Run"
+    "run": "Run",
+    "actions": {
+      "heal": "Drink {{card}}",
+      "equip": "Equip {{card}}",
+      "fightWeapon": "Fight {{card}} with your weapon",
+      "fightBare": "Fight {{card}} bare-handed"
+    },
+    "hint": {
+      "run": "Run: this room would kill you",
+      "fightWeapon": "Fight this monster with your weapon",
+      "fightBare": "Fight this one bare-handed: save your weapon for bigger monsters"
+    }
   },
   "royalCotillion": {
     "theLastDanceIsDone": "The last dance is done!"

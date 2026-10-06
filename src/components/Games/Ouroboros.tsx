@@ -29,6 +29,15 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import {
+  cardTarget,
+  makeHint,
+  pressHint,
+  withNote,
+  zoneTarget,
+  type Hint,
+} from "@/hints/hint";
 const maxMarkedPaths = 3;
 
 export type LoopRank = PlayingCard["rank"] | "Joker";
@@ -99,7 +108,234 @@ function getLoopDeck(cards?: LoopCard[]): LoopCard[] {
   return deck;
 }
 
+// —— Hints ——
+
+type LoopAction =
+  | { type: "look" }
+  | { type: "explore"; index: number }
+  | { type: "mark"; index: number; slot: number }
+  | { type: "return"; slot: number };
+
+type LoopState = Pick<
+  GameState,
+  "deck" | "deckPos" | "paths" | "acesPile" | "trinketsPile" | "ended" | "won"
+>;
+
+// Actions looked ahead: marking and returning paths steer the next explore.
+const LOOP_DEPTH = 4;
+
+function loopActions(state: LoopState): LoopAction[] {
+  const { deck, deckPos, paths } = state;
+  if (state.ended || deck.length === 0) return [];
+  if (!deck[deckPos].faceUp) return [{ type: "look" }];
+  const actions: LoopAction[] = [];
+  const free = paths.findIndex((path) => path === null);
+  const marked = paths.filter((path) => path !== null).length;
+  for (const index of [deckPos, (deckPos + 1) % deck.length]) {
+    const card = deck[index];
+    if (!card.faceUp || !isNumberRank(card.rank)) continue;
+    actions.push({ type: "explore", index });
+    if (free >= 0 && marked < maxMarkedPaths) {
+      actions.push({ type: "mark", index, slot: free });
+    }
+  }
+  paths.forEach((path, slot) => {
+    if (path) actions.push({ type: "return", slot });
+  });
+  return actions;
+}
+
+/** The game after an action, as the game plays it (looking turns cards up). */
+function applyLoopAction(state: LoopState, action: LoopAction): LoopState {
+  const next: LoopState = {
+    ...state,
+    deck: [...state.deck],
+    paths: [...state.paths] as MarkedPaths,
+    acesPile: [...state.acesPile],
+    trinketsPile: [...state.trinketsPile],
+  };
+  const length = next.deck.length;
+  if (action.type === "look") {
+    for (const index of [next.deckPos, (next.deckPos + 1) % length]) {
+      next.deck[index] = { ...next.deck[index], faceUp: true };
+    }
+  } else if (action.type === "mark") {
+    next.paths[action.slot] = next.deck[action.index];
+    next.deck.splice(action.index, 1);
+    if (action.index < next.deckPos) next.deckPos -= 1;
+    next.deckPos = Math.min(next.deckPos, Math.max(0, next.deck.length - 1));
+  } else if (action.type === "return") {
+    next.deck.splice(next.deckPos, 0, next.paths[action.slot]!);
+    next.paths[action.slot] = null;
+  } else {
+    const card = next.deck[action.index];
+    const pos = (next.deckPos + rankValue(card as PlayingCard, 1, 0)) % length;
+    next.deckPos = pos;
+    const landed = next.deck[pos];
+    if (landed.faceUp && isFace(landed as PlayingCard)) {
+      next.ended = true;
+    } else if (landed.faceUp && isJoker(landed as PlayingCard)) {
+      if (next.acesPile.length === 4) {
+        next.ended = true;
+        next.won = true;
+      }
+    } else if (landed.faceUp && isAce(landed as PlayingCard)) {
+      next.deck.splice(pos, 1);
+      next.acesPile.push(landed);
+    } else if (landed.faceUp && isNumberRank(landed.rank)) {
+      next.deck.splice(pos, 1);
+      next.trinketsPile.push(landed);
+    }
+    if (next.deck.length > 0) next.deckPos %= next.deck.length;
+  }
+  return next;
+}
+
+/**
+ * How good a position is: jewels, then trinkets, marked paths (ways out of
+ * a dead end) and number cards on view to move by. Lost with no way
+ * forward: two cards on view that move nothing, and no path.
+ */
+function loopValue(state: LoopState) {
+  if (state.won) return 1e4;
+  if (state.ended) return -1e4;
+  const { deck, deckPos, paths } = state;
+  const marked = paths.filter((path) => path !== null).length;
+  const onView = [deck[deckPos], deck[(deckPos + 1) % deck.length]];
+  const movers = onView.filter(
+    (card) => card?.faceUp && isNumberRank(card.rank),
+  ).length;
+  // With no path, the two cards on view are a dead end if neither moves:
+  // certain for a card on view, about a third of the time for one face down.
+  const stuck = (card: LoopCard | undefined) =>
+    !card ? 1 : card.faceUp ? (isNumberRank(card.rank) ? 0 : 1) : 0.32;
+  const risk = marked === 0 ? stuck(onView[0]) * stuck(onView[1]) * 1e4 : 0;
+  return (
+    state.acesPile.length * 100 +
+    state.trinketsPile.length * 2 +
+    Math.min(marked, 1) * 20 +
+    marked * 15 +
+    movers * 3 -
+    risk
+  );
+}
+
+function bestLoopLine(
+  state: LoopState,
+  depth: number,
+  root = true,
+): { value: number; first: LoopAction | null } {
+  const actions = depth > 0 ? loopActions(state) : [];
+  if (actions.length === 0) return { value: loopValue(state), first: null };
+  // Past the first move, a line may stop where it stands: the moves after
+  // it are for later hints to choose.
+  let best = {
+    value: root ? -Infinity : loopValue(state),
+    first: null as LoopAction | null,
+  };
+  for (const action of actions) {
+    const next = applyLoopAction(state, action);
+    // A path is only returned to, to explore by it at once (else it's
+    // marked again, round and round).
+    const value =
+      action.type === "return"
+        ? loopValue(
+            applyLoopAction(next, { type: "explore", index: next.deckPos }),
+          )
+        : // Looking turns up unknown cards: the line stops there.
+          action.type === "look" || next.ended
+          ? loopValue(next) + (action.type === "look" ? 1 : 0)
+          : bestLoopLine(next, depth - 1, false).value;
+    if (value > best.value) best = { value, first: action };
+  }
+  return best;
+}
+
+function loopKey(state: LoopState) {
+  return [
+    state.deckPos,
+    state.deck.map((card) => `${card.id}${card.faceUp ? "" : "?"}`).join(","),
+    state.paths.map((path) => path?.id ?? "-").join(","),
+  ].join("|");
+}
+
+// After a hint to return to a path, the position it leads to and the
+// explore it was for: the next hint keeps to it.
+let returnPlan: { key: string; action: LoopAction } | null = null;
+
+function findOuroborosHint(
+  game: GameState,
+  selectedCard: number | undefined,
+  selectedPath: number | undefined,
+): Hint | null {
+  if (game.ended || game.deck.length === 0) return null;
+  const planned = returnPlan?.key === loopKey(game) ? returnPlan.action : null;
+  const first = planned ?? bestLoopLine(game, LOOP_DEPTH).first;
+  if (first?.type === "return") {
+    const after = applyLoopAction(game, first);
+    returnPlan = {
+      key: loopKey(after),
+      action: { type: "explore", index: after.deckPos },
+    };
+  }
+  if (!first) return null;
+  if (first.type === "look") {
+    return withNote(
+      pressHint("buttons", i18n.t("games:ouroboros.lookAround")),
+      i18n.t("games:ouroboros.hint.lookAround"),
+    );
+  }
+  if (first.type === "return") {
+    const hint = makeHint(
+      {
+        key: "press",
+        values: { label: i18n.t("games:ouroboros.returnToPath") },
+      },
+      selectedPath === first.slot ? [] : cardTarget(game.paths[first.slot]!.id),
+      zoneTarget("buttons"),
+    );
+    return withNote(hint, i18n.t("games:ouroboros.hint.returnToPath"));
+  }
+  const card = game.deck[first.index];
+  const pick = selectedCard === first.index ? [] : cardTarget(card.id);
+  if (first.type === "mark") {
+    return withNote(
+      makeHint(
+        {
+          key: "press",
+          values: { label: markPathLabel(first.slot) },
+        },
+        pick,
+        zoneTarget(`path-${first.slot}`),
+      ),
+      i18n.t("games:ouroboros.hint.markPath"),
+    );
+  }
+  const after = applyLoopAction(game, first);
+  const note = after.won
+    ? "escape"
+    : after.acesPile.length > game.acesPile.length
+      ? "jewel"
+      : "explore";
+  return withNote(
+    makeHint(
+      { key: "press", values: { label: i18n.t("games:ouroboros.explore") } },
+      pick,
+      zoneTarget("buttons"),
+    ),
+    i18n.t(`games:ouroboros.hint.${note}`),
+  );
+}
+
+/** Each Mark Path button's own name, so a hint can press the right one. */
+function markPathLabel(slot: number) {
+  return i18n.t("games:ouroboros.markPathNumber", { number: slot + 1 });
+}
+
 export const ouroborosRules = {
+  findHint: findOuroborosHint,
+  bestLoopLine,
+  applyLoopAction,
   isBadStartCard,
   hasViableSecondTurn,
   hasSafeLoopStart,
@@ -198,6 +434,11 @@ export default function Ouroboros() {
       selectedRevealedIsNumber ? RANK_VALUE[selectedCard!.rank] : undefined,
     );
   }, [selectedCardIndex, game.deck]);
+
+  useHint(
+    () => findOuroborosHint(game, selectedCardIndex, selectedPath?.index),
+    { game },
+  );
 
   // Look around
   function lookAround() {
@@ -331,6 +572,8 @@ export default function Ouroboros() {
           draft.deck.splice(deckPos, 1);
           draft.trinketsPile.push(newTopCard);
         }
+        // The last card of the loop gone: the next is the first.
+        if (draft.deckPos >= draft.deck.length) draft.deckPos = 0;
 
         return;
       }
@@ -684,7 +927,7 @@ export default function Ouroboros() {
             ]}
           >
             <Button
-              accessibilityLabel={i18n.t("games:ouroboros.markPath")}
+              accessibilityLabel={markPathLabel(pathIndex)}
               iconName="map"
               iconSize={cardWidth * 0.6}
               textOnly

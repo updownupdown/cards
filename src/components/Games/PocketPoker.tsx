@@ -28,6 +28,9 @@ import { Colors, rgba } from "@/styles/styles";
 import { rotatedText } from "@/styles/textStyles";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, withNote, zoneTarget } from "@/hints/hint";
+import { seededRandom, shuffledWith } from "@/hints/random";
 const normalStartScore = 5;
 const hardStartScore = 3;
 const winScore = 10;
@@ -249,7 +252,216 @@ function rulesForDifficulty(difficulty: PokerDifficulty) {
   };
 }
 
+// ── Hints ─────────────────────────────────────────────────────────────────────
+
+const ODDS_SAMPLES = 60;
+const REDRAW_SAMPLES = 10;
+const BETS = [1, 2, 3];
+
+type Odds = { win: number; lose: number };
+
+/**
+ * How often a hand beats the opponent at each bet, from opponent hands dealt
+ * out of the cards the player hasn't seen (the deck, in no particular
+ * order): one sample of base + 3 cards gives every bet its own first cards.
+ */
+function handOdds(
+  hand: PlayingCard[],
+  unseen: PlayingCard[],
+  rules: ReturnType<typeof rulesForDifficulty>,
+  random: () => number,
+  samples = ODDS_SAMPLES,
+): Odds[] {
+  const mine = bestHand(hand);
+  const tally = BETS.map(() => ({ win: 0, lose: 0 }));
+  for (let sample = 0; sample < samples; sample += 1) {
+    const cards = shuffledWith(unseen, random).slice(
+      0,
+      rules.opponentBaseCards + BETS.length,
+    );
+    BETS.forEach((bet, index) => {
+      const theirs = bestFiveOf(cards.slice(0, rules.opponentBaseCards + bet));
+      const cmp = compareValues(mine, theirs.val);
+      if (cmp > 0) tally[index].win += 1;
+      else if (cmp < 0 || rules.houseWinsTies) tally[index].lose += 1;
+    });
+  }
+  return tally.map(({ win, lose }) => ({
+    win: win / samples,
+    lose: lose / samples,
+  }));
+}
+
+/** The best bet from `minBet` up, and what it's worth per round. */
+function bestBet(odds: Odds[], minBet: number) {
+  return BETS.filter((bet) => bet >= minBet)
+    .map((bet) => ({
+      bet,
+      value: bet * (odds[bet - 1].win - odds[bet - 1].lose),
+    }))
+    .reduce((best, option) => (option.value > best.value ? option : best));
+}
+
+type Keep = {
+  keep: PlayingCard[];
+  reason:
+    | "keepSets"
+    | "keepFlushDraw"
+    | "keepPair"
+    | "keepStraightDraw"
+    | "keepHighCards";
+};
+
+/**
+ * What to keep for a draw, the way poker players do: a made hand, else four
+ * to a flush or a straight, else the high cards. Jokers always stay.
+ */
+function cardsToKeep(hand: PlayingCard[]): Keep | null {
+  const jokers = hand.filter(isJoker);
+  const cards = hand.filter((card) => !isJoker(card));
+  const value = bestHand(hand);
+  if (value[0] >= 4) return null; // A straight or better stands.
+
+  const byRank = new Map<CardRank, PlayingCard[]>();
+  cards.forEach((card) =>
+    byRank.set(card.rank, [...(byRank.get(card.rank) ?? []), card]),
+  );
+  const sets = [...byRank.values()].filter((group) => group.length >= 2);
+  const sameRank = sets.flat();
+  if (sets.some((group) => group.length >= 3) || sets.length >= 2) {
+    return { keep: [...jokers, ...sameRank], reason: "keepSets" };
+  }
+
+  const bySuit = SUITS.map((suit) =>
+    cards.filter((card) => card.suit === suit),
+  );
+  const flushDraw = bySuit.find((group) => group.length + jokers.length >= 4);
+  if (flushDraw && flushDraw.length + jokers.length < 5) {
+    return { keep: [...jokers, ...flushDraw], reason: "keepFlushDraw" };
+  }
+
+  if (sameRank.length > 0) {
+    return { keep: [...jokers, ...sameRank], reason: "keepPair" };
+  }
+
+  // Four in a row (Ace high or low), a joker filling a gap.
+  const values = (card: PlayingCard) =>
+    card.rank === "A" ? [14, 1] : [cardValue(card)];
+  for (let low = 14 - 4; low >= 1; low -= 1) {
+    const run = cards.filter((card) =>
+      values(card).some((v) => v >= low && v < low + 4),
+    );
+    if (run.length + jokers.length >= 4) {
+      return {
+        keep: [...jokers, ...run.slice(0, 4)],
+        reason: "keepStraightDraw",
+      };
+    }
+  }
+
+  const high = [...cards]
+    .sort((a, b) => cardValue(b) - cardValue(a))
+    .filter((card) => cardValue(card) >= 11)
+    .slice(0, 2);
+  return { keep: [...jokers, ...high], reason: "keepHighCards" };
+}
+
+function hintRandom(state: GameState) {
+  return seededRandom(
+    [state.phase, state.score, ...state.hand.map((c) => c.id)].join(","),
+  );
+}
+
+/** The round's best line from the discard phase: draw (what to keep), or set. */
+function bestDraw(state: GameState) {
+  const rules = rulesForDifficulty(state.difficulty ?? "normal");
+  const keep = cardsToKeep(state.hand);
+  if (!keep || state.discardCount >= rules.maxDraws) return null;
+  if (state.discardCount === 0) return keep;
+
+  // A second draw raises the smallest bet to two: worth it only if the
+  // hand it makes is worth that much more than this one.
+  const random = hintRandom(state);
+  const standing = bestBet(
+    handOdds(state.hand, state.deck, rules, random),
+    Math.max(1, state.discardCount),
+  ).value;
+  let drawing = 0;
+  for (let sample = 0; sample < REDRAW_SAMPLES; sample += 1) {
+    const deck = shuffledWith(state.deck, random);
+    const hand = [...keep.keep, ...deck.slice(0, 5 - keep.keep.length)];
+    const unseen = deck.slice(5 - keep.keep.length);
+    drawing += bestBet(
+      handOdds(hand, unseen, rules, random, ODDS_SAMPLES / 3),
+      state.discardCount + 1,
+    ).value;
+  }
+  return drawing / REDRAW_SAMPLES > standing ? keep : null;
+}
+
+/**
+ * Always play (a one-point bet loses no more than a fold costs); draw for
+ * what the hand lacks; then bet what the odds against the cards still
+ * unseen make best.
+ */
+function findPocketPokerHint(state: GameState, selected: string[]) {
+  if (state.ended || state.hand.length < 5) return null;
+  const rules = rulesForDifficulty(state.difficulty ?? "normal");
+  const press = (label: string) =>
+    makeHint({ key: "press", values: { label } }, zoneTarget("controls"));
+
+  if (state.phase === "roundEnd") {
+    return press(i18n.t("games:pocketPoker.nextRound"));
+  }
+  if (state.phase === "decide") {
+    return withNote(
+      press(i18n.t("cards:play")),
+      i18n.t("games:pocketPoker.hint.play"),
+    );
+  }
+  if (state.phase === "discard") {
+    const draw = bestDraw(state);
+    if (!draw) {
+      return withNote(
+        press(i18n.t("games:pocketPoker.setHand")),
+        i18n.t("games:pocketPoker.hint.standPat"),
+      );
+    }
+    const keep = new Set(draw.keep.map((card) => card.id));
+    const discards = state.hand.filter((card) => !keep.has(card.id));
+    const wanted = new Set(discards.map((card) => card.id));
+    // Picks to undo first, then the cards to throw.
+    const taps = [
+      ...selected.filter((id) => !wanted.has(id)),
+      ...discards.map((card) => card.id).filter((id) => !selected.includes(id)),
+    ];
+    return withNote(
+      makeHint(
+        {
+          key: "press",
+          values: {
+            label: i18n.t("games:pocketPoker.draw", { value: discards.length }),
+          },
+        },
+        ...taps.map((id) => cardTarget(id)),
+        zoneTarget("controls"),
+      ),
+      i18n.t(`games:pocketPoker.hint.${draw.reason}`),
+    );
+  }
+  const odds = handOdds(state.hand, state.deck, rules, hintRandom(state));
+  const { bet } = bestBet(odds, Math.max(1, state.discardCount));
+  return withNote(
+    press(i18n.t("games:pocketPoker.bet", { value: bet })),
+    i18n.t("games:pocketPoker.hint.odds", {
+      chance: Math.round(odds[bet - 1].win * 100),
+    }),
+  );
+}
+
 export const pocketPokerRules = {
+  findHint: findPocketPokerHint,
+  cardsToKeep,
   handValue,
   bestHand,
   compareValues,
@@ -400,6 +612,8 @@ export default function PocketPoker() {
         : null,
     [game.opponent, game.oppBest],
   );
+
+  useHint(() => findPocketPokerHint(game, selectedDiscards), { game });
 
   function play() {
     if (game.phase !== "decide" || game.ended) return;

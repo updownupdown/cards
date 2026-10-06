@@ -27,6 +27,10 @@ import { ProgressBar } from "../Home/ProgressBar";
 import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { pressHint, withNote, type Hint } from "@/hints/hint";
+import { seededRandom, shuffledWith } from "@/hints/random";
+import { cardLabel } from "../Cards/card-utils";
 export type RogueRunCardType = "monster" | "weapon" | "potion";
 
 const MaxHealth = 20;
@@ -39,6 +43,8 @@ const cardSize = "classic";
 
 type RoomActionSpec = {
   key: string;
+  /** Names the action and its card, for screen readers and hints. */
+  label: string;
   text?: string;
   onPress: () => void;
   disabled: boolean;
@@ -505,7 +511,162 @@ function advanceRogueRunGame(game: Readonly<GameState>): GameState {
   return current;
 }
 
+// —— Hints ——
+
+type RoomPlan = {
+  value: number;
+  first: Exclude<RogueRunAction, { type: "run" }> | null;
+};
+
+// Rooms tried for what running from this one leads to: the deck is face
+// down, so its next cards are dealt from what's in it, a few ways.
+const RUN_SAMPLES = 10;
+
+/**
+ * What a weapon is still worth: the damage it may yet save on the monsters
+ * to come that it can still fight (no higher than the last it killed).
+ */
+function weaponWorth(game: GameState, unseen: PlayingCard[]) {
+  const weapon = game.weaponCard;
+  if (!weapon) return 0;
+  const cap = game.weaponUsedOn.at(-1);
+  const monsters = unseen.filter((card) => cardType(card) === "monster");
+  if (monsters.length === 0) return 0;
+  const saved = monsters
+    .filter((card) => !cap || rogueRunValue(card) <= rogueRunValue(cap))
+    .reduce(
+      (sum, card) => sum + Math.min(rogueRunValue(card), rogueRunValue(weapon)),
+      0,
+    );
+  // Only some of them will meet it: a share of what it could save.
+  return (0.5 * saved) / Math.max(1, monsters.length / 4);
+}
+
+/** How good a game is to be in at the end of a room. */
+function standing(game: GameState, unseen: PlayingCard[]) {
+  if (game.health <= 0) return -1000;
+  const room = validRoomCards(game.roomCards);
+  if (game.draw.length === 0 && room.length === 0) return 1000 + game.health;
+  const carried = room.reduce((sum, card) => {
+    const type = cardType(card);
+    const value = rogueRunValue(card);
+    return (
+      sum + (type === "monster" ? -0.3 : type === "potion" ? 0.3 : 0.2) * value
+    );
+  }, 0);
+  return game.health + weaponWorth(game, unseen) + carried;
+}
+
+function roomActions(
+  game: GameState,
+): Exclude<RogueRunAction, { type: "run" }>[] {
+  type RoomAction = Exclude<RogueRunAction, { type: "run" }>;
+  return game.roomCards.flatMap((card, roomIndex): RoomAction[] => {
+    if (!card) return [];
+    const type = cardType(card);
+    if (type === "potion") return [{ type: "heal" as const, roomIndex }];
+    if (type === "weapon") return [{ type: "equip" as const, roomIndex }];
+    return canFightWithWeapon(game, card)
+      ? [
+          { type: "fight-weapon" as const, roomIndex },
+          { type: "fight-bare" as const, roomIndex },
+        ]
+      : [{ type: "fight-bare" as const, roomIndex }];
+  });
+}
+
+/** The best way through the room on view, to its end. */
+function planRoom(game: GameState, unseen: PlayingCard[]): RoomPlan {
+  const left = validRoomCards(game.roomCards).length;
+  const done =
+    game.health <= 0 || left === 0 || (left <= 1 && game.draw.length > 0);
+  if (done) return { value: standing(game, unseen), first: null };
+  let best: RoomPlan = { value: -Infinity, first: null };
+  for (const action of roomActions(game)) {
+    const next = structuredClone(game);
+    applyRogueRunAction(next, action);
+    const value = planRoom(next, unseen).value;
+    if (value > best.value) best = { value, first: action };
+  }
+  return best;
+}
+
+/** What running is worth: the next room is dealt from the deck. */
+function runValue(game: GameState) {
+  const random = seededRandom(
+    [
+      game.health,
+      ...validRoomCards(game.roomCards).map((card) => card.id),
+    ].join(","),
+  );
+  const ran = structuredClone(game);
+  applyRogueRunAction(ran, { type: "run" });
+  let total = 0;
+  for (let sample = 0; sample < RUN_SAMPLES; sample += 1) {
+    const deck = shuffledWith(game.draw, random);
+    const next = refillRoom({
+      ...ran,
+      draw: [...deck, ...ran.draw.slice(game.draw.length)],
+    });
+    total += planRoom(next, next.draw).value;
+  }
+  return total / RUN_SAMPLES;
+}
+
+function actionLabel(action: RogueRunAction, card: PlayingCard) {
+  const name = cardLabel(card);
+  switch (action.type) {
+    case "heal":
+      return i18n.t("games:rogueRun.actions.heal", { card: name });
+    case "equip":
+      return i18n.t("games:rogueRun.actions.equip", { card: name });
+    case "fight-weapon":
+      return i18n.t("games:rogueRun.actions.fightWeapon", { card: name });
+    default:
+      return i18n.t("games:rogueRun.actions.fightBare", { card: name });
+  }
+}
+
+/**
+ * Plays the room on view as well as it can be played (every order, weapon
+ * or fists), judging where it ends by health and what the weapon is still
+ * good for; runs from a room that would kill, when an average room from the
+ * deck is kinder.
+ */
+function findRogueRunHint(game: GameState): Hint | null {
+  if (game.ended || validRoomCards(game.roomCards).length === 0) return null;
+  const unseen = game.draw;
+  const plan = planRoom(game, unseen);
+  const canRun =
+    validRoomCards(game.roomCards).length === RoomSize &&
+    game.lastRoomNumRanFrom !== game.roomNum;
+  // Running only puts the room off (its cards come back at the end, when
+  // there's no running from them): run only to escape a room that kills.
+  if (canRun && plan.value < 0 && runValue(game) > plan.value) {
+    return withNote(
+      pressHint("room-info", i18n.t("games:rogueRun.run")),
+      i18n.t("games:rogueRun.hint.run"),
+    );
+  }
+  const action = plan.first;
+  if (!action) return null;
+  const card = game.roomCards[action.roomIndex]!;
+  const hint = pressHint(
+    `roomCardActions-${action.roomIndex}`,
+    actionLabel(action, card),
+  );
+  if (action.type === "fight-weapon") {
+    return withNote(hint, i18n.t("games:rogueRun.hint.fightWeapon"));
+  }
+  if (action.type === "fight-bare" && canFightWithWeapon(game, card)) {
+    return withNote(hint, i18n.t("games:rogueRun.hint.fightBare"));
+  }
+  return hint;
+}
+
 export const rogueRunRules = {
+  findHint: findRogueRunHint,
+  planRoom,
   createDeck: createRogueRunDeck,
   cardType,
   cardValue: rogueRunValue,
@@ -549,6 +710,8 @@ export default function RogueRun() {
     },
     gameStateInitial,
   });
+
+  useHint(() => findRogueRunHint(game), { game, enabled: !isSettingUp });
 
   const rooms = roomProgress(game);
   const canRun =
@@ -618,6 +781,7 @@ export default function RogueRun() {
       return [
         {
           key: "heal",
+          label: actionLabel({ type: "heal", roomIndex }, roomCard),
           text: `+${rogueRunValue(roomCard)}`,
           onPress: () => heal(roomIndex, roomCard),
           disabled: game.ended,
@@ -631,6 +795,7 @@ export default function RogueRun() {
       return [
         {
           key: "equip",
+          label: actionLabel({ type: "equip", roomIndex }, roomCard),
           onPress: () => equip(roomIndex, roomCard),
           disabled: game.ended,
           iconName: "equip",
@@ -648,6 +813,7 @@ export default function RogueRun() {
     return [
       {
         key: "fight-weapon",
+        label: actionLabel({ type: "fight-weapon", roomIndex }, roomCard),
         text: `-${weaponDamage}`,
         onPress: () => fightWithWeapon(roomIndex, roomCard),
         disabled: !canPressWeapon,
@@ -657,6 +823,7 @@ export default function RogueRun() {
       },
       {
         key: "fight-bare",
+        label: actionLabel({ type: "fight-bare", roomIndex }, roomCard),
         text: `-${bareDamage}`,
         onPress: () => fightBare(roomIndex, roomCard),
         disabled: !canPressBare,
@@ -951,6 +1118,7 @@ export default function RogueRun() {
                 )}
 
                 <Button
+                  accessibilityLabel={action.label}
                   text={action.disabled ? "--" : action.text}
                   size="xs"
                   uppercase={false}
