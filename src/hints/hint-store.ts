@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AUTOPILOT_SESSIONS_STORAGE_KEY } from "@/data/storage-keys";
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import type { Hint, HintTarget } from "./hint";
 
@@ -194,15 +196,47 @@ export function useHintUfoOut() {
 
 /**
  * Game sessions (deals) Autopilot played a move in. A win in one doesn't
- * count: no stats, no daily win, no Odyssey progress. Kept for as long as the
- * app runs.
+ * count: no stats, no daily win, no Odyssey progress. Saved, so a deal
+ * resumed after the app was closed is still known; only the latest
+ * AUTOPILOT_SESSIONS_KEPT are kept (an old deal can't be resumed anyway).
  */
-const autopilotSessions = new Set<string>();
+export const AUTOPILOT_SESSIONS_KEPT = 50;
+let autopilotSessions: string[] = [];
 
-export function markAutopilotSession(sessionId: string | undefined) {
-  if (sessionId) autopilotSessions.add(sessionId);
+/** Reads the saved sessions; called once at startup. */
+export async function loadAutopilotSessions() {
+  try {
+    const saved = JSON.parse(
+      (await AsyncStorage.getItem(AUTOPILOT_SESSIONS_STORAGE_KEY)) ?? "[]",
+    ) as unknown;
+    const ids = Array.isArray(saved)
+      ? saved.filter((id): id is string => typeof id === "string")
+      : [];
+    // Anything marked while loading stays marked.
+    autopilotSessions = [...new Set([...ids, ...autopilotSessions])].slice(
+      -AUTOPILOT_SESSIONS_KEPT,
+    );
+  } catch {
+    // Unreadable: start afresh rather than block the game.
+  }
+  return autopilotSessions;
+}
+
+export async function markAutopilotSession(sessionId: string | undefined) {
+  if (!sessionId || autopilotSessions.includes(sessionId)) return;
+  autopilotSessions = [...autopilotSessions, sessionId].slice(
+    -AUTOPILOT_SESSIONS_KEPT,
+  );
+  try {
+    await AsyncStorage.setItem(
+      AUTOPILOT_SESSIONS_STORAGE_KEY,
+      JSON.stringify(autopilotSessions),
+    );
+  } catch {
+    // Still known while the app runs.
+  }
 }
 
 export function isAutopilotSession(sessionId: string | undefined) {
-  return !!sessionId && autopilotSessions.has(sessionId);
+  return !!sessionId && autopilotSessions.includes(sessionId);
 }

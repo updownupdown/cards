@@ -15,3 +15,5 @@ export const BETA_GAMES_STORAGE_KEY = "cards.betaGames.v1";
 export const HINT_BUTTON_STORAGE_KEY = "cards.hintButton.v1";
 /** "1" once the player has put away the Rules modal's UFO introduction. */
 export const HINT_INTRO_STORAGE_KEY = "cards.hintIntro.v1";
+/** Deals Autopilot played in (their wins don't count): session ids, JSON. */
+export const AUTOPILOT_SESSIONS_STORAGE_KEY = "cards.autopilotSessions.v1";

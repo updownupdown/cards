@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from "@jest/globals";
+import { beforeEach, describe, expect, jest, test } from "@jest/globals";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { PlayingCard } from "@/components/Cards/card-utils";
 import {
@@ -10,6 +10,7 @@ import {
 } from "@/hints/classic";
 import { cardTarget, makeHint, zoneTarget, type Hint } from "@/hints/hint";
 import {
+  AUTOPILOT_SESSIONS_KEPT,
   getActiveHint,
   hasHintFinder,
   isAutopilotSession,
@@ -27,6 +28,7 @@ import {
   saveHintMode,
 } from "@/data/hint-mode";
 import {
+  AUTOPILOT_SESSIONS_STORAGE_KEY,
   HINT_BUTTON_STORAGE_KEY,
   HINT_INTRO_STORAGE_KEY,
 } from "@/data/storage-keys";
@@ -314,11 +316,61 @@ describe("the Help from Above setting", () => {
 });
 
 describe("Autopilot wins", () => {
-  test("a deal Autopilot played in is remembered, others aren't", () => {
+  beforeEach(async () => {
+    await AsyncStorage.clear();
+  });
+
+  test("a deal Autopilot played in is remembered, others aren't", async () => {
     expect(isAutopilotSession("deal-1")).toBe(false);
-    markAutopilotSession("deal-1");
+    await markAutopilotSession("deal-1");
     expect(isAutopilotSession("deal-1")).toBe(true);
     expect(isAutopilotSession("deal-2")).toBe(false);
     expect(isAutopilotSession(undefined)).toBe(false);
+  });
+
+  test("and still is after the app is closed and opened again", async () => {
+    await markAutopilotSession("deal-resumed");
+    expect(
+      JSON.parse(
+        (await AsyncStorage.getItem(AUTOPILOT_SESSIONS_STORAGE_KEY)) ?? "[]",
+      ),
+    ).toContain("deal-resumed");
+
+    // A fresh start: the store's memory is gone, only the save is left.
+    await jest.isolateModulesAsync(async () => {
+      const store =
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        require("@/hints/hint-store") as typeof import("@/hints/hint-store");
+      expect(store.isAutopilotSession("deal-resumed")).toBe(false);
+      await store.loadAutopilotSessions();
+      expect(store.isAutopilotSession("deal-resumed")).toBe(true);
+      expect(store.isAutopilotSession("another-deal")).toBe(false);
+    });
+  });
+
+  test("only the latest deals are kept", async () => {
+    for (let deal = 0; deal < AUTOPILOT_SESSIONS_KEPT + 5; deal += 1) {
+      await markAutopilotSession(`kept-${deal}`);
+    }
+    const saved = JSON.parse(
+      (await AsyncStorage.getItem(AUTOPILOT_SESSIONS_STORAGE_KEY)) ?? "[]",
+    ) as string[];
+    expect(saved).toHaveLength(AUTOPILOT_SESSIONS_KEPT);
+    expect(isAutopilotSession("kept-0")).toBe(false);
+    expect(isAutopilotSession(`kept-${AUTOPILOT_SESSIONS_KEPT + 4}`)).toBe(
+      true,
+    );
+  });
+
+  test("a damaged save is read as none, without failing", async () => {
+    await AsyncStorage.setItem(AUTOPILOT_SESSIONS_STORAGE_KEY, "{not json");
+    await jest.isolateModulesAsync(async () => {
+      const store =
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        require("@/hints/hint-store") as typeof import("@/hints/hint-store");
+      await expect(store.loadAutopilotSessions()).resolves.toEqual([]);
+      await store.markAutopilotSession("after-damage");
+      expect(store.isAutopilotSession("after-damage")).toBe(true);
+    });
   });
 });

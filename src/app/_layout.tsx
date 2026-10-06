@@ -33,6 +33,7 @@ import {
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { loadBetaGames } from "@/data/beta-games";
 import { loadHintMode } from "@/data/hint-mode";
+import { loadAutopilotSessions } from "@/hints/hint-store";
 import { useFonts } from "expo-font";
 import { Stack, usePathname, SplashScreen } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -49,6 +50,8 @@ SplashScreen.preventAutoHideAsync();
 void loadBetaGames();
 // "Help from Above" (the header UFO), read before a game's header shows.
 void loadHintMode();
+// Deals Autopilot played in, so a resumed one's win still doesn't count.
+void loadAutopilotSessions();
 
 function Layout() {
   // The colour theme is applied before anything below renders, and the app

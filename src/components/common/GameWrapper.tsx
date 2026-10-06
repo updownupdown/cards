@@ -202,9 +202,9 @@ export const GameWrapper = ({
     addGameBreadcrumb("hint", { found: !!hint, mode: hintMode });
   });
   // A win in a deal Autopilot played in doesn't count.
-  const onAutopilotMove = useStableCallback(() =>
-    markAutopilotSession(getActiveGameSessionId(pathname)),
-  );
+  const onAutopilotMove = useStableCallback(() => {
+    void markAutopilotSession(getActiveGameSessionId(pathname));
+  });
   const onHeaderUndo = useStableCallback(() => {
     addGameBreadcrumb("undo");
     handleUndo?.();

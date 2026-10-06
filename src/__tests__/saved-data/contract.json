@@ -1,6 +1,7 @@
 {
   "note": "Pins what players' saves refer to. `npm run saved-data:pin` only adds to it; removing anything is a hand edit, made only with the owner's OK. See src/__tests__/saved-data-guard.test.ts.",
   "storageKeys": [
+    "cards.autopilotSessions.v1",
     "cards.betaGames.v1",
     "cards.campaignProgress.v1",
     "cards.dailyWins.v1",
