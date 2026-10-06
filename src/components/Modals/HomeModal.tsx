@@ -46,6 +46,7 @@ import { useToast } from "../common/Toast";
 import { saveBetaGames, useBetaGamesEnabled } from "@/data/beta-games";
 import { saveHintMode, useHintMode } from "@/data/hint-mode";
 import { HintModeRadio } from "@/components/common/HintModeRadio";
+import { UfoPanel } from "@/components/common/UfoPanel";
 
 /** App version and build type; not translated, since it's for bug reports. */
 const BUILD_LABEL = `v${Constants.expoConfig?.version ?? "?"} · ${__DEV__ ? "dev" : "release"}`;
@@ -202,22 +203,17 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 void updateSettings({ showTipsForNewGames: val });
               }}
             />
-            <View style={{ width: "100%", gap: spacing(10) }}>
-              <View style={{ gap: spacing(4) }}>
-                <Text weight={500} size="md" color={theme.ink}>
-                  {t("helpFromAbove.label")}
-                </Text>
-                <Text size="sm" weight={400} color={theme.dim}>
-                  {t("helpFromAbove.description")}
-                </Text>
-              </View>
+            <UfoPanel title={t("helpFromAbove.label")}>
+              <Text size="sm" weight={300} color={theme.ink} lineHeight={1.4}>
+                {t("helpFromAbove.description")}
+              </Text>
               <HintModeRadio
                 value={hintMode}
                 onChange={(value) => {
                   void saveHintMode(value);
                 }}
               />
-            </View>
+            </UfoPanel>
             <SettingControl
               label={t("showAnimations.label")}
               description={t("showAnimations.description")}

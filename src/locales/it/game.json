@@ -36,8 +36,7 @@
     "helpIntro": {
       "title": "Aiuto dall'alto",
       "body": "Bloccato? Tocca l'UFO in cima allo schermo e ti aiuterà. Scegli come:",
-      "done": "Ho capito",
-      "later": "Puoi cambiarlo quando vuoi nelle Impostazioni, dalla schermata iniziale."
+      "done": "Ho capito"
     }
   },
   "mercySkip": {

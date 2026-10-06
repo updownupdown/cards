@@ -12,6 +12,7 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { WinLoseBox } from "@/components/common/WinLoseBox";
 import { GameCollectibleIcons } from "@/components/ui/GameCollectibleIcons";
 import { ActionButton } from "@/components/ui/Nocturne";
+import { UfoNote } from "@/components/common/UfoNote";
 
 jest.mock("@/hooks/useGamePath", () => ({ useGamePath: () => "/klondike" }));
 jest.mock("react-native-safe-area-context", () => ({
@@ -84,6 +85,24 @@ describe("WinLoseBox", () => {
         "BEST TIME",
       ]),
     );
+  });
+
+  test("the UFO's note shows above the box, apart from its message", async () => {
+    const note = "The UFO helped with this one, so the win doesn't count.";
+    const box = await render(true, { ufoNote: note });
+    const [shownNote] = box.root.findAll((node) => node.type === UfoNote);
+    expect(shownNote.props.text).toBe(note);
+    const shown = texts(box);
+    expect(shown).toContain(note);
+    expect(shown).toContain("All four suits are complete!");
+    // First in the column: above the box.
+    expect(shown.indexOf(note)).toBeLessThan(shown.indexOf("You won!"));
+  });
+
+  test("no note without the UFO's help", async () => {
+    expect(
+      (await render(true)).root.findAll((node) => node.type === UfoNote),
+    ).toHaveLength(0);
   });
 
   test("a loss shows no time", async () => {

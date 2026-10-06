@@ -36,8 +36,7 @@
     "helpIntro": {
       "title": "Help from Above",
       "body": "Stuck? Tap the UFO at the top of the screen and it will help. Choose how:",
-      "done": "Got it",
-      "later": "You can change this any time in Settings, from the home screen."
+      "done": "Got it"
     }
   },
   "mercySkip": {

@@ -9,6 +9,7 @@ import {
   LayerZIndexes,
   rgba,
   textShadow,
+  UfoColors,
 } from "@/styles/styles";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -48,11 +49,14 @@ import {
  * so nothing in a game knows Autopilot is there.
  */
 
-const MINT = "#7dffb0";
-const BEACON_INK = "#3ee08f";
-/** Where a card goes: warm, so "from" and "to" never look alike. */
-const AMBER = "#ffd166";
-const AMBER_INK = "#f0a92e";
+/** What to pick up, tap or press: the UFO's own green. */
+const MINT = UfoColors.green;
+const BEACON_INK = UfoColors.greenGlow;
+/** Where a card goes: pink, so "from" and "to" never look alike. */
+const PINK = UfoColors.pink;
+const PINK_INK = UfoColors.pinkGlow;
+/** The tractor beam that carries a card across. */
+const BEAM = UfoColors.blue;
 const DARK = Colors.K950;
 const useNativeDriver = Platform.OS !== "web";
 
@@ -107,7 +111,7 @@ function beaconKind(hint: Hint, stepIndex: number): BeaconKind {
 
 /**
  * A beacon on a hint target. "from" (what to pick up, tap or press): mint
- * rings ping out of a bright core. "to" (where it goes): amber rings close in
+ * rings ping out of a bright core. "to" (where it goes): pink rings close in
  * on a landing ring.
  */
 function Beacon({
@@ -122,8 +126,8 @@ function Beacon({
   pings?: number;
 }) {
   const to = kind === "to";
-  const ink = to ? AMBER : MINT;
-  const glow = to ? AMBER_INK : BEACON_INK;
+  const ink = to ? PINK : MINT;
+  const glow = to ? PINK_INK : BEACON_INK;
   const presence = useRef(new Animated.Value(0)).current;
   const ping = useRef(new Animated.Value(0)).current;
 
@@ -221,9 +225,9 @@ function Beacon({
           width: to ? core * 1.7 : core,
           height: to ? core * 1.7 : core,
           borderRadius: core,
-          backgroundColor: to ? rgba(AMBER, 0.25) : MINT,
+          backgroundColor: to ? rgba(PINK, 0.25) : MINT,
           borderWidth: to ? 3.5 : 2.5,
-          borderColor: to ? AMBER : Colors.white,
+          borderColor: to ? PINK : Colors.white,
           boxShadow: `0 0 0 1.5px ${rgba(DARK, 0.5)}, 0 0 ${core}px ${glow}`,
           opacity: presence,
           transform: [
@@ -310,8 +314,8 @@ function TractorBeam({
       <Svg width={width} height={height}>
         <Defs>
           <LinearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor={MINT} stopOpacity={0.95} />
-            <Stop offset="1" stopColor={MINT} stopOpacity={0.45} />
+            <Stop offset="0" stopColor={BEAM} stopOpacity={0.95} />
+            <Stop offset="1" stopColor={BEAM} stopOpacity={0.45} />
           </LinearGradient>
         </Defs>
         <Polygon
@@ -887,7 +891,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
               textAlign: "center",
               fontSize: UFO_FONT_SIZE,
               lineHeight: UFO_FONT_SIZE * 1.4,
-              ...textShadow(rgba(Colors.ufoGreen, 0.7), 10),
+              ...textShadow(rgba(MINT, 0.7), 10),
               transform: [
                 { scale },
                 {
@@ -923,13 +927,14 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
   );
 }
 
+// As Mercy Skip's bubble: pure black, a sharp green shadow under it.
 const bubbleStyle = {
   width: BUBBLE_WIDTH,
-  backgroundColor: rgba(Colors.K950, 0.95),
-  borderColor: rgba(MINT, 0.6),
-  borderWidth: 1,
+  backgroundColor: UfoColors.black,
+  borderColor: MINT,
+  borderWidth: 1.5,
   borderRadius: 16,
-  boxShadow: `0 0 18px 4px ${rgba(Colors.ufoGreen, 0.3)}`,
+  boxShadow: `0 4px 0 0 ${MINT}`,
   paddingHorizontal: 12,
   paddingVertical: 8,
 };
@@ -938,10 +943,10 @@ const tailStyle = {
   position: "absolute" as const,
   width: 12,
   height: 12,
-  backgroundColor: rgba(Colors.K950, 0.95),
-  borderColor: rgba(MINT, 0.6),
-  borderTopWidth: 1,
-  borderLeftWidth: 1,
+  backgroundColor: UfoColors.black,
+  borderColor: MINT,
+  borderTopWidth: 1.5,
+  borderLeftWidth: 1.5,
 };
 
 const bubbleTextStyle = {

@@ -20,8 +20,10 @@ import {
 } from "@/data/hint-mode";
 import { useHasHintFinder } from "@/hints/hint-store";
 import { Icon } from "@/icons";
-import { Button } from "@/components/Button/Button";
+import { ActionButton } from "@/components/ui/Nocturne";
 import { HintModeRadio } from "@/components/common/HintModeRadio";
+import { UfoPanel } from "@/components/common/UfoPanel";
+import { UfoColors } from "@/styles/styles";
 
 export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   const pathname = useGamePath();
@@ -68,7 +70,8 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
           <QuickStart
             gameInfo={gameInfo}
             style={{
-              marginTop: showIntro ? spacing(10) : 0,
+              // Clear of the intro's border and its drop shadow.
+              marginTop: showIntro ? spacing(24) : 0,
               paddingLeft: spacing(16),
               paddingRight: spacing(20),
               paddingVertical: spacing(16),
@@ -135,38 +138,6 @@ export const QuickStart = ({ gameInfo, style }: QuickStartProps) => {
   );
 };
 
-/** The box both the introduction and the bottom row (opened) show. */
-function useHelpBoxStyle(): ViewStyle {
-  const { spacing } = useResponsiveMetrics();
-  const theme = usePalette();
-  return {
-    width: "100%",
-    gap: spacing(10),
-    paddingHorizontal: spacing(16),
-    paddingVertical: spacing(14),
-    borderRadius: spacing(14),
-    backgroundColor: theme.raise,
-  };
-}
-
-/** The UFO and "Help from Above", as the box's heading. */
-function HelpHeading({ trailing }: { trailing?: React.ReactNode }) {
-  const { t } = useTranslation("game");
-  const { spacing } = useResponsiveMetrics();
-  const theme = usePalette();
-  return (
-    <View
-      style={{ flexDirection: "row", alignItems: "center", gap: spacing(10) }}
-    >
-      <Icon name="ufo" size={spacing(26)} color={theme.accent} />
-      <Text size="md" weight={700} color={theme.accent2} style={{ flex: 1 }}>
-        {t("rules.helpIntro.title")}
-      </Text>
-      {trailing}
-    </View>
-  );
-}
-
 /** What the UFO does, and the choice of how it helps. */
 function HelpChoice() {
   const { t } = useTranslation("game");
@@ -174,7 +145,7 @@ function HelpChoice() {
   const mode = useHintMode();
   return (
     <>
-      <Text size="sm" weight={300} color={theme.ink} lineHeight={1.3}>
+      <Text size="sm" weight={300} color={theme.ink} lineHeight={1.4}>
         {t("rules.helpIntro.body")}
       </Text>
       <HintModeRadio
@@ -195,19 +166,20 @@ function HelpChoice() {
 function HelpFromAboveIntro({ onDone }: { onDone: () => void }) {
   const { t } = useTranslation("game");
   return (
-    <View style={useHelpBoxStyle()}>
-      <HelpHeading />
+    <UfoPanel title={t("rules.helpIntro.title")}>
       <HelpChoice />
-      <Button
-        text={t("rules.helpIntro.done")}
-        size="sm"
+      <ActionButton
+        label={t("rules.helpIntro.done")}
+        small
+        color={UfoColors.green}
+        ink={UfoColors.black}
         style={{ alignSelf: "flex-end" }}
         onPress={() => {
           onDone();
           void markHintIntroSeen();
         }}
       />
-    </View>
+    </UfoPanel>
   );
 }
 
@@ -218,33 +190,29 @@ function HelpFromAboveIntro({ onDone }: { onDone: () => void }) {
 function HelpFromAboveRow() {
   const { t } = useTranslation("game");
   const { spacing } = useResponsiveMetrics();
-  const theme = usePalette();
   const [open, setOpen] = useState(false);
   return (
-    <View style={[useHelpBoxStyle(), { marginTop: spacing(24) }]}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityState={{ expanded: open }}
-        onPress={() => setOpen((value) => !value)}
-      >
-        <HelpHeading
-          trailing={
-            <Icon
-              name={open ? "expand-less" : "expand-more"}
-              size={spacing(24)}
-              color={theme.accent}
-            />
-          }
+    <UfoPanel
+      title={t("rules.helpIntro.title")}
+      style={{ marginTop: spacing(24) }}
+      trailing={
+        <Icon
+          name={open ? "expand-less" : "expand-more"}
+          size={spacing(24)}
+          color={UfoColors.green}
         />
-      </Pressable>
-      {open && (
-        <>
-          <HelpChoice />
-          <Text size="xs" weight={400} color={theme.dim} lineHeight={1.3}>
-            {t("rules.helpIntro.later")}
-          </Text>
-        </>
+      }
+      wrapHeading={(heading) => (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ expanded: open }}
+          onPress={() => setOpen((value) => !value)}
+        >
+          {heading}
+        </Pressable>
       )}
-    </View>
+    >
+      {open && <HelpChoice />}
+    </UfoPanel>
   );
 }

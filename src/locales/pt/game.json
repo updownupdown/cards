@@ -36,8 +36,7 @@
     "helpIntro": {
       "title": "Ajuda lá de cima",
       "body": "Empacou? Toque no OVNI no alto da tela e ele ajuda. Escolha como:",
-      "done": "Entendi",
-      "later": "Você pode mudar isso quando quiser em Ajustes, na tela inicial."
+      "done": "Entendi"
     }
   },
   "mercySkip": {

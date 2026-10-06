@@ -21,8 +21,6 @@ const BASE_COLORS = {
   brightOrange: "#ff8b2d",
   brightYellow: "#ffea2d",
   brightGreen: "#26ff93",
-  /** The UFO and its Mercy Skip: a calmer green than brightGreen. */
-  ufoGreen: "#4fb381",
 
   // Accents
   accentBlue: "#86e5fd",
@@ -87,6 +85,26 @@ const BASE_COLORS = {
 export const Colors = { ...BASE_COLORS } as {
   -readonly [K in keyof typeof BASE_COLORS]: `#${string}`;
 };
+
+/**
+ * The UFO's neon, for everything it touches: Mercy Skip, Help from Above,
+ * its beacons and beams, and its alien script. The same in every colour
+ * theme. Green leads, pink-purple follows, blue comes third; each `glow` is
+ * a deeper shade of its ink, for halos.
+ */
+export const UfoColors = {
+  green: "#2bff9a",
+  pink: "#f048ff",
+  blue: "#2ed3ff",
+  greenGlow: "#00d977",
+  pinkGlow: "#c81ee6",
+  blueGlow: "#0aa5e6",
+  /** The UFO's boxes are pure black, whatever the theme. */
+  black: "#000000",
+} as const;
+
+/** The UFO's three inks, in order: green, pink, blue. */
+export const UFO_INKS = [UfoColors.green, UfoColors.pink, UfoColors.blue];
 
 /**
  * Converts a hex colour (e.g. from the Colors object) into an rgba string.

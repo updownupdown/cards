@@ -20,6 +20,8 @@ type RadioOption<T extends string> = {
   iconName?: IconName;
   disabled?: boolean;
   selectedBackgroundColor?: string;
+  /** Added to the button while it's chosen (a glow, say). */
+  selectedButtonStyle?: StyleProp<ViewStyle>;
 };
 
 type RadioButtonsProps<T extends string> = {
@@ -98,6 +100,7 @@ export function RadioButtons<T extends string>({
                 backgroundColor: isSelected ? selectedBg : "transparent",
               },
               buttonStyle,
+              isSelected ? option.selectedButtonStyle : null,
             ]}
             onPress={() => onChange(option.value)}
             disabled={option.disabled}
