@@ -1,3 +1,4 @@
+import { AppErrorScreen } from "@/components/common/AppErrorScreen";
 import { GameLaunchOverlay } from "@/components/common/GameLaunchOverlay";
 import { SystemBarScrims } from "@/components/common/SystemBarScrims";
 import { ToastProvider } from "@/components/common/Toast";
@@ -35,7 +36,12 @@ import { loadBetaGames } from "@/data/beta-games";
 import { loadHintMode } from "@/data/hint-mode";
 import { loadAutopilotSessions } from "@/hints/hint-store";
 import { useFonts } from "expo-font";
-import { Stack, usePathname, SplashScreen } from "expo-router";
+import {
+  Stack,
+  usePathname,
+  SplashScreen,
+  type ErrorBoundaryProps,
+} from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { View, Platform } from "react-native";
@@ -214,6 +220,14 @@ function Layout() {
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
+}
+
+/**
+ * Catches render errors from every screen without a boundary of its own (games
+ * have theirs, in [game] and wild/[game]), and from this layout.
+ */
+export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
+  return <AppErrorScreen error={error} retry={retry} />;
 }
 
 // Catches native crashes and errors React itself can't hand to a boundary.

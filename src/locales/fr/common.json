@@ -17,5 +17,9 @@
     "wins": "Victoires"
   },
   "undo": "Annuler",
-  "winToCollect": "Gagnez à **{{game}}** pour débloquer"
+  "winToCollect": "Gagnez à **{{game}}** pour débloquer",
+  "errors": {
+    "appCrashed": "Un problème est survenu.",
+    "tryAgain": "Réessayer"
+  }
 }

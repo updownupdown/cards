@@ -17,5 +17,9 @@
     "wins": "Vittorie"
   },
   "undo": "Annulla",
-  "winToCollect": "Vinci a **{{game}}** per sbloccare"
+  "winToCollect": "Vinci a **{{game}}** per sbloccare",
+  "errors": {
+    "appCrashed": "Qualcosa è andato storto.",
+    "tryAgain": "Riprova"
+  }
 }
