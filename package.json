@@ -19,6 +19,7 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
+    "typecheck": "tsc --noEmit",
     "test": "jest",
     "i18n": "node ./scripts/i18n.mjs",
     "pen-font:generate": "node ./scripts/generate-pen-font.mjs",
