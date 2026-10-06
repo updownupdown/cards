@@ -18,6 +18,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 export type WastePilesVariant = "frog" | "sir-tommy" | "puss-in-the-corner";
 
 type Config = {
@@ -185,7 +187,61 @@ function evaluateEnd(
   return { ended: true, won: false };
 }
 
+/**
+ * Play every card that can go home, the reserve's first (emptying it is the
+ * goal). Otherwise the stock's card goes on a waste pile: on one whose top
+ * card is higher, as close above it as possible, so cards come back off in
+ * the order the foundations want them; high cards start empty piles.
+ */
+function findWastePilesHint(
+  state: WastePilesState,
+  variant: WastePilesVariant,
+) {
+  const config = CONFIGS[variant];
+  const homeFor = (card: PlayingCard | undefined) =>
+    card ? foundationFor(state, card, config) : -1;
+  const sources = [
+    top(state.reserve),
+    ...state.waste.map(top),
+    top(state.stock),
+  ];
+  for (const card of sources) {
+    const home = homeFor(card);
+    if (card?.faceUp && home >= 0) {
+      return makeHint(
+        "toFoundation",
+        cardTarget(card),
+        zoneTarget(`foundation-${home}`),
+      );
+    }
+  }
+
+  const next = top(state.stock);
+  if (next?.faceUp) {
+    const rank = rankValue(next);
+    const fit = (pile: PlayingCard[]) => {
+      const pileTop = top(pile);
+      if (!pileTop) return rank >= 11 ? 30 : 5;
+      const gap = rankValue(pileTop) - rank;
+      return gap >= 0 ? 40 - gap : -10 + gap;
+    };
+    const best = state.waste.reduce(
+      (pick, pile, index) =>
+        fit(pile) > fit(state.waste[pick]) ? index : pick,
+      0,
+    );
+    return makeHint("moveCard", cardTarget(next), zoneTarget(`waste-${best}`));
+  }
+
+  const canRedeal =
+    state.stock.length === 0 &&
+    state.redealsUsed < config.redeals &&
+    state.waste.some((pile) => pile.length > 0);
+  return canRedeal ? makeHint("redeal", zoneTarget("stock")) : null;
+}
+
 export const wastePilesRules = {
+  findHint: findWastePilesHint,
   configs: CONFIGS,
   canBuildFoundation,
   dealFromStock,
@@ -253,6 +309,11 @@ export function WastePilesSolitaire({
       });
     }
   }, [config, game, isSettingUp, setGame]);
+
+  useHint(() => findWastePilesHint(game, variant), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   useEffect(
     () => () => {

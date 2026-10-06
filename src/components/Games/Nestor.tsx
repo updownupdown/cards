@@ -15,6 +15,9 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint } from "@/hints/hint";
+import { planMove } from "@/hints/lookahead";
 const columnCount = 8;
 const columnHeight = 6;
 
@@ -140,7 +143,63 @@ function evaluateEnd(state: GameState, isSettingUp = false) {
   return { ended: false, won: false };
 }
 
+type NestorPick = Exclude<Selection, undefined>;
+
+/**
+ * Every card is on view: the hint looks ahead for the line that pairs off the
+ * most cards, so a card with two partners goes with the one that frees more.
+ */
+function findNestorHint(state: GameState) {
+  const picks = (current: GameState): NestorPick[] => [
+    ...current.columns.flatMap((col, index) =>
+      col.length ? [{ zone: "col" as const, index }] : [],
+    ),
+    ...current.reserve.map((_, index) => ({ zone: "reserve" as const, index })),
+  ];
+  const move = planMove<GameState, [NestorPick, NestorPick]>(state, {
+    key: (current) =>
+      `nestor:${current.columns.map((col) => col.length).join(",")}:${current.reserve.map((card) => card.id).join(",")}`,
+    moves: (current) => {
+      const exposed = picks(current);
+      return exposed.flatMap((first, i) =>
+        exposed
+          .slice(i + 1)
+          .flatMap((second) =>
+            exposedCard(current, first)?.rank ===
+            exposedCard(current, second)?.rank
+              ? [[first, second] as [NestorPick, NestorPick]]
+              : [],
+          ),
+      );
+    },
+    apply: (current, pair) => ({
+      ...current,
+      columns: current.columns.map((col, index) =>
+        pair.some((pick) => pick.zone === "col" && pick.index === index)
+          ? col.slice(0, -1)
+          : col,
+      ),
+      reserve: current.reserve.filter(
+        (_, index) =>
+          !pair.some((pick) => pick.zone === "reserve" && pick.index === index),
+      ),
+    }),
+    score: (current) =>
+      -current.columns.reduce((sum, col) => sum + col.length, 0) -
+      current.reserve.length,
+    budget: 4000,
+  });
+  return move
+    ? makeHint(
+        "removeCards",
+        cardTarget(exposedCard(state, move[0])!),
+        cardTarget(exposedCard(state, move[1])!),
+      )
+    : null;
+}
+
 export const nestorRules = {
+  findHint: findNestorHint,
   dealNestor,
   prepareDiscard,
   exposedCard,
@@ -179,6 +238,11 @@ export default function Nestor() {
       });
     }
   }, [game, isSettingUp, setGame]);
+
+  useHint(() => findNestorHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   function sameSelection(a: Selection, b: Selection) {
     return !!a && !!b && a.zone === b.zone && a.index === b.index;

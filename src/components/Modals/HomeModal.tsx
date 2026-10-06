@@ -43,6 +43,7 @@ import { Text } from "../common/Text";
 import ModalFull from "./ModalFull";
 import { useToast } from "../common/Toast";
 import { saveBetaGames, useBetaGamesEnabled } from "@/data/beta-games";
+import { saveHintButton, useHintButtonShown } from "@/data/hint-button";
 
 /** App version and build type; not translated, since it's for bug reports. */
 const BUILD_LABEL = `v${Constants.expoConfig?.version ?? "?"} · ${__DEV__ ? "dev" : "release"}`;
@@ -84,6 +85,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const scrollRestored = React.useRef(false);
   const versionTaps = React.useRef(0);
   const betaGamesEnabled = useBetaGamesEnabled();
+  const hintButtonShown = useHintButtonShown();
 
   const onVersionPress = () => {
     versionTaps.current += 1;
@@ -229,6 +231,15 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               type="boolean"
               onChange={(val) => {
                 void updateSettings({ showTipsForNewGames: val });
+              }}
+            />
+            <SettingControl
+              label={t("showHintButton.label")}
+              description={t("showHintButton.description")}
+              value={hintButtonShown}
+              type="boolean"
+              onChange={(val) => {
+                void saveHintButton(val);
               }}
             />
             <SettingControl

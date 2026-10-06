@@ -19,6 +19,10 @@
     "label": "Show game tips",
     "description": "Show a quick start summary for new games."
   },
+  "showHintButton": {
+    "label": "Show hint button",
+    "description": "A lightbulb in the game header that highlights a good move."
+  },
   "keepScreenAwake": {
     "label": "Keep screen awake",
     "description": "Keeps the screen on for 10 minutes after your last touch."

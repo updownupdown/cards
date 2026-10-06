@@ -18,6 +18,9 @@ import { View } from "react-native";
 import { useGameColors } from "@/hooks/useGameColors";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, pressHint, zoneTarget } from "@/hints/hint";
+import { planMove } from "@/hints/lookahead";
 const ROWS = 4;
 const COLS = 13;
 
@@ -183,7 +186,61 @@ function redealGrid(grid: (PlayingCard | null)[]) {
   return result;
 }
 
+/**
+ * Every card is on view: the hint looks a few moves ahead for the line that
+ * sets the most cards in place, keeping gaps where a card can still follow
+ * (a gap after a King is dead); redeals when nothing moves.
+ */
+function findGapsHint(state: GapsGameState) {
+  type Grid = (PlayingCard | null)[];
+  const move = planMove<Grid, [number, number]>(state.grid, {
+    key: (grid) => `gaps:${grid.map((card) => card?.id ?? "-").join(",")}`,
+    moves: (grid) => {
+      const locked = getLockedIndices(grid);
+      const gaps = grid.flatMap((card, index) => (card ? [] : [index]));
+      return grid.flatMap((card, source) =>
+        !card || locked.has(source)
+          ? []
+          : gaps.flatMap((gap) =>
+              canMove(grid, source, gap)
+                ? [[source, gap] as [number, number]]
+                : [],
+            ),
+      );
+    },
+    apply: (grid, [source, gap]) =>
+      grid.map((card, index) =>
+        index === gap ? grid[source] : index === source ? null : card,
+      ),
+    score: (grid, depth) => {
+      const live = grid.filter((card, index) => {
+        if (card) return false;
+        const left = index % COLS === 0 ? null : grid[index - 1];
+        return index % COLS === 0 || (!!left && left.rank !== "K");
+      }).length;
+      return getLockedIndices(grid).size * 100 + live * 5 - depth;
+    },
+    budget: 3000,
+    maxDepth: 8,
+  });
+  if (move) {
+    return makeHint(
+      "moveCard",
+      cardTarget(state.grid[move[0]]!),
+      zoneTarget(`cell-${move[1]}`),
+    );
+  }
+  const maxRedeals = state.maxRedeals ?? 2;
+  return state.redealsUsed < maxRedeals
+    ? pressHint(
+        "reveal",
+        i18n.t("cards:redeal", { value: maxRedeals - state.redealsUsed }),
+      )
+    : null;
+}
+
 export const gapsRules = {
+  findHint: findGapsHint,
   canMove,
   createInitialState,
   findMoveSource,
@@ -226,6 +283,11 @@ export default function Gaps() {
       });
     }
   }, [game, maxRedeals, setGame]);
+
+  useHint(() => findGapsHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   function onCardPress(index: number) {
     if (!game.ended && !isSettingUp)

@@ -22,6 +22,8 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { findClassicHint } from "@/hints/classic";
 const COLUMN_COUNT = 13;
 const CARDS_PER_COLUMN = 4;
 
@@ -91,7 +93,27 @@ function createInitialState(): BakersDozenState {
   };
 }
 
+/** Every card is on view: the hint searches for a win, one card at a time. */
+function findBakersDozenHint(state: BakersDozenState) {
+  return findClassicHint(
+    { tableau: state.tableau, foundations: state.foundations },
+    {
+      toFoundation: (card, pile) => canBuildOnFoundation(card, top(pile)),
+      toTableau: (cards, pile) =>
+        cards.length === 1 && canBuildOnTableau(cards[0], top(pile)),
+      canLift: (pile, index) => index === pile.length - 1,
+      buildQuality: (card, base) => (canBuildOnTableau(card, base) ? 2 : 0),
+    },
+    {
+      tableau: (pile) => `tableau-${pile}`,
+      foundation: (pile) => `foundation-${pile}`,
+    },
+    { search: "bakers-dozen" },
+  );
+}
+
 export const bakersDozenRules = {
+  findHint: findBakersDozenHint,
   canBuildOnFoundation,
   canBuildOnTableau,
   dealTableau,
@@ -165,6 +187,12 @@ export default function BakersDozen() {
       setSelectedColumn(null);
       setLastTap(null);
     },
+  });
+
+  useHint(() => findBakersDozenHint(game), {
+    game,
+    enabled:
+      !isSettingUp && !won && !isAutoCompleting && !game.shuffleZone?.length,
   });
 
   function moveToFoundation(columnIndex: number) {

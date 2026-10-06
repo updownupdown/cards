@@ -17,6 +17,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 const quiltSize = 8;
 const quiltCells = quiltSize * quiltSize;
 const gap = 0;
@@ -120,7 +122,50 @@ function evaluateEnd(state: GameState, isSettingUp = false) {
   return quiltMove ? playing : { ended: true, won: false };
 }
 
+/**
+ * Cards home first, the waste's then the quilt's. A quilt card packs onto
+ * the waste only when that frees a quilt card that can go home; otherwise
+ * draw, or turn the waste over.
+ */
+function findCrazyQuiltHint(state: GameState) {
+  const wasteTop = top(state.waste);
+  const home = (card: PlayingCard) =>
+    makeHint(
+      "toFoundation",
+      cardTarget(card),
+      zoneTarget(`foundation-${foundationFor(state, card)}`),
+    );
+  if (wasteTop && foundationFor(state, wasteTop) >= 0) return home(wasteTop);
+  const free = state.quilt.flatMap((card, index) =>
+    card && isAvailable(state.quilt, index) ? [index] : [],
+  );
+  for (const index of free) {
+    const card = state.quilt[index]!;
+    if (foundationFor(state, card) >= 0) return home(card);
+  }
+  for (const index of free) {
+    const card = state.quilt[index]!;
+    if (!canBuildWaste(card, state.waste)) continue;
+    const quilt = state.quilt.map((cell, at) => (at === index ? null : cell));
+    const freesHome = quilt.some(
+      (cell, at) =>
+        cell &&
+        !free.includes(at) &&
+        isAvailable(quilt, at) &&
+        foundationFor(state, cell) >= 0,
+    );
+    if (freesHome) {
+      return makeHint("toWaste", cardTarget(card), zoneTarget("waste"));
+    }
+  }
+  if (state.stock.length > 0) return makeHint("draw", zoneTarget("stock"));
+  return state.redealsUsed < redeals && state.waste.length > 0
+    ? makeHint("redeal", zoneTarget("stock"))
+    : null;
+}
+
 export const crazyQuiltRules = {
+  findHint: findCrazyQuiltHint,
   isUpright,
   isAvailable,
   canBuildWaste,
@@ -188,6 +233,11 @@ export default function CrazyQuilt() {
       });
     }
   }, [game, isSettingUp, setGame]);
+
+  useHint(() => findCrazyQuiltHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   /** A free quilt card goes to a foundation if it can, else onto the waste. */
   function playQuilt(index: number) {

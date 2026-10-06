@@ -42,12 +42,12 @@ import HeartsIcon from "./Hearts.svg";
 import HelpOutlineIcon from "./HelpOutline.svg";
 import HerbsIcon from "./Herbs.svg";
 import HerbsBowlIcon from "./HerbsBowl.svg";
+import HintIcon from "./Hint.svg";
 import HomeIcon from "./Home.svg";
 import InfoIcon from "./Info.svg";
 import InstructionsIcon from "./Instructions.svg";
 import JokerIcon from "./Joker.svg";
 import KingIcon from "./King.svg";
-import LightbulbIcon from "./Lightbulb.svg";
 import LockIcon from "./Lock.svg";
 import MenuIcon from "./Menu.svg";
 import MilkyWayIcon from "./MilkyWay.svg";
@@ -118,12 +118,12 @@ export type IconName =
   | "help-outline"
   | "herbs"
   | "herbs-bowl"
+  | "hint"
   | "home"
   | "info"
   | "instructions"
   | "joker"
   | "king"
-  | "lightbulb"
   | "lock"
   | "menu"
   | "milky-way"
@@ -194,12 +194,12 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "help-outline": HelpOutlineIcon,
   "herbs": HerbsIcon,
   "herbs-bowl": HerbsBowlIcon,
+  "hint": HintIcon,
   "home": HomeIcon,
   "info": InfoIcon,
   "instructions": InstructionsIcon,
   "joker": JokerIcon,
   "king": KingIcon,
-  "lightbulb": LightbulbIcon,
   "lock": LockIcon,
   "menu": MenuIcon,
   "milky-way": MilkyWayIcon,

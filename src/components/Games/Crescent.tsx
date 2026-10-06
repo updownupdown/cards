@@ -27,6 +27,8 @@ import { View } from "react-native";
 import { useGameColors } from "@/hooks/useGameColors";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { findClassicHint } from "@/hints/classic";
 const cardSize = "tableau";
 const MAX_RESTACKS = 3;
 type Direction = "ascending" | "descending";
@@ -176,7 +178,53 @@ function restackTableau(tableau: PlayingCard[][]) {
   });
 }
 
+/**
+ * Ranks the moves on view (the cards under each pile's top are hidden);
+ * restacks the piles only when nothing on the table helps.
+ */
+function findCrescentHint(state: CrescentGameState) {
+  const directions = [
+    ...SUITS.map(() => "ascending" as const),
+    ...SUITS.map(() => "descending" as const),
+  ];
+  return findClassicHint(
+    {
+      tableau: state.tableau,
+      foundations: [...state.ascending, ...state.descending],
+    },
+    {
+      toFoundation: (card, pile, index) =>
+        canBuildFoundation(
+          card,
+          top(pile),
+          directions[index],
+          SUITS[index % 4],
+        ),
+      toTableau: (cards, pile) =>
+        cards.length === 1 && canBuildTableau(cards[0], top(pile)),
+      canLift: (pile, index) => index === pile.length - 1,
+    },
+    {
+      tableau: (pile) => `tableau-${pile}`,
+      foundation: (pile) => `${directions[pile]}-${pile % 4}`,
+    },
+    {
+      stock:
+        state.restacksUsed < MAX_RESTACKS
+          ? {
+              zone: "restack",
+              message: "press",
+              label: i18n.t("games:crescent.restack", {
+                value: MAX_RESTACKS - state.restacksUsed,
+              }),
+            }
+          : null,
+    },
+  );
+}
+
 export const crescentRules = {
+  findHint: findCrescentHint,
   canBuildFoundation,
   canBuildTableau,
   createInitialState,
@@ -193,18 +241,31 @@ export default function Crescent() {
   );
   const [selectedFoundation, setSelectedFoundation] =
     useState<FoundationTarget | null>(null);
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<CrescentGameState>({
-      gameStateInitial: createInitialState(),
-      resetNonGameStates: () => {
-        setSelectedPile(null);
-        setSelectedFoundation(null);
-        setLastTap(null);
-      },
-      resetAndSetup: async () => {
-        await resetAndSetup(setGame);
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<CrescentGameState>({
+    gameStateInitial: createInitialState(),
+    resetNonGameStates: () => {
+      setSelectedPile(null);
+      setSelectedFoundation(null);
+      setLastTap(null);
+    },
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+  });
+
+  useHint(() => findCrescentHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended && !game.setupPile?.length,
+  });
 
   useEffect(() => {
     const won = [...game.ascending, ...game.descending].every(

@@ -14,6 +14,9 @@ import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
+import { planMove } from "@/hints/lookahead";
 export type PyramidCard = PlayingCard & {
   row: number;
   col: number;
@@ -217,7 +220,97 @@ function hasAvailableMove(
   return false;
 }
 
+/** A pyramid card by index, or the waste's top card. */
+type PyramidPick = number | "waste";
+type PyramidMove = PyramidPick[];
+
+function pyramidMoves(state: GameState, difficulty: PyramidDifficulty) {
+  const wasteTop = state.waste[state.waste.length - 1];
+  const exposed = state.pyramid.flatMap((card, index) =>
+    card && isCardExposed(card, state.pyramid) ? [index] : [],
+  );
+  const cardOf = (pick: PyramidPick) =>
+    pick === "waste" ? wasteTop : state.pyramid[pick];
+  const moves: PyramidMove[] = [];
+  const picks: PyramidPick[] = [
+    ...exposed,
+    ...(wasteTop ? ["waste" as const] : []),
+  ];
+  for (const pick of picks) {
+    if (cardOf(pick)?.rank === "K") moves.push([pick]);
+  }
+  for (const first of exposed) {
+    const firstCard = state.pyramid[first]!;
+    const partners: PyramidPick[] = [
+      ...state.pyramid.flatMap((card, index) =>
+        card &&
+        index > first &&
+        isPyramidCardSelectable(card, state.pyramid, firstCard, difficulty)
+          ? [index]
+          : [],
+      ),
+      // In easy, the card just under the first one pairs with it too.
+      ...state.pyramid.flatMap((card, index) =>
+        card &&
+        index < first &&
+        !isCardExposed(card, state.pyramid) &&
+        isPyramidCardSelectable(card, state.pyramid, firstCard, difficulty)
+          ? [index]
+          : [],
+      ),
+      ...(wasteTop ? ["waste" as const] : []),
+    ];
+    for (const partner of partners) {
+      const other = cardOf(partner);
+      if (other && cardValue(firstCard) + cardValue(other) === 13) {
+        moves.push([first, partner]);
+      }
+    }
+  }
+  return moves;
+}
+
+/**
+ * Looks through the cards on view for the line that clears the most of the
+ * pyramid, so a card with two partners goes with the right one. Draws when
+ * nothing pairs.
+ */
+function findPyramidHint(state: GameState, difficulty: PyramidDifficulty) {
+  const move = planMove<GameState, PyramidMove>(state, {
+    key: (current) =>
+      `pyramid:${current.pyramid.map((card) => (card ? 1 : 0)).join("")}:${current.waste.at(-1)?.id}:${current.waste.length}`,
+    moves: (current) => pyramidMoves(current, difficulty),
+    apply: (current, picks) => ({
+      ...current,
+      pyramid: current.pyramid.map((card, index) =>
+        picks.includes(index) ? null : card,
+      ),
+      waste: picks.includes("waste")
+        ? current.waste.slice(0, -1)
+        : current.waste,
+    }),
+    score: (current, depth) =>
+      current.pyramid.filter((card) => card === null).length * 100 + depth,
+    budget: 3000,
+  });
+  if (move) {
+    const targets = move.map((pick) =>
+      cardTarget(
+        pick === "waste"
+          ? state.waste[state.waste.length - 1]
+          : state.pyramid[pick]!,
+      ),
+    );
+    return makeHint(
+      move.length === 1 ? "removeCard" : "removeCards",
+      ...targets,
+    );
+  }
+  return state.stockCount > 0 ? makeHint("draw", zoneTarget("stock")) : null;
+}
+
 export const pyramidRules = {
+  findHint: findPyramidHint,
   isCardExposed,
   isPyramidCardSelectable,
   cardValue,
@@ -264,6 +357,11 @@ export default function Pyramid() {
     game.stockCount === 0 &&
     !hasAvailableMove(game, difficulty);
   const ended = !isSettingUp && (won || lost);
+
+  useHint(() => findPyramidHint(game, difficulty), {
+    game,
+    enabled: !isSettingUp && !ended,
+  });
 
   function stockCards(snapshot = game) {
     if (snapshot.stockCount <= 0) return [] as PlayingCard[];

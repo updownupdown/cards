@@ -24,6 +24,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 type GameState = {
   draw: PlayingCard[];
   foundations: PlayingCard[][];
@@ -126,7 +128,61 @@ function evaluateEndState(
     : { ended: true, won: false };
 }
 
+/**
+ * Plays to the foundations first, the waste piles' cards before the draw
+ * card. Otherwise the draw card goes where an expert puts it: on a waste
+ * pile whose top card the foundations will want later (so it comes back off
+ * in time), as close in turn as possible; Kings, wanted last, share a pile.
+ */
+function findCalculationHint(state: GameState) {
+  const drawTop = state.draw[state.draw.length - 1];
+  const sources = [
+    ...state.wastes.map((pile) => pile[pile.length - 1]),
+    drawTop?.faceUp ? drawTop : undefined,
+  ];
+  for (const card of sources) {
+    const home = state.foundations.findIndex((pile, index) =>
+      canPlayToFoundation(card, pile, STEPS[index]),
+    );
+    if (card && home >= 0) {
+      return makeHint(
+        "toFoundation",
+        cardTarget(card),
+        zoneTarget(`foundation-${home}`),
+      );
+    }
+  }
+  if (!drawTop?.faceUp) return null;
+
+  // How many plays until some foundation wants this card.
+  const wait = (card: PlayingCard) =>
+    Math.min(
+      ...state.foundations.map((pile, index) => {
+        const pileTop = pile[pile.length - 1];
+        if (!pileTop) return 13;
+        for (let plays = 1; plays <= 13; plays += 1) {
+          if (nextRankValue(pileTop, STEPS[index] * plays) === rankValue(card))
+            return plays;
+        }
+        return 13;
+      }),
+    );
+  const fit = (pile: PlayingCard[]) => {
+    const pileTop = pile[pile.length - 1];
+    if (!pileTop) return drawTop.rank === "K" ? 80 : 20;
+    if (drawTop.rank === "K") return pileTop.rank === "K" ? 120 : -50;
+    const gap = wait(pileTop) - wait(drawTop);
+    return gap >= 0 ? 100 - gap : gap * 10;
+  };
+  const best = state.wastes.reduce(
+    (pick, pile, index) => (fit(pile) > fit(state.wastes[pick]) ? index : pick),
+    0,
+  );
+  return makeHint("moveCard", cardTarget(drawTop), zoneTarget(`waste-${best}`));
+}
+
 export const calculationRules = {
+  findHint: findCalculationHint,
   nextRankValue,
   canPlayToFoundation,
   anyFoundationPlayable,
@@ -162,6 +218,11 @@ export default function Calculation() {
     undefined,
   );
 
+  useHint(() => findCalculationHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
+
   // Turn over top draw card
   async function turnOverDrawCard() {
     setGame((draft) => {
@@ -191,7 +252,7 @@ export default function Calculation() {
 
     // Turn over draw card
     turnOverDrawCard();
-  }, [game]);
+  }, [game, isSettingUp]);
 
   // Move from draw to waste pile
   async function moveDrawToWaste(wastePileIndex: number) {
@@ -378,7 +439,8 @@ export default function Calculation() {
             if (thisIsSelected) {
               setSelectedCard(undefined);
             } else if (drawIsSelected) {
-              mappedCard.pileIndex && moveDrawToWaste(mappedCard.pileIndex);
+              mappedCard.pileIndex !== undefined &&
+                moveDrawToWaste(mappedCard.pileIndex);
             } else if (anotherWasteCardIsSelected || topWasteCard) {
               setSelectedCard(topWasteCard);
             }

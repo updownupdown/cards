@@ -4,6 +4,7 @@
     "campaign": "Odisseia",
     "instantWin": "Vitória instantânea",
     "rules": "Regras",
+    "hint": "Dica",
     "undo": "Desfazer",
     "reset": "Reiniciar",
     "menu": "Menu",
@@ -31,7 +32,8 @@
   },
   "rules": {
     "title": "Regras",
-    "unavailable": "As instruções não estão disponíveis para este jogo."
+    "unavailable": "As instruções não estão disponíveis para este jogo.",
+    "hintTip": "Toque no botão Dica para destacar uma jogada válida."
   },
   "mercySkip": {
     "title": "Usar um indulto"
@@ -65,5 +67,21 @@
     "start": "Completar",
     "settings": "Configurações de completar automaticamente",
     "dismiss": "Fechar"
+  },
+  "hint": {
+    "none": "Nenhuma dica disponível",
+    "toFoundation": "Mova esta carta para uma fundação",
+    "moveCard": "Mova esta carta para cá",
+    "moveCards": "Mova estas cartas para cá",
+    "toCell": "Mova esta carta para uma célula livre",
+    "draw": "Compre do monte",
+    "redeal": "Vire o descarte para percorrer o monte de novo",
+    "dealRow": "Distribua uma nova fileira",
+    "toWaste": "Jogue esta carta no descarte",
+    "removeCard": "Remova esta carta",
+    "removeCards": "Remova estas cartas",
+    "swapCards": "Troque estas cartas",
+    "tapCard": "Toque nesta carta",
+    "press": "Toque em {{label}}"
   }
 }

@@ -19,6 +19,10 @@
     "label": "Mostrar dicas",
     "description": "Mostra um resumo de início rápido nos jogos novos."
   },
+  "showHintButton": {
+    "label": "Mostrar botão de dica",
+    "description": "Uma lâmpada no cabeçalho do jogo que destaca uma boa jogada."
+  },
   "keepScreenAwake": {
     "label": "Manter a tela ligada",
     "description": "A tela fica ligada por 10 minutos depois do último toque."

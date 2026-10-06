@@ -24,6 +24,9 @@ import { View } from "react-native";
 import { BlackHoleGraphic } from "./BlackHoleGraphic";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
+import { planMove } from "@/hints/lookahead";
 
 /**
  * Black Hole: seventeen fans of three around the Ace of Spades.
@@ -182,7 +185,42 @@ function evaluateEnd(state: GameState, isSettingUp = false) {
   return { ended: false, won: false };
 }
 
+/**
+ * Every card is on view: the hint looks deep for the longest run into the
+ * hole, keeping the fans even so no card ends up buried.
+ */
+function findBlackHoleHint(state: GameState) {
+  const move = planMove<GameState, number>(state, {
+    key: (current) =>
+      `hole:${current.piles.map((pile) => pile.length).join(",")}:${top(current.hole)?.id}`,
+    moves: (current) =>
+      current.piles.flatMap((pile, index) => {
+        const card = top(pile);
+        return card && canAbsorb(card, top(current.hole)) ? [index] : [];
+      }),
+    apply: (current, index) => ({
+      ...current,
+      piles: current.piles.map((pile, at) =>
+        at === index ? pile.slice(0, -1) : pile,
+      ),
+      hole: [...current.hole, top(current.piles[index])!],
+    }),
+    score: (current, depth) =>
+      depth * 100 -
+      current.piles.reduce((sum, pile) => sum + pile.length ** 2, 0) / 4,
+    budget: 6000,
+  });
+  return move === null
+    ? null
+    : makeHint(
+        "toFoundation",
+        cardTarget(top(state.piles[move])!),
+        zoneTarget("hole"),
+      );
+}
+
 export const blackHoleRules = {
+  findHint: findBlackHoleHint,
   adjacentWrap,
   canAbsorb,
   evaluateEnd,
@@ -291,6 +329,11 @@ function BlackHoleBoard({ variant }: { variant: BlackHoleVariant }) {
       await resetAndSetup(setGame, variant);
     },
     gameStateInitial,
+  });
+
+  useHint(() => findBlackHoleHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended,
   });
 
   useEffect(() => {

@@ -14,6 +14,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint } from "@/hints/hint";
 const GRID_SIZE = 4;
 const CELL_COUNT = GRID_SIZE * GRID_SIZE;
 const PUZZLE_RANKS: CardRank[] = ["A", "2", "3", "4"];
@@ -91,22 +93,149 @@ function gatherState(state: GameState): GameState {
   };
 }
 
-export const fifteenPuzzleRules = { adjacentIndices, moveCell, isSolved };
+// The solution the last hint found: for each position, the cell to slide.
+let solutionPath = new Map<string, number>();
+
+/**
+ * Slides tiles home along a short solution found by a weighted A* search
+ * (how far each tile is from home guides it), remembered so the hints along
+ * it come at once. If none turns up in time, the slide that brings the tiles
+ * closest to home.
+ */
+function findFifteenPuzzleHint(state: GameState) {
+  // Each cell's tile as its home cell; the gap is the last cell.
+  const homeOf = new Map(SOLVED_CELLS.map((card, index) => [card?.id, index]));
+  const start = state.cells.map((card) =>
+    card ? homeOf.get(card.id)! : CELL_COUNT - 1,
+  );
+  const key = (tiles: number[]) => tiles.join(",");
+  const distance = (tiles: number[]) =>
+    tiles.reduce((sum, home, at) => {
+      if (home === CELL_COUNT - 1) return sum;
+      return (
+        sum +
+        Math.abs((home % GRID_SIZE) - (at % GRID_SIZE)) +
+        Math.abs(Math.floor(home / GRID_SIZE) - Math.floor(at / GRID_SIZE))
+      );
+    }, 0);
+  const slide = (tiles: number[], cell: number) => {
+    const gap = tiles.indexOf(CELL_COUNT - 1);
+    const next = [...tiles];
+    [next[cell], next[gap]] = [next[gap], next[cell]];
+    return next;
+  };
+  const hintFor = (cell: number) =>
+    makeHint("tapCard", cardTarget(state.cells[cell]!));
+
+  const startKey = key(start);
+  const known = solutionPath.get(startKey);
+  if (known !== undefined) return hintFor(known);
+  if (distance(start) === 0) return null;
+
+  type Node = { tiles: number[]; cost: number; priority: number };
+  const parent = new Map<string, { from: string; cell: number }>();
+  const best = new Map([[startKey, 0]]);
+  const heap: Node[] = [{ tiles: start, cost: 0, priority: 0 }];
+  const push = (node: Node) => {
+    heap.push(node);
+    for (let i = heap.length - 1; i > 0; ) {
+      const up = (i - 1) >> 1;
+      if (heap[up].priority <= heap[i].priority) break;
+      [heap[up], heap[i]] = [heap[i], heap[up]];
+      i = up;
+    }
+  };
+  const pop = () => {
+    const first = heap[0];
+    const last = heap.pop()!;
+    if (heap.length > 0) {
+      heap[0] = last;
+      for (let i = 0; ; ) {
+        const left = i * 2 + 1;
+        const right = left + 1;
+        let low = i;
+        if (left < heap.length && heap[left].priority < heap[low].priority)
+          low = left;
+        if (right < heap.length && heap[right].priority < heap[low].priority)
+          low = right;
+        if (low === i) break;
+        [heap[low], heap[i]] = [heap[i], heap[low]];
+        i = low;
+      }
+    }
+    return first;
+  };
+
+  // A slow phone stops early and gets the nearest slide instead.
+  const startedAt = Date.now();
+  for (
+    let expanded = 0;
+    heap.length > 0 && expanded < 60000 && Date.now() - startedAt < 400;
+    expanded += 1
+  ) {
+    const node = pop();
+    const nodeKey = key(node.tiles);
+    if (distance(node.tiles) === 0) {
+      solutionPath = new Map();
+      let first = -1;
+      for (let at = parent.get(nodeKey); at; at = parent.get(at.from)) {
+        solutionPath.set(at.from, at.cell);
+        first = at.cell;
+      }
+      return hintFor(first);
+    }
+    for (const cell of adjacentIndices(node.tiles.indexOf(CELL_COUNT - 1))) {
+      const tiles = slide(node.tiles, cell);
+      const tilesKey = key(tiles);
+      const cost = node.cost + 1;
+      if (cost >= (best.get(tilesKey) ?? Infinity)) continue;
+      best.set(tilesKey, cost);
+      parent.set(tilesKey, { from: nodeKey, cell });
+      push({ tiles, cost, priority: cost + 2 * distance(tiles) });
+    }
+  }
+
+  const gap = start.indexOf(CELL_COUNT - 1);
+  const closest = adjacentIndices(gap).reduce((pick, cell) =>
+    distance(slide(start, cell)) < distance(slide(start, pick)) ? cell : pick,
+  );
+  return hintFor(closest);
+}
+
+export const fifteenPuzzleRules = {
+  findHint: findFifteenPuzzleHint,
+  adjacentIndices,
+  moveCell,
+  isSolved,
+};
 
 // Starts with every tile in the deal pile, to be dealt out from there.
 const gameStateInitial = gatherState(createInitialState());
 
 export default function FifteenPuzzle() {
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<GameState>({
-      gameStateInitial,
-      resetAndSetup: async () => {
-        // Gather every tile into the deal pile, then deal them back out.
-        setGame((draft) => gatherState(draft));
-        await delay();
-        setGame(() => createInitialState());
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<GameState>({
+    gameStateInitial,
+    resetAndSetup: async () => {
+      // Gather every tile into the deal pile, then deal them back out.
+      setGame((draft) => gatherState(draft));
+      await delay();
+      setGame(() => createInitialState());
+    },
+  });
+
+  useHint(() => findFifteenPuzzleHint(game), {
+    game,
+    enabled: !isSettingUp && !game.won && !game.deal?.length,
+  });
 
   const emptyIndex = game.cells.indexOf(null);
   const movable = useMemo(

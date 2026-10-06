@@ -19,6 +19,10 @@
     "label": "Tampilkan tips",
     "description": "Tampilkan ringkasan mulai cepat untuk permainan baru."
   },
+  "showHintButton": {
+    "label": "Tampilkan tombol petunjuk",
+    "description": "Bola lampu di kepala permainan yang menyorot langkah yang bagus."
+  },
   "keepScreenAwake": {
     "label": "Biarkan layar tetap menyala",
     "description": "Layar tetap menyala selama 10 menit setelah sentuhan terakhir."

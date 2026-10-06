@@ -12,6 +12,14 @@ import { View, ViewStyle } from "react-native";
 import { RichText } from "../common/RichText";
 import { ScrollView } from "react-native-gesture-handler";
 import { useModalStyles } from "@/styles/modalStyles";
+import { useHintButtonShown } from "@/data/hint-button";
+import { useHasHintFinder } from "@/hints/hint-store";
+import { useGameSettings } from "@/hooks/useGameSettings";
+import { Icon } from "@/icons";
+import { rgba } from "@/styles/styles";
+
+/** Players who've won a game this often know it: no more Hint button tip. */
+const HINT_TIP_MAX_WINS = 3;
 
 export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   const pathname = useGamePath();
@@ -26,6 +34,14 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   const modalStyles = useModalStyles();
   // The game's own accent, as the game modal's headings.
   const headingColor = theme.accent2;
+  const hintButtonShown = useHintButtonShown();
+  const hasHints = useHasHintFinder();
+  const { settings: gameSettings } = useGameSettings(pathname);
+  const showHintTip =
+    hintButtonShown &&
+    hasHints &&
+    !!gameSettings &&
+    gameSettings.stats.wins < HINT_TIP_MAX_WINS;
 
   return (
     <ModalFull
@@ -57,6 +73,36 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
               backgroundColor: theme.raise,
             }}
           />
+
+          {showHintTip && (
+            <View
+              style={[
+                flexStyles.fullWidth,
+                {
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: spacing(12),
+                  paddingLeft: spacing(14),
+                  paddingRight: spacing(20),
+                  paddingVertical: spacing(12),
+                  marginTop: spacing(10),
+                  borderRadius: spacing(14),
+                  backgroundColor: rgba(theme.raise, 0.5),
+                },
+              ]}
+            >
+              <Icon name="hint" size={spacing(26)} color={theme.accent} />
+              <Text
+                size="sm"
+                weight={300}
+                color={theme.ink}
+                style={{ flex: 1 }}
+                lineHeight={1.3}
+              >
+                {t("rules.hintTip")}
+              </Text>
+            </View>
+          )}
 
           <RichText
             content={gameInfo.howToPlay ?? [t("rules.unavailable")]}

@@ -26,6 +26,8 @@ import {
   top,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { useHint } from "@/hints/hint-store";
+import { findClassicHint } from "@/hints/classic";
 import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 import { useGameVariant } from "@/hooks/useGameVariant";
 
@@ -136,7 +138,35 @@ function dealYukon(deckCards: PlayingCard[]): GameState {
   };
 }
 
+/**
+ * Any face-up card moves with the cards on it. Once every card is face up,
+ * the hint searches for a win; before, it ranks the moves on view.
+ */
+function findYukonHint(
+  state: GameState,
+  canStack: (card: PlayingCard, destTop: PlayingCard | undefined) => boolean,
+) {
+  const allOnView = state.columns.every((pile) =>
+    pile.every((card) => card.faceUp),
+  );
+  return findClassicHint(
+    { tableau: state.columns, foundations: state.foundations },
+    {
+      toFoundation: (card, pile) => canPlaceOnFoundation(card, pile.at(-1)),
+      toTableau: (cards, pile) => canStack(cards[0], pile.at(-1)),
+      canLift: (pile, index) => pile[index].faceUp,
+      buildQuality: (card, base) => (canStack(card, base) ? 2 : 0),
+    },
+    {
+      tableau: (pile) => `cascade-${pile}`,
+      foundation: (pile) => `foundation-${pile}`,
+    },
+    { search: allOnView ? `yukon:${canStack.name}` : undefined },
+  );
+}
+
 export const yukonRules = {
+  findHint: findYukonHint,
   yukonCanStack,
   canPlaceOnFoundation,
   createYukonState,
@@ -270,6 +300,12 @@ export function YukonBoard({
     getFoundations: (state) => state.foundations,
     canPlaceOnFoundation,
     onStart: () => setSelected(null),
+  });
+
+  useHint(() => findYukonHint(game, canStack), {
+    game,
+    enabled:
+      !isSettingUp && !won && !isAutoCompleting && !game.setupPile?.length,
   });
 
   // ── Zones ─────────────────────────────────────────────────────────────────

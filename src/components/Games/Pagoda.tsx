@@ -19,6 +19,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint } from "@/hints/hint";
 
 // Tile-matching with cards (Tile Master, Zen Match): pick uncovered cards into
 // the tray; three of a rank are offered at the shrine. One suit of each rank is
@@ -189,7 +191,44 @@ function gatherState(state: PagodaGameState): PagodaGameState {
 
 const gameStateInitial = createInitialState(TRAY_SIZES.normal);
 
+/**
+ * Finish a set already in the tray; else take a card whose set can be
+ * finished from the cards on view, while the tray has room for it; else
+ * the card that uncovers the most. Hidden cards stay hidden.
+ */
+function findPagodaHint(state: PagodaGameState) {
+  const free = state.board.flatMap((card, index) =>
+    card?.faceUp && isFree(state.board, index) ? [index] : [],
+  );
+  const room = state.traySize - state.tray.length;
+  let best: { index: number; worth: number } | null = null;
+  for (const index of free) {
+    const card = state.board[index]!;
+    const inTray = state.tray.filter(
+      (other) => other.rank === card.rank,
+    ).length;
+    const onView = free.filter(
+      (other) => other !== index && state.board[other]!.rank === card.rank,
+    ).length;
+    const needed = SET_SIZE - inTray;
+    const after = state.board.map((cell, at) => (at === index ? null : cell));
+    const uncovers = state.board.filter(
+      (cell, at) => cell && !cell.faceUp && isFree(after, at),
+    ).length;
+    let worth: number;
+    if (needed === 1) worth = 1000;
+    else if (onView + 1 >= needed && needed <= room) worth = 500 + inTray * 100;
+    else if (room > needed) worth = inTray * 100 + uncovers * 30 + 10;
+    else worth = uncovers * 5 - 100;
+    if (!best || worth > best.worth) best = { index, worth };
+  }
+  return best
+    ? makeHint("tapCard", cardTarget(state.board[best.index]!))
+    : null;
+}
+
 export const pagodaRules = {
+  findHint: findPagodaHint,
   TRAY_SIZES,
   SLOTS,
   COVERED_BY,
@@ -210,23 +249,36 @@ export default function Pagoda() {
   const difficulty = useGameSettingValue("pagodaDifficulty");
   const [busy, setBusy] = useState(false);
 
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<PagodaGameState>({
-      gameStateInitial,
-      resetAndSetup: async () => {
-        // Gather every card into the shrine, then deal them back out.
-        setGame((draft) => gatherState(draft));
-        await delay();
-        setGame((draft) =>
-          redealWith(createInitialState(TRAY_SIZES[difficulty]), draft.deal),
-        );
-      },
-      resetNonGameStates: () => setBusy(false),
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<PagodaGameState>({
+    gameStateInitial,
+    resetAndSetup: async () => {
+      // Gather every card into the shrine, then deal them back out.
+      setGame((draft) => gatherState(draft));
+      await delay();
+      setGame((draft) =>
+        redealWith(createInitialState(TRAY_SIZES[difficulty]), draft.deal),
+      );
+    },
+    resetNonGameStates: () => setBusy(false),
+  });
 
   const won = isWon(game);
   const lost = isLost(game);
   const ended = won || lost;
+
+  useHint(() => findPagodaHint(game), {
+    game,
+    enabled: !isSettingUp && !ended && !busy && !game.deal?.length,
+  });
 
   async function onCardPress(index: number) {
     if (busy || ended || !isFree(game.board, index)) return;

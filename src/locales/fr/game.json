@@ -4,6 +4,7 @@
     "campaign": "Odyssée",
     "instantWin": "Victoire instantanée",
     "rules": "Règles",
+    "hint": "Indice",
     "undo": "Annuler",
     "reset": "Recommencer",
     "menu": "Menu",
@@ -31,7 +32,8 @@
   },
   "rules": {
     "title": "Règles",
-    "unavailable": "Les instructions ne sont pas disponibles pour ce jeu."
+    "unavailable": "Les instructions ne sont pas disponibles pour ce jeu.",
+    "hintTip": "Appuyez sur le bouton Indice pour mettre en évidence un coup valide."
   },
   "mercySkip": {
     "title": "Utiliser un passe-droit"
@@ -65,5 +67,21 @@
     "start": "Terminer",
     "settings": "Réglages de fin automatique",
     "dismiss": "Fermer"
+  },
+  "hint": {
+    "none": "Aucun indice disponible",
+    "toFoundation": "Placez cette carte sur une fondation",
+    "moveCard": "Déplacez cette carte ici",
+    "moveCards": "Déplacez ces cartes ici",
+    "toCell": "Placez cette carte dans une case libre",
+    "draw": "Piochez dans le talon",
+    "redeal": "Retournez la défausse pour repasser le talon",
+    "dealRow": "Distribuez une nouvelle rangée",
+    "toWaste": "Jouez cette carte sur la défausse",
+    "removeCard": "Retirez cette carte",
+    "removeCards": "Retirez ces cartes",
+    "swapCards": "Échangez ces cartes",
+    "tapCard": "Touchez cette carte",
+    "press": "Appuyez sur {{label}}"
   }
 }

@@ -19,6 +19,9 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint } from "@/hints/hint";
+import { planMove } from "@/hints/lookahead";
 type GameState = {
   setupPile: PlayingCard[];
   line: (PlayingCard[] | null)[];
@@ -86,7 +89,37 @@ function hasAnyMove(line: PlayingCard[][]) {
   return false;
 }
 
+/**
+ * Every card is on view: the hint looks ahead for the line that leaves the
+ * fewest piles. A move is a pile's index and the index it goes onto.
+ */
+function findAccordionHint(state: GameState) {
+  // The top cards in order, gaps left out (as the line closes up).
+  const tops = state.line.flatMap((pile) => (pile ? [top(pile)!] : []));
+  const move = planMove<PlayingCard[], [number, number]>(tops, {
+    key: (current) => `accordion:${current.map((card) => card.id).join(",")}`,
+    moves: (current) =>
+      current.flatMap((card, index) =>
+        [index - 1, index - 3].flatMap((target) =>
+          target >= 0 && canMerge(card, current[target])
+            ? [[index, target] as [number, number]]
+            : [],
+        ),
+      ),
+    apply: (current, [from, to]) =>
+      current.flatMap((card, index) =>
+        index === from ? [] : index === to ? [current[from]] : [card],
+      ),
+    score: (current) => -current.length,
+    budget: 5000,
+  });
+  return move
+    ? makeHint("moveCard", cardTarget(tops[move[0]]), cardTarget(tops[move[1]]))
+    : null;
+}
+
 export const accordionRules = {
+  findHint: findAccordionHint,
   canMerge,
   hasAnyMove,
 };
@@ -97,6 +130,7 @@ export default function Accordion() {
 
   const {
     isLoaded,
+    isSettingUp,
     game,
     setGame,
     undo,
@@ -113,6 +147,11 @@ export default function Accordion() {
     resetNonGameStates: () => {
       setSelectedIndex(null);
     },
+  });
+
+  useHint(() => findAccordionHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended && game.line.length > 0,
   });
 
   function onCardPress(index: number) {

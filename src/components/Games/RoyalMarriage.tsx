@@ -22,6 +22,9 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
+import { planMove } from "@/hints/lookahead";
 
 type GameState = {
   setupPile: PlayingCard[];
@@ -107,7 +110,42 @@ function hasAnyMove(line: PlayingCard[]) {
   return false;
 }
 
+/**
+ * Every card is on view: the hint looks ahead for the line of discards that
+ * brings the King and Queen closest together, then lights the cards to
+ * select and the Discard button.
+ */
+function findRoyalMarriageHint(state: GameState) {
+  const move = planMove<PlayingCard[], [number, number]>(state.line, {
+    key: (line) => `royal-marriage:${line.map((card) => card.id).join(",")}`,
+    moves: (line) => {
+      const runs: [number, number][] = [];
+      for (let start = 1; start < line.length - 1; start += 1) {
+        for (let count = 1; start + count < line.length; count += 1) {
+          if (canDiscardRun(line, start, count)) runs.push([start, count]);
+        }
+      }
+      return runs;
+    },
+    apply: (line, [start, count]) => [
+      ...line.slice(0, start),
+      ...line.slice(start + count),
+    ],
+    score: (line, depth) => -line.length * 10 - depth,
+    budget: 3000,
+  });
+  if (!move) return null;
+  const [start, count] = move;
+  return makeHint(
+    // The button's text, for the toast's sake and tests that press it.
+    { key: "removeCards", values: { label: i18n.t("cards:discard") } },
+    ...state.line.slice(start, start + count).map((card) => cardTarget(card)),
+    zoneTarget("buttons"),
+  );
+}
+
 export const royalMarriageRules = {
+  findHint: findRoyalMarriageHint,
   canDiscardRun,
   canDiscardSelection,
   hasAnyMove,
@@ -120,6 +158,7 @@ export default function RoyalMarriage() {
 
   const {
     isLoaded,
+    isSettingUp,
     game,
     setGame,
     undo,
@@ -141,6 +180,11 @@ export default function RoyalMarriage() {
   const lost = game.line.length > 0 && !won && !hasAnyMove(game.line);
   const ended = won || lost;
   const canDiscard = !ended && canDiscardSelection(game.line, selected);
+
+  useHint(() => findRoyalMarriageHint(game), {
+    game,
+    enabled: !isSettingUp && !ended && game.line.length > 0,
+  });
 
   function onCardPress(index: number) {
     if (isAnimatingRef.current || ended) return;

@@ -13,6 +13,9 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
+import { planMove } from "@/hints/lookahead";
 
 const lineCols = 7;
 const startCards = 3;
@@ -75,7 +78,67 @@ function evaluateEnd(state: GameState, isSettingUp = false) {
   return { ended: true, won: false };
 }
 
+/**
+ * The order to tap a run's cards in, so that it only goes once complete
+ * (each tap adds a card next to the selection), or null if every order
+ * would discard part of it first.
+ */
+function tapOrder(line: PlayingCard[], start: number, end: number) {
+  const run = line.slice(start, end + 1);
+  const clean = (cards: PlayingCard[]) =>
+    cards.every(
+      (_, size) =>
+        size < 1 ||
+        size >= cards.length - 1 ||
+        !isDecade(cards.slice(0, size + 1)),
+    );
+  if (clean(run)) return run;
+  const reversed = [...run].reverse();
+  return clean(reversed) ? reversed : null;
+}
+
+/**
+ * Looks ahead through the runs on the line for the line of removals that
+ * clears the most cards (a run can join two others once gone); draws when
+ * none adds up. The hint lights the run's cards in the order to tap them.
+ */
+function findTenTwentyThirtyHint(state: GameState) {
+  const move = planMove<PlayingCard[], [number, number]>(state.line, {
+    key: (line) => `ten-twenty-thirty:${line.map((card) => card.id).join(",")}`,
+    moves: (line) => {
+      const runs: [number, number][] = [];
+      for (let start = 0; start < line.length; start += 1) {
+        for (let end = start + 1; end < line.length; end += 1) {
+          if (
+            isDecade(line.slice(start, end + 1)) &&
+            tapOrder(line, start, end)
+          ) {
+            runs.push([start, end]);
+          }
+        }
+      }
+      return runs;
+    },
+    apply: (line, [start, end]) => [
+      ...line.slice(0, start),
+      ...line.slice(end + 1),
+    ],
+    score: (line, depth) => -line.length * 10 - depth,
+    budget: 3000,
+  });
+  if (move) {
+    return makeHint(
+      "removeCards",
+      ...tapOrder(state.line, move[0], move[1])!.map((card) =>
+        cardTarget(card),
+      ),
+    );
+  }
+  return state.stock.length > 0 ? makeHint("draw", zoneTarget("stock")) : null;
+}
+
 export const tenTwentyThirtyRules = {
+  findHint: findTenTwentyThirtyHint,
   points,
   isDecade,
   hasDecade,
@@ -133,6 +196,11 @@ export default function TenTwentyThirty() {
       });
     }
   }, [game, isSettingUp, setGame]);
+
+  useHint(() => findTenTwentyThirtyHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended && !slots,
+  });
 
   async function shiftLine(
     before: PlayingCard[],

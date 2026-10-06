@@ -29,6 +29,9 @@ import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
 
 import { i18n } from "@/i18n";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
+import { useHint } from "@/hints/hint-store";
+import { seededRandom, shuffledWith } from "@/hints/random";
 type GameState = {
   deck: PlayingCard[];
   hand: (PlayingCard | null)[];
@@ -126,12 +129,87 @@ function handScore(hand: (PlayingCard | null)[]) {
   return hand.filter((card) => card !== null).length;
 }
 
+function sandwiches(cards: PlayingCard[]) {
+  const found: PlayingCard[][] = [];
+  for (let i = 0; i < cards.length; i++) {
+    for (let j = i + 1; j < cards.length; j++) {
+      for (let k = j + 1; k < cards.length; k++) {
+        const triple = [cards[i], cards[j], cards[k]];
+        if (isValidSandwich(triple)) found.push(triple);
+      }
+    }
+  }
+  return found;
+}
+
+/**
+ * The sandwich to serve: the one that earns most cards back, and of those
+ * the one most likely to leave a good sandwich in the next hand, over the
+ * refills the deck could give.
+ */
+function bestSandwich(state: GameState) {
+  const hand = state.hand.filter((card) => card !== null);
+  const random = seededRandom(
+    hand.map((card) => card.id).join(",") + state.deck.length,
+  );
+  const refills = Array.from({ length: 8 }, () =>
+    shuffledWith(state.deck, random),
+  );
+  let best: PlayingCard[] | null = null;
+  let bestWorth = -Infinity;
+  for (const triple of sandwiches(hand)) {
+    const earned = Math.min(
+      replacementCount(triple),
+      state.deck.length,
+      hand.length,
+    );
+    const rest = hand.filter((card) => !triple.includes(card));
+    let next = 0;
+    for (const deck of refills) {
+      const nextHand = [...rest, ...deck.slice(0, earned)];
+      const options = sandwiches(nextHand);
+      if (options.length > 0) {
+        next +=
+          20 + 5 * Math.max(...options.map(replacementCount)) + options.length;
+      }
+    }
+    const worth =
+      earned * 100 + (earned >= state.deck.length ? 1000 : next / 8);
+    if (worth > bestWorth) {
+      bestWorth = worth;
+      best = triple;
+    }
+  }
+  return best;
+}
+
+function findTripleStackHint(state: GameState, selectedIds: string[]) {
+  if (state.ended) return null;
+  const triple = bestSandwich(state);
+  if (!triple) return null;
+  const wrong = selectedIds.filter(
+    (id) => !triple.some((card) => card.id === id),
+  );
+  if (wrong.length > 0) {
+    return makeHint("tapCard", ...wrong.map((id) => cardTarget(id)));
+  }
+  return makeHint(
+    {
+      key: "removeCards",
+      values: { label: i18n.t("games:tripleStack.serveSandwich") },
+    },
+    triple.filter((card) => !selectedIds.includes(card.id)).map(cardTarget),
+    zoneTarget("button"),
+  );
+}
+
 export const tripleStackRules = {
   mod13,
   isValidSandwich,
   hasAnyValidSandwich,
   replacementCount,
   handScore,
+  findHint: findTripleStackHint,
 };
 
 // ================== Component =================== //
@@ -169,6 +247,11 @@ export default function TripleStack() {
   }, [selectedCards]);
 
   const score = handScore(game.hand);
+
+  useHint(() => findTripleStackHint(game, selectedIds), {
+    game,
+    enabled: !game.ended && game.hand.some((card) => card !== null),
+  });
 
   function toggleSelect(id: string) {
     if (game.ended) return;

@@ -35,8 +35,13 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { findClassicHint } from "@/hints/classic";
 export type FanVariant =
-  "la-belle-lucie" | "trefoil" | "shamrocks" | "flower-garden";
+  | "la-belle-lucie"
+  | "trefoil"
+  | "shamrocks"
+  | "flower-garden";
 
 /**
  * A fan's offset, tightened once it would run into the next row of fans (or,
@@ -80,7 +85,8 @@ type Selection =
 
 type MoveSource = Exclude<Selection, null>;
 type DropTarget =
-  { zone: "tableau"; index: number } | { zone: "foundation"; index: number };
+  | { zone: "tableau"; index: number }
+  | { zone: "foundation"; index: number };
 
 const CONFIGS: Record<FanVariant, FanConfig> = {
   "la-belle-lucie": {
@@ -249,7 +255,53 @@ function evaluate(state: FanGameState, config: FanConfig) {
   };
 }
 
+/**
+ * Only the top card of a fan moves. A redeal shuffles the fans, so until the
+ * redeals are spent the hint ranks the moves on view and redeals when
+ * nothing helps; after, every card being on view, it searches for a win.
+ */
+function findFanHint(state: FanGameState, variant: FanVariant) {
+  const config = CONFIGS[variant];
+  const canRedeal =
+    state.redealsUsed < config.redeals &&
+    state.tableau.some((pile) => pile.length > 0);
+  return findClassicHint(
+    {
+      tableau: state.tableau,
+      foundations: state.foundations,
+      // Flower Garden's reserve cards each play on their own.
+      reserves: state.reserve.map((card) => [card]),
+    },
+    {
+      toFoundation: (card, pile) => canBuildFoundation(card, top(pile)),
+      toTableau: (cards, pile) =>
+        cards.length === 1 &&
+        canBuildTableau(cards[0], top(pile), pile.length, config),
+      canLift: (pile, index) => index === pile.length - 1,
+      buildQuality: (card, base) =>
+        canBuildTableau(card, base, 1, config) ? 2 : 0,
+    },
+    {
+      tableau: (pile) => `tableau-${pile}`,
+      foundation: (pile) => `foundation-${pile}`,
+    },
+    {
+      stock: canRedeal
+        ? {
+            zone: "redeal",
+            message: "press",
+            label: i18n.t("cards:redeal", {
+              value: config.redeals - state.redealsUsed,
+            }),
+          }
+        : null,
+      search: canRedeal ? undefined : `fan:${variant}`,
+    },
+  );
+}
+
 export const fanSolitaireRules = {
+  findHint: findFanHint,
   configs: CONFIGS,
   canBuildFoundation,
   canBuildTableau,
@@ -369,6 +421,11 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
     getFoundations: (state) => state.foundations,
     canPlaceOnFoundation: canBuildFoundation,
     onStart: () => setSelected(null),
+  });
+
+  useHint(() => findFanHint(game, variant), {
+    game,
+    enabled: !isSettingUp && !game.ended && !isAutoCompleting,
   });
 
   useEffect(() => {

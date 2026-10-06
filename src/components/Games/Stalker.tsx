@@ -20,6 +20,9 @@ import { delay } from "@/utils/utils";
 import { flexStyles } from "@/styles/flexStyles";
 
 import { i18n } from "@/i18n";
+import { ARROW_LABELS, cardTarget, makeHint, zoneTarget } from "@/hints/hint";
+import { useHint } from "@/hints/hint-store";
+import { seededRandom, shuffledWith } from "@/hints/random";
 const HORROR_RANKS = ["2", "3", "4", "5", "6", "7", "8", "9"] as const;
 const HORROR_DECK_SIZE = HORROR_RANKS.length * 4;
 type HorrorRank = (typeof HORROR_RANKS)[number];
@@ -270,6 +273,141 @@ async function resetAndSetup(
   });
 }
 
+type StalkerAction =
+  | { kind: "search"; rank: HorrorRank }
+  | { kind: "escape"; from: number; to: number };
+
+function stalkerActions(hand: readonly PlayingCard[]) {
+  const actions: StalkerAction[] = [];
+  for (const rank of new Set(hand.map((card) => card.rank as HorrorRank))) {
+    actions.push({ kind: "search", rank });
+  }
+  hand.forEach((_, from) => {
+    if (isCardInSequence(hand, from)) return;
+    hand.forEach((__, to) => {
+      if (to !== from) actions.push({ kind: "escape", from, to });
+    });
+  });
+  return actions;
+}
+
+/** How good a position looks: a long line to hide behind, a thin deck. */
+function stalkerWorth(state: StalkerGameState) {
+  if (state.ended) return state.won ? 10000 : -10000;
+  const runReady = state.hand.some(
+    (_, from) =>
+      !isCardInSequence(state.hand, from) &&
+      state.hand.some(
+        (__, to) => to !== from && escapeDrawCount(state.hand, from, to) > 0,
+      ),
+  );
+  return 10 * state.hand.length - 4 * state.deck.length + (runReady ? 8 : 0);
+}
+
+/**
+ * The action that does best over the draws the deck could give: escapes
+ * that build a run gain a card, searches thin the deck, and a trap wins.
+ */
+function bestStalkerAction(state: StalkerGameState) {
+  const random = seededRandom(
+    state.hand.map((card) => card.id).join(",") + state.deck.length,
+  );
+  const draws = Array.from({ length: 8 }, () =>
+    shuffledWith(state.deck, random),
+  );
+  let best: StalkerAction | null = null;
+  let bestWorth = -Infinity;
+  for (const action of stalkerActions(state.hand)) {
+    let worth = 0;
+    for (const deck of draws) {
+      const trial: StalkerGameState = {
+        ...state,
+        deck: [...deck],
+        hand: [...state.hand],
+        discard: [],
+      };
+      if (action.kind === "search") searchRank(trial, action.rank);
+      else escapeCard(trial, action.from, action.to);
+      worth += stalkerWorth(trial);
+    }
+    if (worth > bestWorth) {
+      bestWorth = worth;
+      best = action;
+    }
+  }
+  return best;
+}
+
+/**
+ * The hint, one press at a time: pick the card, then Search, or move it
+ * with the arrows and Escape.
+ */
+function findStalkerHint(
+  state: StalkerGameState,
+  selectedCardId: string | null,
+  mockHand: PlayingCard[] | null,
+) {
+  if (state.ended || state.hand.length === 0) return null;
+  const action = bestStalkerAction(state);
+  if (!action) return null;
+  const buttonLabel = (text: string) => text.split("\n")[0];
+
+  if (action.kind === "search") {
+    if (mockHand) {
+      return makeHint(
+        { key: "press", values: { label: i18n.t("cards:cancel") } },
+        zoneTarget("escapeAction"),
+      );
+    }
+    const cards = state.hand.filter((card) => card.rank === action.rank);
+    const selected = cards.some((card) => card.id === selectedCardId);
+    return makeHint(
+      {
+        key: "removeCards",
+        values: {
+          label: buttonLabel(
+            i18n.t("games:stalker.searchDraw", {
+              pendingSearchDrawCount: cards.length,
+            }),
+          ),
+        },
+      },
+      selected ? [] : cards.map(cardTarget),
+      zoneTarget("searchAction"),
+    );
+  }
+
+  const card = state.hand[action.from];
+  if (mockHand && selectedCardId !== card.id) {
+    return makeHint(
+      { key: "press", values: { label: i18n.t("cards:cancel") } },
+      zoneTarget("escapeAction"),
+    );
+  }
+  const at = (mockHand ?? state.hand).findIndex(
+    (entry) => entry.id === card.id,
+  );
+  const label =
+    at === action.to
+      ? buttonLabel(
+          i18n.t("games:stalker.escapeDraw", {
+            pendingEscapeDrawCount: escapeDrawCount(
+              state.hand,
+              action.from,
+              action.to,
+            ),
+          }),
+        )
+      : at < action.to
+        ? ARROW_LABELS.forward
+        : ARROW_LABELS.back;
+  return makeHint(
+    { key: "press", values: { label } },
+    selectedCardId === card.id ? [] : cardTarget(card),
+    zoneTarget("escapeAction"),
+  );
+}
+
 export const stalkerRules = {
   createDeck: createHorrorDeck,
   sequenceLengthFrom,
@@ -282,6 +420,7 @@ export const stalkerRules = {
   searchDrawCount,
   searchRank,
   escapeCard,
+  findHint: findStalkerHint,
 };
 
 export default function Stalker() {
@@ -317,6 +456,11 @@ export default function Stalker() {
       setGame((draft) => evaluateEnd(draft));
     }
   }, [game, isSettingUp, setGame]);
+
+  useHint(() => findStalkerHint(game, selectedCardId, mockHand), {
+    game: mockHand ?? game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   function takeSearch() {
     const selectedCard = game.hand.find((card) => card.id === selectedCardId);
@@ -558,6 +702,7 @@ export default function Stalker() {
           <Button
             size="sm"
             iconName="arrow-back"
+            accessibilityLabel={ARROW_LABELS.back}
             theme="green"
             onPress={() => moveSelectedCard(-1)}
             style={{ flex: 1 }}
@@ -569,6 +714,7 @@ export default function Stalker() {
           <Button
             size="sm"
             iconName="arrow-forward"
+            accessibilityLabel={ARROW_LABELS.forward}
             theme="green"
             onPress={() => moveSelectedCard(1)}
             style={{ flex: 1 }}

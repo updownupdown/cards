@@ -29,6 +29,8 @@ import {
   StandardRank,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { useHint } from "@/hints/hint-store";
+import { findClassicHint } from "@/hints/classic";
 
 import { i18n } from "@/i18n";
 const cardSize = "tableau";
@@ -174,7 +176,43 @@ function createInitialState(drawCount: 1 | 3 = 1): GameState {
   };
 }
 
+/**
+ * Ranks the moves on view. Getting the reserve's cards into play is what wins
+ * Canfield, so its cards come before the waste's.
+ */
+function findCanfieldHint(state: GameState) {
+  return findClassicHint(
+    {
+      tableau: state.tableau,
+      foundations: state.foundations,
+      reserves: [state.reserve, state.waste],
+    },
+    {
+      toFoundation: (card, pile) =>
+        canPlaceOnFoundation(card, pile, state.baseRank),
+      toTableau: (cards, pile) => canPlaceOnTableau(cards[0], pile.at(-1)),
+      canLift: (pile, index) => isValidTableauRun(pile.slice(index)),
+      buildQuality: (card, base) => (canPlaceOnTableau(card, base) ? 2 : 0),
+      bonus: (move) =>
+        move.from.kind === "reserve" && move.from.pile === 0 ? 200 : 0,
+    },
+    {
+      tableau: (pile) => `tableau-${pile}`,
+      foundation: (pile) => `foundation-${pile}`,
+    },
+    {
+      stock:
+        state.stock.length > 0
+          ? { zone: "stock", message: "draw" }
+          : state.waste.length > 0
+            ? { zone: "stock", message: "redeal" }
+            : null,
+    },
+  );
+}
+
 export const canfieldRules = {
+  findHint: findCanfieldHint,
   rankFromValue,
   nextRankWrap,
   popReserveTop,
@@ -209,23 +247,31 @@ export default function Canfield() {
     null,
   );
 
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<GameState>({
-      gameStateInitial,
-      resetNonGameStates: () => {
-        setSelected(null);
-        setLastTap(null);
-        clearDragGhost();
-      },
-      resetAndSetup: async () => {
-        // Gather every card into the stock, then deal them back out.
-        setGame((draft) => gatherState(draft));
-        await delay();
-        setGame((draft) =>
-          redealWith(createInitialState(configuredDrawCount), draft.stock),
-        );
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<GameState>({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelected(null);
+      setLastTap(null);
+      clearDragGhost();
+    },
+    resetAndSetup: async () => {
+      // Gather every card into the stock, then deal them back out.
+      setGame((draft) => gatherState(draft));
+      await delay();
+      setGame((draft) =>
+        redealWith(createInitialState(configuredDrawCount), draft.stock),
+      );
+    },
+  });
 
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
 
@@ -669,6 +715,11 @@ export default function Canfield() {
     [game.foundations],
   );
   const won = foundationCount === 52;
+
+  useHint(() => findCanfieldHint(game), {
+    game,
+    enabled: !isSettingUp && !won,
+  });
 
   useLayoutEffect(() => {
     const pending = pendingAutoFoundationRef.current;

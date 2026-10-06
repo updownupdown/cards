@@ -25,6 +25,9 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
+import { planMove } from "@/hints/lookahead";
 const cardSize = "small";
 const TABLEAU_COUNT = 5;
 const HAND_COUNT = 4;
@@ -258,7 +261,99 @@ function isWinningState(snapshot: RoyalRestGameState) {
   return completedColumns.length === 4 && emptyColumns.length === 1;
 }
 
+type RoyalRestMove = { source: RoyalRestMoveSource; to: number };
+
+/** How close a position is to four pillow-Jack-pillow columns. */
+function restScore(state: RoyalRestGameState) {
+  let score = 0;
+  for (const pile of state.tableau) {
+    score += pile.filter(isPillow).length * 100;
+    if (
+      pile.length === 3 &&
+      isPillow(pile[0]) &&
+      pile[1].rank === "J" &&
+      isPillow(pile[2])
+    ) {
+      score += 300;
+    }
+    for (let index = 1; index < pile.length; index += 1) {
+      const card = pile[index];
+      if (
+        card.faceUp &&
+        isNumberCard(card) &&
+        card.rank === pile[index - 1].rank
+      )
+        score += 15;
+    }
+  }
+  return score;
+}
+
+/**
+ * Every card is on view: the hint looks ahead for the line that makes the
+ * most pillows and pillow-Jack-pillow columns, gathering cards of a rank on
+ * the way.
+ */
+function royalRestKey(current: RoyalRestGameState) {
+  return `royal-rest:${current.tableau
+    .map((pile) => pile.map((c) => `${c.id}${c.faceUp ? "" : "?"}`).join("."))
+    .join("|")}:${current.hand.map((c) => c?.id ?? "-").join(",")}`;
+}
+
+function findRoyalRestHint(state: RoyalRestGameState, hardMode: boolean) {
+  const move = planMove<RoyalRestGameState, RoyalRestMove>(state, {
+    key: royalRestKey,
+    positionKey: royalRestKey,
+    moves: (current) => {
+      const sources: RoyalRestMoveSource[] = [
+        ...current.hand.flatMap((card, pileIndex) =>
+          card ? [{ zone: "hand" as const, pileIndex }] : [],
+        ),
+        ...current.tableau.flatMap((pile, pileIndex) =>
+          pile.map((_, cardIndex) => ({
+            zone: "tableau" as const,
+            pileIndex,
+            cardIndex,
+          })),
+        ),
+      ];
+      return sources.flatMap((source) =>
+        current.tableau.flatMap((destination, to) =>
+          // A whole pile into an empty one changes nothing.
+          (source.zone === "tableau" &&
+            source.cardIndex === 0 &&
+            destination.length === 0) ||
+          !canMove(source, to, current, hardMode)
+            ? []
+            : [{ source, to }],
+        ),
+      );
+    },
+    apply: (current, { source, to }) => {
+      const next: RoyalRestGameState = {
+        tableau: current.tableau.map((pile) => [...pile]),
+        hand: [...current.hand],
+        discard: [...current.discard],
+      };
+      moveCards(source, to, next, hardMode);
+      return next;
+    },
+    score: (current, depth) =>
+      isWinningState(current) ? 10000 - depth : restScore(current) - depth,
+    budget: 3000,
+    maxDepth: 10,
+  });
+  if (!move) return null;
+  const cards = getSourceCards(move.source, state);
+  return makeHint(
+    cards.length > 1 ? "moveCards" : "moveCard",
+    cardTarget(cards[0]),
+    zoneTarget(`tableau-${move.to}`),
+  );
+}
+
 export const royalRestRules = {
+  findHint: findRoyalRestHint,
   isNumberCard,
   isPillow,
   createInitialState,
@@ -619,6 +714,11 @@ export default function RoyalRest() {
   );
 
   const won = !isSettingUp && isWinningState(game);
+
+  useHint(() => findRoyalRestHint(game, hardMode), {
+    game,
+    enabled: !isSettingUp && !won,
+  });
 
   return (
     <GameWrapper

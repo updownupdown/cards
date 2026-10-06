@@ -4,6 +4,7 @@
     "campaign": "Odyssey",
     "instantWin": "Instant win",
     "rules": "Rules",
+    "hint": "Hint",
     "undo": "Undo",
     "reset": "Reset",
     "menu": "Menu",
@@ -31,7 +32,8 @@
   },
   "rules": {
     "title": "Rules",
-    "unavailable": "Instructions are not available for this game."
+    "unavailable": "Instructions are not available for this game.",
+    "hintTip": "Press the Hint button to highlight a valid move."
   },
   "mercySkip": {
     "title": "Use Mercy Skip"
@@ -65,5 +67,21 @@
     "start": "Auto-complete",
     "settings": "Auto-complete settings",
     "dismiss": "Close"
+  },
+  "hint": {
+    "none": "No hint available",
+    "toFoundation": "Move this card to a foundation",
+    "moveCard": "Move this card here",
+    "moveCards": "Move these cards here",
+    "toCell": "Move this card to a free cell",
+    "draw": "Draw from the stock",
+    "redeal": "Turn the waste over to go through the stock again",
+    "dealRow": "Deal a new row",
+    "toWaste": "Play this card onto the waste",
+    "removeCard": "Remove this card",
+    "removeCards": "Remove these cards",
+    "swapCards": "Swap these cards",
+    "tapCard": "Tap this card",
+    "press": "Press {{label}}"
   }
 }

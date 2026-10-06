@@ -19,6 +19,10 @@
     "label": "Mostrar consejos",
     "description": "Muestra un resumen de inicio rápido en los juegos nuevos."
   },
+  "showHintButton": {
+    "label": "Mostrar botón de pista",
+    "description": "Una bombilla en la cabecera del juego que resalta una buena jugada."
+  },
   "keepScreenAwake": {
     "label": "Mantener la pantalla encendida",
     "description": "La pantalla se mantiene encendida 10 minutos después de tu último toque."

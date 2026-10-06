@@ -13,6 +13,8 @@ import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint } from "@/hints/hint";
 
 type GameState = {
   grid: (PlayingCard | null)[];
@@ -157,7 +159,24 @@ async function resetAndSetup(
   });
 }
 
+/**
+ * Jack, Queen and King go together whenever they can (only a full set of
+ * them ever clears a face card); otherwise a pair totalling eleven. The
+ * stock's cards are unknown, so there's nothing to look ahead into.
+ */
+function findElevensHint(state: GameState) {
+  const sets = removableSets(state.grid);
+  const best = sets.find((set) => set.length === 3) ?? sets[0];
+  return best
+    ? makeHint(
+        "removeCards",
+        ...best.map((index) => cardTarget(state.grid[index]!)),
+      )
+    : null;
+}
+
 export const elevensRules = {
+  findHint: findElevensHint,
   isRemovableSet,
   isPartialSet,
   hasAvailableMove,
@@ -197,6 +216,11 @@ export default function Elevens() {
     !hasAvailableMove(game.grid) &&
     game.grid.some((card) => card !== null);
   const ended = !isSettingUp && (won || lost);
+
+  useHint(() => findElevensHint(game), {
+    game,
+    enabled: !isSettingUp && !ended,
+  });
 
   function onGridPress(index: number) {
     if (ended || !game.grid[index]) return;

@@ -36,6 +36,8 @@ import { GameWrapper } from "../common/GameWrapper";
 import { flexStyles } from "@/styles/flexStyles";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { findClassicHint } from "@/hints/classic";
 const pileCount = 12;
 const pileSize = 4;
 const pilesPerRow = 6;
@@ -59,7 +61,8 @@ export type CruelGameState = GameState;
 
 type Source = { pile: number };
 type Target =
-  { zone: "tableau"; pile: number } | { zone: "foundation"; pile: number };
+  | { zone: "tableau"; pile: number }
+  | { zone: "foundation"; pile: number };
 
 function emptyPiles(count: number) {
   return Array.from({ length: count }, () => [] as PlayingCard[]);
@@ -142,7 +145,40 @@ function pileOffset(count: number) {
   return zoneFanOffset(count, pileRows, 0.12, cardDims.tableauOffset);
 }
 
+/**
+ * Every card is on view. Moves come first; the redeal (allowed after a move)
+ * only when nothing on the table helps. With no redeal left, the hint
+ * searches for a win.
+ */
+function findCruelHint(state: GameState) {
+  return findClassicHint(
+    { tableau: state.tableau, foundations: state.foundations },
+    {
+      toFoundation: (card, pile) => canBuildFoundation(card, pile),
+      toTableau: (cards, pile) =>
+        cards.length === 1 && canBuildTableau(cards[0], pile),
+      canLift: (pile, index) => index === pile.length - 1,
+      buildQuality: (card, base) => (canBuildTableau(card, [base]) ? 2 : 0),
+    },
+    {
+      tableau: (pile) => `tableau-${pile}`,
+      foundation: (pile) => `foundation-${pile}`,
+    },
+    {
+      stock: state.canRedeal
+        ? {
+            zone: "redeal",
+            message: "press",
+            label: i18n.t("cards:redealAction"),
+          }
+        : null,
+      search: state.canRedeal ? undefined : "cruel",
+    },
+  );
+}
+
 export const cruelRules = {
+  findHint: findCruelHint,
   canMove,
   canPlaceOnFoundation,
   hasMove,
@@ -246,6 +282,12 @@ export default function Cruel() {
       setSelected(null);
       setLastTap(null);
     },
+  });
+
+  useHint(() => findCruelHint(game), {
+    game,
+    enabled:
+      !isSettingUp && !game.ended && !isAutoCompleting && !game.deck?.length,
   });
 
   useEffect(() => {

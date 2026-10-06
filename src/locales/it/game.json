@@ -4,6 +4,7 @@
     "campaign": "Odissea",
     "instantWin": "Vittoria istantanea",
     "rules": "Regole",
+    "hint": "Suggerimento",
     "undo": "Annulla",
     "reset": "Ricomincia",
     "menu": "Menu",
@@ -31,7 +32,8 @@
   },
   "rules": {
     "title": "Regole",
-    "unavailable": "Le istruzioni non sono disponibili per questo gioco."
+    "unavailable": "Le istruzioni non sono disponibili per questo gioco.",
+    "hintTip": "Premi il pulsante Suggerimento per evidenziare una mossa valida."
   },
   "mercySkip": {
     "title": "Usa una grazia"
@@ -65,5 +67,21 @@
     "start": "Completa",
     "settings": "Impostazioni di completamento automatico",
     "dismiss": "Chiudi"
+  },
+  "hint": {
+    "none": "Nessun suggerimento disponibile",
+    "toFoundation": "Sposta questa carta su una fondazione",
+    "moveCard": "Sposta questa carta qui",
+    "moveCards": "Sposta queste carte qui",
+    "toCell": "Sposta questa carta in una cella libera",
+    "draw": "Pesca dal mazzo",
+    "redeal": "Gira gli scarti per ripassare il mazzo",
+    "dealRow": "Distribuisci una nuova fila",
+    "toWaste": "Gioca questa carta sugli scarti",
+    "removeCard": "Rimuovi questa carta",
+    "removeCards": "Rimuovi queste carte",
+    "swapCards": "Scambia queste carte",
+    "tapCard": "Tocca questa carta",
+    "press": "Premi {{label}}"
   }
 }

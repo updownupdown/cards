@@ -18,6 +18,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { findClassicHint } from "@/hints/classic";
 type GameState = {
   columns: PlayingCard[][];
   foundations: PlayingCard[][];
@@ -164,7 +166,30 @@ function evaluateEnd(
   return { ended: false, won: false };
 }
 
+/** Every card is on view: the hint searches for a win, one card at a time. */
+function findCastleHint(
+  state: GameState,
+  canStack: (card: PlayingCard, destTop: PlayingCard | undefined) => boolean,
+) {
+  return findClassicHint(
+    { tableau: state.columns, foundations: state.foundations },
+    {
+      toFoundation: (card, pile) => canPlaceFoundation(card, top(pile)),
+      toTableau: (cards, pile) =>
+        cards.length === 1 && canStack(cards[0], top(pile)),
+      canLift: (pile, index) => index === pile.length - 1,
+      buildQuality: (card, base) => (canStack(card, base) ? 2 : 0),
+    },
+    {
+      tableau: (pile) => `col-${pile}`,
+      foundation: (pile) => `foundation-${pile}`,
+    },
+    { search: `castle:${canStack.name}` },
+  );
+}
+
 export const beleagueredCastleRules = {
+  findHint: findCastleHint,
   canStackDown,
   canPlaceFoundation,
   anyLegalMove,
@@ -247,6 +272,11 @@ export function CastleBoard({
     getFoundations: (state) => state.foundations,
     canPlaceOnFoundation: canPlaceFoundation,
     onStart: () => setSelectedCol(undefined),
+  });
+
+  useHint(() => findCastleHint(game, canStack), {
+    game,
+    enabled: !isSettingUp && !game.ended && !isAutoCompleting,
   });
 
   useEffect(() => {

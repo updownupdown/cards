@@ -4,6 +4,7 @@
     "campaign": "Pengembaraan",
     "instantWin": "Menang instan",
     "rules": "Aturan",
+    "hint": "Petunjuk",
     "undo": "Urungkan",
     "reset": "Ulangi",
     "menu": "Menu",
@@ -31,7 +32,8 @@
   },
   "rules": {
     "title": "Aturan",
-    "unavailable": "Petunjuk untuk permainan ini belum tersedia."
+    "unavailable": "Petunjuk untuk permainan ini belum tersedia.",
+    "hintTip": "Tekan tombol Petunjuk untuk menyorot langkah yang sah."
   },
   "mercySkip": {
     "title": "Gunakan pengampunan"
@@ -65,5 +67,21 @@
     "start": "Selesaikan",
     "settings": "Pengaturan selesaikan otomatis",
     "dismiss": "Tutup"
+  },
+  "hint": {
+    "none": "Tidak ada petunjuk",
+    "toFoundation": "Pindahkan kartu ini ke fondasi",
+    "moveCard": "Pindahkan kartu ini ke sini",
+    "moveCards": "Pindahkan kartu-kartu ini ke sini",
+    "toCell": "Pindahkan kartu ini ke sel kosong",
+    "draw": "Ambil dari tumpukan",
+    "redeal": "Balik buangan untuk melewati tumpukan lagi",
+    "dealRow": "Bagikan baris baru",
+    "toWaste": "Mainkan kartu ini ke buangan",
+    "removeCard": "Singkirkan kartu ini",
+    "removeCards": "Singkirkan kartu-kartu ini",
+    "swapCards": "Tukar kartu-kartu ini",
+    "tapCard": "Ketuk kartu ini",
+    "press": "Tekan {{label}}"
   }
 }

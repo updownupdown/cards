@@ -32,6 +32,8 @@ import {
   zoneFanOffset,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { useHint } from "@/hints/hint-store";
+import { findClassicHint } from "@/hints/classic";
 import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
 
 import { i18n } from "@/i18n";
@@ -188,7 +190,40 @@ function revealLastIfNeeded(pile: readonly PlayingCard[]) {
   return [...pile.slice(0, -1), { ...last, faceUp: true }];
 }
 
+/** Ranks the moves on view; the stock's order stays a secret. */
+function findKlondikeHint(state: GameState) {
+  const allOnView = state.tableau.every((pile) =>
+    pile.every((card) => card.faceUp),
+  );
+  return findClassicHint(
+    {
+      tableau: state.tableau,
+      foundations: state.foundations,
+      reserves: [state.waste],
+    },
+    {
+      toFoundation: (card, pile) => canPlaceOnFoundation(card, pile.at(-1)),
+      toTableau: (cards, pile) => canPlaceOnTableau(cards[0], pile.at(-1)),
+      canLift: (pile, index) => isValidTableauRun(pile.slice(index)),
+    },
+    {
+      tableau: (pile) => `tableau-${pile}`,
+      foundation: (pile) => `foundation-${pile}`,
+    },
+    {
+      stock:
+        state.stock.length > 0
+          ? { zone: "stock", message: "draw" }
+          : state.waste.length > 0
+            ? { zone: "stock", message: "redeal" }
+            : null,
+      search: allOnView ? "klondike" : undefined,
+    },
+  );
+}
+
 export const klondikeRules = {
+  findHint: findKlondikeHint,
   canPlaceOnTableau,
   canPlaceOnFoundation,
   isValidTableauRun,
@@ -706,6 +741,11 @@ export default function Klondike() {
     getFoundations: (state) => state.foundations,
     canPlaceOnFoundation,
     onStart: clearSelection,
+  });
+
+  useHint(() => findKlondikeHint(game), {
+    game,
+    enabled: !isSettingUp && !won && !isAutoCompleting,
   });
 
   function clearSelection() {

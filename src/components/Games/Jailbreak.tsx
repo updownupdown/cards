@@ -20,6 +20,8 @@ import { useStateManager } from "@/hooks/useStateManager";
 import { Colors, rgba } from "@/styles/styles";
 import { i18n } from "@/i18n";
 import { delay } from "@/utils/utils";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 
 export type JailbreakDifficulty = "easy" | "normal" | "hard";
 export type JailbreakSource =
@@ -229,7 +231,62 @@ function removeSelections(
   }
 }
 
+/**
+ * The best set of cards whose red and black totals match: cards off the
+ * Joker (it must be bare to escape) and off the walls, the shorter wall
+ * first, and more cards rather than fewer. Only minimal sets are offered,
+ * so no part of one clears by itself while it's being tapped. Adds a card
+ * to the Joker when nothing matches.
+ */
+function findJailbreakHint(state: JailbreakGameState) {
+  const sources: JailbreakSource[] = [
+    ...state.piles.flatMap((pile, index) =>
+      pile.length ? [{ zone: "jail" as const, index }] : [],
+    ),
+    ...(state.jokerPile.length ? [{ zone: "joker" as const }] : []),
+  ];
+  const balanced = (mask: number) =>
+    isBalancedSelection(
+      state,
+      sources.filter((_, index) => mask & (1 << index)),
+    );
+  let best: { mask: number; worth: number } | null = null;
+  for (let mask = 1; mask < 1 << sources.length; mask += 1) {
+    if (!balanced(mask)) continue;
+    // Minimal: no smaller set inside it balances.
+    let minimal = true;
+    for (let sub = (mask - 1) & mask; sub > 0; sub = (sub - 1) & mask) {
+      if (balanced(sub)) {
+        minimal = false;
+        break;
+      }
+    }
+    if (!minimal) continue;
+    let worth = 0;
+    sources.forEach((source, index) => {
+      if (!(mask & (1 << index))) return;
+      worth += 10;
+      if (source.zone === "joker") worth += 60;
+      else if (WALL_INDICES.includes(source.index)) {
+        worth += 40 - state.piles[source.index].length * 4;
+      }
+    });
+    if (!best || worth > best.worth) best = { mask, worth };
+  }
+  if (best) {
+    const picked = sources.filter((_, index) => best!.mask & (1 << index));
+    return makeHint(
+      "removeCards",
+      ...picked.map((source) => cardTarget(getSourceCard(state, source)!)),
+    );
+  }
+  return state.stock.length > 0 && state.jokerPile.length < MAX_JOKER_CARDS
+    ? makeHint("draw", zoneTarget("stock"))
+    : null;
+}
+
 export const jailbreakRules = {
+  findHint: findJailbreakHint,
   cornerCards: CORNER_CARDS,
   createInitialState: createJailbreakState,
   selectionTotals,
@@ -286,6 +343,11 @@ export default function Jailbreak() {
   }, [game, isSettingUp, setGame]);
 
   const totals = selectionTotals(game, selected);
+
+  useHint(() => findJailbreakHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   function toggleSelection(source: JailbreakSource) {
     if (game.ended || !getSourceCard(game, source)) return;

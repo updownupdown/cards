@@ -17,6 +17,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 const leftCols = 4;
 const leftDepth = 3;
 const rightCols = 4;
@@ -94,7 +96,45 @@ function evaluateEnd(state: GameState, isSettingUp = false) {
   return { ended: true, won: false };
 }
 
+/**
+ * Cards go home first, from the right-hand reserve (whose gaps can then take
+ * the waste's cards), the left-hand piles, then the waste. A gap on the
+ * right takes the waste's card next; draw when nothing else plays.
+ */
+function findRoyalCotillionHint(state: GameState) {
+  const sources = [
+    ...state.right.map((_, index) => ({ zone: "right", index }) as Source),
+    ...state.left.map((_, pile) => ({ zone: "left", pile }) as Source),
+    { zone: "waste" } as Source,
+  ];
+  for (const source of sources) {
+    const card = sourceCard(state, source);
+    const home = card ? foundationFor(state, card) : -1;
+    if (card && home >= 0) {
+      return makeHint(
+        "toFoundation",
+        cardTarget(card),
+        zoneTarget(`foundation-${home}`),
+      );
+    }
+  }
+  const gap = state.right.findIndex((card) => !card);
+  const wasteTop = top(state.waste);
+  if (gap >= 0 && wasteTop) {
+    return makeHint(
+      "moveCard",
+      cardTarget(wasteTop),
+      zoneTarget(`right-${gap}`),
+    );
+  }
+  if (gap >= 0 && state.stock.length > 0) {
+    return makeHint("tapCard", zoneTarget(`right-${gap}`));
+  }
+  return state.stock.length > 0 ? makeHint("draw", zoneTarget("stock")) : null;
+}
+
 export const royalCotillionRules = {
+  findHint: findRoyalCotillionHint,
   nextRankValue,
   foundationFor,
   evaluateEnd,
@@ -165,6 +205,11 @@ export default function RoyalCotillion() {
       });
     }
   }, [game, isSettingUp, setGame]);
+
+  useHint(() => findRoyalCotillionHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   function playToFoundation(source: Source) {
     const card = sourceCard(game, source);

@@ -18,6 +18,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 const MAX_REDEALS = 2;
 type Selection = { zone: "reserve"; index: number } | { zone: "waste" } | null;
 
@@ -129,7 +131,29 @@ function hasMove(state: SultanGameState) {
   return cards.some((card) => getFoundationTarget(state, card) !== null);
 }
 
+/**
+ * Reserve cards go home first (their gaps refill, bringing more cards into
+ * play), then the waste's; draw, or redeal, when none can.
+ */
+function findSultanHint(state: SultanGameState) {
+  const playable = [...state.reserve, top(state.waste)].find(
+    (card) => card && getFoundationTarget(state, card) !== null,
+  );
+  if (playable) {
+    return makeHint(
+      "toFoundation",
+      cardTarget(playable),
+      zoneTarget(`foundation-${getFoundationTarget(state, playable)}`),
+    );
+  }
+  if (state.stock.length > 0) return makeHint("draw", zoneTarget("stock"));
+  return state.waste.length > 0 && state.redealsUsed < MAX_REDEALS
+    ? makeHint("redeal", zoneTarget("stock"))
+    : null;
+}
+
 export const sultanRules = {
+  findHint: findSultanHint,
   canBuildFoundation,
   createInitialState,
   getFoundationTarget,
@@ -141,21 +165,34 @@ export default function Sultan() {
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
     null,
   );
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<SultanGameState>({
-      // Starts with every card in the stock, to be dealt out from there.
-      gameStateInitial: gatherState(createInitialState()),
-      resetNonGameStates: () => {
-        setSelected(null);
-        setLastTap(null);
-      },
-      resetAndSetup: async () => {
-        // Gather every card into the stock, then deal them back out.
-        setGame((draft) => gatherState(draft));
-        await delay();
-        setGame((draft) => redealState(draft));
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<SultanGameState>({
+    // Starts with every card in the stock, to be dealt out from there.
+    gameStateInitial: gatherState(createInitialState()),
+    resetNonGameStates: () => {
+      setSelected(null);
+      setLastTap(null);
+    },
+    resetAndSetup: async () => {
+      // Gather every card into the stock, then deal them back out.
+      setGame((draft) => gatherState(draft));
+      await delay();
+      setGame((draft) => redealState(draft));
+    },
+  });
+
+  useHint(() => findSultanHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   useEffect(() => {
     const won = game.foundations.every((pile) => top(pile)?.rank === "Q");

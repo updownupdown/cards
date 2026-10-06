@@ -16,6 +16,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 const carpetCols = 5;
 const carpetRows = 4;
 const carpetSize = carpetCols * carpetRows;
@@ -70,7 +72,29 @@ function evaluateEnd(state: GameState, isSettingUp = false) {
   return { ended: true, won: false };
 }
 
-export const carpetRules = { foundationFor, evaluateEnd };
+/**
+ * Carpet cards go home first: each gap takes the waste's top card, which
+ * brings the next waste card into play. Then the waste, then the stock.
+ */
+function findCarpetHint(state: GameState) {
+  const playable = [...state.carpet, top(state.waste)].find(
+    (card) => card && foundationFor(state, card) >= 0,
+  );
+  if (playable) {
+    return makeHint(
+      "toFoundation",
+      cardTarget(playable),
+      zoneTarget(`foundation-${foundationFor(state, playable)}`),
+    );
+  }
+  return state.stock.length > 0 ? makeHint("draw", zoneTarget("stock")) : null;
+}
+
+export const carpetRules = {
+  findHint: findCarpetHint,
+  foundationFor,
+  evaluateEnd,
+};
 
 export default function Carpet() {
   const {
@@ -126,6 +150,11 @@ export default function Carpet() {
       });
     }
   }, [game, isSettingUp, setGame]);
+
+  useHint(() => findCarpetHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended,
+  });
 
   function playFromCarpet(index: number) {
     const card = game.carpet[index];

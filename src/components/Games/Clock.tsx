@@ -29,6 +29,8 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint } from "@/hints/hint";
 type GameState = {
   piles: PlayingCard[][];
   nextPileIndex?: number;
@@ -113,7 +115,17 @@ function revealCardAtPileIndex(draft: GameState, pileIndex: number) {
   return true;
 }
 
+/** Clock plays itself: the hint shows the one card to turn. */
+function findClockHint(state: GameState) {
+  const card =
+    state.nextPileIndex === undefined
+      ? undefined
+      : top(state.piles[state.nextPileIndex]);
+  return card ? makeHint("tapCard", cardTarget(card)) : null;
+}
+
 export const clockRules = {
+  findHint: findClockHint,
   revealCardAtPileIndex,
 };
 
@@ -136,6 +148,11 @@ export default function Clock() {
       await resetAndSetup(setGame);
     },
     gameStateInitial,
+  });
+
+  useHint(() => findClockHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended,
   });
 
   async function revealCard(pileIndex: number) {

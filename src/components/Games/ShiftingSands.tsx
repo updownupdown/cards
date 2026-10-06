@@ -25,6 +25,9 @@ import { GameWrapper } from "../common/GameWrapper";
 import { ProgressBar } from "../Home/ProgressBar";
 
 import { i18n } from "@/i18n";
+import { ARROW_LABELS, pressHint } from "@/hints/hint";
+import { useHint } from "@/hints/hint-store";
+import { seededRandom, shuffledWith } from "@/hints/random";
 const cardSize = "tableau";
 const minCols = 10;
 
@@ -303,6 +306,139 @@ function playCard(draft: ShiftingSandsGameState, requestedColumn: number) {
   return true;
 }
 
+/**
+ * How much a hand placed from \`start\` gains, castle cards less tide, once
+ * the tide has come in, and how many deck cards the turn uses.
+ */
+function placementGain(
+  snapshot: ShiftingSandsGameState,
+  hand: PlayingCard[],
+  start: number,
+  deckLeft: number,
+) {
+  const changed = new Map<number, PlayingCard[]>();
+  for (const [index, card] of hand.entries()) {
+    const target = start + index;
+    const column = changed.get(target) ?? snapshot.columns[target] ?? [];
+    const standing = keepsStanding(column, card);
+    const placed = [...column, { ...card, faceUp: true }];
+    changed.set(
+      target,
+      standing ? placed : placed.map((entry) => ({ ...entry, faceUp: false })),
+    );
+  }
+  const columns = [
+    ...snapshot.columns.map((column, index) => changed.get(index) ?? column),
+    ...[...changed.entries()]
+      .filter(([index]) => index < 0 || index >= snapshot.columns.length)
+      .map(([, column]) => column),
+  ];
+  const before = faceUpCount(snapshot.columns);
+  const after = faceUpCount(columns);
+  const tide = Math.ceil(columns.filter(isStanding).length / 2);
+  const fromDeck = Math.min(tide, deckLeft);
+  const fromCastle = Math.min(tide - fromDeck, after);
+  return {
+    gain: after - fromCastle - before - (fromDeck + fromCastle),
+    used: hand.length + fromDeck,
+  };
+}
+
+/** The best way to lay out a hand: its order, where it starts, and its gain. */
+function bestPlacement(
+  snapshot: ShiftingSandsGameState,
+  hand: PlayingCard[],
+  deckLeft: number,
+  canShift: boolean,
+) {
+  const orders = hand.length > 1 ? [hand, [...hand].reverse()] : [hand];
+  const starts = canShift
+    ? Array.from(
+        { length: snapshot.columns.length + hand.length },
+        (_, index) => index + 1 - hand.length,
+      )
+    : [snapshot.previewStart];
+  let best = { reversed: false, start: 0, gain: -Infinity, used: 1 };
+  for (const [orderIndex, order] of orders.entries()) {
+    for (const start of starts) {
+      const { gain, used } = placementGain(snapshot, order, start, deckLeft);
+      if (gain > best.gain) {
+        best = { reversed: orderIndex === 1, start, gain, used };
+      }
+    }
+  }
+  return best;
+}
+
+/**
+ * The hint: how many cards to gather (the count that, over hands the deck
+ * could give, gains most for the deck cards it uses), then the order and
+ * place that do best with the hand drawn, then Place.
+ */
+function findShiftingSandsHint(snapshot: ShiftingSandsGameState) {
+  if (snapshot.ended) return null;
+  const canShift = snapshot.columns.some((column) => column.length > 0);
+
+  if (snapshot.phase === "gather") {
+    const random = seededRandom(
+      snapshot.columns
+        .map((column) => column.map((card) => card.id).join(","))
+        .join("|") + snapshot.deck.length,
+    );
+    let bestCount = 0;
+    let bestRate = -Infinity;
+    for (
+      let count = 1;
+      count <= Math.min(7, snapshot.deck.length);
+      count += 1
+    ) {
+      let total = 0;
+      const samples = 12;
+      for (let sample = 0; sample < samples; sample += 1) {
+        const hand = shuffledWith(snapshot.deck, random).slice(0, count);
+        const { gain, used } = bestPlacement(
+          snapshot,
+          hand,
+          snapshot.deck.length - count,
+          canShift,
+        );
+        total += gain / used;
+      }
+      if (total / samples > bestRate) {
+        bestRate = total / samples;
+        bestCount = count;
+      }
+    }
+    return bestCount > 0 ? pressHint("actions", String(bestCount)) : null;
+  }
+
+  if (snapshot.hand.length === 0) return null;
+  const best = bestPlacement(
+    snapshot,
+    snapshot.hand,
+    snapshot.deck.length,
+    canShift,
+  );
+  const current = placementGain(
+    snapshot,
+    snapshot.hand,
+    snapshot.previewStart,
+    snapshot.deck.length,
+  );
+  if (current.gain >= best.gain) {
+    return pressHint("actions", i18n.t("games:shiftingSands.place"));
+  }
+  if (best.reversed) {
+    return pressHint("actions", i18n.t("games:shiftingSands.reverse"));
+  }
+  return pressHint(
+    "actions",
+    best.start < snapshot.previewStart
+      ? ARROW_LABELS.back
+      : ARROW_LABELS.forward,
+  );
+}
+
 export const shiftingSandsRules = {
   createInitialState,
   isStanding,
@@ -319,6 +455,7 @@ export const shiftingSandsRules = {
   faceUpCount,
   resolveTide,
   playCard,
+  findHint: findShiftingSandsHint,
 };
 
 const gameStateInitial = createInitialState();
@@ -375,6 +512,11 @@ export default function ShiftingSands() {
   const columnOffset = Math.max(minCols - displayColumnCount, 0) / 2;
   const placementPreview = useMemo(() => previewPlacement(game), [game]);
   const isFirstHand = game.columns.every((column) => column.length === 0);
+
+  useHint(() => findShiftingSandsHint(game), {
+    game,
+    enabled: isLoaded && !game.ended,
+  });
 
   function gather(count: number) {
     saveUndoState(structuredClone(game));
@@ -650,6 +792,7 @@ export default function ShiftingSands() {
                 size="sm"
                 theme={colorDark}
                 disabled={isFirstHand}
+                accessibilityLabel={ARROW_LABELS.back}
                 onPress={() =>
                   updatePreview((draft) => shiftPreview(draft, -1))
                 }
@@ -660,6 +803,7 @@ export default function ShiftingSands() {
                 size="sm"
                 theme={colorDark}
                 disabled={isFirstHand}
+                accessibilityLabel={ARROW_LABELS.forward}
                 onPress={() => updatePreview((draft) => shiftPreview(draft, 1))}
                 taller
                 iconName="arrow-forward"

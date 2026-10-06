@@ -17,6 +17,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 const colStep = 1.15;
 const rowStep = 1.1;
 // The antechamber is the outer ring of a 5x5 grid, as [col, row].
@@ -219,7 +221,30 @@ function evaluateEnd(state: GameState, isPaused = false) {
   return hasMove ? playing : { ended: true, won: false };
 }
 
+/**
+ * Any card that can go up, the frame's before the waste's (its gap takes the
+ * next card); a pair goes up together. Draws when nothing plays.
+ */
+function findQueensAudienceHint(state: GameState) {
+  for (const location of [
+    ...availableLocations(state).filter((at) => at.zone === "frame"),
+    ...availableLocations(state).filter((at) => at.zone === "waste"),
+  ]) {
+    const play = playFor(state, location);
+    if (play) {
+      const pile = `${play.pile === "royals" ? "royal" : "foundation"}-${play.suit}`;
+      return makeHint(
+        "toFoundation",
+        cardTarget(cardAt(state, location)!),
+        zoneTarget(pile),
+      );
+    }
+  }
+  return state.stock.length > 0 ? makeHint("draw", zoneTarget("stock")) : null;
+}
+
 export const queensAudienceRules = {
+  findHint: findQueensAudienceHint,
   findAvailable,
   playFor,
   planFinish,
@@ -356,6 +381,11 @@ export default function QueensAudience() {
     );
     return () => clearTimeout(timer);
   }, [game, isMoving, isSettingUp]);
+
+  useHint(() => findQueensAudienceHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended && !isMoving,
+  });
 
   function onCardPress(location: Location) {
     if (game.ended || isMovingRef.current) return;

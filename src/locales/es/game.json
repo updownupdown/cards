@@ -4,6 +4,7 @@
     "campaign": "Odisea",
     "instantWin": "Victoria instantánea",
     "rules": "Reglas",
+    "hint": "Pista",
     "undo": "Deshacer",
     "reset": "Reiniciar",
     "menu": "Menú",
@@ -31,7 +32,8 @@
   },
   "rules": {
     "title": "Reglas",
-    "unavailable": "Las instrucciones no están disponibles para este juego."
+    "unavailable": "Las instrucciones no están disponibles para este juego.",
+    "hintTip": "Pulsa el botón Pista para resaltar una jugada válida."
   },
   "mercySkip": {
     "title": "Usar un indulto"
@@ -65,5 +67,21 @@
     "start": "Autocompletar",
     "settings": "Ajustes de autocompletar",
     "dismiss": "Cerrar"
+  },
+  "hint": {
+    "none": "No hay pistas disponibles",
+    "toFoundation": "Mueve esta carta a una fundación",
+    "moveCard": "Mueve esta carta aquí",
+    "moveCards": "Mueve estas cartas aquí",
+    "toCell": "Mueve esta carta a una celda libre",
+    "draw": "Roba del mazo",
+    "redeal": "Da la vuelta al descarte para recorrer el mazo otra vez",
+    "dealRow": "Reparte una nueva fila",
+    "toWaste": "Juega esta carta sobre el descarte",
+    "removeCard": "Retira esta carta",
+    "removeCards": "Retira estas cartas",
+    "swapCards": "Intercambia estas cartas",
+    "tapCard": "Toca esta carta",
+    "press": "Pulsa {{label}}"
   }
 }

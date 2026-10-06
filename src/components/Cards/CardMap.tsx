@@ -23,6 +23,9 @@ import { CardMapVisualizer } from "./CardMapVisualizer";
 import { CardSizes } from "./CardStyles";
 import { getHeaderHeightWithInset } from "@/styles/styles";
 import { IconName } from "@/icons/generated";
+import { HintLayer } from "@/hints/HintLayer";
+import type { HintTarget } from "@/hints/hint";
+import { locateHintTarget } from "@/hints/locate";
 
 export type CardPosition = {
   x: number;
@@ -596,6 +599,18 @@ export function useCardMap({
     [cardHeight, cardWidth, getZoneBasePos, zoneMapper, zones],
   );
 
+  // The Hint button's highlights, drawn over the cards they point at.
+  const locateHint = useCallback(
+    (target: HintTarget) =>
+      locateHintTarget(target, {
+        cards: Object.values(cardPositions),
+        getZoneRect: (zoneId) => zoneBasePosById.get(zoneId) ?? null,
+        cardWidth,
+        cardHeight,
+      }),
+    [cardHeight, cardPositions, cardWidth, zoneBasePosById],
+  );
+
   const mapVisualizer = useMemo(
     () =>
       visualizer ? (
@@ -636,12 +651,14 @@ export function useCardMap({
         />
         {mapBackgrounds}
         {mappedCards}
+        <HintLayer locate={locateHint} />
         {mapVisualizer}
       </>
     ),
     [
       cardImagesLoaded,
       gameColorDark,
+      locateHint,
       mapBackgrounds,
       mapVisualizer,
       mappedCards,

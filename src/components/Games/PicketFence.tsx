@@ -27,6 +27,8 @@ import { ProgressBar } from "../Home/ProgressBar";
 import { i18n } from "@/i18n";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { Icon } from "@/icons";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 
 // A flip-and-write in cards (Welcome To...): each turn one card is built as a
 // house, whose number must rise along its street, and another card's suit
@@ -345,7 +347,164 @@ function gatherState(state: PicketFenceGameState): PicketFenceGameState {
 
 const gameStateInitial = createInitialState();
 
+// ========== Hints ========== //
+
+function cloneStreets(streets: Street[]): Street[] {
+  return streets.map((street) => ({
+    houses: [...street.houses],
+    tucked: [...street.tucked],
+    fences: [...street.fences],
+  }));
+}
+
+/**
+ * How good a house number is on a lot: it should sit where its number
+ * belongs along the street (low numbers left, high right), and leave no
+ * lot that no number could fill.
+ */
+function placementWorth(streets: Street[], at: Lot, value: number) {
+  const street = streets[at.street];
+  const length = street.houses.length;
+  const ideal = ((value - 1) / 12) * (length - 1);
+  const deadBefore = street.houses.filter((_, lot) =>
+    isDeadLot(street, lot),
+  ).length;
+  const houses = [...street.houses];
+  const deadAfter = houses.filter((house, lot) => {
+    if (house || lot === at.lot) return false;
+    let low = 0;
+    let high = 14;
+    for (let i = lot - 1; i >= 0; i--) {
+      const number =
+        i === at.lot ? value : houses[i] && houseNumber(houses[i]!);
+      if (number) {
+        low = number;
+        break;
+      }
+    }
+    for (let i = lot + 1; i < houses.length; i++) {
+      const number =
+        i === at.lot ? value : houses[i] && houseNumber(houses[i]!);
+      if (number) {
+        high = number;
+        break;
+      }
+    }
+    return high - low <= 1;
+  }).length;
+  return -(deadAfter - deadBefore) * 20 - Math.abs(ideal - at.lot) * 3;
+}
+
+type EffectChoice = { worth: number; target?: Lot | FenceSpot };
+
+/** What an effect card is worth on the house built at `pending`. */
+function effectWorth(
+  state: PicketFenceGameState,
+  pending: Lot,
+  card: PlayingCard,
+): EffectChoice {
+  const streets = state.streets;
+  if (card.suit === "hearts") {
+    const after = cloneStreets(streets);
+    after[pending.street].tucked[pending.lot] = card;
+    const gain =
+      parkScore(after[pending.street], pending.street) -
+      parkScore(streets[pending.street], pending.street);
+    return { worth: gain * 3 + 2 };
+  }
+  if (card.suit === "diamonds") {
+    if (!POOL_LOTS[pending.street].includes(pending.lot)) return { worth: -5 };
+    return { worth: 10 };
+  }
+  if (card.suit === "clubs") {
+    const lots = legalLots(streets, houseNumber(card));
+    let best: EffectChoice = { worth: -5 };
+    for (const lot of lots) {
+      const worth = 6 + placementWorth(streets, lot, houseNumber(card)) / 4;
+      if (worth > best.worth) best = { worth, target: lot };
+    }
+    return best;
+  }
+  // Spades: the fence that best rounds off an estate.
+  let best: EffectChoice = { worth: -3 };
+  for (const spot of openFences(streets)) {
+    const after = cloneStreets(streets);
+    after[spot.street].fences[spot.gap] = true;
+    const street = after[spot.street];
+    const gain = estateScore(street) - estateScore(streets[spot.street]);
+    const usable = estates(street).filter(
+      (estate) => estateStatus(street, estate) !== "blocked",
+    ).length;
+    const before = estates(streets[spot.street]).filter(
+      (estate) => estateStatus(streets[spot.street], estate) !== "blocked",
+    ).length;
+    const worth = gain * 4 + (usable - before) * 3;
+    if (worth > best.worth) best = { worth, target: spot };
+  }
+  return best;
+}
+
+function targetZone(target: Lot | FenceSpot) {
+  // A fence's post shows once the spade is picked: the glow appears then.
+  return "gap" in target
+    ? `post-${target.street}-${target.gap}`
+    : `lot-${target.street}-${target.lot}`;
+}
+
+/**
+ * Building: the hand card and lot that keep the streets open, counting the
+ * best effect the other cards could then give. Then the effect: the card
+ * (and where a fence or second house goes) worth the most points.
+ */
+function findPicketFenceHint(state: PicketFenceGameState) {
+  if (state.pending) {
+    const pending = state.pending;
+    let best: { index: number; choice: EffectChoice } | null = null;
+    state.hand.forEach((card, index) => {
+      const choice = effectWorth(state, pending, card);
+      if (!best || choice.worth > best.choice.worth) best = { index, choice };
+    });
+    if (!best) return null;
+    const { index, choice } = best as { index: number; choice: EffectChoice };
+    const card = state.hand[index];
+    return choice.target
+      ? makeHint(
+          "moveCard",
+          cardTarget(card),
+          zoneTarget(targetZone(choice.target)),
+        )
+      : makeHint("tapCard", cardTarget(card));
+  }
+
+  let best: { index: number; at: Lot; worth: number } | null = null;
+  state.hand.forEach((card, index) => {
+    for (const at of legalLots(state.streets, houseNumber(card))) {
+      const after: PicketFenceGameState = {
+        ...state,
+        streets: cloneStreets(state.streets),
+        hand: state.hand.filter((_, i) => i !== index),
+      };
+      after.streets[at.street].houses[at.lot] = card;
+      const effect = after.hand.reduce(
+        (top, other) => Math.max(top, effectWorth(after, at, other).worth),
+        after.hand.length ? -Infinity : 0,
+      );
+      const worth =
+        placementWorth(state.streets, at, houseNumber(card)) + effect;
+      if (!best || worth > best.worth) best = { index, at, worth };
+    }
+  });
+  if (!best) return null;
+  const { index, at } = best as { index: number; at: Lot; worth: number };
+  return makeHint(
+    "moveCard",
+    cardTarget(state.hand[index]),
+    zoneTarget(`lot-${at.street}-${at.lot}`),
+  );
+}
+
 export const picketFenceRules = {
+  findHint: findPicketFenceHint,
   STREET_LENGTHS,
   POOL_LOTS,
   WIN_SCORE,
@@ -418,24 +577,37 @@ export default function PicketFence() {
   const [selectedHouse, setSelectedHouse] = useState<number | null>(null);
   const [selectedEffect, setSelectedEffect] = useState<number | null>(null);
 
-  const { isLoaded, game, setGame, reset, undo, canUndo, saveUndoState } =
-    useStateManager<PicketFenceGameState>({
-      gameStateInitial,
-      resetAndSetup: async () => {
-        // Gather every card into the deck, then deal a fresh hand.
-        setGame((draft) => gatherState(draft));
-        await delay();
-        setGame((draft) => redealWith(createInitialState(), draft.deck));
-      },
-      resetNonGameStates: () => {
-        setSelectedHouse(null);
-        setSelectedEffect(null);
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    reset,
+    undo,
+    canUndo,
+    saveUndoState,
+  } = useStateManager<PicketFenceGameState>({
+    gameStateInitial,
+    resetAndSetup: async () => {
+      // Gather every card into the deck, then deal a fresh hand.
+      setGame((draft) => gatherState(draft));
+      await delay();
+      setGame((draft) => redealWith(createInitialState(), draft.deck));
+    },
+    resetNonGameStates: () => {
+      setSelectedHouse(null);
+      setSelectedEffect(null);
+    },
+  });
 
   const ended = isOver(game);
   const score = useMemo(() => scoreOf(game.streets), [game.streets]);
   const won = ended && score.total >= WIN_SCORE;
+
+  useHint(() => findPicketFenceHint(game), {
+    game,
+    enabled: !isSettingUp && !ended,
+  });
 
   const effectCard =
     selectedEffect !== null ? game.hand[selectedEffect] : undefined;

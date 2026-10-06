@@ -29,6 +29,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { findClassicHint } from "@/hints/classic";
 const pileCount = 8;
 const pileSize = 5;
 // Starting cards for the 1 o'clock to 12 o'clock foundations.
@@ -156,7 +158,28 @@ function pileOffset(count: number) {
   return zoneFanOffset(count, pileRows, 0.12, cardDims.tableauOffset);
 }
 
+/** Every card is on view: the hint searches for a win, one card at a time. */
+function findGrandfathersClockHint(state: GameState) {
+  return findClassicHint(
+    { tableau: state.tableau, foundations: state.foundations },
+    {
+      toFoundation: (card, pile, index) =>
+        canBuildFoundation(card, pile, index),
+      toTableau: (cards, pile) =>
+        cards.length === 1 && canBuildTableau(cards[0], pile),
+      canLift: (pile, index) => index === pile.length - 1,
+      buildQuality: (card, base) => (canBuildTableau(card, [base]) ? 2 : 0),
+    },
+    {
+      tableau: (pile) => `tableau-${pile}`,
+      foundation: (pile) => `foundation-${pile}`,
+    },
+    { search: "grandfathers-clock" },
+  );
+}
+
 export const grandfathersClockRules = {
+  findHint: findGrandfathersClockHint,
   clockStart,
   isComplete,
   canMove,
@@ -249,6 +272,11 @@ export default function GrandfathersClock() {
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
     getTapHandler: (source) => () => onPilePress(source.pile),
+  });
+
+  useHint(() => findGrandfathersClockHint(game), {
+    game,
+    enabled: !isSettingUp && !game.ended && !game.deck?.length,
   });
 
   useEffect(() => {

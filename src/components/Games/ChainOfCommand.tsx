@@ -26,6 +26,9 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
+import { useHint } from "@/hints/hint-store";
+import { planMove } from "@/hints/lookahead";
 type RankBand = {
   members: PlayingCard[];
   candidates: PlayingCard[];
@@ -136,28 +139,204 @@ function hasAnyMove(state: GameState) {
   return false;
 }
 
+type ChainMove = {
+  rank: number;
+  member: string;
+  replacement: string;
+  as: "members" | "candidates";
+  sacrifice?: string;
+};
+
+/** One card of each value: cards of a value play alike. */
+function byValue(cards: PlayingCard[]) {
+  const seen = new Set<number>();
+  return cards.filter((card) => {
+    const value = cardVal(card);
+    if (seen.has(value)) return false;
+    seen.add(value);
+    return true;
+  });
+}
+
+function chainMoves(state: GameState) {
+  const moves: ChainMove[] = [];
+  if (state.ended) return moves;
+  state.ranks.forEach((band, rank) => {
+    if (band.members.length !== 3) return;
+    for (const member of byValue(band.members)) {
+      const remaining = [...band.members];
+      remaining.splice(band.members.indexOf(member), 1);
+      const replacements = byValue(
+        band.candidates.filter((candidate) =>
+          replacementMatches(candidate, remaining[0], remaining[1]),
+        ),
+      );
+      for (const replacement of replacements) {
+        const promotion = {
+          rank,
+          member: member.id,
+          replacement: replacement.id,
+        };
+        if (rank === 0) {
+          moves.push({ ...promotion, as: "candidates" });
+          continue;
+        }
+        moves.push({ ...promotion, as: "candidates" });
+        const above = state.ranks[rank - 1].members;
+        if (above.length < 3) {
+          moves.push({ ...promotion, as: "members" });
+        } else {
+          for (const sacrifice of byValue(above)) {
+            moves.push({
+              ...promotion,
+              as: "members",
+              sacrifice: sacrifice.id,
+            });
+          }
+        }
+      }
+    }
+  });
+  return moves;
+}
+
+function applyChainMove(state: GameState, move: ChainMove): GameState {
+  const ranks = state.ranks.map((band) => ({
+    members: [...band.members],
+    candidates: [...band.candidates],
+  }));
+  const from = ranks[move.rank];
+  const promoted = from.members.find((card) => card.id === move.member)!;
+  const replacement = from.candidates.find(
+    (card) => card.id === move.replacement,
+  )!;
+  from.members = [
+    ...from.members.filter((card) => card !== promoted),
+    replacement,
+  ];
+  from.candidates = from.candidates.filter((card) => card !== replacement);
+  if (move.rank === 0) {
+    return { ...state, ranks, ended: true, won: true };
+  }
+  const to = ranks[move.rank - 1];
+  const dead = [...state.dead];
+  to[move.as] = [...to[move.as], promoted];
+  if (to.members.length > 3) {
+    const sacrifice = to.members.find((card) => card.id === move.sacrifice);
+    dead.push(sacrifice ?? to.members[to.members.length - 1]);
+    to.members = to.members.filter(
+      (card) => card !== (sacrifice ?? to.members[to.members.length - 1]),
+    );
+  }
+  const next = { ...state, ranks, dead };
+  return hasAnyMove(next) ? next : { ...next, ended: true, won: false };
+}
+
+function chainKey(state: GameState) {
+  const values = (cards: PlayingCard[]) =>
+    cards
+      .map(cardVal)
+      .sort((a, b) => a - b)
+      .join("");
+  return state.ranks
+    .map((band) => `${values(band.members)}/${values(band.candidates)}`)
+    .join("|");
+}
+
+// What a card in each rank is worth to the climb, members and candidates.
+const MEMBER_WORTH = [1000, 200, 40, 8, 0];
+const CANDIDATE_WORTH = [300, 60, 12, 3, 0];
+
+function chainWorth(state: GameState, depth: number) {
+  if (state.ended) return state.won ? 1e6 - depth : -1e5;
+  return state.ranks.reduce(
+    (sum, band, rank) =>
+      sum +
+      MEMBER_WORTH[rank] * band.members.length +
+      CANDIDATE_WORTH[rank] * band.candidates.length,
+    0,
+  );
+}
+
+/**
+ * The hint: the next promotion on the way to a win (every card is on view,
+ * so this looks for one), shown as the taps it takes from what's selected.
+ */
+function findChainOfCommandHint(
+  state: GameState,
+  selected: {
+    member: string | null;
+    replacement: string | null;
+    sacrifice: string | null;
+  },
+) {
+  if (state.ended) return null;
+  const move =
+    planMove(state, {
+      moves: chainMoves,
+      apply: applyChainMove,
+      score: chainWorth,
+      key: chainKey,
+      positionKey: chainKey,
+      budget: 6000,
+    }) ??
+    // When every line loses, any promotion still keeps the game going.
+    chainMoves(state)[0];
+  if (!move) return null;
+  const memberChosen = selected.member === move.member;
+  return makeHint(
+    {
+      key: "press",
+      values: {
+        label: i18n.t(
+          move.as === "members"
+            ? "games:chainOfCommand.member"
+            : "games:chainOfCommand.candidate",
+        ),
+      },
+    },
+    memberChosen ? [] : cardTarget(move.member),
+    memberChosen && selected.replacement === move.replacement
+      ? []
+      : cardTarget(move.replacement),
+    move.sacrifice && !(memberChosen && selected.sacrifice === move.sacrifice)
+      ? cardTarget(move.sacrifice)
+      : [],
+    zoneTarget("instructions-buttons"),
+  );
+}
+
 export const chainOfCommandRules = {
   cardVal,
   lastDigit,
   replacementMatches,
   hasAnyMove,
   totalCardsNeeded,
+  findHint: findChainOfCommandHint,
 };
 
 // ========== Main Component ========== //
 export default function ChainOfCommand() {
   const { colorZone } = useGameColors(0.6);
 
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      resetAndSetup: async () => {
-        await resetAndSetup(setGame);
-      },
-      gameStateInitial,
-      resetNonGameStates: () => {
-        resetSelected();
-      },
-    });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    resetAndSetup: async () => {
+      await resetAndSetup(setGame);
+    },
+    gameStateInitial,
+    resetNonGameStates: () => {
+      resetSelected();
+    },
+  });
 
   const [selectedRank, setSelectedRank] = useState<number | null>(null);
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
@@ -165,6 +344,19 @@ export default function ChainOfCommand() {
     useState<PlayingCard | null>(null);
   const [selectedSacrifice, setSelectedSacrifice] =
     useState<PlayingCard | null>(null);
+
+  useHint(
+    () =>
+      findChainOfCommandHint(game, {
+        member: selectedMember,
+        replacement: selectedReplacement?.id ?? null,
+        sacrifice: selectedSacrifice?.id ?? null,
+      }),
+    {
+      game,
+      enabled: !isSettingUp && !game.ended && game.ranks[4].members.length > 0,
+    },
+  );
 
   function resetSelected() {
     setSelectedRank(null);

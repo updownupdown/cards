@@ -17,6 +17,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
+import { useHint } from "@/hints/hint-store";
 
 // Water Sort with cards: 13 jars of four mixed cards, sorted into one rank per
 // jar. Two spare jars and two one-card dishes give just enough room that
@@ -133,7 +135,11 @@ function rackKey(racks: Racks) {
 }
 
 function rackPours(racks: Racks) {
-  const results: Racks[] = [];
+  return rackPourMoves(racks).map(({ next }) => next);
+}
+
+function rackPourMoves(racks: Racks) {
+  const results: { from: number; to: number; next: Racks }[] = [];
   racks.forEach((source, from) => {
     const rank = source[source.length - 1];
     if (rank === undefined) return;
@@ -159,7 +165,7 @@ function rackPours(racks: Racks) {
       ) {
         next[to].push(next[from].pop()!);
       }
-      results.push(next);
+      results.push({ from, to, next });
     });
   });
   return results;
@@ -182,6 +188,84 @@ function isSolvable(racks: Racks) {
   };
 
   return search(racks);
+}
+
+// The pours of the last solution found, by position, so the hints after the
+// first follow it instead of searching again.
+let solutionPours = new Map<string, { from: number; to: number }>();
+
+/** The pours that seal every jar from here, searched as isSolvable does. */
+function solvePours(racks: Racks) {
+  const seen = new Set<string>();
+  let nodes = 0;
+  const line: { from: number; to: number; racks: Racks }[] = [];
+
+  const search = (current: Racks): boolean => {
+    if (rackBreaks(current) === FILLED_JARS) return true;
+    if (++nodes > SOLVER_NODE_LIMIT) return false;
+    const key = rackKey(current);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    const options = rackPourMoves(current).sort(
+      (a, b) => rackBreaks(a.next) - rackBreaks(b.next),
+    );
+    return options.some((option) => {
+      line.push({ from: option.from, to: option.to, racks: current });
+      if (search(option.next)) return true;
+      line.pop();
+      return false;
+    });
+  };
+
+  return search(racks) ? line : null;
+}
+
+/**
+ * The hint: the next pour of a way to seal every jar. Every card is on view,
+ * so this is the solver's line; with none in reach, the pour that best
+ * brings ranks together.
+ */
+function findApothecaryHint(
+  state: ApothecaryGameState,
+  selected: number | null,
+) {
+  const racks = toRacks(state.vessels);
+  const exact = JSON.stringify(racks);
+  let pourMove = solutionPours.get(exact);
+  if (!pourMove) {
+    const line = solvePours(racks);
+    if (line) {
+      solutionPours = new Map(
+        line.map((step) => [
+          JSON.stringify(step.racks),
+          { from: step.from, to: step.to },
+        ]),
+      );
+      pourMove = line[0];
+    } else {
+      pourMove = rackPourMoves(racks).sort(
+        (a, b) => rackBreaks(a.next) - rackBreaks(b.next),
+      )[0];
+    }
+  }
+  if (!pourMove) return null;
+
+  const zoneOf = (index: number) =>
+    isDish(index) ? `dish-${index - JAR_COUNT}` : `jar-${index}`;
+  if (selected !== null && selected !== pourMove.from) {
+    // Put down what's picked up first.
+    return makeHint("tapCard", cardTarget(top(state.vessels[selected])!));
+  }
+  const source = state.vessels[pourMove.from];
+  const moving = Math.min(
+    topRunLength(source),
+    capacityOf(pourMove.to) - state.vessels[pourMove.to].length,
+  );
+  return makeHint(
+    moving > 1 ? "moveCards" : "moveCard",
+    selected === pourMove.from ? [] : cardTarget(top(source)!),
+    zoneTarget(zoneOf(pourMove.to)),
+  );
 }
 
 function toRacks(vessels: PlayingCard[][]): Racks {
@@ -245,6 +329,7 @@ export const apothecaryRules = {
   isSolvable,
   toRacks,
   createInitialState,
+  findHint: findApothecaryHint,
 };
 
 // ========== Component ========== //
@@ -266,6 +351,11 @@ export default function Apothecary() {
   const won = isWon(game);
   const lost = isLost(game);
   const ended = won || lost;
+
+  useHint(() => findApothecaryHint(game, selected), {
+    game,
+    enabled: !ended && game.deal.length === 0,
+  });
 
   function onVesselPress(index: number) {
     if (ended) return;

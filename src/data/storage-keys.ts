@@ -8,3 +8,5 @@ export const GALLERY_LAST_QUOTE_STORAGE_KEY = "cards.gallery.lastQuote.v1";
 export const WILD_CARDS_STORAGE_KEY = "cards.wildCards.v1";
 /** Beta (local-only) games turned on outside dev, from the settings. */
 export const BETA_GAMES_STORAGE_KEY = "cards.betaGames.v1";
+/** Whether the Hint button shows in the game header ("0" hides it). */
+export const HINT_BUTTON_STORAGE_KEY = "cards.hintButton.v1";
