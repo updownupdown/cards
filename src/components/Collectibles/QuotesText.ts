@@ -1041,4 +1041,632 @@ that reach out across the world.`,
     author: `Richard Feynman`,
     source: `What Do You Care What Other People Think? (1988)`,
   },
+
+  {
+    text: `For it knew now where it was going, and it said to itself, "There is no hurry. We shall get there some day."`,
+    author: `A. A. Milne`,
+    source: `The House at Pooh Corner, Chapter 6 (1928)`,
+  },
+
+  {
+    text: `Believe me, my young friend, there is nothing—absolute nothing—half so much worth doing as simply messing about in boats.`,
+    author: `Kenneth Grahame`,
+    source: `The Wind in the Willows, Chapter 1 (1908)`,
+  },
+
+  {
+    text: `Marilla, isn't it nice to think that tomorrow is a new day with no mistakes in it yet?`,
+    author: `L. M. Montgomery`,
+    source: `Anne of Green Gables, Chapter 21 (1908)`,
+  },
+
+  {
+    text: `The road to wisdom? — Well, it's plain
+and simple to express:
+Err and err and err again
+but less and less and less.`,
+    author: `Piet Hein`,
+    source: `"The Road to Wisdom?", Grooks (1966)`,
+  },
+
+  {
+    text: `Why, sometimes I've believed as many as six impossible things before breakfast.`,
+    author: `Lewis Carroll`,
+    source: `Through the Looking-Glass, Chapter 5 (1871)`,
+  },
+
+  {
+    text: `The most precious thing in life is its uncertainty.`,
+    author: `Yoshida Kenkō`,
+    source: `Essays in Idleness, Section 7, Donald Keene translation (1967)`,
+  },
+
+  {
+    text: `If you are curious, you will find the puzzles around you. If you are determined, you will solve them.`,
+    author: `Ernő Rubik`,
+    source: `Cubed: The Puzzle of Us All, Chapter 1 (2020)`,
+  },
+
+  {
+    text: `Victory awaits him who has everything in order — luck, people call it. Defeat is certain for him who has neglected to take the necessary precautions in time; this is called bad luck.`,
+    author: `Roald Amundsen`,
+    source: `The South Pole, A. G. Chater translation (1912)`,
+  },
+
+  {
+    text: `On my business card, I am a corporate president. In my mind, I am a game developer. But in my heart, I am a gamer.`,
+    author: `Satoru Iwata`,
+    source: `Keynote, Game Developers Conference (2005)`,
+  },
+
+  {
+    text: `It is said that the effect of eating too much lettuce is "soporific." I have never felt sleepy after eating lettuces; but then I am not a rabbit.`,
+    author: `Beatrix Potter`,
+    source: `The Tale of the Flopsy Bunnies (1909)`,
+  },
+
+  {
+    text: `All things are so very uncertain, and that's exactly what makes me feel reassured.`,
+    author: `Tove Jansson`,
+    source: `Moominland Midwinter, Thomas Warburton translation (1958)`,
+  },
+
+  {
+    text: `Sometimes magic is just someone spending more time on something than anyone else might reasonably expect.`,
+    author: `Teller`,
+    source: `"Teller Reveals His Secrets," Smithsonian (March 2012)`,
+  },
+
+  {
+    text: `Honor thy error as a hidden intention.`,
+    author: `Brian Eno`,
+    source: `Oblique Strategies, with Peter Schmidt (1975)`,
+  },
+
+  {
+    text: `We may say most aptly that the Analytical Engine weaves algebraical patterns just as the Jacquard-loom weaves flowers and leaves.`,
+    author: `Ada Lovelace`,
+    source: `Notes on the Analytical Engine, Note A (1843)`,
+  },
+
+  {
+    text: `You can observe a lot by watching.`,
+    author: `Yogi Berra`,
+    source: `You Can Observe a Lot by Watching (2008)`,
+  },
+
+  {
+    text: `Those who contemplate the beauty of the earth find reserves of strength that will endure as long as life lasts.`,
+    author: `Rachel Carson`,
+    source: `The Sense of Wonder (1965)`,
+  },
+
+  {
+    text: `Every day is a journey, and the journey itself is home.`,
+    author: `Matsuo Bashō`,
+    source: `Narrow Road to the Interior (1702), Sam Hamill translation (2000)`,
+  },
+
+  {
+    text: `Life is like riding a bicycle. To keep your balance you must keep moving.`,
+    author: `Albert Einstein`,
+    source: `Letter to his son Eduard (February 5, 1930)`,
+  },
+
+  {
+    text: `Feet, what do I need them for
+If I have wings to fly.`,
+    author: `Frida Kahlo`,
+    source: `Diary (1953)`,
+  },
+
+  {
+    text: `The man who views the world at 50 the same as he did at 20 has wasted 30 years of his life.`,
+    author: `Muhammad Ali`,
+    source: `Interview, Playboy (November 1975)`,
+  },
+
+  {
+    text: `Empty your mind, be formless, shapeless — like water... Be water, my friend.`,
+    author: `Bruce Lee`,
+    source: `Longstreet, "The Way of the Intercepting Fist" (1971)`,
+  },
+
+  {
+    text: `Instructions for living a life:
+Pay attention.
+Be astonished.
+Tell about it.`,
+    author: `Mary Oliver`,
+    source: `"Sometimes," Red Bird (2008)`,
+  },
+
+  {
+    text: `Beauty is the first test: there is no permanent place in the world for ugly mathematics.`,
+    author: `G. H. Hardy`,
+    source: `A Mathematician's Apology (1940)`,
+  },
+
+  {
+    text: `In every walk with nature one receives far more than he seeks.`,
+    author: `John Muir`,
+    source: `"Mormon Lilies" (1877), in Steep Trails (1918)`,
+  },
+
+  {
+    text: `The ultimate goal of farming is not the growing of crops, but the cultivation and perfection of human beings.`,
+    author: `Masanobu Fukuoka`,
+    source: `The One-Straw Revolution, Larry Korn, Chris Pearce and Tsune Kurosawa translation (1978)`,
+  },
+
+  {
+    text: `The earth is so richly endowed that the least we can do in return is to pay attention.`,
+    author: `Robin Wall Kimmerer`,
+    source: `Braiding Sweetgrass (2013)`,
+  },
+
+  {
+    text: `If you shut your door to all errors truth will be shut out.`,
+    author: `Rabindranath Tagore`,
+    source: `Stray Birds, 130 (1916)`,
+  },
+
+  {
+    text: `It is essentially a worship of the Imperfect, as it is a tender attempt to accomplish something possible in this impossible thing we know as life.`,
+    author: `Okakura Kakuzō`,
+    source: `The Book of Tea, Chapter 1 (1906)`,
+  },
+
+  {
+    text: `To awaken quite alone in a strange town, is one of the pleasantest sensations in the world.`,
+    author: `Freya Stark`,
+    source: `Baghdad Sketches (1932)`,
+  },
+
+  {
+    text: `To science, not even the bark of a tree or a drop of pond water is dull or a handful of dirt banal. They all arouse awe and wonder.`,
+    author: `Jane Jacobs`,
+    source: `Dark Age Ahead, Chapter 4 (2004)`,
+  },
+
+  {
+    text: `It is possible to fly without motors, but not without knowledge and skill.`,
+    author: `Wilbur Wright`,
+    source: `Letter to Octave Chanute (May 13, 1900)`,
+  },
+
+  {
+    text: `This is my invariable advice to people: Learn how to cook — try new recipes, learn from your mistakes, be fearless, and above all have fun!`,
+    author: `Julia Child`,
+    source: `My Life in France, Chapter 9 (2006)`,
+  },
+
+  {
+    text: `Playing "Bop" is like playing Scrabble with all the vowels missing.`,
+    author: `Duke Ellington`,
+    source: `Look (August 10, 1954)`,
+  },
+
+  {
+    text: `All musicians are subconsciously mathematicians.`,
+    author: `Thelonious Monk`,
+    source: `Interview, DownBeat (October 28, 1971)`,
+  },
+
+  {
+    text: `Life is a tragedy when seen in close-up, but a comedy in long-shot.`,
+    author: `Charlie Chaplin`,
+    source: `As quoted in his obituary, The Guardian (December 28, 1977)`,
+  },
+
+  {
+    text: `Every disadvantage has its advantage.`,
+    author: `Johan Cruyff`,
+    source: `His saying "Elk nadeel heb z'n voordeel," quoted by FIFA (2014)`,
+  },
+
+  {
+    text: `Until you dig a hole, you plant a tree, you water it and make it survive, you haven't done a thing. You are just talking.`,
+    author: `Wangari Maathai`,
+    source: `Speech at the Goldman Environmental Prize (April 24, 2006)`,
+  },
+
+  {
+    text: `Point of view is worth 80 IQ points.`,
+    author: `Alan Kay`,
+    source: `Talk at the Creative Think seminar (July 20, 1982)`,
+  },
+
+  {
+    text: `I have never been forced to accept compromises but I have willingly accepted constraints.`,
+    author: `Charles Eames`,
+    source: `"Design Q & A," interview with Madame L'Amic (1972)`,
+  },
+
+  {
+    text: `What is a scientist after all? It is a curious man looking through a keyhole, the keyhole of nature, trying to know what's going on.`,
+    author: `Jacques-Yves Cousteau`,
+    source: `Christian Science Monitor (July 21, 1971)`,
+  },
+
+  {
+    text: `I'm not an animal lover if that means you think things are nice if you can pet them, but I am intoxicated by animals.`,
+    author: `David Attenborough`,
+    source: `Interview, Metro (January 29, 2013)`,
+  },
+
+  {
+    text: `The mind that is not baffled is not employed. The impeded stream is the one that sings.`,
+    author: `Wendell Berry`,
+    source: `"Poetry and Marriage: The Use of Old Forms" (1982)`,
+  },
+
+  {
+    text: `There are two spiritual dangers in not owning a farm. One is the danger of supposing that breakfast comes from the grocery, and the other that heat comes from the furnace.`,
+    author: `Aldo Leopold`,
+    source: `A Sand County Almanac, "February: Good Oak" (1949)`,
+  },
+
+  {
+    text: `Put up in a place where it's easy to see
+the cryptic admonishment T. T. T.
+When you feel how depressingly slowly you climb,
+it's well to remember that Things Take Time.`,
+    author: `Piet Hein`,
+    source: `"T. T. T.", Grooks (1966)`,
+  },
+
+  {
+    text: `To win a race, the swiftness of a dart
+Availeth not without a timely start.`,
+    author: `Jean de La Fontaine`,
+    source: `"The Hare and the Tortoise," Fables VI.10 (1668), Elizur Wright translation (1841)`,
+  },
+
+  {
+    text: `The thief left it behind:
+the moon
+at my window.`,
+    author: `Ryōkan`,
+    source: `The Enlightened Heart, Stephen Mitchell translation (1989)`,
+  },
+
+  {
+    text: `The cure for anything is salt water — sweat, tears, or the sea.`,
+    author: `Karen Blixen`,
+    source: `As quoted in Reader's Digest (April 1964)`,
+  },
+
+  {
+    text: `If people never did silly things nothing intelligent would ever get done.`,
+    author: `Ludwig Wittgenstein`,
+    source: `Culture and Value, Peter Winch translation (1980)`,
+  },
+
+  {
+    text: `I've missed over 9,000 shots in my career. I've lost almost 300 games. 26 times I've been trusted to take the game-winning shot and missed. I've failed over and over and over again in my life. And that is why I succeed.`,
+    author: `Michael Jordan`,
+    source: `Nike advertisement, "Failure" (1997)`,
+  },
+
+  {
+    text: `Ours is the commencement of a flying age, and I am happy to have popped into existence at a period so interesting.`,
+    author: `Amelia Earhart`,
+    source: `20 Hrs. 40 Min. (1928)`,
+  },
+
+  {
+    text: `Why I ran at all or with what purpose in mind is beyond my answering, but when I had no specific destination I always ran as fast as I could in the hope of finding one — and I always found one.`,
+    author: `Beryl Markham`,
+    source: `West with the Night (1942)`,
+  },
+
+  {
+    text: `Chess, like love, like music, has the power to make men happy.`,
+    author: `Siegbert Tarrasch`,
+    source: `The Game of Chess, Preface (1931)`,
+  },
+
+  {
+    text: `You have to be a romantic to invest yourself, your money, and your time in cheese.`,
+    author: `Anthony Bourdain`,
+    source: `Medium Raw (2010)`,
+  },
+
+  {
+    text: `The camera is an instrument that teaches people how to see without a camera.`,
+    author: `Dorothea Lange`,
+    source: `As quoted in Dorothea Lange: A Photographer's Life by Milton Meltzer (1978)`,
+  },
+
+  {
+    text: `Every individual matters. Every individual has a role to play. Every individual makes a difference.`,
+    author: `Jane Goodall`,
+    source: `With Love (1999)`,
+  },
+
+  {
+    text: `There is nothing that says more about its creator than the work itself.`,
+    author: `Akira Kurosawa`,
+    source: `Something Like an Autobiography, Audie E. Bock translation (1982)`,
+  },
+
+  {
+    text: `A conjurer is not a juggler; he is an actor playing the part of a magician.`,
+    author: `Jean Eugène Robert-Houdin`,
+    source: `Secrets of Conjuring and Magic, Professor Hoffmann translation (1878)`,
+  },
+
+  {
+    text: `Creativity is a habit, and the best creativity is a result of good work habits.`,
+    author: `Twyla Tharp`,
+    source: `The Creative Habit (2003)`,
+  },
+
+  {
+    text: `If you think of brick, for instance, you say to brick, "What do you want, brick?" And brick says to you, "I like an arch."`,
+    author: `Louis Kahn`,
+    source: `Master class at the University of Pennsylvania (1971), in My Architect (2003)`,
+  },
+
+  {
+    text: `Which of my photographs is my favorite? The one I'm going to take tomorrow.`,
+    author: `Imogen Cunningham`,
+    source: `Interview (1976)`,
+  },
+
+  {
+    text: `To face the elements is, to be sure, no light matter when the sea is in its grandest mood. You must then know the sea, and know that you know it, and not forget that it was made to be sailed over.`,
+    author: `Joshua Slocum`,
+    source: `Sailing Alone Around the World (1900)`,
+  },
+
+  {
+    text: `Life is poker, not chess.`,
+    author: `Annie Duke`,
+    source: `Thinking in Bets, title of Chapter 1 (2018)`,
+  },
+
+  {
+    text: `You miss 100% of the shots you don't take.`,
+    author: `Wayne Gretzky`,
+    source: `Interview with Bob McKenzie, The Hockey News (1983)`,
+  },
+
+  {
+    text: `Pressure is a privilege.`,
+    author: `Billie Jean King`,
+    source: `Pressure Is a Privilege (2008)`,
+  },
+
+  {
+    text: `Fun is just another word for learning.`,
+    author: `Raph Koster`,
+    source: `A Theory of Fun for Game Design (2004)`,
+  },
+
+  {
+    text: `The more constraints one imposes, the more one frees one's self of the chains that shackle the spirit.`,
+    author: `Igor Stravinsky`,
+    source: `Poetics of Music, Arthur Knodel and Ingolf Dahl translation (1947)`,
+  },
+
+  {
+    text: `Listen to the MUSTN'TS, child,
+Listen to the DON'TS
+Listen to the SHOULDN'TS
+The IMPOSSIBLES, the WON'TS
+Listen to the NEVER HAVES
+Then listen close to me—
+Anything can happen, child,
+ANYTHING can be.`,
+    author: `Shel Silverstein`,
+    source: `"Listen to the Mustn'ts," Where the Sidewalk Ends (1974)`,
+  },
+
+  {
+    text: `I cannot pretend I am without fear. But my predominant feeling is one of gratitude.`,
+    author: `Oliver Sacks`,
+    source: `"My Own Life," The New York Times (February 19, 2015)`,
+  },
+
+  {
+    text: `Play is older than culture, for culture, however inadequately defined, always presupposes human society, and animals have not waited for man to teach them their playing.`,
+    author: `Johan Huizinga`,
+    source: `Homo Ludens (1938), R. F. C. Hull translation (1949)`,
+  },
+
+  {
+    text: `The world needs all kinds of minds.`,
+    author: `Temple Grandin`,
+    source: `Title of her talk at TED (February 2010)`,
+  },
+
+  {
+    text: `"Just living is not enough," said the butterfly, "one must have sunshine, freedom, and a little flower."`,
+    author: `Hans Christian Andersen`,
+    source: `"The Butterfly" (1861), Jean Hersholt translation (1949)`,
+  },
+
+  {
+    text: `A game is a series of interesting decisions.`,
+    author: `Sid Meier`,
+    source: `Computer Game Developers Conference (1989)`,
+  },
+
+  {
+    text: `O snail
+Climb Mount Fuji,
+But slowly, slowly!`,
+    author: `Kobayashi Issa`,
+    source: `R. H. Blyth translation, Haiku (1949-1952)`,
+  },
+
+  {
+    text: `Making the simple complicated is commonplace; making the complicated simple, awesomely simple, that's creativity.`,
+    author: `Charles Mingus`,
+    source: `Mainliner (July 1977)`,
+  },
+
+  {
+    text: `There is only a queer divine dissatisfaction, a blessed unrest that keeps us marching and makes us more alive than the others.`,
+    author: `Martha Graham`,
+    source: `As quoted in Martha: The Life and Work of Martha Graham by Agnes de Mille (1991)`,
+  },
+
+  {
+    text: `The one important thing I have learned over the years is the difference between taking one's work seriously and taking one's self seriously. The first is imperative and the second is disastrous.`,
+    author: `Margot Fonteyn`,
+    source: `As quoted in Simpson's Contemporary Quotations (1988)`,
+  },
+
+  {
+    text: `I have had three personal ideals: One to do the day's work well and not to bother about tomorrow.`,
+    author: `William Osler`,
+    source: `Farewell dinner address, New York (May 20, 1905)`,
+  },
+
+  {
+    text: `Because it's there.`,
+    author: `George Mallory`,
+    source: `"Climbing Mount Everest Is Work for Supermen," The New York Times (March 18, 1923)`,
+  },
+
+  {
+    text: `Optimism is true moral courage.`,
+    author: `Ernest Shackleton`,
+    source: `As quoted in South with Shackleton by L. D. A. Hussey (1949)`,
+  },
+
+  {
+    text: `Nothing is a mistake. There's no win and no fail. There's only make.`,
+    author: `Corita Kent`,
+    source: `Immaculate Heart College Art Department Rules, Rule 6 (1968)`,
+  },
+
+  {
+    text: `We don't make mistakes; we just have happy accidents.`,
+    author: `Bob Ross`,
+    source: `The Joy of Painting (1983-1994)`,
+  },
+
+  {
+    text: `There must be more to life than having everything!`,
+    author: `Maurice Sendak`,
+    source: `Higglety Pigglety Pop! or There Must Be More to Life (1967)`,
+  },
+
+  {
+    text: `It's easy to sleep floating around — it's very comfortable. But you have to be careful that you don't float into somebody or something!`,
+    author: `Sally Ride`,
+    source: `Interview, Scholastic (1998)`,
+  },
+
+  {
+    text: `I like to think of ideas as potential energy. They're really wonderful, but nothing will happen until we risk putting them into action.`,
+    author: `Mae Jemison`,
+    source: `"Teach arts and sciences together," TED talk (2002)`,
+  },
+
+  {
+    text: `Yet often the mountain gives itself most completely when I have no destination, when I reach nowhere in particular, but have gone out merely to be with the mountain as one visits a friend with no intention but to be with him.`,
+    author: `Nan Shepherd`,
+    source: `The Living Mountain (1977)`,
+  },
+
+  {
+    text: `"Begin at the beginning," the King said, very gravely, "and go on till you come to the end: then stop."`,
+    author: `Lewis Carroll`,
+    source: `Alice's Adventures in Wonderland, Chapter 12 (1865)`,
+  },
+
+  {
+    text: `You have brains in your head.
+You have feet in your shoes.
+You can steer yourself
+any direction you choose.`,
+    author: `Dr. Seuss`,
+    source: `Oh, the Places You'll Go! (1990)`,
+  },
+
+  {
+    text: `So many things are possible just as long as you don't know they're impossible.`,
+    author: `Norton Juster`,
+    source: `The Phantom Tollbooth (1961)`,
+  },
+
+  {
+    text: `And above all, watch with glittering eyes the whole world around you because the greatest secrets are always hidden in the most unlikely places.`,
+    author: `Roald Dahl`,
+    source: `The Minpins (1991)`,
+  },
+
+  {
+    text: `I arise in the morning torn between a desire to improve (or save) the world and a desire to enjoy (or savor) the world. This makes it hard to plan the day.`,
+    author: `E. B. White`,
+    source: `As quoted by Israel Shenker, The New York Times (July 11, 1969)`,
+  },
+
+  {
+    text: `A cartoonist is someone who has to draw the same thing day after day without repeating himself.`,
+    author: `Charles M. Schulz`,
+    source: `You Don't Look 35, Charlie Brown! (1985)`,
+  },
+
+  {
+    text: `It's a magical world, Hobbes, ol' buddy... Let's go exploring!`,
+    author: `Bill Watterson`,
+    source: `Calvin and Hobbes, the final strip (December 31, 1995)`,
+  },
+
+  {
+    text: `Ring the bells that still can ring
+Forget your perfect offering
+There is a crack in everything
+That's how the light gets in.`,
+    author: `Leonard Cohen`,
+    source: `"Anthem," The Future (1992)`,
+  },
+
+  {
+    text: `The moment you doubt whether you can fly, you cease forever to be able to do it.`,
+    author: `J. M. Barrie`,
+    source: `The Little White Bird, Chapter 14 (1902)`,
+  },
+
+  {
+    text: `Life is short, and Art long; the crisis fleeting; experience perilous, and decision difficult.`,
+    author: `Hippocrates`,
+    source: `Aphorisms, I.1, Francis Adams translation (1849)`,
+  },
+
+  {
+    text: `The beauty of mathematics only shows itself to more patient followers.`,
+    author: `Maryam Mirzakhani`,
+    source: `Interview, The Guardian (August 13, 2014)`,
+  },
+
+  {
+    text: `If you cannot solve the proposed problem, try to solve first a simpler related problem.`,
+    author: `George Pólya`,
+    source: `Mathematical Methods in Science (1977)`,
+  },
+
+  {
+    text: `It is by logic that we prove, but by intuition that we discover.`,
+    author: `Henri Poincaré`,
+    source: `Science and Method, Book II, Chapter 2 (1908), Francis Maitland translation (1914)`,
+  },
+
+  {
+    text: `No ocean, no life. No blue, no green. No ocean, no us.`,
+    author: `Sylvia Earle`,
+    source: `Address to the United Nations (January 2015)`,
+  },
+
+  {
+    text: `I've never made a discovery myself, unless by accident.`,
+    author: `Martin Gardner`,
+    source: `As quoted by Sally Helgeson, "Every Day," Bookletter (December 6, 1976)`,
+  },
 ] as const satisfies readonly QuoteText[];

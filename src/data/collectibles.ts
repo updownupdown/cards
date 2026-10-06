@@ -2,7 +2,7 @@ import { TAO_CHAPTERS } from "@/components/Campaign/TaoChapters";
 import { quotes } from "@/components/Collectibles/QuotesText";
 
 export const TAO_CHAPTER_COUNT = 81;
-export const QUOTE_COUNT = 184;
+export const QUOTE_COUNT = 272;
 
 export type TaoId = number;
 export type QuoteId = number;
