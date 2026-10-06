@@ -87,24 +87,35 @@ export const Colors = { ...BASE_COLORS } as {
 };
 
 /**
- * The UFO's neon, for everything it touches: Mercy Skip, Help from Above,
- * its beacons and beams, and its alien script. The same in every colour
- * theme. Green leads, pink-purple follows, blue comes third; each `glow` is
- * a deeper shade of its ink, for halos.
+ * The UFO's colours, for everything it touches in the interface: Mercy Skip,
+ * Help from Above, its alien script. Soft, so they sit calmly on screen, and
+ * the same in every colour theme. Green leads, purple follows, blue comes
+ * third.
  */
 export const UfoColors = {
+  green: "#7dffb0",
+  purple: "#c79bff",
+  blue: "#6ee7ff",
+  /** The UFO's boxes are pure black, whatever the theme. */
+  black: "#000000",
+} as const;
+
+/** The UFO's three interface inks, in order: green, purple, blue. */
+export const UFO_INKS = [UfoColors.green, UfoColors.purple, UfoColors.blue];
+
+/**
+ * The same three, turned up to neon, for the UFO's moving effects only (hint
+ * beacons, beams and zaps), which need to stand out on any card. Each `glow`
+ * is a deeper shade of its ink, for halos.
+ */
+export const UfoNeon = {
   green: "#2bff9a",
   pink: "#f048ff",
   blue: "#2ed3ff",
   greenGlow: "#00d977",
   pinkGlow: "#c81ee6",
   blueGlow: "#0aa5e6",
-  /** The UFO's boxes are pure black, whatever the theme. */
-  black: "#000000",
 } as const;
-
-/** The UFO's three inks, in order: green, pink, blue. */
-export const UFO_INKS = [UfoColors.green, UfoColors.pink, UfoColors.blue];
 
 /**
  * Converts a hex colour (e.g. from the Colors object) into an rgba string.

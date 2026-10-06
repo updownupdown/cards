@@ -10,6 +10,7 @@ import {
   rgba,
   textShadow,
   UfoColors,
+  UfoNeon,
 } from "@/styles/styles";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -50,13 +51,13 @@ import {
  */
 
 /** What to pick up, tap or press: the UFO's own green. */
-const MINT = UfoColors.green;
-const BEACON_INK = UfoColors.greenGlow;
+const MINT = UfoNeon.green;
+const BEACON_INK = UfoNeon.greenGlow;
 /** Where a card goes: pink, so "from" and "to" never look alike. */
-const PINK = UfoColors.pink;
-const PINK_INK = UfoColors.pinkGlow;
+const PINK = UfoNeon.pink;
+const PINK_INK = UfoNeon.pinkGlow;
 /** The tractor beam that carries a card across. */
-const BEAM = UfoColors.blue;
+const BEAM = UfoNeon.blue;
 const DARK = Colors.K950;
 const useNativeDriver = Platform.OS !== "web";
 
@@ -927,14 +928,15 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
   );
 }
 
-// As Mercy Skip's bubble: pure black, a sharp green shadow under it.
+// As Mercy Skip's bubble: pure black, a fine green shadow under it, in the
+// interface's softer green.
 const bubbleStyle = {
   width: BUBBLE_WIDTH,
   backgroundColor: UfoColors.black,
-  borderColor: MINT,
-  borderWidth: 1.5,
+  borderColor: UfoColors.green,
+  borderWidth: 1,
   borderRadius: 16,
-  boxShadow: `0 4px 0 0 ${MINT}`,
+  boxShadow: `0 2px 0 0 ${rgba(UfoColors.green, 0.45)}`,
   paddingHorizontal: 12,
   paddingVertical: 8,
 };
@@ -944,9 +946,9 @@ const tailStyle = {
   width: 12,
   height: 12,
   backgroundColor: UfoColors.black,
-  borderColor: MINT,
-  borderTopWidth: 1.5,
-  borderLeftWidth: 1.5,
+  borderColor: UfoColors.green,
+  borderTopWidth: 1,
+  borderLeftWidth: 1,
 };
 
 const bubbleTextStyle = {

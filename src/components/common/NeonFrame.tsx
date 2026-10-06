@@ -1,4 +1,4 @@
-import { UFO_INKS, UfoColors } from "@/styles/styles";
+import { rgba, UFO_INKS, UfoColors } from "@/styles/styles";
 import { useEffect, useRef, type ReactNode } from "react";
 import {
   Animated,
@@ -35,14 +35,14 @@ function inkOpacity(index: number) {
 const OPACITIES = UFO_INKS.map((_, index) => inkOpacity(index));
 
 /**
- * The UFO's box: pure black, a sharp green shadow under it, and a border that
- * slowly turns through the UFO's neon inks. Mercy Skip's bubble, the Help
+ * The UFO's box: pure black, a fine, sharp green shadow under it, and a
+ * border that slowly turns through the UFO's three inks. Mercy Skip's bubble, the Help
  * from Above panels and the win box's note that the UFO helped all wear it.
  */
 export function NeonFrame({
   radius,
-  borderWidth = 1.5,
-  shadowOffset = 4,
+  borderWidth = 1,
+  shadowOffset = 2,
   style,
   children,
 }: {
@@ -74,7 +74,7 @@ export function NeonFrame({
         {
           backgroundColor: UfoColors.black,
           borderRadius: radius,
-          boxShadow: `0 ${shadowOffset}px 0 0 ${UfoColors.green}`,
+          boxShadow: `0 ${shadowOffset}px 0 0 ${rgba(UfoColors.green, 0.45)}`,
         },
         style,
       ]}

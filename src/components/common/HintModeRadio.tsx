@@ -11,12 +11,12 @@ import { View } from "react-native";
 const MODE_INKS: Record<HintMode, string> = {
   off: UfoColors.blue,
   beacons: UfoColors.green,
-  autopilot: UfoColors.pink,
+  autopilot: UfoColors.purple,
 };
 
 /**
  * The "Help from Above" choices side by side, with what the chosen one does
- * underneath, in the UFO's neon. In the settings and in the Rules modal.
+ * underneath, in the UFO's colours. In the settings and in the Rules modal.
  */
 export function HintModeRadio({
   value,
@@ -37,7 +37,7 @@ export function HintModeRadio({
           label: t(`helpFromAbove.${option}`),
           selectedBackgroundColor: MODE_INKS[option],
           selectedButtonStyle: {
-            boxShadow: `0 0 ${spacing(12)}px ${rgba(MODE_INKS[option], 0.6)}`,
+            boxShadow: `0 0 ${spacing(8)}px ${rgba(MODE_INKS[option], 0.35)}`,
           },
         }))}
         selectedValue={value}

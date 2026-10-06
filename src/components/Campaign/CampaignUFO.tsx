@@ -42,7 +42,7 @@ function randomBetween(min: number, max: number) {
   return min + Math.random() * (max - min);
 }
 
-/** The alien script takes the UFO's own neon, a random ink per glyph. */
+/** The alien script takes the UFO's own colours, a random ink per glyph. */
 const ALIEN_INKS = UFO_INKS;
 /** Roughly this share of glyphs glow in their own ink. */
 const ALIEN_GLOW_SHARE = 0.3;

@@ -8,7 +8,7 @@ import { View, type StyleProp, type ViewStyle } from "react-native";
 
 /**
  * A "Help from Above" box: the UFO and its title in green capitals, in the
- * UFO's neon frame. The Rules modal and the settings both show one.
+ * UFO's glowing frame. The Rules modal and the settings both show one.
  */
 export function UfoPanel({
   title,

@@ -102,7 +102,7 @@ function RestlessUfo({ size }: { size: number }) {
   );
 }
 
-/** A short line from the UFO, in its neon frame (e.g. "it helped"). */
+/** A short line from the UFO, in its glowing frame (e.g. "it helped"). */
 export function UfoNote({ text }: { text: string }) {
   const { spacing } = useResponsiveMetrics();
   return (
