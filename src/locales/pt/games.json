@@ -214,7 +214,16 @@
     "victoryGold": "Todos os inimigos derrotados! Vitória de OURO!",
     "victorySilver": "Todos os inimigos derrotados! Vitória de PRATA!",
     "victoryBronze": "Todos os inimigos derrotados! Vitória de BRONZE!",
-    "failedToBlock": "Não foi possível bloquear {{damage}} de dano. Fim de jogo!"
+    "failedToBlock": "Não foi possível bloquear {{damage}} de dano. Fim de jogo!",
+    "hint": {
+      "kill": "Derrote este inimigo",
+      "exactKill": "Golpe exato: o inimigo entra na sua taverna",
+      "shield": "Espadas enfraquecem o ataque dele antes que ele golpeie",
+      "draw": "Ouros reabastecem sua mão",
+      "heal": "Copas devolvem o descarte à taverna",
+      "defend": "Bloqueie com as cartas de que você menos precisa",
+      "jester": "Chame um bobo para ter uma mão nova"
+    }
   },
   "cruel": {
     "crueltyConquered": "Crueldade vencida!"
@@ -247,7 +256,15 @@
   },
   "elementaryDetective": {
     "youScored20ToWin": "Você fez {{score}} (20 para vencer)",
-    "score": "Pontos"
+    "score": "Pontos",
+    "hint": {
+      "reveal_one": "Revele este companheiro: cerca de {{count}} palpite deve pontuar",
+      "reveal_other": "Revele este companheiro: cerca de {{count}} palpites devem pontuar",
+      "revealInfo": "Revele um companheiro para saber o que os outros podem ser",
+      "place": "Um palpite aqui pontua {{chance}}% das vezes",
+      "discard": "Esta carta não pode pontuar: coloque-a onde não custa nada",
+      "withdraw": "Este palpite não pode mais pontuar: libere o espaço (a próxima carta do monte também vai embora)"
+    }
   },
   "fanSolitaire": {
     "theFoundationsAreComplete": "As fundações estão completas!"
@@ -340,7 +357,12 @@
     "harvestGood": "Boa colheita: restam {{count}} ervas.",
     "harvestExcellent": "Colheita excelente: restam {{count}} ervas.",
     "harvestPerfect": "Colheita perfeita: restam {{count}} ervas.",
-    "noHerbsRemain": "Não restam ervas para curar o reino."
+    "noHerbsRemain": "Não restam ervas para curar o reino.",
+    "hint": {
+      "heal": "Pegue estas ervas: bem semeadas, curam uma criatura",
+      "setUp": "Pegue estas ervas: bem semeadas, preparam uma cura",
+      "noCure": "Não há mais cura para o reino: continue semeando para terminar o jogo"
+    }
   },
   "infiltrator": {
     "retired": "Aposentados",
@@ -682,7 +704,13 @@
     "dsq": "Desclassificado: o relógio chegou a 16 penalidades.",
     "stage": "Etapa",
     "sector": "Setor",
-    "speed": "Velocidade"
+    "speed": "Velocidade",
+    "hint": {
+      "boosts": "Use o gás para chegar à velocidade-alvo",
+      "brakes": "Freie: melhor devagar do que passar da velocidade-alvo",
+      "finishUnder": "Feche agora: outra carta provavelmente passaria do alvo",
+      "finishOver": "Rápido demais e sem freio: feche e aceite a penalidade"
+    }
   },
   "windmill": {
     "theSailsTurnFreely": "As pás giram livremente!"

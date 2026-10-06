@@ -23,6 +23,8 @@ import { useGameColors } from "@/hooks/useGameColors";
 import { flexStyles } from "@/styles/flexStyles";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, withNote, zoneTarget } from "@/hints/hint";
 const ZONE_ROW_MULT = 1.1;
 const LOCATION_COUNT = 9;
 const STABLES_INDEX = 4;
@@ -253,7 +255,309 @@ function createHerbalistDecks() {
   };
 }
 
+// —— Hints ——
+
+// A creature healed is the aim; a herb eaten is gone for good.
+const HEAL_WORTH = 60;
+const HERB_WORTH = 2;
+const RANK_ORDER = ["J", "Q", "K"] as const;
+
+/**
+ * How close a sick creature's herbs are to healing it: their total against
+ * its rank, and one of its suit among them. Creatures that heal first (the
+ * Jacks, then the Queens) count most.
+ */
+function sickWorth(
+  creature: Creature,
+  herbs: PlayingCard[],
+  healingRank: string | null,
+) {
+  const need = rankValue(creature.card);
+  const total = herbTotal(herbs);
+  const suited = herbs.some((herb) => herb.suit === creature.card.suit);
+  const order =
+    RANK_ORDER.indexOf(creature.card.rank as (typeof RANK_ORDER)[number]) -
+    RANK_ORDER.indexOf((healingRank ?? "J") as (typeof RANK_ORDER)[number]);
+  const weight = order <= 0 ? 1 : order === 1 ? 0.5 : 0.25;
+  // Short of its rank, a point per point missing; over it, twice that and
+  // more: the stack must be picked up again to fix it.
+  let worth = total <= need ? total - need : 2 * (need - total) - 3;
+  if (suited) worth += 3;
+  if (suited && total === need) worth += 5;
+  return worth * weight;
+}
+
+/**
+ * How many of these herbs are eaten at a location once the creatures have
+ * healed (a creature healed now eats too), with the jester's share.
+ */
+function herbsEaten(
+  state: Readonly<HerbalistGameState>,
+  index: number,
+  herbs: PlayingCard[],
+  healingRank: string | null,
+  jesterEats: boolean,
+) {
+  const eats = (suit: string | undefined) =>
+    herbs.filter((herb) => herb.suit === suit).length;
+  if (index === STABLES_INDEX) {
+    if (!state.openStables) return 0;
+    return eats(state.noble?.suit) + (jesterEats && herbs.length ? 1 : 0);
+  }
+  const creature = state.creatures[index];
+  if (!creature) return 0;
+  const heals = creature.card.rank === healingRank && canHeal(creature, herbs);
+  return creature.healthy || heals ? eats(creature.card.suit) : 0;
+}
+
+/**
+ * What a location is worth once these herbs lie there and the creatures
+ * have healed and eaten: a creature healed, a sick one's progress, less the
+ * herbs eaten.
+ */
+function locationWorth(
+  state: Readonly<HerbalistGameState>,
+  index: number,
+  herbs: PlayingCard[],
+  healingRank: string | null,
+  jesterEats: boolean,
+) {
+  const lost =
+    herbsEaten(state, index, herbs, healingRank, jesterEats) * HERB_WORTH;
+  const creature = state.creatures[index];
+  if (!creature || creature.healthy) return -lost;
+  if (creature.card.rank === healingRank && canHeal(creature, herbs)) {
+    return HEAL_WORTH - lost;
+  }
+  return sickWorth(creature, herbs, healingRank);
+}
+
+/** How good a position is between turns. */
+function positionWorth(state: Readonly<HerbalistGameState>) {
+  if (state.ended) return state.won ? 10000 : -10000;
+  const healingRank = currentHealingRank(state);
+  let worth = uneatenHerbCount(state) * HERB_WORTH;
+  state.creatures.forEach((creature, index) => {
+    if (!creature) return;
+    worth += creature.healthy
+      ? HEAL_WORTH
+      : sickWorth(creature, state.herbStacks[index], healingRank);
+  });
+  return worth;
+}
+
+/**
+ * The order to sow the carried herbs in, best first: each lands one place
+ * further on, so the order says which herb goes where. With no more herbs
+ * than places it's an assignment, solved exactly over the subsets of herbs
+ * placed; a bigger handful wraps round, and is sown greedily.
+ */
+function sowingOrder(state: Readonly<HerbalistGameState>): PlayingCard[] {
+  const carried = state.carriedHerbs;
+  const start = state.nextLocation;
+  if (start === null || carried.length === 0) return [];
+  const healingRank = currentHealingRank(state);
+  const count = carried.length;
+  // With no cure left, herbs are sown to be eaten: that ends the game.
+  const judge = isHopeless(state) ? herbsEaten : locationWorth;
+  const place = (step: number) => (start + step) % LOCATION_COUNT;
+  const worthAt = (step: number, herbs: PlayingCard[]) =>
+    judge(
+      state,
+      place(step),
+      [...state.herbStacks[place(step)], ...herbs],
+      healingRank,
+      // The jester takes a herb when the last lands in the stables.
+      step === count - 1,
+    );
+
+  if (count > LOCATION_COUNT) {
+    const order: PlayingCard[] = [];
+    const left = [...carried];
+    const added = new Map<number, PlayingCard[]>();
+    for (let step = 0; step < count; step += 1) {
+      const here = added.get(place(step)) ?? [];
+      let best = 0;
+      for (let index = 1; index < left.length; index += 1) {
+        if (
+          worthAt(step, [...here, left[index]]) >
+          worthAt(step, [...here, left[best]])
+        ) {
+          best = index;
+        }
+      }
+      const [herb] = left.splice(best, 1);
+      order.push(herb);
+      added.set(place(step), [...here, herb]);
+    }
+    return order;
+  }
+
+  // worth[step][herb]: that herb sown at that step.
+  const worth = Array.from({ length: count }, (_, step) =>
+    carried.map((herb) => worthAt(step, [herb])),
+  );
+  const memo = new Map<number, number>();
+  const bestFrom = (mask: number, step: number): number => {
+    if (step === count) return 0;
+    let value = memo.get(mask);
+    if (value !== undefined) return value;
+    value = -Infinity;
+    for (let herb = 0; herb < count; herb += 1) {
+      if (mask & (1 << herb)) continue;
+      value = Math.max(
+        value,
+        worth[step][herb] + bestFrom(mask | (1 << herb), step + 1),
+      );
+    }
+    memo.set(mask, value);
+    return value;
+  };
+  const order: PlayingCard[] = [];
+  let mask = 0;
+  for (let step = 0; step < count; step += 1) {
+    let choice = -1;
+    let choiceValue = -Infinity;
+    for (let herb = 0; herb < count; herb += 1) {
+      if (mask & (1 << herb)) continue;
+      const value = worth[step][herb] + bestFrom(mask | (1 << herb), step + 1);
+      if (value > choiceValue + 1e-9) {
+        choice = herb;
+        choiceValue = value;
+      }
+    }
+    order.push(carried[choice]);
+    mask |= 1 << choice;
+  }
+  return order;
+}
+
+/** The position after picking up a stack and sowing it in the best order. */
+function playTurn(state: Readonly<HerbalistGameState>, source: number) {
+  const next = structuredClone(state) as HerbalistGameState;
+  if (!beginDistribution(next, source)) return null;
+  for (const herb of sowingOrder(next)) dropHerb(next, herb.id);
+  return next;
+}
+
+function sources(state: Readonly<HerbalistGameState>) {
+  return state.herbStacks.flatMap((herbs, index) =>
+    herbs.length ? [index] : [],
+  );
+}
+
+// Turns played out per hint, at most: few stacks left means few choices,
+// so the search reaches further then.
+const SEARCH_BUDGET = 800;
+
+type Search = { budget: number; seen: Map<string, number> };
+
+/** The best position reachable within `turns` turns (this one included). */
+function lookAhead(
+  state: Readonly<HerbalistGameState>,
+  turns: number,
+  search: Search,
+): number {
+  let best = positionWorth(state);
+  if (turns === 0 || state.ended) return best;
+  const key = `${turns}:${state.herbStacks.map((herbs) => herbs.map((herb) => herb.id).join()).join("|")}`;
+  const known = search.seen.get(key);
+  if (known !== undefined) return known;
+  for (const source of sources(state)) {
+    if (search.budget <= 0) break;
+    search.budget -= 1;
+    const after = playTurn(state, source);
+    // Sooner is better: a turn later is worth a little less.
+    if (after) best = Math.max(best, lookAhead(after, turns - 1, search) - 1);
+  }
+  search.seen.set(key, best);
+  return best;
+}
+
+/**
+ * Whether some sick creature can no longer be healed: all the herbs left
+ * don't add up to its rank.
+ */
+function isHopeless(state: Readonly<HerbalistGameState>) {
+  const left = herbTotal([...state.herbStacks.flat(), ...state.carriedHerbs]);
+  return state.creatures.some(
+    (creature) =>
+      creature && !creature.healthy && rankValue(creature.card) > left,
+  );
+}
+
+/**
+ * The stack to sow: each is tried with its best sowing, and judged by the
+ * best that can follow it in a turn more (a heal often takes two turns to
+ * set up), or further when that shows no way forward. Once the realm can't
+ * be healed, the herbs are sown to be eaten, to end the game.
+ */
+function bestSource(state: Readonly<HerbalistGameState>) {
+  const hopeless = isHopeless(state);
+  const search: Search = { budget: SEARCH_BUDGET, seen: new Map() };
+  const pick = (turns: number) => {
+    let best: { source: number; value: number } | null = null;
+    for (const source of sources(state)) {
+      const after = playTurn(state, source);
+      if (!after) continue;
+      const value = hopeless
+        ? -uneatenHerbCount(after) - after.carriedHerbs.length
+        : lookAhead(after, turns, search);
+      if (!best || value > best.value) best = { source, value };
+    }
+    return best;
+  };
+  const here = positionWorth(state);
+  let best = pick(1);
+  // Nothing better in sight: look further, while the budget lasts.
+  for (
+    let turns = 2;
+    !hopeless && best && best.value <= here && search.budget > 0 && turns <= 8;
+    turns += 1
+  ) {
+    const further = pick(turns);
+    if (search.budget <= 0) break;
+    best = further ?? best;
+  }
+  return best?.source ?? null;
+}
+
+/**
+ * Pick up the stack whose sowing does most for the creatures, then sow its
+ * herbs where they heal, build toward healing, or at least aren't eaten.
+ */
+function findHerbalistHint(state: Readonly<HerbalistGameState>) {
+  if (state.ended) return null;
+  if (state.phase === "distribute") {
+    const [herb] = sowingOrder(state);
+    if (!herb || state.nextLocation === null) return null;
+    return makeHint(
+      "moveCard",
+      cardTarget(herb),
+      zoneTarget(`herbs-${state.nextLocation}`),
+    );
+  }
+  const source = bestSource(state);
+  if (source === null) return null;
+  const healed = (position: Readonly<HerbalistGameState> | null) =>
+    position?.creatures.filter((creature) => creature?.healthy).length ?? 0;
+  const heals = healed(playTurn(state, source)) > healed(state);
+  return withNote(
+    makeHint("tapCard", cardTarget(state.herbStacks[source].at(-1)!)),
+    i18n.t(
+      isHopeless(state)
+        ? "games:herbalist.hint.noCure"
+        : heals
+          ? "games:herbalist.hint.heal"
+          : "games:herbalist.hint.setUp",
+    ),
+  );
+}
+
 export const herbalistRules = {
+  findHint: findHerbalistHint,
+  sowingOrder,
+  bestSource,
   herbValue,
   herbTotal,
   currentHealingRank,
@@ -365,6 +669,8 @@ export default function Herbalist() {
         });
       },
     });
+
+  useHint(() => findHerbalistHint(game), { game });
 
   function selectSource(index: number) {
     if (game.phase !== "chooseSource" || game.ended) return;

@@ -8,7 +8,9 @@ import {
   flipAllToFace,
   isFace,
   shuffle,
+  SUITS,
   top,
+  type CardSuit,
   type PlayingCard,
 } from "../Cards/card-utils";
 import {
@@ -21,6 +23,8 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, withNote, zoneTarget } from "@/hints/hint";
 const gridCols = 4;
 const gridRows = 3;
 
@@ -161,7 +165,193 @@ function resolvePlaymateReveal(
   };
 }
 
+// —— Hints ——
+
+const GUESS_COUNT = guessZonesColRows.length;
+const PLAYMATE_COUNT = gridCols * gridRows;
+
+/** The playmates each guess space scores against (its row or column). */
+const GUESS_LINES: number[][] = Array.from(
+  { length: GUESS_COUNT },
+  (_, guess) =>
+    Array.from({ length: PLAYMATE_COUNT }, (_, index) => index).filter(
+      (index) => getScoreIndexes(index).includes(guess),
+    ),
+);
+
+/** Ways to choose `pick` of `from`. */
+function choose(from: number, pick: number) {
+  if (pick < 0 || pick > from) return 0;
+  let ways = 1;
+  for (let index = 0; index < pick; index += 1) {
+    ways = (ways * (from - index)) / (index + 1);
+  }
+  return ways;
+}
+
+/**
+ * What the player knows of the hidden playmates: they are the Jacks, Queens
+ * and Kings not yet revealed, in any order. How many of each suit are left
+ * to find, and how many are hidden.
+ */
+function hiddenSuits(state: GameState) {
+  const left = Object.fromEntries(SUITS.map((suit) => [suit, 3])) as Record<
+    CardSuit,
+    number
+  >;
+  let hidden = 0;
+  for (const playmate of state.playmates) {
+    if (playmate.faceUp) left[playmate.suit] -= 1;
+    else hidden += 1;
+  }
+  return { left, hidden };
+}
+
+/**
+ * The chance a guess of this suit in this space scores: that one of the
+ * hidden playmates in its line has the suit.
+ */
+function guessChance(state: GameState, guess: number, suit: CardSuit) {
+  const { left, hidden } = hiddenSuits(state);
+  const inLine = GUESS_LINES[guess].filter(
+    (index) => !state.playmates[index].faceUp,
+  ).length;
+  if (inLine === 0 || hidden === 0) return 0;
+  return 1 - choose(hidden - left[suit], inLine) / choose(hidden, inLine);
+}
+
+/** How many guesses revealing this playmate should score. */
+function revealWorth(state: GameState, playmate: number) {
+  const { left, hidden } = hiddenSuits(state);
+  if (hidden === 0) return 0;
+  return getScoreIndexes(playmate).reduce((sum, guess) => {
+    const card = state.guesses[guess];
+    return card ? sum + left[card.suit] / hidden : sum;
+  }, 0);
+}
+
+type DetectiveMove =
+  | { type: "place"; guess: number; chance: number }
+  | { type: "reveal"; playmate: number; worth: number }
+  | { type: "withdraw"; guess: number };
+
+// A guess this likely to score is worth its space; below, the card is
+// better used to clear a dead guess, or a reveal comes first.
+const GOOD_CHANCE = 0.3;
+const POOR_CHANCE = 0.15;
+
+/**
+ * Fill the guess spaces where the top card most likely scores. Reveal a
+ * playmate only once the card has no good space left, the one whose guesses
+ * should score most (best with all its spaces filled): a guess scores
+ * whenever its line is revealed, so revealing early gives up guesses for
+ * no more than freed spaces and a better idea of the others. Clear a guess
+ * that can't score any more when the top card has no better use.
+ */
+function bestDetectiveMove(state: GameState): DetectiveMove | null {
+  if (state.ended) return null;
+  const hidden = state.playmates.flatMap((playmate, index) =>
+    playmate.faceUp ? [] : [index],
+  );
+  if (hidden.length === 0) return null;
+  const reveal = (candidates: number[]) => {
+    let best: { type: "reveal"; playmate: number; worth: number } | null = null;
+    for (const playmate of candidates) {
+      const worth = revealWorth(state, playmate);
+      if (!best || worth > best.worth + 1e-9) {
+        best = { type: "reveal", playmate, worth };
+      }
+    }
+    return best;
+  };
+
+  const card = top(state.draw);
+  if (!card) return reveal(hidden);
+
+  const empty = state.guesses.flatMap((guess, index) => (guess ? [] : [index]));
+  let place: { type: "place"; guess: number; chance: number } | null = null;
+  for (const guess of empty) {
+    const chance = guessChance(state, guess, card.suit);
+    if (!place || chance > place.chance + 1e-9) {
+      place = { type: "place", guess, chance };
+    }
+  }
+  if (place && place.chance >= GOOD_CHANCE) return place;
+
+  // A space whose line is all revealed takes a useless card for free.
+  const spent = empty.find((guess) =>
+    GUESS_LINES[guess].every((playmate) => state.playmates[playmate].faceUp),
+  );
+  if (place && place.chance === 0 && spent !== undefined) {
+    return { type: "place", guess: spent, chance: 0 };
+  }
+  // Guesses that can't score any more, in a line still to be revealed.
+  const dead = state.guesses.flatMap((guess, index) =>
+    guess &&
+    guessChance(state, index, guess.suit) === 0 &&
+    GUESS_LINES[index].some((playmate) => !state.playmates[playmate].faceUp)
+      ? [index]
+      : [],
+  );
+  if (dead.length > 0 && (!place || place.chance < POOR_CHANCE)) {
+    return { type: "withdraw", guess: dead[0] };
+  }
+  const ready = reveal(
+    hidden.filter((playmate) =>
+      getScoreIndexes(playmate).every((guess) => state.guesses[guess]),
+    ),
+  );
+  if (ready && ready.worth > 0) return ready;
+  if (place) return place;
+  const any = reveal(hidden);
+  if (any && any.worth === 0 && dead.length > 0) {
+    return { type: "withdraw", guess: dead[0] };
+  }
+  return any;
+}
+
+function findDetectiveHint(state: GameState) {
+  const move = bestDetectiveMove(state);
+  if (!move) return null;
+  if (move.type === "reveal") {
+    const count = Math.round(move.worth);
+    return withNote(
+      makeHint("tapCard", cardTarget(state.playmates[move.playmate])),
+      count > 0
+        ? i18n.t("games:elementaryDetective.hint.reveal", { count })
+        : i18n.t("games:elementaryDetective.hint.revealInfo"),
+    );
+  }
+  if (move.type === "withdraw") {
+    return withNote(
+      makeHint("removeCard", cardTarget(state.guesses[move.guess]!)),
+      i18n.t("games:elementaryDetective.hint.withdraw"),
+    );
+  }
+  const hint = makeHint(
+    "moveCard",
+    cardTarget(top(state.draw)!),
+    zoneTarget(`guess-${move.guess}`),
+  );
+  if (move.chance > 0) {
+    return withNote(
+      hint,
+      i18n.t("games:elementaryDetective.hint.place", {
+        chance: Math.round(move.chance * 100),
+      }),
+    );
+  }
+  const spent = GUESS_LINES[move.guess].every(
+    (playmate) => state.playmates[playmate].faceUp,
+  );
+  return spent
+    ? withNote(hint, i18n.t("games:elementaryDetective.hint.discard"))
+    : hint;
+}
+
 export const elementaryDetectiveRules = {
+  findHint: findDetectiveHint,
+  bestMove: bestDetectiveMove,
   dealPlaymates,
   getScoreIndexes,
   resolvePlaymateReveal,
@@ -221,6 +411,8 @@ export default function ElementaryDetective() {
       },
       gameStateInitial,
     });
+
+  useHint(() => findDetectiveHint(game), { game });
 
   // ── Game logic ────────────────────────────────────────────
   function placeGuess(guessIndex: number) {

@@ -214,7 +214,16 @@
     "victoryGold": "Tous les ennemis sont vaincus ! Victoire OR !",
     "victorySilver": "Tous les ennemis sont vaincus ! Victoire ARGENT !",
     "victoryBronze": "Tous les ennemis sont vaincus ! Victoire BRONZE !",
-    "failedToBlock": "Impossible de bloquer {{damage}} dégâts. Partie terminée !"
+    "failedToBlock": "Impossible de bloquer {{damage}} dégâts. Partie terminée !",
+    "hint": {
+      "kill": "Battez cet ennemi",
+      "exactKill": "Coup exact : l'ennemi rejoint votre taverne",
+      "shield": "Les piques affaiblissent son attaque avant qu'il frappe",
+      "draw": "Les carreaux remplissent votre main",
+      "heal": "Les cœurs renvoient la défausse dans la taverne",
+      "defend": "Bloquez avec les cartes dont vous avez le moins besoin",
+      "jester": "Appelez un bouffon pour une nouvelle main"
+    }
   },
   "cruel": {
     "crueltyConquered": "La cruauté est vaincue !"
@@ -247,7 +256,15 @@
   },
   "elementaryDetective": {
     "youScored20ToWin": "Vous avez marqué {{score}} (20 pour gagner)",
-    "score": "Score"
+    "score": "Score",
+    "hint": {
+      "reveal_one": "Révélez ce camarade : environ {{count}} hypothèse devrait marquer",
+      "reveal_other": "Révélez ce camarade : environ {{count}} hypothèses devraient marquer",
+      "revealInfo": "Révélez un camarade pour savoir ce que les autres peuvent être",
+      "place": "Une hypothèse ici marque {{chance}} % du temps",
+      "discard": "Cette carte ne peut pas marquer : posez-la là où elle ne coûte rien",
+      "withdraw": "Cette hypothèse ne peut plus marquer : libérez sa case (la carte suivante de la pioche part aussi)"
+    }
   },
   "fanSolitaire": {
     "theFoundationsAreComplete": "Les fondations sont complètes !"
@@ -340,7 +357,12 @@
     "harvestGood": "Bonne récolte : il reste {{count}} herbes.",
     "harvestExcellent": "Excellente récolte : il reste {{count}} herbes.",
     "harvestPerfect": "Récolte parfaite : il reste {{count}} herbes.",
-    "noHerbsRemain": "Il ne reste plus d'herbes pour soigner le royaume."
+    "noHerbsRemain": "Il ne reste plus d'herbes pour soigner le royaume.",
+    "hint": {
+      "heal": "Ramassez ces herbes : bien semées, elles soignent une créature",
+      "setUp": "Ramassez ces herbes : bien semées, elles préparent une guérison",
+      "noCure": "Plus aucun remède pour le royaume : semez pour finir la partie"
+    }
   },
   "infiltrator": {
     "retired": "Retirés",
@@ -682,7 +704,13 @@
     "dsq": "Disqualifié : le chrono a atteint 16 pénalités.",
     "stage": "Spéciale",
     "sector": "Secteur",
-    "speed": "Vitesse"
+    "speed": "Vitesse",
+    "hint": {
+      "boosts": "Mettez les gaz pour atteindre la vitesse visée",
+      "brakes": "Freinez : mieux vaut trop lent qu'au-delà de la vitesse visée",
+      "finishUnder": "Finissez maintenant : une autre carte dépasserait sans doute",
+      "finishOver": "Trop vite et plus de frein : finissez et prenez la pénalité"
+    }
   },
   "windmill": {
     "theSailsTurnFreely": "Les ailes tournent librement !"

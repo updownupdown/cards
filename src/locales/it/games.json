@@ -214,7 +214,16 @@
     "victoryGold": "Tutti i nemici sconfitti! Vittoria d'ORO!",
     "victorySilver": "Tutti i nemici sconfitti! Vittoria d'ARGENTO!",
     "victoryBronze": "Tutti i nemici sconfitti! Vittoria di BRONZO!",
-    "failedToBlock": "Non sei riuscito a bloccare {{damage}} danni. Partita finita!"
+    "failedToBlock": "Non sei riuscito a bloccare {{damage}} danni. Partita finita!",
+    "hint": {
+      "kill": "Sconfiggi questo nemico",
+      "exactKill": "Colpo esatto: il nemico si unisce alla tua taverna",
+      "shield": "Le picche indeboliscono il suo attacco prima che colpisca",
+      "draw": "I quadri ti riempiono la mano",
+      "heal": "I cuori rimandano gli scarti nella taverna",
+      "defend": "Blocca con le carte che ti servono meno",
+      "jester": "Chiama un buffone per una mano nuova"
+    }
   },
   "cruel": {
     "crueltyConquered": "Crudeltà sconfitta!"
@@ -247,7 +256,15 @@
   },
   "elementaryDetective": {
     "youScored20ToWin": "Hai fatto {{score}} punti (20 per vincere)",
-    "score": "Punti"
+    "score": "Punti",
+    "hint": {
+      "reveal_one": "Rivela questo compagno: dovrebbe fare punti circa {{count}} ipotesi",
+      "reveal_other": "Rivela questo compagno: dovrebbero fare punti circa {{count}} ipotesi",
+      "revealInfo": "Rivela un compagno per capire cosa possono essere gli altri",
+      "place": "Un'ipotesi qui fa punti il {{chance}}% delle volte",
+      "discard": "Questa carta non può fare punti: mettila dove non costa nulla",
+      "withdraw": "Questa ipotesi non può più fare punti: libera il suo spazio (se ne va anche la prossima carta del mazzo)"
+    }
   },
   "fanSolitaire": {
     "theFoundationsAreComplete": "Le fondazioni sono complete!"
@@ -340,7 +357,12 @@
     "harvestGood": "Buon raccolto: restano {{count}} erbe.",
     "harvestExcellent": "Raccolto eccellente: restano {{count}} erbe.",
     "harvestPerfect": "Raccolto perfetto: restano {{count}} erbe.",
-    "noHerbsRemain": "Non restano erbe per curare il regno."
+    "noHerbsRemain": "Non restano erbe per curare il regno.",
+    "hint": {
+      "heal": "Raccogli queste erbe: seminate bene, curano una creatura",
+      "setUp": "Raccogli queste erbe: seminate bene, preparano una guarigione",
+      "noCure": "Non c'è più cura per il regno: continua a seminare per finire la partita"
+    }
   },
   "infiltrator": {
     "retired": "Ritirate",
@@ -682,7 +704,13 @@
     "dsq": "Squalificato: il cronometro è arrivato a 16 penalità.",
     "stage": "Tappa",
     "sector": "Settore",
-    "speed": "Velocità"
+    "speed": "Velocità",
+    "hint": {
+      "boosts": "Usa il gas per raggiungere la velocità obiettivo",
+      "brakes": "Frena: meglio lenti che oltre la velocità obiettivo",
+      "finishUnder": "Chiudi ora: un'altra carta probabilmente andrebbe oltre",
+      "finishOver": "Troppo veloce e niente freni: chiudi e accetta la penalità"
+    }
   },
   "windmill": {
     "theSailsTurnFreely": "Le pale girano libere!"

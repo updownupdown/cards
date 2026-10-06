@@ -214,7 +214,16 @@
     "victoryGold": "Semua musuh kalah! Kemenangan EMAS!",
     "victorySilver": "Semua musuh kalah! Kemenangan PERAK!",
     "victoryBronze": "Semua musuh kalah! Kemenangan PERUNGGU!",
-    "failedToBlock": "Gagal menahan {{damage}} kerusakan. Permainan berakhir!"
+    "failedToBlock": "Gagal menahan {{damage}} kerusakan. Permainan berakhir!",
+    "hint": {
+      "kill": "Kalahkan musuh ini",
+      "exactKill": "Serangan pas: musuh bergabung ke kedaimu",
+      "shield": "Sekop melemahkan serangannya sebelum ia menyerang",
+      "draw": "Wajik mengisi ulang tanganmu",
+      "heal": "Hati mengembalikan buangan ke kedai",
+      "defend": "Tahan dengan kartu yang paling tidak kamu perlukan",
+      "jester": "Panggil badut untuk tangan baru"
+    }
   },
   "cruel": {
     "crueltyConquered": "Kekejaman ditaklukkan!"
@@ -247,7 +256,15 @@
   },
   "elementaryDetective": {
     "youScored20ToWin": "Skormu {{score}} (20 untuk menang)",
-    "score": "Skor"
+    "score": "Skor",
+    "hint": {
+      "reveal_one": "Buka teman bermain ini: sekitar {{count}} tebakan seharusnya dapat skor",
+      "reveal_other": "Buka teman bermain ini: sekitar {{count}} tebakan seharusnya dapat skor",
+      "revealInfo": "Buka satu teman bermain untuk tahu apa saja kemungkinan yang lain",
+      "place": "Tebakan di sini dapat skor {{chance}}% dari waktu",
+      "discard": "Kartu ini tidak bisa dapat skor: taruh di tempat yang tidak merugikan",
+      "withdraw": "Tebakan ini tidak bisa dapat skor lagi: kosongkan ruangnya (kartu dek berikutnya ikut dibuang)"
+    }
   },
   "fanSolitaire": {
     "theFoundationsAreComplete": "Fondasi sudah lengkap!"
@@ -340,7 +357,12 @@
     "harvestGood": "Panen bagus: tersisa {{count}} tanaman obat.",
     "harvestExcellent": "Panen luar biasa: tersisa {{count}} tanaman obat.",
     "harvestPerfect": "Panen sempurna: tersisa {{count}} tanaman obat.",
-    "noHerbsRemain": "Tidak ada tanaman obat tersisa untuk menyembuhkan negeri."
+    "noHerbsRemain": "Tidak ada tanaman obat tersisa untuk menyembuhkan negeri.",
+    "hint": {
+      "heal": "Ambil tanaman obat ini: jika disebar dengan tepat, satu makhluk sembuh",
+      "setUp": "Ambil tanaman obat ini: jika disebar dengan tepat, ini menyiapkan penyembuhan",
+      "noCure": "Tidak ada lagi obat untuk negeri: terus sebar untuk mengakhiri permainan"
+    }
   },
   "infiltrator": {
     "retired": "Pensiun",
@@ -682,7 +704,13 @@
     "dsq": "DSQ: jam mencapai 16 penalti waktu.",
     "stage": "Etape",
     "sector": "Sektor",
-    "speed": "Kecepatan"
+    "speed": "Kecepatan",
+    "hint": {
+      "boosts": "Injak gas untuk mencapai kecepatan target",
+      "brakes": "Rem: lebih baik lambat daripada melewati kecepatan target",
+      "finishUnder": "Selesaikan sekarang: kartu lain kemungkinan akan melewati target",
+      "finishOver": "Terlalu cepat dan rem habis: selesaikan dan terima penaltinya"
+    }
   },
   "windmill": {
     "theSailsTurnFreely": "Baling-baling berputar bebas!"
