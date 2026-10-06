@@ -1,6 +1,7 @@
 import { GLOBAL_SETTINGS_STORAGE_KEY } from "@/data/storage-keys";
 import { COLOR_THEMES, DEFAULT_COLOR_THEME } from "@/styles/themes";
 import { ScrollViewStyleReset } from "expo-router/html";
+import { SITE_URL } from "@/utils/share-win";
 import type { ReactNode } from "react";
 
 // Web-only root HTML template for Expo Router static rendering.
@@ -19,6 +20,18 @@ export default function Root({ children }: { children: ReactNode }) {
           name="description"
           content="A collection of solo playing card games."
         />
+        {/* Link previews, so a shared win shows the logo beside its link. */}
+        <meta property="og:site_name" content="Solitarius" />
+        <meta property="og:title" content="Solitarius" />
+        <meta
+          property="og:description"
+          content="A collection of solo playing card games."
+        />
+        <meta property="og:image" content={`${SITE_URL}/icon-512.png`} />
+        <meta property="og:image:width" content="512" />
+        <meta property="og:image:height" content="512" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
         <meta name="application-name" content="Solitarius" />
         <meta name="apple-mobile-web-app-title" content="Solitarius" />
         <meta name="mobile-web-app-capable" content="yes" />

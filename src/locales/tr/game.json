@@ -11,13 +11,18 @@
     "infoAndSettings": "Bilgi ve Ayarlar"
   },
   "result": {
-    "won": "Kazandınız",
-    "lost": "Kaybettin",
+    "won": "Kazandın!",
+    "lost": "Kaybettin.",
     "score": "Puan: {{score}}",
     "playAgain": "Tekrar oyna",
     "tryAgain": "Tekrar dene",
     "continueOdyssey": "Devam et",
-    "home": "Ana sayfa"
+    "home": "Ana sayfa",
+    "share": "Paylaş",
+    "shareText": "{{game}} oyununu {{time}} sürede kazandım! Sen de Solitarius'ta dene.",
+    "shareTextNoTime": "{{game}} oyununu kazandım! Sen de Solitarius'ta dene.",
+    "shareCopied": "Panoya kopyalandı",
+    "shareFailed": "Bu galibiyet paylaşılamadı"
   },
   "reset": {
     "hold": "Oyunu sıfırlamak için basılı tut"

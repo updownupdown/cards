@@ -256,6 +256,13 @@ export function SearchTab({
           initialNumToRender={16}
           maxToRenderPerBatch={16}
           windowSize={7}
+          // On the web the letters ride in the list itself (see
+          // StickyIndexLetters), so the browser scrolls them with the rows.
+          ListHeaderComponent={
+            indexed && Platform.OS === "web" ? (
+              <StickyIndexLetters sections={sections} />
+            ) : null
+          }
           renderItem={({ item: [path, game] }) => (
             <View
               style={[
@@ -274,7 +281,9 @@ export function SearchTab({
             </View>
           )}
         />
-        {indexed && <IndexLetters sections={sections} scrollY={scrollY} />}
+        {indexed && Platform.OS !== "web" && (
+          <IndexLetters sections={sections} scrollY={scrollY} />
+        )}
       </View>
 
       {/* The search box, filters, count and order stay at the top. */}
@@ -524,6 +533,7 @@ function IndexLetters({
   scrollY: Animated.Value;
 }) {
   const { spacing, font, ui } = useResponsiveMetrics();
+  const letterStyle = useLetterStyle();
   const letterHeight = font(36);
   const rowHeight = spacing(ROW_HEIGHT);
   const starts: number[] = [];
@@ -571,18 +581,75 @@ function IndexLetters({
                 transform: [{ translateY }],
               }}
             >
-              <Text
-                weight={500}
-                color={theme.accent}
-                style={{
-                  fontSize: font(22),
-                  lineHeight: letterHeight,
-                  paddingTop: spacing(6),
-                }}
-              >
+              <Text weight={500} color={theme.accent} style={letterStyle}>
                 {section.key}
               </Text>
             </Animated.View>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+/** The style of an index letter, beside its section's first row. */
+function useLetterStyle() {
+  const { spacing, font } = useResponsiveMetrics();
+  return {
+    fontSize: font(22),
+    lineHeight: font(36),
+    paddingTop: spacing(6),
+  };
+}
+
+/**
+ * The index on the web. Driving the letters from scroll events, as
+ * IndexLetters does, leaves them a frame or more behind the list there, since
+ * the browser scrolls the page off the main thread. Instead each letter sits
+ * in a box as tall as its section, inside the list, and sticks to the top of
+ * the list with CSS: the browser moves it with the rows, holds it at the top
+ * while its games scroll past, and lets the next section's box push it off.
+ */
+export function StickyIndexLetters({ sections }: { sections: Section[] }) {
+  const { spacing, ui } = useResponsiveMetrics();
+  const letterStyle = useLetterStyle();
+  const rowHeight = spacing(ROW_HEIGHT);
+  let top = 0;
+  return (
+    // No height of its own, so the rows start where they would without it.
+    <View style={{ height: 0, zIndex: 1, pointerEvents: "none" }}>
+      <View
+        style={{
+          width: "100%",
+          maxWidth: ui.contentMaxWidth,
+          alignSelf: "center",
+        }}
+      >
+        {sections.map((section) => {
+          const start = top;
+          const height = section.data.length * rowHeight;
+          top += height;
+          return (
+            <View
+              key={section.key}
+              testID={`index ${section.key}`}
+              style={{
+                position: "absolute",
+                top: start,
+                height,
+                left: spacing(layoutDims.pagePadding),
+              }}
+            >
+              <View
+                // Not in React Native's types, but react-native-web passes it
+                // through, as its own sticky headers do.
+                style={{ position: "sticky" as "relative", top: 0 }}
+              >
+                <Text weight={500} color={theme.accent} style={letterStyle}>
+                  {section.key}
+                </Text>
+              </View>
+            </View>
           );
         })}
       </View>

@@ -17,7 +17,12 @@
     "playAgain": "Play again",
     "tryAgain": "Try again",
     "continueOdyssey": "Continue",
-    "home": "Home"
+    "home": "Home",
+    "share": "Share",
+    "shareText": "I won {{game}} in {{time}}! Try it in Solitarius.",
+    "shareTextNoTime": "I won {{game}}! Try it in Solitarius.",
+    "shareCopied": "Copied to the clipboard",
+    "shareFailed": "Couldn't share this win"
   },
   "reset": {
     "hold": "Hold to reset game"

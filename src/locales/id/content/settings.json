@@ -90,6 +90,22 @@
       }
     }
   },
+  "augury": {
+    "difficulty": {
+      "hash": "946f322b",
+      "value": {
+        "label": "Tingkat kesulitan",
+        "options": [
+          {
+            "label": "Mudah (hukum sederhana)"
+          },
+          {
+            "label": "Sulit (hukum halus)"
+          }
+        ]
+      }
+    }
+  },
   "baroness": {
     "difficulty": {
       "hash": "9cf97680",
@@ -200,6 +216,26 @@
           },
           {
             "label": "2 Joker (Lebih sulit)"
+          }
+        ]
+      }
+    }
+  },
+  "ebb-and-flow": {
+    "ebbAndFlowDifficulty": {
+      "hash": "11a42223",
+      "value": {
+        "description": "Menentukan berapa kartu yang kamu pegang.",
+        "label": "Tingkat kesulitan",
+        "options": [
+          {
+            "label": "Mudah (8 kartu)"
+          },
+          {
+            "label": "Normal (7 kartu)"
+          },
+          {
+            "label": "Sulit (6 kartu)"
           }
         ]
       }
@@ -520,6 +556,22 @@
           {
             "label": "Kota dalam bayang",
             "description": "Queen memberi 1 dan King memberi 2 kerusakan tambahan."
+          }
+        ]
+      }
+    }
+  },
+  "ozanams-square": {
+    "difficulty": {
+      "hash": "ea2fa3d5",
+      "value": {
+        "label": "Tingkat kesulitan",
+        "options": [
+          {
+            "label": "Mudah (tujuh kartu di tempatnya)"
+          },
+          {
+            "label": "Sulit (kartu di tempatnya paling sedikit)"
           }
         ]
       }

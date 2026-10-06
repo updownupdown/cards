@@ -58,6 +58,10 @@
   "colorTheme": {
     "label": "Renk teması"
   },
+  "betaGames": {
+    "enabled": "Beta oyunlar açık",
+    "hide": "Beta oyunları gizle"
+  },
   "tabs": {
     "display": "Ekran",
     "theme": "Tema",

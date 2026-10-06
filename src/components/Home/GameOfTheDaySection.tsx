@@ -6,17 +6,16 @@ import {
   getDailyStreak,
   getDateKey,
   getGameOfTheDayPath,
-  loadDailyWins,
-  subscribeToDailyWins,
 } from "@/data/game-of-the-day";
 import { isGameEnabled } from "@/data/games-data";
 import { GAMES_DATA } from "@/data/games-registry";
+import { useDailyWins } from "@/hooks/useDailyWins";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { Icon } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { rgba, theme } from "@/styles/styles";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 
 /** Today and the days before it that can be swiped back to. */
@@ -48,19 +47,7 @@ export function GameOfTheDaySection({
   const { spacing } = useResponsiveMetrics();
   const scrollRef = useRef<ScrollView>(null);
   const [pageIndex, setPageIndex] = useState(0);
-  const [dailyWins, setDailyWins] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    let active = true;
-    const unsubscribe = subscribeToDailyWins(setDailyWins);
-    loadDailyWins().then((wins) => {
-      if (active) setDailyWins(wins);
-    });
-    return () => {
-      active = false;
-      unsubscribe();
-    };
-  }, []);
+  const dailyWins = useDailyWins();
 
   // Today first, then back through the days before it.
   const days = useMemo(() => {

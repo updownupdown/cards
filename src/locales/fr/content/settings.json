@@ -90,6 +90,22 @@
       }
     }
   },
+  "augury": {
+    "difficulty": {
+      "hash": "946f322b",
+      "value": {
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile (lois simples)"
+          },
+          {
+            "label": "Difficile (lois subtiles)"
+          }
+        ]
+      }
+    }
+  },
   "baroness": {
     "difficulty": {
       "hash": "9cf97680",
@@ -200,6 +216,26 @@
           },
           {
             "label": "2 Jokers (plus difficile)"
+          }
+        ]
+      }
+    }
+  },
+  "ebb-and-flow": {
+    "ebbAndFlowDifficulty": {
+      "hash": "11a42223",
+      "value": {
+        "description": "Détermine le nombre de cartes en main.",
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile (8 cartes)"
+          },
+          {
+            "label": "Normal (7 cartes)"
+          },
+          {
+            "label": "Difficile (6 cartes)"
           }
         ]
       }
@@ -520,6 +556,22 @@
           {
             "label": "Ville dans l'ombre",
             "description": "Les Dames infligent 1 dégât de plus et les Rois 2."
+          }
+        ]
+      }
+    }
+  },
+  "ozanams-square": {
+    "difficulty": {
+      "hash": "ea2fa3d5",
+      "value": {
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile (sept cartes en place)"
+          },
+          {
+            "label": "Difficile (le moins de cartes en place)"
           }
         ]
       }

@@ -65,6 +65,7 @@ import RoyalIcon from "./Royal.svg";
 import SearchIcon from "./Search.svg";
 import SequenceIcon from "./Sequence.svg";
 import SettingsIcon from "./Settings.svg";
+import ShareIcon from "./Share.svg";
 import ShieldIcon from "./Shield.svg";
 import ShuffleIcon from "./Shuffle.svg";
 import SkullIcon from "./Skull.svg";
@@ -140,6 +141,7 @@ export type IconName =
   | "search"
   | "sequence"
   | "settings"
+  | "share"
   | "shield"
   | "shuffle"
   | "skull"
@@ -215,6 +217,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "search": SearchIcon,
   "sequence": SequenceIcon,
   "settings": SettingsIcon,
+  "share": ShareIcon,
   "shield": ShieldIcon,
   "shuffle": ShuffleIcon,
   "skull": SkullIcon,

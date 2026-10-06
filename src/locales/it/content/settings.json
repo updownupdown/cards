@@ -90,6 +90,22 @@
       }
     }
   },
+  "augury": {
+    "difficulty": {
+      "hash": "946f322b",
+      "value": {
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile (leggi semplici)"
+          },
+          {
+            "label": "Difficile (leggi sottili)"
+          }
+        ]
+      }
+    }
+  },
   "baroness": {
     "difficulty": {
       "hash": "9cf97680",
@@ -200,6 +216,26 @@
           },
           {
             "label": "2 Jolly (più difficile)"
+          }
+        ]
+      }
+    }
+  },
+  "ebb-and-flow": {
+    "ebbAndFlowDifficulty": {
+      "hash": "11a42223",
+      "value": {
+        "description": "Stabilisce quante carte hai in mano.",
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile (8 carte)"
+          },
+          {
+            "label": "Normale (7 carte)"
+          },
+          {
+            "label": "Difficile (6 carte)"
           }
         ]
       }
@@ -520,6 +556,22 @@
           {
             "label": "Città nell'ombra",
             "description": "Le Donne infliggono 1 danno in più e i Re 2."
+          }
+        ]
+      }
+    }
+  },
+  "ozanams-square": {
+    "difficulty": {
+      "hash": "ea2fa3d5",
+      "value": {
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile (sette carte al loro posto)"
+          },
+          {
+            "label": "Difficile (il minimo di carte al loro posto)"
           }
         ]
       }

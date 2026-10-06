@@ -58,6 +58,10 @@
   "colorTheme": {
     "label": "Tema warna"
   },
+  "betaGames": {
+    "enabled": "Game beta aktif",
+    "hide": "Sembunyikan game beta"
+  },
   "tabs": {
     "display": "Tampilan",
     "theme": "Tema",

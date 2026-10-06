@@ -58,6 +58,10 @@
   "colorTheme": {
     "label": "Tema de color"
   },
+  "betaGames": {
+    "enabled": "Juegos beta activados",
+    "hide": "Ocultar juegos beta"
+  },
   "tabs": {
     "display": "Pantalla",
     "theme": "Tema",

@@ -3,7 +3,15 @@ import { usePalette } from "@/styles/palette";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
-import { ActionButton, Caps, Kicker } from "@/components/ui/Nocturne";
+import {
+  ActionButton,
+  Caps,
+  Kicker,
+  RoundButton,
+} from "@/components/ui/Nocturne";
+import { useToast } from "@/components/common/Toast";
+import { useGamePath } from "@/hooks/useGamePath";
+import { gameShareUrl, shareWin } from "@/utils/share-win";
 import { GameCollectibleIcons } from "@/components/ui/GameCollectibleIcons";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, Platform, View } from "react-native";
@@ -79,6 +87,19 @@ export const WinLoseBox = ({
       <Caps>{label}</Caps>
     </View>
   );
+  const gamePath = useGamePath();
+  const showToast = useToast();
+  const share = async () => {
+    const text = winTimes
+      ? t("result.shareText", {
+          game: title,
+          time: formatPlayTime(winTimes.timeMs),
+        })
+      : t("result.shareTextNoTime", { game: title });
+    const outcome = await shareWin({ text, url: gameShareUrl(gamePath) });
+    if (outcome === "copied") showToast(t("result.shareCopied"));
+    if (outcome === "failed") showToast(t("result.shareFailed"));
+  };
   const insets = useSafeAreaInsets();
   const restingBottom = spacing(layoutDims.pagePadding) + insets.bottom;
   const backdropGradientColors = [
@@ -214,6 +235,16 @@ export const WinLoseBox = ({
                   glowingReward={newlyEarnedReward}
                 />
               )}
+            {won && (
+              <RoundButton
+                iconName="share"
+                size={36}
+                color={theme.accent}
+                accessibilityLabel={t("result.share")}
+                disabled={actionsDisabled}
+                onPress={share}
+              />
+            )}
           </View>
 
           {message || (!hideScore && score !== undefined) ? (

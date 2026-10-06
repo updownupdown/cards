@@ -11,7 +11,7 @@ import { Text } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { WinLoseBox } from "@/components/common/WinLoseBox";
 import { GameCollectibleIcons } from "@/components/ui/GameCollectibleIcons";
-import { ActionButton } from "@/components/ui/Nocturne";
+import { ActionButton, RoundButton } from "@/components/ui/Nocturne";
 
 jest.mock("@/hooks/useGamePath", () => ({ useGamePath: () => "/klondike" }));
 jest.mock("react-native-safe-area-context", () => ({
@@ -19,8 +19,23 @@ jest.mock("react-native-safe-area-context", () => ({
 }));
 jest.mock("expo-linear-gradient", () => ({ LinearGradient: () => null }));
 
+const mockToasts: string[] = [];
+jest.mock("@/components/common/Toast", () => ({
+  useToast: () => (message: string) => mockToasts.push(message),
+}));
+
+const mockShareWin = jest.fn<
+  (share: { text: string; url: string }) => Promise<string>
+>(async () => "shared");
+jest.mock("@/utils/share-win", () => ({
+  ...jest.requireActual<object>("@/utils/share-win"),
+  shareWin: (share: { text: string; url: string }) => mockShareWin(share),
+}));
+
 beforeEach(() => {
   jest.useFakeTimers();
+  mockToasts.length = 0;
+  mockShareWin.mockClear();
 });
 
 afterEach(() => {
@@ -35,7 +50,6 @@ async function render(
   await act(async () => {
     renderer = create(
       <WinLoseBox
-        {...extra}
         gameEnded
         headerBottom={0}
         won={won}
@@ -44,6 +58,7 @@ async function render(
         score={120}
         message="All four suits are complete!"
         reset={() => {}}
+        {...extra}
       />,
     );
   });
@@ -60,13 +75,20 @@ describe("WinLoseBox", () => {
   test("a win shows its time, with the best time beside it", async () => {
     const shown = texts(await render(true));
     expect(shown).toEqual(
-      expect.arrayContaining(["YOU WON", "3:05", "TIME", "1:32", "BEST TIME"]),
+      expect.arrayContaining([
+        "KLONDIKE",
+        "You won!",
+        "3:05",
+        "TIME",
+        "1:32",
+        "BEST TIME",
+      ]),
     );
   });
 
   test("a loss shows no time", async () => {
     const shown = texts(await render(false));
-    expect(shown).toContain("YOU LOST");
+    expect(shown).toContain("You lost.");
     expect(shown).not.toContain("3:05");
     expect(shown.some((text) => text.startsWith("Best"))).toBe(false);
   });
@@ -102,8 +124,49 @@ describe("WinLoseBox", () => {
     expect(collectibleIcons[0]?.props.glowingReward).toEqual(rewards[1]);
   });
 
-  test("hidden actions can't be pressed", async () => {
-    const hidden = await render(true, { actionsHidden: true });
+  const shareButton = (renderer: ReactTestRenderer) =>
+    renderer.root
+      .findAll((node) => node.type === RoundButton)
+      .find((button) => button.props.iconName === "share");
+
+  test("a win can be shared; a loss can't", async () => {
+    expect(shareButton(await render(true))).toBeDefined();
+    expect(shareButton(await render(false))).toBeUndefined();
+  });
+
+  test("sharing a win sends the game, its time and its page", async () => {
+    const box = await render(true);
+    await act(async () => {
+      await shareButton(box)!.props.onPress();
+    });
+    expect(mockShareWin).toHaveBeenCalledWith({
+      text: "I won Klondike in 3:05! Try it in Solitarius.",
+      url: "https://solitarius.app/klondike",
+    });
+    expect(mockToasts).toEqual([]);
+  });
+
+  test("a win without a time is shared without one", async () => {
+    const box = await render(true, { winTimes: null });
+    await act(async () => {
+      await shareButton(box)!.props.onPress();
+    });
+    expect(mockShareWin.mock.calls[0][0].text).toBe(
+      "I won Klondike! Try it in Solitarius.",
+    );
+  });
+
+  test("a win copied to the clipboard says so", async () => {
+    mockShareWin.mockResolvedValueOnce("copied");
+    const box = await render(true);
+    await act(async () => {
+      await shareButton(box)!.props.onPress();
+    });
+    expect(mockToasts).toEqual(["Copied to the clipboard"]);
+  });
+
+  test("disabled actions can't be pressed", async () => {
+    const hidden = await render(true, { actionsDisabled: true });
     const buttons = hidden.root.findAll((node) => node.type === ActionButton);
     expect(buttons.length).toBeGreaterThan(0);
     for (const button of buttons) expect(button.props.disabled).toBe(true);

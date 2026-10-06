@@ -11,13 +11,18 @@
     "infoAndSettings": "Información y ajustes"
   },
   "result": {
-    "won": "Has ganado",
-    "lost": "Has perdido",
+    "won": "¡Has ganado!",
+    "lost": "Has perdido.",
     "score": "Puntuación: {{score}}",
     "playAgain": "Jugar de nuevo",
     "tryAgain": "Reintentar",
     "continueOdyssey": "Seguir",
-    "home": "Inicio"
+    "home": "Inicio",
+    "share": "Compartir",
+    "shareText": "¡He ganado a {{game}} en {{time}}! Pruébalo en Solitarius.",
+    "shareTextNoTime": "¡He ganado a {{game}}! Pruébalo en Solitarius.",
+    "shareCopied": "Copiado al portapapeles",
+    "shareFailed": "No se ha podido compartir esta victoria"
   },
   "reset": {
     "hold": "Mantén pulsado para reiniciar"
