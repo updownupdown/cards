@@ -14,7 +14,7 @@ import { getTestGameDotPaths, getTestWonPaths } from "@/data/test-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors, rgba, theme } from "@/styles/styles";
+import { Colors, theme } from "@/styles/styles";
 import { ThemePicker, settingsView } from "../common/ThemePicker";
 import {
   getDeviceLanguageCodes,
@@ -33,7 +33,7 @@ import { isLocalDevEnvironment } from "@/utils/utils";
 import Constants from "expo-constants";
 import { router } from "expo-router";
 import React from "react";
-import { Linking, Platform, Pressable, ScrollView, View } from "react-native";
+import { Linking, Platform, ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
 import { AddToHomeScreenNotice } from "../common/AddToHomeScreenNotice";
 import { SelectControl } from "../common/SelectControl";
@@ -41,6 +41,7 @@ import { SettingControl } from "../common/SettingControl";
 import { AutoCompleteModeRadio } from "../common/AutoCompletePanel";
 import { Text } from "../common/Text";
 import ModalFull from "./ModalFull";
+import { UnderlineTabs } from "../ui/Nocturne";
 import { useToast } from "../common/Toast";
 import { saveBetaGames, useBetaGamesEnabled } from "@/data/beta-games";
 import { saveHintButton, useHintButtonShown } from "@/data/hint-button";
@@ -151,44 +152,11 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
 
   return (
     <ModalFull showLogo onClose={onCloseAndRefresh}>
-      <View
-        accessibilityRole="tablist"
-        style={{
-          flexDirection: "row",
-          paddingHorizontal: spacing(20),
-          borderBottomWidth: 1,
-          borderBottomColor: rgba(theme.ink, 0.14),
-        }}
-      >
-        {TABS.map((id) => {
-          const selected = id === tab;
-          return (
-            <Pressable
-              key={id}
-              accessibilityRole="tab"
-              accessibilityState={{ selected }}
-              onPress={() => setTab(id)}
-              style={{
-                flex: 1,
-                alignItems: "center",
-                paddingVertical: spacing(12),
-                marginBottom: -1,
-                borderBottomWidth: 2,
-                borderBottomColor: selected ? theme.accent : "transparent",
-                outline: "none",
-              }}
-            >
-              <Text
-                weight={500}
-                size="md"
-                color={selected ? theme.accent : theme.dim}
-              >
-                {t(`tabs.${id}`)}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
+      <UnderlineTabs
+        options={TABS.map((id) => ({ value: id, label: t(`tabs.${id}`) }))}
+        value={tab}
+        onChange={setTab}
+      />
       <ScrollView
         key={tab}
         ref={scrollRef}

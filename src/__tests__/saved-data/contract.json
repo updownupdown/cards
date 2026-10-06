@@ -56,6 +56,7 @@
     "/ebb-and-flow",
     "/eight-off",
     "/elementary-detective",
+    "/elevens",
     "/field-command",
     "/fifteen-puzzle",
     "/fight-clubs",
@@ -91,6 +92,7 @@
     "/nestor",
     "/night-vigil",
     "/ouroboros",
+    "/ozanams-square",
     "/pagoda",
     "/parallels",
     "/penguin",
@@ -103,6 +105,7 @@
     "/rogue-run",
     "/royal-cotillion",
     "/royal-envoy",
+    "/royal-marriage",
     "/royal-rest",
     "/scorpion",
     "/seahaven-towers",
@@ -369,6 +372,8 @@
     "drawCount",
     "dungeonLevel",
     "ebbAndFlowDifficulty",
+    "elevensDifficulty",
+    "elevensEliminateBadDeals",
     "fightClubsDifficulty",
     "gapsDifficulty",
     "golfDifficulty",
@@ -377,6 +382,7 @@
     "isFavorite",
     "islandJokers",
     "jailbreakDifficulty",
+    "littleWindmillDifficulty",
     "lycanMode",
     "memoryDifficulty",
     "nightVigilDifficulty",
@@ -400,5 +406,5 @@
     "losses",
     "wins"
   ],
-  "campaignProgressVersion": 3
+  "campaignProgressVersion": 4
 }

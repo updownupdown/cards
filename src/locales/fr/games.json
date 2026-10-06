@@ -120,7 +120,7 @@
     "trade": "Échanger",
     "offer": "Offre"
   },
-  "charlatan": {
+  "boilingOver": {
     "statusStart": "Touchez votre paquet pour commencer la potion.",
     "statusRisk": "Risque d'explosion {{risk}} % · En vous arrêtant : {{points}} points, {{coins}} pièces",
     "statusRiskFinal": "Risque d'explosion {{risk}} % · En vous arrêtant : {{points}} points",
@@ -141,7 +141,14 @@
     "keepPoints": "+{{value}} points",
     "keepCoins": "+{{value}} pièces",
     "nextRound": "Manche {{round}} / {{total}}",
+    "continueToRound": "Passer à la manche {{round}}",
     "round": "Manche",
+    "roundCounter": "Manche",
+    "strengthLabel": "Force",
+    "pointsLabel": "Points",
+    "coinsLabel": "Pièces",
+    "dudsLabel": "Ratées",
+    "bustLabel": "Explosion",
     "score": "Score",
     "tierVillageHealer": "Guérisseur du village",
     "tierCourtAlchemist": "Alchimiste de la cour",
@@ -212,12 +219,7 @@
     "youRanOutOfCards": "Vous n'avez plus de cartes avant d'avoir vaincu les douze figures."
   },
   "ebbAndFlow": {
-    "rising": "Montante",
-    "falling": "Descendante",
-    "playMore_one": "Jouez encore {{count}} carte",
-    "playMore_other": "Jouez encore {{count}} cartes",
-    "playOrDraw": "Continuez, ou touchez le paquet pour piocher",
-    "deckEmpty": "Paquet vide : jouez toutes les cartes possibles",
+    "stock": "Pioche",
     "allPlayed": "Toutes les cartes sont jouées !",
     "stuck_one": "Aucune carte jouable. Il reste {{count}} carte.",
     "stuck_other": "Aucune carte jouable. Il reste {{count}} cartes."
@@ -429,14 +431,18 @@
   },
   "picketFence": {
     "statusChooseHouse": "Choisissez une carte à bâtir en maison.",
-    "statusChooseLot": "Touchez un terrain en surbrillance pour y bâtir.",
-    "statusChooseEffect": "Choisissez un effet : {{hearts}} parc · {{diamonds}} piscine · {{spades}} clôture · {{clubs}} maison",
-    "statusChooseFence": "Touchez l'endroit où va la clôture.",
-    "statusChooseSecondHouse": "Touchez un terrain pour la seconde maison.",
-    "noLotFits": "Cette carte ne tient sur aucun terrain.",
+    "statusChooseLot": "Touchez un terrain pour bâtir, une maison pour la rénover, ou la défausse pour passer.",
+    "statusChooseEffect": "Choisissez une carte d'effet.",
+    "statusChooseFence": "Touchez l'endroit où va la clôture, ou la défausse pour passer.",
+    "statusChooseSecondHouse": "Touchez un terrain ou une maison pour la seconde maison, ou la défausse.",
+    "legendPark": "parc",
+    "legendPool": "piscine",
+    "legendFence": "clôture",
+    "legendHouse": "maison",
+    "noLotFits": "Cette carte ne tient nulle part : défaussez-la pour ne pas bâtir.",
     "effectWasted": "Aucun effet cette fois : la carte est défaussée.",
     "estateBlocked": "✕",
-    "parks": "Parcs {{count}}/{{max}} · {{points}}",
+    "parksLabel": "Parcs",
     "pools": "Piscines",
     "score": "Score",
     "tierGoodNeighbours": "Bons voisins",
@@ -446,23 +452,6 @@
     "tierVacantLots": "Terrains vagues",
     "wonWithTier": "{{score}} points : {{tier}} !",
     "lostShortOfTarget": "{{score}} points : {{tier}}. Il vous faut {{target}} points pour gagner."
-  },
-  "pickpocket": {
-    "round": "Manche",
-    "score": "Pièces",
-    "statusStart": "Retournez une carte pour commencer votre bourse.",
-    "statusPurse": "Bourse : {{purse}}",
-    "cleanSweep": "Coup parfait ! Vous gardez {{purse}}.",
-    "walkedAway": "Vous filez avec {{purse}}.",
-    "caught": "Pris ! Vous perdez les {{purse}} de votre bourse.",
-    "caughtEmpty": "Pris avant d'avoir volé une pièce !",
-    "walkAway": "Filer",
-    "nextRound": "Manche suivante",
-    "tierLightFingers": "Doigts agiles",
-    "tierCutpurse": "Coupe-bourse",
-    "tierPrinceOfThieves": "Prince des voleurs",
-    "wonWithTier": "{{score}} pièces : {{tier}} !",
-    "lostShortOfTarget": "{{score}} pièces. Il vous faut {{target}} pièces pour gagner."
   },
   "pocketPoker": {
     "youHit10PointsYou": "Vous atteignez 10 points, vous gagnez !",
@@ -519,30 +508,6 @@
   },
   "scorpion": {
     "allFourSuitStacksAre": "Les quatre piles par couleur sont complètes."
-  },
-  "seer": {
-    "reveal": "Révéler",
-    "return": "Rendre",
-    "predictions": {
-      "red": "Rouge",
-      "redOddBlackEven": "RI  ·  NP",
-      "even": "Pair",
-      "diamondsHearts": "♦  ·  ♥",
-      "spadesClubs": "♠  ·  ♣",
-      "odd": "Impair",
-      "blackOddRedEven": "NI  ·  RP",
-      "black": "Noir"
-    },
-    "predictionLabel_one": "Prédiction {{label}}, {{count}} pierre",
-    "predictionLabel_other": "Prédiction {{label}}, {{count}} pierres",
-    "complete": ", terminée",
-    "blocked": ", bloquée",
-    "allPredictionsComplete": "Les huit prédictions sont accomplies.",
-    "deckRanOut": "La pioche s'est épuisée avant que toutes les prédictions soient accomplies.",
-    "allPredictionsBlocked": "Les huit prédictions sont bloquées par des pierres.",
-    "chooseHighlightedStone": "Choisissez une pierre en surbrillance",
-    "freedStones_one": "{{count}} pierre libérée",
-    "freedStones_other": "{{count}} pierres libérées"
   },
   "shiftingSands": {
     "draw": "Piocher :",
@@ -749,16 +714,9 @@
   },
   "augury": {
     "streak": "Bonnes réponses",
-    "start": "Touchez une carte pour la jouer, ou déclarez qu’aucune ne convient.",
     "noneFit": "Aucune ne convient",
     "won": "Vous avez lu les présages ! La loi : {{law}}",
     "lost": "Votre main est épuisée. La loi : {{law}}",
-    "verdict": {
-      "accepted": "La carte est acceptée.",
-      "rejected": "La carte est refusée.",
-      "noneRight": "Exact : aucune carte ne convenait. Nouvelle main.",
-      "noneWrong": "Une carte convenait, elle a donc été jouée. Votre série repart de zéro."
-    },
     "law": {
       "alternateColours": "Chaque carte doit être de l’autre couleur que la précédente.",
       "suitOrRank": "Chaque carte doit avoir la couleur ou la valeur de la précédente.",
@@ -770,7 +728,35 @@
       "evenRedOddBlack": "Les valeurs paires doivent être rouges et les impaires noires.",
       "colourTwoBack": "Chaque carte doit être de la même couleur que celle d’il y a deux cartes.",
       "blackClimbs": "Une carte noire doit être plus haute que la précédente ; une rouge peut suivre n’importe quoi.",
-      "sameColourClimbs": "Une carte de la même couleur que la précédente doit être plus haute ; l’autre couleur peut suivre n’importe quoi."
+      "sameColourClimbs": "Une carte de la même couleur que la précédente doit être plus haute ; l’autre couleur peut suivre n’importe quoi.",
+      "sameColour": "Doit être de la même couleur (rouge ou noire)",
+      "differentSuit": "Doit être d'une autre enseigne",
+      "highLowAlternate": "Doit alterner entre haute (8 à Roi) et basse (As à 7)",
+      "courtAlternate": "Doit alterner entre figures et cartes numérales",
+      "lowerUntilAce": "Doit être plus basse ; tout peut suivre un As",
+      "farApart": "Doit être à au moins trois rangs d'écart",
+      "colourTwoBackDiffers": "Doit être de la couleur opposée à celle de l'avant-dernière carte",
+      "suitTwoBack": "Doit être de la même enseigne que l'avant-dernière carte",
+      "freshSuit": "Doit être d'une autre enseigne que les deux dernières cartes",
+      "zigzag": "Doit zigzaguer : plus haute après une baisse, plus basse après une hausse ; tout peut suivre deux valeurs égales",
+      "afterRedLow": "Après une rouge, 7 ou moins ; après une noire, 8 ou plus",
+      "heartsWild": "Les cœurs peuvent suivre n'importe quoi ; les autres cartes doivent être plus hautes",
+      "sumAtMost14": "Les deux valeurs doivent totaliser 14 ou moins",
+      "parityLock": "Une impaire doit suivre une impaire, une paire doit suivre une paire",
+      "withinTwoWrap": "Doit être à deux rangs au plus (As et Roi sont voisins)",
+      "suitSequence": "Doit suivre les enseignes dans l'ordre : pique, cœur, carreau, trèfle",
+      "sameSuitAscender": "Même enseigne que la dernière : plus haute ; autre enseigne de la même couleur : plus basse ; l'autre couleur peut suivre n'importe quoi",
+      "redHighBlackLow": "Les rouges doivent valoir 8 ou plus ; les noires, 7 ou moins",
+      "royalCommand": "Après une figure, même enseigne ; après une carte numérale, autre enseigne",
+      "rangeFlip": "Après une haute (8 à Roi), l'autre couleur ; après une basse (As à 7), la même couleur",
+      "suitSwitcher": "Doit être de la même couleur mais d'une autre enseigne",
+      "suitSuperiority": "Doit être d'une enseigne plus forte (trèfle, carreau, cœur, pique) ou d'une valeur plus haute ; tout peut suivre le Roi de pique",
+      "rankSandwich": "Doit se situer entre les deux dernières valeurs, ou égaler l'une d'elles",
+      "colourBalance": "Ne doit pas faire trois cartes de la même couleur de suite",
+      "distanceMirroring": "Après une hausse, même enseigne que l'avant-dernière ; après une baisse, même couleur ; tout peut suivre deux valeurs égales"
     }
+  },
+  "elevens": {
+    "noMorePairsOrFaceTriplets": "Plus aucune paire ni aucun trio de figures n'est possible."
   }
 }

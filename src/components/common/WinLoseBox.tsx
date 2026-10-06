@@ -3,18 +3,13 @@ import { usePalette } from "@/styles/palette";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
-import {
-  ActionButton,
-  Caps,
-  Kicker,
-  RoundButton,
-} from "@/components/ui/Nocturne";
+import { ActionButton, Caps, Kicker } from "@/components/ui/Nocturne";
 import { useToast } from "@/components/common/Toast";
 import { useGamePath } from "@/hooks/useGamePath";
 import { gameShareUrl, shareWin } from "@/utils/share-win";
 import { GameCollectibleIcons } from "@/components/ui/GameCollectibleIcons";
 import { useEffect, useRef } from "react";
-import { Animated, Easing, Platform, View } from "react-native";
+import { Animated, Easing, Platform, Pressable, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { ReactNode } from "react";
@@ -100,6 +95,11 @@ export const WinLoseBox = ({
     if (outcome === "copied") showToast(t("result.shareCopied"));
     if (outcome === "failed") showToast(t("result.shareFailed"));
   };
+  const showCollectibles =
+    isCampaignMode &&
+    !!collectibleRewards &&
+    !!collectedTaoIds &&
+    !!collectedQuoteIds;
   const insets = useSafeAreaInsets();
   const restingBottom = spacing(layoutDims.pagePadding) + insets.bottom;
   const backdropGradientColors = [
@@ -224,26 +224,31 @@ export const WinLoseBox = ({
                 {won ? t("result.won") : t("result.lost")}
               </Text>
             </View>
-            {isCampaignMode &&
-              collectibleRewards &&
-              collectedTaoIds &&
-              collectedQuoteIds && (
-                <GameCollectibleIcons
-                  rewards={collectibleRewards}
-                  collectedTaoIds={collectedTaoIds}
-                  collectedQuoteIds={collectedQuoteIds}
-                  glowingReward={newlyEarnedReward}
-                />
-              )}
-            {won && (
-              <RoundButton
-                iconName="share"
-                size={36}
-                color={theme.accent}
-                accessibilityLabel={t("result.share")}
-                disabled={actionsDisabled}
-                onPress={share}
-              />
+            {(showCollectibles || won) && (
+              <View style={{ alignItems: "flex-end", gap: spacing(8) }}>
+                {showCollectibles && (
+                  <GameCollectibleIcons
+                    rewards={collectibleRewards}
+                    collectedTaoIds={collectedTaoIds}
+                    collectedQuoteIds={collectedQuoteIds}
+                    glowingReward={newlyEarnedReward}
+                  />
+                )}
+                {won && (
+                  <Pressable
+                    testID="share-win"
+                    accessibilityRole="button"
+                    disabled={actionsDisabled}
+                    onPress={share}
+                    hitSlop={spacing(10)}
+                    style={{ opacity: actionsDisabled ? 0.2 : 1 }}
+                  >
+                    <Text size="md" weight={500} color={theme.accent}>
+                      {t("result.share")}
+                    </Text>
+                  </Pressable>
+                )}
+              </View>
             )}
           </View>
 

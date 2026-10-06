@@ -6,8 +6,10 @@ import {
   AppState,
   Easing as RNEasing,
   Platform,
-  View,
 } from "react-native";
+
+/** The longest a trail gets, as a share of the path the head travels. */
+const MAX_TRAIL_SHARE = 0.8;
 
 const DEFAULT_STAR_COLORS = [
   "#ffffff",
@@ -23,13 +25,13 @@ type Props = {
   animationsEnabled: boolean;
   /** Candidate head colours, picked at random for each streak. */
   colors?: string[];
-  /** Peak opacity a streak fades in to. */
+  /** The streak's opacity at its brightest, mid-flight. */
   peakOpacity?: number;
   /** Multiplies every timing so streaks can be sped up or slowed down. */
   durationScale?: number;
   minIntervalMs?: number;
   maxIntervalMs?: number;
-  /** Top speed in px/s; a faster streak travels a shorter path instead. */
+  /** The head's top speed in px/s; a faster streak travels a shorter path. */
   maxSpeed?: number;
   /** Draw the bright head; without it the streak is a single fine line. */
   head?: boolean;
@@ -38,7 +40,8 @@ type Props = {
 
 /**
  * A single streak that repeatedly re-schedules itself at a random point on
- * the given surface. Pauses while the app is backgrounded/hidden so it isn't
+ * the given surface. It starts as a point, draws out into a line as its head
+ * runs ahead, then closes up from the tail to a point where the head stopped. Pauses while the app is backgrounded/hidden so it isn't
  * silently animating (and burning battery) off-screen, then resumes fresh.
  */
 export function ShootingStar({
@@ -54,17 +57,19 @@ export function ShootingStar({
   head = true,
   testID,
 }: Props) {
-  const opacity = useRef(new RNAnimated.Value(0)).current;
-  const translateX = useRef(new RNAnimated.Value(0)).current;
-  const translateY = useRef(new RNAnimated.Value(0)).current;
+  // 0 as the streak is born, 1 once it has burnt out.
+  const progress = useRef(new RNAnimated.Value(0)).current;
   const [isAppActive, setIsAppActive] = useState(
     AppState.currentState === "active",
   );
   const [resumeKey, setResumeKey] = useState(0);
   const [appearance, setAppearance] = useState({
+    x: 0,
+    y: 0,
     angle: 0,
     color: colors[0],
-    trailLength: 210,
+    pathLength: 1,
+    headUntil: 0.6,
   });
 
   useEffect(() => {
@@ -96,11 +101,10 @@ export function ShootingStar({
   }, []);
 
   useEffect(() => {
+    progress.setValue(0);
     if (!animationsEnabled || !isAppActive || width <= 0 || height <= 0) {
-      opacity.setValue(0);
       return;
     }
-    opacity.setValue(0);
 
     let timer: ReturnType<typeof setTimeout>;
     let animation: RNAnimated.CompositeAnimation | undefined;
@@ -121,56 +125,35 @@ export function ShootingStar({
           }
 
           const angle = Math.atan2(endY - startY, endX - startX);
-          const fadeInDuration = (20 + Math.random() * 80) * durationScale;
-          const holdDuration = (200 + Math.random() * 600) * durationScale;
-          const fadeOutDuration = (100 + Math.random() * 300) * durationScale;
-          const travelDuration =
-            fadeInDuration + holdDuration + fadeOutDuration;
-          const maxDistance = (maxSpeed * travelDuration) / 1000;
-          const distance = Math.hypot(endX - startX, endY - startY);
-          if (distance > maxDistance) {
-            endX = startX + Math.cos(angle) * maxDistance;
-            endY = startY + Math.sin(angle) * maxDistance;
-          }
+          const duration = (320 + Math.random() * 980) * durationScale;
+          // The head covers the path in about the first 60% of the time.
+          const pathLength = Math.min(
+            Math.hypot(endX - startX, endY - startY),
+            (maxSpeed * duration * 0.6) / 1000,
+          );
+          // The trail is at most this long, and never most of the path: the
+          // streak has to be seen growing out of a point and shrinking to one.
+          const trailLength = Math.min(
+            165 + Math.random() * 225,
+            pathLength * MAX_TRAIL_SHARE,
+          );
 
           setAppearance({
+            x: startX,
+            y: startY,
             angle,
             color: colors[Math.floor(Math.random() * colors.length)],
-            trailLength: 165 + Math.random() * 225,
+            pathLength,
+            headUntil: pathLength / (pathLength + trailLength),
           });
-          translateX.setValue(startX);
-          translateY.setValue(startY);
-          opacity.setValue(0);
+          progress.setValue(0);
 
-          animation = RNAnimated.parallel([
-            RNAnimated.timing(translateX, {
-              toValue: endX,
-              duration: travelDuration,
-              easing: RNEasing.linear,
-              useNativeDriver: Platform.OS !== "web",
-            }),
-            RNAnimated.timing(translateY, {
-              toValue: endY,
-              duration: travelDuration,
-              easing: RNEasing.linear,
-              useNativeDriver: Platform.OS !== "web",
-            }),
-            RNAnimated.sequence([
-              RNAnimated.timing(opacity, {
-                toValue: peakOpacity,
-                duration: fadeInDuration,
-                easing: RNEasing.out(RNEasing.quad),
-                useNativeDriver: Platform.OS !== "web",
-              }),
-              RNAnimated.delay(holdDuration),
-              RNAnimated.timing(opacity, {
-                toValue: 0,
-                duration: fadeOutDuration,
-                easing: RNEasing.in(RNEasing.quad),
-                useNativeDriver: Platform.OS !== "web",
-              }),
-            ]),
-          ]);
+          animation = RNAnimated.timing(progress, {
+            toValue: 1,
+            duration,
+            easing: RNEasing.linear,
+            useNativeDriver: Platform.OS !== "web",
+          });
           animation.start(({ finished }) => {
             if (finished && !cancelled) schedule();
           });
@@ -194,13 +177,34 @@ export function ShootingStar({
     maxIntervalMs,
     maxSpeed,
     minIntervalMs,
-    opacity,
-    peakOpacity,
+    progress,
     resumeKey,
-    translateX,
-    translateY,
     width,
   ]);
+
+  // The head runs the path and stops; the tail sets off after it and catches
+  // up. Between them is the streak: a point, a growing line, a shrinking one.
+  const { pathLength, headUntil } = appearance;
+  const tailFrom = 1 - headUntil;
+  const headTravel = progress.interpolate({
+    inputRange: [0, headUntil, 1],
+    outputRange: [0, pathLength, pathLength],
+  });
+  const tailTravel = progress.interpolate({
+    inputRange: [0, tailFrom, 1],
+    outputRange: [0, 0, pathLength],
+  });
+  const longest = tailFrom / headUntil;
+  const streakScale = progress.interpolate({
+    inputRange: [0, tailFrom, headUntil, 1],
+    outputRange: [0.0001, longest, longest, 0.0001],
+  });
+  // It brightens as it burns and dims as it dies, but stays visible at both
+  // ends so the line is seen drawing out and closing up.
+  const opacity = progress.interpolate({
+    inputRange: [0, 0.1, 0.5, 0.9, 1],
+    outputRange: [0, peakOpacity * 0.45, peakOpacity, peakOpacity * 0.45, 0],
+  });
 
   return (
     <RNAnimated.View
@@ -214,32 +218,43 @@ export function ShootingStar({
         height: 2,
         opacity,
         transform: [
-          { translateX },
-          { translateY },
+          { translateX: appearance.x },
+          { translateY: appearance.y },
           { rotate: `${appearance.angle}rad` },
         ],
       }}
     >
-      <LinearGradient
-        colors={["transparent", rgba(appearance.color, 0.32), appearance.color]}
-        locations={[0, 0.65, 1]}
-        start={{ x: 0, y: 0.5 }}
-        end={{ x: 1, y: 0.5 }}
+      <RNAnimated.View
         style={{
           position: "absolute",
           top: 0.5,
-          left: -appearance.trailLength,
-          width: appearance.trailLength,
+          left: 1,
+          width: pathLength,
           height: 1,
+          transformOrigin: "0% 50%",
+          transform: [{ translateX: tailTravel }, { scaleX: streakScale }],
         }}
-      />
+      >
+        <LinearGradient
+          colors={[
+            "transparent",
+            rgba(appearance.color, 0.32),
+            appearance.color,
+          ]}
+          locations={[0, 0.65, 1]}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
+          style={{ width: "100%", height: "100%" }}
+        />
+      </RNAnimated.View>
       {head && (
-        <View
+        <RNAnimated.View
           style={{
             width: 2,
             height: 2,
             borderRadius: 1,
             backgroundColor: "#ffffff",
+            transform: [{ translateX: headTravel }],
           }}
         />
       )}

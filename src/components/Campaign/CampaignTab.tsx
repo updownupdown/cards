@@ -142,6 +142,7 @@ export function CampaignTab({ contentPaddingTop }: Props) {
         ready={isMapReady}
         onSelectGameDot={selectGameDot}
         wonPaths={wonPaths}
+        unlockedPaths={unlockedPaths}
         collectedTaoIds={collectedTaoIds}
         collectedQuoteIds={collectedQuoteIds}
       />

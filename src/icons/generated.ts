@@ -49,6 +49,7 @@ import InstructionsIcon from "./Instructions.svg";
 import JokerIcon from "./Joker.svg";
 import KingIcon from "./King.svg";
 import LockIcon from "./Lock.svg";
+import MapIcon from "./Map.svg";
 import MenuIcon from "./Menu.svg";
 import MilkyWayIcon from "./MilkyWay.svg";
 import MoreIcon from "./More.svg";
@@ -125,6 +126,7 @@ export type IconName =
   | "joker"
   | "king"
   | "lock"
+  | "map"
   | "menu"
   | "milky-way"
   | "more"
@@ -201,6 +203,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "joker": JokerIcon,
   "king": KingIcon,
   "lock": LockIcon,
+  "map": MapIcon,
   "menu": MenuIcon,
   "milky-way": MilkyWayIcon,
   "more": MoreIcon,

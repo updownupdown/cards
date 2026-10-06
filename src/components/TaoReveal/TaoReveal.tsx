@@ -467,36 +467,54 @@ type Shot = {
 
 const TAIL_COLORS = [rgba(GLOW_COLOR, 0), rgba(STAR_COLOR, 0.5)] as const;
 
-/** One slow streak across the sky, from where the player tapped. */
+/**
+ * One slow streak across the sky, from where the player tapped. It starts as
+ * a point, draws out into a line as its head runs ahead, then closes up from
+ * the tail to a point where the head burnt out.
+ */
 const ShootingStar = memo(function ShootingStar({ shot }: { shot: Shot }) {
   const progress = useSharedValue(0);
   useEffect(() => {
     progress.value = withTiming(1, {
       duration: shot.durationMs,
-      easing: Easing.out(Easing.quad),
+      easing: Easing.linear,
     });
     return () => cancelAnimation(progress);
   }, [progress, shot.durationMs]);
 
-  const ux = Math.cos(shot.angle);
-  const uy = Math.sin(shot.angle);
-  const rotate = `${shot.angle}rad`;
+  // The trail is never most of the path, or it would not be seen to grow.
+  const trail = Math.min(shot.tail, shot.travel * 0.8);
+  // The head covers the path in this share of the time; the tail sets off
+  // late by the rest of it, and arrives as the streak ends.
+  const headUntil = shot.travel / (shot.travel + trail);
 
-  // The head travels and fades; the tail grows out behind it.
-  const headStyle = useAnimatedStyle(() => {
+  // Brightening as it burns and dimming as it dies, but visible at both
+  // ends, so the line is seen drawing out and closing up.
+  const streakStyle = useAnimatedStyle(() => {
     const p = progress.value;
-    const distance = p * shot.travel;
     return {
-      opacity: 0.7 * smoothstep(0, 0.1, p) * (1 - smoothstep(0.55, 1, p)),
+      opacity:
+        0.7 * (0.4 + 0.6 * Math.sin(Math.PI * p)) * smoothstep(0, 0.06, p),
+    };
+  });
+  const tailStyle = useAnimatedStyle(() => {
+    const p = progress.value;
+    const head = Math.min(1, p / headUntil) * shot.travel;
+    const tail = Math.max(0, (p - (1 - headUntil)) / headUntil) * shot.travel;
+    return {
       transform: [
-        { translateX: ux * distance },
-        { translateY: uy * distance },
-        { rotate },
+        { translateX: tail },
+        { scaleX: Math.max(0.001, (head - tail) / shot.travel) },
       ],
     };
   });
-  const tailStyle = useAnimatedStyle(() => ({
-    transform: [{ scaleX: 0.05 + 0.95 * smoothstep(0, 0.4, progress.value) }],
+  const headStyle = useAnimatedStyle(() => ({
+    opacity: 1 - smoothstep(0.85, 1, progress.value),
+    transform: [
+      {
+        translateX: Math.min(1, progress.value / headUntil) * shot.travel,
+      },
+    ],
   }));
 
   return (
@@ -504,19 +522,20 @@ const ShootingStar = memo(function ShootingStar({ shot }: { shot: Shot }) {
       style={[
         {
           position: "absolute",
-          left: shot.x - shot.tail,
+          left: shot.x,
           top: shot.y - 1,
-          width: shot.tail,
+          width: shot.travel,
           height: 2,
-          transformOrigin: "100% 50%",
+          transformOrigin: "0% 50%",
+          transform: [{ rotate: `${shot.angle}rad` }],
         },
-        headStyle,
+        streakStyle,
       ]}
     >
       <Animated.View
         style={[
           StyleSheet.absoluteFill,
-          { transformOrigin: "100% 50%", borderRadius: 1, overflow: "hidden" },
+          { transformOrigin: "0% 50%", borderRadius: 1, overflow: "hidden" },
           tailStyle,
         ]}
       >
@@ -538,17 +557,20 @@ const ShootingStar = memo(function ShootingStar({ shot }: { shot: Shot }) {
           />
         )}
       </Animated.View>
-      <View
-        style={{
-          position: "absolute",
-          right: -1.5,
-          top: -0.5,
-          width: 3,
-          height: 3,
-          borderRadius: 1.5,
-          backgroundColor: STAR_COLOR,
-          boxShadow: `0 0 5px 1px ${rgba(GLOW_COLOR, 0.5)}`,
-        }}
+      <Animated.View
+        style={[
+          {
+            position: "absolute",
+            left: -1.5,
+            top: -0.5,
+            width: 3,
+            height: 3,
+            borderRadius: 1.5,
+            backgroundColor: STAR_COLOR,
+            boxShadow: `0 0 5px 1px ${rgba(GLOW_COLOR, 0.5)}`,
+          },
+          headStyle,
+        ]}
       />
     </Animated.View>
   );

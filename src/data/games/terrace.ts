@@ -12,7 +12,6 @@ export const terrace: GameDefinition = {
     "Blondes and Brunettes",
     "Falling Star",
   ],
-  enabledOnLocalOnly: true,
   tags: [GameTag.DoubleDeckers, GameTag.StockAndWaste, GameTag.TableauBuilding],
   rating: { complexity: 45, difficulty: 60, luck: 40 },
   thumbnail: "Terrace.webp",

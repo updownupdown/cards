@@ -6,7 +6,6 @@ import { GameAnimations } from "@/animations";
 export const picketFence: GameDefinition = {
   path: "/picket-fence",
   title: "Picket Fence",
-  enabledOnLocalOnly: true,
   tags: [
     GameTag.ModernMechanics,
     GameTag.ScoringPuzzles,
@@ -35,28 +34,31 @@ export const picketFence: GameDefinition = {
   quickStart: [
     "Each turn, build one card as a house and use another card's suit as its effect.",
     "House numbers must rise from left to right along each street.",
-    "The game ends when none of your cards fits on a lot.",
+    "Only fenced-off estates of up to four houses score, once every lot in them is built.",
   ],
   howToPlay: [
     "## Objective",
-    "Score **60 points** or more by building houses, parks and pools, and fencing off estates.",
+    "Score **60 points** or more by fencing your streets into estates and filling them with houses, parks and pools. Play goes on until the deck is used up, so keep building your score.",
+
+    "## Your Turn",
+    "You hold three cards, and play two of them each turn: one for its number, then one for its suit. Then draw back up to three.",
 
     "## Building",
-    "- You hold three cards. Each turn, build one of them as a house on an empty lot.",
-    "- House numbers must rise from left to right along a street (Aces are 1, Jacks 11, Queens 12 and Kings 13). Empty lots don't count.",
-    "- Then use one of your other cards for its effect, and draw back up to three cards.",
-    "- The game ends when none of your cards can be built, or when every lot is built.",
+    "- Build a card as a house on an empty lot. House numbers must rise from left to right along a street (Aces are 1, Jacks 11, Queens 12 and Kings 13). Empty lots don't count.",
+    "- Or **renovate**: build the card over an existing house, if the street's numbers still rise. The old house is discarded; its park or pool stays.",
+    "- Or discard the card and build nothing this turn.",
 
     "## Effects",
-    "- **♥ Park:** the heart is tucked under the new house, as a park on its street.",
-    "- **♦ Pool:** if the new house is on a pool lot, the diamond is tucked under it as a pool. Otherwise it is discarded.",
+    "- **♥ Park:** the heart is tucked under the house you just built or renovated, as a park.",
+    "- **♦ Pool:** the diamond is tucked under that house as a pool, if it stands on a pool lot.",
     "- **♠ Fence:** put up a fence between two lots, on any street.",
-    "- **♣ Second house:** build the club as a house as well.",
+    "- **♣ Second house:** build the club as a house as well, or renovate with it.",
+    "- A house holds one park or pool. A card with no use is discarded.",
 
     "## Scoring",
-    "- **Parks:** 2 points each. The streets hold up to 3, 4 and 5 parks, and a full street of parks scores 10, 14 or 18 points instead.",
-    "- **Pools:** 3, 6, 9, 13, 17, 21 and 26 points for 1 to 7 pools.",
-    "- **Estates:** fences and street ends divide each street into estates. An estate with every lot built scores 1, 3, 5, 7, 9 or 11 points for 1 to 6 houses. Longer estates score nothing.",
+    "- Fences and street ends divide each street into **estates**. Only a **finished** estate scores: one with every lot built.",
+    "- Its houses score 1, 3, 6 or 10 points for an estate of 1, 2, 3 or 4. **Estates of five or more score nothing**, so every street needs fences.",
+    "- Each park in a finished estate adds 2 points, and each pool 4.",
 
     "## Ratings",
     "- 60+: Good Neighbours",
@@ -64,7 +66,8 @@ export const picketFence: GameDefinition = {
     "- 80+: Picture Perfect",
 
     "## Tips",
-    "- Leave room between numbers: a lot between a 5 and a 6 can never be built.",
-    "- The label above each estate shows what it will score, or ✕ if it can no longer be completed.",
+    "- Bigger estates are worth more, but one unbuilt lot leaves the whole estate, and its parks and pools, scoring nothing. A fence can cut your losses.",
+    "- Leave room between numbers: a lot between a 5 and a 6 can't be built until one of them is renovated.",
+    "- The label above each estate shows what it scores once finished, or ✕ if it can't be finished as it stands.",
   ],
 };

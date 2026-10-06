@@ -406,6 +406,64 @@ export function ActionButton({
   );
 }
 
+/**
+ * Tabs across the top of a modal: plain labels on a hairline, the chosen one
+ * in the accent with a line under it.
+ */
+export function UnderlineTabs<T extends string>({
+  options,
+  value,
+  onChange,
+}: {
+  options: { value: T; label: string }[];
+  value: T;
+  onChange: (value: T) => void;
+}) {
+  const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
+  return (
+    <View
+      accessibilityRole="tablist"
+      style={{
+        flexDirection: "row",
+        paddingHorizontal: spacing(20),
+        borderBottomWidth: 1,
+        borderBottomColor: rgba(theme.ink, 0.14),
+      }}
+    >
+      {options.map((option) => {
+        const selected = option.value === value;
+        return (
+          <Pressable
+            key={option.value}
+            accessibilityRole="tab"
+            accessibilityState={{ selected }}
+            onPress={() => onChange(option.value)}
+            style={{
+              flex: 1,
+              alignItems: "center",
+              paddingVertical: spacing(12),
+              marginBottom: -1,
+              borderBottomWidth: 2,
+              borderBottomColor: selected ? theme.accent : "transparent",
+              outline: "none",
+            }}
+          >
+            <Text
+              weight={500}
+              size="md"
+              color={selected ? theme.accent : theme.dim}
+              numberOfLines={1}
+            >
+              {option.label}
+            </Text>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
 /** The look every segmented toggle shares: its track and its chosen segment. */
 export const segmentTrack = () => ({
   backgroundColor: rgba(theme.ink, 0.06),

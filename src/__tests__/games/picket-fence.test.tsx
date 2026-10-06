@@ -6,7 +6,9 @@ import {
   jest,
   test,
 } from "@jest/globals";
+import type React from "react";
 import "../../../jest/game-mocks";
+import { ProgressBar } from "@/components/Home/ProgressBar";
 import {
   card,
   harness,
@@ -37,13 +39,16 @@ const {
   isDeadLot,
   estates,
   estateStatus,
-  parkScore,
+  estateValue,
   scoreOf,
   isOver,
   getTier,
   WIN_SCORE,
   buildHouse,
+  canRenovate,
+  skipBuild,
   applyEffect,
+  findHint,
 } = picketFenceRules;
 
 function house(rank: CardRank, suit: CardSuit = "spades") {
@@ -122,30 +127,58 @@ describe("Picket Fence rules", () => {
     expect(estateStatus(street, [0, 2])).toBe("blocked");
   });
 
-  test("completed estates, parks and pools score", () => {
+  test("only a finished estate scores, for its houses, parks and pools", () => {
     const streets = emptyStreets();
     const [first] = streets;
-    first.fences[1] = true;
     first.houses[0] = house("2");
     first.houses[1] = house("5");
-    first.tucked[1] = card("9", "diamonds");
     first.tucked[0] = card("3", "hearts");
+    first.tucked[1] = card("9", "diamonds");
+    // Six lots with no fence: too long to score, parks and pools included.
+    expect(scoreOf(streets).total).toBe(0);
 
-    expect(parkScore(first, 0)).toBe(2);
+    first.fences[1] = true;
+    expect(estateValue(first, [0, 1])).toEqual({
+      houses: 3,
+      parks: 2,
+      pools: 4,
+      total: 9,
+    });
     expect(scoreOf(streets)).toEqual({
       parks: 2,
-      pools: 3,
+      pools: 4,
       estates: 3,
-      total: 8,
+      total: 9,
     });
+
+    // The four lots to its right are fenced off, but not built: nothing more.
+    first.houses[2] = house("8");
+    first.tucked[2] = card("4", "hearts");
+    expect(scoreOf(streets).total).toBe(9);
   });
 
-  test("a full row of parks scores the street's bonus", () => {
-    const [first] = emptyStreets();
-    first.tucked[0] = card("2", "hearts");
-    first.tucked[2] = card("4", "hearts");
-    first.tucked[3] = card("5", "hearts");
-    expect(parkScore(first, 0)).toBe(10);
+  test("bigger estates score more, up to four houses", () => {
+    const score = (sizes: number[]) => {
+      const streets = emptyStreets();
+      const street = streets[2];
+      const ranks = ["A", "2", "3", "4", "5", "6", "7", "8"] as const;
+      let lot = 0;
+      for (const size of sizes) {
+        for (let i = 0; i < size; i++, lot++) {
+          street.houses[lot] = house(ranks[lot]);
+        }
+        if (lot < street.fences.length) street.fences[lot - 1] = true;
+      }
+      return scoreOf(streets).total;
+    };
+    expect(score([1])).toBe(1);
+    expect(score([2])).toBe(3);
+    expect(score([3])).toBe(6);
+    expect(score([4])).toBe(10);
+    expect(score([4, 4])).toBe(20);
+    expect(score([2, 2, 2, 2])).toBe(12);
+    // Five in a row scores nothing until a fence splits it.
+    expect(score([5])).toBe(0);
   });
 
   test("a turn builds a house, then applies the effect card", () => {
@@ -191,17 +224,108 @@ describe("Picket Fence rules", () => {
     expect(state.streets[1].houses[5]?.rank).toBe("9");
   });
 
-  test("the game ends when no card in hand fits", () => {
+  test("renovating replaces a house if the street still rises, and keeps its park", () => {
+    const streets = emptyStreets();
+    const [first] = streets;
+    const five = house("5");
+    const park = card("J", "hearts");
+    first.houses[0] = five;
+    first.tucked[0] = park;
+    first.houses[2] = house("6");
+    // Nothing fits between the 5 and the 6.
+    expect(isDeadLot(first, 1)).toBe(true);
+    expect(canRenovate(first, 0, 6)).toBe(false);
+    expect(canRenovate(first, 0, 3)).toBe(true);
+    expect(canRenovate(first, 1, 3)).toBe(false);
+
+    const three = house("3");
+    const heart = card("2", "hearts");
+    const state = baseState({ streets, hand: [three, heart, house("9")] });
+    expect(buildHouse(state, 0, { street: 0, lot: 0 })).toBe(true);
+
+    expect(first.houses[0]?.id).toBe(three.id);
+    expect(first.tucked[0]?.id).toBe(park.id);
+    expect(state.discard.map((c) => c.id)).toEqual([five.id]);
+    expect(isDeadLot(first, 1)).toBe(false);
+    // The house already has a park: a second one is wasted.
+    expect(applyEffect(state, 0)).toBe("wasted");
+    expect(state.discard.map((c) => c.id)).toEqual([five.id, heart.id]);
+  });
+
+  test("a house card may be discarded instead of built; only a fence or a second house can follow", () => {
+    const king = house("K");
+    const state = baseState({
+      hand: [king, card("2", "hearts"), card("4", "spades"), house("9")],
+    });
+
+    expect(skipBuild(state, 0)).toBe(true);
+    expect(state.discard.map((c) => c.id)).toEqual([king.id]);
+    expect(state.pending).toBeNull();
+    expect(isOver(state)).toBe(false);
+    // No second card for the house half of the turn.
+    expect(skipBuild(state, 0)).toBe(false);
+    expect(buildHouse(state, 2, { street: 0, lot: 0 })).toBe(false);
+
+    // With no new house, a heart has nowhere to go.
+    const wasted = structuredClone(state);
+    expect(applyEffect(wasted, 0)).toBe("wasted");
+    expect(applyEffect(state, 1, { street: 0, gap: 3 })).toBe("fence");
+    expect(state.skippedBuild).toBe(false);
+  });
+
+  test("the game runs until the deck and hand are used up", () => {
     const streets = emptyStreets();
     streets.forEach((street) => {
       street.houses[0] = house("Q");
     });
-    // Only a King fits to the right of the Queens.
-    const state = baseState({ streets, hand: [house("Q"), house("J")] });
-    expect(isOver(state)).toBe(true);
-
-    state.hand.push(house("K"));
+    // Nothing fits, but there are cards to play: the game goes on.
+    const state = baseState({
+      streets,
+      hand: [house("2"), house("3"), card("4", "hearts")],
+      deck: [house("5")],
+    });
     expect(isOver(state)).toBe(false);
+
+    skipBuild(state, 0);
+    applyEffect(state, 0);
+    expect(state.hand).toHaveLength(2);
+    expect(isOver(state)).toBe(false);
+
+    skipBuild(state, 0);
+    expect(isOver(state)).toBe(false);
+    applyEffect(state, 0);
+    expect(state.hand).toHaveLength(0);
+    expect(isOver(state)).toBe(true);
+  });
+
+  test("the last card of the deck is played alone", () => {
+    const state = baseState({ hand: [house("7")] });
+    expect(buildHouse(state, 0, { street: 0, lot: 2 })).toBe(true);
+    expect(state.pending).toBeNull();
+    expect(isOver(state)).toBe(true);
+  });
+
+  test("the hint fences off a finished estate rather than leave it unscored", () => {
+    const streets = emptyStreets();
+    const [first] = streets;
+    (["2", "4", "6", "8"] as const).forEach((rank, lot) => {
+      first.houses[lot] = house(rank);
+    });
+    const spade = card("K", "spades");
+    const state = baseState({
+      streets,
+      hand: [spade, card("Q", "clubs")],
+      deck: [house("A"), house("3")],
+      skippedBuild: true,
+    });
+
+    const before = structuredClone(state);
+    expect(findHint(state)?.steps).toEqual([
+      [{ card: spade.id }],
+      [{ zone: "post-0-3" }],
+    ]);
+    // Looking ahead leaves the game, and its deck, as they were.
+    expect(state).toEqual(before);
   });
 });
 
@@ -227,7 +351,8 @@ describe("Picket Fence games", () => {
     expect(outcome()).toBe("playing");
 
     for (let step = 0; step < 200 && outcome() === "playing"; step++) {
-      // Build: the first hand card that fits somewhere.
+      // Build: the first hand card that fits somewhere; with none, the first
+      // card is discarded instead.
       let built = false;
       for (const mapped of handCards()) {
         await pressCardId(mapped.card.id);
@@ -241,7 +366,10 @@ describe("Picket Fence games", () => {
         }
         await pressCardId(mapped.card.id);
       }
-      expect(built).toBe(true);
+      if (!built) {
+        await pressCardId(handCards()[0].card.id);
+        await pressZone((zone) => zone.id === "discard");
+      }
       if (outcome() !== "playing" || handCards().length === 0) continue;
 
       // Effect: the first hand card, then its target if it needs one.
@@ -255,6 +383,11 @@ describe("Picket Fence games", () => {
       if (target) await pressZone((zone) => zone.id === target.id);
     }
 
+    // The whole deck was played.
+    expect(handCards()).toHaveLength(0);
+    expect(
+      mappedCards().filter((mapped) => mapped.zoneName === "deck"),
+    ).toHaveLength(0);
     expect(["won", "lost"]).toContain(outcome());
     const ids = mappedCards().map((mapped) => mapped.card.id);
     expect(ids).toHaveLength(52);
@@ -262,7 +395,7 @@ describe("Picket Fence games", () => {
     expect(typeof harness.wrapperProps?.score).toBe("number");
   });
 
-  test("a heart effect adds a park to the new house's street", async () => {
+  test("a heart effect adds a park under the new house", async () => {
     const seven = house("7", "clubs");
     const heart = card("2", "hearts");
     await renderGame(
@@ -280,7 +413,122 @@ describe("Picket Fence games", () => {
 
     const tucked = mappedCards().find((mapped) => mapped.card.id === heart.id);
     expect(tucked?.zoneId).toBe("tuck-1-3");
-    expect(harness.wrapperProps?.score).toBe(2);
+    // Nothing scores until the estate is fenced and finished.
+    expect(harness.wrapperProps?.score).toBe(0);
     expect(handCards()).toHaveLength(3);
+  });
+
+  test("tucked cards are tinted and stock and discard show pile information", async () => {
+    const streets = emptyStreets();
+    streets[0].houses[0] = house("2");
+    streets[0].tucked[0] = card("4", "hearts");
+    streets[0].houses[1] = house("8");
+    streets[0].tucked[1] = card("5", "diamonds");
+    streets[0].fences[1] = true;
+    streets[1].tucked[0] = card("2", "hearts");
+    streets[1].tucked[1] = card("3", "hearts");
+    streets[1].tucked[2] = card("4", "hearts");
+    streets[1].tucked[3] = card("5", "hearts");
+    streets[2].tucked[0] = card("6", "hearts");
+    streets[2].tucked[1] = card("7", "diamonds");
+    streets[2].tucked[2] = card("8", "hearts");
+    streets[2].tucked[4] = card("9", "diamonds");
+    const discard = house("9", "clubs");
+    const effectHand = [
+      card("6", "hearts"),
+      card("7", "spades"),
+      card("8", "clubs"),
+    ];
+
+    const renderer = await renderGame(
+      "/picket-fence",
+      PicketFence,
+      baseState({
+        deck: [house("A")],
+        hand: effectHand,
+        streets,
+        discard: [discard],
+        pending: { street: 0, lot: 0 },
+      }),
+    );
+
+    const progressBars = renderer.root.findAllByType(
+      ProgressBar as React.ComponentType,
+    );
+    // Three pools and seven parks are down; only the fenced, finished pair
+    // on the first street scores: 3 for its houses, a park and a pool.
+    expect(progressBars.map((bar) => bar.props.progressValue)).toEqual([
+      3, 7, 9,
+    ]);
+    expect(progressBars.map((bar) => bar.props.totalValue)).toEqual([
+      7, 14, 60,
+    ]);
+    expect(progressBars.map((bar) => bar.props.tallyText)).toEqual([
+      "3 / 7",
+      "7",
+      "9 / 60",
+    ]);
+    expect(progressBars.map((bar) => bar.props.color)).toEqual([
+      "#1E88E5",
+      "#2E8B57",
+      "#9E9E9E",
+    ]);
+    expect(progressBars.map((bar) => bar.props.style)).toEqual([
+      { flex: 1 },
+      { flex: 1 },
+      { flex: 1 },
+    ]);
+
+    const tuckedCards = mappedCards().filter(
+      (mapped) => mapped.zoneName === "tuck",
+    );
+    const park = tuckedCards.find((mapped) => mapped.card.suit === "hearts");
+    const pool = tuckedCards.find((mapped) => mapped.card.suit === "diamonds");
+    expect(
+      harness.mapConfig!.cardMapper(park!) as {
+        selectColor?: string;
+        forceOverlayColor?: boolean;
+      },
+    ).toMatchObject({ selectColor: "#2E8B57", forceOverlayColor: true });
+    expect(
+      harness.mapConfig!.cardMapper(pool!) as {
+        selectColor?: string;
+        forceOverlayColor?: boolean;
+      },
+    ).toMatchObject({ selectColor: "#1E88E5", forceOverlayColor: true });
+
+    const mappedHand = handCards();
+    const suitColors = [
+      ["hearts", "#2E8B57"],
+      ["spades", "#808080"],
+      ["clubs", "#8B5A2B"],
+    ] as const;
+    suitColors.forEach(([suit, color]) => {
+      const mapped = mappedHand.find((entry) => entry.card.suit === suit);
+      expect(
+        harness.mapConfig!.cardMapper(mapped!) as {
+          selectColor?: string;
+          forceOverlayColor?: boolean;
+        },
+      ).toMatchObject({ selectColor: color, forceOverlayColor: true });
+    });
+
+    const stock = zones().find((zone) => zone.id === "deck");
+    const discardZone = zones().find((zone) => zone.id === "discard");
+    expect(stock?.placeholder).toMatchObject({
+      text: expect.any(String),
+      infoPos: "right",
+    });
+    expect(stock?.placeholder?.showCount).not.toBe(false);
+    expect(discardZone?.placeholder).toMatchObject({
+      text: expect.any(String),
+      infoPos: "left",
+    });
+    expect(discardZone?.placeholder?.showCount).not.toBe(false);
+    expect(
+      mappedCards()
+        .filter((mapped) => mapped.zoneId === "discard")
+        .every((mapped) => !mapped.card.faceUp),
+    ).toBe(true);
   });
 });

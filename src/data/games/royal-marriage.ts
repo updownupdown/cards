@@ -12,8 +12,15 @@ export const royalMarriage: GameDefinition = {
     difficulty: 85,
     luck: 35,
   },
-  // Placeholder cover art.
-  thumbnail: "Accordion.webp",
+  thumbnail: "RoyalMarriage.webp",
+  thumbnailCredit: {
+    title: "The Wedding by Proxy of Marie de' Medici to King Henry IV",
+    artistName: "Peter Paul Rubens",
+    date: "1622–25",
+    sourceName: "Wikimedia Commons",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Peter_Paul_Rubens_-_The_Wedding_by_Proxy_of_Marie_de%27_Medici_to_King_Henry_IV.jpg",
+  },
   background: GAME_BACKGROUNDS.fallLeaves,
   animation: GameAnimations.Leaves,
   gameColorDark: "#351219",

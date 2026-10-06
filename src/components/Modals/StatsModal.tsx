@@ -1,11 +1,9 @@
 import { StatsList, type StatsTab } from "@/components/Home/StatsList";
-import { Segmented } from "@/components/ui/Nocturne";
+import { UnderlineTabs } from "@/components/ui/Nocturne";
 import type { GameSettingsMap } from "@/data/game-menu";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
-import { layoutDims } from "@/styles/styles";
 import { useState } from "react";
-import { View } from "react-native";
 import ModalFull from "./ModalFull";
 
 const TABS: StatsTab[] = ["progress", "personas", "games"];
@@ -23,35 +21,21 @@ export function StatsModal({
   onToggleFavorite,
   onClose,
 }: StatsModalProps) {
-  const { spacing, ui } = useResponsiveMetrics();
+  const { spacing } = useResponsiveMetrics();
   const { t } = useTranslation("home");
   const [tab, setTab] = useState<StatsTab>("progress");
 
   return (
     <ModalFull title={t("statsModal.title")} iconName="chart" onClose={onClose}>
       {/* The tabs stay put while each one scrolls below them. */}
-      <View
-        style={{
-          width: "100%",
-          maxWidth: ui.contentMaxWidth,
-          alignSelf: "center",
-          paddingHorizontal: spacing(layoutDims.pagePadding),
-          // Clear of the header's shadow, which would cut the track's edge.
-          paddingTop: spacing(8),
-          paddingBottom: spacing(4),
-        }}
-      >
-        <Segmented
-          pill
-          size="sm"
-          options={TABS.map((key) => ({
-            value: key,
-            label: t(`statsModal.tabs.${key}`),
-          }))}
-          value={tab}
-          onChange={setTab}
-        />
-      </View>
+      <UnderlineTabs
+        options={TABS.map((key) => ({
+          value: key,
+          label: t(`statsModal.tabs.${key}`),
+        }))}
+        value={tab}
+        onChange={setTab}
+      />
       <StatsList
         tab={tab}
         settingsMap={settingsMap}

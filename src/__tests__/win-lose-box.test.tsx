@@ -11,7 +11,7 @@ import { Text } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { WinLoseBox } from "@/components/common/WinLoseBox";
 import { GameCollectibleIcons } from "@/components/ui/GameCollectibleIcons";
-import { ActionButton, RoundButton } from "@/components/ui/Nocturne";
+import { ActionButton } from "@/components/ui/Nocturne";
 
 jest.mock("@/hooks/useGamePath", () => ({ useGamePath: () => "/klondike" }));
 jest.mock("react-native-safe-area-context", () => ({
@@ -96,7 +96,7 @@ describe("WinLoseBox", () => {
   test("the loss undo button hides its label and keeps its accessible name", async () => {
     const box = await render(false, { handleUndo: () => {} });
     const undoButton = box.root
-      .findAllByType(ActionButton)
+      .findAll((node) => node.type === ActionButton)
       .find((button) => button.props.iconName === "undo");
 
     expect(undoButton?.props.label).toBe("");
@@ -125,9 +125,11 @@ describe("WinLoseBox", () => {
   });
 
   const shareButton = (renderer: ReactTestRenderer) =>
-    renderer.root
-      .findAll((node) => node.type === RoundButton)
-      .find((button) => button.props.iconName === "share");
+    renderer.root.findAll(
+      (node) =>
+        node.props.testID === "share-win" &&
+        typeof node.props.onPress === "function",
+    )[0];
 
   test("a win can be shared; a loss can't", async () => {
     expect(shareButton(await render(true))).toBeDefined();

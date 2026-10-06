@@ -39,3 +39,11 @@ migrations) over changing the pins. Never:
 Adding things is safe: new games (then `npm run campaign:generate` and
 `npm run campaign:lock`), quotes appended at the end, new settings, themes or
 storage keys (then `npm run saved-data:pin`, which only ever adds).
+
+Renaming or removing a game is done without losing anything else, but only
+with the owner's OK for a released game: list a rename in `MOVED_GAME_PATHS`
+and a removal in `RETIRED_GAME_PATHS` (`src/data/game-variants.ts`), then run
+`npm run campaign:generate` and `npm run campaign:lock`. The generator keeps a
+renamed game's node and hands a removed game's rewards to other games; saves
+keep every game they had open (`unlockedPaths`) and every collectible. See
+"Adding, renaming and removing games" in `docs/campaign-map.md`.

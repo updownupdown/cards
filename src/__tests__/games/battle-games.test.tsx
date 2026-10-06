@@ -19,7 +19,6 @@ import type { PlayingCard } from "@/components/Cards/card-utils";
 import CabinSiege from "@/components/Games/CabinSiege";
 import ChainOfCommand from "@/components/Games/ChainOfCommand";
 import Dynasty from "@/components/Games/Dynasty";
-import Seer from "@/components/Games/Seer";
 
 beforeEach(() => {
   jest.useFakeTimers();
@@ -133,51 +132,6 @@ describe("Cabin Siege", () => {
     expect(outcome()).toBe("playing");
 
     await pressCardId(state.piles[1][0].id);
-
-    expect(outcome()).toBe("lost");
-  });
-});
-
-describe("Seer", () => {
-  const baseState = () => ({
-    table: [],
-    discard: [],
-    pendingFreed: [],
-    pendingHardChoice: [],
-    ended: false,
-    won: false,
-    winLoseMessage: "",
-  });
-
-  test("completing the eighth prediction wins", async () => {
-    const board = Array.from({ length: 8 }, () => [card("2", "spades")]);
-    board[0] = [];
-    await renderGame("/seer", Seer, {
-      ...baseState(),
-      board,
-      // The top card is red, matching prediction 0 ("Red").
-      stock: [card("4", "clubs", false), card("3", "hearts", false)],
-    });
-    expect(outcome()).toBe("playing");
-
-    await pressZone(
-      (zone) => zone.name === "prediction" && zone.pileIndex === 0,
-    );
-
-    expect(outcome()).toBe("won");
-  });
-
-  test("running out of cards before every prediction loses", async () => {
-    await renderGame("/seer", Seer, {
-      ...baseState(),
-      board: Array.from({ length: 8 }, () => [] as PlayingCard[]),
-      stock: [card("4", "clubs", false)],
-    });
-    expect(outcome()).toBe("playing");
-
-    await pressZone(
-      (zone) => zone.name === "prediction" && zone.pileIndex === 0,
-    );
 
     expect(outcome()).toBe("lost");
   });

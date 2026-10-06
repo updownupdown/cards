@@ -34,12 +34,7 @@ export type GameSettings = {
   isFavorite: boolean;
   difficulty: "easy" | "difficult";
   memoryDifficulty:
-    | "veryeasy"
-    | "easy"
-    | "medium"
-    | "hard"
-    | "veryhard"
-    | "extreme";
+    "veryeasy" | "easy" | "medium" | "hard" | "veryhard" | "extreme";
   drawCount: 1 | 3;
   islandJokers: boolean;
   lycanMode: "hard" | "medium" | "easy";
@@ -61,8 +56,10 @@ export type GameSettings = {
   pyramidDifficulty: "easy" | "hard";
   golfDifficulty: "easy" | "hard";
   gapsDifficulty: "easy" | "hard";
-  seerDifficulty: "easy" | "normal" | "hard";
+  elevensDifficulty: "easy" | "medium" | "hard";
+  elevensEliminateBadDeals: boolean;
   jailbreakDifficulty: "easy" | "normal" | "hard";
+  littleWindmillDifficulty: "easy" | "normal";
   gremlinDifficulty: "easy" | "hard";
   nightVigilDifficulty: "street" | "kingpin" | "city";
   pagodaDifficulty: "easy" | "normal" | "hard";
@@ -231,8 +228,10 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   pyramidDifficulty: "hard",
   golfDifficulty: "easy",
   gapsDifficulty: "easy",
-  seerDifficulty: "normal",
+  elevensDifficulty: "hard",
+  elevensEliminateBadDeals: true,
   jailbreakDifficulty: "normal",
+  littleWindmillDifficulty: "normal",
   gremlinDifficulty: "easy",
   nightVigilDifficulty: "kingpin",
   pagodaDifficulty: "normal",
@@ -744,10 +743,14 @@ export function getGameSettings(
     pyramidDifficulty: merged.pyramidDifficulty === "easy" ? "easy" : "hard",
     golfDifficulty: merged.golfDifficulty === "hard" ? "hard" : "easy",
     gapsDifficulty: merged.gapsDifficulty === "hard" ? "hard" : "easy",
-    seerDifficulty:
-      merged.seerDifficulty === "easy" || merged.seerDifficulty === "hard"
-        ? merged.seerDifficulty
-        : "normal",
+    elevensDifficulty:
+      merged.elevensDifficulty === "easy" ||
+      merged.elevensDifficulty === "medium"
+        ? merged.elevensDifficulty
+        : "hard",
+    elevensEliminateBadDeals: merged.elevensEliminateBadDeals !== false,
+    littleWindmillDifficulty:
+      merged.littleWindmillDifficulty === "easy" ? "easy" : "normal",
     jailbreakDifficulty:
       merged.jailbreakDifficulty === "easy" ||
       merged.jailbreakDifficulty === "hard"

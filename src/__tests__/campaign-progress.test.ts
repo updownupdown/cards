@@ -3,10 +3,16 @@ import { beforeEach, describe, expect, test } from "@jest/globals";
 import {
   grantMercySkip,
   loadCampaignProgress,
+  recordCampaignWin,
   spendMercySkip,
 } from "@/data/campaign-progress";
 import { CAMPAIGN_PROGRESS_STORAGE_KEY } from "@/data/storage-keys";
-import { GAME_DOT_DEFINITIONS, CAMPAIGN_START_PATH } from "@/data/campaign-map";
+import {
+  GAME_DOT_DEFINITIONS,
+  CAMPAIGN_START_PATH,
+  getUnlockedGameDotPaths,
+} from "@/data/campaign-map";
+import { getV3Neighbours } from "@/data/campaign-map.v3";
 
 describe("Nodes progress", () => {
   beforeEach(async () => {
@@ -25,7 +31,7 @@ describe("Nodes progress", () => {
 
     const progress = await loadCampaignProgress();
 
-    expect(progress.version).toBe(3);
+    expect(progress.version).toBe(4);
     expect(progress.collectedTaoIds).toEqual([1]);
     // In version 2: 115 was dropped, 116 moved down one and 168 twelve, to
     // 3, 104, 105, 115 and 156. Of those, version 3 kept 3 and 105.
@@ -114,5 +120,85 @@ describe("Nodes progress", () => {
 
     expect(result.applied).toBe(false);
     expect(progress.mercySkipCount).toBe(1);
+  });
+
+  describe("games stay open once they have been", () => {
+    const save = (progress: object) =>
+      AsyncStorage.setItem(
+        CAMPAIGN_PROGRESS_STORAGE_KEY,
+        JSON.stringify(progress),
+      );
+    const onMap = (path: string) =>
+      GAME_DOT_DEFINITIONS.some((gameDot) => gameDot.path === path);
+
+    test("a save from before version 4 keeps what its wins opened on the old map", async () => {
+      // Seer has since been removed. Winning it had opened its neighbours.
+      const opened = getV3Neighbours("/seer");
+      expect(opened.length).toBeGreaterThan(0);
+      await save({ version: 3, winsByPath: { "/klondike": 1, "/seer": 2 } });
+
+      const progress = await loadCampaignProgress();
+
+      expect(progress.winsByPath).toEqual({ "/klondike": 1 });
+      expect(progress.unlockedPaths).toEqual(
+        expect.arrayContaining([...opened]),
+      );
+      expect(progress.unlockedPaths).not.toContain("/seer");
+      // And they are playable, not just listed.
+      const unlocked = getUnlockedGameDotPaths(
+        new Set(Object.keys(progress.winsByPath)),
+        progress.unlockedPaths,
+      );
+      for (const path of opened) expect(unlocked.has(path)).toBe(true);
+    });
+
+    test("a renamed game's win and neighbours follow it", async () => {
+      await save({ version: 3, winsByPath: { "/four-seasons": 1 } });
+
+      const progress = await loadCampaignProgress();
+
+      const kept = getV3Neighbours("/four-seasons").filter(onMap);
+      expect(progress.unlockedPaths).toEqual(
+        expect.arrayContaining(["/little-windmill", ...kept]),
+      );
+      expect(progress.unlockedPaths).not.toContain("/four-seasons");
+    });
+
+    test("games listed as open stay open with no win to explain them", async () => {
+      const far = GAME_DOT_DEFINITIONS.find(
+        (gameDot) =>
+          gameDot.path !== CAMPAIGN_START_PATH &&
+          !gameDot.connections.includes(CAMPAIGN_START_PATH),
+      )!.path;
+      await save({ version: 4, winsByPath: {}, unlockedPaths: [far, "/gone"] });
+
+      const progress = await loadCampaignProgress();
+      expect(progress.unlockedPaths).toEqual([far, CAMPAIGN_START_PATH].sort());
+
+      // So it can be won, which opens its own neighbours for good.
+      const result = await recordCampaignWin(far, "session-1");
+      expect(result.progress.winsByPath[far]).toBe(1);
+      const after = await loadCampaignProgress();
+      expect(after.unlockedPaths).toEqual(
+        expect.arrayContaining(
+          GAME_DOT_DEFINITIONS.find((gameDot) => gameDot.path === far)!
+            .connections,
+        ),
+      );
+    });
+
+    test("a win adds the games it opens to the save", async () => {
+      const result = await recordCampaignWin(CAMPAIGN_START_PATH, "session-1");
+      const start = GAME_DOT_DEFINITIONS.find(
+        (gameDot) => gameDot.path === CAMPAIGN_START_PATH,
+      )!;
+
+      expect(result.newlyUnlockedPaths.sort()).toEqual(
+        [...start.connections].sort(),
+      );
+      expect((await loadCampaignProgress()).unlockedPaths).toEqual(
+        [CAMPAIGN_START_PATH, ...start.connections].sort(),
+      );
+    });
   });
 });

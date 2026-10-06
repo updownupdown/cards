@@ -120,7 +120,7 @@
     "trade": "Takas",
     "offer": "Teklif"
   },
-  "charlatan": {
+  "boilingOver": {
     "statusStart": "İksiri kaynatmaya başlamak için destenize dokunun.",
     "statusRisk": "Taşma riski %{{risk}} · Şimdi durursanız: {{points}} puan, {{coins}} altın",
     "statusRiskFinal": "Taşma riski %{{risk}} · Şimdi durursanız: {{points}} puan",
@@ -141,7 +141,14 @@
     "keepPoints": "+{{value}} puan",
     "keepCoins": "+{{value}} altın",
     "nextRound": "Tur {{round}} / {{total}}",
+    "continueToRound": "{{round}}. tura devam et",
     "round": "Tur",
+    "roundCounter": "Tur",
+    "strengthLabel": "Güç",
+    "pointsLabel": "Puan",
+    "coinsLabel": "Altın",
+    "dudsLabel": "Bozuklar",
+    "bustLabel": "Taşma",
     "score": "Puan",
     "tierVillageHealer": "Köy Şifacısı",
     "tierCourtAlchemist": "Saray Simyacısı",
@@ -212,12 +219,7 @@
     "youRanOutOfCards": "On iki soylunun hepsini yenemeden kartların bitti."
   },
   "ebbAndFlow": {
-    "rising": "Yükselen",
-    "falling": "Alçalan",
-    "playMore_one": "{{count}} kart daha oynayın",
-    "playMore_other": "{{count}} kart daha oynayın",
-    "playOrDraw": "Oynamaya devam edin ya da kart çekmek için desteye dokunun",
-    "deckEmpty": "Deste boş: oynayabildiğiniz her kartı oynayın",
+    "stock": "Deste",
     "allPlayed": "Tüm kartlar oynandı!",
     "stuck_one": "Oynanabilecek kart yok. {{count}} kart kaldı.",
     "stuck_other": "Oynanabilecek kart yok. {{count}} kart kaldı."
@@ -429,14 +431,18 @@
   },
   "picketFence": {
     "statusChooseHouse": "Ev olarak inşa edilecek bir kart seçin.",
-    "statusChooseLot": "İnşa etmek için vurgulanan bir arsaya dokunun.",
-    "statusChooseEffect": "Bir etki seçin: {{hearts}} park · {{diamonds}} havuz · {{spades}} çit · {{clubs}} ev",
-    "statusChooseFence": "Çitin gideceği yere dokunun.",
-    "statusChooseSecondHouse": "İkinci ev için bir arsaya dokunun.",
-    "noLotFits": "Bu kart hiçbir arsaya sığmıyor.",
+    "statusChooseLot": "İnşa için bir arsaya, yenilemek için bir eve ya da geçmek için ıskartaya dokunun.",
+    "statusChooseEffect": "Bir etki kartı seçin.",
+    "statusChooseFence": "Çitin gideceği yere ya da geçmek için ıskartaya dokunun.",
+    "statusChooseSecondHouse": "İkinci ev için bir arsaya ya da eve, veya ıskartaya dokunun.",
+    "legendPark": "park",
+    "legendPool": "havuz",
+    "legendFence": "çit",
+    "legendHouse": "ev",
+    "noLotFits": "Bu kart hiçbir yere uymuyor: inşa etmemek için ıskartaya atın.",
     "effectWasted": "Bu sefer etkisi yok: kart atılıyor.",
     "estateBlocked": "✕",
-    "parks": "Parklar {{count}}/{{max}} · {{points}}",
+    "parksLabel": "Parklar",
     "pools": "Havuzlar",
     "score": "Puan",
     "tierGoodNeighbours": "İyi Komşular",
@@ -446,23 +452,6 @@
     "tierVacantLots": "Boş Arsalar",
     "wonWithTier": "{{score}} puan: {{tier}}!",
     "lostShortOfTarget": "{{score}} puan: {{tier}}. Kazanmak için {{target}} puan gerekiyor."
-  },
-  "pickpocket": {
-    "round": "Tur",
-    "score": "Altın",
-    "statusStart": "Kesenizi başlatmak için bir kart çevirin.",
-    "statusPurse": "Kese: {{purse}}",
-    "cleanSweep": "Kusursuz vurgun! {{purse}} sizde kalıyor.",
-    "walkedAway": "{{purse}} ile sıvıştınız.",
-    "caught": "Yakalandınız! Kesenizdeki {{purse}} kayboldu.",
-    "caughtEmpty": "Tek altın almadan yakalandınız!",
-    "walkAway": "Sıvış",
-    "nextRound": "Sonraki tur",
-    "tierLightFingers": "Hafif Parmaklar",
-    "tierCutpurse": "Yankesici",
-    "tierPrinceOfThieves": "Hırsızlar Prensi",
-    "wonWithTier": "{{score}} altın: {{tier}}!",
-    "lostShortOfTarget": "{{score}} altın. Kazanmak için {{target}} altın gerekiyor."
   },
   "pocketPoker": {
     "youHit10PointsYou": "10 puana ulaştın, kazandın!",
@@ -519,30 +508,6 @@
   },
   "scorpion": {
     "allFourSuitStacksAre": "Dört takım yığınının hepsi tamamlandı."
-  },
-  "seer": {
-    "reveal": "Aç",
-    "return": "Geri koy",
-    "predictions": {
-      "red": "Kırmızı",
-      "redOddBlackEven": "KT  ·  SÇ",
-      "even": "Çift",
-      "diamondsHearts": "♦  ·  ♥",
-      "spadesClubs": "♠  ·  ♣",
-      "odd": "Tek",
-      "blackOddRedEven": "ST  ·  KÇ",
-      "black": "Siyah"
-    },
-    "predictionLabel_one": "{{label}} tahmini, {{count}} taş",
-    "predictionLabel_other": "{{label}} tahmini, {{count}} taş",
-    "complete": ", tamamlandı",
-    "blocked": ", engellendi",
-    "allPredictionsComplete": "Sekiz tahminin hepsi tamamlandı.",
-    "deckRanOut": "Bütün tahminler tamamlanmadan deste bitti.",
-    "allPredictionsBlocked": "Sekiz tahminin hepsi taşlarla tıkandı.",
-    "chooseHighlightedStone": "Vurgulanan bir taş seç",
-    "freedStones_one": "{{count}} taş serbest",
-    "freedStones_other": "{{count}} taş serbest"
   },
   "shiftingSands": {
     "draw": "Çek:",
@@ -749,16 +714,9 @@
   },
   "augury": {
     "streak": "Doğru tahmin",
-    "start": "Oynamak için bir karta dokun ya da hiçbirinin uymadığını söyle.",
     "noneFit": "Hiçbiri uymuyor",
     "won": "Kehanetleri okudun! Kural: {{law}}",
     "lost": "Elindeki kartlar bitti. Kural: {{law}}",
-    "verdict": {
-      "accepted": "Kart kabul edildi.",
-      "rejected": "Kart reddedildi.",
-      "noneRight": "Doğru: hiçbir kart uymuyordu. Yeni bir el.",
-      "noneWrong": "Bir kart uyuyordu, o yüzden oynandı. Serin baştan başlıyor."
-    },
     "law": {
       "alternateColours": "Her kart bir öncekinden farklı renkte olmalı.",
       "suitOrRank": "Her kart bir öncekiyle aynı takımdan ya da aynı değerde olmalı.",
@@ -770,7 +728,35 @@
       "evenRedOddBlack": "Çift değerler kırmızı, tek değerler siyah olmalı.",
       "colourTwoBack": "Her kart iki önceki kartla aynı renkte olmalı.",
       "blackClimbs": "Siyah bir kart bir öncekinden yüksek olmalı; kırmızılar her şeyin ardından gelebilir.",
-      "sameColourClimbs": "Bir öncekiyle aynı renkteki kart ondan yüksek olmalı; öbür renk her şeyin ardından gelebilir."
+      "sameColourClimbs": "Bir öncekiyle aynı renkteki kart ondan yüksek olmalı; öbür renk her şeyin ardından gelebilir.",
+      "sameColour": "Aynı renkte olmalı",
+      "differentSuit": "Farklı takımdan olmalı",
+      "highLowAlternate": "Yüksek (8-Papaz) ile düşük (As-7) arasında sırayla gitmeli",
+      "courtAlternate": "Resimli kartlarla sayı kartları sırayla gelmeli",
+      "lowerUntilAce": "Daha düşük olmalı; Astan sonra her şey gelebilir",
+      "farApart": "En az üç değer uzakta olmalı",
+      "colourTwoBackDiffers": "İki önceki kartın zıt renginde olmalı",
+      "suitTwoBack": "İki önceki kartla aynı takımdan olmalı",
+      "freshSuit": "Son iki kartın ikisinden de farklı takımdan olmalı",
+      "zigzag": "Zikzak yapmalı: düşüşten sonra daha yüksek, yükselişten sonra daha düşük; eşit değerlerden sonra her şey gelebilir",
+      "afterRedLow": "Kırmızıdan sonra 7 veya altı, siyahtan sonra 8 veya üstü olmalı",
+      "heartsWild": "Kupalar her şeyden sonra gelebilir; diğer kartlar daha yüksek olmalı",
+      "sumAtMost14": "İki değerin toplamı 14 veya daha az olmalı",
+      "parityLock": "Tekten sonra tek, çiftten sonra çift gelmeli",
+      "withinTwoWrap": "En fazla iki değer uzakta olmalı (As ile Papaz komşudur)",
+      "suitSequence": "Takımlar sırayla gelmeli: maça, kupa, karo, sinek",
+      "sameSuitAscender": "Son kartla aynı takım: daha yüksek; aynı renkteki diğer takım: daha düşük; diğer renk her şeyden sonra gelebilir",
+      "redHighBlackLow": "Kırmızı kartlar 8 veya üstü, siyah kartlar 7 veya altı olmalı",
+      "royalCommand": "Resimli karttan sonra aynı takım, sayı kartından sonra farklı takım olmalı",
+      "rangeFlip": "Yüksekten (8-Papaz) sonra diğer renk, düşükten (As-7) sonra aynı renk olmalı",
+      "suitSwitcher": "Aynı renkte ama farklı takımdan olmalı",
+      "suitSuperiority": "Daha üstün takımdan (sinek, karo, kupa, maça) ya da daha yüksek değerde olmalı; maça Papazından sonra her şey gelebilir",
+      "rankSandwich": "Son iki değerin arasında ya da birine eşit olmalı",
+      "colourBalance": "Art arda aynı renkten üç kart olmamalı",
+      "distanceMirroring": "Yükselişten sonra iki önceki kartla aynı takım, düşüşten sonra aynı renk olmalı; eşit değerlerden sonra her şey gelebilir"
     }
+  },
+  "elevens": {
+    "noMorePairsOrFaceTriplets": "Yapılabilecek çift ya da resimli kart üçlüsü kalmadı."
   }
 }

@@ -700,26 +700,6 @@
       }
     }
   },
-  "seer": {
-    "seerDifficulty": {
-      "hash": "e0c908ab",
-      "value": {
-        "description": "Détermine quelles pierres voisines une réussite peut libérer.",
-        "label": "Difficulté",
-        "options": [
-          {
-            "label": "Facile (diagonales comprises)"
-          },
-          {
-            "label": "Normal (orthogonal)"
-          },
-          {
-            "label": "Difficile (une seule au choix)"
-          }
-        ]
-      }
-    }
-  },
   "sir-tommy": {
     "variant": {
       "hash": "a1adf9a0",

@@ -700,26 +700,6 @@
       }
     }
   },
-  "seer": {
-    "seerDifficulty": {
-      "hash": "e0c908ab",
-      "value": {
-        "description": "Stabilisce quali pietre vicine può liberare una previsione giusta.",
-        "label": "Difficoltà",
-        "options": [
-          {
-            "label": "Facile (anche in diagonale)"
-          },
-          {
-            "label": "Normale (in orizzontale e in verticale)"
-          },
-          {
-            "label": "Difficile (una a scelta)"
-          }
-        ]
-      }
-    }
-  },
   "sir-tommy": {
     "variant": {
       "hash": "a1adf9a0",

@@ -10,6 +10,12 @@
 // src/data/campaign-progress.ts). See "Locked: players' saved data" in
 // AGENTS.md.
 //
+// A game the owner has agreed to remove is listed in RETIRED_GAME_PATHS (and
+// its settings in RETIRED_GAME_SETTINGS) in src/data/game-variants.ts: what
+// saves hold for it is dropped, and its pins here are let go. Its place on the
+// map and its rewards are handled by `npm run campaign:generate`, which hands
+// the rewards to other games.
+//
 // saved-data/contract.json pins what saves refer to. Additions pass; to pin
 // them too, run `npm run saved-data:pin`, which only ever adds. Removing a pin
 // is a hand edit, made only with the owner's OK.
@@ -28,7 +34,12 @@ import {
   GAME_SETTINGS_STORAGE_KEY,
   type GlobalSettings,
 } from "@/data/game-menu";
-import { MOVED_GAME_PATHS, currentGamePath } from "@/data/game-variants";
+import {
+  MOVED_GAME_PATHS,
+  RETIRED_GAME_PATHS,
+  RETIRED_GAME_SETTINGS,
+  currentGamePath,
+} from "@/data/game-variants";
 import { GAMES_DATA } from "@/data/games-registry";
 import {
   CAMPAIGN_PROGRESS_STORAGE_KEY,
@@ -114,7 +125,7 @@ function currentContract(): Omit<Contract, "note"> {
     globalSettings: Object.keys(DEFAULT_GLOBAL_SETTINGS).sort(),
     gameSettings: Object.keys(DEFAULT_GAME_SETTINGS).sort(),
     gameStats: Object.keys(DEFAULT_GAME_SETTINGS.stats).sort(),
-    campaignProgressVersion: 3,
+    campaignProgressVersion: 4,
   };
 }
 
@@ -145,6 +156,11 @@ function readContract(): Contract {
 const contract = readContract();
 const now = currentContract();
 
+/** Pinned games still in the app, under whatever path they have now. */
+const livingGamePaths = contract.gamePaths.filter(
+  (gamePath) => !RETIRED_GAME_PATHS.includes(gamePath),
+);
+
 // ========== The pins ========== //
 
 describe("Saved data: what saves refer to still exists", () => {
@@ -159,18 +175,29 @@ describe("Saved data: what saves refer to still exists", () => {
     );
   });
 
-  test("every released game still exists, or has moved to a game that does", () => {
+  test("every released game still exists, has moved to a game that does, or was retired", () => {
     expectNothingLost(
-      contract.gamePaths.flatMap((gamePath) => {
+      livingGamePaths.flatMap((gamePath) => {
         const target = currentGamePath(gamePath);
         if (GAMES_DATA[target]) return [];
         return MOVED_GAME_PATHS[gamePath]
           ? [`${gamePath} moved to ${target}, which doesn't exist`]
           : [
-              `${gamePath} is gone: its stats, favourite and campaign wins would be lost (add it to MOVED_GAME_PATHS if it was renamed or merged)`,
+              `${gamePath} is gone: its stats, favourite and campaign wins would be lost (add it to MOVED_GAME_PATHS if it was renamed or merged; only with the owner's OK to remove it, to RETIRED_GAME_PATHS)`,
             ];
       }),
     );
+  });
+
+  test("a retired game is really gone, and not also moved", () => {
+    expect(
+      RETIRED_GAME_PATHS.filter(
+        (gamePath) => GAMES_DATA[gamePath] || MOVED_GAME_PATHS[gamePath],
+      ),
+    ).toEqual([]);
+    expect(
+      RETIRED_GAME_SETTINGS.filter((field) => field in DEFAULT_GAME_SETTINGS),
+    ).toEqual([]);
   });
 
   test("released games stay released", () => {
@@ -224,7 +251,13 @@ describe("Saved data: what saves refer to still exists", () => {
 
     expectNothingLost([
       ...missing("global setting", contract.globalSettings, now.globalSettings),
-      ...missing("game setting", contract.gameSettings, now.gameSettings),
+      ...missing(
+        "game setting",
+        contract.gameSettings.filter(
+          (field) => !RETIRED_GAME_SETTINGS.includes(field),
+        ),
+        now.gameSettings,
+      ),
       ...missing("game stat", contract.gameStats, now.gameStats),
     ]);
   });
@@ -273,6 +306,30 @@ async function launchApp(storage: Record<string, unknown>): Promise<App> {
   };
   /* eslint-enable @typescript-eslint/no-require-imports */
 }
+
+/**
+ * What the golden save's five wins had open on the September 2026 map, read
+ * off that map by hand. A later map may open more; it must never open less.
+ */
+const GOLDEN_UNLOCKED_PATHS = [
+  "/bakers-dozen",
+  "/beehive",
+  "/blackberry-pie",
+  "/bowling",
+  "/crescent",
+  "/fifteen-puzzle",
+  "/freecell",
+  "/frog",
+  "/grandfathers-clock",
+  "/klondike",
+  "/memory",
+  "/ouroboros",
+  "/penguin",
+  "/pocket-poker",
+  "/sultan",
+  "/tower-of-hanoi",
+  "/yukon",
+];
 
 describe("Saved data: an existing player's save loads intact", () => {
   const golden = JSON.parse(fs.readFileSync(goldenSavePath, "utf8")) as {
@@ -345,7 +402,7 @@ describe("Saved data: an existing player's save loads intact", () => {
     const { campaign } = await launchApp(golden.storage);
 
     expect(await campaign.loadCampaignProgress()).toEqual({
-      version: 3,
+      version: 4,
       lastPlayedPath: "/beehive",
       winsByPath: {
         "/klondike": 3,
@@ -355,6 +412,8 @@ describe("Saved data: an existing player's save loads intact", () => {
         // Won as /alaska.
         "/yukon": 1,
       },
+      // Every game those wins had opened on the map of the time.
+      unlockedPaths: GOLDEN_UNLOCKED_PATHS,
       collectedTaoIds: [1, 2, 3],
       collectedQuoteIds: [1, 40, 84, 170],
       lastResultSessionIds: { "/beehive": "session-7" },
@@ -412,7 +471,7 @@ describe("Saved data: an existing player's save loads intact", () => {
     const progress = await campaign.loadCampaignProgress();
 
     const problems: string[] = [];
-    for (const gamePath of contract.gamePaths) {
+    for (const gamePath of livingGamePaths) {
       const target = currentGamePath(gamePath);
       if (!favorites.has(target)) problems.push(`${gamePath} lost its star`);
       if (menu.getGameSettings(map, target).stats.wins < stats.wins) {
@@ -420,6 +479,9 @@ describe("Saved data: an existing player's save loads intact", () => {
       }
       if (!progress.winsByPath[target]) {
         problems.push(`${gamePath} lost its campaign win`);
+      }
+      if (!progress.unlockedPaths.includes(target)) {
+        problems.push(`${gamePath} is locked again`);
       }
     }
     const lostTao = taoIds.filter(
@@ -489,7 +551,7 @@ describe("Saved data: the campaign map stays locked", () => {
 
   test("every released game is locked", () => {
     // Once a game ships, players' campaign progress depends on its node.
-    const unlocked = contract.gamePaths.filter(
+    const unlocked = livingGamePaths.filter(
       (gamePath) => !MOVED_GAME_PATHS[gamePath] && !(gamePath in lock.gameDots),
     );
     if (unlocked.length > 0) {
@@ -503,13 +565,20 @@ describe("Saved data: the campaign map stays locked", () => {
   describe("the generator", () => {
     // Runs the real generator on a copy of src/data, so nothing here can
     // touch the map itself.
-    function runGenerator(args: string[], { withLock = true } = {}) {
+    function runGenerator(
+      args: string[],
+      {
+        withLock = true,
+        prepare,
+      }: { withLock?: boolean; prepare?: (dataDirectory: string) => void } = {},
+    ) {
       const root = fs.mkdtempSync(path.join(os.tmpdir(), "campaign-map-"));
       fs.cpSync(path.join(repoRoot, "src/data"), path.join(root, "src/data"), {
         recursive: true,
       });
       if (!withLock)
         fs.rmSync(path.join(root, "src/data/campaign-map.lock.json"));
+      prepare?.(path.join(root, "src/data"));
       const read = () =>
         fs.readFileSync(
           path.join(root, "src/data/campaign-map.generated.ts"),
@@ -531,11 +600,116 @@ describe("Saved data: the campaign map stays locked", () => {
       return { before, after, error };
     }
 
+    type GeneratedGameDot = {
+      path: string;
+      x: number;
+      y: number;
+      connections: string[];
+      rewards: { type: string; id: number }[];
+    };
+
     /** The node list in a generated file, however it was formatted. */
     function parseMap(source: string) {
-      const body = source.slice(source.indexOf("= [") + 2).replace(/;\s*$/, "");
-      return Function(`return ${body}`)() as unknown[];
+      const list = source.slice(source.indexOf("GAME_DOT_DEFINITIONS"));
+      const body = list.slice(list.indexOf("= [") + 2).replace(/;\s*$/, "");
+      return Function(`return ${body}`)() as GeneratedGameDot[];
     }
+
+    /** Edits game-variants.ts in a copy of src/data. */
+    const editVariants =
+      (edit: (source: string) => string) => (dataDirectory: string) => {
+        const file = path.join(dataDirectory, "game-variants.ts");
+        fs.writeFileSync(file, edit(fs.readFileSync(file, "utf8")));
+      };
+    const removeGame = (dataDirectory: string) =>
+      fs.rmSync(path.join(dataDirectory, "games/golf.ts"));
+    const renameGame = (dataDirectory: string) => {
+      const file = path.join(dataDirectory, "games/golf.ts");
+      fs.writeFileSync(
+        file,
+        fs
+          .readFileSync(file, "utf8")
+          .replace('path: "/golf"', 'path: "/links-golf"'),
+      );
+    };
+
+    test("a game that disappears without a word is refused", () => {
+      const { before, after, error } = runGenerator([], {
+        prepare: removeGame,
+      });
+      expect(error).toMatch(/\/golf is on the map but no longer a game/);
+      expect(after).toBe(before);
+    }, 30000);
+
+    test("a retired game leaves the map and its rewards are handed on", () => {
+      const { before, after, error } = runGenerator([], {
+        prepare: (dataDirectory) => {
+          removeGame(dataDirectory);
+          editVariants((source) =>
+            source.replace(
+              /(RETIRED_GAME_PATHS: readonly string\[\] = \[)/,
+              '$1"/golf", ',
+            ),
+          )(dataDirectory);
+        },
+      });
+      expect(error).toBe("");
+      const was = parseMap(before);
+      const now = parseMap(after);
+      const golf = was.find((gameDot) => gameDot.path === "/golf")!;
+
+      expect(now.some((gameDot) => gameDot.path === "/golf")).toBe(false);
+      expect(now.some((gameDot) => gameDot.connections.includes("/golf"))).toBe(
+        false,
+      );
+      // Golf's rewards can still be collected, each from one other game.
+      for (const reward of golf.rewards) {
+        expect(
+          now.filter((gameDot) =>
+            gameDot.rewards.some(
+              (kept) => kept.type === reward.type && kept.id === reward.id,
+            ),
+          ),
+        ).toHaveLength(1);
+      }
+      // No other game moved, lost a link to a game still there, or lost a
+      // reward.
+      for (const gameDot of was) {
+        if (gameDot.path === "/golf") continue;
+        const kept = now.find((entry) => entry.path === gameDot.path)!;
+        expect([kept.x, kept.y]).toEqual([gameDot.x, gameDot.y]);
+        expect(kept.connections).toEqual(
+          expect.arrayContaining(
+            gameDot.connections.filter((next) => next !== "/golf"),
+          ),
+        );
+        expect(kept.rewards).toEqual(expect.arrayContaining(gameDot.rewards));
+      }
+    }, 30000);
+
+    test("a renamed game keeps its place, links and rewards", () => {
+      const { before, after, error } = runGenerator([], {
+        prepare: (dataDirectory) => {
+          renameGame(dataDirectory);
+          editVariants((source) =>
+            source.replace(
+              /(export const MOVED_GAME_PATHS[^=]*= \{)/,
+              '$1 "/golf": { path: "/links-golf" },',
+            ),
+          )(dataDirectory);
+        },
+      });
+      expect(error).toBe("");
+      const rename = (gamePath: string) =>
+        gamePath === "/golf" ? "/links-golf" : gamePath;
+      expect(parseMap(after)).toEqual(
+        parseMap(before).map((gameDot) => ({
+          ...gameDot,
+          path: rename(gameDot.path),
+          connections: gameDot.connections.map(rename).sort(),
+        })),
+      );
+    }, 30000);
 
     test("a plain run leaves the map as it is", () => {
       const { before, after, error } = runGenerator([]);

@@ -2,7 +2,6 @@ import { GAMES_DATA } from "@/data/games-registry";
 import { CampaignBlackHole } from "@/components/Campaign/CampaignBlackHole";
 import {
   getGameDotState,
-  getUnlockedGameDotPaths,
   GAME_DOTS_BY_PATH,
   GAME_DOT_DEFINITIONS,
   type GameDotDefinition,
@@ -182,6 +181,7 @@ type Props = {
   ready: boolean;
   onSelectGameDot: (gameDot: GameDotDefinition) => void;
   wonPaths: ReadonlySet<string>;
+  unlockedPaths: ReadonlySet<string>;
   collectedTaoIds: ReadonlySet<number>;
   collectedQuoteIds: ReadonlySet<number>;
 };
@@ -561,6 +561,7 @@ export function CampaignMap({
   ready,
   onSelectGameDot,
   wonPaths,
+  unlockedPaths,
   collectedTaoIds,
   collectedQuoteIds,
 }: Props) {
@@ -598,10 +599,6 @@ export function CampaignMap({
     },
   );
   const hasCenteredInitialGameDot = useRef(false);
-  const unlockedPaths = useMemo(
-    () => getUnlockedGameDotPaths(wonPaths),
-    [wonPaths],
-  );
   const gameDotStates = useMemo(
     () =>
       new Map(

@@ -77,11 +77,9 @@ type GameState = {
 export type StalactitesGameState = GameState;
 
 type Source =
-  | { zone: "tableau"; pile: number }
-  | { zone: "cell"; pile: number };
+  { zone: "tableau"; pile: number } | { zone: "cell"; pile: number };
 type Target =
-  | { zone: "foundation"; pile: number }
-  | { zone: "cell"; pile: number };
+  { zone: "foundation"; pile: number } | { zone: "cell"; pile: number };
 
 function emptyPiles(count: number) {
   return Array.from({ length: count }, () => [] as PlayingCard[]);
@@ -263,7 +261,7 @@ export const stalactitesRules = {
 const gameStateInitial = createInitialState();
 
 export default function Stalactites() {
-  const { colorPale, colorDark } = useGameColors();
+  const { colorPale } = useGameColors();
   const {
     isLoaded,
     isSettingUp,
@@ -389,6 +387,9 @@ export default function Stalactites() {
     });
   }
 
+  const choosing =
+    game.deck.length === 0 && game.foundations[0].length > 0 && !game.step;
+
   const zones: MapZone[] = useMemo(() => {
     const foundationZones: MapZone[] = game.foundations.map((pile, i) => ({
       id: `foundation-${i}`,
@@ -407,7 +408,9 @@ export default function Stalactites() {
       cards: pile,
       col: COLUMN_COUNT - CELL_COUNT + i,
       row: 0,
-      placeholder: { iconName: "free-cell", showCount: false },
+      placeholder: choosing
+        ? undefined
+        : { iconName: "free-cell", showCount: false },
     }));
     const tableauZones: MapZone[] = game.tableau.map((pile, i) => ({
       id: `tableau-${i}`,
@@ -438,7 +441,9 @@ export default function Stalactites() {
         id: "step",
         col: FOUNDATION_COUNT,
         row: 0,
-        width: COLUMN_COUNT - FOUNDATION_COUNT - CELL_COUNT,
+        width: choosing
+          ? COLUMN_COUNT - FOUNDATION_COUNT
+          : COLUMN_COUNT - FOUNDATION_COUNT - CELL_COUNT,
       },
       ...cellZones,
       ...game.foundations.map((_, i) => ({
@@ -449,7 +454,7 @@ export default function Stalactites() {
       })),
       ...tableauZones,
     ];
-  }, [game]);
+  }, [game, choosing]);
 
   const cardMapper = (card: MappedCard): AnimatedCardMapping | undefined => {
     const isBeingDragged = draggedCardIds?.has(card.card.id) ?? false;
@@ -629,6 +634,7 @@ export default function Stalactites() {
         {cardMap}
 
         {dealt &&
+          !!game.step &&
           game.foundations.map((pile, i) => {
             const foundationTop = top(pile);
             const full = pile.length >= FOUNDATION_SIZE;
@@ -636,22 +642,11 @@ export default function Stalactites() {
               full || !foundationTop
                 ? i18n.t("games:stalactites.full")
                 : game.step
-                  ? i18n.t("games:stalactites.next", {
-                      rank: nameFromRankValue(
-                        nextRankValue(foundationTop, game.step),
-                        true,
-                      ),
-                    })
-                  : i18n.t("games:stalactites.nextEither", {
-                      one: nameFromRankValue(
-                        nextRankValue(foundationTop, 1),
-                        true,
-                      ),
-                      two: nameFromRankValue(
-                        nextRankValue(foundationTop, 2),
-                        true,
-                      ),
-                    });
+                  ? nameFromRankValue(
+                      nextRankValue(foundationTop, game.step),
+                      true,
+                    )
+                  : "";
             return (
               <View
                 key={`next-${i}`}
@@ -677,16 +672,21 @@ export default function Stalactites() {
           style={[
             getZoneStylesById("step"),
             flexStyles.colCentered,
-            { gap: cardHeight * 0.06, paddingHorizontal: cardWidth * 0.08 },
+            {
+              flexDirection: "row",
+              gap: cardWidth * 0.1,
+              paddingHorizontal: cardWidth * 0.08,
+            },
           ]}
         >
-          {dealt && !game.step ? (
+          {choosing ? (
             <>
               <Button
                 text={i18n.t("games:stalactites.byOnes")}
                 size="sm"
                 onPress={() => chooseStep(1)}
                 fullWidth
+                style={{ flex: 1 }}
                 disabled={game.ended}
                 theme="blue"
               />
@@ -695,30 +695,11 @@ export default function Stalactites() {
                 size="sm"
                 onPress={() => chooseStep(2)}
                 fullWidth
+                style={{ flex: 1 }}
                 disabled={game.ended}
                 theme="blue"
               />
             </>
-          ) : game.step ? (
-            <View
-              style={[
-                flexStyles.colCentered,
-                pointerEventsStyles.none,
-                {
-                  backgroundColor: rgba(colorDark, 0.6),
-                  borderRadius: cardWidth * 0.1,
-                  padding: cardWidth * 0.1,
-                },
-              ]}
-            >
-              <Text size="xs" weight={600} color={colorPale}>
-                {i18n.t(
-                  game.step === 1
-                    ? "games:stalactites.buildingByOnes"
-                    : "games:stalactites.buildingByTwos",
-                )}
-              </Text>
-            </View>
           ) : null}
         </View>
 

@@ -3,8 +3,17 @@
 //
 //   npm run campaign:generate
 //     Keeps every existing node (position, links and rewards), so players'
-//     progress and collected rewards stay put. New games are placed out
-//     towards the rim, linked in and given unused quotes.
+//     progress and collected rewards stay put, and brings the map in line
+//     with the games:
+//     - a new game is placed out towards the rim, linked in and given unused
+//       quotes;
+//     - a renamed game (MOVED_GAME_PATHS in src/data/game-variants.ts) keeps
+//       its node under its new path;
+//     - a removed game (RETIRED_GAME_PATHS there, or one folded into another
+//       game) leaves the map, the gap it left is bridged, and its rewards
+//       are handed to other games so they can still be collected.
+//     A game with a node but no definition, and no entry in either list, is
+//     an error: say which it is.
 //
 //   npm run campaign:generate -- --rebuild
 //     Lays out a fresh spiral galaxy and fits the games to it: Klondike at
@@ -17,15 +26,16 @@
 //
 //   npm run campaign:lock
 //     Records every game's place, links and rewards in
-//     src/data/campaign-map.lock.json. From then on --rebuild and
-//     --rebalance-rewards are refused, and a plain run fails rather than
-//     move, unlink, drop or re-reward a locked game. Run it again after
-//     adding a game to lock that one too; locked games can't change.
+//     src/data/campaign-map.lock.json. From then on a plain run fails rather
+//     than move, unlink or take a reward from a locked game. Run it again
+//     after adding, renaming or removing a game to bring the lock up to date.
 //
 // Players' progress hangs on the map, so --rebuild and --rebalance-rewards
-// also refuse to replace an existing map, lock or no lock, unless given
-// --reset-player-progress. Ask the owner first: see "Locked: players' saved
-// data" in AGENTS.md.
+// refuse to replace an existing map unless given --reset-player-progress.
+// Ask the owner first: see "Locked: players' saved data" in AGENTS.md. Saved
+// progress keeps its wins, the games it had open and its collectibles across
+// a rebuild (see src/data/campaign-progress.ts), but which game gives which
+// reward changes for everyone.
 //
 // The galaxy's shape is tuned from the parameter block below.
 
@@ -38,6 +48,7 @@ const gamesDirectory = path.join(root, "src/data/games");
 const outputPath = path.join(root, "src/data/campaign-map.generated.ts");
 const collectiblesPath = path.join(root, "src/data/collectibles.ts");
 const lockPath = path.join(root, "src/data/campaign-map.lock.json");
+const variantsPath = path.join(root, "src/data/game-variants.ts");
 const rebuild = process.argv.includes("--rebuild");
 const rebalance = process.argv.includes("--rebalance-rewards");
 const lockOnly = process.argv.includes("--lock");
@@ -65,7 +76,7 @@ const GALAXY = {
   /** Main spiral arms. */
   arms: 4,
   /** Radians an arm sweeps per e-fold of radius; higher curls tighter. */
-  wind: 2.2,
+  wind: 2.18,
   /** Angular half-width of an arm at the core, narrowing outwards. */
   width: 0.4,
   /** How far an arm's centre line strays from a true logarithmic spiral, as a
@@ -75,9 +86,9 @@ const GALAXY = {
    *  in the gaps stop the map reading as five separate strands. */
   fieldDensity: 0.02,
   /** How steeply star density drops with radius, as an exponential disc. */
-  radialFalloff: 1.1,
+  radialFalloff: 1.4,
   /** How sharply density falls off across an arm; higher packs the spine. */
-  armSharpness: 2,
+  armSharpness: 2.2,
   /** Share of an arm's width that counts as its spine for chaining. */
   armCore: 0.5,
   /**
@@ -111,6 +122,15 @@ const CONNECTIONS = {
    * stay lonely when there is genuinely nothing nearby to join.
    */
   lonelyTipReach: 0.34,
+};
+
+const HUB = {
+  /**
+   * Links added from Klondike to its nearest games, beyond the ones the
+   * layout drew, so the first win opens more of the map. They are left out of
+   * the rule that the first games are each of a different category.
+   */
+  extraLinks: 2,
 };
 
 const REWARDS = {
@@ -209,11 +229,12 @@ function progressionScore(game) {
   );
 }
 
-function readExistingGameDots() {
-  if (!fs.existsSync(outputPath)) return [];
-  const source = fs.readFileSync(outputPath, "utf8");
+/** A top-level `const name = <literal>` in a TypeScript file, as a value. */
+function readConstant(filePath, name, fallback) {
+  if (!fs.existsSync(filePath)) return fallback;
+  const source = fs.readFileSync(filePath, "utf8");
   const sourceFile = ts.createSourceFile(
-    outputPath,
+    filePath,
     source,
     ts.ScriptTarget.Latest,
     true,
@@ -224,11 +245,11 @@ function readExistingGameDots() {
     .flatMap((statement) => [...statement.declarationList.declarations])
     .find(
       (candidate) =>
-        ts.isIdentifier(candidate.name) &&
-        candidate.name.text === "GAME_DOT_DEFINITIONS",
+        ts.isIdentifier(candidate.name) && candidate.name.text === name,
     );
   if (!declaration?.initializer) {
-    throw new Error(`Could not read the node list in ${outputPath}.`);
+    if (fallback !== undefined) return fallback;
+    throw new Error(`Could not read ${name} in ${filePath}.`);
   }
 
   function readLiteral(node) {
@@ -244,7 +265,7 @@ function readExistingGameDots() {
               !ts.isStringLiteral(property.name) &&
               !ts.isNumericLiteral(property.name))
           ) {
-            throw new Error("Only literal node properties may be generated.");
+            throw new Error(`Only literal properties can be read for ${name}.`);
           }
           return [property.name.text, readLiteral(property.initializer)];
         }),
@@ -263,11 +284,25 @@ function readExistingGameDots() {
     ) {
       return -Number(node.operand.text);
     }
-    throw new Error("Only literal node values may be generated.");
+    throw new Error(`Only literal values can be read for ${name}.`);
   }
 
-  return readLiteral(declaration.initializer);
+  let initializer = declaration.initializer;
+  while (ts.isAsExpression(initializer)) initializer = initializer.expression;
+  return readLiteral(initializer);
 }
+
+const readExistingGameDots = () =>
+  readConstant(outputPath, "GAME_DOT_DEFINITIONS", []);
+
+/** Old path -> the path its game goes by now (MOVED_GAME_PATHS). */
+const MOVED = Object.fromEntries(
+  Object.entries(readConstant(variantsPath, "MOVED_GAME_PATHS", {})).map(
+    ([from, to]) => [from, to.path],
+  ),
+);
+/** Games taken out of the app for good (RETIRED_GAME_PATHS). */
+const RETIRED = new Set(readConstant(variantsPath, "RETIRED_GAME_PATHS", []));
 
 const distance = (left, right) =>
   Math.hypot(left.x - right.x, left.y - right.y);
@@ -896,12 +931,25 @@ function layoutAll(games) {
   const pathOf = new Map(
     slots.map((slot, index) => [slot.path, records[index].path]),
   );
+  // Klondike's extra links, to its nearest games not already joined to it.
+  const hubSlot = slots[0];
+  const hubExtraLinks = [];
+  for (const slot of [...slots.slice(1)].sort(
+    (left, right) => distance(hubSlot, left) - distance(hubSlot, right),
+  )) {
+    if (hubExtraLinks.length >= HUB.extraLinks) break;
+    if (localSet.has(indexOf.get(slot.path))) continue;
+    if (link(slots, connections, hubSlot, slot, CONNECTIONS.maxBridgeEdge)) {
+      hubExtraLinks.push(pathOf.get(slot.path));
+    }
+  }
+
   for (const [index, record] of records.entries()) {
     record.connections = [...connections.get(slots[index].path)]
       .map((slotPath) => pathOf.get(slotPath))
       .sort();
   }
-  return records;
+  return { records, hubExtraLinks: hubExtraLinks.sort() };
 }
 
 /**
@@ -944,15 +992,51 @@ function rimPoint(game, records) {
   throw new Error(`Could not find room for ${game.path} at the rim.`);
 }
 
-/** The existing map as-is, with removed games dropped and new games added. */
+/**
+ * The existing map as-is, brought in line with the games: renamed games keep
+ * their node under the new path, removed games leave (their rewards are
+ * returned as `orphaned`, to be handed on), and new games are added.
+ */
 function extendMap(existing, games) {
   const gamePaths = new Set(games.map((game) => game.path));
+  const existingPaths = new Set(existing.map((record) => record.path));
+
+  // Where each node that no longer has a game went.
+  const renamed = new Map();
+  const removed = [];
+  const unexplained = [];
+  for (const record of existing) {
+    if (gamePaths.has(record.path)) continue;
+    const target = MOVED[record.path];
+    if (target && gamePaths.has(target) && !existingPaths.has(target)) {
+      renamed.set(record.path, target);
+    } else if (target || RETIRED.has(record.path)) {
+      // Retired, or folded into a game that has its own node.
+      removed.push(record);
+    } else {
+      unexplained.push(record.path);
+    }
+  }
+  if (unexplained.length > 0) {
+    throw new Error(
+      `${unexplained.join(", ")} ${unexplained.length > 1 ? "are" : "is"} on ` +
+        `the map but no longer a game. If it was renamed or folded into ` +
+        `another game, add it to MOVED_GAME_PATHS; if it was removed, to ` +
+        `RETIRED_GAME_PATHS (both in src/data/game-variants.ts). Removing a ` +
+        `released game needs the owner's OK.`,
+    );
+  }
+
+  const nowAt = (gamePath) => renamed.get(gamePath) ?? gamePath;
   const records = existing
-    .filter((record) => gamePaths.has(record.path))
+    .filter((record) => gamePaths.has(nowAt(record.path)))
     .map((record) => ({
       ...record,
+      path: nowAt(record.path),
       arm: record.arm ?? armOf(record),
-      connections: record.connections.filter((path) => gamePaths.has(path)),
+      connections: record.connections
+        .map(nowAt)
+        .filter((next) => gamePaths.has(next)),
     }));
 
   const known = new Set(records.map((record) => record.path));
@@ -972,6 +1056,8 @@ function extendMap(existing, games) {
       connections: [],
       rewards: [],
       arm: armOf(point),
+      // Not part of the layout: the placement rules don't apply to it.
+      appended: true,
     };
     records.push(record);
     connections.set(record.path, new Set());
@@ -991,7 +1077,13 @@ function extendMap(existing, games) {
   for (const record of records) {
     record.connections = [...connections.get(record.path)].sort();
   }
-  return { records, added };
+  return {
+    records,
+    added,
+    renamed,
+    removed: removed.map((record) => record.path),
+    orphaned: removed.flatMap((record) => record.rewards),
+  };
 }
 
 // ── Rewards ──────────────────────────────────────────────────────────────────
@@ -1068,21 +1160,69 @@ function dealRewards(records, gamesByPath) {
     record.rewards.push({ type: "quote", id: quotes.pop() });
   }
 
-  for (const record of records) {
-    record.rewards.sort(
-      (left, right) =>
-        (left.type === "tao" ? 0 : 1) - (right.type === "tao" ? 0 : 1) ||
-        left.id - right.id,
-    );
-  }
+  records.forEach(sortRewards);
   return quotes.sort((left, right) => left - right);
 }
 
+const sortRewards = (record) =>
+  record.rewards.sort(
+    (left, right) =>
+      (left.type === "tao" ? 0 : 1) - (right.type === "tao" ? 0 : 1) ||
+      left.id - right.id,
+  );
+
 /**
- * Rewards for games added to an existing map: unused quotes only, as every
- * Tao chapter is already out. Existing games keep theirs untouched.
+ * Rewards on an existing map after games came or went. Existing games keep
+ * the rewards they have; nothing a player could have collected moves.
+ *
+ * - `orphaned` rewards (those of removed games) are handed on, so they can
+ *   still be collected: a Tao chapter to a released game without one, new
+ *   games first and then the easiest; quotes to new games and then to
+ *   released games with room.
+ * - New games are then topped up with unused quotes.
  */
-function rewardNewGames(records, added) {
+function redistributeRewards(records, added, orphaned, gamesByPath) {
+  const addedPaths = new Set(added.map((game) => game.path));
+  const hasTao = (record) =>
+    record.rewards.some((reward) => reward.type === "tao");
+  const released = (record) => !gamesByPath.get(record.path).localOnly;
+  const byPreference = (left, right) =>
+    Number(addedPaths.has(right.path)) - Number(addedPaths.has(left.path)) ||
+    left.rewards.length - right.rewards.length ||
+    progressionScore(gamesByPath.get(left.path)) -
+      progressionScore(gamesByPath.get(right.path)) ||
+    left.path.localeCompare(right.path);
+
+  for (const reward of orphaned.filter((reward) => reward.type === "tao")) {
+    const [home] = records
+      .filter(
+        (record) =>
+          released(record) &&
+          !hasTao(record) &&
+          record.rewards.length < REWARDS.max,
+      )
+      .sort(byPreference);
+    if (!home) {
+      throw new Error(
+        `No released game has room for Tao chapter ${reward.id}, which a ` +
+          `removed game gave. Every chapter must stay collectable.`,
+      );
+    }
+    home.rewards.push(reward);
+  }
+
+  for (const reward of orphaned.filter((reward) => reward.type === "quote")) {
+    const [home] = records
+      .filter(
+        (record) =>
+          record.rewards.length < REWARDS.max &&
+          (released(record) || record.rewards.length < REWARDS.min),
+      )
+      .sort(byPreference);
+    // With every game full, the quote goes back to the unused ones.
+    if (home) home.rewards.push(reward);
+  }
+
   const used = new Set(
     records.flatMap((record) =>
       record.rewards
@@ -1107,6 +1247,7 @@ function rewardNewGames(records, added) {
       record.rewards.push({ type: "quote", id });
     }
   }
+  records.forEach(sortRewards);
   return spare;
 }
 
@@ -1117,7 +1258,7 @@ function rewardNewGames(records, added) {
  * because breaking it either makes a game unreachable or makes the map look
  * wrong; nothing is checked purely for tidiness.
  */
-function validate(records, gamesByPath) {
+function validate(records, gamesByPath, { layoutRules }) {
   const errors = [];
   const byPath = new Map(records.map((record) => [record.path, record]));
 
@@ -1211,25 +1352,33 @@ function validate(records, gamesByPath) {
     errors.push("the map comes apart without its local-only games");
   }
 
-  // No game is the only way through to an easier one.
-  const order = released.map((record) => record.path);
-  const indexOf = new Map(order.map((gamePath, index) => [gamePath, index]));
-  const adjacency = order.map((gamePath) =>
-    [...releasedLinks.get(gamePath)].map((next) => indexOf.get(next)),
-  );
-  const start = indexOf.get(CAMPAIGN_START);
-  const swap = (index) => (index === 0 ? start : index === start ? 0 : index);
-  const rooted = adjacency.map((_, index) => adjacency[swap(index)].map(swap));
-  const indices = order.map((_, index) => index).filter((index) => index !== 0);
-  for (const gate of indices) {
-    const gateGame = gamesByPath.get(order[swap(gate)]);
-    for (const blocked of gatedBy(indices, rooted, gate)) {
-      const blockedGame = gamesByPath.get(order[swap(blocked)]);
-      if (blockedGame.difficulty < gateGame.difficulty) {
-        errors.push(
-          `${gateGame.path} (difficulty ${gateGame.difficulty}) is the only way to ` +
-            `${blockedGame.path} (difficulty ${blockedGame.difficulty})`,
-        );
+  // No game is the only way through to an easier one. This is a rule of the
+  // layout: once games are added at the rim, removed or re-rated, the locked
+  // map can no longer be held to it.
+  if (layoutRules) {
+    const order = released.map((record) => record.path);
+    const indexOf = new Map(order.map((gamePath, index) => [gamePath, index]));
+    const adjacency = order.map((gamePath) =>
+      [...releasedLinks.get(gamePath)].map((next) => indexOf.get(next)),
+    );
+    const start = indexOf.get(CAMPAIGN_START);
+    const swap = (index) => (index === 0 ? start : index === start ? 0 : index);
+    const rooted = adjacency.map((_, index) =>
+      adjacency[swap(index)].map(swap),
+    );
+    const indices = order
+      .map((_, index) => index)
+      .filter((index) => index !== 0);
+    for (const gate of indices) {
+      const gateGame = gamesByPath.get(order[swap(gate)]);
+      for (const blocked of gatedBy(indices, rooted, gate)) {
+        const blockedGame = gamesByPath.get(order[swap(blocked)]);
+        if (blockedGame.difficulty < gateGame.difficulty) {
+          errors.push(
+            `${gateGame.path} (difficulty ${gateGame.difficulty}) is the only way to ` +
+              `${blockedGame.path} (difficulty ${blockedGame.difficulty})`,
+          );
+        }
       }
     }
   }
@@ -1248,32 +1397,49 @@ function validate(records, gamesByPath) {
 }
 
 /**
- * Once the map is locked, a player's progress depends on it: which games are
- * unlocked comes from the links, and every collected reward belongs to a
- * game. So a locked game must keep its place, its links and its rewards;
- * new games may only be added around it.
+ * Once the map is locked, players' progress leans on it, so a locked game
+ * must keep its place, its links and its rewards (it may gain rewards, when a
+ * removed game's are handed on). New games may only be added around it. A
+ * renamed game is checked under its new path; a removed one, and links to
+ * it, are let go.
  */
 function checkLock(lock, records) {
   const byPath = new Map(records.map((record) => [record.path, record]));
+  const gone = (gamePath) => !byPath.has(gamePath) && RETIRED.has(gamePath);
+  const nowAt = (gamePath) =>
+    !byPath.has(gamePath) && MOVED[gamePath] ? MOVED[gamePath] : gamePath;
   const errors = [];
-  for (const [gamePath, before] of Object.entries(lock.gameDots)) {
+  for (const [lockedPath, before] of Object.entries(lock.gameDots)) {
+    if (gone(lockedPath)) continue;
+    const gamePath = nowAt(lockedPath);
     const now = byPath.get(gamePath);
     if (!now) {
-      errors.push(`${gamePath} is locked and cannot leave the map`);
+      errors.push(`${lockedPath} is locked and cannot leave the map`);
       continue;
     }
+    // Folded into a game with its own node: that node is checked instead.
+    if (gamePath !== lockedPath && lock.gameDots[gamePath]) continue;
     if (now.x !== before.x || now.y !== before.y) {
       errors.push(`${gamePath} is locked and cannot move`);
     }
     for (const next of before.connections) {
-      if (!now.connections.includes(next)) {
+      if (gone(next)) continue;
+      if (!now.connections.includes(nowAt(next))) {
         errors.push(
           `${gamePath} is locked and cannot lose its link to ${next}`,
         );
       }
     }
-    if (JSON.stringify(now.rewards) !== JSON.stringify(before.rewards)) {
-      errors.push(`${gamePath} is locked and its rewards cannot change`);
+    for (const reward of before.rewards) {
+      if (
+        !now.rewards.some(
+          (kept) => kept.type === reward.type && kept.id === reward.id,
+        )
+      ) {
+        errors.push(
+          `${gamePath} is locked and cannot lose ${reward.type} ${reward.id}`,
+        );
+      }
     }
   }
   if (errors.length > 0) throw new Error(errors.join("\n"));
@@ -1316,28 +1482,62 @@ const locked = fs.existsSync(lockPath)
 let records;
 let summary;
 let unassigned = [];
+let hubExtraLinks = readConstant(outputPath, "HUB_EXTRA_LINKS", []);
+/** Whether this run lays the map out, rather than keeping the one there. */
+const laidOutNow = !lockOnly && (rebuild || existing.length === 0);
+// What the layout was fitted to: the games and their ratings at the time.
+// Tests hold the map to the layout rules only while this still matches.
+const fingerprintNow = String(
+  hash(
+    games
+      .map((game) =>
+        [
+          game.path,
+          game.difficulty,
+          game.complexity,
+          game.category,
+          game.localOnly,
+        ].join(":"),
+      )
+      .join("|"),
+  ),
+);
+if (process.argv.includes("--fingerprint")) {
+  // For the tests: what the map would be fitted to if it were laid out now.
+  console.log(fingerprintNow);
+  process.exit(0);
+}
+const layoutFingerprint = laidOutNow
+  ? fingerprintNow
+  : readConstant(outputPath, "LAYOUT_FINGERPRINT", "");
 
 if (lockOnly) {
   records = existing;
   const newlyLocked = locked
     ? records.filter((record) => !locked.gameDots[record.path]).length
     : records.length;
-  summary = `Locked ${newlyLocked} more nodes (${records.length} in all)`;
-} else if (locked && (rebuild || rebalance)) {
-  throw new Error(
-    `The map is locked (${path.relative(root, lockPath)}): players' progress ` +
-      `depends on every game's place, links and rewards, so --rebuild and ` +
-      `--rebalance-rewards are refused. New games can still be added with a ` +
-      `plain run.`,
-  );
+  const unlocked = locked
+    ? Object.keys(locked.gameDots).filter(
+        (gamePath) => !records.some((record) => record.path === gamePath),
+      ).length
+    : 0;
+  summary =
+    `Locked ${newlyLocked} more nodes` +
+    (unlocked > 0 ? `, let go of ${unlocked} that left the map` : "") +
+    ` (${records.length} in all)`;
 } else if ((rebuild || rebalance) && existing.length > 0 && !resetConfirmed) {
   throw new Error(
-    `--rebuild and --rebalance-rewards replace the map players' progress ` +
-      `depends on: their unlocks and collected rewards would no longer match. ` +
+    (locked
+      ? `The map is locked (${path.relative(root, lockPath)}): players' ` +
+        `progress depends on every game's place, links and rewards. `
+      : "") +
+      `--rebuild and --rebalance-rewards replace the map players' progress ` +
+      `depends on: which game gives which reward changes for everyone. New ` +
+      `games can be added, and games renamed or removed, with a plain run. ` +
       `Only with the owner's OK, run again with --reset-player-progress.`,
   );
 } else if (rebuild || existing.length === 0) {
-  records = layoutAll(games);
+  ({ records, hubExtraLinks } = layoutAll(games));
   unassigned = dealRewards(records, gamesByPath);
   summary = `Rebuilt ${records.length} nodes and dealt every reward`;
 } else if (rebalance) {
@@ -1347,15 +1547,37 @@ if (lockOnly) {
 } else {
   const result = extendMap(existing, games);
   records = result.records;
-  unassigned = rewardNewGames(records, result.added);
+  unassigned = redistributeRewards(
+    records,
+    result.added,
+    result.orphaned,
+    gamesByPath,
+  );
+  hubExtraLinks = hubExtraLinks
+    .map((gamePath) => result.renamed.get(gamePath) ?? gamePath)
+    .filter((gamePath) => gamesByPath.has(gamePath));
+  const changes = [
+    result.added.length > 0 &&
+      `added ${result.added.map((game) => game.path).join(", ")} at the edge`,
+    result.renamed.size > 0 &&
+      `renamed ${[...result.renamed].map(([from, to]) => `${from} to ${to}`).join(", ")}`,
+    result.removed.length > 0 &&
+      `removed ${result.removed.join(", ")} and handed on ` +
+        `${result.orphaned.length} rewards`,
+  ].filter(Boolean);
   summary =
-    result.added.length > 0
-      ? `Added ${result.added.map((game) => game.path).join(", ")} at the edge (${records.length} nodes)`
-      : `No new games; kept all ${records.length} nodes`;
+    changes.length > 0
+      ? `${changes.join("; ")} (${records.length} nodes)`.replace(/^./, (c) =>
+          c.toUpperCase(),
+        )
+      : `No changes; kept all ${records.length} nodes`;
 }
 
-validate(records, gamesByPath);
-if (locked) checkLock(locked, records);
+validate(records, gamesByPath, { layoutRules: laidOutNow });
+// A rebuild or a fresh deal replaces the locked map outright, with the
+// owner's say-so; the lock is then written again from the result.
+if (locked && !lockOnly && !rebuild && !rebalance) checkLock(locked, records);
+if (lockOnly && locked && !resetConfirmed) checkLock(locked, records);
 if (unassigned.length > 0) {
   summary += `; ${unassigned.length} quotes left unassigned (${unassigned.join(", ")})`;
 }
@@ -1366,15 +1588,27 @@ summary += ` (${armed} on arms, ${records.length - armed} between them)`;
 const output =
   `// Generated by scripts/generate-campaign-map.mjs. Coordinates and entries may be edited manually.\n` +
   `import type { GameDotDefinition } from "./campaign-map";\n\n` +
+  `/**\n` +
+  ` * What the layout was fitted to: a hash of the games, their ratings and\n` +
+  ` * categories when the map was last rebuilt. The layout rules (easier games\n` +
+  ` * nearer the centre and never gated by harder ones, Tao chapters on the\n` +
+  ` * easiest) are only checked while it still matches.\n` +
+  ` */\n` +
+  `export const LAYOUT_FINGERPRINT = ${JSON.stringify(layoutFingerprint)};\n\n` +
+  `/** Klondike's links beyond the ones the layout drew (see HUB.extraLinks). */\n` +
+  `export const HUB_EXTRA_LINKS: readonly string[] = ${JSON.stringify(hubExtraLinks)};\n\n` +
   `export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = ${JSON.stringify(
-    records.map(({ path: gameDotPath, x, y, arm, connections, rewards }) => ({
-      path: gameDotPath,
-      x,
-      y,
-      arm: arm ?? null,
-      connections,
-      rewards,
-    })),
+    records.map(
+      ({ path: gameDotPath, x, y, arm, connections, rewards, appended }) => ({
+        path: gameDotPath,
+        x,
+        y,
+        arm: arm ?? null,
+        connections,
+        rewards,
+        ...(appended ? { appended: true } : {}),
+      }),
+    ),
     null,
     2,
   )};\n`;

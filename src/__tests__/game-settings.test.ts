@@ -29,7 +29,7 @@ describe("getGameSettings", () => {
         [path]: {
           drawCount: 7 as never,
           pyramidDifficulty: "nonsense" as never,
-          seerDifficulty: "impossible" as never,
+          jailbreakDifficulty: "impossible" as never,
           memoryDifficulty: "legendary" as never,
           stats: {
             attempts: -3,
@@ -48,7 +48,7 @@ describe("getGameSettings", () => {
     expect(settings.pyramidDifficulty).toBe(
       DEFAULT_GAME_SETTINGS.pyramidDifficulty,
     );
-    expect(settings.seerDifficulty).toBe("normal");
+    expect(settings.jailbreakDifficulty).toBe("normal");
     expect(settings.memoryDifficulty).toBe(
       DEFAULT_GAME_SETTINGS.memoryDifficulty,
     );

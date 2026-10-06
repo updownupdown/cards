@@ -9,6 +9,7 @@ import {
   type PlayingCard,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
 
@@ -24,14 +25,16 @@ type GameState = {
 
 export type ElevensGameState = GameState;
 
-const GRID_COLS = 3;
-const GRID_SIZE = 9;
+const GRID_ROWS = 3;
+const GRID_COLS_BY_DIFFICULTY = { easy: 5, medium: 4, hard: 3 } as const;
+type ElevensDifficulty = keyof typeof GRID_COLS_BY_DIFFICULTY;
+const GRID_SIZE = GRID_ROWS * GRID_COLS_BY_DIFFICULTY.hard;
 const PAIR_TOTAL = 11;
 const FACE_RANKS = ["J", "Q", "K"];
 
-function createInitialState(): GameState {
+function createInitialState(gridSize = GRID_SIZE): GameState {
   return {
-    grid: Array.from({ length: GRID_SIZE }, () => null),
+    grid: Array.from({ length: gridSize }, () => null),
     stock: createDeck({ faceUp: false }),
     discard: [],
   };
@@ -80,12 +83,13 @@ function hasAvailableMove(grid: (PlayingCard | null)[]) {
 /** Index sets of the grid that could be removed right now. */
 function removableSets(grid: (PlayingCard | null)[]) {
   const sets: number[][] = [];
-  for (let i = 0; i < GRID_SIZE; i += 1) {
-    for (let j = i + 1; j < GRID_SIZE; j += 1) {
+  const size = grid.length;
+  for (let i = 0; i < size; i += 1) {
+    for (let j = i + 1; j < size; j += 1) {
       const a = grid[i];
       const b = grid[j];
       if (a && b && isRemovableSet([a, b])) sets.push([i, j]);
-      for (let k = j + 1; k < GRID_SIZE; k += 1) {
+      for (let k = j + 1; k < size; k += 1) {
         const c = grid[k];
         if (a && b && c && isRemovableSet([a, b, c])) sets.push([i, j, k]);
       }
@@ -96,7 +100,7 @@ function removableSets(grid: (PlayingCard | null)[]) {
 
 /** Fills every empty grid space from the top of the stock. */
 function refillGrid(draft: GameState) {
-  for (let i = 0; i < GRID_SIZE; i += 1) {
+  for (let i = 0; i < draft.grid.length; i += 1) {
     if (draft.grid[i] !== null) continue;
     const next = draft.stock.pop();
     if (!next) return;
@@ -104,7 +108,9 @@ function refillGrid(draft: GameState) {
   }
 }
 
-const MIN_PLAYABLE_MOVES = 4;
+const FILTERED_PLAYABLE_MOVES = 3;
+// Even unfiltered deals must not lose on the spot.
+const UNFILTERED_PLAYABLE_MOVES = 1;
 const DEAL_ATTEMPTS = 100;
 
 /** Whether at least `moves` consecutive moves can be made from this position. */
@@ -127,13 +133,19 @@ function canPlayMoves(
   });
 }
 
-/** A deal is playable if it allows at least four moves in a row. */
-function isPlayableDeal(draft: GameState) {
-  return canPlayMoves(draft.grid, draft.stock, MIN_PLAYABLE_MOVES);
+/** A deal is playable if it allows at least the required moves in a row. */
+function isPlayableDeal(draft: GameState, eliminateBadDeals: boolean) {
+  return canPlayMoves(
+    draft.grid,
+    draft.stock,
+    eliminateBadDeals ? FILTERED_PLAYABLE_MOVES : UNFILTERED_PLAYABLE_MOVES,
+  );
 }
 
 async function resetAndSetup(
   setGame: (updater: (draft: GameState) => void) => void,
+  gridSize: number,
+  eliminateBadDeals: boolean,
 ) {
   setGame((draft) => {
     draft.stock = flipAllToBack([
@@ -141,7 +153,7 @@ async function resetAndSetup(
       ...draft.stock,
       ...draft.discard,
     ]);
-    draft.grid = Array.from({ length: GRID_SIZE }, () => null);
+    draft.grid = Array.from({ length: gridSize }, () => null);
     draft.discard = [];
   });
 
@@ -149,12 +161,12 @@ async function resetAndSetup(
 
   setGame((draft) => {
     const cards = draft.stock;
-    // Only keep deals that allow at least four moves in a row.
+    // Only keep deals that allow enough moves in a row.
     for (let attempt = 0; attempt < DEAL_ATTEMPTS; attempt += 1) {
       draft.stock = shuffle(cards);
-      draft.grid = Array.from({ length: GRID_SIZE }, () => null);
+      draft.grid = Array.from({ length: gridSize }, () => null);
       refillGrid(draft);
-      if (isPlayableDeal(draft)) return;
+      if (isPlayableDeal(draft, eliminateBadDeals)) return;
     }
   });
 }
@@ -185,6 +197,11 @@ export const elevensRules = {
 };
 
 export default function Elevens() {
+  const difficulty = useGameSettingValue(
+    "elevensDifficulty",
+  ) as ElevensDifficulty;
+  const eliminateBadDeals = useGameSettingValue("elevensEliminateBadDeals");
+  const settingGridSize = GRID_ROWS * GRID_COLS_BY_DIFFICULTY[difficulty];
   const [selected, setSelected] = useState<number[]>([]);
 
   const {
@@ -202,9 +219,12 @@ export default function Elevens() {
       setSelected([]);
     },
     resetAndSetup: async () => {
-      await resetAndSetup(setGame);
+      await resetAndSetup(setGame, settingGridSize, eliminateBadDeals);
     },
   });
+
+  // A saved game keeps the grid it was dealt with until the next game starts.
+  const gridCols = Math.max(1, Math.round(game.grid.length / GRID_ROWS));
 
   const won =
     !isSettingUp &&
@@ -259,8 +279,8 @@ export default function Elevens() {
       name: "grid",
       pileIndex: index,
       cards: card ? [card] : [],
-      col: index % GRID_COLS,
-      row: Math.floor(index / GRID_COLS),
+      col: index % gridCols,
+      row: Math.floor(index / gridCols),
       baseZIndex: 20,
       placeholder: { text: "" },
     }));
@@ -281,14 +301,14 @@ export default function Elevens() {
         id: "discard",
         name: "discard",
         cards: game.discard,
-        col: 2,
+        col: gridCols - 1,
         row: 3.3,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
         placeholder: { text: i18n.t("cards:discard"), infoPos: "left" },
       },
     ];
-  }, [game]);
+  }, [game, gridCols]);
 
   const cardMapper = (
     mappedCard: MappedCard,
@@ -312,7 +332,7 @@ export default function Elevens() {
     cardMapper,
     zoneMapper,
     cardSize: "small",
-    fixedCols: GRID_COLS,
+    fixedCols: gridCols,
     gap: 0.1,
   });
 

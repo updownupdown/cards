@@ -50,16 +50,19 @@ export function pickVariant<P extends VariantGamePath>(
 /**
  * Games that were folded into another game (as one of its variants) or
  * renamed. Saved stats, favourites, recent games and Campaign wins under the
- * old path move to the new one.
+ * old path move to the new one, and the campaign map generator keeps a
+ * renamed game's place, links and rewards under its new path.
  */
 export const MOVED_GAME_PATHS: Record<
   string,
-  { path: VariantGamePath; variant: string }
+  { path: string; variant?: string }
 > = {
   "/alaska": { path: "/yukon", variant: "alaska" },
   "/all-in-a-row": { path: "/black-hole", variant: "all-in-a-row" },
   "/bakers-game": { path: "/freecell", variant: "bakers-game" },
   "/busy-aces": { path: "/forty-thieves", variant: "busy-aces" },
+  "/charlatan": { path: "/boiling-over" },
+  "/four-seasons": { path: "/little-windmill" },
   "/harp": { path: "/gargantua", variant: "harp" },
   "/josephine": { path: "/forty-thieves", variant: "josephine" },
   "/lucas": { path: "/forty-thieves", variant: "lucas" },
@@ -71,6 +74,21 @@ export const MOVED_GAME_PATHS: Record<
   "/shamrocks": { path: "/la-belle-lucie", variant: "shamrocks" },
   "/singularity": { path: "/black-hole", variant: "black-hole" },
 };
+
+/**
+ * Games taken out of the app for good. Whatever a save holds for them (stats,
+ * a favourite, Campaign wins) is dropped when it loads; everything else in
+ * the save is untouched. The campaign map generator hands a retired game's
+ * rewards to other games, so its quotes and Tao chapter can still be
+ * collected, and players who had already collected them keep them.
+ *
+ * Retiring a released game needs the owner's OK: see "Locked: players' saved
+ * data" in AGENTS.md.
+ */
+export const RETIRED_GAME_PATHS: readonly string[] = ["/pickpocket", "/seer"];
+
+/** Game settings that only retired games used; saved values are ignored. */
+export const RETIRED_GAME_SETTINGS: readonly string[] = ["seerDifficulty"];
 
 /** The current path for a game path that may have moved. */
 export function currentGamePath(path: string): string {

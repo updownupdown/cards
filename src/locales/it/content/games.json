@@ -136,40 +136,6 @@
     }
   },
   "augury": {
-    "howToPlay": {
-      "hash": "392b4bab",
-      "value": [
-        "## Obiettivo",
-        "Scopri la **legge nascosta** abbastanza bene da indovinare **otto volte di fila**.",
-        "## La legge",
-        "- Ogni partita ha una legge segreta su quali carte possono seguire l'**ultima carta del percorso**. Per esempio, potrebbe ammettere solo una carta dell'altro colore.",
-        "- La prima carta inizia il percorso.",
-        "## Gioco",
-        "- Hai quattro carte in mano. Toccane una per giocarla.",
-        "- Se la legge la ammette, la carta si aggiunge al percorso e conta come risposta giusta.",
-        "- Altrimenti viene respinta: resta in grigio nella griglia, e la tua serie di risposte giuste ricomincia.",
-        "- Dopo ogni giocata peschi fino a tornare a quattro carte.",
-        "## Nessuna va bene",
-        "- Se pensi che nessuna carta della tua mano vada bene, tocca **Nessuna va bene**.",
-        "- Se hai ragione, conta come risposta giusta e ricevi una mano nuova.",
-        "- Se una carta andava bene, viene giocata al posto tuo (in viola), e la tua serie ricomincia.",
-        "- Le carte più vecchie e le mani scartate vanno coperte negli **scarti**; toccali per vederle.",
-        "## Fine",
-        "- Vinci con otto risposte giuste di fila.",
-        "- Perdi se la tua mano finisce. In ogni caso la legge viene rivelata.",
-        "## Difficoltà",
-        "- **Facile:** leggi semplici sul colore, il seme o il valore dell'ultima carta.",
-        "- **Difficile:** leggi più sottili, alcune guardano due carte indietro o mescolano colore e valore."
-      ]
-    },
-    "quickStart": {
-      "hash": "5de8e5b8",
-      "value": [
-        "Una legge nascosta decide quali carte possono seguire l'ultima carta del percorso.",
-        "Gioca una carta che pensi vada bene, o dichiara che nessuna della tua mano va bene.",
-        "Indovina otto volte di fila per vincere."
-      ]
-    },
     "title": {
       "hash": "f453f554",
       "value": "Auspicio"
@@ -401,6 +367,51 @@
     "title": {
       "hash": "d3fd95cc",
       "value": "Torta di more"
+    }
+  },
+  "boiling-over": {
+    "howToPlay": {
+      "hash": "ea9ac512",
+      "value": [
+        "## Obiettivo",
+        "Fai **150 punti** o più in **9 round** di preparazione.",
+        "## Il tuo mazzo",
+        "- Inizi con 11 carte: sei **flop** (gli A, 2 e 3 neri) e cinque ingredienti (2♥ 3♥ 4♥ 2♦ 3♦).",
+        "- All'inizio di ogni round, tutte le tue carte vengono mescolate nel tuo mazzo.",
+        "## Preparazione",
+        "- Tocca il tuo mazzo per aggiungere la carta in cima al calderone.",
+        "- Ogni ingrediente aggiunge il suo valore alla **forza** della pozione (gli Assi valgono 1, i Fanti 11, le Donne 12 e i Re 13).",
+        "- Se i flop nel calderone superano **7 in tutto**, la pozione trabocca.",
+        "- Il rischio indica la probabilità che la carta successiva faccia traboccare la pozione.",
+        "## Effetti",
+        "- **♥ Cuori:** nessun effetto.",
+        "- **♦ Quadri:** se ti fermi con un quadri come ultima carta, conta doppio.",
+        "- **♣ Fiori:** se la carta precedente è un flop, il flop torna nel tuo mazzo.",
+        "- **♠ Picche:** la carta successiva del tuo mazzo viene girata scoperta.",
+        "## Fermarsi",
+        "- Fermati quando vuoi per segnare la forza della pozione in punti e riceverne la metà (arrotondata per eccesso) in monete.",
+        "- Se la pozione trabocca, scegli i punti o le monete.",
+        "## Mercato",
+        "- Spendi le monete per un massimo di **2 carte di semi diversi**. Entrano nel tuo mazzo.",
+        "- Un cuori costa il suo valore. Quadri, fiori e picche costano 1 in più.",
+        "- Le monete che non spendi vanno perse.",
+        "## Titoli",
+        "- 150+: Guaritore di villaggio",
+        "- 200+: Alchimista di corte",
+        "- 250+: Taumaturgo"
+      ]
+    },
+    "quickStart": {
+      "hash": "8bdb8a52",
+      "value": [
+        "Tocca il tuo mazzo per aggiungere la carta in cima al calderone.",
+        "Fermati prima che i flop (A, 2 e 3 neri) superino 7 in tutto.",
+        "Spendi le monete in carte migliori per il tuo mazzo, poi prepara di nuovo."
+      ]
+    },
+    "title": {
+      "hash": "c5a5df6d",
+      "value": "Trabocca"
     }
   },
   "bowling": {
@@ -688,51 +699,6 @@
       "value": "Capitolo e versetto"
     }
   },
-  "charlatan": {
-    "howToPlay": {
-      "hash": "ea9ac512",
-      "value": [
-        "## Obiettivo",
-        "Fai **150 punti** o più in **9 round** di preparazione.",
-        "## Il tuo mazzo",
-        "- Inizi con 11 carte: sei **flop** (gli A, 2 e 3 neri) e cinque ingredienti (2♥ 3♥ 4♥ 2♦ 3♦).",
-        "- All'inizio di ogni round, tutte le tue carte vengono mescolate nel tuo mazzo.",
-        "## Preparazione",
-        "- Tocca il tuo mazzo per aggiungere la carta in cima al calderone.",
-        "- Ogni ingrediente aggiunge il suo valore alla **forza** della pozione (gli Assi valgono 1, i Fanti 11, le Donne 12 e i Re 13).",
-        "- Se i flop nel calderone superano **7 in tutto**, la pozione trabocca.",
-        "- Il rischio indica la probabilità che la carta successiva faccia traboccare la pozione.",
-        "## Effetti",
-        "- **♥ Cuori:** nessun effetto.",
-        "- **♦ Quadri:** se ti fermi con un quadri come ultima carta, conta doppio.",
-        "- **♣ Fiori:** se la carta precedente è un flop, il flop torna nel tuo mazzo.",
-        "- **♠ Picche:** la carta successiva del tuo mazzo viene girata scoperta.",
-        "## Fermarsi",
-        "- Fermati quando vuoi per segnare la forza della pozione in punti e riceverne la metà (arrotondata per eccesso) in monete.",
-        "- Se la pozione trabocca, scegli i punti o le monete.",
-        "## Mercato",
-        "- Spendi le monete per un massimo di **2 carte di semi diversi**. Entrano nel tuo mazzo.",
-        "- Un cuori costa il suo valore. Quadri, fiori e picche costano 1 in più.",
-        "- Le monete che non spendi vanno perse.",
-        "## Titoli",
-        "- 150+: Guaritore di villaggio",
-        "- 200+: Alchimista di corte",
-        "- 250+: Taumaturgo"
-      ]
-    },
-    "quickStart": {
-      "hash": "8bdb8a52",
-      "value": [
-        "Tocca il tuo mazzo per aggiungere la carta in cima al calderone.",
-        "Fermati prima che i flop (A, 2 e 3 neri) superino 7 in tutto.",
-        "Spendi le monete in carte migliori per il tuo mazzo, poi prepara di nuovo."
-      ]
-    },
-    "title": {
-      "hash": "a18289b9",
-      "value": "Ciarlatano"
-    }
-  },
   "city-grid": {
     "howToPlay": {
       "hash": "316682c7",
@@ -914,40 +880,6 @@
     }
   },
   "crossword": {
-    "howToPlay": {
-      "hash": "240983c3",
-      "value": [
-        "## Obiettivo",
-        "Riempi la **griglia 7×7**, come un cruciverba, con 49 delle 52 carte.",
-        "## Posare le carte",
-        "- La prima carta viene posata al centro per te.",
-        "- Posa ogni carta che scopri in una casella vuota **accanto a una carta già posata**, di lato o in diagonale. Le caselle possibili sono evidenziate.",
-        "- Fanti, Donne e Re sono le **caselle nere**. Due di esse non possono mai toccarsi di lato (in diagonale sì).",
-        "## Parole pari",
-        "- Le carte numeriche sono le lettere. Gli Assi valgono 1, le altre il loro numero.",
-        "- Quando una serie di carte numeriche tra due caselle nere, o tra una casella nera e il bordo, è completa, deve **dare una somma pari**.",
-        "- Anche un'intera riga o colonna senza caselle nere deve dare una somma pari.",
-        "- Le carte numeriche diventano arancioni quando esattamente una delle loro serie (riga o colonna) ha somma dispari, e rosse quando ce l'hanno entrambe. Le carte nelle serie pari diventano verdi solo quando entrambe le serie sono chiuse ad altre carte numeriche; altrimenti restano senza colore.",
-        "- Le figure diventano grigie per mostrare le caselle nere.",
-        "## L'ultima casella",
-        "Quando 48 caselle sono piene, le ultime quattro carte vengono scoperte e ne scegli una per riempire l'ultima casella.",
-        "## Fine",
-        "- Vinci quando tutte le 49 caselle sono piene.",
-        "- Completare una serie numerica con somma dispari termina subito la partita.",
-        "- La partita finisce appena la carta da posare non ha dove andare. Il tuo punteggio è il numero di carte posate.",
-        "## Consigli",
-        "- Una casella nera può chiudere una serie in anticipo, qualunque sia la sua somma fino a quel punto.",
-        "- Lascia aperte alcune serie, così una carta dispari ha sempre dove andare."
-      ]
-    },
-    "quickStart": {
-      "hash": "5b847a72",
-      "value": [
-        "Metti ogni carta accanto a una già posata, di lato o in diagonale.",
-        "Le figure sono caselle nere: due di esse non possono toccarsi di lato.",
-        "Le carte numeriche tra caselle nere o il bordo devono dare una somma pari."
-      ]
-    },
     "title": {
       "hash": "6c831cdf",
       "value": "Cruciverba"
@@ -1243,40 +1175,6 @@
     }
   },
   "ebb-and-flow": {
-    "howToPlay": {
-      "hash": "2ae1fc74",
-      "value": [
-        "## Obiettivo",
-        "Gioca tutte le **52 carte** sulle quattro pile.",
-        "## Pile",
-        "- **Pile crescenti:** gioca una carta dello stesso valore di quella in cima, o più alta.",
-        "- **Pile decrescenti:** gioca una carta dello stesso valore di quella in cima, o più bassa.",
-        "- Qualsiasi carta può iniziare una pila vuota. Gli Assi sono bassi e i Re alti.",
-        "## Tornare indietro",
-        "- Una carta **di un valore indietro dello stesso seme** si può sempre giocare: un 7♥ su un 8♥ crescente, o un 9♠ su un 8♠ decrescente.",
-        "- Conserva queste carte: ridanno spazio a una pila.",
-        "## Turni",
-        "- Gioca almeno **due carte** a ogni turno. Puoi giocarne di più.",
-        "- Poi tocca il mazzo per ricompletare la mano.",
-        "- Quando il mazzo è vuoto, gioca tutte le carte che puoi.",
-        "- La partita è persa quando non puoi giocare le carte obbligatorie.",
-        "## Carte in mano",
-        "- Facile: **8** carte",
-        "- Normale: **7** carte",
-        "- Difficile: **6** carte",
-        "## Consigli",
-        "- Ogni salto spreca valori. Gioca carte vicine, anche se vuol dire giocarne più di due.",
-        "- Tieni le carte che fanno tornare indietro una pila finché la pila non ne ha bisogno."
-      ]
-    },
-    "quickStart": {
-      "hash": "f7f08849",
-      "value": [
-        "Gioca le carte dalla mano: le pile crescenti salgono, quelle decrescenti scendono.",
-        "Gioca almeno due carte, poi tocca il mazzo per ricompletare la mano.",
-        "Una carta di un valore indietro dello stesso seme fa tornare indietro una pila."
-      ]
-    },
     "title": {
       "hash": "6cff71c4",
       "value": "Flusso e Riflusso"
@@ -1549,36 +1447,6 @@
     "title": {
       "hash": "f7d2814b",
       "value": "Quaranta ladroni"
-    }
-  },
-  "four-seasons": {
-    "howToPlay": {
-      "hash": "baf2850a",
-      "value": [
-        "## Obiettivo",
-        "Porta tutte le 52 carte sulle quattro fondazioni negli angoli.",
-        "## Fondazioni",
-        "- La prima carta d'angolo fissa il **valore base**. Le altre tre fondazioni partono con le altre carte di quel valore.",
-        "- Costruisci ogni fondazione **per seme**, passando dal Re all'Asso, finché non contiene 13 carte.",
-        "## La croce",
-        "- Costruisci le cinque pile della croce **in ordine decrescente, a prescindere dal seme**. I valori ricominciano da capo, quindi un Re può andare su un Asso, a meno che gli Assi non siano il valore base.",
-        "- È disponibile solo la carta in cima a ogni pila, e le carte si spostano una alla volta.",
-        "- Qualsiasi carta disponibile può riempire uno spazio vuoto della croce.",
-        "## Mazzo",
-        "Gira le carte dal mazzo al pozzo una alla volta. Non si ridistribuisce."
-      ]
-    },
-    "quickStart": {
-      "hash": "5b92f9b8",
-      "value": [
-        "La carta d'angolo fissa il valore di partenza di ogni fondazione.",
-        "Le fondazioni salgono per seme, passando dal Re all'Asso.",
-        "Costruisci la croce in ordine decrescente con qualsiasi seme, una carta alla volta."
-      ]
-    },
-    "title": {
-      "hash": "7bc4dacb",
-      "value": "Quattro Stagioni"
     }
   },
   "freecell": {
@@ -1961,32 +1829,6 @@
     }
   },
   "iris-garden": {
-    "howToPlay": {
-      "hash": "745e02ea",
-      "value": [
-        "## Obiettivo",
-        "Togli dal giardino tutte le **48 carte** (dall'Asso alla Donna) a coppie.",
-        "## Coppie",
-        "- Due carte dello **stesso valore** formano una coppia, qualunque sia il seme.",
-        "- Una coppia si può prendere quando un percorso le unisce attraverso **caselle vuote**, fatto di al massimo tre linee rette, quindi con **non più di due curve**. Il percorso resta dentro il giardino.",
-        "- Carte vicine, o con solo caselle vuote tra loro in linea, si possono sempre prendere.",
-        "- Tocca una carta, poi la sua compagna. Il percorso viene disegnato mentre se ne vanno.",
-        "## Fine",
-        "- Ogni giardino si può liberare.",
-        "- Perdi se non si può prendere nessuna coppia. Annulla ti permette di provare un'altra strada.",
-        "## Consigli",
-        "- Ogni valore ha quattro carte: pensa a quali due abbinare per prime.",
-        "- Togliere le carte vicino al centro apre percorsi per le altre."
-      ]
-    },
-    "quickStart": {
-      "hash": "0cda1b1b",
-      "value": [
-        "Tocca due carte dello stesso valore per prenderle.",
-        "Devono essere unite da un percorso tra caselle vuote con al massimo due curve.",
-        "Libera tutto il giardino per vincere."
-      ]
-    },
     "title": {
       "hash": "b023f43f",
       "value": "Giardino di Iris"
@@ -2310,31 +2152,6 @@
     }
   },
   "miss-milligan": {
-    "howToPlay": {
-      "hash": "d8f2b41f",
-      "value": [
-        "## Obiettivo",
-        "Porta entrambi i mazzi sulle otto fondazioni, ognuna costruita per seme dall'Asso al Re.",
-        "## Regole",
-        "- La partita inizia con una carta in ognuna delle otto colonne.",
-        "- Costruisci le colonne **in ordine decrescente, alternando rosso e nero**. Una sequenza costruita correttamente si sposta in blocco.",
-        "- Solo un **Re** (o una sequenza che inizia con un Re) può riempire una colonna vuota.",
-        "- Tocca il **mazzo** per distribuire una carta su ogni colonna, vuota o no.",
-        "## Mettere da parte",
-        "- Quando il mazzo è finito, puoi mettere da parte una carta o una sequenza nella **tasca**.",
-        "- La tasca contiene una carta o una sequenza alla volta. Rigiocala su una colonna o una fondazione prima di usare di nuovo la tasca.",
-        "## Gigante",
-        "Nella variante Gigante, qualsiasi carta o sequenza può riempire una colonna vuota, ma non c'è la tasca."
-      ]
-    },
-    "quickStart": {
-      "hash": "94b68883",
-      "value": [
-        "Costruisci otto fondazioni per seme, da A a K.",
-        "Costruisci le colonne in ordine decrescente alternando rosso e nero; sposta le sequenze costruite.",
-        "Tocca il mazzo per distribuire una carta su ogni colonna."
-      ]
-    },
     "title": {
       "hash": "71a70424",
       "value": "Miss Milligan"
@@ -2476,32 +2293,6 @@
     }
   },
   "ozanams-square": {
-    "howToPlay": {
-      "hash": "c30557f7",
-      "value": [
-        "## Obiettivo",
-        "Disponi **Assi, Re, Donne e Fanti** in un quadrato 4×4 in modo che ogni **riga**, ogni **colonna** ed entrambe le **diagonali principali** contengano una carta di ogni valore e una di ogni seme.",
-        "## Gioco",
-        "- Alcune carte vengono distribuite al loro posto e non si possono spostare. Le altre aspettano nel vassoio, per seme.",
-        "- Trascina una carta dal vassoio a una casella vuota, oppure toccala e poi tocca la casella.",
-        "- Le carte che posi si possono spostare in un'altra casella, scambiare o riportare nel vassoio.",
-        "- Una carta che ripete un valore o un seme in una delle sue linee è segnata in rosso.",
-        "- Ogni distribuzione ha **esattamente una** soluzione.",
-        "## Difficoltà",
-        "- **Facile:** sette carte partono al loro posto.",
-        "- **Difficile:** partono al loro posto solo le carte che servono alla soluzione.",
-        "## Storia",
-        "Jacques Ozanam propose questo rompicapo con le carte da gioco nelle sue *Récréations mathématiques et physiques* (1725). Più tardi Leonhard Euler studiò quadrati come questo, che chiamò quadrati greco-latini."
-      ]
-    },
-    "quickStart": {
-      "hash": "c309afcc",
-      "value": [
-        "Riempi il quadrato con i sedici Assi, Re, Donne e Fanti.",
-        "Nessuna riga, colonna o diagonale principale può contenere due carte dello stesso valore o seme.",
-        "Trascina le carte dal vassoio. Le carte distribuite al loro posto non si possono spostare."
-      ]
-    },
     "title": {
       "hash": "e2c5ab80",
       "value": "Quadrato di Ozanam"
@@ -2592,79 +2383,9 @@
     }
   },
   "picket-fence": {
-    "howToPlay": {
-      "hash": "1fbe71b9",
-      "value": [
-        "## Obiettivo",
-        "Fai **60 punti** o più costruendo case, parchi e piscine, e recintando quartieri.",
-        "## Costruire",
-        "- Hai tre carte in mano. A ogni turno, costruiscine una come casa su un lotto vuoto.",
-        "- I numeri delle case devono salire da sinistra a destra lungo una via (gli Assi valgono 1, i Fanti 11, le Donne 12 e i Re 13). I lotti vuoti non contano.",
-        "- Poi usa una delle altre carte per il suo effetto, e peschi fino a tornare a tre carte.",
-        "- La partita finisce quando nessuna delle tue carte si può costruire, o quando tutti i lotti sono costruiti.",
-        "## Effetti",
-        "- **♥ Parco:** il cuori va sotto la nuova casa, come parco della sua via.",
-        "- **♦ Piscina:** se la nuova casa è su un lotto con piscina, il quadri va sotto di essa come piscina. Altrimenti viene scartato.",
-        "- **♠ Recinto:** metti un recinto tra due lotti, su qualsiasi via.",
-        "- **♣ Seconda casa:** costruisci anche il fiori come casa.",
-        "## Punteggio",
-        "- **Parchi:** 2 punti ciascuno. Le vie ospitano fino a 3, 4 e 5 parchi, e una via piena di parchi vale invece 10, 14 o 18 punti.",
-        "- **Piscine:** 3, 6, 9, 13, 17, 21 e 26 punti per 1–7 piscine.",
-        "- **Quartieri:** recinti e fine via dividono ogni via in quartieri. Un quartiere con tutti i lotti costruiti vale 1, 3, 5, 7, 9 o 11 punti per 1–6 case. I quartieri più lunghi non valgono nulla.",
-        "## Titoli",
-        "- 60+: Buoni vicini",
-        "- 70+: Quartiere modello",
-        "- 80+: Da cartolina",
-        "## Consigli",
-        "- Lascia spazio tra i numeri: un lotto tra un 5 e un 6 non potrà mai essere costruito.",
-        "- L'etichetta sopra ogni quartiere mostra quanto varrà, o ✕ se non può più essere completato."
-      ]
-    },
-    "quickStart": {
-      "hash": "15a8cad5",
-      "value": [
-        "A ogni turno, costruisci una carta come casa e usa il seme di un'altra carta come effetto.",
-        "I numeri delle case devono salire da sinistra a destra lungo ogni via.",
-        "La partita finisce quando nessuna delle tue carte trova un lotto."
-      ]
-    },
     "title": {
       "hash": "63ac8afa",
       "value": "Staccionata"
-    }
-  },
-  "pickpocket": {
-    "howToPlay": {
-      "hash": "1ef6bb8f",
-      "value": [
-        "## Obiettivo",
-        "Ruba **750 monete** o più in cinque round.",
-        "## Round",
-        "- Ogni round distribuisce 25 carte coperte: Assi, Due, Tre e figure (Fanti, Donne e Re).",
-        "- Accanto a ogni riga e sotto ogni colonna ci sono il suo **totale di monete** (Assi 1, Due 2, Tre 3) e il suo **numero di figure**.",
-        "- Ogni round nasconde più figure del precedente.",
-        "## Girare",
-        "- Tocca una carta per girarla. Il tuo bottino parte dal valore della prima carta, e ogni carta successiva lo moltiplica: un Due lo raddoppia, un Tre lo triplica.",
-        "- Gira tutti i Due e i Tre per fare piazza pulita e tenere il bottino.",
-        "- Gira una figura e vieni scoperto: il bottino del round è perso.",
-        "- Puoi ritirarti in qualsiasi momento e tenere quello che hai nel bottino.",
-        "## Titoli",
-        "- 750+: Mani leste",
-        "- 850+: Tagliaborse",
-        "- 950+: Principe dei ladri"
-      ]
-    },
-    "quickStart": {
-      "hash": "c66bbe79",
-      "value": [
-        "Gira le carte: Assi, Due e Tre moltiplicano il tuo bottino.",
-        "Ogni riga e colonna mostra il suo totale di monete e quante figure nasconde.",
-        "Gira una figura e il bottino del round è perso. Ritirati in tempo per tenerlo."
-      ]
-    },
-    "title": {
-      "hash": "7ea3b108",
-      "value": "Borseggiatore"
     }
   },
   "pocket-poker": {
@@ -3046,41 +2767,6 @@
       "value": "Torri di Seahaven"
     }
   },
-  "seer": {
-    "howToPlay": {
-      "hash": "3824f461",
-      "value": [
-        "## Obiettivo",
-        "Completa tutte e otto le previsioni prima che finisca il mazzo da 24 carte o che tutti gli spazi siano bloccati.",
-        "## Preparazione",
-        "- Si usano le carte dall'Asso al 6 di tutti e quattro i semi.",
-        "- Le carte mescolate formano un mazzo coperto. Toccalo per vedere o nascondere la sua ultima carta.",
-        "## Previsioni",
-        "- Scegli tra Rosso, Rosso dispari / Nero pari, Pari, Quadri / Cuori, Picche / Fiori, Dispari, Nero dispari / Rosso pari, o Nero.",
-        "- Se la previsione è giusta, metti la carta rivelata su quello spazio.",
-        "- Se è sbagliata, metti la carta rivelata scoperta sul tavolo, poi metti la carta successiva coperta sulla previsione, come pietra.",
-        "- Una previsione con tre pietre è bloccata.",
-        "## Liberare le pietre",
-        "- Una previsione giusta libera una pietra scoperta da ogni spazio vicino: anche in diagonale in Facile, in orizzontale e in verticale in Normale, oppure da un solo vicino a scelta (in orizzontale o in verticale) in Difficile.",
-        "- Scegli se tutte le pietre liberate da quella previsione vanno rivelate sul tavolo o rimesse coperte in fondo al mazzo.",
-        "- Le pietre coperte da una carta indovinata restano intrappolate.",
-        "## Rigiocare",
-        "- Le previsioni completate si possono scegliere di nuovo per liberare altre pietre.",
-        "- Una nuova previsione sbagliata su uno spazio completato lo rende di nuovo incompleto, finché le sue pietre scoperte non vengono tolte o finché non la indovini di nuovo."
-      ]
-    },
-    "quickStart": {
-      "hash": "4249e832",
-      "value": [
-        "Scegli uno spazio di previsione per rivelare la prima carta.",
-        "Le previsioni giuste completano gli spazi e liberano le pietre vicine; quelle sbagliate aggiungono pietre."
-      ]
-    },
-    "title": {
-      "hash": "e33b153c",
-      "value": "Il veggente"
-    }
-  },
   "shifting-sands": {
     "howToPlay": {
       "hash": "91681187",
@@ -3421,10 +3107,6 @@
         "Tocca il mazzo per aggiungere una carta in fondo alla fila.",
         "Tocca la prima e l’ultima carta di una sequenza per rimuoverla."
       ]
-    },
-    "title": {
-      "hash": "e0db7d2f",
-      "value": "Dieci, venti, trenta"
     }
   },
   "terrace": {

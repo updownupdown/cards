@@ -12,9 +12,13 @@ import {
   GAME_DOTS_BY_PATH,
   CAMPAIGN_START_PATH,
 } from "./campaign-map";
+// Straight from the generated file: campaign-map is still loading when a
+// game's own imports reach this module first.
+import { GAME_DOT_DEFINITIONS as ALL_GAME_DOT_DEFINITIONS } from "./campaign-map.generated";
+import { getV3Neighbours } from "./campaign-map.v3";
 import { currentGamePath } from "./game-variants";
 
-const CAMPAIGN_PROGRESS_VERSION = 3;
+const CAMPAIGN_PROGRESS_VERSION = 4;
 
 // Version 2 cut the quotes to three 52-card decks: these version 1 quotes were
 // dropped, and the quotes after them moved down to close the gaps.
@@ -55,10 +59,66 @@ function migrateQuoteIds(version: unknown, value: unknown) {
   return value;
 }
 
+// Version 4 laid the map out afresh and started keeping `unlockedPaths`.
+// Until then, which games were open was worked out from the wins and the
+// map's links alone, so a change to the map could lock a game again. Older
+// progress is opened against the map it was played on (campaign-map.v3.ts).
+
+/** Every game on the map, whether or not this build shows it. */
+const KNOWN_GAME_DOT_PATHS = new Set(
+  ALL_GAME_DOT_DEFINITIONS.map((gameDot) => gameDot.path),
+);
+
+/**
+ * The games a save has open, to be kept open from now on: the ones it lists
+ * (or, before version 4, the ones its wins had unlocked on the old map) and
+ * the ones its wins unlock on today's map. Games that have since been renamed
+ * follow their new path; ones that were removed drop out.
+ */
+function migrateUnlockedPaths(
+  candidate: Partial<CampaignProgress>,
+  winsByPath: Record<string, number>,
+) {
+  const opened = new Set<string>();
+  const version = typeof candidate.version === "number" ? candidate.version : 0;
+  if (version >= 4) {
+    if (Array.isArray(candidate.unlockedPaths)) {
+      for (const path of candidate.unlockedPaths) {
+        if (typeof path === "string") opened.add(path);
+      }
+    }
+  } else if (candidate.winsByPath && typeof candidate.winsByPath === "object") {
+    for (const [wonPath, wins] of Object.entries(candidate.winsByPath)) {
+      if (typeof wins !== "number" || !(wins > 0)) continue;
+      opened.add(wonPath);
+      // The old map knew a game by the path it had then, which may itself
+      // have been the new name of an even older one.
+      for (const path of [wonPath, currentGamePath(wonPath)]) {
+        getV3Neighbours(path).forEach((next) => opened.add(next));
+      }
+    }
+  }
+
+  const current = getUnlockedGameDotPaths(new Set(Object.keys(winsByPath)));
+  return [
+    ...new Set([
+      ...[...opened]
+        .map(currentGamePath)
+        .filter((path) => KNOWN_GAME_DOT_PATHS.has(path)),
+      ...current,
+    ]),
+  ].sort();
+}
+
 export type CampaignProgress = {
   version: number;
   lastPlayedPath: string;
   winsByPath: Record<string, number>;
+  /**
+   * Every game that has been open to the player. Winning a game opens its
+   * neighbours; this keeps them open whatever later happens to the map.
+   */
+  unlockedPaths: string[];
   collectedTaoIds: number[];
   collectedQuoteIds: number[];
   lastResultSessionIds: Record<string, string>;
@@ -88,6 +148,7 @@ export const DEFAULT_CAMPAIGN_PROGRESS: CampaignProgress = {
   version: CAMPAIGN_PROGRESS_VERSION,
   lastPlayedPath: CAMPAIGN_START_PATH,
   winsByPath: {},
+  unlockedPaths: [],
   collectedTaoIds: [],
   collectedQuoteIds: [],
   lastResultSessionIds: {},
@@ -99,6 +160,7 @@ function createDefaultCampaignProgress(): CampaignProgress {
   return {
     ...DEFAULT_CAMPAIGN_PROGRESS,
     winsByPath: {},
+    unlockedPaths: [],
     collectedTaoIds: [],
     collectedQuoteIds: [],
     lastResultSessionIds: {},
@@ -150,6 +212,12 @@ function validPathRecord<T>(
 function normalizeCampaignProgress(value: unknown): CampaignProgress {
   const parsed = value && typeof value === "object" ? value : {};
   const candidate = parsed as Partial<CampaignProgress>;
+  const winsByPath = validPathRecord(
+    candidate.winsByPath,
+    (entry): entry is number =>
+      typeof entry === "number" && Number.isInteger(entry) && entry > 0,
+    (current, moved) => current + moved,
+  );
 
   return {
     version: CAMPAIGN_PROGRESS_VERSION,
@@ -158,12 +226,8 @@ function normalizeCampaignProgress(value: unknown): CampaignProgress {
       GAME_DOTS_BY_PATH.has(currentGamePath(candidate.lastPlayedPath))
         ? currentGamePath(candidate.lastPlayedPath)
         : CAMPAIGN_START_PATH,
-    winsByPath: validPathRecord(
-      candidate.winsByPath,
-      (entry): entry is number =>
-        typeof entry === "number" && Number.isInteger(entry) && entry > 0,
-      (current, moved) => current + moved,
-    ),
+    winsByPath,
+    unlockedPaths: migrateUnlockedPaths(candidate, winsByPath),
     collectedTaoIds: validIds(candidate.collectedTaoIds, TAO_CHAPTER_COUNT),
     collectedQuoteIds: validIds(
       migrateQuoteIds(candidate.version, candidate.collectedQuoteIds),
@@ -232,6 +296,24 @@ export async function setLastPlayedGameDot(path: string) {
   });
 }
 
+/**
+ * After a win or a skip: adds the games it opened to the ones kept open, and
+ * returns them.
+ */
+function openNewlyUnlockedPaths(
+  progress: CampaignProgress,
+  unlockedBefore: ReadonlySet<string>,
+) {
+  const unlockedAfter = getUnlockedGameDotPaths(
+    new Set(Object.keys(progress.winsByPath)),
+    progress.unlockedPaths,
+  );
+  progress.unlockedPaths = [
+    ...new Set([...progress.unlockedPaths, ...unlockedAfter]),
+  ].sort();
+  return [...unlockedAfter].filter((path) => !unlockedBefore.has(path));
+}
+
 export async function recordCampaignWin(
   path: string,
   sessionId: string | undefined,
@@ -248,7 +330,11 @@ export async function recordCampaignWin(
     }
 
     const wonPaths = new Set(Object.keys(progress.winsByPath));
-    if (!getUnlockedGameDotPaths(wonPaths).has(path)) {
+    const unlockedPathsBeforeWin = getUnlockedGameDotPaths(
+      wonPaths,
+      progress.unlockedPaths,
+    );
+    if (!unlockedPathsBeforeWin.has(path)) {
       return { progress, newlyUnlockedPaths: [], duplicate: false };
     }
 
@@ -260,7 +346,6 @@ export async function recordCampaignWin(
         : !collectedQuoteIds.has(reward.id),
     );
 
-    const unlockedPathsBeforeWin = getUnlockedGameDotPaths(wonPaths);
     progress.winsByPath[path] = (progress.winsByPath[path] ?? 0) + 1;
     progress.lastPlayedPath = path;
     if (sessionId) progress.lastResultSessionIds[path] = sessionId;
@@ -277,11 +362,9 @@ export async function recordCampaignWin(
       ].sort((left, right) => left - right);
     }
 
-    const unlockedPathsAfterWin = getUnlockedGameDotPaths(
-      new Set(Object.keys(progress.winsByPath)),
-    );
-    const newlyUnlockedPaths = [...unlockedPathsAfterWin].filter(
-      (unlockedPath) => !unlockedPathsBeforeWin.has(unlockedPath),
+    const newlyUnlockedPaths = openNewlyUnlockedPaths(
+      progress,
+      unlockedPathsBeforeWin,
     );
 
     return { progress, awardedReward, newlyUnlockedPaths, duplicate: false };
@@ -308,22 +391,23 @@ export async function spendMercySkip(
     }
 
     const wonPaths = new Set(Object.keys(progress.winsByPath));
-    if (!getUnlockedGameDotPaths(wonPaths).has(path)) {
+    const unlockedPathsBeforeSkip = getUnlockedGameDotPaths(
+      wonPaths,
+      progress.unlockedPaths,
+    );
+    if (!unlockedPathsBeforeSkip.has(path)) {
       return { progress, newlyUnlockedPaths: [], applied: false };
     }
 
-    const unlockedPathsBeforeSkip = getUnlockedGameDotPaths(wonPaths);
     progress.winsByPath[path] = 1;
     progress.lastPlayedPath = path;
     progress.mercySkipCount -= 1;
     progress.mercySkipCollectibleCheckpoint =
       progress.collectedTaoIds.length + progress.collectedQuoteIds.length;
 
-    const unlockedPathsAfterSkip = getUnlockedGameDotPaths(
-      new Set(Object.keys(progress.winsByPath)),
-    );
-    const newlyUnlockedPaths = [...unlockedPathsAfterSkip].filter(
-      (unlockedPath) => !unlockedPathsBeforeSkip.has(unlockedPath),
+    const newlyUnlockedPaths = openNewlyUnlockedPaths(
+      progress,
+      unlockedPathsBeforeSkip,
     );
 
     return { progress, newlyUnlockedPaths, applied: true };
@@ -377,6 +461,9 @@ export async function populateTestCampaignProgress(paths: string[]) {
         GAME_DOT_DEFINITIONS[0]?.path ??
         CAMPAIGN_START_PATH,
       winsByPath,
+      unlockedPaths: [
+        ...getUnlockedGameDotPaths(new Set(Object.keys(winsByPath))),
+      ].sort(),
       collectedTaoIds: [...collectedTaoIds].sort((left, right) => left - right),
       collectedQuoteIds: [...collectedQuoteIds].sort(
         (left, right) => left - right,

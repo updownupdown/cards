@@ -6,17 +6,13 @@ import {
 } from "./collectibles";
 import { isGameEnabled } from "./games-data";
 import { GAME_DEFINITIONS } from "./games-registry";
-import { GAME_DOT_DEFINITIONS as ALL_GAME_DOT_DEFINITIONS } from "./campaign-map.generated";
+import {
+  GAME_DOT_DEFINITIONS as ALL_GAME_DOT_DEFINITIONS,
+  HUB_EXTRA_LINKS,
+  LAYOUT_FINGERPRINT,
+} from "./campaign-map.generated";
 
 export const CAMPAIGN_START_PATH = "/klondike";
-
-/**
- * Links from Klondike added by hand, beyond the ones the layout drew, so the
- * first win opens more of the map. The centre may hold up to
- * MAP_GEOMETRY.maxConnections links; the rule that the first games are each
- * of a different category leaves these out.
- */
-export const HUB_EXTRA_LINKS: readonly string[] = ["/beehive", "/pocket-poker"];
 
 export type GameDotDefinition = {
   path: string;
@@ -27,6 +23,8 @@ export type GameDotDefinition = {
   arm: number | null;
   connections: string[];
   rewards: CollectibleReward[];
+  /** Added at the rim after the map was laid out, where there was room. */
+  appended?: boolean;
 };
 
 /**
@@ -119,8 +117,19 @@ export function getRewardSource(reward: CollectibleReward) {
   return REWARD_SOURCES.get(`${reward.type}:${reward.id}`);
 }
 
-export function getUnlockedGameDotPaths(wonPaths: ReadonlySet<string>) {
+/**
+ * The games a player may play: Klondike, every game won and its neighbours,
+ * and every game that was open before (`openedPaths`, kept in the saved
+ * progress), so a game never locks again when the map changes.
+ */
+export function getUnlockedGameDotPaths(
+  wonPaths: ReadonlySet<string>,
+  openedPaths: Iterable<string> = [],
+) {
   const unlocked = new Set<string>([CAMPAIGN_START_PATH]);
+  for (const path of openedPaths) {
+    if (GAME_DOTS_BY_PATH.has(path)) unlocked.add(path);
+  }
   for (const wonPath of wonPaths) {
     const gameDot = GAME_DOTS_BY_PATH.get(wonPath);
     if (!gameDot) continue;
@@ -140,7 +149,7 @@ const GAMES_BY_PATH = new Map(
  */
 export function getNextGameDotPaths(
   wonPaths: ReadonlySet<string>,
-  unlockedPaths = getUnlockedGameDotPaths(wonPaths),
+  unlockedPaths: ReadonlySet<string> = getUnlockedGameDotPaths(wonPaths),
 ) {
   const effort = (path: string) => {
     const rating = GAMES_BY_PATH.get(path)?.rating;
@@ -156,7 +165,7 @@ export function getGameDotState(
   wonPaths: ReadonlySet<string>,
   collectedTaoIds: ReadonlySet<number>,
   collectedQuoteIds: ReadonlySet<number>,
-  unlockedPaths = getUnlockedGameDotPaths(wonPaths),
+  unlockedPaths: ReadonlySet<string> = getUnlockedGameDotPaths(wonPaths),
 ): GameDotState {
   if (!unlockedPaths.has(gameDot.path)) return "locked";
   if (!wonPaths.has(gameDot.path)) return "connected";
@@ -337,4 +346,4 @@ if (__DEV__) {
   }
 }
 
-export { ALL_GAME_DOT_DEFINITIONS };
+export { ALL_GAME_DOT_DEFINITIONS, HUB_EXTRA_LINKS, LAYOUT_FINGERPRINT };

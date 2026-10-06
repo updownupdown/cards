@@ -6,7 +6,6 @@ import { GameAnimations } from "@/animations";
 export const stalactites: GameDefinition = {
   path: "/stalactites",
   title: "Stalactites",
-  enabledOnLocalOnly: true,
   tags: [GameTag.FoundationBuilders, GameTag.SequenceBuilding],
   rating: {
     complexity: 20,

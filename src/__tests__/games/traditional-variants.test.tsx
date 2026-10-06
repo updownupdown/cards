@@ -17,10 +17,11 @@ import {
   renderGame,
   renderVariant,
   run,
+  setGameSettings,
 } from "../../../jest/game-harness";
 import type { PlayingCard } from "@/components/Cards/card-utils";
 import Bristol from "@/components/Games/Bristol";
-import FourSeasons from "@/components/Games/FourSeasons";
+import LittleWindmill from "@/components/Games/LittleWindmill";
 import KingAlbert, { kingAlbertRules } from "@/components/Games/KingAlbert";
 import Scorpion from "@/components/Games/Scorpion";
 import { spiderRules } from "@/components/Games/SpiderSolitaire";
@@ -160,49 +161,114 @@ describe("Terrace", () => {
   });
 });
 
-describe("Four Seasons", () => {
-  test("ranks run round from the base in the cross", () => {
-    const { canBuildTableau, configs } = singleCardRules;
-    const state = { baseRank: "5" } as never;
+describe("Little Windmill", () => {
+  const { canBuildFoundation, canBuildTableau, configs, deal } =
+    singleCardRules;
+  const config = configs["little-windmill"];
+
+  test("an Ace comes out of the stock to start the first foundation", () => {
+    for (let attempt = 0; attempt < 50; attempt += 1) {
+      const state = deal(
+        singleCardRules.createInitialState("little-windmill").stock,
+        config,
+      );
+      expect(state.baseRank).toBe("A");
+      expect(state.foundations.map((pile) => pile.length)).toEqual([
+        1, 0, 0, 0,
+      ]);
+      expect(state.foundations[0][0]).toMatchObject({
+        rank: "A",
+        faceUp: true,
+      });
+      expect(state.tableau.map((pile) => pile.length)).toEqual([1, 1, 1, 1, 1]);
+      expect(state.stock).toHaveLength(46);
+    }
+  });
+
+  test("foundations build up by suit from Ace to King", () => {
+    const build = (next: PlayingCard, onto?: PlayingCard) =>
+      canBuildFoundation(next, onto, "A", config);
+    expect(build(card("A", "clubs"))).toBe(true);
+    expect(build(card("5", "clubs"))).toBe(false);
+    expect(build(card("2", "clubs"), card("A", "clubs"))).toBe(true);
+    expect(build(card("2", "hearts"), card("A", "clubs"))).toBe(false);
+    expect(build(card("A", "clubs"), card("K", "clubs"))).toBe(false);
+  });
+
+  test("the cross builds down in any suit, and nothing goes on an Ace", () => {
+    const state = { baseRank: "A" } as never;
     const source = { zone: "waste" } as const;
-    // With Fives as the base, a Four is the top rank: it can't go on a Five,
-    // but a King can go on an Ace.
-    expect(
-      canBuildTableau(
-        card("4", "hearts"),
-        source,
-        card("5", "clubs"),
-        state,
-        configs["four-seasons"],
-      ),
-    ).toBe(false);
-    expect(
-      canBuildTableau(
-        card("K", "hearts"),
-        source,
-        card("A", "clubs"),
-        state,
-        configs["four-seasons"],
-      ),
-    ).toBe(true);
+    const build = (next: PlayingCard, onto: PlayingCard) =>
+      canBuildTableau(next, source, onto, state, config);
+    expect(build(card("4", "hearts"), card("5", "clubs"))).toBe(true);
+    expect(build(card("4", "hearts"), card("5", "hearts"))).toBe(true);
+    expect(build(card("K", "hearts"), card("A", "clubs"))).toBe(false);
+  });
+
+  const spentStock = () => ({
+    tableau: [[card("9", "hearts")], ...emptyPiles(4)],
+    reserves: [],
+    stock: [],
+    waste: [card("3", "clubs"), card("J", "spades")],
+    foundations: [[card("A", "spades")], ...emptyPiles(3)],
+    baseRank: "A",
+    redealsUsed: 0,
+    ended: false,
+    won: false,
+  });
+
+  test("Normal has no redeal", async () => {
+    await renderGame("/little-windmill", LittleWindmill, spentStock());
+
+    await pressZone((zone) => zone.name === "stock");
+
+    expect(zoneCardIds("stock")).toHaveLength(0);
+    expect(zoneCardIds("waste")).toHaveLength(2);
+  });
+
+  test("Easy turns the waste over once", async () => {
+    await setGameSettings("/little-windmill", {
+      littleWindmillDifficulty: "easy",
+    });
+    const fixture = spentStock();
+    await renderGame("/little-windmill", LittleWindmill, fixture);
+
+    await pressZone((zone) => zone.name === "stock");
+
+    // The waste becomes the stock, its first card back on top.
+    expect(zoneCardIds("waste")).toHaveLength(0);
+    expect(zoneCardIds("stock")).toEqual(
+      [...fixture.waste].reverse().map((entry) => entry.id),
+    );
+
+    await pressZone((zone) => zone.name === "stock");
+    await pressZone((zone) => zone.name === "stock");
+    expect(zoneCardIds("waste")).toHaveLength(2);
+
+    // The one redeal is spent.
+    await pressZone((zone) => zone.name === "stock");
+    expect(zoneCardIds("stock")).toHaveLength(0);
+    expect(zoneCardIds("waste")).toHaveLength(2);
+    await setGameSettings("/little-windmill", {
+      littleWindmillDifficulty: "normal",
+    });
   });
 
   test("playing the last card wins", async () => {
     const tableau = emptyPiles(5);
-    const four = card("4", "spades");
-    tableau[0] = [four];
-    await renderGame("/four-seasons", FourSeasons, {
+    tableau[0] = [card("K", "spades")];
+    await renderGame("/little-windmill", LittleWindmill, {
       tableau,
       reserves: [],
       stock: [],
       waste: [],
       foundations: [
-        [...run("hearts", "5", "K"), ...run("hearts", "A", "4")],
-        [...run("clubs", "5", "K"), ...run("clubs", "A", "4")],
-        [...run("diamonds", "5", "K"), ...run("diamonds", "A", "4")],
-        [...run("spades", "5", "K"), ...run("spades", "A", "3")],
+        run("hearts", "A", "K"),
+        run("clubs", "A", "K"),
+        run("diamonds", "A", "K"),
+        run("spades", "A", "Q"),
       ],
-      baseRank: "5",
+      baseRank: "A",
       ended: false,
       won: false,
     });

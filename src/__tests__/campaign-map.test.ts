@@ -1,4 +1,5 @@
 import { describe, expect, jest, test } from "@jest/globals";
+import { execFileSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import {
@@ -7,6 +8,7 @@ import {
   CAMPAIGN_START_PATH,
   HUB_EXTRA_LINKS,
   GAME_DOT_DEFINITIONS,
+  LAYOUT_FINGERPRINT,
   validateCampaignMap,
 } from "@/data/campaign-map";
 import { GAMES_DATA } from "@/data/games-registry";
@@ -65,6 +67,23 @@ function gatedBy(gameDots: typeof RELEASED, gate: string) {
     (gameDot) => gameDot.path !== gate && !reached.has(gameDot.path),
   );
 }
+
+/**
+ * The layout rules (which game sits where, and which get a Tao chapter) are
+ * what a rebuild fits the map to. Once games are added at the rim, removed or
+ * re-rated, the locked map stays as it is and can't be held to them any more,
+ * so they are only checked while the games are the ones it was laid out for.
+ */
+const AS_LAID_OUT =
+  execFileSync(
+    process.execPath,
+    [
+      path.join(__dirname, "../../scripts/generate-campaign-map.mjs"),
+      "--fingerprint",
+    ],
+    { cwd: path.join(__dirname, "../.."), encoding: "utf8" },
+  ).trim() === LAYOUT_FINGERPRINT;
+const layoutTest = AS_LAID_OUT ? test : test.skip;
 
 const hasTao = (gameDot: (typeof GAME_DOT_DEFINITIONS)[number]) =>
   gameDot.rewards.some((reward) => reward.type === "tao");
@@ -126,7 +145,7 @@ describe("Campaign map", () => {
     ).toBeGreaterThan(5);
   });
 
-  test("gentler games sit nearer the centre than punishing ones", () => {
+  layoutTest("gentler games sit nearer the centre than punishing ones", () => {
     const withRadius = RELEASED.map((gameDot) => ({
       radius: Math.hypot(gameDot.x, gameDot.y),
       score: progression(gameDot.path),
@@ -143,7 +162,7 @@ describe("Campaign map", () => {
     }
   });
 
-  test("no game is the only way through to an easier one", () => {
+  layoutTest("no game is the only way through to an easier one", () => {
     for (const gate of RELEASED) {
       if (gate.path === CAMPAIGN_START_PATH) continue;
       const gateDifficulty = GAMES_DATA[gate.path]!.rating.difficulty;
@@ -157,7 +176,7 @@ describe("Campaign map", () => {
     }
   });
 
-  test("the first games are each of a different category", () => {
+  layoutTest("the first games are each of a different category", () => {
     const byPath = new Map(RELEASED.map((gameDot) => [gameDot.path, gameDot]));
     // The layout's own links: Klondike's hand-added ones don't count.
     const handAdded = (from: string, to: string) =>
@@ -177,24 +196,27 @@ describe("Campaign map", () => {
     expect(new Set(categories).size).toBe(categories.length);
   });
 
-  test("local-only games sit on the rim as dead ends, without Tao chapters", () => {
-    const byRadius = [...GAME_DOT_DEFINITIONS].sort(
-      (left, right) =>
-        Math.hypot(left.x, left.y) - Math.hypot(right.x, right.y),
-    );
-    const local = GAME_DOT_DEFINITIONS.filter((gameDot) =>
-      isLocalOnly(gameDot.path),
-    );
-    expect(local.length).toBeGreaterThan(0);
-    for (const gameDot of local) {
-      expect(byRadius.indexOf(gameDot)).toBeGreaterThanOrEqual(
-        Math.floor(byRadius.length * 0.7),
+  layoutTest(
+    "local-only games sit on the rim as dead ends, without Tao chapters",
+    () => {
+      const byRadius = [...GAME_DOT_DEFINITIONS].sort(
+        (left, right) =>
+          Math.hypot(left.x, left.y) - Math.hypot(right.x, right.y),
       );
-      expect(hasTao(gameDot)).toBe(false);
-      // Nothing else is reached only through it.
-      expect(gatedBy(GAME_DOT_DEFINITIONS, gameDot.path)).toEqual([]);
-    }
-  });
+      const local = GAME_DOT_DEFINITIONS.filter((gameDot) =>
+        isLocalOnly(gameDot.path),
+      );
+      expect(local.length).toBeGreaterThan(0);
+      for (const gameDot of local) {
+        expect(byRadius.indexOf(gameDot)).toBeGreaterThanOrEqual(
+          Math.floor(byRadius.length * 0.7),
+        );
+        expect(hasTao(gameDot)).toBe(false);
+        // Nothing else is reached only through it.
+        expect(gatedBy(GAME_DOT_DEFINITIONS, gameDot.path)).toEqual([]);
+      }
+    },
+  );
 
   test("every Tao chapter is awarded exactly once", () => {
     const chapters = GAME_DOT_DEFINITIONS.flatMap((gameDot) =>
@@ -206,7 +228,7 @@ describe("Campaign map", () => {
     expect(chapters.length).toBe(TAO_CHAPTER_COUNT);
   });
 
-  test("Tao chapters go one each to the easiest games", () => {
+  layoutTest("Tao chapters go one each to the easiest games", () => {
     const withTao = RELEASED.filter(hasTao);
     const without = RELEASED.filter((gameDot) => !hasTao(gameDot));
     for (const gameDot of GAME_DOT_DEFINITIONS) {
@@ -265,6 +287,8 @@ describe("Campaign map", () => {
       };
     });
     jest.doMock("@/data/campaign-map.generated", () => ({
+      HUB_EXTRA_LINKS: [],
+      LAYOUT_FINGERPRINT: "",
       GAME_DOT_DEFINITIONS: [
         {
           path: "/klondike",

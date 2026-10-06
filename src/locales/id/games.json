@@ -120,7 +120,7 @@
     "trade": "Jual",
     "offer": "Tawaran"
   },
-  "charlatan": {
+  "boilingOver": {
     "statusStart": "Ketuk dek Anda untuk mulai meracik ramuan.",
     "statusRisk": "Risiko meledak {{risk}}% · Berhenti sekarang: {{points}} poin, {{coins}} koin",
     "statusRiskFinal": "Risiko meledak {{risk}}% · Berhenti sekarang: {{points}} poin",
@@ -141,7 +141,14 @@
     "keepPoints": "+{{value}} poin",
     "keepCoins": "+{{value}} koin",
     "nextRound": "Ronde {{round}} / {{total}}",
+    "continueToRound": "Lanjut ke ronde {{round}}",
     "round": "Ronde",
+    "roundCounter": "Ronde",
+    "strengthLabel": "Kekuatan",
+    "pointsLabel": "Poin",
+    "coinsLabel": "Koin",
+    "dudsLabel": "Kartu gagal",
+    "bustLabel": "Meluap",
     "score": "Skor",
     "tierVillageHealer": "Tabib Desa",
     "tierCourtAlchemist": "Alkemis Istana",
@@ -212,12 +219,7 @@
     "youRanOutOfCards": "Kartumu habis sebelum semua bangsawan dikalahkan."
   },
   "ebbAndFlow": {
-    "rising": "Naik",
-    "falling": "Turun",
-    "playMore_one": "Mainkan {{count}} kartu lagi",
-    "playMore_other": "Mainkan {{count}} kartu lagi",
-    "playOrDraw": "Terus bermain, atau ketuk dek untuk mengambil kartu",
-    "deckEmpty": "Dek kosong: mainkan setiap kartu yang bisa",
+    "stock": "Dek",
     "allPlayed": "Semua kartu sudah dimainkan!",
     "stuck_one": "Tidak ada kartu yang bisa dimainkan. Tersisa {{count}} kartu.",
     "stuck_other": "Tidak ada kartu yang bisa dimainkan. Tersisa {{count}} kartu."
@@ -429,14 +431,18 @@
   },
   "picketFence": {
     "statusChooseHouse": "Pilih kartu untuk dibangun menjadi rumah.",
-    "statusChooseLot": "Ketuk kavling yang disorot untuk membangun di sana.",
-    "statusChooseEffect": "Pilih efek: {{hearts}} taman · {{diamonds}} kolam · {{spades}} pagar · {{clubs}} rumah",
-    "statusChooseFence": "Ketuk tempat pagar dipasang.",
-    "statusChooseSecondHouse": "Ketuk kavling untuk rumah kedua.",
-    "noLotFits": "Kartu ini tidak muat di kavling mana pun.",
+    "statusChooseLot": "Ketuk kavling untuk membangun, rumah untuk merenovasi, atau buangan untuk melewati.",
+    "statusChooseEffect": "Pilih kartu efek.",
+    "statusChooseFence": "Ketuk tempat pagar dipasang, atau buangan untuk melewati.",
+    "statusChooseSecondHouse": "Ketuk kavling atau rumah untuk rumah kedua, atau buangan.",
+    "legendPark": "taman",
+    "legendPool": "kolam",
+    "legendFence": "pagar",
+    "legendHouse": "rumah",
+    "noLotFits": "Kartu ini tidak muat di mana pun: buang untuk tidak membangun.",
     "effectWasted": "Kali ini tanpa efek: kartu dibuang.",
     "estateBlocked": "✕",
-    "parks": "Taman {{count}}/{{max}} · {{points}}",
+    "parksLabel": "Taman",
     "pools": "Kolam",
     "score": "Skor",
     "tierGoodNeighbours": "Tetangga Baik",
@@ -446,23 +452,6 @@
     "tierVacantLots": "Kavling Kosong",
     "wonWithTier": "{{score}} poin: {{tier}}!",
     "lostShortOfTarget": "{{score}} poin: {{tier}}. Anda butuh {{target}} poin untuk menang."
-  },
-  "pickpocket": {
-    "round": "Ronde",
-    "score": "Koin",
-    "statusStart": "Balik sebuah kartu untuk memulai kantong Anda.",
-    "statusPurse": "Kantong: {{purse}}",
-    "cleanSweep": "Sapu bersih! Anda menyimpan {{purse}}.",
-    "walkedAway": "Anda menyelinap pergi dengan {{purse}}.",
-    "caught": "Tertangkap! {{purse}} di kantong Anda hilang.",
-    "caughtEmpty": "Tertangkap sebelum sempat mengambil koin!",
-    "walkAway": "Pergi",
-    "nextRound": "Ronde berikutnya",
-    "tierLightFingers": "Jari Ringan",
-    "tierCutpurse": "Pencopet",
-    "tierPrinceOfThieves": "Pangeran Pencuri",
-    "wonWithTier": "{{score}} koin: {{tier}}!",
-    "lostShortOfTarget": "{{score}} koin. Anda butuh {{target}} koin untuk menang."
   },
   "pocketPoker": {
     "youHit10PointsYou": "Kamu mencapai 10 poin — kamu menang!",
@@ -519,30 +508,6 @@
   },
   "scorpion": {
     "allFourSuitStacksAre": "Keempat tumpukan jenis sudah lengkap."
-  },
-  "seer": {
-    "reveal": "Buka",
-    "return": "Kembalikan",
-    "predictions": {
-      "red": "Merah",
-      "redOddBlackEven": "MGj  ·  HGn",
-      "even": "Genap",
-      "diamondsHearts": "♦  ·  ♥",
-      "spadesClubs": "♠  ·  ♣",
-      "odd": "Ganjil",
-      "blackOddRedEven": "HGj  ·  MGn",
-      "black": "Hitam"
-    },
-    "predictionLabel_one": "Ramalan {{label}}, {{count}} batu",
-    "predictionLabel_other": "Ramalan {{label}}, {{count}} batu",
-    "complete": ", selesai",
-    "blocked": ", terblokir",
-    "allPredictionsComplete": "Kedelapan ramalan sudah selesai.",
-    "deckRanOut": "Dek habis sebelum semua ramalan selesai.",
-    "allPredictionsBlocked": "Kedelapan ramalan terblokir batu.",
-    "chooseHighlightedStone": "Pilih satu batu yang disorot",
-    "freedStones_one": "{{count}} batu bebas",
-    "freedStones_other": "{{count}} batu bebas"
   },
   "shiftingSands": {
     "draw": "Ambil:",
@@ -749,16 +714,9 @@
   },
   "augury": {
     "streak": "Tebakan benar",
-    "start": "Ketuk kartu untuk memainkannya, atau nyatakan tidak ada yang cocok.",
     "noneFit": "Tak ada yang cocok",
     "won": "Kamu berhasil membaca pertanda! Hukumnya: {{law}}",
     "lost": "Kartu di tanganmu habis. Hukumnya: {{law}}",
-    "verdict": {
-      "accepted": "Kartu diterima.",
-      "rejected": "Kartu ditolak.",
-      "noneRight": "Benar: tidak ada kartu yang cocok. Tangan baru.",
-      "noneWrong": "Ada kartu yang cocok, jadi kartu itu dimainkan. Rentetanmu mulai lagi."
-    },
     "law": {
       "alternateColours": "Setiap kartu harus berwarna lain dari kartu sebelumnya.",
       "suitOrRank": "Setiap kartu harus sama jenis atau nilainya dengan kartu sebelumnya.",
@@ -770,7 +728,35 @@
       "evenRedOddBlack": "Nilai genap harus merah dan nilai ganjil harus hitam.",
       "colourTwoBack": "Setiap kartu harus sewarna dengan kartu dua langkah sebelumnya.",
       "blackClimbs": "Kartu hitam harus lebih tinggi dari kartu sebelumnya; kartu merah boleh setelah apa saja.",
-      "sameColourClimbs": "Kartu yang sewarna dengan kartu sebelumnya harus lebih tinggi; warna lain boleh setelah apa saja."
+      "sameColourClimbs": "Kartu yang sewarna dengan kartu sebelumnya harus lebih tinggi; warna lain boleh setelah apa saja.",
+      "sameColour": "Harus berwarna sama",
+      "differentSuit": "Harus berbeda jenis",
+      "highLowAlternate": "Harus berselang antara tinggi (8-K) dan rendah (As-7)",
+      "courtAlternate": "Harus berselang antara kartu bergambar dan kartu angka",
+      "lowerUntilAce": "Harus lebih rendah; apa saja boleh setelah As",
+      "farApart": "Harus berjarak setidaknya tiga nilai",
+      "colourTwoBackDiffers": "Harus berlawanan warna dengan dua kartu sebelumnya",
+      "suitTwoBack": "Harus sama jenisnya dengan dua kartu sebelumnya",
+      "freshSuit": "Harus berbeda jenis dari kedua kartu terakhir",
+      "zigzag": "Harus zigzag: lebih tinggi setelah turun, lebih rendah setelah naik; apa saja boleh setelah nilai yang sama",
+      "afterRedLow": "Setelah merah harus 7 atau kurang, setelah hitam harus 8 atau lebih",
+      "heartsWild": "Hati boleh mengikuti apa saja; kartu lain harus lebih tinggi",
+      "sumAtMost14": "Jumlah dua nilai harus 14 atau kurang",
+      "parityLock": "Ganjil harus mengikuti ganjil, genap harus mengikuti genap",
+      "withinTwoWrap": "Harus berjarak paling banyak dua nilai (As dan Raja bertetangga)",
+      "suitSequence": "Harus mengikuti urutan jenis: sekop, hati, wajik, keriting",
+      "sameSuitAscender": "Jenis yang sama dengan kartu terakhir harus lebih tinggi; jenis lain yang sewarna harus lebih rendah; warna lain boleh mengikuti apa saja",
+      "redHighBlackLow": "Kartu merah harus 8 atau lebih; kartu hitam harus 7 atau kurang",
+      "royalCommand": "Setelah kartu bergambar harus sama jenis, setelah kartu angka harus berbeda jenis",
+      "rangeFlip": "Setelah tinggi (8-K) harus warna lain, setelah rendah (As-7) harus warna yang sama",
+      "suitSwitcher": "Harus sewarna tetapi berbeda jenis",
+      "suitSuperiority": "Harus dari jenis yang lebih tinggi (keriting, wajik, hati, sekop) atau bernilai lebih tinggi; apa saja boleh setelah Raja sekop",
+      "rankSandwich": "Harus di antara dua nilai terakhir, atau sama dengan salah satunya",
+      "colourBalance": "Tidak boleh membuat tiga kartu sewarna berturut-turut",
+      "distanceMirroring": "Setelah naik harus sama jenis dengan dua kartu sebelumnya, setelah turun harus sewarna; apa saja boleh setelah nilai yang sama"
     }
+  },
+  "elevens": {
+    "noMorePairsOrFaceTriplets": "Tidak ada lagi pasangan atau trio kartu bergambar yang bisa dibuat."
   }
 }

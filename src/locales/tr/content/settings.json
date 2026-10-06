@@ -700,26 +700,6 @@
       }
     }
   },
-  "seer": {
-    "seerDifficulty": {
-      "hash": "e0c908ab",
-      "value": {
-        "description": "Bir başarının hangi komşu taşları serbest bırakabileceğini belirler.",
-        "label": "Zorluk",
-        "options": [
-          {
-            "label": "Kolay (çaprazlar dahil)"
-          },
-          {
-            "label": "Normal (yatay ve dikey)"
-          },
-          {
-            "label": "Zor (birini seç)"
-          }
-        ]
-      }
-    }
-  },
   "sir-tommy": {
     "variant": {
       "hash": "a1adf9a0",

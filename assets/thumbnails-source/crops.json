@@ -31,6 +31,12 @@
     "right": 0.095,
     "bottom": 0.075
   },
+  "BoilingOver": {
+    "left": 0.035,
+    "top": 0.03,
+    "right": 0.04,
+    "bottom": 0.03
+  },
   "Bowling": false,
   "Bristol": false,
   "CabinSiege": false,
@@ -47,7 +53,6 @@
     "right": 0,
     "bottom": 0.1
   },
-  "Charlatan": false,
   "CityGrid": false,
   "Dominion": {
     "left": 0,

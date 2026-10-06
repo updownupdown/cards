@@ -5,11 +5,12 @@
       "x": 0,
       "y": 0,
       "connections": [
-        "/beehive",
+        "/bowling",
         "/fifteen-puzzle",
+        "/grandfathers-clock",
         "/memory",
         "/pocket-poker",
-        "/sultan"
+        "/three-peaks"
       ],
       "rewards": [
         {
@@ -18,22 +19,22 @@
         },
         {
           "type": "quote",
-          "id": 40
+          "id": 43
         },
         {
           "type": "quote",
-          "id": 84
+          "id": 116
         }
       ]
     },
     "/memory": {
-      "x": 0.0107,
-      "y": 0.0891,
+      "x": 0.0312,
+      "y": 0.0957,
       "connections": [
-        "/bowling",
+        "/eight-off",
         "/fifteen-puzzle",
-        "/grandfathers-clock",
-        "/klondike"
+        "/klondike",
+        "/ouroboros"
       ],
       "rewards": [
         {
@@ -42,22 +43,22 @@
         },
         {
           "type": "quote",
-          "id": 28
+          "id": 31
         },
         {
           "type": "quote",
-          "id": 140
+          "id": 107
         }
       ]
     },
-    "/fifteen-puzzle": {
-      "x": 0.1104,
-      "y": -0.0064,
+    "/grandfathers-clock": {
+      "x": -0.0785,
+      "y": -0.0769,
       "connections": [
         "/bakers-dozen",
-        "/eight-off",
+        "/bowling",
         "/klondike",
-        "/memory"
+        "/simple-simon"
       ],
       "rewards": [
         {
@@ -66,18 +67,21 @@
         },
         {
           "type": "quote",
-          "id": 103
+          "id": 6
+        },
+        {
+          "type": "quote",
+          "id": 112
         }
       ]
     },
-    "/grandfathers-clock": {
-      "x": -0.0708,
-      "y": 0.1144,
+    "/three-peaks": {
+      "x": 0.1104,
+      "y": -0.0064,
       "connections": [
-        "/bowling",
-        "/jailbreak",
-        "/memory",
-        "/three-peaks"
+        "/klondike",
+        "/pocket-poker",
+        "/sultan"
       ],
       "rewards": [
         {
@@ -86,22 +90,324 @@
         },
         {
           "type": "quote",
-          "id": 118
+          "id": 127
         }
       ]
     },
-    "/three-peaks": {
+    "/fifteen-puzzle": {
+      "x": -0.0824,
+      "y": 0.0892,
+      "connections": [
+        "/bowling",
+        "/eight-off",
+        "/freecell",
+        "/klondike",
+        "/memory"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 5
+        },
+        {
+          "type": "quote",
+          "id": 173
+        }
+      ]
+    },
+    "/pocket-poker": {
+      "x": 0.0797,
+      "y": -0.112,
+      "connections": [
+        "/delta-21",
+        "/diplomat",
+        "/klondike",
+        "/three-peaks"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 6
+        },
+        {
+          "type": "quote",
+          "id": 10
+        }
+      ]
+    },
+    "/eight-off": {
+      "x": -0.0254,
+      "y": 0.1585,
+      "connections": [
+        "/canfield",
+        "/fifteen-puzzle",
+        "/iris-garden",
+        "/memory"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 7
+        },
+        {
+          "type": "quote",
+          "id": 101
+        }
+      ]
+    },
+    "/bowling": {
       "x": -0.161,
       "y": 0.0382,
       "connections": [
+        "/bakers-dozen",
+        "/fifteen-puzzle",
+        "/freecell",
         "/grandfathers-clock",
-        "/lights-out",
+        "/klondike"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 8
+        },
+        {
+          "type": "quote",
+          "id": 84
+        }
+      ]
+    },
+    "/sultan": {
+      "x": 0.1612,
+      "y": 0.0507,
+      "connections": [
+        "/apothecary",
+        "/ozanams-square",
+        "/pagoda",
+        "/three-peaks"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 9
+        },
+        {
+          "type": "quote",
+          "id": 93
+        },
+        {
+          "type": "quote",
+          "id": 124
+        }
+      ]
+    },
+    "/bakers-dozen": {
+      "x": -0.1927,
+      "y": -0.0419,
+      "connections": [
+        "/bowling",
+        "/grandfathers-clock",
+        "/queens-audience",
+        "/windmill"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 10
+        },
+        {
+          "type": "quote",
+          "id": 100
+        }
+      ]
+    },
+    "/delta-21": {
+      "x": 0.0478,
+      "y": -0.1971,
+      "connections": [
+        "/beehive",
+        "/diplomat",
+        "/pocket-poker",
+        "/whitehead"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 11
+        },
+        {
+          "type": "quote",
+          "id": 165
+        }
+      ]
+    },
+    "/ouroboros": {
+      "x": 0.1045,
+      "y": 0.1821,
+      "connections": [
+        "/apothecary",
+        "/iris-garden",
+        "/memory",
+        "/seahaven-towers"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 12
+        },
+        {
+          "type": "quote",
+          "id": 54
+        }
+      ]
+    },
+    "/simple-simon": {
+      "x": -0.1334,
+      "y": -0.1814,
+      "connections": [
+        "/beehive",
+        "/boiling-over",
+        "/grandfathers-clock",
+        "/queens-audience"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 13
+        },
+        {
+          "type": "quote",
+          "id": 97
+        }
+      ]
+    },
+    "/freecell": {
+      "x": -0.177,
+      "y": 0.141,
+      "connections": [
+        "/bowling",
+        "/fifteen-puzzle",
+        "/ten-twenty-thirty",
+        "/thumb-and-pouch"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 14
+        },
+        {
+          "type": "quote",
+          "id": 1
+        },
+        {
+          "type": "quote",
+          "id": 27
+        }
+      ]
+    },
+    "/diplomat": {
+      "x": 0.169,
+      "y": -0.1547,
+      "connections": [
+        "/delta-21",
+        "/ozanams-square",
+        "/pocket-poker",
+        "/whitehead"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 15
+        },
+        {
+          "type": "quote",
+          "id": 63
+        }
+      ]
+    },
+    "/apothecary": {
+      "x": 0.1847,
+      "y": 0.1528,
+      "connections": [
+        "/ouroboros",
+        "/pagoda",
         "/seahaven-towers",
         "/sultan"
       ],
       "rewards": [
         {
           "type": "tao",
+          "id": 16
+        },
+        {
+          "type": "quote",
+          "id": 17
+        },
+        {
+          "type": "quote",
+          "id": 71
+        }
+      ]
+    },
+    "/iris-garden": {
+      "x": 0.0661,
+      "y": 0.2439,
+      "connections": [
+        "/canfield",
+        "/eight-off",
+        "/ouroboros",
+        "/seahaven-towers"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 17
+        },
+        {
+          "type": "quote",
+          "id": 149
+        },
+        {
+          "type": "quote",
+          "id": 167
+        }
+      ]
+    },
+    "/beehive": {
+      "x": -0.044,
+      "y": -0.2537,
+      "connections": [
+        "/boiling-over",
+        "/delta-21",
+        "/golf",
+        "/simple-simon"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 18
+        },
+        {
+          "type": "quote",
+          "id": 9
+        }
+      ]
+    },
+    "/ozanams-square": {
+      "x": 0.2679,
+      "y": -0.0515,
+      "connections": [
+        "/diplomat",
+        "/indian",
+        "/parallels",
+        "/sultan"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 19
+        },
+        {
+          "type": "quote",
           "id": 5
         },
         {
@@ -110,314 +416,13 @@
         }
       ]
     },
-    "/eight-off": {
-      "x": 0.1938,
-      "y": 0.0208,
-      "connections": [
-        "/fifteen-puzzle",
-        "/queens-audience",
-        "/ten-twenty-thirty",
-        "/thumb-and-pouch"
-      ],
-      "rewards": [
-        {
-          "type": "tao",
-          "id": 6
-        },
-        {
-          "type": "quote",
-          "id": 10
-        }
-      ]
-    },
-    "/bowling": {
-      "x": 0.0019,
-      "y": 0.1961,
-      "connections": [
-        "/grandfathers-clock",
-        "/memory",
-        "/pagoda",
-        "/queens-audience"
-      ],
-      "rewards": [
-        {
-          "type": "tao",
-          "id": 7
-        },
-        {
-          "type": "quote",
-          "id": 93
-        },
-        {
-          "type": "quote",
-          "id": 121
-        }
-      ]
-    },
-    "/sultan": {
-      "x": -0.1927,
-      "y": -0.0419,
-      "connections": [
-        "/klondike",
-        "/ouroboros",
-        "/pocket-poker",
-        "/three-peaks"
-      ],
-      "rewards": [
-        {
-          "type": "tao",
-          "id": 8
-        },
-        {
-          "type": "quote",
-          "id": 77
-        }
-      ]
-    },
-    "/beehive": {
-      "x": 0.0478,
-      "y": -0.1971,
-      "connections": [
-        "/bakers-dozen",
-        "/freecell",
-        "/frog",
-        "/klondike",
-        "/tower-of-hanoi"
-      ],
-      "rewards": [
-        {
-          "type": "tao",
-          "id": 9
-        },
-        {
-          "type": "quote",
-          "id": 53
-        },
-        {
-          "type": "quote",
-          "id": 85
-        }
-      ]
-    },
-    "/pocket-poker": {
-      "x": -0.1334,
-      "y": -0.1814,
-      "connections": [
-        "/freecell",
-        "/klondike",
-        "/ouroboros",
-        "/penguin",
-        "/sultan"
-      ],
-      "rewards": [
-        {
-          "type": "tao",
-          "id": 10
-        },
-        {
-          "type": "quote",
-          "id": 92
-        }
-      ]
-    },
-    "/bakers-dozen": {
-      "x": 0.182,
-      "y": -0.1339,
-      "connections": [
-        "/beehive",
-        "/fifteen-puzzle",
-        "/thumb-and-pouch",
-        "/tower-of-hanoi"
-      ],
-      "rewards": [
-        {
-          "type": "tao",
-          "id": 11
-        },
-        {
-          "type": "quote",
-          "id": 113
-        },
-        {
-          "type": "quote",
-          "id": 152
-        }
-      ]
-    },
     "/queens-audience": {
-      "x": 0.0661,
-      "y": 0.2439,
-      "connections": [
-        "/bowling",
-        "/eight-off",
-        "/parallels",
-        "/whitehead"
-      ],
-      "rewards": [
-        {
-          "type": "tao",
-          "id": 12
-        },
-        {
-          "type": "quote",
-          "id": 50
-        },
-        {
-          "type": "quote",
-          "id": 86
-        }
-      ]
-    },
-    "/freecell": {
-      "x": -0.044,
-      "y": -0.2537,
-      "connections": [
-        "/beehive",
-        "/cruel",
-        "/frog",
-        "/pocket-poker"
-      ],
-      "rewards": [
-        {
-          "type": "tao",
-          "id": 13
-        },
-        {
-          "type": "quote",
-          "id": 89
-        }
-      ]
-    },
-    "/tower-of-hanoi": {
-      "x": 0.1319,
-      "y": -0.2318,
+      "x": -0.2483,
+      "y": -0.1321,
       "connections": [
         "/bakers-dozen",
-        "/beehive",
         "/frog",
-        "/gargantua"
-      ],
-      "rewards": [
-        {
-          "type": "tao",
-          "id": 14
-        },
-        {
-          "type": "quote",
-          "id": 1
-        }
-      ]
-    },
-    "/jailbreak": {
-      "x": -0.1772,
-      "y": 0.1999,
-      "connections": [
-        "/apothecary",
-        "/diplomat",
-        "/grandfathers-clock",
-        "/seahaven-towers"
-      ],
-      "rewards": [
-        {
-          "type": "tao",
-          "id": 15
-        },
-        {
-          "type": "quote",
-          "id": 58
-        }
-      ]
-    },
-    "/thumb-and-pouch": {
-      "x": 0.2679,
-      "y": -0.0515,
-      "connections": [
-        "/bakers-dozen",
-        "/delta-21",
-        "/eight-off",
-        "/ten-twenty-thirty"
-      ],
-      "rewards": [
-        {
-          "type": "tao",
-          "id": 16
-        },
-        {
-          "type": "quote",
-          "id": 16
-        }
-      ]
-    },
-    "/apothecary": {
-      "x": -0.1127,
-      "y": 0.2554,
-      "connections": [
-        "/canfield",
-        "/jailbreak",
-        "/pagoda"
-      ],
-      "rewards": [
-        {
-          "type": "tao",
-          "id": 17
-        },
-        {
-          "type": "quote",
-          "id": 153
-        }
-      ]
-    },
-    "/seahaven-towers": {
-      "x": -0.249,
-      "y": 0.1522,
-      "connections": [
-        "/jailbreak",
-        "/lights-out",
-        "/royal-rest",
-        "/three-peaks"
-      ],
-      "rewards": [
-        {
-          "type": "tao",
-          "id": 18
-        },
-        {
-          "type": "quote",
-          "id": 9
-        },
-        {
-          "type": "quote",
-          "id": 164
-        }
-      ]
-    },
-    "/lights-out": {
-      "x": -0.2897,
-      "y": 0.0908,
-      "connections": [
-        "/fortunes-call",
-        "/royal-rest",
-        "/seahaven-towers",
-        "/three-peaks"
-      ],
-      "rewards": [
-        {
-          "type": "tao",
-          "id": 19
-        },
-        {
-          "type": "quote",
-          "id": 146
-        }
-      ]
-    },
-    "/ten-twenty-thirty": {
-      "x": 0.2949,
-      "y": 0.084,
-      "connections": [
-        "/delta-21",
-        "/eight-off",
-        "/thumb-and-pouch",
+        "/simple-simon",
         "/windmill"
       ],
       "rewards": [
@@ -427,22 +432,18 @@
         },
         {
           "type": "quote",
-          "id": 76
-        },
-        {
-          "type": "quote",
-          "id": 134
+          "id": 83
         }
       ]
     },
-    "/pagoda": {
-      "x": -0.0543,
-      "y": 0.302,
+    "/ten-twenty-thirty": {
+      "x": -0.1895,
+      "y": 0.2194,
       "connections": [
-        "/apothecary",
-        "/bowling",
-        "/canfield",
-        "/parallels"
+        "/city-grid",
+        "/freecell",
+        "/lights-out",
+        "/thumb-and-pouch"
       ],
       "rewards": [
         {
@@ -455,14 +456,14 @@
         }
       ]
     },
-    "/ouroboros": {
-      "x": -0.2927,
-      "y": -0.0941,
+    "/thumb-and-pouch": {
+      "x": -0.249,
+      "y": 0.1522,
       "connections": [
-        "/fortunes-call",
-        "/penguin",
-        "/pocket-poker",
-        "/sultan"
+        "/city-grid",
+        "/freecell",
+        "/ten-twenty-thirty",
+        "/tower-of-hanoi"
       ],
       "rewards": [
         {
@@ -471,18 +472,18 @@
         },
         {
           "type": "quote",
-          "id": 97
+          "id": 106
         }
       ]
     },
-    "/whitehead": {
-      "x": 0.1839,
-      "y": 0.2524,
+    "/pagoda": {
+      "x": 0.2744,
+      "y": 0.1261,
       "connections": [
-        "/black-hole",
-        "/city-grid",
-        "/queens-audience",
-        "/windmill"
+        "/apothecary",
+        "/fortunes-call",
+        "/parallels",
+        "/sultan"
       ],
       "rewards": [
         {
@@ -491,22 +492,22 @@
         },
         {
           "type": "quote",
-          "id": 11
+          "id": 12
         },
         {
           "type": "quote",
-          "id": 62
+          "id": 34
         }
       ]
     },
-    "/parallels": {
-      "x": 0.0227,
-      "y": 0.3357,
+    "/tower-of-hanoi": {
+      "x": -0.2897,
+      "y": 0.0908,
       "connections": [
-        "/chapter-and-verse",
-        "/city-grid",
-        "/pagoda",
-        "/queens-audience"
+        "/jailbreak",
+        "/picket-fence",
+        "/royal-rest",
+        "/thumb-and-pouch"
       ],
       "rewards": [
         {
@@ -519,13 +520,14 @@
         }
       ]
     },
-    "/delta-21": {
-      "x": 0.3584,
-      "y": -0.0746,
+    "/canfield": {
+      "x": -0.0543,
+      "y": 0.302,
       "connections": [
-        "/baroness",
-        "/ten-twenty-thirty",
-        "/thumb-and-pouch"
+        "/cruel",
+        "/eight-off",
+        "/iris-garden",
+        "/lights-out"
       ],
       "rewards": [
         {
@@ -534,18 +536,18 @@
         },
         {
           "type": "quote",
-          "id": 102
+          "id": 182
         }
       ]
     },
-    "/canfield": {
-      "x": -0.1461,
-      "y": 0.3417,
+    "/seahaven-towers": {
+      "x": 0.1839,
+      "y": 0.2524,
       "connections": [
         "/apothecary",
-        "/glazier",
-        "/pagoda",
-        "/simple-simon"
+        "/fortunes-call",
+        "/iris-garden",
+        "/ouroboros"
       ],
       "rewards": [
         {
@@ -554,18 +556,18 @@
         },
         {
           "type": "quote",
-          "id": 131
+          "id": 144
         }
       ]
     },
-    "/frog": {
-      "x": 0.045,
-      "y": -0.3723,
+    "/boiling-over": {
+      "x": -0.146,
+      "y": -0.2781,
       "connections": [
+        "/baroness",
         "/beehive",
-        "/cruel",
-        "/freecell",
-        "/tower-of-hanoi"
+        "/frog",
+        "/simple-simon"
       ],
       "rewards": [
         {
@@ -574,18 +576,18 @@
         },
         {
           "type": "quote",
-          "id": 124
+          "id": 137
         }
       ]
     },
-    "/windmill": {
-      "x": 0.3013,
-      "y": 0.2287,
+    "/whitehead": {
+      "x": 0.1425,
+      "y": -0.2998,
       "connections": [
-        "/black-hole",
-        "/elementary-detective",
-        "/ten-twenty-thirty",
-        "/whitehead"
+        "/delta-21",
+        "/diplomat",
+        "/elevens",
+        "/penguin"
       ],
       "rewards": [
         {
@@ -594,18 +596,22 @@
         },
         {
           "type": "quote",
-          "id": 168
+          "id": 113
+        },
+        {
+          "type": "quote",
+          "id": 145
         }
       ]
     },
-    "/gargantua": {
-      "x": 0.2797,
-      "y": -0.2796,
+    "/windmill": {
+      "x": -0.3243,
+      "y": -0.0932,
       "connections": [
-        "/rank-and-file",
-        "/red-diamond",
-        "/royal-cotillion",
-        "/tower-of-hanoi"
+        "/bakers-dozen",
+        "/ebb-and-flow",
+        "/jailbreak",
+        "/queens-audience"
       ],
       "rewards": [
         {
@@ -614,18 +620,17 @@
         },
         {
           "type": "quote",
-          "id": 49
+          "id": 180
         }
       ]
     },
-    "/penguin": {
-      "x": -0.2904,
-      "y": -0.2693,
+    "/jailbreak": {
+      "x": -0.3438,
+      "y": -0.017,
       "connections": [
-        "/golf",
-        "/ouroboros",
-        "/pocket-poker",
-        "/sly-fox"
+        "/picket-fence",
+        "/tower-of-hanoi",
+        "/windmill"
       ],
       "rewards": [
         {
@@ -634,22 +639,21 @@
         },
         {
           "type": "quote",
-          "id": 18
+          "id": 19
         },
         {
           "type": "quote",
-          "id": 68
+          "id": 169
         }
       ]
     },
-    "/royal-rest": {
-      "x": -0.3686,
-      "y": 0.1721,
+    "/parallels": {
+      "x": 0.3703,
+      "y": 0.0145,
       "connections": [
-        "/diplomat",
-        "/fortunes-call",
-        "/lights-out",
-        "/seahaven-towers"
+        "/indian",
+        "/ozanams-square",
+        "/pagoda"
       ],
       "rewards": [
         {
@@ -658,21 +662,17 @@
         },
         {
           "type": "quote",
-          "id": 116
-        },
-        {
-          "type": "quote",
-          "id": 135
+          "id": 148
         }
       ]
     },
-    "/cruel": {
-      "x": -0.1022,
-      "y": -0.4014,
+    "/lights-out": {
+      "x": -0.1461,
+      "y": 0.3417,
       "connections": [
-        "/freecell",
-        "/frog",
-        "/indian"
+        "/canfield",
+        "/sly-fox",
+        "/ten-twenty-thirty"
       ],
       "rewards": [
         {
@@ -681,16 +681,17 @@
         },
         {
           "type": "quote",
-          "id": 109
+          "id": 120
         }
       ]
     },
-    "/baroness": {
-      "x": 0.4019,
-      "y": -0.1326,
+    "/penguin": {
+      "x": 0.045,
+      "y": -0.3723,
       "connections": [
-        "/delta-21",
-        "/royal-cotillion"
+        "/golf",
+        "/stalactites",
+        "/whitehead"
       ],
       "rewards": [
         {
@@ -699,22 +700,18 @@
         },
         {
           "type": "quote",
-          "id": 38
-        },
-        {
-          "type": "quote",
-          "id": 88
+          "id": 172
         }
       ]
     },
     "/fortunes-call": {
-      "x": -0.4205,
-      "y": 0.1116,
+      "x": 0.3013,
+      "y": 0.2287,
       "connections": [
-        "/lights-out",
-        "/ouroboros",
-        "/pyramid",
-        "/royal-rest"
+        "/carpet",
+        "/pagoda",
+        "/royal-cotillion",
+        "/seahaven-towers"
       ],
       "rewards": [
         {
@@ -723,16 +720,21 @@
         },
         {
           "type": "quote",
-          "id": 8
+          "id": 68
+        },
+        {
+          "type": "quote",
+          "id": 168
         }
       ]
     },
-    "/indian": {
-      "x": -0.2218,
-      "y": -0.3892,
+    "/golf": {
+      "x": -0.0806,
+      "y": -0.3707,
       "connections": [
-        "/cruel",
-        "/golf"
+        "/baroness",
+        "/beehive",
+        "/penguin"
       ],
       "rewards": [
         {
@@ -741,17 +743,16 @@
         },
         {
           "type": "quote",
-          "id": 136
+          "id": 150
         }
       ]
     },
-    "/golf": {
-      "x": -0.2977,
-      "y": -0.3488,
+    "/cruel": {
+      "x": 0.0463,
+      "y": 0.3819,
       "connections": [
-        "/gaps",
-        "/indian",
-        "/penguin"
+        "/canfield",
+        "/gargantua"
       ],
       "rewards": [
         {
@@ -764,12 +765,12 @@
         }
       ]
     },
-    "/diplomat": {
-      "x": -0.3872,
-      "y": 0.246,
+    "/baroness": {
+      "x": -0.1611,
+      "y": -0.3538,
       "connections": [
-        "/jailbreak",
-        "/royal-rest",
+        "/boiling-over",
+        "/golf",
         "/westcliff"
       ],
       "rewards": [
@@ -779,19 +780,21 @@
         },
         {
           "type": "quote",
-          "id": 111
+          "id": 108
+        },
+        {
+          "type": "quote",
+          "id": 123
         }
       ]
     },
-    "/city-grid": {
-      "x": 0.2154,
-      "y": 0.4103,
+    "/picket-fence": {
+      "x": -0.3894,
+      "y": 0.0648,
       "connections": [
-        "/augury",
-        "/black-hole",
-        "/chapter-and-verse",
-        "/parallels",
-        "/whitehead"
+        "/jailbreak",
+        "/royal-rest",
+        "/tower-of-hanoi"
       ],
       "rewards": [
         {
@@ -800,18 +803,18 @@
         },
         {
           "type": "quote",
-          "id": 114
+          "id": 126
         }
       ]
     },
-    "/black-hole": {
-      "x": 0.2916,
-      "y": 0.3607,
+    "/elevens": {
+      "x": 0.2797,
+      "y": -0.2796,
       "connections": [
-        "/city-grid",
-        "/flower-garden",
-        "/whitehead",
-        "/windmill"
+        "/augury",
+        "/bristol",
+        "/elementary-detective",
+        "/whitehead"
       ],
       "rewards": [
         {
@@ -820,18 +823,22 @@
         },
         {
           "type": "quote",
-          "id": 110
+          "id": 46
+        },
+        {
+          "type": "quote",
+          "id": 122
         }
       ]
     },
-    "/simple-simon": {
-      "x": -0.2762,
-      "y": 0.3913,
+    "/frog": {
+      "x": -0.2904,
+      "y": -0.2693,
       "connections": [
-        "/canfield",
-        "/field-command",
-        "/glazier",
-        "/westcliff"
+        "/black-hole",
+        "/boiling-over",
+        "/ebb-and-flow",
+        "/queens-audience"
       ],
       "rewards": [
         {
@@ -840,17 +847,22 @@
         },
         {
           "type": "quote",
-          "id": 14
+          "id": 16
+        },
+        {
+          "type": "quote",
+          "id": 55
         }
       ]
     },
-    "/royal-cotillion": {
-      "x": 0.3939,
-      "y": -0.2809,
+    "/royal-rest": {
+      "x": -0.3854,
+      "y": 0.1635,
       "connections": [
-        "/baroness",
-        "/gargantua",
-        "/rank-and-file"
+        "/gaps",
+        "/picket-fence",
+        "/sir-tommy",
+        "/tower-of-hanoi"
       ],
       "rewards": [
         {
@@ -859,17 +871,22 @@
         },
         {
           "type": "quote",
-          "id": 13
+          "id": 14
+        },
+        {
+          "type": "quote",
+          "id": 96
         }
       ]
     },
-    "/westcliff": {
-      "x": -0.3604,
-      "y": 0.3514,
+    "/ebb-and-flow": {
+      "x": -0.3906,
+      "y": -0.1614,
       "connections": [
-        "/diplomat",
         "/field-command",
-        "/simple-simon"
+        "/flower-garden",
+        "/frog",
+        "/windmill"
       ],
       "rewards": [
         {
@@ -878,16 +895,16 @@
         },
         {
           "type": "quote",
-          "id": 56
+          "id": 62
         }
       ]
     },
-    "/gaps": {
-      "x": -0.3801,
-      "y": -0.3525,
+    "/gargantua": {
+      "x": 0.1769,
+      "y": 0.3848,
       "connections": [
-        "/golf",
-        "/sir-tommy"
+        "/cruel",
+        "/royal-cotillion"
       ],
       "rewards": [
         {
@@ -896,22 +913,18 @@
         },
         {
           "type": "quote",
-          "id": 51
-        },
-        {
-          "type": "quote",
-          "id": 163
+          "id": 86
         }
       ]
     },
-    "/rank-and-file": {
-      "x": 0.3783,
-      "y": -0.3738,
+    "/city-grid": {
+      "x": -0.3201,
+      "y": 0.2782,
       "connections": [
-        "/gargantua",
-        "/red-diamond",
-        "/royal-cotillion",
-        "/twelve-trials"
+        "/glazier",
+        "/sir-tommy",
+        "/ten-twenty-thirty",
+        "/thumb-and-pouch"
       ],
       "rewards": [
         {
@@ -920,18 +933,17 @@
         },
         {
           "type": "quote",
-          "id": 37
+          "id": 41
         }
       ]
     },
-    "/red-diamond": {
-      "x": 0.3241,
-      "y": -0.427,
+    "/indian": {
+      "x": 0.4188,
+      "y": -0.0948,
       "connections": [
-        "/gargantua",
-        "/rank-and-file",
-        "/seer",
-        "/twelve-trials"
+        "/augury",
+        "/ozanams-square",
+        "/parallels"
       ],
       "rewards": [
         {
@@ -940,18 +952,17 @@
         },
         {
           "type": "quote",
-          "id": 81
+          "id": 90
         }
       ]
     },
-    "/glazier": {
-      "x": -0.2766,
-      "y": 0.4844,
+    "/augury": {
+      "x": 0.39,
+      "y": -0.1853,
       "connections": [
-        "/canfield",
-        "/field-command",
-        "/monte-carlo",
-        "/simple-simon"
+        "/elementary-detective",
+        "/elevens",
+        "/indian"
       ],
       "rewards": [
         {
@@ -960,17 +971,16 @@
         },
         {
           "type": "quote",
-          "id": 169
+          "id": 183
         }
       ]
     },
-    "/seer": {
-      "x": 0.2753,
-      "y": -0.4873,
+    "/westcliff": {
+      "x": -0.1962,
+      "y": -0.4293,
       "connections": [
-        "/bisley",
-        "/crazy-quilt",
-        "/red-diamond"
+        "/baroness",
+        "/rank-and-file"
       ],
       "rewards": [
         {
@@ -979,21 +989,18 @@
         },
         {
           "type": "quote",
-          "id": 6
-        },
-        {
-          "type": "quote",
-          "id": 141
+          "id": 164
         }
       ]
     },
-    "/sir-tommy": {
-      "x": -0.4632,
-      "y": -0.3149,
+    "/royal-cotillion": {
+      "x": 0.288,
+      "y": 0.3968,
       "connections": [
-        "/australian-patience",
-        "/gaps",
-        "/sly-fox"
+        "/carpet",
+        "/chapter-and-verse",
+        "/fortunes-call",
+        "/gargantua"
       ],
       "rewards": [
         {
@@ -1002,22 +1009,18 @@
         },
         {
           "type": "quote",
-          "id": 57
-        },
-        {
-          "type": "quote",
-          "id": 79
+          "id": 88
         }
       ]
     },
-    "/elementary-detective": {
-      "x": 0.4498,
-      "y": 0.3378,
+    "/sir-tommy": {
+      "x": -0.3893,
+      "y": 0.2994,
       "connections": [
-        "/bristol",
-        "/crescent",
-        "/flower-garden",
-        "/windmill"
+        "/city-grid",
+        "/gaps",
+        "/glazier",
+        "/royal-rest"
       ],
       "rewards": [
         {
@@ -1026,17 +1029,18 @@
         },
         {
           "type": "quote",
-          "id": 65
+          "id": 72
         }
       ]
     },
-    "/sly-fox": {
-      "x": -0.5155,
-      "y": -0.2488,
+    "/black-hole": {
+      "x": -0.3614,
+      "y": -0.3409,
       "connections": [
-        "/labyrinth",
-        "/penguin",
-        "/sir-tommy"
+        "/crazy-quilt",
+        "/flower-garden",
+        "/frog",
+        "/rank-and-file"
       ],
       "rewards": [
         {
@@ -1045,18 +1049,16 @@
         },
         {
           "type": "quote",
-          "id": 156
+          "id": 65
         }
       ]
     },
-    "/chapter-and-verse": {
-      "x": 0.1014,
-      "y": 0.5668,
+    "/gaps": {
+      "x": -0.4486,
+      "y": 0.2404,
       "connections": [
-        "/carpet",
-        "/city-grid",
-        "/nestor",
-        "/parallels"
+        "/royal-rest",
+        "/sir-tommy"
       ],
       "rewards": [
         {
@@ -1065,16 +1067,17 @@
         },
         {
           "type": "quote",
-          "id": 80
+          "id": 89
         }
       ]
     },
-    "/crescent": {
-      "x": 0.5043,
-      "y": 0.2835,
+    "/elementary-detective": {
+      "x": 0.4017,
+      "y": -0.3134,
       "connections": [
-        "/elementary-detective",
-        "/yukon"
+        "/augury",
+        "/bristol",
+        "/elevens"
       ],
       "rewards": [
         {
@@ -1083,16 +1086,18 @@
         },
         {
           "type": "quote",
-          "id": 26
+          "id": 29
         }
       ]
     },
-    "/yukon": {
-      "x": 0.5441,
-      "y": 0.2143,
+    "/glazier": {
+      "x": -0.3308,
+      "y": 0.3963,
       "connections": [
-        "/blackberry-pie",
-        "/crescent"
+        "/city-grid",
+        "/congress",
+        "/sir-tommy",
+        "/sly-fox"
       ],
       "rewards": [
         {
@@ -1101,22 +1106,17 @@
         },
         {
           "type": "quote",
-          "id": 74
-        },
-        {
-          "type": "quote",
-          "id": 75
+          "id": 82
         }
       ]
     },
-    "/carpet": {
-      "x": -0.0422,
-      "y": 0.5885,
+    "/rank-and-file": {
+      "x": -0.3178,
+      "y": -0.4084,
       "connections": [
-        "/chapter-and-verse",
-        "/congress",
-        "/monte-carlo",
-        "/shifting-sands"
+        "/black-hole",
+        "/easthaven",
+        "/westcliff"
       ],
       "rewards": [
         {
@@ -1125,18 +1125,22 @@
         },
         {
           "type": "quote",
-          "id": 70
+          "id": 78
+        },
+        {
+          "type": "quote",
+          "id": 115
         }
       ]
     },
-    "/beleaguered-castle": {
-      "x": -0.5792,
-      "y": -0.1323,
+    "/bristol": {
+      "x": 0.3735,
+      "y": -0.3854,
       "connections": [
-        "/easthaven",
-        "/labyrinth",
-        "/pyramid",
-        "/triple-stack"
+        "/elementary-detective",
+        "/elevens",
+        "/red-diamond",
+        "/twelve-trials"
       ],
       "rewards": [
         {
@@ -1145,17 +1149,18 @@
         },
         {
           "type": "quote",
-          "id": 128
+          "id": 142
         }
       ]
     },
-    "/field-command": {
-      "x": -0.3583,
-      "y": 0.4825,
+    "/flower-garden": {
+      "x": -0.4753,
+      "y": -0.2594,
       "connections": [
-        "/glazier",
-        "/simple-simon",
-        "/westcliff"
+        "/black-hole",
+        "/crazy-quilt",
+        "/ebb-and-flow",
+        "/field-command"
       ],
       "rewards": [
         {
@@ -1164,17 +1169,17 @@
         },
         {
           "type": "quote",
-          "id": 151
+          "id": 85
         }
       ]
     },
-    "/flower-garden": {
-      "x": 0.4315,
-      "y": 0.4244,
+    "/red-diamond": {
+      "x": 0.3221,
+      "y": -0.4423,
       "connections": [
-        "/black-hole",
         "/bristol",
-        "/elementary-detective"
+        "/twelve-trials",
+        "/yukon"
       ],
       "rewards": [
         {
@@ -1183,17 +1188,18 @@
         },
         {
           "type": "quote",
-          "id": 147
+          "id": 161
         }
       ]
     },
-    "/crazy-quilt": {
-      "x": 0.227,
-      "y": -0.576,
+    "/sly-fox": {
+      "x": -0.2541,
+      "y": 0.495,
       "connections": [
-        "/cribbage-squares",
-        "/crossword",
-        "/seer"
+        "/beleaguered-castle",
+        "/congress",
+        "/glazier",
+        "/lights-out"
       ],
       "rewards": [
         {
@@ -1202,21 +1208,22 @@
         },
         {
           "type": "quote",
-          "id": 17
+          "id": 35
         },
         {
           "type": "quote",
-          "id": 158
+          "id": 155
         }
       ]
     },
-    "/monte-carlo": {
-      "x": -0.2116,
-      "y": 0.5839,
+    "/carpet": {
+      "x": 0.3983,
+      "y": 0.4026,
       "connections": [
-        "/carpet",
-        "/congress",
-        "/glazier"
+        "/chapter-and-verse",
+        "/crescent",
+        "/fortunes-call",
+        "/royal-cotillion"
       ],
       "rewards": [
         {
@@ -1225,16 +1232,16 @@
         },
         {
           "type": "quote",
-          "id": 161
+          "id": 103
         }
       ]
     },
-    "/bisley": {
-      "x": 0.34,
-      "y": -0.5202,
+    "/crescent": {
+      "x": 0.4983,
+      "y": 0.3128,
       "connections": [
-        "/seer",
-        "/twelve-trials"
+        "/carpet",
+        "/cribbage-squares"
       ],
       "rewards": [
         {
@@ -1243,17 +1250,17 @@
         },
         {
           "type": "quote",
-          "id": 12
+          "id": 166
         }
       ]
     },
-    "/cribbage-squares": {
-      "x": 0.0774,
-      "y": -0.6225,
+    "/stalactites": {
+      "x": 0.2064,
+      "y": -0.5559,
       "connections": [
-        "/cafe-queue",
-        "/crazy-quilt",
-        "/waypoint"
+        "/blackberry-pie",
+        "/penguin",
+        "/yukon"
       ],
       "rewards": [
         {
@@ -1262,17 +1269,17 @@
         },
         {
           "type": "quote",
-          "id": 90
+          "id": 178
         }
       ]
     },
-    "/labyrinth": {
-      "x": -0.5991,
-      "y": -0.2144,
+    "/yukon": {
+      "x": 0.2736,
+      "y": -0.5292,
       "connections": [
-        "/beleaguered-castle",
-        "/sly-fox",
-        "/triple-stack"
+        "/red-diamond",
+        "/stalactites",
+        "/twelve-trials"
       ],
       "rewards": [
         {
@@ -1281,18 +1288,18 @@
         },
         {
           "type": "quote",
-          "id": 69
+          "id": 131
         }
       ]
     },
-    "/pyramid": {
-      "x": -0.6508,
-      "y": 0.0899,
+    "/crazy-quilt": {
+      "x": -0.4964,
+      "y": -0.3472,
       "connections": [
-        "/beleaguered-castle",
-        "/dominion",
-        "/fortunes-call",
-        "/spiderette"
+        "/black-hole",
+        "/easthaven",
+        "/field-command",
+        "/flower-garden"
       ],
       "rewards": [
         {
@@ -1301,18 +1308,17 @@
         },
         {
           "type": "quote",
-          "id": 67
+          "id": 75
         }
       ]
     },
-    "/congress": {
-      "x": -0.1715,
-      "y": 0.6478,
+    "/beleaguered-castle": {
+      "x": -0.2195,
+      "y": 0.5673,
       "connections": [
-        "/carpet",
-        "/monte-carlo",
-        "/night-vigil",
-        "/shifting-sands"
+        "/cafe-queue",
+        "/congress",
+        "/sly-fox"
       ],
       "rewards": [
         {
@@ -1321,16 +1327,21 @@
         },
         {
           "type": "quote",
-          "id": 52
+          "id": 59
+        },
+        {
+          "type": "quote",
+          "id": 81
         }
       ]
     },
-    "/blackberry-pie": {
-      "x": 0.6521,
-      "y": 0.2097,
+    "/crossword": {
+      "x": 0.5947,
+      "y": 0.1797,
       "connections": [
-        "/cabin-siege",
-        "/yukon"
+        "/cribbage-squares",
+        "/shifting-sands",
+        "/waypoint"
       ],
       "rewards": [
         {
@@ -1339,19 +1350,18 @@
         },
         {
           "type": "quote",
-          "id": 29
+          "id": 33
         }
       ]
     },
-    "/twelve-trials": {
-      "x": 0.5095,
-      "y": -0.462,
+    "/field-command": {
+      "x": -0.5874,
+      "y": -0.2168,
       "connections": [
-        "/bisley",
-        "/four-seasons",
-        "/infiltrator",
-        "/rank-and-file",
-        "/red-diamond"
+        "/crazy-quilt",
+        "/ebb-and-flow",
+        "/flower-garden",
+        "/pyramid"
       ],
       "rewards": [
         {
@@ -1360,20 +1370,16 @@
         },
         {
           "type": "quote",
-          "id": 106
-        },
-        {
-          "type": "quote",
-          "id": 137
+          "id": 151
         }
       ]
     },
-    "/maria": {
-      "x": -0.0648,
-      "y": -0.6908,
+    "/chapter-and-verse": {
+      "x": 0.3506,
+      "y": 0.5225,
       "connections": [
-        "/cafe-queue",
-        "/king-albert"
+        "/carpet",
+        "/royal-cotillion"
       ],
       "rewards": [
         {
@@ -1382,17 +1388,18 @@
         },
         {
           "type": "quote",
-          "id": 35
+          "id": 40
         }
       ]
     },
-    "/cafe-queue": {
-      "x": 0.0191,
-      "y": -0.6943,
+    "/congress": {
+      "x": -0.3529,
+      "y": 0.5346,
       "connections": [
-        "/cribbage-squares",
-        "/maria",
-        "/waypoint"
+        "/aces-up",
+        "/beleaguered-castle",
+        "/glazier",
+        "/sly-fox"
       ],
       "rewards": [
         {
@@ -1401,17 +1408,18 @@
         },
         {
           "type": "quote",
-          "id": 166
+          "id": 57
         }
       ]
     },
-    "/waypoint": {
-      "x": 0.0937,
-      "y": -0.7046,
+    "/cribbage-squares": {
+      "x": 0.57,
+      "y": 0.3018,
       "connections": [
-        "/cafe-queue",
-        "/cribbage-squares",
-        "/crossword"
+        "/crescent",
+        "/crossword",
+        "/la-belle-lucie",
+        "/shifting-sands"
       ],
       "rewards": [
         {
@@ -1420,17 +1428,16 @@
         },
         {
           "type": "quote",
-          "id": 143
+          "id": 56
         }
       ]
     },
-    "/easthaven": {
-      "x": -0.7093,
-      "y": -0.0484,
+    "/bisley": {
+      "x": -0.6714,
+      "y": -0.047,
       "connections": [
-        "/beleaguered-castle",
-        "/dominion",
-        "/triple-stack"
+        "/labyrinth",
+        "/pyramid"
       ],
       "rewards": [
         {
@@ -1439,17 +1446,17 @@
         },
         {
           "type": "quote",
-          "id": 96
+          "id": 109
         }
       ]
     },
-    "/triple-stack": {
-      "x": -0.6947,
-      "y": -0.152,
+    "/blackberry-pie": {
+      "x": 0.1405,
+      "y": -0.6605,
       "connections": [
-        "/beleaguered-castle",
-        "/easthaven",
-        "/labyrinth"
+        "/little-windmill",
+        "/stalactites",
+        "/terrace"
       ],
       "rewards": [
         {
@@ -1458,18 +1465,16 @@
         },
         {
           "type": "quote",
-          "id": 98
+          "id": 111
         }
       ]
     },
-    "/shifting-sands": {
-      "x": -0.0826,
-      "y": 0.7231,
+    "/pyramid": {
+      "x": -0.6651,
+      "y": -0.1762,
       "connections": [
-        "/carpet",
-        "/charlatan",
-        "/congress",
-        "/nestor"
+        "/bisley",
+        "/field-command"
       ],
       "rewards": [
         {
@@ -1478,16 +1483,20 @@
         },
         {
           "type": "quote",
-          "id": 120
+          "id": 79
+        },
+        {
+          "type": "quote",
+          "id": 91
         }
       ]
     },
-    "/cabin-siege": {
-      "x": 0.7127,
-      "y": 0.1612,
+    "/cafe-queue": {
+      "x": -0.1304,
+      "y": 0.6815,
       "connections": [
-        "/blackberry-pie",
-        "/gremlin"
+        "/beleaguered-castle",
+        "/maria"
       ],
       "rewards": [
         {
@@ -1496,17 +1505,21 @@
         },
         {
           "type": "quote",
-          "id": 24
+          "id": 28
+        },
+        {
+          "type": "quote",
+          "id": 135
         }
       ]
     },
-    "/dominion": {
-      "x": -0.7341,
-      "y": 0.0309,
+    "/waypoint": {
+      "x": 0.6908,
+      "y": 0.0946,
       "connections": [
-        "/easthaven",
-        "/pyramid",
-        "/spiderette"
+        "/crossword",
+        "/nestor",
+        "/shifting-sands"
       ],
       "rewards": [
         {
@@ -1515,18 +1528,21 @@
         },
         {
           "type": "quote",
-          "id": 15
+          "id": 18
+        },
+        {
+          "type": "quote",
+          "id": 118
         }
       ]
     },
-    "/nestor": {
-      "x": 0.0752,
-      "y": 0.7317,
+    "/twelve-trials": {
+      "x": 0.4669,
+      "y": -0.5181,
       "connections": [
-        "/aces-up",
-        "/chapter-and-verse",
-        "/fortress",
-        "/shifting-sands"
+        "/bristol",
+        "/red-diamond",
+        "/yukon"
       ],
       "rewards": [
         {
@@ -1535,16 +1551,21 @@
         },
         {
           "type": "quote",
-          "id": 145
+          "id": 15
+        },
+        {
+          "type": "quote",
+          "id": 80
         }
       ]
     },
-    "/gremlin": {
-      "x": 0.7348,
-      "y": 0.037,
+    "/terrace": {
+      "x": -0.0616,
+      "y": -0.7007,
       "connections": [
-        "/cabin-siege",
-        "/calculation"
+        "/blackberry-pie",
+        "/dominion",
+        "/little-windmill"
       ],
       "rewards": [
         {
@@ -1553,22 +1574,20 @@
         },
         {
           "type": "quote",
-          "id": 107
+          "id": 60
         },
         {
           "type": "quote",
-          "id": 150
+          "id": 163
         }
       ]
     },
-    "/australian-patience": {
-      "x": -0.5726,
-      "y": -0.5149,
+    "/monte-carlo": {
+      "x": 0.0463,
+      "y": 0.7127,
       "connections": [
-        "/ebb-and-flow",
-        "/royal-envoy",
-        "/sir-tommy",
-        "/terrace"
+        "/maria",
+        "/spiderette"
       ],
       "rewards": [
         {
@@ -1577,16 +1596,18 @@
         },
         {
           "type": "quote",
-          "id": 71
+          "id": 132
         }
       ]
     },
-    "/calculation": {
-      "x": 0.7744,
-      "y": -0.0618,
+    "/maria": {
+      "x": -0.0646,
+      "y": 0.7134,
       "connections": [
-        "/gremlin",
-        "/invaders"
+        "/cafe-queue",
+        "/invaders",
+        "/monte-carlo",
+        "/spiderette"
       ],
       "rewards": [
         {
@@ -1595,18 +1616,16 @@
         },
         {
           "type": "quote",
-          "id": 133
+          "id": 128
         }
       ]
     },
-    "/fortress": {
-      "x": 0.1864,
-      "y": 0.7632,
+    "/nestor": {
+      "x": 0.7164,
+      "y": -0.0138,
       "connections": [
-        "/aces-up",
-        "/nestor",
-        "/pickpocket",
-        "/rogue-run"
+        "/fortress",
+        "/waypoint"
       ],
       "rewards": [
         {
@@ -1615,551 +1634,41 @@
         },
         {
           "type": "quote",
-          "id": 25
+          "id": 133
+        },
+        {
+          "type": "quote",
+          "id": 140
         }
       ]
     },
-    "/king-albert": {
-      "x": -0.0878,
-      "y": -0.7822,
+    "/easthaven": {
+      "x": -0.5615,
+      "y": -0.4573,
       "connections": [
-        "/la-belle-lucie",
-        "/maria",
-        "/picket-fence"
+        "/crazy-quilt",
+        "/lycan",
+        "/rank-and-file"
       ],
       "rewards": [
         {
-          "type": "tao",
-          "id": 80
+          "type": "quote",
+          "id": 26
         },
         {
           "type": "quote",
-          "id": 31
-        },
-        {
-          "type": "quote",
-          "id": 108
+          "id": 77
         }
       ]
     },
-    "/spiderette": {
-      "x": -0.7621,
-      "y": 0.2079,
+    "/shifting-sands": {
+      "x": 0.7111,
+      "y": 0.183,
       "connections": [
-        "/dominion",
+        "/cribbage-squares",
+        "/crossword",
         "/dynasty",
-        "/pyramid"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 23
-        },
-        {
-          "type": "quote",
-          "id": 34
-        }
-      ]
-    },
-    "/invaders": {
-      "x": 0.7649,
-      "y": -0.2027,
-      "connections": [
-        "/calculation",
-        "/infiltrator",
-        "/lone-joker"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 99
-        },
-        {
-          "type": "quote",
-          "id": 104
-        }
-      ]
-    },
-    "/infiltrator": {
-      "x": 0.6752,
-      "y": -0.4139,
-      "connections": [
-        "/fight-clubs",
-        "/invaders",
-        "/lone-joker",
-        "/twelve-trials"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 91
-        },
-        {
-          "type": "quote",
-          "id": 170
-        }
-      ]
-    },
-    "/la-belle-lucie": {
-      "x": -0.1721,
-      "y": -0.7736,
-      "connections": [
-        "/king-albert",
-        "/picket-fence",
-        "/scorpion"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 54
-        },
-        {
-          "type": "quote",
-          "id": 60
-        },
-        {
-          "type": "quote",
-          "id": 94
-        }
-      ]
-    },
-    "/clock": {
-      "x": -0.3456,
-      "y": -0.7298,
-      "connections": [
-        "/accordion",
-        "/iris-garden",
-        "/scorpion"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 55
-        },
-        {
-          "type": "quote",
-          "id": 126
-        }
-      ]
-    },
-    "/stalker": {
-      "x": 0.3403,
-      "y": 0.7368,
-      "connections": [
-        "/poker-squares",
-        "/rogue-run"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 20
-        },
-        {
-          "type": "quote",
-          "id": 154
-        }
-      ]
-    },
-    "/aces-up": {
-      "x": 0.1277,
-      "y": 0.8096,
-      "connections": [
-        "/fortress",
-        "/forty-thieves",
-        "/nestor",
-        "/pickpocket"
-      ],
-      "rewards": [
-        {
-          "type": "tao",
-          "id": 81
-        },
-        {
-          "type": "quote",
-          "id": 87
-        },
-        {
-          "type": "quote",
-          "id": 129
-        }
-      ]
-    },
-    "/rogue-run": {
-      "x": 0.2761,
-      "y": 0.7752,
-      "connections": [
-        "/fortress",
-        "/pickpocket",
-        "/stalker"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 100
-        },
-        {
-          "type": "quote",
-          "id": 160
-        }
-      ]
-    },
-    "/scorpion": {
-      "x": -0.2395,
-      "y": -0.8069,
-      "connections": [
-        "/clock",
-        "/la-belle-lucie",
-        "/picket-fence"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 21
-        },
-        {
-          "type": "quote",
-          "id": 155
-        }
-      ]
-    },
-    "/dynasty": {
-      "x": -0.7971,
-      "y": 0.2915,
-      "connections": [
-        "/chain-of-command",
-        "/spiderette",
-        "/stalactites"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 63
-        },
-        {
-          "type": "quote",
-          "id": 157
-        }
-      ]
-    },
-    "/lone-joker": {
-      "x": 0.8021,
-      "y": -0.2887,
-      "connections": [
-        "/infiltrator",
-        "/invaders"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 42
-        },
-        {
-          "type": "quote",
-          "id": 95
-        }
-      ]
-    },
-    "/poker-squares": {
-      "x": 0.4043,
-      "y": 0.7801,
-      "connections": [
-        "/augury",
-        "/bristol",
-        "/devils-grip",
-        "/ozanams-square",
-        "/stalker"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 4
-        },
-        {
-          "type": "quote",
-          "id": 78
-        }
-      ]
-    },
-    "/forty-thieves": {
-      "x": 0.0732,
-      "y": 0.8763,
-      "connections": [
-        "/aces-up",
-        "/charlatan"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 30
-        },
-        {
-          "type": "quote",
-          "id": 117
-        }
-      ]
-    },
-    "/fight-clubs": {
-      "x": 0.7578,
-      "y": -0.4504,
-      "connections": [
-        "/infiltrator",
-        "/spider-solitaire"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 61
-        },
-        {
-          "type": "quote",
-          "id": 83
-        }
-      ]
-    },
-    "/pickpocket": {
-      "x": 0.2435,
-      "y": 0.8488,
-      "connections": [
-        "/aces-up",
-        "/devils-grip",
-        "/fortress",
-        "/rogue-run"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 32
-        },
-        {
-          "type": "quote",
-          "id": 167
-        }
-      ]
-    },
-    "/spider-solitaire": {
-      "x": 0.801,
-      "y": -0.3789,
-      "connections": [
-        "/ascent",
-        "/fight-clubs"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 47
-        },
-        {
-          "type": "quote",
-          "id": 122
-        }
-      ]
-    },
-    "/somnus": {
-      "x": -0.7691,
-      "y": 0.4481,
-      "connections": [
-        "/chain-of-command",
-        "/herbalist"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 48
-        },
-        {
-          "type": "quote",
-          "id": 101
-        }
-      ]
-    },
-    "/chain-of-command": {
-      "x": -0.8136,
-      "y": 0.3626,
-      "connections": [
-        "/dynasty",
-        "/somnus",
-        "/stalactites"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 19
-        },
-        {
-          "type": "quote",
-          "id": 82
-        }
-      ]
-    },
-    "/herbalist": {
-      "x": -0.7316,
-      "y": 0.5103,
-      "connections": [
-        "/crownslayer",
-        "/miss-milligan",
-        "/somnus"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 73
-        },
-        {
-          "type": "quote",
-          "id": 125
-        }
-      ]
-    },
-    "/night-vigil": {
-      "x": -0.4469,
-      "y": 0.7924,
-      "connections": [
-        "/congress",
-        "/miss-milligan"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 112
-        },
-        {
-          "type": "quote",
-          "id": 123
-        },
-        {
-          "type": "quote",
-          "id": 130
-        }
-      ]
-    },
-    "/charlatan": {
-      "x": -0.0839,
-      "y": 0.9191,
-      "connections": [
-        "/forty-thieves",
-        "/shifting-sands"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 139
-        },
-        {
-          "type": "quote",
-          "id": 149
-        }
-      ]
-    },
-    "/picket-fence": {
-      "x": -0.112,
-      "y": -0.9175,
-      "connections": [
-        "/king-albert",
-        "/la-belle-lucie",
-        "/scorpion"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 72
-        },
-        {
-          "type": "quote",
-          "id": 105
-        }
-      ]
-    },
-    "/accordion": {
-      "x": -0.5196,
-      "y": -0.7728,
-      "connections": [
-        "/clock",
-        "/ebb-and-flow",
-        "/iris-garden"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 127
-        },
-        {
-          "type": "quote",
-          "id": 138
-        },
-        {
-          "type": "quote",
-          "id": 144
-        }
-      ]
-    },
-    "/devils-grip": {
-      "x": 0.3037,
-      "y": 0.8938,
-      "connections": [
-        "/augury",
-        "/bristol",
-        "/pickpocket",
-        "/poker-squares"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 46
-        },
-        {
-          "type": "quote",
-          "id": 115
-        }
-      ]
-    },
-    "/ebb-and-flow": {
-      "x": -0.5911,
-      "y": -0.7405,
-      "connections": [
-        "/accordion",
-        "/australian-patience",
-        "/royal-envoy"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 45
-        },
-        {
-          "type": "quote",
-          "id": 66
-        }
-      ]
-    },
-    "/lycan": {
-      "x": 0.7534,
-      "y": -0.576,
-      "connections": [
-        "/ascent",
-        "/elevens",
-        "/four-seasons"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 64
-        },
-        {
-          "type": "quote",
-          "id": 162
-        }
-      ]
-    },
-    "/bristol": {
-      "x": 0.5684,
-      "y": 0.7717,
-      "connections": [
-        "/devils-grip",
-        "/elementary-detective",
-        "/flower-garden",
-        "/ozanams-square",
-        "/poker-squares",
-        "/royal-marriage"
+        "/waypoint"
       ],
       "rewards": [
         {
@@ -2168,16 +1677,597 @@
         },
         {
           "type": "quote",
-          "id": 148
+          "id": 176
         }
       ]
     },
-    "/crownslayer": {
-      "x": -0.7976,
-      "y": 0.5551,
+    "/labyrinth": {
+      "x": -0.7388,
+      "y": -0.0143,
       "connections": [
+        "/bisley",
+        "/gremlin"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 80
+        },
+        {
+          "type": "quote",
+          "id": 141
+        }
+      ]
+    },
+    "/little-windmill": {
+      "x": 0.0402,
+      "y": -0.7422,
+      "connections": [
+        "/blackberry-pie",
+        "/dominion",
         "/herbalist",
+        "/scorpion",
+        "/terrace"
+      ],
+      "rewards": [
+        {
+          "type": "tao",
+          "id": 81
+        },
+        {
+          "type": "quote",
+          "id": 154
+        }
+      ]
+    },
+    "/triple-stack": {
+      "x": -0.724,
+      "y": 0.1841,
+      "connections": [
+        "/australian-patience",
+        "/cabin-siege",
+        "/gremlin"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 47
+        },
+        {
+          "type": "quote",
+          "id": 174
+        }
+      ]
+    },
+    "/gremlin": {
+      "x": -0.7662,
+      "y": 0.0669,
+      "connections": [
+        "/australian-patience",
+        "/labyrinth",
+        "/triple-stack"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 64
+        },
+        {
+          "type": "quote",
+          "id": 70
+        }
+      ]
+    },
+    "/dominion": {
+      "x": -0.1142,
+      "y": -0.7736,
+      "connections": [
+        "/little-windmill",
+        "/miss-milligan",
+        "/scorpion",
+        "/terrace"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 23
+        },
+        {
+          "type": "quote",
+          "id": 95
+        }
+      ]
+    },
+    "/calculation": {
+      "x": 0.1514,
+      "y": 0.7746,
+      "connections": [
+        "/infiltrator",
+        "/spiderette"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 11
+        },
+        {
+          "type": "quote",
+          "id": 42
+        }
+      ]
+    },
+    "/infiltrator": {
+      "x": 0.2353,
+      "y": 0.7597,
+      "connections": [
+        "/calculation",
+        "/stalker"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 121
+        },
+        {
+          "type": "quote",
+          "id": 160
+        }
+      ]
+    },
+    "/king-albert": {
+      "x": 0.7449,
+      "y": -0.3145,
+      "connections": [
+        "/fight-clubs",
+        "/fortress",
+        "/forty-thieves",
+        "/rogue-run"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 24
+        },
+        {
+          "type": "quote",
+          "id": 181
+        }
+      ]
+    },
+    "/aces-up": {
+      "x": -0.4648,
+      "y": 0.6706,
+      "connections": [
+        "/congress",
+        "/royal-envoy"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 146
+        },
+        {
+          "type": "quote",
+          "id": 171
+        },
+        {
+          "type": "quote",
+          "id": 184
+        }
+      ]
+    },
+    "/fortress": {
+      "x": 0.8105,
+      "y": -0.1186,
+      "connections": [
+        "/forty-thieves",
+        "/king-albert",
+        "/nestor"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 50
+        },
+        {
+          "type": "quote",
+          "id": 143
+        }
+      ]
+    },
+    "/cabin-siege": {
+      "x": -0.7548,
+      "y": 0.3379,
+      "connections": [
+        "/australian-patience",
+        "/clock",
+        "/triple-stack"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 4
+        },
+        {
+          "type": "quote",
+          "id": 92
+        }
+      ]
+    },
+    "/spiderette": {
+      "x": 0.0634,
+      "y": 0.8285,
+      "connections": [
+        "/calculation",
+        "/invaders",
+        "/maria",
+        "/monte-carlo"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 37
+        },
+        {
+          "type": "quote",
+          "id": 170
+        }
+      ]
+    },
+    "/invaders": {
+      "x": -0.1,
+      "y": 0.8271,
+      "connections": [
+        "/maria",
+        "/spiderette"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 73
+        },
+        {
+          "type": "quote",
+          "id": 130
+        }
+      ]
+    },
+    "/miss-milligan": {
+      "x": -0.173,
+      "y": -0.8186,
+      "connections": [
+        "/dominion",
+        "/poker-squares",
+        "/scorpion"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 147
+        },
+        {
+          "type": "quote",
+          "id": 158
+        }
+      ]
+    },
+    "/la-belle-lucie": {
+      "x": 0.7158,
+      "y": 0.4422,
+      "connections": [
+        "/cribbage-squares",
+        "/crownslayer",
+        "/dynasty"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 51
+        },
+        {
+          "type": "quote",
+          "id": 58
+        },
+        {
+          "type": "quote",
+          "id": 117
+        }
+      ]
+    },
+    "/australian-patience": {
+      "x": -0.8324,
+      "y": 0.1997,
+      "connections": [
+        "/cabin-siege",
+        "/clock",
+        "/gremlin",
+        "/triple-stack"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 114
+        },
+        {
+          "type": "quote",
+          "id": 157
+        }
+      ]
+    },
+    "/scorpion": {
+      "x": -0.055,
+      "y": -0.8675,
+      "connections": [
+        "/dominion",
+        "/herbalist",
+        "/little-windmill",
         "/miss-milligan"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 69
+        },
+        {
+          "type": "quote",
+          "id": 134
+        }
+      ]
+    },
+    "/stalker": {
+      "x": 0.3014,
+      "y": 0.8256,
+      "connections": [
+        "/infiltrator",
+        "/spider-solitaire"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 36
+        },
+        {
+          "type": "quote",
+          "id": 87
+        }
+      ]
+    },
+    "/rogue-run": {
+      "x": 0.7308,
+      "y": -0.5073,
+      "connections": [
+        "/accordion",
+        "/ascent",
+        "/king-albert",
+        "/royal-marriage"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 32
+        },
+        {
+          "type": "quote",
+          "id": 162
+        }
+      ]
+    },
+    "/dynasty": {
+      "x": 0.7964,
+      "y": 0.4139,
+      "connections": [
+        "/la-belle-lucie",
+        "/shifting-sands"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 45
+        },
+        {
+          "type": "quote",
+          "id": 105
+        }
+      ]
+    },
+    "/clock": {
+      "x": -0.8294,
+      "y": 0.3556,
+      "connections": [
+        "/australian-patience",
+        "/cabin-siege",
+        "/devils-grip",
+        "/somnus"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 20
+        },
+        {
+          "type": "quote",
+          "id": 102
+        }
+      ]
+    },
+    "/poker-squares": {
+      "x": -0.3219,
+      "y": -0.8479,
+      "connections": [
+        "/chain-of-command",
+        "/miss-milligan"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 8
+        },
+        {
+          "type": "quote",
+          "id": 48
+        }
+      ]
+    },
+    "/fight-clubs": {
+      "x": 0.8269,
+      "y": -0.3789,
+      "connections": [
+        "/forty-thieves",
+        "/king-albert",
+        "/night-vigil",
+        "/royal-marriage"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 49
+        },
+        {
+          "type": "quote",
+          "id": 67
+        }
+      ]
+    },
+    "/lone-joker": {
+      "x": -0.5263,
+      "y": -0.7488,
+      "connections": [
+        "/chain-of-command",
+        "/lycan"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 66
+        },
+        {
+          "type": "quote",
+          "id": 136
+        }
+      ]
+    },
+    "/chain-of-command": {
+      "x": -0.4303,
+      "y": -0.8265,
+      "connections": [
+        "/lone-joker",
+        "/poker-squares"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 61
+        },
+        {
+          "type": "quote",
+          "id": 156
+        }
+      ]
+    },
+    "/royal-marriage": {
+      "x": 0.8024,
+      "y": -0.4776,
+      "connections": [
+        "/ascent",
+        "/fight-clubs",
+        "/night-vigil",
+        "/rogue-run"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 53
+        },
+        {
+          "type": "quote",
+          "id": 110
+        }
+      ]
+    },
+    "/forty-thieves": {
+      "x": 0.8905,
+      "y": -0.2842,
+      "connections": [
+        "/fight-clubs",
+        "/fortress",
+        "/king-albert"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 13
+        },
+        {
+          "type": "quote",
+          "id": 74
+        }
+      ]
+    },
+    "/somnus": {
+      "x": -0.8309,
+      "y": 0.4514,
+      "connections": [
+        "/clock",
+        "/devils-grip",
+        "/royal-envoy"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 30
+        },
+        {
+          "type": "quote",
+          "id": 129
+        }
+      ]
+    },
+    "/spider-solitaire": {
+      "x": 0.4653,
+      "y": 0.8286,
+      "connections": [
+        "/crownslayer",
+        "/stalker"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 38
+        },
+        {
+          "type": "quote",
+          "id": 138
+        }
+      ]
+    },
+    "/herbalist": {
+      "x": 0.0215,
+      "y": -0.9538,
+      "connections": [
+        "/little-windmill",
+        "/scorpion"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 76
+        },
+        {
+          "type": "quote",
+          "id": 94
+        },
+        {
+          "type": "quote",
+          "id": 98
+        }
+      ]
+    },
+    "/accordion": {
+      "x": 0.7245,
+      "y": -0.6535,
+      "connections": [
+        "/ascent",
+        "/rogue-run"
       ],
       "rewards": [
         {
@@ -2186,20 +2276,16 @@
         },
         {
           "type": "quote",
-          "id": 132
-        },
-        {
-          "type": "quote",
-          "id": 165
+          "id": 52
         }
       ]
     },
-    "/ascent": {
-      "x": 0.8881,
-      "y": -0.4184,
+    "/devils-grip": {
+      "x": -0.8977,
+      "y": 0.3917,
       "connections": [
-        "/lycan",
-        "/spider-solitaire"
+        "/clock",
+        "/somnus"
       ],
       "rewards": [
         {
@@ -2208,208 +2294,102 @@
         },
         {
           "type": "quote",
-          "id": 36
-        }
-      ]
-    },
-    "/royal-envoy": {
-      "x": -0.6759,
-      "y": -0.7187,
-      "connections": [
-        "/australian-patience",
-        "/ebb-and-flow",
-        "/terrace"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 5
-        },
-        {
-          "type": "quote",
-          "id": 27
-        }
-      ]
-    },
-    "/four-seasons": {
-      "x": 0.7461,
-      "y": -0.6544,
-      "connections": [
-        "/elevens",
-        "/lycan",
-        "/twelve-trials"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 33
-        },
-        {
-          "type": "quote",
-          "id": 142
-        }
-      ]
-    },
-    "/terrace": {
-      "x": -0.7622,
-      "y": -0.6408,
-      "connections": [
-        "/australian-patience",
-        "/royal-envoy"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 43
-        },
-        {
-          "type": "quote",
           "id": 119
         }
       ]
     },
-    "/miss-milligan": {
-      "x": -0.7043,
-      "y": 0.7051,
+    "/night-vigil": {
+      "x": 0.8735,
+      "y": -0.4466,
       "connections": [
-        "/crownslayer",
-        "/herbalist",
-        "/night-vigil"
+        "/fight-clubs",
+        "/royal-marriage"
       ],
       "rewards": [
         {
           "type": "quote",
-          "id": 41
+          "id": 139
         },
         {
           "type": "quote",
-          "id": 59
+          "id": 153
         }
       ]
     },
-    "/augury": {
-      "x": 0.346,
-      "y": 0.8348,
+    "/lycan": {
+      "x": -0.6459,
+      "y": -0.7423,
       "connections": [
-        "/city-grid",
-        "/devils-grip",
-        "/poker-squares"
+        "/easthaven",
+        "/lone-joker"
       ],
       "rewards": [
         {
           "type": "quote",
-          "id": 171
+          "id": 104
         },
-        {
-          "type": "quote",
-          "id": 172
-        }
-      ]
-    },
-    "/crossword": {
-      "x": 0.325,
-      "y": -0.7723,
-      "connections": [
-        "/crazy-quilt",
-        "/waypoint"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 173
-        },
-        {
-          "type": "quote",
-          "id": 174
-        }
-      ]
-    },
-    "/iris-garden": {
-      "x": -0.405,
-      "y": -0.8106,
-      "connections": [
-        "/accordion",
-        "/clock"
-      ],
-      "rewards": [
         {
           "type": "quote",
           "id": 175
-        },
-        {
-          "type": "quote",
-          "id": 176
         }
       ]
     },
-    "/ozanams-square": {
-      "x": 0.4774,
-      "y": 0.7968,
+    "/crownslayer": {
+      "x": 0.6202,
+      "y": 0.7675,
       "connections": [
-        "/bristol",
-        "/poker-squares"
+        "/la-belle-lucie",
+        "/spider-solitaire"
       ],
       "rewards": [
+        {
+          "type": "quote",
+          "id": 25
+        },
+        {
+          "type": "quote",
+          "id": 125
+        }
+      ]
+    },
+    "/royal-envoy": {
+      "x": -0.6873,
+      "y": 0.7103,
+      "connections": [
+        "/aces-up",
+        "/somnus"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 21
+        },
+        {
+          "type": "quote",
+          "id": 152
+        }
+      ]
+    },
+    "/ascent": {
+      "x": 0.7942,
+      "y": -0.5915,
+      "connections": [
+        "/accordion",
+        "/rogue-run",
+        "/royal-marriage"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 99
+        },
         {
           "type": "quote",
           "id": 177
         },
         {
           "type": "quote",
-          "id": 178
-        }
-      ]
-    },
-    "/stalactites": {
-      "x": -0.8924,
-      "y": 0.3119,
-      "connections": [
-        "/chain-of-command",
-        "/dynasty"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
           "id": 179
-        },
-        {
-          "type": "quote",
-          "id": 180
-        }
-      ]
-    },
-    "/elevens": {
-      "x": 0.6445,
-      "y": -0.7387,
-      "connections": [
-        "/four-seasons",
-        "/lycan"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 181
-        },
-        {
-          "type": "quote",
-          "id": 182
-        }
-      ]
-    },
-    "/royal-marriage": {
-      "x": 0.672,
-      "y": 0.7189,
-      "connections": [
-        "/bristol"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 183
-        },
-        {
-          "type": "quote",
-          "id": 184
         }
       ]
     }

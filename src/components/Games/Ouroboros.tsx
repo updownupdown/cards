@@ -2,7 +2,6 @@ import { useFade } from "@/hooks/useFade";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
-import { FontWeight } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { Animated, View } from "react-native";
@@ -685,8 +684,9 @@ export default function Ouroboros() {
             ]}
           >
             <Button
-              text={i18n.t("games:ouroboros.markPath")}
-              size="xs"
+              accessibilityLabel={i18n.t("games:ouroboros.markPath")}
+              iconName="map"
+              iconSize={cardWidth * 0.6}
               textOnly
               onPress={() => {
                 if (selectedCardIndex !== undefined) {
@@ -699,8 +699,6 @@ export default function Ouroboros() {
               disabled={selectedCardIndex === undefined}
               style={[flexStyles.fullWidth, flexStyles.fullHeight]}
               theme={"green"}
-              textStyle={{ fontFamily: FontWeight[600] }}
-              lineHeight={1.1}
             />
           </Animated.View>
         ))}

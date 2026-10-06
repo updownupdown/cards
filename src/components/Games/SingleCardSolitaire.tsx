@@ -49,17 +49,19 @@ export type SingleCardVariant =
   | "generals-patience"
   | "blondes-and-brunettes"
   | "falling-star"
-  | "four-seasons"
+  | "little-windmill"
   | "bristol";
 
 type Config = {
   decks: 1 | 2;
   foundations: number;
   /**
-   * The foundations' starting rank: always Ace, the card the player picks from
-   * the first four dealt ("choose"), or the first card dealt ("dealt").
+   * The foundations' starting rank: always Ace, with one taken out of the
+   * stock to start the first foundation ("ace-out") or none ("ace"); the card
+   * the player picks from the first four dealt ("choose"); or the first card
+   * dealt ("dealt").
    */
-  base: "ace" | "choose" | "dealt";
+  base: "ace" | "ace-out" | "choose" | "dealt";
   foundationBuild: "suit" | "alternating" | "any";
   tableau: {
     count: number;
@@ -87,6 +89,8 @@ type Config = {
   reserve?:
     | { kind: "terrace"; size: number }
     | { kind: "piles"; count: number };
+  /** Times the waste may be turned over to go through the stock again. */
+  redeals?: number;
 };
 
 const CONFIGS: Record<SingleCardVariant, Config> = {
@@ -134,14 +138,14 @@ const CONFIGS: Record<SingleCardVariant, Config> = {
     empty: "waste-or-stock",
     reserve: { kind: "terrace", size: 11 },
   },
-  "four-seasons": {
+  "little-windmill": {
     decks: 1,
     foundations: 4,
-    base: "dealt",
+    base: "ace-out",
     foundationBuild: "suit",
     tableau: { count: 5, size: 1, layout: "cross" },
     tableauBuild: "any",
-    tableauWrap: "base",
+    tableauWrap: "none",
     empty: "any",
   },
   bristol: {
@@ -168,6 +172,8 @@ export type SingleCardState = {
   foundations: PlayingCard[][];
   /** The rank every foundation starts from; null while the player picks it. */
   baseRank: CardRank | null;
+  /** Times the waste has been turned over; absent in older saved games. */
+  redealsUsed?: number;
   ended: boolean;
   won: boolean;
 };
@@ -263,14 +269,25 @@ function sourcesOf(state: SingleCardState): MoveSource[] {
   ];
 }
 
-/** Whether the stock can be tapped: in Terrace a gap takes the card instead. */
-function canDraw(state: SingleCardState) {
-  return state.baseRank !== null && state.stock.length > 0;
+function canRedeal(state: SingleCardState, config: Config) {
+  return (
+    state.stock.length === 0 &&
+    state.waste.length > 0 &&
+    (state.redealsUsed ?? 0) < (config.redeals ?? 0)
+  );
+}
+
+/** Whether the stock can be tapped: to turn a card, or to turn the waste over. */
+function canDraw(state: SingleCardState, config: Config) {
+  return (
+    state.baseRank !== null &&
+    (state.stock.length > 0 || canRedeal(state, config))
+  );
 }
 
 function hasMove(state: SingleCardState, config: Config) {
   if (state.baseRank === null) return true;
-  if (canDraw(state)) return true;
+  if (canDraw(state, config)) return true;
   return sourcesOf(state).some((source) => {
     const card = getCard(state, source)!;
     if (
@@ -314,6 +331,7 @@ function createInitialState(variant: SingleCardVariant): SingleCardState {
     waste: [],
     foundations: emptyPiles(config.foundations),
     baseRank: null,
+    redealsUsed: 0,
     ended: false,
     won: false,
   };
@@ -343,7 +361,13 @@ function deal(stock: PlayingCard[], config: Config): SingleCardState {
         : [];
 
   const foundations = emptyPiles(config.foundations);
-  let baseRank: CardRank | null = config.base === "ace" ? "A" : null;
+  let baseRank: CardRank | null =
+    config.base === "ace" || config.base === "ace-out" ? "A" : null;
+  if (config.base === "ace-out") {
+    // The Ace nearest the top of the stock comes out to start a foundation.
+    const ace = deck.findLastIndex((card) => card.rank === "A");
+    if (ace >= 0) foundations[0].push(flipToFace(deck.splice(ace, 1)[0]));
+  }
   if (config.base === "dealt") {
     const [base] = take(1);
     foundations[0].push(base);
@@ -367,6 +391,7 @@ function deal(stock: PlayingCard[], config: Config): SingleCardState {
     waste: [],
     foundations,
     baseRank,
+    redealsUsed: 0,
     ended: false,
     won: false,
   };
@@ -380,8 +405,8 @@ function deal(stock: PlayingCard[], config: Config): SingleCardState {
 function findSingleCardHint(
   state: SingleCardState,
   variant: SingleCardVariant,
+  config: Config = CONFIGS[variant],
 ) {
-  const config = CONFIGS[variant];
   if (state.baseRank === null) {
     const terrace = state.reserves.flat();
     const choices = state.tableau
@@ -407,7 +432,7 @@ function findSingleCardHint(
         ? { zone: "waste" }
         : { zone: "reserve", pile: from.pile - 1 }
       : { zone: "tableau", pile: from.kind === "tableau" ? from.pile : 0 };
-  const canDrawNow = canDraw(state);
+  const canDrawNow = canDraw(state, config);
   return findClassicHint(
     {
       tableau: state.tableau,
@@ -436,7 +461,11 @@ function findSingleCardHint(
       stock: canDrawNow
         ? {
             zone: "stock",
-            message: config.reserve?.kind === "piles" ? "dealRow" : "draw",
+            message: canRedeal(state, config)
+              ? "redeal"
+              : config.reserve?.kind === "piles"
+                ? "dealRow"
+                : "draw",
           }
         : null,
       search: canDrawNow ? undefined : `single-card:${variant}`,
@@ -449,6 +478,7 @@ export const singleCardRules = {
   configs: CONFIGS,
   canBuildFoundation,
   canBuildTableau,
+  canDraw,
   createInitialState,
   deal,
   hasMove,
@@ -493,8 +523,8 @@ function getLayout(config: Config): Layout {
         { col: 1, row: 2 },
       ],
       reserves: [],
-      stock: { col: 2, row: 3.4 },
-      waste: { col: 1, row: 3.4 },
+      stock: { col: 1.6, row: 3.4 },
+      waste: { col: 0.4, row: 3.4 },
     };
   }
 
@@ -542,10 +572,19 @@ function getLayout(config: Config): Layout {
 
 export function SingleCardSolitaire({
   variant,
+  redeals,
 }: {
   variant: SingleCardVariant;
+  /** Overrides the variant's number of stock redeals. */
+  redeals?: number;
 }) {
-  const config = CONFIGS[variant];
+  const config = useMemo(
+    () =>
+      redeals === undefined
+        ? CONFIGS[variant]
+        : { ...CONFIGS[variant], redeals },
+    [redeals, variant],
+  );
   const layout = useMemo(() => getLayout(config), [config]);
   const initial = useMemo(() => createInitialState(variant), [variant]);
   const [selected, setSelected] = useState<Selection>(null);
@@ -585,6 +624,7 @@ export function SingleCardSolitaire({
         draft.waste = [];
         draft.foundations = next.foundations;
         draft.baseRank = null;
+        draft.redealsUsed = 0;
         draft.ended = false;
         draft.won = false;
       });
@@ -637,7 +677,9 @@ export function SingleCardSolitaire({
     won: game.won,
     isBlocked: !!dragGhost,
     getSources: (state) =>
-      state.stock.length === 0 && state.baseRank !== null
+      state.stock.length === 0 &&
+      state.baseRank !== null &&
+      !canRedeal(state, config)
         ? [...state.tableau, ...state.reserves, state.waste]
         : null,
     getFoundations: (state) => state.foundations,
@@ -645,7 +687,7 @@ export function SingleCardSolitaire({
     onStart: () => setSelected(null),
   });
 
-  useHint(() => findSingleCardHint(game, variant), {
+  useHint(() => findSingleCardHint(game, variant, config), {
     game,
     enabled: !isSettingUp && !game.ended && !isAutoCompleting,
   });
@@ -777,9 +819,14 @@ export function SingleCardSolitaire({
   }
 
   function drawStock() {
-    if (game.ended || !canDraw(game)) return;
+    if (game.ended || !canDraw(game, config)) return;
     saveUndoState(structuredClone(game));
     setGame((draft) => {
+      if (canRedeal(draft, config)) {
+        draft.stock = draft.waste.splice(0).reverse().map(flipToBack);
+        draft.redealsUsed = (draft.redealsUsed ?? 0) + 1;
+        return;
+      }
       if (config.reserve?.kind === "piles") {
         draft.reserves.forEach((pile) => {
           const card = draft.stock.pop();
@@ -820,7 +867,7 @@ export function SingleCardSolitaire({
       ...layout.tableau[index],
       fan:
         config.tableau.layout === "cross"
-          ? { maxVisible: 1 }
+          ? { maxVisible: 3 }
           : { direction: "down", offset: pileOffset(pile.length) },
       placeholder:
         config.empty === "blocked" && pile.length === 0
@@ -896,7 +943,7 @@ export function SingleCardSolitaire({
     if (card.zoneName === "stock" && card.topOfZone)
       return {
         onPress: drawStock,
-        isDisabled: !canDraw(game),
+        isDisabled: !canDraw(game, config),
         isVisible: !isBeingDragged,
         animDuration,
       };
@@ -948,7 +995,7 @@ export function SingleCardSolitaire({
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
     if (zone.name === "stock")
-      return { onPress: drawStock, isDisabled: !canDraw(game) };
+      return { onPress: drawStock, isDisabled: !canDraw(game, config) };
     if (zone.name === "foundation" && zone.pileIndex !== undefined)
       return {
         onPress: () => moveToFoundation(selected, zone.pileIndex),
@@ -1154,7 +1201,7 @@ export function SingleCardSolitaire({
                 height: stockRect.height,
               }}
               onPress={drawStock}
-              disabled={!canDraw(game)}
+              disabled={!canDraw(game, config)}
             />
           )}
           {interactionTargets}

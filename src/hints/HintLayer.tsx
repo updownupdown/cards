@@ -7,7 +7,7 @@ import { clearActiveHint, useActiveHint } from "./hint-store";
 /** Where a hint highlight goes on the board, and how big it is. */
 export type HintSpot = { x: number; y: number; size: number };
 
-const GLOW_COLOR = "#ffd34d";
+const GLOW_COLOR = "#007179";
 const STEP_DELAY_MS = 650;
 const APPEAR_MS = 200;
 const PULSE_MS = 1000;

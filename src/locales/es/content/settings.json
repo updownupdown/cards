@@ -700,26 +700,6 @@
       }
     }
   },
-  "seer": {
-    "seerDifficulty": {
-      "hash": "e0c908ab",
-      "value": {
-        "description": "Determina qué piedras vecinas puede liberar un acierto.",
-        "label": "Dificultad",
-        "options": [
-          {
-            "label": "Fácil (con diagonales)"
-          },
-          {
-            "label": "Normal (ortogonal)"
-          },
-          {
-            "label": "Difícil (elige una)"
-          }
-        ]
-      }
-    }
-  },
   "sir-tommy": {
     "variant": {
       "hash": "a1adf9a0",

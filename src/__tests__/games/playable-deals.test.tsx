@@ -39,6 +39,8 @@ const MIN_MOVES = 2;
  * them. Each needs its reason.
  */
 const NOT_COUNTED: Record<string, string> = {
+  "/boiling-over":
+    "a round can always draw from the deck, but pressing Stop on a brew of duds moves no card",
   "/cafe-queue":
     "a move places a customer through the game's own queue controls",
   "/chain-of-command": "a move picks a member, then a candidate, then promotes",

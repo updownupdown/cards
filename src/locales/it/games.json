@@ -120,7 +120,7 @@
     "trade": "Scambia",
     "offer": "Offerta"
   },
-  "charlatan": {
+  "boilingOver": {
     "statusStart": "Tocca il tuo mazzo per iniziare la pozione.",
     "statusRisk": "Rischio di esplosione {{risk}}% · Fermandoti: {{points}} punti, {{coins}} monete",
     "statusRiskFinal": "Rischio di esplosione {{risk}}% · Fermandoti: {{points}} punti",
@@ -141,7 +141,14 @@
     "keepPoints": "+{{value}} punti",
     "keepCoins": "+{{value}} monete",
     "nextRound": "Round {{round}} / {{total}}",
+    "continueToRound": "Continua al round {{round}}",
     "round": "Round",
+    "roundCounter": "Round",
+    "strengthLabel": "Forza",
+    "pointsLabel": "Punti",
+    "coinsLabel": "Monete",
+    "dudsLabel": "Fallite",
+    "bustLabel": "Esplosione",
     "score": "Punti",
     "tierVillageHealer": "Guaritore del villaggio",
     "tierCourtAlchemist": "Alchimista di corte",
@@ -212,12 +219,7 @@
     "youRanOutOfCards": "Hai finito le carte prima di sconfiggere tutte e dodici le figure."
   },
   "ebbAndFlow": {
-    "rising": "In salita",
-    "falling": "In discesa",
-    "playMore_one": "Gioca ancora {{count}} carta",
-    "playMore_other": "Gioca ancora {{count}} carte",
-    "playOrDraw": "Continua, o tocca il mazzo per pescare",
-    "deckEmpty": "Mazzo vuoto: gioca tutte le carte che puoi",
+    "stock": "Mazzo",
     "allPlayed": "Tutte le carte sono giocate!",
     "stuck_one": "Nessuna carta giocabile. Resta {{count}} carta.",
     "stuck_other": "Nessuna carta giocabile. Restano {{count}} carte."
@@ -429,14 +431,18 @@
   },
   "picketFence": {
     "statusChooseHouse": "Scegli una carta da costruire come casa.",
-    "statusChooseLot": "Tocca un lotto evidenziato per costruirci.",
-    "statusChooseEffect": "Scegli un effetto: {{hearts}} parco · {{diamonds}} piscina · {{spades}} steccato · {{clubs}} casa",
-    "statusChooseFence": "Tocca dove va lo steccato.",
-    "statusChooseSecondHouse": "Tocca un lotto per la seconda casa.",
-    "noLotFits": "Questa carta non entra in nessun lotto.",
+    "statusChooseLot": "Tocca un lotto per costruire, una casa per ristrutturarla o gli scarti per passare.",
+    "statusChooseEffect": "Scegli una carta effetto.",
+    "statusChooseFence": "Tocca dove va lo steccato, o gli scarti per passare.",
+    "statusChooseSecondHouse": "Tocca un lotto o una casa per la seconda casa, o gli scarti.",
+    "legendPark": "parco",
+    "legendPool": "piscina",
+    "legendFence": "steccato",
+    "legendHouse": "casa",
+    "noLotFits": "Questa carta non entra da nessuna parte: scartala per non costruire.",
     "effectWasted": "Nessun effetto stavolta: la carta viene scartata.",
     "estateBlocked": "✕",
-    "parks": "Parchi {{count}}/{{max}} · {{points}}",
+    "parksLabel": "Parchi",
     "pools": "Piscine",
     "score": "Punti",
     "tierGoodNeighbours": "Buoni vicini",
@@ -446,23 +452,6 @@
     "tierVacantLots": "Lotti vuoti",
     "wonWithTier": "{{score}} punti: {{tier}}!",
     "lostShortOfTarget": "{{score}} punti: {{tier}}. Te ne servono {{target}} per vincere."
-  },
-  "pickpocket": {
-    "round": "Round",
-    "score": "Monete",
-    "statusStart": "Gira una carta per iniziare la tua borsa.",
-    "statusPurse": "Borsa: {{purse}}",
-    "cleanSweep": "Colpo perfetto! Tieni {{purse}}.",
-    "walkedAway": "Te la sei svignata con {{purse}}.",
-    "caught": "Preso! Perdi i {{purse}} della tua borsa.",
-    "caughtEmpty": "Preso prima di aver preso una moneta!",
-    "walkAway": "Svignatela",
-    "nextRound": "Round successivo",
-    "tierLightFingers": "Dita leggere",
-    "tierCutpurse": "Tagliaborse",
-    "tierPrinceOfThieves": "Principe dei ladri",
-    "wonWithTier": "{{score}} monete: {{tier}}!",
-    "lostShortOfTarget": "{{score}} monete. Te ne servono {{target}} per vincere."
   },
   "pocketPoker": {
     "youHit10PointsYou": "Hai raggiunto 10 punti: hai vinto!",
@@ -519,30 +508,6 @@
   },
   "scorpion": {
     "allFourSuitStacksAre": "Tutte e quattro le pile per seme sono complete."
-  },
-  "seer": {
-    "reveal": "Rivela",
-    "return": "Rimetti",
-    "predictions": {
-      "red": "Rosso",
-      "redOddBlackEven": "RD  ·  NP",
-      "even": "Pari",
-      "diamondsHearts": "♦  ·  ♥",
-      "spadesClubs": "♠  ·  ♣",
-      "odd": "Dispari",
-      "blackOddRedEven": "ND  ·  RP",
-      "black": "Nero"
-    },
-    "predictionLabel_one": "Previsione {{label}}, {{count}} pietra",
-    "predictionLabel_other": "Previsione {{label}}, {{count}} pietre",
-    "complete": ", completata",
-    "blocked": ", bloccata",
-    "allPredictionsComplete": "Tutte e otto le previsioni sono completate.",
-    "deckRanOut": "Il mazzo è finito prima di completare tutte le previsioni.",
-    "allPredictionsBlocked": "Tutte e otto le previsioni sono bloccate dalle pietre.",
-    "chooseHighlightedStone": "Scegli una pietra evidenziata",
-    "freedStones_one": "{{count}} pietra liberata",
-    "freedStones_other": "{{count}} pietre liberate"
   },
   "shiftingSands": {
     "draw": "Pesca:",
@@ -749,16 +714,9 @@
   },
   "augury": {
     "streak": "Risposte giuste",
-    "start": "Tocca una carta per giocarla, o dichiara che nessuna va bene.",
     "noneFit": "Nessuna va bene",
     "won": "Hai letto i presagi! La legge: {{law}}",
     "lost": "La tua mano è finita. La legge: {{law}}",
-    "verdict": {
-      "accepted": "La carta è accettata.",
-      "rejected": "La carta è respinta.",
-      "noneRight": "Giusto: nessuna carta andava bene. Una mano nuova.",
-      "noneWrong": "Una carta andava bene, quindi è stata giocata. La tua serie ricomincia."
-    },
     "law": {
       "alternateColours": "Ogni carta deve essere dell’altro colore rispetto alla precedente.",
       "suitOrRank": "Ogni carta deve avere il seme o il valore della precedente.",
@@ -770,7 +728,35 @@
       "evenRedOddBlack": "I valori pari devono essere rossi e quelli dispari neri.",
       "colourTwoBack": "Ogni carta deve essere dello stesso colore di quella di due carte prima.",
       "blackClimbs": "Una carta nera deve essere più alta della precedente; le rosse possono seguire qualsiasi carta.",
-      "sameColourClimbs": "Una carta dello stesso colore della precedente deve essere più alta; l’altro colore può seguire qualsiasi carta."
+      "sameColourClimbs": "Una carta dello stesso colore della precedente deve essere più alta; l’altro colore può seguire qualsiasi carta.",
+      "sameColour": "Deve essere dello stesso colore",
+      "differentSuit": "Deve essere di un altro seme",
+      "highLowAlternate": "Deve alternare tra alta (8-Re) e bassa (Asso-7)",
+      "courtAlternate": "Deve alternare tra figure e carte numerali",
+      "lowerUntilAce": "Deve essere più bassa; dopo un Asso va bene tutto",
+      "farApart": "Deve distare almeno tre valori",
+      "colourTwoBackDiffers": "Deve essere del colore opposto alla penultima carta",
+      "suitTwoBack": "Deve essere dello stesso seme della penultima carta",
+      "freshSuit": "Deve essere di un seme diverso da entrambe le ultime due carte",
+      "zigzag": "Deve andare a zigzag: più alta dopo una discesa, più bassa dopo una salita; dopo due valori uguali va bene tutto",
+      "afterRedLow": "Dopo una rossa, 7 o meno; dopo una nera, 8 o più",
+      "heartsWild": "I cuori possono seguire qualsiasi carta; le altre devono essere più alte",
+      "sumAtMost14": "I due valori devono sommare 14 o meno",
+      "parityLock": "Una dispari deve seguire una dispari, una pari deve seguire una pari",
+      "withinTwoWrap": "Deve stare entro due valori (Asso e Re sono vicini)",
+      "suitSequence": "Deve seguire i semi in ordine: picche, cuori, quadri, fiori",
+      "sameSuitAscender": "Stesso seme dell'ultima: più alta; altro seme dello stesso colore: più bassa; l'altro colore può seguire qualsiasi carta",
+      "redHighBlackLow": "Le rosse devono essere 8 o più; le nere, 7 o meno",
+      "royalCommand": "Dopo una figura, stesso seme; dopo una carta numerale, seme diverso",
+      "rangeFlip": "Dopo un'alta (8-Re), l'altro colore; dopo una bassa (Asso-7), lo stesso colore",
+      "suitSwitcher": "Deve essere dello stesso colore ma di un altro seme",
+      "suitSuperiority": "Deve essere di un seme superiore (fiori, quadri, cuori, picche) o di valore più alto; dopo il Re di picche va bene tutto",
+      "rankSandwich": "Deve stare tra gli ultimi due valori, o essere uguale a uno di essi",
+      "colourBalance": "Non deve formare tre carte dello stesso colore di fila",
+      "distanceMirroring": "Dopo una salita, stesso seme della penultima; dopo una discesa, stesso colore; dopo due valori uguali va bene tutto"
     }
+  },
+  "elevens": {
+    "noMorePairsOrFaceTriplets": "Non si possono più formare coppie né tris di figure."
   }
 }

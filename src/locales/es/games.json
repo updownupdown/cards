@@ -120,7 +120,7 @@
     "trade": "Intercambiar",
     "offer": "Oferta"
   },
-  "charlatan": {
+  "boilingOver": {
     "statusStart": "Toca tu mazo para empezar la poción.",
     "statusRisk": "Riesgo de explosión {{risk}} % · Si paras: {{points}} puntos, {{coins}} monedas",
     "statusRiskFinal": "Riesgo de explosión {{risk}} % · Si paras: {{points}} puntos",
@@ -141,7 +141,14 @@
     "keepPoints": "+{{value}} puntos",
     "keepCoins": "+{{value}} monedas",
     "nextRound": "Ronda {{round}} / {{total}}",
+    "continueToRound": "Continuar a la ronda {{round}}",
     "round": "Ronda",
+    "roundCounter": "Ronda",
+    "strengthLabel": "Fuerza",
+    "pointsLabel": "Puntos",
+    "coinsLabel": "Monedas",
+    "dudsLabel": "Fallidas",
+    "bustLabel": "Explosión",
     "score": "Puntos",
     "tierVillageHealer": "Curandero del pueblo",
     "tierCourtAlchemist": "Alquimista de la corte",
@@ -212,12 +219,7 @@
     "youRanOutOfCards": "Te quedaste sin cartas antes de derrotar a las doce figuras."
   },
   "ebbAndFlow": {
-    "rising": "Subiendo",
-    "falling": "Bajando",
-    "playMore_one": "Juega {{count}} carta más",
-    "playMore_other": "Juega {{count}} cartas más",
-    "playOrDraw": "Sigue jugando, o toca el mazo para robar",
-    "deckEmpty": "Mazo vacío: juega todas las cartas que puedas",
+    "stock": "Mazo",
     "allPlayed": "¡Todas las cartas jugadas!",
     "stuck_one": "No se puede jugar ninguna carta. Queda {{count}} carta.",
     "stuck_other": "No se puede jugar ninguna carta. Quedan {{count}} cartas."
@@ -429,14 +431,18 @@
   },
   "picketFence": {
     "statusChooseHouse": "Elige una carta para construir una casa.",
-    "statusChooseLot": "Toca un solar resaltado para construir ahí.",
-    "statusChooseEffect": "Elige un efecto: {{hearts}} parque · {{diamonds}} piscina · {{spades}} valla · {{clubs}} casa",
-    "statusChooseFence": "Toca donde va la valla.",
-    "statusChooseSecondHouse": "Toca un solar para la segunda casa.",
-    "noLotFits": "Esta carta no cabe en ningún solar.",
+    "statusChooseLot": "Toca un solar para construir, una casa para reformarla o el descarte para pasar.",
+    "statusChooseEffect": "Elige una carta de efecto.",
+    "statusChooseFence": "Toca dónde va la valla, o el descarte para pasar.",
+    "statusChooseSecondHouse": "Toca un solar o una casa para la segunda casa, o el descarte.",
+    "legendPark": "parque",
+    "legendPool": "piscina",
+    "legendFence": "valla",
+    "legendHouse": "casa",
+    "noLotFits": "Esta carta no cabe en ningún sitio: descártala para no construir.",
     "effectWasted": "Sin efecto esta vez: la carta se descarta.",
     "estateBlocked": "✕",
-    "parks": "Parques {{count}}/{{max}} · {{points}}",
+    "parksLabel": "Parques",
     "pools": "Piscinas",
     "score": "Puntos",
     "tierGoodNeighbours": "Buenos vecinos",
@@ -446,23 +452,6 @@
     "tierVacantLots": "Solares vacíos",
     "wonWithTier": "{{score}} puntos: ¡{{tier}}!",
     "lostShortOfTarget": "{{score}} puntos: {{tier}}. Necesitas {{target}} puntos para ganar."
-  },
-  "pickpocket": {
-    "round": "Ronda",
-    "score": "Monedas",
-    "statusStart": "Da la vuelta a una carta para empezar tu bolsa.",
-    "statusPurse": "Bolsa: {{purse}}",
-    "cleanSweep": "¡Golpe perfecto! Te quedas {{purse}}.",
-    "walkedAway": "Te escabulles con {{purse}}.",
-    "caught": "¡Te han pillado! Pierdes los {{purse}} de tu bolsa.",
-    "caughtEmpty": "¡Te han pillado antes de coger una moneda!",
-    "walkAway": "Escabullirse",
-    "nextRound": "Siguiente ronda",
-    "tierLightFingers": "Dedos ligeros",
-    "tierCutpurse": "Cortabolsas",
-    "tierPrinceOfThieves": "Príncipe de los ladrones",
-    "wonWithTier": "{{score}} monedas: ¡{{tier}}!",
-    "lostShortOfTarget": "{{score}} monedas. Necesitas {{target}} monedas para ganar."
   },
   "pocketPoker": {
     "youHit10PointsYou": "¡Llegas a 10 puntos y ganas!",
@@ -519,30 +508,6 @@
   },
   "scorpion": {
     "allFourSuitStacksAre": "Las cuatro pilas por palo están completas."
-  },
-  "seer": {
-    "reveal": "Descubrir",
-    "return": "Devolver",
-    "predictions": {
-      "red": "Rojo",
-      "redOddBlackEven": "RI  ·  NP",
-      "even": "Par",
-      "diamondsHearts": "♦  ·  ♥",
-      "spadesClubs": "♠  ·  ♣",
-      "odd": "Impar",
-      "blackOddRedEven": "NI  ·  RP",
-      "black": "Negro"
-    },
-    "predictionLabel_one": "Predicción {{label}}, {{count}} piedra",
-    "predictionLabel_other": "Predicción {{label}}, {{count}} piedras",
-    "complete": ", completada",
-    "blocked": ", bloqueada",
-    "allPredictionsComplete": "Las ocho predicciones están completas.",
-    "deckRanOut": "El mazo se agotó antes de completar todas las predicciones.",
-    "allPredictionsBlocked": "Las ocho predicciones están bloqueadas por piedras.",
-    "chooseHighlightedStone": "Elige una piedra resaltada",
-    "freedStones_one": "{{count}} piedra liberada",
-    "freedStones_other": "{{count}} piedras liberadas"
   },
   "shiftingSands": {
     "draw": "Robar:",
@@ -749,16 +714,9 @@
   },
   "augury": {
     "streak": "Aciertos",
-    "start": "Toca una carta para jugarla, o declara que ninguna encaja.",
     "noneFit": "Ninguna encaja",
     "won": "¡Has leído los augurios! La ley: {{law}}",
     "lost": "Se te acabó la mano. La ley: {{law}}",
-    "verdict": {
-      "accepted": "La carta es aceptada.",
-      "rejected": "La carta es rechazada.",
-      "noneRight": "Correcto: ninguna carta encajaba. Mano nueva.",
-      "noneWrong": "Una carta sí encajaba, así que se jugó. Tu racha vuelve a empezar."
-    },
     "law": {
       "alternateColours": "Cada carta debe ser del otro color que la anterior.",
       "suitOrRank": "Cada carta debe compartir el palo o el valor de la anterior.",
@@ -770,7 +728,35 @@
       "evenRedOddBlack": "Los valores pares deben ser rojos y los impares negros.",
       "colourTwoBack": "Cada carta debe ser del mismo color que la de dos cartas atrás.",
       "blackClimbs": "Una carta negra debe ser más alta que la anterior; las rojas pueden seguir a cualquiera.",
-      "sameColourClimbs": "Una carta del color de la anterior debe ser más alta que ella; el otro color puede seguir a cualquiera."
+      "sameColourClimbs": "Una carta del color de la anterior debe ser más alta que ella; el otro color puede seguir a cualquiera.",
+      "sameColour": "Debe ser del mismo color",
+      "differentSuit": "Debe ser de otro palo",
+      "highLowAlternate": "Debe alternar entre alta (8 a Rey) y baja (As a 7)",
+      "courtAlternate": "Debe alternar entre figuras y cartas numéricas",
+      "lowerUntilAce": "Debe ser más baja; cualquiera puede seguir a un As",
+      "farApart": "Debe estar al menos a tres valores de distancia",
+      "colourTwoBackDiffers": "Debe ser del color opuesto al de la penúltima carta",
+      "suitTwoBack": "Debe ser del mismo palo que la penúltima carta",
+      "freshSuit": "Debe ser de un palo distinto al de las dos últimas cartas",
+      "zigzag": "Debe zigzaguear: más alta tras una bajada, más baja tras una subida; cualquiera puede seguir a dos valores iguales",
+      "afterRedLow": "Tras una roja, 7 o menos; tras una negra, 8 o más",
+      "heartsWild": "Los corazones pueden seguir a cualquiera; las demás cartas deben ser más altas",
+      "sumAtMost14": "Los dos valores deben sumar 14 o menos",
+      "parityLock": "Una impar debe seguir a una impar, una par a una par",
+      "withinTwoWrap": "Debe estar a dos valores como mucho (As y Rey son vecinos)",
+      "suitSequence": "Debe seguir los palos en orden: picas, corazones, diamantes, tréboles",
+      "sameSuitAscender": "Mismo palo que la última: más alta; otro palo del mismo color: más baja; el otro color puede seguir a cualquiera",
+      "redHighBlackLow": "Las rojas deben ser 8 o más; las negras, 7 o menos",
+      "royalCommand": "Tras una figura, mismo palo; tras una carta numérica, otro palo",
+      "rangeFlip": "Tras una alta (8 a Rey), el otro color; tras una baja (As a 7), el mismo color",
+      "suitSwitcher": "Debe ser del mismo color pero de otro palo",
+      "suitSuperiority": "Debe ser de un palo superior (tréboles, diamantes, corazones, picas) o de un valor más alto; cualquiera puede seguir al Rey de picas",
+      "rankSandwich": "Debe estar entre los dos últimos valores, o ser igual a uno de ellos",
+      "colourBalance": "No debe formar tres cartas seguidas del mismo color",
+      "distanceMirroring": "Tras una subida, mismo palo que la penúltima; tras una bajada, mismo color; cualquiera puede seguir a dos valores iguales"
     }
+  },
+  "elevens": {
+    "noMorePairsOrFaceTriplets": "No quedan parejas ni tríos de figuras posibles."
   }
 }

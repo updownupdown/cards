@@ -700,26 +700,6 @@
       }
     }
   },
-  "seer": {
-    "seerDifficulty": {
-      "hash": "e0c908ab",
-      "value": {
-        "description": "Define quais pedras vizinhas um acerto pode liberar.",
-        "label": "Dificuldade",
-        "options": [
-          {
-            "label": "Fácil (inclui diagonais)"
-          },
-          {
-            "label": "Normal (horizontal e vertical)"
-          },
-          {
-            "label": "Difícil (escolha uma)"
-          }
-        ]
-      }
-    }
-  },
   "sir-tommy": {
     "variant": {
       "hash": "a1adf9a0",

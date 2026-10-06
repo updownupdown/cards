@@ -12,7 +12,15 @@ export const elevens: GameDefinition = {
     difficulty: 55,
     luck: 80,
   },
-  thumbnail: "Pyramid.webp",
+  thumbnail: "Elevens.webp",
+  thumbnailCredit: {
+    title: "Allegory of Arithmetic",
+    artistName: "Laurent de La Hyre",
+    date: "1650",
+    sourceName: "The Walters Art Museum",
+    sourceLink:
+      "https://commons.wikimedia.org/wiki/File:Laurent_de_La_Hyre_-_Allegory_of_Arithmetic_-_Walters_371917.jpg",
+  },
   background: GAME_BACKGROUNDS.sahara,
   animation: GameAnimations.Sand,
   gameColorDark: "#251703",
@@ -27,7 +35,7 @@ export const elevens: GameDefinition = {
     "Clear the whole deck by removing pairs of cards that total **11**, or a royal **Jack-Queen-King** triplet.",
 
     "## Deal",
-    "- Nine cards are dealt face up in a 3x3 grid.",
+    "- Cards are dealt face up in a grid: 5x3 on Easy, 4x3 on Medium or 3x3 on Hard (the default).",
     "- The rest of the deck forms the stock.",
 
     "## Card values",

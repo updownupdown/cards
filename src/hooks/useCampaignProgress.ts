@@ -34,8 +34,8 @@ export function useCampaignProgress() {
     [progress.winsByPath],
   );
   const unlockedPaths = useMemo(
-    () => getUnlockedGameDotPaths(wonPaths),
-    [wonPaths],
+    () => getUnlockedGameDotPaths(wonPaths, progress.unlockedPaths),
+    [wonPaths, progress.unlockedPaths],
   );
   const collectedTaoIds = useMemo(
     () => new Set(progress.collectedTaoIds),

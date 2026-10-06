@@ -24,8 +24,10 @@ export type GameSpecificSettingKey =
   | "pyramidDifficulty"
   | "golfDifficulty"
   | "gapsDifficulty"
-  | "seerDifficulty"
+  | "elevensDifficulty"
+  | "elevensEliminateBadDeals"
   | "jailbreakDifficulty"
+  | "littleWindmillDifficulty"
   | "gremlinDifficulty"
   | "nightVigilDifficulty"
   | "pagodaDifficulty"
@@ -336,6 +338,45 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
+    "/elevens": [
+      {
+        key: "elevensDifficulty",
+        label: "Difficulty",
+        type: "string",
+        applyBehavior: "next-game",
+        description: "Larger grids are easier.",
+        options: [
+          { label: "Easy (5 x 3)", value: "easy" },
+          { label: "Medium (4 x 3)", value: "medium" },
+          { label: "Hard (3 x 3)", value: "hard" },
+        ],
+      },
+      {
+        key: "elevensEliminateBadDeals",
+        label: "Eliminate bad deals",
+        type: "boolean",
+        booleanType: "toggle",
+        applyBehavior: "next-game",
+        description: "Ensures all deals can be played at least 3 moves.",
+        options: [
+          { label: "Off", value: false },
+          { label: "On", value: true },
+        ],
+      },
+    ],
+    "/little-windmill": [
+      {
+        key: "littleWindmillDifficulty",
+        label: "Difficulty",
+        type: "string",
+        applyBehavior: "next-game",
+        description: "Easy allows one redeal of the waste.",
+        options: [
+          { label: "Easy (1 redeal)", value: "easy" },
+          { label: "Normal (no redeal)", value: "normal" },
+        ],
+      },
+    ],
     "/golf": [
       {
         key: "golfDifficulty",
@@ -383,20 +424,6 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         options: [
           { label: "5 (Easy)", value: "easy" },
           { label: "4 (Hard)", value: "hard" },
-        ],
-      },
-    ],
-    "/seer": [
-      {
-        key: "seerDifficulty",
-        label: "Difficulty",
-        type: "string",
-        applyBehavior: "immediate",
-        description: "Controls which neighboring stones a success can free.",
-        options: [
-          { label: "Easy (including diagonals)", value: "easy" },
-          { label: "Normal (orthogonal)", value: "normal" },
-          { label: "Hard (choose one)", value: "hard" },
         ],
       },
     ],

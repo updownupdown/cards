@@ -14,12 +14,12 @@ export const crossword: GameDefinition = {
   },
   thumbnail: "Crossword.webp",
   thumbnailCredit: {
-    title: "Checkerboard Composition with Dark Colors",
-    artistName: "Piet Mondrian",
-    date: "1919",
-    sourceName: "Wikimedia Commons",
+    title: "Checkerboard and Playing Cards",
+    artistName: "Juan Gris",
+    date: "1915",
+    sourceName: "The Metropolitan Museum of Art",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Mondrian_Compositie_Dambord,_donkere_Kleuren.jpg",
+      "https://commons.wikimedia.org/wiki/File:Checkerboard_and_Playing_Cards_MET_DP302916_ms.jpg",
   },
   background: GAME_BACKGROUNDS.cozyRoom2,
   animation: GameAnimations.Dust,

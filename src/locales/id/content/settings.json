@@ -700,26 +700,6 @@
       }
     }
   },
-  "seer": {
-    "seerDifficulty": {
-      "hash": "e0c908ab",
-      "value": {
-        "description": "Mengatur batu tetangga mana yang bisa dibebaskan ramalan yang tepat.",
-        "label": "Kesulitan",
-        "options": [
-          {
-            "label": "Mudah (termasuk diagonal)"
-          },
-          {
-            "label": "Normal (mendatar dan tegak)"
-          },
-          {
-            "label": "Sulit (pilih satu)"
-          }
-        ]
-      }
-    }
-  },
   "sir-tommy": {
     "variant": {
       "hash": "a1adf9a0",

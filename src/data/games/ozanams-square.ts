@@ -15,12 +15,12 @@ export const ozanamsSquare: GameDefinition = {
   },
   thumbnail: "OzanamsSquare.webp",
   thumbnailCredit: {
-    title: "Queen of Nooses, from The Cloisters Playing Cards",
-    artistName: "Unknown South Netherlandish artist",
-    date: "about 1475–80",
+    title: "Melencolia I",
+    artistName: "Albrecht Dürer",
+    date: "1514",
     sourceName: "The Metropolitan Museum of Art",
     sourceLink:
-      "https://commons.wikimedia.org/wiki/File:Queen_of_Nooses,_from_The_Cloisters_Playing_Cards_MET_DP354543.jpg",
+      "https://commons.wikimedia.org/wiki/File:Melencolia_I_MET_DP820348.jpg",
   },
   background: GAME_BACKGROUNDS.alhambra,
   animation: GameAnimations.Dust,

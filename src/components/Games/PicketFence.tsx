@@ -2,7 +2,7 @@ import { Text } from "@/components/common/Text";
 import { useGameColors } from "@/hooks/useGameColors";
 import { useStateManager } from "@/hooks/useStateManager";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, rgba } from "@/styles/styles";
+import { rgba } from "@/styles/styles";
 import { delay } from "@/utils/utils";
 import { produce } from "immer";
 import { useMemo, useState } from "react";
@@ -16,7 +16,7 @@ import {
   rankValue,
   redealWith,
   shuffle,
-  SUIT_SYMBOLS,
+  type CardSuit,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
@@ -35,21 +35,33 @@ import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 // gives an effect. Two cards a turn use the deck in 26 turns.
 const STREET_LENGTHS = [6, 7, 8];
 const HAND_SIZE = 3;
-// Points for 0, 1, 2... parks on each street; extra parks score nothing.
-const PARK_POINTS = [
-  [0, 2, 4, 10],
-  [0, 2, 4, 6, 14],
-  [0, 2, 4, 6, 8, 18],
-];
+const PICKET_FENCE_COLORS = {
+  park: "#2E8B57",
+  pool: "#1E88E5",
+  fence: "#808080",
+  house: "#8B5A2B",
+  score: "#9E9E9E",
+} as const;
+const SUIT_EFFECT_COLORS = {
+  hearts: PICKET_FENCE_COLORS.park,
+  diamonds: PICKET_FENCE_COLORS.pool,
+  spades: PICKET_FENCE_COLORS.fence,
+  clubs: PICKET_FENCE_COLORS.house,
+} satisfies Record<CardSuit, string>;
 const POOL_LOTS = [
   [1, 4],
   [2, 5],
   [1, 4, 6],
 ];
-const POOL_POINTS = [0, 3, 6, 9, 13, 17, 21, 26];
-// Points for a completed estate of 1 to 6 houses; longer estates score nothing.
-const ESTATE_POINTS = [0, 1, 3, 5, 7, 9, 11];
+const LOT_COUNT = STREET_LENGTHS.reduce((sum, length) => sum + length, 0);
+const MAX_POOL_COUNT = POOL_LOTS.reduce((sum, lots) => sum + lots.length, 0);
+// Only a finished estate scores: for its houses (1, 3, 6 or 10 points for 1
+// to 4), and for each park and pool in it. Every street is longer than the
+// largest estate, so none scores without a fence.
+const ESTATE_POINTS = [0, 1, 3, 6, 10];
 const MAX_ESTATE = ESTATE_POINTS.length - 1;
+const PARK_POINTS = 2;
+const POOL_POINTS = 4;
 const WIN_SCORE = 60;
 
 const TIERS = [
@@ -76,8 +88,10 @@ export type PicketFenceGameState = {
   hand: PlayingCard[];
   streets: Street[];
   discard: PlayingCard[];
-  /** The house built this turn, waiting for its effect card. */
+  /** The house built or renovated this turn, waiting for its effect card. */
   pending: Lot | null;
+  /** This turn's house card was discarded instead; the effect card is next. */
+  skippedBuild?: boolean;
 };
 
 function emptyStreets(): Street[] {
@@ -114,21 +128,51 @@ function neighbours(houses: (PlayingCard | null)[], lot: number) {
   return { low, high };
 }
 
-function canBuild(street: Street, lot: number, value: number) {
-  if (street.houses[lot]) return false;
+/** Whether a number keeps the street rising at a lot, built on or not. */
+function fits(street: Street, lot: number, value: number) {
   const { low, high } = neighbours(street.houses, lot);
   return value > low && value < high;
 }
 
-function legalLots(streets: Street[], value: number): Lot[] {
+function canBuild(street: Street, lot: number, value: number) {
+  return !street.houses[lot] && fits(street, lot, value);
+}
+
+/** Renovating: a card may replace a house if the street still rises. */
+function canRenovate(street: Street, lot: number, value: number) {
+  return !!street.houses[lot] && fits(street, lot, value);
+}
+
+function lotsWhere(
+  streets: Street[],
+  test: (street: Street, lot: number) => boolean,
+): Lot[] {
   return streets.flatMap((street, s) =>
     street.houses.flatMap((_, lot) =>
-      canBuild(street, lot, value) ? [{ street: s, lot }] : [],
+      test(street, lot) ? [{ street: s, lot }] : [],
     ),
   );
 }
 
-/** An empty lot no number can ever fill: its neighbours are consecutive. */
+/** The empty lots a number can be built on. */
+function legalLots(streets: Street[], value: number): Lot[] {
+  return lotsWhere(streets, (street, lot) => canBuild(street, lot, value));
+}
+
+/** The houses a number can replace. */
+function renovationLots(streets: Street[], value: number): Lot[] {
+  return lotsWhere(streets, (street, lot) => canRenovate(street, lot, value));
+}
+
+/** Everywhere a card can go as a house: empty lots, then houses to replace. */
+function houseLots(streets: Street[], value: number): Lot[] {
+  return [...legalLots(streets, value), ...renovationLots(streets, value)];
+}
+
+/**
+ * An empty lot no number can fill as things stand: its neighbours are
+ * consecutive. Renovating one of them can open it again.
+ */
 function isDeadLot(street: Street, lot: number) {
   if (street.houses[lot]) return false;
   const { low, high } = neighbours(street.houses, lot);
@@ -155,8 +199,9 @@ function estates(street: Street): [number, number][] {
 }
 
 /**
- * Whether an estate is built, can still be built, or never can: it is too
- * long, or a gap in it has more empty lots than numbers left to fill them.
+ * Whether an estate is built, can still be built, or can't as it stands: it
+ * is too long (and needs a fence), or a gap in it has more empty lots than
+ * numbers left to fill them (and needs a neighbour renovated).
  */
 function estateStatus(street: Street, [first, last]: [number, number]) {
   const size = last - first + 1;
@@ -182,56 +227,52 @@ function estateStatus(street: Street, [first, last]: [number, number]) {
   return "open";
 }
 
-function parkCount(street: Street) {
-  return street.tucked.filter((card) => card?.suit === "hearts").length;
+function tuckedCount(
+  street: Street,
+  suit: CardSuit,
+  estate?: [number, number],
+) {
+  const [first, last] = estate ?? [0, street.houses.length - 1];
+  return street.tucked
+    .slice(first, last + 1)
+    .filter((card) => card?.suit === suit).length;
 }
 
-function parkScore(street: Street, s: number) {
-  const points = PARK_POINTS[s];
-  return points[Math.min(parkCount(street), points.length - 1)];
-}
-
-function poolCount(streets: Street[]) {
-  return streets.reduce(
-    (sum, street) =>
-      sum + street.tucked.filter((card) => card?.suit === "diamonds").length,
-    0,
-  );
-}
-
-function estateScore(street: Street) {
-  return estates(street).reduce((sum, estate) => {
-    if (estateStatus(street, estate) !== "complete") return sum;
-    return sum + ESTATE_POINTS[estate[1] - estate[0] + 1];
-  }, 0);
+/** What an estate scores once finished: its houses, parks and pools. */
+function estateValue(street: Street, estate: [number, number]) {
+  const houses = ESTATE_POINTS[estate[1] - estate[0] + 1] ?? 0;
+  const parks = tuckedCount(street, "hearts", estate) * PARK_POINTS;
+  const pools = tuckedCount(street, "diamonds", estate) * POOL_POINTS;
+  return { houses, parks, pools, total: houses + parks + pools };
 }
 
 function scoreOf(streets: Street[]) {
-  const parks = streets.reduce((sum, st, s) => sum + parkScore(st, s), 0);
-  const pools =
-    POOL_POINTS[Math.min(poolCount(streets), POOL_POINTS.length - 1)];
-  const estatePoints = streets.reduce((sum, st) => sum + estateScore(st), 0);
-  return {
-    parks,
-    pools,
-    estates: estatePoints,
-    total: parks + pools + estatePoints,
-  };
+  const score = { parks: 0, pools: 0, estates: 0, total: 0 };
+  for (const street of streets) {
+    for (const estate of estates(street)) {
+      if (estateStatus(street, estate) !== "complete") continue;
+      const value = estateValue(street, estate);
+      score.parks += value.parks;
+      score.pools += value.pools;
+      score.estates += value.houses;
+      score.total += value.total;
+    }
+  }
+  return score;
 }
 
 function isFull(streets: Street[]) {
   return streets.every((street) => street.houses.every(Boolean));
 }
 
-function canBuildAny(state: PicketFenceGameState) {
-  return state.hand.some(
-    (card) => legalLots(state.streets, houseNumber(card)).length > 0,
-  );
+/** Whether this turn's house is settled and its effect card is due. */
+function awaitingEffect(state: PicketFenceGameState) {
+  return !!state.pending || !!state.skippedBuild;
 }
 
+/** The game runs until the deck is used up and the last cards are played. */
 function isOver(state: PicketFenceGameState) {
-  if (state.pending) return false;
-  return isFull(state.streets) || !canBuildAny(state);
+  return !awaitingEffect(state) && state.hand.length === 0;
 }
 
 function getTier(score: number) {
@@ -246,19 +287,44 @@ function drawHand(state: PicketFenceGameState) {
 
 function finishTurn(state: PicketFenceGameState) {
   state.pending = null;
+  state.skippedBuild = false;
   drawHand(state);
 }
 
+/** Puts a card on a lot as its house; a house it replaces is discarded. */
+function placeHouse(state: PicketFenceGameState, card: PlayingCard, at: Lot) {
+  const street = state.streets[at.street];
+  const replaced = street.houses[at.lot];
+  if (replaced) state.discard.push(replaced);
+  street.houses[at.lot] = card;
+}
+
+/** Builds a hand card on an empty lot, or renovates a house with it. */
 function buildHouse(state: PicketFenceGameState, handIndex: number, at: Lot) {
   const card = state.hand[handIndex];
   const street = state.streets[at.street];
-  if (!card || state.pending || !canBuild(street, at.lot, houseNumber(card))) {
+  if (
+    !card ||
+    awaitingEffect(state) ||
+    !fits(street, at.lot, houseNumber(card))
+  ) {
     return false;
   }
   state.hand.splice(handIndex, 1);
-  street.houses[at.lot] = card;
+  placeHouse(state, card, at);
   state.pending = at;
   // The deck's last card is built without an effect.
+  if (state.hand.length === 0) finishTurn(state);
+  return true;
+}
+
+/** Discards a hand card instead of building this turn. */
+function skipBuild(state: PicketFenceGameState, handIndex: number) {
+  const card = state.hand[handIndex];
+  if (!card || awaitingEffect(state)) return false;
+  state.hand.splice(handIndex, 1);
+  state.discard.push(card);
+  state.skippedBuild = true;
   if (state.hand.length === 0) finishTurn(state);
   return true;
 }
@@ -266,9 +332,10 @@ function buildHouse(state: PicketFenceGameState, handIndex: number, at: Lot) {
 type EffectResult = "park" | "pool" | "fence" | "house" | "wasted";
 
 /**
- * Uses a hand card's suit on this turn's house: hearts make a park, diamonds
- * a pool (on a pool lot), spades a fence at `target`, and clubs are built as
- * a second house at `target`. Without a usable target the card is discarded.
+ * Uses a hand card's suit: hearts make a park and diamonds a pool (on a pool
+ * lot) under this turn's house, if it has neither yet; spades put a fence at
+ * `target`; and clubs are built as a second house at `target`. Without a
+ * usable target the card is discarded.
  */
 function applyEffect(
   state: PicketFenceGameState,
@@ -277,15 +344,17 @@ function applyEffect(
 ): EffectResult | null {
   const pending = state.pending;
   const card = state.hand[handIndex];
-  if (!pending || !card) return null;
+  if (!awaitingEffect(state) || !card) return null;
 
-  const street = state.streets[pending.street];
+  const free = !!pending && !state.streets[pending.street].tucked[pending.lot];
   let result: EffectResult = "wasted";
 
   if (card.suit === "hearts") {
-    result = "park";
+    if (free) result = "park";
   } else if (card.suit === "diamonds") {
-    if (POOL_LOTS[pending.street].includes(pending.lot)) result = "pool";
+    if (free && POOL_LOTS[pending!.street].includes(pending!.lot)) {
+      result = "pool";
+    }
   } else if (card.suit === "spades") {
     if (target && "gap" in target) {
       const fences = state.streets[target.street].fences;
@@ -295,15 +364,15 @@ function applyEffect(
     }
   } else if (target && "lot" in target) {
     const other = state.streets[target.street];
-    if (!canBuild(other, target.lot, houseNumber(card))) return null;
+    if (!fits(other, target.lot, houseNumber(card))) return null;
     result = "house";
   }
 
   state.hand.splice(handIndex, 1);
   if (result === "park" || result === "pool") {
-    street.tucked[pending.lot] = card;
+    state.streets[pending!.street].tucked[pending!.lot] = card;
   } else if (result === "house" && target && "lot" in target) {
-    state.streets[target.street].houses[target.lot] = card;
+    placeHouse(state, card, target);
   } else {
     state.discard.push(card);
   }
@@ -318,7 +387,7 @@ function effectTargets(
 ): (Lot | FenceSpot)[] {
   if (card.suit === "spades") return openFences(state.streets);
   if (card.suit === "clubs") {
-    return legalLots(state.streets, houseNumber(card));
+    return houseLots(state.streets, houseNumber(card));
   }
   return [];
 }
@@ -330,6 +399,7 @@ function createInitialState(): PicketFenceGameState {
     streets: emptyStreets(),
     discard: [],
     pending: null,
+    skippedBuild: false,
   };
   drawHand(state);
   return state;
@@ -342,6 +412,7 @@ function gatherState(state: PicketFenceGameState): PicketFenceGameState {
     streets: emptyStreets(),
     discard: [],
     pending: null,
+    skippedBuild: false,
   };
 }
 
@@ -349,98 +420,109 @@ const gameStateInitial = createInitialState();
 
 // ========== Hints ========== //
 
-function cloneStreets(streets: Street[]): Street[] {
-  return streets.map((street) => ({
-    houses: [...street.houses],
-    tucked: [...street.tucked],
-    fences: [...street.fences],
-  }));
+function cloneState(state: PicketFenceGameState): PicketFenceGameState {
+  return {
+    ...state,
+    // Copied too: finishing a turn draws from it.
+    deck: [...state.deck],
+    hand: [...state.hand],
+    discard: [...state.discard],
+    streets: state.streets.map((street) => ({
+      houses: [...street.houses],
+      tucked: [...street.tucked],
+      fences: [...street.fences],
+    })),
+  };
 }
+
+/** How likely each missing house of an unfinished estate is to get built. */
+const FILL_CHANCE = 0.6;
 
 /**
- * How good a house number is on a lot: it should sit where its number
- * belongs along the street (low numbers left, high right), and leave no
- * lot that no number could fill.
+ * What the streets look worth with `turnsLeft` to go: finished estates in
+ * full, and unfinished ones by how likely they are to be finished. Estates
+ * that are too long count a little for their houses while a fence could still
+ * split them, and lots nothing fits count against.
  */
-function placementWorth(streets: Street[], at: Lot, value: number) {
-  const street = streets[at.street];
-  const length = street.houses.length;
-  const ideal = ((value - 1) / 12) * (length - 1);
-  const deadBefore = street.houses.filter((_, lot) =>
-    isDeadLot(street, lot),
-  ).length;
-  const houses = [...street.houses];
-  const deadAfter = houses.filter((house, lot) => {
-    if (house || lot === at.lot) return false;
-    let low = 0;
-    let high = 14;
-    for (let i = lot - 1; i >= 0; i--) {
-      const number =
-        i === at.lot ? value : houses[i] && houseNumber(houses[i]!);
-      if (number) {
-        low = number;
-        break;
+function outlook(streets: Street[], turnsLeft: number) {
+  let worth = 0;
+  for (const street of streets) {
+    for (const estate of estates(street)) {
+      const size = estate[1] - estate[0] + 1;
+      const built = street.houses
+        .slice(estate[0], estate[1] + 1)
+        .filter(Boolean).length;
+      const status = estateStatus(street, estate);
+      if (status === "complete") {
+        worth += estateValue(street, estate).total;
+      } else if (status === "open") {
+        const missing = size - built;
+        worth +=
+          FILL_CHANCE ** missing *
+          Math.min(1, turnsLeft / (missing * 1.5)) *
+          estateValue(street, estate).total;
+      } else if (size > MAX_ESTATE) {
+        worth += 0.5 * built * Math.min(1, turnsLeft / 4);
       }
     }
-    for (let i = lot + 1; i < houses.length; i++) {
-      const number =
-        i === at.lot ? value : houses[i] && houseNumber(houses[i]!);
-      if (number) {
-        high = number;
-        break;
-      }
-    }
-    return high - low <= 1;
-  }).length;
-  return -(deadAfter - deadBefore) * 20 - Math.abs(ideal - at.lot) * 3;
+    street.houses.forEach((_, lot) => {
+      if (isDeadLot(street, lot)) worth -= 1.5;
+    });
+  }
+  return worth;
 }
 
-type EffectChoice = { worth: number; target?: Lot | FenceSpot };
+type EffectPlay = {
+  index: number;
+  target?: Lot | FenceSpot;
+  /** A spade or club thrown away rather than used. */
+  discard?: boolean;
+  worth: number;
+};
 
-/** What an effect card is worth on the house built at `pending`. */
-function effectWorth(
-  state: PicketFenceGameState,
-  pending: Lot,
-  card: PlayingCard,
-): EffectChoice {
-  const streets = state.streets;
-  if (card.suit === "hearts") {
-    const after = cloneStreets(streets);
-    after[pending.street].tucked[pending.lot] = card;
-    const gain =
-      parkScore(after[pending.street], pending.street) -
-      parkScore(streets[pending.street], pending.street);
-    return { worth: gain * 3 + 2 };
-  }
-  if (card.suit === "diamonds") {
-    if (!POOL_LOTS[pending.street].includes(pending.lot)) return { worth: -5 };
-    return { worth: 10 };
-  }
-  if (card.suit === "clubs") {
-    const lots = legalLots(streets, houseNumber(card));
-    let best: EffectChoice = { worth: -5 };
-    for (const lot of lots) {
-      const worth = 6 + placementWorth(streets, lot, houseNumber(card)) / 4;
-      if (worth > best.worth) best = { worth, target: lot };
-    }
-    return best;
-  }
-  // Spades: the fence that best rounds off an estate.
-  let best: EffectChoice = { worth: -3 };
-  for (const spot of openFences(streets)) {
-    const after = cloneStreets(streets);
-    after[spot.street].fences[spot.gap] = true;
-    const street = after[spot.street];
-    const gain = estateScore(street) - estateScore(streets[spot.street]);
-    const usable = estates(street).filter(
-      (estate) => estateStatus(street, estate) !== "blocked",
-    ).length;
-    const before = estates(streets[spot.street]).filter(
-      (estate) => estateStatus(streets[spot.street], estate) !== "blocked",
-    ).length;
-    const worth = gain * 4 + (usable - before) * 3;
-    if (worth > best.worth) best = { worth, target: spot };
-  }
+/** The effect card (and its target) that leaves the streets worth most. */
+function bestEffect(state: PicketFenceGameState): EffectPlay | null {
+  const turnsLeft = Math.ceil((state.deck.length + state.hand.length - 1) / 2);
+  let best: EffectPlay | null = null;
+  const consider = (play: Omit<EffectPlay, "worth">) => {
+    const after = cloneState(state);
+    if (applyEffect(after, play.index, play.target) === null) return;
+    const worth = outlook(after.streets, turnsLeft);
+    if (!best || worth > best.worth) best = { ...play, worth };
+  };
+  state.hand.forEach((card, index) => {
+    const targets = effectTargets(state, card);
+    if (targets.length === 0) return consider({ index });
+    targets.forEach((target) => consider({ index, target }));
+    consider({ index, discard: true });
+  });
+  return best;
+}
+
+type HousePlay = { index: number; at: Lot | null; worth: number };
+
+/**
+ * The house to build (or renovate, or the card to discard instead), counting
+ * the best effect the other cards could then give.
+ */
+function bestHouse(state: PicketFenceGameState): HousePlay | null {
+  const turnsLeft = Math.ceil((state.deck.length + state.hand.length) / 2);
+  let best: HousePlay | null = null;
+  const consider = (index: number, at: Lot | null) => {
+    const after = cloneState(state);
+    if (at ? !buildHouse(after, index, at) : !skipBuild(after, index)) return;
+    const effect = awaitingEffect(after) ? bestEffect(after) : null;
+    const worth = effect
+      ? effect.worth
+      : outlook(after.streets, Math.max(0, turnsLeft - 1));
+    if (!best || worth > best.worth) best = { index, at, worth };
+  };
+  state.hand.forEach((card, index) => {
+    houseLots(state.streets, houseNumber(card)).forEach((at) =>
+      consider(index, at),
+    );
+    consider(index, null);
+  });
   return best;
 }
 
@@ -451,55 +533,25 @@ function targetZone(target: Lot | FenceSpot) {
     : `lot-${target.street}-${target.lot}`;
 }
 
-/**
- * Building: the hand card and lot that keep the streets open, counting the
- * best effect the other cards could then give. Then the effect: the card
- * (and where a fence or second house goes) worth the most points.
- */
 function findPicketFenceHint(state: PicketFenceGameState) {
-  if (state.pending) {
-    const pending = state.pending;
-    let best: { index: number; choice: EffectChoice } | null = null;
-    state.hand.forEach((card, index) => {
-      const choice = effectWorth(state, pending, card);
-      if (!best || choice.worth > best.choice.worth) best = { index, choice };
-    });
-    if (!best) return null;
-    const { index, choice } = best as { index: number; choice: EffectChoice };
-    const card = state.hand[index];
-    return choice.target
-      ? makeHint(
-          "moveCard",
-          cardTarget(card),
-          zoneTarget(targetZone(choice.target)),
-        )
-      : makeHint("tapCard", cardTarget(card));
+  if (awaitingEffect(state)) {
+    const play = bestEffect(state);
+    if (!play) return null;
+    const card = cardTarget(state.hand[play.index]);
+    if (play.target) {
+      return makeHint("moveCard", card, zoneTarget(targetZone(play.target)));
+    }
+    return play.discard
+      ? makeHint("moveCard", card, zoneTarget("discard"))
+      : makeHint("tapCard", card);
   }
 
-  let best: { index: number; at: Lot; worth: number } | null = null;
-  state.hand.forEach((card, index) => {
-    for (const at of legalLots(state.streets, houseNumber(card))) {
-      const after: PicketFenceGameState = {
-        ...state,
-        streets: cloneStreets(state.streets),
-        hand: state.hand.filter((_, i) => i !== index),
-      };
-      after.streets[at.street].houses[at.lot] = card;
-      const effect = after.hand.reduce(
-        (top, other) => Math.max(top, effectWorth(after, at, other).worth),
-        after.hand.length ? -Infinity : 0,
-      );
-      const worth =
-        placementWorth(state.streets, at, houseNumber(card)) + effect;
-      if (!best || worth > best.worth) best = { index, at, worth };
-    }
-  });
-  if (!best) return null;
-  const { index, at } = best as { index: number; at: Lot; worth: number };
+  const play = bestHouse(state);
+  if (!play) return null;
   return makeHint(
     "moveCard",
-    cardTarget(state.hand[index]),
-    zoneTarget(`lot-${at.street}-${at.lot}`),
+    cardTarget(state.hand[play.index]),
+    zoneTarget(play.at ? targetZone(play.at) : "discard"),
   );
 }
 
@@ -508,18 +560,24 @@ export const picketFenceRules = {
   STREET_LENGTHS,
   POOL_LOTS,
   WIN_SCORE,
+  ESTATE_POINTS,
+  PARK_POINTS,
+  POOL_POINTS,
   emptyStreets,
   canBuild,
+  canRenovate,
   legalLots,
+  renovationLots,
   isDeadLot,
   estates,
   estateStatus,
-  parkScore,
+  estateValue,
   scoreOf,
   isFull,
   isOver,
   getTier,
   buildHouse,
+  skipBuild,
   applyEffect,
   effectTargets,
   createInitialState,
@@ -530,12 +588,13 @@ const GAP = 0.15;
 const COLS = Math.max(...STREET_LENGTHS);
 const HUD_ROW = 0;
 const STREETS_ROW = 0.6;
-const STREET_SPACING = 2.3;
+const STREET_SPACING = 1.95;
 const LABEL_HEIGHT = 0.36;
 // The effect card tucked under a house shows above it.
-const TUCK_PEEK = 0.4;
+const TUCK_PEEK = 0.2;
 const STATUS_ROW = STREETS_ROW + STREET_SPACING * STREET_LENGTHS.length;
-const HAND_ROW = STATUS_ROW + 0.5;
+const LEGEND_ROW = STATUS_ROW + 0.42;
+const HAND_ROW = LEGEND_ROW + 0.5;
 const HAND_COL = (COLS - HAND_SIZE) / 2;
 const POST_WIDTH = 0.45;
 const POST_HEIGHT = 0.6;
@@ -554,21 +613,44 @@ function lotRow(s: number) {
   return estateLabelRow(s) + LABEL_HEIGHT + 0.02 + TUCK_PEEK;
 }
 
-function parkLabelRow(s: number) {
-  return lotRow(s) + 1.05;
-}
-
 // Zone widths include the gaps they span, so a zone of width w centred on
 // the gap after lot g starts at col g + 1 - w / 2.
 function gapCol(s: number, gap: number, width: number) {
   return streetCol(s) + gap + 1 - width / 2;
 }
 
+const LEGEND = [
+  {
+    suit: "hearts",
+    color: PICKET_FENCE_COLORS.park,
+    label: "games:picketFence.legendPark",
+    points: PARK_POINTS,
+  },
+  {
+    suit: "diamonds",
+    color: PICKET_FENCE_COLORS.pool,
+    label: "games:picketFence.legendPool",
+    points: POOL_POINTS,
+  },
+  {
+    suit: "spades",
+    color: PICKET_FENCE_COLORS.fence,
+    label: "games:picketFence.legendFence",
+    points: 0,
+  },
+  {
+    suit: "clubs",
+    color: PICKET_FENCE_COLORS.house,
+    label: "games:picketFence.legendHouse",
+    points: 0,
+  },
+] as const;
+
 type Phase =
   | { kind: "house" }
-  | { kind: "effect"; pending: Lot }
-  | { kind: "fence"; pending: Lot; card: number }
-  | { kind: "secondHouse"; pending: Lot; card: number };
+  | { kind: "effect" }
+  | { kind: "fence"; card: number }
+  | { kind: "secondHouse"; card: number };
 
 // ========== Component ========== //
 export default function PicketFence() {
@@ -601,6 +683,7 @@ export default function PicketFence() {
   });
 
   const ended = isOver(game);
+  const awaiting = awaitingEffect(game);
   const score = useMemo(() => scoreOf(game.streets), [game.streets]);
   const won = ended && score.total >= WIN_SCORE;
 
@@ -611,25 +694,34 @@ export default function PicketFence() {
 
   const effectCard =
     selectedEffect !== null ? game.hand[selectedEffect] : undefined;
-  const phase: Phase = !game.pending
+  const phase: Phase = !awaiting
     ? { kind: "house" }
     : effectCard?.suit === "spades"
-      ? { kind: "fence", pending: game.pending, card: selectedEffect! }
+      ? { kind: "fence", card: selectedEffect! }
       : effectCard?.suit === "clubs"
-        ? { kind: "secondHouse", pending: game.pending, card: selectedEffect! }
-        : { kind: "effect", pending: game.pending };
+        ? { kind: "secondHouse", card: selectedEffect! }
+        : { kind: "effect" };
 
   const houseCard =
     phase.kind === "house" && selectedHouse !== null
       ? game.hand[selectedHouse]
       : undefined;
 
-  // Lots that the selected card can be built on.
+  // Where the selected card can go as a house: empty lots, and houses it
+  // can replace.
   const targetLots = useMemo(() => {
     const card =
       houseCard ?? (phase.kind === "secondHouse" ? effectCard : null);
-    return card ? legalLots(game.streets, houseNumber(card)) : [];
+    return card ? houseLots(game.streets, houseNumber(card)) : [];
   }, [houseCard, effectCard, phase.kind, game.streets]);
+
+  // A selected card can go to the discard instead: skipping this turn's
+  // house, or throwing away a spade or club rather than using it.
+  const canDiscardSelected =
+    !ended &&
+    (houseCard !== undefined ||
+      phase.kind === "fence" ||
+      phase.kind === "secondHouse");
 
   const isTargetLot = (s: number, lot: number) =>
     targetLots.some((target) => target.street === s && target.lot === lot);
@@ -641,13 +733,29 @@ export default function PicketFence() {
     setGame(produce(game, update));
   }
 
-  function playEffectCard(handIndex: number, target?: Lot | FenceSpot) {
+  function playEffectCard(
+    handIndex: number,
+    target?: Lot | FenceSpot,
+    discarding = false,
+  ) {
     let result: EffectResult | null = null;
     commit((draft) => {
       result = applyEffect(draft, handIndex, target);
     });
-    if (result === "wasted") {
+    if (result === "wasted" && !discarding) {
       showToast(i18n.t("games:picketFence.effectWasted"));
+    }
+  }
+
+  function onDiscardPress() {
+    if (!canDiscardSelected) return;
+    if (phase.kind === "house") {
+      const handIndex = selectedHouse!;
+      commit((draft) => {
+        skipBuild(draft, handIndex);
+      });
+    } else if (phase.kind === "fence" || phase.kind === "secondHouse") {
+      playEffectCard(phase.card, undefined, true);
     }
   }
 
@@ -661,7 +769,7 @@ export default function PicketFence() {
         setSelectedHouse(null);
         return;
       }
-      if (legalLots(game.streets, houseNumber(card)).length === 0) {
+      if (houseLots(game.streets, houseNumber(card)).length === 0) {
         showToast(i18n.t("games:picketFence.noLotFits"));
       }
       setSelectedHouse(handIndex);
@@ -773,18 +881,7 @@ export default function PicketFence() {
         height: LABEL_HEIGHT,
       }));
 
-      return [
-        ...lotZones,
-        ...fenceZones,
-        ...estateZones,
-        {
-          id: `parks-${s}`,
-          col: streetCol(s),
-          row: parkLabelRow(s),
-          width: STREET_LENGTHS[s],
-          height: LABEL_HEIGHT,
-        },
-      ];
+      return [...lotZones, ...fenceZones, ...estateZones];
     });
 
     const handZones: MapZone[] = Array.from({ length: HAND_SIZE }, (_, i) => ({
@@ -814,6 +911,13 @@ export default function PicketFence() {
         height: 0.4,
       },
       {
+        id: "legend",
+        col: 0,
+        row: LEGEND_ROW,
+        width: COLS,
+        height: 0.35,
+      },
+      {
         id: "deck",
         name: "deck",
         cards: game.deck,
@@ -821,18 +925,24 @@ export default function PicketFence() {
         row: HAND_ROW,
         baseZIndex: 10,
         fan: { maxVisible: 3 },
-        placeholder: {},
+        placeholder: {
+          text: i18n.t("cards:stock"),
+          infoPos: "right",
+        },
       },
       ...handZones,
       {
         id: "discard",
         name: "discard",
-        cards: game.discard,
+        cards: flipAllToBack(game.discard),
         col: COLS - 1,
         row: HAND_ROW,
         baseZIndex: 10,
         fan: { maxVisible: 3 },
-        placeholder: { showCount: false },
+        placeholder: {
+          text: i18n.t("cards:discard"),
+          infoPos: "left",
+        },
       },
     ];
   }, [game, phase.kind]);
@@ -842,19 +952,34 @@ export default function PicketFence() {
   ): AnimatedCardMapping | undefined => {
     const { zoneName, pileIndex, refIndex } = mappedCard;
 
+    if (zoneName === "tuck") {
+      return {
+        isDisabled: true,
+        selectColor: SUIT_EFFECT_COLORS[mappedCard.card.suit],
+        forceOverlayColor: true,
+      };
+    }
+
     if (zoneName === "hand" && pileIndex !== undefined) {
       const isSelected =
         phase.kind === "house"
           ? selectedHouse === pileIndex
           : selectedEffect === pileIndex;
+      const effectPhase = phase.kind === "effect";
       const choosingEffect = phase.kind !== "house" && !isSelected;
       return {
         onPress: () => onHandPress(pileIndex),
         isDisabled: ended,
         isSelected,
-        selectColor: isSelected ? "blue" : choosingEffect ? "orange" : "none",
+        selectColor: effectPhase
+          ? SUIT_EFFECT_COLORS[mappedCard.card.suit]
+          : isSelected
+            ? "blue"
+            : choosingEffect
+              ? "orange"
+              : "none",
         forceSelectColor: isSelected,
-        forceOverlayColor: choosingEffect,
+        forceOverlayColor: effectPhase || choosingEffect,
       };
     }
 
@@ -863,10 +988,24 @@ export default function PicketFence() {
         !!game.pending &&
         game.pending.street === pileIndex &&
         game.pending.lot === refIndex;
+      // A house the selected card can replace.
+      const isTarget =
+        !ended && refIndex !== undefined && isTargetLot(pileIndex, refIndex);
       return {
-        isDisabled: true,
-        selectColor: isPending ? "purple" : "none",
-        forceSelectColor: isPending,
+        onPress: isTarget ? () => onLotPress(pileIndex, refIndex) : undefined,
+        isDisabled: !isTarget,
+        selectColor: isTarget ? "orange" : isPending ? "purple" : "none",
+        forceSelectColor: isPending && !isTarget,
+        forceOverlayColor: isTarget,
+      };
+    }
+
+    if (zoneName === "discard") {
+      return {
+        onPress: onDiscardPress,
+        isDisabled: !canDiscardSelected,
+        selectColor: canDiscardSelected ? "orange" : "none",
+        forceOverlayColor: canDiscardSelected,
       };
     }
 
@@ -875,6 +1014,14 @@ export default function PicketFence() {
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
     const { name, pileIndex: s, refIndex } = zone;
+    if (name === "discard") {
+      return {
+        onPress: onDiscardPress,
+        isDisabled: !canDiscardSelected,
+        selectColor: canDiscardSelected ? "orange" : "none",
+        forceOverlayColor: canDiscardSelected,
+      };
+    }
     if (s === undefined || refIndex === undefined) return;
 
     if (name === "lot") {
@@ -908,7 +1055,10 @@ export default function PicketFence() {
   });
 
   const tier = getTier(score.total);
-  const pools = poolCount(game.streets);
+  const tucked = (suit: CardSuit) =>
+    game.streets.reduce((sum, street) => sum + tuckedCount(street, suit), 0);
+  const parks = tucked("hearts");
+  const pools = tucked("diamonds");
 
   const statusKey = ended
     ? null
@@ -960,7 +1110,7 @@ export default function PicketFence() {
                 getZoneStylesById(`fence-${s}-${gap}`),
                 {
                   zIndex: 30,
-                  backgroundColor: colorPale,
+                  backgroundColor: PICKET_FENCE_COLORS.fence,
                   borderRadius: cardWidth * 0.03,
                   borderTopLeftRadius: cardWidth * 0.05,
                   borderTopRightRadius: cardWidth * 0.05,
@@ -971,36 +1121,12 @@ export default function PicketFence() {
         ),
       )}
 
-      {/* Parks and pools are both red: mark the suit on the part that shows. */}
-      {game.streets.flatMap((street, s) =>
-        street.tucked.map((card, lot) =>
-          card ? (
-            <View
-              key={`tuckSuit-${s}-${lot}`}
-              style={[
-                pointerEventsStyles.none,
-                getZoneStylesById(`tuck-${s}-${lot}`),
-                {
-                  zIndex: 8,
-                  alignItems: "flex-end",
-                  padding: cardWidth * 0.08,
-                },
-              ]}
-            >
-              <Icon
-                name={card.suit}
-                size={cardWidth * 0.26}
-                color={Colors.suitsRed}
-              />
-            </View>
-          ) : null,
-        ),
-      )}
-
       {game.streets.flatMap((street, s) =>
         estates(street).map((estate) => {
           const status = estateStatus(street, estate);
-          const points = ESTATE_POINTS[estate[1] - estate[0] + 1] ?? 0;
+          // What the estate scores, or would once finished: its houses,
+          // parks and pools.
+          const points = estateValue(street, estate).total;
           return (
             <View
               key={`estate-${s}-${estate[0]}`}
@@ -1038,43 +1164,49 @@ export default function PicketFence() {
         }),
       )}
 
-      {game.streets.map((street, s) => (
-        <View
-          key={`parks-${s}`}
-          style={[
-            pointerEventsStyles.none,
-            getZoneStylesById(`parks-${s}`),
-            flexStyles.colCentered,
-          ]}
-        >
-          <Text size="xs" weight={500} color={rgba(colorPale, 0.8)}>
-            {i18n.t("games:picketFence.parks", {
-              count: Math.min(parkCount(street), PARK_POINTS[s].length - 1),
-              max: PARK_POINTS[s].length - 1,
-              points: parkScore(street, s),
-            })}
+      <View
+        style={[
+          pointerEventsStyles.none,
+          getZoneStylesById("status"),
+          flexStyles.rowCentered,
+        ]}
+      >
+        {statusKey && (
+          <Text
+            size="xs"
+            weight={500}
+            color={colorPale}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.6}
+            style={{ flex: 1, textAlign: "center" }}
+          >
+            {i18n.t(statusKey)}
           </Text>
-        </View>
-      ))}
+        )}
+      </View>
 
-      {statusKey && (
-        <View
-          style={[
-            pointerEventsStyles.none,
-            getZoneStylesById("status"),
-            flexStyles.colCentered,
-          ]}
-        >
-          <Text size="xs" weight={500} color={colorPale} numberOfLines={1}>
-            {i18n.t(statusKey, {
-              hearts: SUIT_SYMBOLS.hearts,
-              diamonds: SUIT_SYMBOLS.diamonds,
-              spades: SUIT_SYMBOLS.spades,
-              clubs: SUIT_SYMBOLS.clubs,
-            })}
-          </Text>
-        </View>
-      )}
+      <View
+        style={[
+          pointerEventsStyles.none,
+          getZoneStylesById("legend"),
+          flexStyles.rowCentered,
+          { gap: cardWidth * 0.2 },
+        ]}
+      >
+        {LEGEND.map(({ suit, color, label, points }) => (
+          <View
+            key={suit}
+            style={[flexStyles.rowCentered, { gap: cardWidth * 0.04 }]}
+          >
+            <Icon name={suit} size={cardWidth * 0.17} color={color} />
+            <Text size="xxs" weight={500} color={color} numberOfLines={1}>
+              {i18n.t(label)}
+              {points ? ` +${points}` : ""}
+            </Text>
+          </View>
+        ))}
+      </View>
 
       <View
         style={[
@@ -1086,23 +1218,33 @@ export default function PicketFence() {
       >
         <ProgressBar
           progressValue={pools}
-          totalValue={POOL_POINTS.length - 1}
-          color="blue"
+          totalValue={MAX_POOL_COUNT}
+          color={PICKET_FENCE_COLORS.pool}
           backgroundColor={rgba(colorDark, 0.7)}
           labelText={i18n.t("games:picketFence.pools")}
-          tallyText={`${pools}/${POOL_POINTS.length - 1} · ${score.pools}`}
+          tallyText={`${pools} / ${MAX_POOL_COUNT}`}
+          scaledHeight={cardHeight * 0.42}
+          style={{ flex: 1 }}
+        />
+        <ProgressBar
+          progressValue={parks}
+          totalValue={LOT_COUNT - MAX_POOL_COUNT}
+          color={PICKET_FENCE_COLORS.park}
+          backgroundColor={rgba(colorDark, 0.7)}
+          labelText={i18n.t("games:picketFence.parksLabel")}
+          tallyText={`${parks}`}
           scaledHeight={cardHeight * 0.42}
           style={{ flex: 1 }}
         />
         <ProgressBar
           progressValue={score.total}
           totalValue={WIN_SCORE}
-          color={score.total >= WIN_SCORE ? "green" : "orange"}
+          color={PICKET_FENCE_COLORS.score}
           backgroundColor={rgba(colorDark, 0.7)}
           labelText={i18n.t("games:picketFence.score")}
           tallyText={`${score.total} / ${WIN_SCORE}`}
           scaledHeight={cardHeight * 0.42}
-          style={{ flex: 2 }}
+          style={{ flex: 1 }}
         />
       </View>
     </GameWrapper>

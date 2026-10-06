@@ -120,7 +120,7 @@
     "trade": "Trocar",
     "offer": "Oferta"
   },
-  "charlatan": {
+  "boilingOver": {
     "statusStart": "Toque no seu baralho para começar a poção.",
     "statusRisk": "Risco de explosão {{risk}}% · Parando agora: {{points}} pontos, {{coins}} moedas",
     "statusRiskFinal": "Risco de explosão {{risk}}% · Parando agora: {{points}} pontos",
@@ -141,7 +141,14 @@
     "keepPoints": "+{{value}} pontos",
     "keepCoins": "+{{value}} moedas",
     "nextRound": "Rodada {{round}} / {{total}}",
+    "continueToRound": "Continuar para a rodada {{round}}",
     "round": "Rodada",
+    "roundCounter": "Rodada",
+    "strengthLabel": "Força",
+    "pointsLabel": "Pontos",
+    "coinsLabel": "Moedas",
+    "dudsLabel": "Falhadas",
+    "bustLabel": "Explosão",
     "score": "Pontos",
     "tierVillageHealer": "Curandeiro da aldeia",
     "tierCourtAlchemist": "Alquimista da corte",
@@ -212,12 +219,7 @@
     "youRanOutOfCards": "Suas cartas acabaram antes de você derrotar as doze figuras."
   },
   "ebbAndFlow": {
-    "rising": "Subindo",
-    "falling": "Descendo",
-    "playMore_one": "Jogue mais {{count}} carta",
-    "playMore_other": "Jogue mais {{count}} cartas",
-    "playOrDraw": "Continue jogando, ou toque no baralho para comprar",
-    "deckEmpty": "Baralho vazio: jogue todas as cartas que puder",
+    "stock": "Monte",
     "allPlayed": "Todas as cartas foram jogadas!",
     "stuck_one": "Nenhuma carta pode ser jogada. Resta {{count}} carta.",
     "stuck_other": "Nenhuma carta pode ser jogada. Restam {{count}} cartas."
@@ -429,14 +431,18 @@
   },
   "picketFence": {
     "statusChooseHouse": "Escolha uma carta para construir uma casa.",
-    "statusChooseLot": "Toque em um lote destacado para construir nele.",
-    "statusChooseEffect": "Escolha um efeito: {{hearts}} parque · {{diamonds}} piscina · {{spades}} cerca · {{clubs}} casa",
-    "statusChooseFence": "Toque onde vai a cerca.",
-    "statusChooseSecondHouse": "Toque em um lote para a segunda casa.",
-    "noLotFits": "Esta carta não cabe em nenhum lote.",
+    "statusChooseLot": "Toque em um lote para construir, em uma casa para reformar ou no descarte para pular.",
+    "statusChooseEffect": "Escolha uma carta de efeito.",
+    "statusChooseFence": "Toque onde a cerca vai, ou no descarte para pular.",
+    "statusChooseSecondHouse": "Toque em um lote ou em uma casa para a segunda casa, ou no descarte.",
+    "legendPark": "parque",
+    "legendPool": "piscina",
+    "legendFence": "cerca",
+    "legendHouse": "casa",
+    "noLotFits": "Esta carta não cabe em lugar nenhum: descarte-a para não construir.",
     "effectWasted": "Sem efeito desta vez: a carta é descartada.",
     "estateBlocked": "✕",
-    "parks": "Parques {{count}}/{{max}} · {{points}}",
+    "parksLabel": "Parques",
     "pools": "Piscinas",
     "score": "Pontos",
     "tierGoodNeighbours": "Bons vizinhos",
@@ -446,23 +452,6 @@
     "tierVacantLots": "Terrenos vazios",
     "wonWithTier": "{{score}} pontos: {{tier}}!",
     "lostShortOfTarget": "{{score}} pontos: {{tier}}. Você precisa de {{target}} pontos para vencer."
-  },
-  "pickpocket": {
-    "round": "Rodada",
-    "score": "Moedas",
-    "statusStart": "Vire uma carta para começar sua bolsa.",
-    "statusPurse": "Bolsa: {{purse}}",
-    "cleanSweep": "Golpe perfeito! Você fica com {{purse}}.",
-    "walkedAway": "Você escapou com {{purse}}.",
-    "caught": "Pego! Você perde os {{purse}} da sua bolsa.",
-    "caughtEmpty": "Pego antes de levar uma moeda!",
-    "walkAway": "Escapar",
-    "nextRound": "Próxima rodada",
-    "tierLightFingers": "Dedos leves",
-    "tierCutpurse": "Batedor de carteiras",
-    "tierPrinceOfThieves": "Príncipe dos ladrões",
-    "wonWithTier": "{{score}} moedas: {{tier}}!",
-    "lostShortOfTarget": "{{score}} moedas. Você precisa de {{target}} moedas para vencer."
   },
   "pocketPoker": {
     "youHit10PointsYou": "Você chegou a 10 pontos e venceu!",
@@ -519,30 +508,6 @@
   },
   "scorpion": {
     "allFourSuitStacksAre": "As quatro pilhas de naipe estão completas."
-  },
-  "seer": {
-    "reveal": "Revelar",
-    "return": "Devolver",
-    "predictions": {
-      "red": "Vermelho",
-      "redOddBlackEven": "VI  ·  PP",
-      "even": "Par",
-      "diamondsHearts": "♦  ·  ♥",
-      "spadesClubs": "♠  ·  ♣",
-      "odd": "Ímpar",
-      "blackOddRedEven": "PI  ·  VP",
-      "black": "Preto"
-    },
-    "predictionLabel_one": "Previsão {{label}}, {{count}} pedra",
-    "predictionLabel_other": "Previsão {{label}}, {{count}} pedras",
-    "complete": ", completa",
-    "blocked": ", bloqueada",
-    "allPredictionsComplete": "As oito previsões estão completas.",
-    "deckRanOut": "O monte acabou antes de todas as previsões serem completadas.",
-    "allPredictionsBlocked": "As oito previsões estão bloqueadas por pedras.",
-    "chooseHighlightedStone": "Escolha uma pedra destacada",
-    "freedStones_one": "{{count}} pedra liberada",
-    "freedStones_other": "{{count}} pedras liberadas"
   },
   "shiftingSands": {
     "draw": "Comprar:",
@@ -749,16 +714,9 @@
   },
   "augury": {
     "streak": "Acertos",
-    "start": "Toque em uma carta para jogá-la, ou declare que nenhuma serve.",
     "noneFit": "Nenhuma serve",
     "won": "Você leu os presságios! A lei: {{law}}",
     "lost": "Sua mão acabou. A lei: {{law}}",
-    "verdict": {
-      "accepted": "A carta é aceita.",
-      "rejected": "A carta é recusada.",
-      "noneRight": "Certo: nenhuma carta servia. Uma nova mão.",
-      "noneWrong": "Uma carta servia, então foi jogada. Sua sequência recomeça."
-    },
     "law": {
       "alternateColours": "Cada carta deve ser da outra cor da anterior.",
       "suitOrRank": "Cada carta deve ter o naipe ou o valor da anterior.",
@@ -770,7 +728,35 @@
       "evenRedOddBlack": "Valores pares devem ser vermelhos e ímpares, pretos.",
       "colourTwoBack": "Cada carta deve ser da mesma cor da carta de duas jogadas atrás.",
       "blackClimbs": "Uma carta preta deve ser mais alta que a anterior; as vermelhas podem seguir qualquer uma.",
-      "sameColourClimbs": "Uma carta da cor da anterior deve ser mais alta que ela; a outra cor pode seguir qualquer uma."
+      "sameColourClimbs": "Uma carta da cor da anterior deve ser mais alta que ela; a outra cor pode seguir qualquer uma.",
+      "sameColour": "Deve ser da mesma cor",
+      "differentSuit": "Deve ser de outro naipe",
+      "highLowAlternate": "Deve alternar entre alta (8 a Rei) e baixa (Ás a 7)",
+      "courtAlternate": "Deve alternar entre figuras e cartas numéricas",
+      "lowerUntilAce": "Deve ser mais baixa; qualquer uma pode seguir um Ás",
+      "farApart": "Deve estar a pelo menos três valores de distância",
+      "colourTwoBackDiffers": "Deve ser da cor oposta à da penúltima carta",
+      "suitTwoBack": "Deve ser do mesmo naipe da penúltima carta",
+      "freshSuit": "Deve ser de um naipe diferente das duas últimas cartas",
+      "zigzag": "Deve ziguezaguear: mais alta após uma queda, mais baixa após uma subida; qualquer uma pode seguir dois valores iguais",
+      "afterRedLow": "Após uma vermelha, 7 ou menos; após uma preta, 8 ou mais",
+      "heartsWild": "Copas podem seguir qualquer carta; as outras devem ser mais altas",
+      "sumAtMost14": "Os dois valores devem somar 14 ou menos",
+      "parityLock": "Ímpar deve seguir ímpar, par deve seguir par",
+      "withinTwoWrap": "Deve estar a no máximo dois valores (Ás e Rei são vizinhos)",
+      "suitSequence": "Deve seguir os naipes em ordem: espadas, copas, ouros, paus",
+      "sameSuitAscender": "Mesmo naipe da última: mais alta; outro naipe da mesma cor: mais baixa; a outra cor pode seguir qualquer carta",
+      "redHighBlackLow": "As vermelhas devem ser 8 ou mais; as pretas, 7 ou menos",
+      "royalCommand": "Após uma figura, mesmo naipe; após uma carta numérica, outro naipe",
+      "rangeFlip": "Após uma alta (8 a Rei), a outra cor; após uma baixa (Ás a 7), a mesma cor",
+      "suitSwitcher": "Deve ser da mesma cor, mas de outro naipe",
+      "suitSuperiority": "Deve ser de um naipe superior (paus, ouros, copas, espadas) ou de valor mais alto; qualquer uma pode seguir o Rei de espadas",
+      "rankSandwich": "Deve ficar entre os dois últimos valores, ou ser igual a um deles",
+      "colourBalance": "Não deve formar três cartas seguidas da mesma cor",
+      "distanceMirroring": "Após uma subida, mesmo naipe da penúltima; após uma queda, mesma cor; qualquer uma pode seguir dois valores iguais"
     }
+  },
+  "elevens": {
+    "noMorePairsOrFaceTriplets": "Não há mais pares nem trios de figuras possíveis."
   }
 }
