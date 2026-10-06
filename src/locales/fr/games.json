@@ -39,7 +39,14 @@
     "outOfCardsWhileMakingCamp": "Plus de cartes en installant le camp.",
     "deckAndFatigueRanDry": "La pioche et la pile de fatigue sont épuisées.",
     "handOverflowed": "Votre main déborde (18 cartes ou plus).",
-    "baseClimb": "Ascension de base"
+    "baseClimb": "Ascension de base",
+    "hint": {
+      "route_one": "Jouez cette voie : elle fait piocher {{count}} carte",
+      "route_other": "Jouez cette voie : elle fait piocher {{count}} cartes",
+      "camp": "Jouez vos dernières cartes pour installer le camp",
+      "rest": "Reposez-vous : prenez la pile de fatigue en main et repartez",
+      "discard": "Défaussez la carte dont votre main se passe le mieux"
+    }
   },
   "bakersDozen": {
     "allFourSuitsAreComplete": "Les quatre couleurs sont complètes !"
@@ -248,7 +255,12 @@
     "extract": "Extraire",
     "reassign": "Réattribuer",
     "allTwelveRoyalsAreDown": "Les douze figures sont tombées.",
-    "youRanOutOfCards": "Vous n'avez plus de cartes avant d'avoir vaincu les douze figures."
+    "youRanOutOfCards": "Vous n'avez plus de cartes avant d'avoir vaincu les douze figures.",
+    "hint": {
+      "kill": "Ceci fait tomber une figure",
+      "extract": "Utilisez un as : cette pile repart sous le paquet",
+      "reassign": "Utilisez un joker : déplacez cette carte"
+    }
   },
   "ebbAndFlow": {
     "stock": "Pioche",
@@ -447,7 +459,12 @@
     "difficultyMedium": "Moyen",
     "difficultyHard": "Difficile",
     "difficultyVeryHard": "Très difficile",
-    "difficultyExtreme": "Extrême"
+    "difficultyExtreme": "Extrême",
+    "hint": {
+      "match": "Vous avez déjà vu sa paire ici",
+      "knownPair": "Vous savez où sont les deux cartes de cette paire",
+      "newCard": "Retournez une carte que vous n'avez pas encore vue"
+    }
   },
   "monteCarlo": {
     "youClearedAllCards": "Vous avez retiré toutes les cartes !",

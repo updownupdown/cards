@@ -39,7 +39,14 @@
     "outOfCardsWhileMakingCamp": "Kartu habis saat mendirikan kemah.",
     "deckAndFatigueRanDry": "Dek dan tumpukan kelelahan sudah habis.",
     "handOverflowed": "Tanganmu kepenuhan (18+ kartu).",
-    "baseClimb": "Pendakian dasar"
+    "baseClimb": "Pendakian dasar",
+    "hint": {
+      "route_one": "Mainkan rute ini: kamu mengambil {{count}} kartu",
+      "route_other": "Mainkan rute ini: kamu mengambil {{count}} kartu",
+      "camp": "Mainkan kartu terakhirmu untuk mendirikan kemah",
+      "rest": "Istirahat: ambil tumpukan lelah ke tanganmu dan mulai lagi",
+      "discard": "Buang kartu yang paling tidak dibutuhkan tanganmu"
+    }
   },
   "bakersDozen": {
     "allFourSuitsAreComplete": "Keempat jenis sudah lengkap!"
@@ -248,7 +255,12 @@
     "extract": "Tarik",
     "reassign": "Pindahkan",
     "allTwelveRoyalsAreDown": "Kedua belas bangsawan sudah tumbang.",
-    "youRanOutOfCards": "Kartumu habis sebelum semua bangsawan dikalahkan."
+    "youRanOutOfCards": "Kartumu habis sebelum semua bangsawan dikalahkan.",
+    "hint": {
+      "kill": "Ini menumbangkan seorang bangsawan",
+      "extract": "Pakai as: tumpukan ini kembali ke bawah dek",
+      "reassign": "Pakai joker: pindahkan kartu ini"
+    }
   },
   "ebbAndFlow": {
     "stock": "Dek",
@@ -447,7 +459,12 @@
     "difficultyMedium": "Sedang",
     "difficultyHard": "Sulit",
     "difficultyVeryHard": "Sangat sulit",
-    "difficultyExtreme": "Ekstrem"
+    "difficultyExtreme": "Ekstrem",
+    "hint": {
+      "match": "Kamu sudah melihat pasangannya di sini",
+      "knownPair": "Kamu tahu letak kedua kartu pasangan ini",
+      "newCard": "Buka kartu yang belum pernah kamu lihat"
+    }
   },
   "monteCarlo": {
     "youClearedAllCards": "Kamu membersihkan semua kartu!",

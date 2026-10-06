@@ -39,7 +39,14 @@
     "outOfCardsWhileMakingCamp": "Kamp kurarken kartların bitti.",
     "deckAndFatigueRanDry": "Deste ve yorgunluk yığını tükendi.",
     "handOverflowed": "Elin taştı (18+ kart).",
-    "baseClimb": "Temel tırmanış"
+    "baseClimb": "Temel tırmanış",
+    "hint": {
+      "route_one": "Bu rotayı oyna: {{count}} kart çektirir",
+      "route_other": "Bu rotayı oyna: {{count}} kart çektirir",
+      "camp": "Kamp kurmak için son kartlarını oyna",
+      "rest": "Dinlen: yorgunluk destesini eline al ve yeniden başla",
+      "discard": "Elinin en az ihtiyaç duyduğu kartı at"
+    }
   },
   "bakersDozen": {
     "allFourSuitsAreComplete": "Dört takım da tamamlandı!"
@@ -248,7 +255,12 @@
     "extract": "Çıkar",
     "reassign": "Yeniden ata",
     "allTwelveRoyalsAreDown": "On iki soylunun hepsi düştü.",
-    "youRanOutOfCards": "On iki soylunun hepsini yenemeden kartların bitti."
+    "youRanOutOfCards": "On iki soylunun hepsini yenemeden kartların bitti.",
+    "hint": {
+      "kill": "Bu bir soyluyu düşürür",
+      "extract": "Bir as kullan: bu deste destenin altına döner",
+      "reassign": "Bir joker kullan: bu kartı taşı"
+    }
   },
   "ebbAndFlow": {
     "stock": "Deste",
@@ -447,7 +459,12 @@
     "difficultyMedium": "Orta",
     "difficultyHard": "Zor",
     "difficultyVeryHard": "Çok zor",
-    "difficultyExtreme": "Aşırı zor"
+    "difficultyExtreme": "Aşırı zor",
+    "hint": {
+      "match": "Eşini burada görmüştün",
+      "knownPair": "Bu çiftin iki kartının da yerini biliyorsun",
+      "newCard": "Henüz görmediğin bir kartı aç"
+    }
   },
   "monteCarlo": {
     "youClearedAllCards": "Bütün kartları temizledin!",

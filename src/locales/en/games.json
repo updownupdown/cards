@@ -39,7 +39,14 @@
     "outOfCardsWhileMakingCamp": "Out of cards while making camp.",
     "deckAndFatigueRanDry": "The deck and fatigue pile ran dry.",
     "handOverflowed": "Your hand overflowed (18+ cards).",
-    "baseClimb": "Base Climb"
+    "baseClimb": "Base Climb",
+    "hint": {
+      "route_one": "Play this route: it draws {{count}} card",
+      "route_other": "Play this route: it draws {{count}} cards",
+      "camp": "Play your last cards to make camp",
+      "rest": "Rest: take the fatigue pile into your hand and start a new climb",
+      "discard": "Discard the card your hand climbs best without"
+    }
   },
   "bakersDozen": {
     "allFourSuitsAreComplete": "All four suits are complete!"
@@ -248,7 +255,12 @@
     "extract": "Extract",
     "reassign": "Reassign",
     "allTwelveRoyalsAreDown": "All twelve royals are down.",
-    "youRanOutOfCards": "You ran out of cards before defeating all twelve royals."
+    "youRanOutOfCards": "You ran out of cards before defeating all twelve royals.",
+    "hint": {
+      "kill": "This brings down a royal",
+      "extract": "Spend an ace: send this pile back under the deck",
+      "reassign": "Spend a joker: move this card"
+    }
   },
   "ebbAndFlow": {
     "stock": "Stock",
@@ -447,7 +459,12 @@
     "difficultyMedium": "Medium",
     "difficultyHard": "Hard",
     "difficultyVeryHard": "Very Hard",
-    "difficultyExtreme": "Extreme"
+    "difficultyExtreme": "Extreme",
+    "hint": {
+      "match": "You've seen its pair here",
+      "knownPair": "You know where both cards of this pair are",
+      "newCard": "Turn up a card you haven't seen yet"
+    }
   },
   "monteCarlo": {
     "youClearedAllCards": "You cleared all cards!",

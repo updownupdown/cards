@@ -27,6 +27,8 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 
 // Crossword: fill a 7x7 grid one card at a time, each beside one already
 // down. Court cards are the black squares: no two may touch side by side, and
@@ -245,7 +247,313 @@ function gatherState(state: GameState): GameState {
   };
 }
 
+// —— Hints ——
+
+// What a space holds, as the rules see it: a number's parity is all that
+// counts for the runs.
+const EMPTY = 0;
+const ODD = 1;
+const EVEN = 2;
+const COURT = 3;
+type Kind = typeof ODD | typeof EVEN | typeof COURT;
+const KINDS: Kind[] = [ODD, EVEN, COURT];
+
+// Each space's neighbours, worked out once: hints look at them often.
+const SIDE_NEIGHBOURS = Array.from({ length: CELLS }, (_, cell) =>
+  neighbours(cell, false),
+);
+const ALL_NEIGHBOURS = Array.from({ length: CELLS }, (_, cell) =>
+  neighbours(cell, true),
+);
+
+function kindOf(card: PlayingCard): Kind {
+  if (isFace(card)) return COURT;
+  return rankValue(card) % 2 ? ODD : EVEN;
+}
+
+/**
+ * The kinds of card a space could still take without ever making an odd run
+ * (a bit per kind): a number must even up a run it completes, and a court
+ * may not touch another or cut off an odd run on either side.
+ */
+function spaceOptions(kinds: Uint8Array, cell: number) {
+  let courtOk = !SIDE_NEIGHBOURS[cell].some((n) => kinds[n] === COURT);
+  let numbersOk = true;
+  let numberParity = -1;
+  // Along the row, then down the column.
+  for (const stride of [1, SIZE]) {
+    const index = stride === 1 ? colOf(cell) : rowOf(cell);
+    let completes = true;
+    let sum = 0;
+    for (const direction of [-1, 1]) {
+      let partSum = 0;
+      let open = false;
+      for (
+        let i = index + direction, at = cell + direction * stride;
+        i >= 0 && i < SIZE;
+        i += direction, at += direction * stride
+      ) {
+        if (kinds[at] === COURT) break;
+        if (kinds[at] === EMPTY) open = true;
+        else if (kinds[at] === ODD) partSum += 1;
+      }
+      // A court here would close off this side's run.
+      if (!open && partSum % 2) courtOk = false;
+      if (open) completes = false;
+      sum += partSum;
+    }
+    if (completes) {
+      // This space completes the run: its parity is set.
+      const parity = sum % 2;
+      if (numberParity >= 0 && numberParity !== parity) numbersOk = false;
+      numberParity = parity;
+    }
+  }
+  let options = courtOk ? 1 << COURT : 0;
+  if (numbersOk && numberParity !== 0) options |= 1 << ODD;
+  if (numbersOk && numberParity !== 1) options |= 1 << EVEN;
+  return options;
+}
+
+type Supply = Record<Kind, number>;
+
+function supplyOf(cards: PlayingCard[]): Supply {
+  const supply: Supply = { [ODD]: 0, [EVEN]: 0, [COURT]: 0 };
+  cards.forEach((card) => (supply[kindOf(card)] += 1));
+  return supply;
+}
+
+/**
+ * How well the grid can still be filled with the cards to come: a space no
+ * card can take is a lost game, as are more spaces needing one kind than
+ * there are cards of it, or more courts than places for them. Spaces open
+ * to every kind are worth keeping.
+ */
+function crosswordScore(kinds: Uint8Array, supply: Supply) {
+  let score = 0;
+  const forced: Supply = { [ODD]: 0, [EVEN]: 0, [COURT]: 0 };
+  const courtSpaces: number[] = [];
+  const optionsAt = new Uint8Array(CELLS);
+  for (let cell = 0; cell < CELLS; cell++) {
+    if (kinds[cell] !== EMPTY) continue;
+    const options = spaceOptions(kinds, cell);
+    optionsAt[cell] = options;
+    if (options === 0) {
+      score -= 10000;
+      continue;
+    }
+    const open = KINDS.filter((kind) => options & (1 << kind));
+    score += open.length;
+    if (open.length === 1) forced[open[0]] += 1;
+    if (options & (1 << COURT)) courtSpaces.push(cell);
+  }
+  score -= 10000 * deadPairs(kinds, optionsAt);
+  KINDS.forEach((kind) => {
+    const short = forced[kind] - supply[kind];
+    if (short > 0) score -= 3000 * short;
+    score -= (10 * forced[kind]) / (supply[kind] + 1);
+  });
+  // Courts can't sit side by side: count the places they can share.
+  const taken = new Set<number>();
+  for (const cell of courtSpaces) {
+    if (SIDE_NEIGHBOURS[cell].some((n) => taken.has(n))) continue;
+    taken.add(cell);
+  }
+  const room = taken.size - supply[COURT];
+  score += room < 0 ? 2000 * room : -20 / (room + 1);
+  return score;
+}
+
+/**
+ * Runs left with two spaces, both for numbers only, whose parities (set by
+ * their other runs) can't add up to an even run: one of them is lost.
+ */
+function deadPairs(kinds: Uint8Array, optionsAt: Uint8Array) {
+  let dead = 0;
+  for (const stride of [1, SIZE]) {
+    for (let line = 0; line < SIZE; line++) {
+      const start = stride === 1 ? line * SIZE : line;
+      let empty: number[] = [];
+      let odd = 0;
+      for (let i = 0; i <= SIZE; i++) {
+        const cell = start + i * stride;
+        const kind = i < SIZE ? kinds[cell] : COURT;
+        if (kind !== COURT) {
+          if (kind === EMPTY) empty.push(cell);
+          else if (kind === ODD) odd += 1;
+          continue;
+        }
+        const courtFree = empty.every(
+          (space) => !(optionsAt[space] & (1 << COURT)),
+        );
+        if (empty.length === 2 && courtFree) {
+          const fits = [ODD, EVEN].some(
+            (first) =>
+              optionsAt[empty[0]] & (1 << first) &&
+              [ODD, EVEN].some(
+                (second) =>
+                  optionsAt[empty[1]] & (1 << second) &&
+                  (odd + (first === ODD ? 1 : 0) + (second === ODD ? 1 : 0)) %
+                    2 ===
+                    0,
+              ),
+          );
+          if (!fits) dead += 1;
+        }
+        empty = [];
+        odd = 0;
+      }
+    }
+  }
+  return dead;
+}
+
+/** Spaces a card of this kind can go now and keep every run even. */
+function safeCells(kinds: Uint8Array, kind: Kind) {
+  const cells: number[] = [];
+  for (let cell = 0; cell < CELLS; cell++) {
+    if (kinds[cell] !== EMPTY) continue;
+    if (!ALL_NEIGHBOURS[cell].some((n) => kinds[n] !== EMPTY)) continue;
+    if (spaceOptions(kinds, cell) & (1 << kind)) cells.push(cell);
+  }
+  return cells;
+}
+
+// From this few empty spaces on, every way the last cards may come is
+// weighed (see fillChance).
+const ENDGAME_SPACES = 6;
+
+/**
+ * The chance to fill the grid from here, the cards to come known only as a
+ * set (any of them may come next), each placed where it keeps the best
+ * chance. The last space takes any of the cards left.
+ */
+function fillChance(
+  kinds: Uint8Array,
+  supply: Supply,
+  memo = new Map<string, number>(),
+): number {
+  const empty = kinds.reduce(
+    (cells: number[], kind, cell) =>
+      kind === EMPTY ? [...cells, cell] : cells,
+    [],
+  );
+  if (empty.length === 0) return 1;
+  if (empty.length === 1) {
+    const options = spaceOptions(kinds, empty[0]);
+    return KINDS.some((kind) => supply[kind] > 0 && options & (1 << kind))
+      ? 1
+      : 0;
+  }
+  const key = `${kinds.join("")}:${supply[ODD]},${supply[EVEN]},${supply[COURT]}`;
+  const known = memo.get(key);
+  if (known !== undefined) return known;
+  const total = supply[ODD] + supply[EVEN] + supply[COURT];
+  let chance = 0;
+  for (const kind of KINDS) {
+    if (!supply[kind]) continue;
+    const rest = { ...supply, [kind]: supply[kind] - 1 };
+    let best = 0;
+    for (const cell of safeCells(kinds, kind)) {
+      const next = kinds.slice();
+      next[cell] = kind;
+      best = Math.max(best, fillChance(next, rest, memo));
+      if (best === 1) break;
+    }
+    chance += (best * supply[kind]) / total;
+  }
+  memo.set(key, chance);
+  return chance;
+}
+
+// Placements looked at again over the next card.
+const LOOKAHEAD_PLACEMENTS = 10;
+
+/**
+ * Where to put a hand card: the placement that leaves the grid best (see
+ * crosswordScore) once the next card is placed well too, averaged over the
+ * cards not yet seen; near the end, the one most likely to fill the grid.
+ */
+function bestCrosswordMove(state: GameState) {
+  if (state.ended) return null;
+  const kinds = new Uint8Array(
+    state.grid.map((card) => (card ? kindOf(card) : EMPTY)),
+  );
+  const supply = supplyOf(state.stock);
+  const total = state.stock.length;
+  const candidates: {
+    hand: number;
+    cell: number;
+    kinds: Uint8Array;
+    score: number;
+  }[] = [];
+  state.hand.forEach((card, hand) => {
+    const kind = kindOf(card);
+    for (const cell of safeCells(kinds, kind)) {
+      const next = kinds.slice();
+      next[cell] = kind;
+      candidates.push({
+        hand,
+        cell,
+        kinds: next,
+        score: crosswordScore(next, supply),
+      });
+    }
+  });
+  if (candidates.length === 0) {
+    // Every move loses: still show one.
+    const hand = state.hand.findIndex(
+      (card) => legalCells(state.grid, card).length > 0,
+    );
+    return hand < 0
+      ? null
+      : { hand, cell: legalCells(state.grid, state.hand[hand])[0] };
+  }
+  candidates.sort((a, b) => b.score - a.score);
+  const empty = CELLS - placedCount(state.grid) - 1;
+  const endgame = state.hand.length === 1 && empty <= ENDGAME_SPACES;
+  const memo = new Map<string, number>();
+  let best = null as { hand: number; cell: number; value: number } | null;
+  for (const candidate of endgame
+    ? candidates
+    : candidates.slice(0, LOOKAHEAD_PLACEMENTS)) {
+    let value = candidate.score;
+    if (endgame) {
+      value += 1e6 * fillChance(candidate.kinds, supply, memo);
+    } else if (state.hand.length === 1 && total > 0) {
+      value = 0;
+      for (const kind of KINDS) {
+        if (!supply[kind]) continue;
+        const rest = { ...supply, [kind]: supply[kind] - 1 };
+        let reply = -20000;
+        for (const cell of safeCells(candidate.kinds, kind)) {
+          const next = candidate.kinds.slice();
+          next[cell] = kind;
+          reply = Math.max(reply, crosswordScore(next, rest));
+        }
+        value += (reply * supply[kind]) / total;
+      }
+    }
+    if (!best || value > best.value) {
+      best = { hand: candidate.hand, cell: candidate.cell, value };
+    }
+  }
+  return best && { hand: best.hand, cell: best.cell };
+}
+
+function findCrosswordHint(state: GameState) {
+  const move = bestCrosswordMove(state);
+  if (!move) return null;
+  return makeHint(
+    "moveCard",
+    cardTarget(state.hand[move.hand]),
+    zoneTarget(`cell-${move.cell}`),
+  );
+}
+
 export const crosswordRules = {
+  findHint: findCrosswordHint,
+  bestMove: bestCrosswordMove,
   SIZE,
   CELLS,
   CENTRE,
@@ -282,6 +590,8 @@ export default function Crossword() {
         setGame((draft) => redealWith(createInitialState(), draft.stock));
       },
     });
+
+  useHint(() => findCrosswordHint(game), { game });
 
   const handCard = game.hand[selected] ?? game.hand[0];
   const handIndex = game.hand[selected] ? selected : 0;
