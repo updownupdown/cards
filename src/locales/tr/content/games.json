@@ -137,7 +137,7 @@
   },
   "augury": {
     "howToPlay": {
-      "hash": "be872579",
+      "hash": "6ac89a30",
       "value": [
         "## Amaç",
         "**Gizli kuralı**, **art arda sekiz doğru tahmin** yapacak kadar iyi çöz.",
@@ -145,7 +145,7 @@
         "Her oyunda, yoldaki son karttan (ya da kartlardan) sonra hangi kartların gelebileceğini belirleyen gizli bir kural vardır.",
         "- Elindeki bir kartın gizli kurala uyduğunu düşünüyorsan ona dokun.",
         "- Elindeki hiçbir kartın uymadığını düşünüyorsan **Hiçbiri uymuyor**'a dokun.",
-        "- Uyan bir kart varsa senin yerine oynanır (kırmızıyla gösterilir) ve doğru tahmin serin sıfırlanır.",
+        "- “Hiçbiri uymuyor”a dokunduktan sonra uyan bir kart **varsa**, senin yerine oynanır, kırmızıyla gösterilir ve doğru tahmin serin sıfırlanır.",
         "Bütün kurallarda: A = 1, Vale = 11, Kız = 12, Papaz = 13.",
         "## Kurallar",
         "Zorluk ayarı, oyuna hangi kuralların dahil edileceğini belirler. Zor ayarı kolay kurallar arasından da seçer.",
@@ -2951,7 +2951,7 @@
         "- 52 kartın hepsi, sıradan sıraya geçen tek ve kesintisiz bir hat halinde dizilir.",
         "- Kupa Kızı hattın başında, kupa Papazı sonundadır.",
         "## Iskartaya atma",
-        "- Çıkarılacak kartı ya da kartları seç, sonra **Iskarta**'ya bas.",
+        "- Çıkarılacak kartı ya da kartları seç, sonra **Iskartaya at** düğmesine bas.",
         "- İki yanındaki kartlar **değer ya da takım** olarak eşleşiyorsa tek bir kart ya da yan yana iki kart atılabilir.",
         "- Daha uzun bir dizi ancak içindeki her kart **aynı takımdan** ise ve iki yanındaki kartlar değer ya da takım olarak eşleşiyorsa atılabilir.",
         "- Kupa Kızı ve kupa Papazı hattan asla ayrılmaz.",

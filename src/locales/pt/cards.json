@@ -2,6 +2,7 @@
   "noLegalMovesRemain": "Não há mais jogadas válidas.",
   "stock": "Monte",
   "discard": "Lixo",
+  "discardAction": "Descartar",
   "deal": "Distribuir",
   "draw": "Comprar",
   "clear": "Remover",

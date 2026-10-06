@@ -2,6 +2,7 @@
   "noLegalMovesRemain": "Plus aucun coup valide.",
   "stock": "Pioche",
   "discard": "Défausse",
+  "discardAction": "Défausser",
   "deal": "Distribuer",
   "draw": "Piocher",
   "clear": "Effacer",

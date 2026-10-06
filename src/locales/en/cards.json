@@ -2,6 +2,7 @@
   "noLegalMovesRemain": "No legal moves remain.",
   "stock": "Stock",
   "discard": "Discard",
+  "discardAction": "Discard",
   "deal": "Deal",
   "draw": "Draw",
   "clear": "Clear",

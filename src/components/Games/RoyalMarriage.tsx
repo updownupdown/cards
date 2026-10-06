@@ -138,7 +138,7 @@ function findRoyalMarriageHint(state: GameState) {
   const [start, count] = move;
   return makeHint(
     // The button's text, for the toast's sake and tests that press it.
-    { key: "removeCards", values: { label: i18n.t("cards:discard") } },
+    { key: "removeCards", values: { label: i18n.t("cards:discardAction") } },
     ...state.line.slice(start, start + count).map((card) => cardTarget(card)),
     zoneTarget("buttons"),
   );
@@ -301,7 +301,7 @@ export default function RoyalMarriage() {
 
       <View style={[getZoneStylesById("buttons"), flexStyles.rowCentered]}>
         <Button
-          text={i18n.t("cards:discard")}
+          text={i18n.t("cards:discardAction")}
           size="md"
           onPress={discardSelected}
           disabled={!canDiscard}

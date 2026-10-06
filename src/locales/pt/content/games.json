@@ -137,7 +137,7 @@
   },
   "augury": {
     "howToPlay": {
-      "hash": "be872579",
+      "hash": "6ac89a30",
       "value": [
         "## Objetivo",
         "Desvende a **lei oculta** o suficiente para acertar **oito palpites seguidos**.",
@@ -145,7 +145,7 @@
         "Cada partida tem uma lei secreta sobre quais cartas podem seguir a(s) última(s) carta(s) do caminho.",
         "- Toque em uma carta da sua mão se achar que ela segue a lei oculta.",
         "- Se achar que nenhuma carta da sua mão serve, toque em **Nenhuma serve**.",
-        "- Se alguma carta servia, ela é jogada por você (mostrada em vermelho), e sua sequência de acertos é zerada.",
+        "- Depois de tocar em “Nenhuma serve”, se alguma carta **de fato** servia, ela é jogada por você, mostrada em vermelho, e sua sequência de acertos é zerada.",
         "Para todas as leis: A = 1, Valetes = 11, Dama = 12, Rei = 13.",
         "## Leis",
         "A configuração de dificuldade determina quais leis entram no jogo. A configuração Difícil também sorteia entre as leis fáceis.",
@@ -2951,7 +2951,7 @@
         "- As 52 cartas são dispostas numa única linha contínua, que passa de uma fileira para a seguinte.",
         "- A Dama de copas abre a linha e o Rei de copas a fecha.",
         "## Descarte",
-        "- Selecione a carta ou as cartas a remover e pressione **Lixo**.",
+        "- Selecione a carta ou as cartas a remover e pressione **Descartar**.",
         "- Uma carta, ou duas cartas lado a lado, podem sair se as cartas de cada lado delas forem do mesmo **valor ou naipe**.",
         "- Uma sequência mais longa só pode sair se todas as cartas dela forem do **mesmo naipe** e as cartas de cada lado forem do mesmo valor ou naipe.",
         "- A Dama e o Rei de copas nunca saem da linha.",

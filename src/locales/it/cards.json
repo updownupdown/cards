@@ -2,6 +2,7 @@
   "noLegalMovesRemain": "Nessuna mossa valida rimasta.",
   "stock": "Mazzo",
   "discard": "Scarti",
+  "discardAction": "Scarta",
   "deal": "Distribuisci",
   "draw": "Pesca",
   "clear": "Rimuovi",

@@ -2,6 +2,7 @@
   "noLegalMovesRemain": "Geçerli hamle kalmadı.",
   "stock": "Deste",
   "discard": "Iskarta",
+  "discardAction": "Iskartaya at",
   "deal": "Dağıt",
   "draw": "Çek",
   "clear": "Temizle",

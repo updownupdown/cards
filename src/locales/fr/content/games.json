@@ -137,7 +137,7 @@
   },
   "augury": {
     "howToPlay": {
-      "hash": "be872579",
+      "hash": "6ac89a30",
       "value": [
         "## Objectif",
         "Percez la **loi cachée** assez bien pour faire **huit bonnes réponses d'affilée**.",
@@ -145,7 +145,7 @@
         "Chaque partie a une loi secrète qui décide quelles cartes peuvent suivre la ou les dernières cartes du chemin.",
         "- Touchez une carte de votre main si vous pensez qu'elle respecte la loi cachée.",
         "- Si vous pensez qu'aucune carte de votre main ne convient, touchez **Aucune ne convient**.",
-        "- Si une carte convenait, elle est jouée à votre place (affichée en rouge), et votre série de bonnes réponses repart de zéro.",
+        "- Après avoir touché «\u00a0Aucune ne convient\u00a0», si une carte convenait **bel et bien**, elle est jouée à votre place, affichée en rouge, et votre série de bonnes réponses repart de zéro.",
         "Pour toutes les lois\u00a0: A = 1, Valet = 11, Dame = 12, Roi = 13. Ci-dessous, l'«\u00a0enseigne\u00a0» est pique, cœur, carreau ou trèfle, et la «\u00a0couleur\u00a0» est rouge ou noir.",
         "## Lois",
         "Le réglage de difficulté détermine quelles lois peuvent sortir. Le réglage Difficile puise aussi parmi les lois faciles.",
@@ -2951,7 +2951,7 @@
         "- Les 52 cartes sont étalées en une seule ligne continue, qui passe d'une rangée à la suivante.",
         "- La Dame de cœur ouvre la ligne et le Roi de cœur la ferme.",
         "## Défausser",
-        "- Sélectionnez la ou les cartes à retirer, puis appuyez sur **Défausse**.",
+        "- Sélectionnez la ou les cartes à retirer, puis appuyez sur **Défausser**.",
         "- Une carte, ou deux cartes côte à côte, peuvent partir si les cartes situées de part et d'autre sont assorties en **rang ou en couleur**.",
         "- Une séquence plus longue ne peut partir que si toutes ses cartes sont de la **même couleur**, et que les cartes de part et d'autre sont assorties en rang ou en couleur.",
         "- La Dame et le Roi de cœur ne quittent jamais la ligne.",

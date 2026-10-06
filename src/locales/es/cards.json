@@ -2,6 +2,7 @@
   "noLegalMovesRemain": "No quedan movimientos válidos.",
   "stock": "Mazo",
   "discard": "Descarte",
+  "discardAction": "Descartar",
   "deal": "Repartir",
   "draw": "Robar",
   "clear": "Borrar",

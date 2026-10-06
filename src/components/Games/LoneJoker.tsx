@@ -1054,7 +1054,7 @@ export default function LoneJoker() {
               taller
             />
             <Button
-              text={i18n.t("cards:discard")}
+              text={i18n.t("cards:discardAction")}
               theme="red"
               size="md"
               onPress={discardCards}

@@ -137,7 +137,7 @@
   },
   "augury": {
     "howToPlay": {
-      "hash": "be872579",
+      "hash": "6ac89a30",
       "value": [
         "## Objetivo",
         "Descifra la **ley oculta** lo bastante bien como para acertar **ocho veces seguidas**.",
@@ -145,7 +145,7 @@
         "Cada partida tiene una ley secreta sobre qué cartas pueden seguir a la última o las últimas cartas del camino.",
         "- Toca una carta de tu mano si crees que encaja con la ley oculta.",
         "- Si crees que ninguna carta de tu mano encaja, toca **Ninguna encaja**.",
-        "- Si alguna carta sí encajaba, se juega por ti (se muestra en rojo) y tu racha de aciertos vuelve a cero.",
+        "- Tras tocar «Ninguna encaja», si alguna carta **sí** encajaba, se juega por ti, se muestra en rojo y tu racha de aciertos vuelve a cero.",
         "Para todas las leyes: As = 1, Jotas = 11, Reina = 12, Rey = 13.",
         "## Leyes",
         "El ajuste de dificultad determina qué leyes se incluyen en la partida. El ajuste Difícil también elige entre las leyes fáciles.",
@@ -2951,7 +2951,7 @@
         "- Las 52 cartas se disponen en una sola línea continua que pasa de una fila a la siguiente.",
         "- La Reina de corazones empieza la línea y el Rey de corazones la termina.",
         "## Descartar",
-        "- Selecciona la carta o cartas que quieras retirar y pulsa **Descarte**.",
+        "- Selecciona la carta o cartas que quieras retirar y pulsa **Descartar**.",
         "- Una carta, o dos cartas juntas, pueden salir si las cartas a ambos lados coinciden en **valor o palo**.",
         "- Una secuencia más larga solo puede salir si todas sus cartas son del **mismo palo** y las cartas a ambos lados coinciden en valor o palo.",
         "- La Reina y el Rey de corazones nunca salen de la línea.",

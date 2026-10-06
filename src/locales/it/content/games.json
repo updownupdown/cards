@@ -137,7 +137,7 @@
   },
   "augury": {
     "howToPlay": {
-      "hash": "be872579",
+      "hash": "6ac89a30",
       "value": [
         "## Obiettivo",
         "Scopri la **legge nascosta** abbastanza bene da indovinare **otto volte di fila**.",
@@ -145,7 +145,7 @@
         "Ogni partita ha una legge segreta che stabilisce quali carte possono seguire l'ultima carta (o le ultime carte) del percorso.",
         "- Tocca una carta della tua mano se pensi che rispetti la legge nascosta.",
         "- Se pensi che nessuna carta della tua mano vada bene, tocca **Nessuna va bene**.",
-        "- Se invece una carta andava bene, viene giocata al posto tuo (in rosso) e la tua serie di risposte giuste si azzera.",
+        "- Dopo aver toccato «Nessuna va bene», se una carta andava **davvero** bene, viene giocata al posto tuo, mostrata in rosso, e la tua serie di risposte giuste si azzera.",
         "Per tutte le leggi: A = 1, Fante = 11, Donna = 12, Re = 13.",
         "## Leggi",
         "L'impostazione della difficoltà stabilisce quali leggi entrano in gioco. Il livello Difficile sceglie anche tra le leggi facili.",
@@ -2951,7 +2951,7 @@
         "- Tutte le 52 carte sono disposte in un'unica fila continua, che va a capo da una riga all'altra.",
         "- La Donna di cuori apre la fila e il Re di cuori la chiude.",
         "## Scartare",
-        "- Seleziona la carta o le carte da togliere, poi premi **Scarti**.",
+        "- Seleziona la carta o le carte da togliere, poi premi **Scarta**.",
         "- Una carta, o due carte vicine, si possono togliere se le carte ai loro due lati hanno lo stesso **valore o seme**.",
         "- Una sequenza più lunga si può togliere solo se tutte le sue carte sono dello **stesso seme** e le carte ai due lati hanno lo stesso valore o seme.",
         "- La Donna e il Re di cuori non lasciano mai la fila.",

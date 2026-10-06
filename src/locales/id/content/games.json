@@ -137,7 +137,7 @@
   },
   "augury": {
     "howToPlay": {
-      "hash": "be872579",
+      "hash": "6ac89a30",
       "value": [
         "## Tujuan",
         "Pahami **hukum tersembunyi** cukup baik untuk menebak benar **delapan kali berturut-turut**.",
@@ -145,7 +145,7 @@
         "Setiap permainan punya hukum rahasia tentang kartu mana yang boleh menyusul kartu terakhir di jalur.",
         "- Ketuk kartu di tanganmu jika menurutmu kartu itu cocok dengan hukum tersembunyi.",
         "- Jika menurutmu tidak ada kartu di tanganmu yang cocok, ketuk **Tak ada yang cocok**.",
-        "- Jika ternyata ada kartu yang cocok, kartu itu dimainkan untukmu (ditandai merah), dan rangkaian tebakan benarmu diulang dari nol.",
+        "- Setelah mengetuk “Tak ada yang cocok”, jika ternyata **ada** kartu yang cocok, kartu itu dimainkan untukmu, ditandai merah, dan rangkaian tebakan benarmu diulang dari nol.",
         "Untuk semua hukum: A = 1, Jack = 11, Queen = 12, King = 13.",
         "## Hukum",
         "Pengaturan tingkat kesulitan menentukan hukum mana yang dipakai dalam permainan. Pengaturan Sulit juga memilih dari hukum-hukum mudah.",
@@ -2951,7 +2951,7 @@
         "- Ke-52 kartu dijajarkan dalam satu barisan bersambung, berlanjut dari baris ke baris.",
         "- Queen hati mengawali barisan dan King hati mengakhirinya.",
         "## Membuang",
-        "- Pilih kartu yang akan dibuang, lalu tekan **Buangan**.",
+        "- Pilih kartu yang akan dibuang, lalu tekan **Buang**.",
         "- Satu kartu, atau dua kartu yang bersebelahan, boleh dibuang jika kartu di kedua sisinya sama **nilai atau jenis**.",
         "- Urutan yang lebih panjang hanya boleh dibuang jika setiap kartunya **sejenis**, dan kartu di kedua sisinya sama nilai atau jenis.",
         "- Queen dan King hati tidak pernah meninggalkan barisan.",

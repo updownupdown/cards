@@ -40,7 +40,7 @@ export const augury: GameDefinition = {
     "Each game has a secret law about which cards may follow the last card(s) on the path.",
     "- Tap a card in your hand if you think it fits the hidden law.",
     "- If you think no card in your hand fits, tap **None Fit**.",
-    "- If a card did fit, it is played for you (shown in red), and your run of correct guesses is reset.",
+    '- After tapping "None Fit", if a card **did** fit, it is played for you, shown in red, and your run of correct guesses is reset.',
 
     "For all laws: A = 1, Jacks = 11, Queen = 12, King = 13.",
 
