@@ -16,18 +16,18 @@
     "description": "Weather and scenery behind the cards, and moving stars in the menus."
   },
   "showTips": {
-    "label": "Show game tips",
+    "label": "Show \"Quick Start\" tips",
     "description": "Show a quick start summary for new games."
   },
   "helpFromAbove": {
     "label": "Help from Above",
-    "description": "A UFO in the game header that helps when you're stuck.",
+    "description": "Press the UFO for help when you're stuck!",
     "off": "Off",
     "beacons": "Beacons",
     "autopilot": "Autopilot",
-    "offDescription": "No UFO in the game header.",
-    "beaconsDescription": "Beacons light up a good move. Your wins still count.",
-    "autopilotDescription": "The UFO flies down and plays a good move for you. A win in a game it played doesn't count."
+    "offDescription": "The UFO is not shown in the game header.",
+    "beaconsDescription": "Lights up recommended cards or actions. **Your wins still count!**",
+    "autopilotDescription": "Plays the recommended move for you. **Your wins don't count!**"
   },
   "keepScreenAwake": {
     "label": "Keep screen awake",

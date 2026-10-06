@@ -16,18 +16,18 @@
     "description": "Meteo e paesaggi dietro le carte, e stelle in movimento nei menu."
   },
   "showTips": {
-    "label": "Mostra suggerimenti",
+    "label": "Mostra i suggerimenti «Guida rapida»",
     "description": "Mostra una guida rapida per i giochi nuovi."
   },
   "helpFromAbove": {
     "label": "Aiuto dall'alto",
-    "description": "Un UFO nell'intestazione del gioco che ti aiuta quando sei bloccato.",
+    "description": "Tocca l'UFO per un aiuto quando sei bloccato!",
     "off": "No",
     "beacons": "Segnali",
     "autopilot": "Pilota automatico",
-    "offDescription": "Nessun UFO nell'intestazione del gioco.",
-    "beaconsDescription": "I segnali illuminano una buona mossa. Le tue vittorie contano comunque.",
-    "autopilotDescription": "L'UFO scende e fa una buona mossa al posto tuo. Una vittoria in una partita in cui ha giocato non conta."
+    "offDescription": "L'UFO non compare nell'intestazione del gioco.",
+    "beaconsDescription": "Illumina le carte o le azioni consigliate. **Le tue vittorie contano comunque!**",
+    "autopilotDescription": "Fa la mossa consigliata al posto tuo. **Le tue vittorie non contano!**"
   },
   "keepScreenAwake": {
     "label": "Mantieni lo schermo acceso",

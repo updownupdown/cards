@@ -8,7 +8,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGame } from "@/i18n/content";
 import { flexStyles } from "@/styles/flexStyles";
-import { View, ViewStyle } from "react-native";
+import { Pressable, View, ViewStyle } from "react-native";
 import { RichText } from "../common/RichText";
 import { ScrollView } from "react-native-gesture-handler";
 import { useModalStyles } from "@/styles/modalStyles";
@@ -38,9 +38,9 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   const headingColor = theme.accent2;
   const hasHints = useHasHintFinder();
   const introSeen = useHintIntroSeen();
-  // Shown the first time the Rules open on a game with hints; once put
-  // away, a note of the same size says where to change it.
-  const [showIntro] = useState(() => hasHints && !introSeen);
+  // Introduced at the top the first time the Rules open on a game with
+  // hints; once put away, it folds into a row at the bottom.
+  const [showIntro, setShowIntro] = useState(() => hasHints && !introSeen);
 
   return (
     <ModalFull
@@ -61,7 +61,9 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
             },
           ]}
         >
-          {showIntro && <HelpFromAboveIntro />}
+          {showIntro && (
+            <HelpFromAboveIntro onDone={() => setShowIntro(false)} />
+          )}
 
           <QuickStart
             gameInfo={gameInfo}
@@ -80,6 +82,8 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
             content={gameInfo.howToPlay ?? [t("rules.unavailable")]}
             headingColor={headingColor}
           />
+
+          {hasHints && !showIntro && <HelpFromAboveRow />}
         </View>
       </ScrollView>
     </ModalFull>
@@ -131,64 +135,45 @@ export const QuickStart = ({ gameInfo, style }: QuickStartProps) => {
   );
 };
 
-/**
- * Introduces the header's UFO ("Help from Above") and lets the player pick
- * how it helps. Once put away it doesn't come back; the note that replaces it
- * keeps its size, so the rules below don't jump.
- */
-function HelpFromAboveIntro() {
-  const { t } = useTranslation("game");
+/** The box both the introduction and the bottom row (opened) show. */
+function useHelpBoxStyle(): ViewStyle {
   const { spacing } = useResponsiveMetrics();
   const theme = usePalette();
-  const mode = useHintMode();
-  const [dismissed, setDismissed] = useState(false);
-  const [height, setHeight] = useState<number | undefined>(undefined);
-
-  const boxStyle: ViewStyle = {
+  return {
     width: "100%",
-    minHeight: dismissed ? height : undefined,
     gap: spacing(10),
     paddingHorizontal: spacing(16),
     paddingVertical: spacing(14),
     borderRadius: spacing(14),
     backgroundColor: theme.raise,
   };
+}
 
-  if (dismissed) {
-    return (
-      <View
-        style={[
-          boxStyle,
-          { flexDirection: "row", alignItems: "center", gap: spacing(12) },
-        ]}
-      >
-        <Icon name="ufo" size={spacing(26)} color={theme.accent} />
-        <Text
-          size="sm"
-          weight={300}
-          color={theme.ink}
-          style={{ flex: 1 }}
-          lineHeight={1.3}
-        >
-          {t("rules.helpIntro.later")}
-        </Text>
-      </View>
-    );
-  }
-
+/** The UFO and "Help from Above", as the box's heading. */
+function HelpHeading({ trailing }: { trailing?: React.ReactNode }) {
+  const { t } = useTranslation("game");
+  const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
   return (
     <View
-      style={boxStyle}
-      onLayout={(event) => setHeight(event.nativeEvent.layout.height)}
+      style={{ flexDirection: "row", alignItems: "center", gap: spacing(10) }}
     >
-      <View
-        style={{ flexDirection: "row", alignItems: "center", gap: spacing(10) }}
-      >
-        <Icon name="ufo" size={spacing(26)} color={theme.accent} />
-        <Text size="md" weight={700} color={theme.accent2} style={{ flex: 1 }}>
-          {t("rules.helpIntro.title")}
-        </Text>
-      </View>
+      <Icon name="ufo" size={spacing(26)} color={theme.accent} />
+      <Text size="md" weight={700} color={theme.accent2} style={{ flex: 1 }}>
+        {t("rules.helpIntro.title")}
+      </Text>
+      {trailing}
+    </View>
+  );
+}
+
+/** What the UFO does, and the choice of how it helps. */
+function HelpChoice() {
+  const { t } = useTranslation("game");
+  const theme = usePalette();
+  const mode = useHintMode();
+  return (
+    <>
       <Text size="sm" weight={300} color={theme.ink} lineHeight={1.3}>
         {t("rules.helpIntro.body")}
       </Text>
@@ -198,15 +183,68 @@ function HelpFromAboveIntro() {
           void saveHintMode(value);
         }}
       />
+    </>
+  );
+}
+
+/**
+ * Introduces the header's UFO ("Help from Above") and lets the player pick
+ * how it helps. Once put away it doesn't come back at the top; the Rules keep
+ * it as a row at the bottom.
+ */
+function HelpFromAboveIntro({ onDone }: { onDone: () => void }) {
+  const { t } = useTranslation("game");
+  return (
+    <View style={useHelpBoxStyle()}>
+      <HelpHeading />
+      <HelpChoice />
       <Button
         text={t("rules.helpIntro.done")}
         size="sm"
         style={{ alignSelf: "flex-end" }}
         onPress={() => {
-          setDismissed(true);
+          onDone();
           void markHintIntroSeen();
         }}
       />
+    </View>
+  );
+}
+
+/**
+ * At the bottom of the Rules: the UFO and "Help from Above", which opens to
+ * the same choice as the settings.
+ */
+function HelpFromAboveRow() {
+  const { t } = useTranslation("game");
+  const { spacing } = useResponsiveMetrics();
+  const theme = usePalette();
+  const [open, setOpen] = useState(false);
+  return (
+    <View style={[useHelpBoxStyle(), { marginTop: spacing(24) }]}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityState={{ expanded: open }}
+        onPress={() => setOpen((value) => !value)}
+      >
+        <HelpHeading
+          trailing={
+            <Icon
+              name={open ? "expand-less" : "expand-more"}
+              size={spacing(24)}
+              color={theme.accent}
+            />
+          }
+        />
+      </Pressable>
+      {open && (
+        <>
+          <HelpChoice />
+          <Text size="xs" weight={400} color={theme.dim} lineHeight={1.3}>
+            {t("rules.helpIntro.later")}
+          </Text>
+        </>
+      )}
     </View>
   );
 }

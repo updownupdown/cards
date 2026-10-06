@@ -16,18 +16,18 @@
     "description": "Kartların arkasında hava durumu ve manzara, menülerde hareketli yıldızlar."
   },
   "showTips": {
-    "label": "İpuçlarını göster",
+    "label": "\"Hızlı başlangıç\" ipuçlarını göster",
     "description": "Yeni oyunlarda hızlı başlangıç özeti gösterir."
   },
   "helpFromAbove": {
     "label": "Yukarıdan Yardım",
-    "description": "Takıldığında yardım eden, oyun başlığındaki bir UFO.",
+    "description": "Takıldığında yardım için UFO'ya dokun!",
     "off": "Kapalı",
     "beacons": "İşaretler",
     "autopilot": "Otopilot",
-    "offDescription": "Oyun başlığında UFO yok.",
-    "beaconsDescription": "İşaretler iyi bir hamleyi gösterir. Galibiyetlerin yine sayılır.",
-    "autopilotDescription": "UFO aşağı iner ve senin yerine iyi bir hamle yapar. Onun oynadığı bir oyundaki galibiyet sayılmaz."
+    "offDescription": "UFO oyun başlığında gösterilmez.",
+    "beaconsDescription": "Önerilen kartları ya da hamleleri gösterir. **Galibiyetlerin yine sayılır!**",
+    "autopilotDescription": "Önerilen hamleyi senin yerine yapar. **Galibiyetlerin sayılmaz!**"
   },
   "keepScreenAwake": {
     "label": "Ekranı açık tut",

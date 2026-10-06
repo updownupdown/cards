@@ -16,18 +16,18 @@
     "description": "Météo et décor derrière les cartes, et étoiles animées dans les menus."
   },
   "showTips": {
-    "label": "Afficher les conseils",
+    "label": "Afficher les conseils « Démarrage rapide »",
     "description": "Affiche un résumé de démarrage rapide pour les nouveaux jeux."
   },
   "helpFromAbove": {
     "label": "Un coup de main d'en haut",
-    "description": "Un OVNI dans l'en-tête du jeu, qui vous aide quand vous êtes bloqué.",
+    "description": "Touchez l'OVNI pour de l'aide quand vous êtes bloqué !",
     "off": "Non",
     "beacons": "Balises",
     "autopilot": "Pilote auto",
-    "offDescription": "Pas d'OVNI dans l'en-tête du jeu.",
-    "beaconsDescription": "Des balises montrent un bon coup. Vos victoires comptent toujours.",
-    "autopilotDescription": "L'OVNI descend et joue un bon coup pour vous. Une victoire dans une partie où il a joué ne compte pas."
+    "offDescription": "L'OVNI n'apparaît pas dans l'en-tête du jeu.",
+    "beaconsDescription": "Éclaire les cartes ou actions recommandées. **Vos victoires comptent toujours !**",
+    "autopilotDescription": "Joue le coup recommandé pour vous. **Vos victoires ne comptent pas !**"
   },
   "keepScreenAwake": {
     "label": "Garder l'écran allumé",

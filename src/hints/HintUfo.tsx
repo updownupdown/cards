@@ -1,4 +1,5 @@
 import { isBoardInputLocked } from "@/components/Cards/input-lock";
+import { defaultAnimDuration } from "@/constants/animation";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useTranslation } from "@/i18n";
@@ -49,6 +50,9 @@ import {
 
 const MINT = "#7dffb0";
 const BEACON_INK = "#3ee08f";
+/** Where a card goes: warm, so "from" and "to" never look alike. */
+const AMBER = "#ffd166";
+const AMBER_INK = "#f0a92e";
 const DARK = Colors.K950;
 const useNativeDriver = Platform.OS !== "web";
 
@@ -65,8 +69,12 @@ const POP_MS = 260;
 const BEAM_MS = 300;
 const BEAM_HOLD_MS = 450;
 const ZAP_MS = 180;
-/** As long as a card takes to move, so the beam carries it across. */
-const CARRY_MS = 400;
+/**
+ * Hints show only where to look, not words: the move speaks for itself, and
+ * games would otherwise each need their own messages. The wiring stays, for
+ * moves that may need explaining one day; "No hint available" always shows.
+ */
+const SHOW_HINT_TEXT = false;
 const NOTHING_TO_SAY_MS = 1800;
 const HOME_DELAY_MS = 450;
 const BUBBLE_WIDTH = 168;
@@ -88,17 +96,34 @@ function hintText(t: Translate, hint: Hint | null) {
     : t("hint.none");
 }
 
+type BeaconKind = "from" | "to";
+
+/** A move's later steps are where it goes; everything else is acted on. */
+function beaconKind(hint: Hint, stepIndex: number): BeaconKind {
+  return hint.steps.length >= 2 && stepIndex > 0 ? "to" : "from";
+}
+
 // —— Beacon ———————————————————————————————————————————————————————————
 
+/**
+ * A beacon on a hint target. "from" (what to pick up, tap or press): mint
+ * rings ping out of a bright core. "to" (where it goes): amber rings close in
+ * on a landing ring.
+ */
 function Beacon({
   spot,
+  kind,
   delay = 0,
   pings = PINGS,
 }: {
   spot: HintSpot;
+  kind: BeaconKind;
   delay?: number;
   pings?: number;
 }) {
+  const to = kind === "to";
+  const ink = to ? AMBER : MINT;
+  const glow = to ? AMBER_INK : BEACON_INK;
   const presence = useRef(new Animated.Value(0)).current;
   const ping = useRef(new Animated.Value(0)).current;
 
@@ -133,7 +158,8 @@ function Beacon({
   const size = Math.max(64, spot.size * 1.5);
   const core = Math.max(16, Math.round(spot.size * 0.22));
 
-  // Two rings, half a ping apart, each growing out of the core and fading.
+  // Two rings, half a ping apart, each growing out of the core and fading
+  // (or, for "to", closing in on it).
   const ring = (offset: number) => {
     const phase =
       offset === 0
@@ -150,21 +176,22 @@ function Beacon({
           height: size,
           borderRadius: size / 2,
           borderWidth: 3,
-          borderColor: MINT,
+          borderColor: ink,
           // A dark edge keeps the ring clear on pale cards.
-          boxShadow: `0 0 0 1.5px ${rgba(DARK, 0.45)}, 0 0 12px ${rgba(BEACON_INK, 0.7)}`,
+          boxShadow: `0 0 0 1.5px ${rgba(DARK, 0.45)}, 0 0 12px ${rgba(glow, 0.7)}`,
           opacity: Animated.multiply(
             presence,
-            phase.interpolate({
-              inputRange: [0, 0.15, 1],
-              outputRange: [0, 1, 0],
-            }),
+            phase.interpolate(
+              to
+                ? { inputRange: [0, 0.2, 0.85, 1], outputRange: [0, 1, 0.8, 0] }
+                : { inputRange: [0, 0.15, 1], outputRange: [0, 1, 0] },
+            ),
           ),
           transform: [
             {
               scale: phase.interpolate({
                 inputRange: [0, 1],
-                outputRange: [0.2, 1.15],
+                outputRange: to ? [1.15, 0.3] : [0.2, 1.15],
               }),
             },
           ],
@@ -190,13 +217,14 @@ function Beacon({
       {ring(0.5)}
       <Animated.View
         style={{
-          width: core,
-          height: core,
-          borderRadius: core / 2,
-          backgroundColor: MINT,
-          borderWidth: 2.5,
-          borderColor: Colors.white,
-          boxShadow: `0 0 0 1.5px ${rgba(DARK, 0.5)}, 0 0 ${core}px ${BEACON_INK}`,
+          // "to" lands on a ring (a landing pad), "from" glows as a dot.
+          width: to ? core * 1.7 : core,
+          height: to ? core * 1.7 : core,
+          borderRadius: core,
+          backgroundColor: to ? rgba(AMBER, 0.25) : MINT,
+          borderWidth: to ? 3.5 : 2.5,
+          borderColor: to ? AMBER : Colors.white,
+          boxShadow: `0 0 0 1.5px ${rgba(DARK, 0.5)}, 0 0 ${core}px ${glow}`,
           opacity: presence,
           transform: [
             {
@@ -405,7 +433,13 @@ async function tapWhenFree(board: HintBoard, target: HintTarget, hint: Hint) {
 /** Lets the game take in a tap (re-render with what it selected). */
 const settle = () => new Promise((resolve) => setTimeout(resolve, 90));
 
-type FlightStop = { key: string; spot: HintSpot };
+/** Two frames: long enough for the game to re-render after a tap. */
+const nextFrames = () =>
+  new Promise((resolve) =>
+    requestAnimationFrame(() => requestAnimationFrame(resolve)),
+  );
+
+type FlightStop = { key: string; spot: HintSpot; kind: BeaconKind };
 
 // —— HintUfo ——————————————————————————————————————————————————————————
 
@@ -443,7 +477,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
   const [beacons, setBeacons] = useState<{
     id: number;
     hasHint: boolean;
-    spots: { key: string; spot: HintSpot; delay: number }[];
+    spots: { key: string; spot: HintSpot; delay: number; kind: BeaconKind }[];
     text: string;
     dock: HintSpot | null;
   } | null>(null);
@@ -549,6 +583,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
                       key: `${id}-${stepIndex}-${targetIndex}`,
                       spot: toLocal(spot),
                       delay: stepIndex * STEP_DELAY_MS,
+                      kind: beaconKind(hint, stepIndex),
                     },
                   ]
                 : [];
@@ -580,28 +615,38 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
 
     const sideFor = (x: number) => (x > width / 2 ? "left" : "right");
     let here = { x: dock.x, y: dock.y };
-    const moveTo = (x: number, y: number, duration: number) => {
+    const moveTo = (
+      x: number,
+      y: number,
+      duration: number,
+      easing = Easing.inOut(Easing.cubic),
+    ) => {
       here = { x, y };
       return flight.run(
         Animated.timing(position, {
           toValue: { x, y },
           duration,
-          easing: Easing.inOut(Easing.cubic),
+          easing,
           useNativeDriver,
         }),
       );
     };
-    const flyOver = async (spot: HintSpot, duration?: number) => {
+    const flyOver = async (
+      spot: HintSpot,
+      duration?: number,
+      easing?: (value: number) => number,
+    ) => {
       const local = toLocal(spot);
       const up = hoverLift(local.size);
       setLift(up);
       setBeamWidth(Math.max(40, local.size * 0.95));
-      setBubble({ text, side: sideFor(local.x) });
+      if (SHOW_HINT_TEXT) setBubble({ text, side: sideFor(local.x) });
       const distance = Math.hypot(local.x - here.x, local.y - up - here.y);
       return moveTo(
         local.x,
         local.y - up,
         duration ?? Math.max(350, Math.min(900, distance * 1.1)),
+        easing,
       );
     };
 
@@ -644,20 +689,32 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
             if (!(await tapWhenFree(board, target, hint))) break steps;
             played = true;
             setInterruptible(false);
-            await settle();
+            // Where the card lands shows once the game has taken the tap, a
+            // frame or two, which is also when the card sets off. The UFO
+            // flies there in the card's own time and easing, so the beam
+            // keeps hold of it all the way.
+            await nextFrames();
             const landed =
               (grabbed && "card" in grabbed && board.locate(grabbed)) ||
               destination;
             if (landed) {
-              setStop({ key, spot: toLocal(landed) });
-              await flyOver(landed, CARRY_MS);
+              setStop({ key, spot: toLocal(landed), kind: "to" });
+              await flyOver(
+                landed,
+                defaultAnimDuration,
+                Easing.out(Easing.cubic),
+              );
             }
             continue;
           }
 
           const spot = board.locate(target);
           if (!spot) break steps;
-          setStop({ key, spot: toLocal(spot) });
+          setStop({
+            key,
+            spot: toLocal(spot),
+            kind: beaconKind(hint, stepIndex),
+          });
           if (!(await flyOver(spot))) break steps;
 
           if (isMove) {
@@ -764,10 +821,10 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
         },
       ]}
     >
-      {beacons?.spots.map(({ key, spot, delay }) => (
-        <Beacon key={key} spot={spot} delay={delay} />
+      {beacons?.spots.map(({ key, spot, delay, kind }) => (
+        <Beacon key={key} spot={spot} delay={delay} kind={kind} />
       ))}
-      {beacons?.dock && (
+      {beacons?.dock && (!beacons.hasHint || SHOW_HINT_TEXT) && (
         <View
           style={{
             position: "absolute",
@@ -784,7 +841,9 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
         </View>
       )}
 
-      {flying && stop && <Beacon key={stop.key} spot={stop.spot} pings={2} />}
+      {flying && stop && (
+        <Beacon key={stop.key} spot={stop.spot} kind={stop.kind} pings={2} />
+      )}
 
       {/* Tapping anywhere calls the UFO home, until it acts. */}
       {flying && (

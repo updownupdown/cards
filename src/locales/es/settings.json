@@ -16,18 +16,18 @@
     "description": "Clima y paisaje detrás de las cartas, y estrellas en movimiento en los menús."
   },
   "showTips": {
-    "label": "Mostrar consejos",
+    "label": "Mostrar consejos de «Inicio rápido»",
     "description": "Muestra un resumen de inicio rápido en los juegos nuevos."
   },
   "helpFromAbove": {
     "label": "Ayuda de las alturas",
-    "description": "Un ovni en la cabecera del juego que te ayuda cuando te atascas.",
+    "description": "¡Pulsa el ovni para pedir ayuda cuando te atasques!",
     "off": "No",
     "beacons": "Balizas",
     "autopilot": "Piloto automático",
-    "offDescription": "Sin ovni en la cabecera del juego.",
-    "beaconsDescription": "Las balizas iluminan una buena jugada. Tus victorias siguen contando.",
-    "autopilotDescription": "El ovni baja y hace una buena jugada por ti. Una victoria en una partida en la que jugó no cuenta."
+    "offDescription": "El ovni no aparece en la cabecera del juego.",
+    "beaconsDescription": "Ilumina las cartas o acciones recomendadas. **¡Tus victorias siguen contando!**",
+    "autopilotDescription": "Hace la jugada recomendada por ti. **¡Tus victorias no cuentan!**"
   },
   "keepScreenAwake": {
     "label": "Mantener la pantalla encendida",

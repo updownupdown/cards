@@ -3,7 +3,7 @@ import { Text } from "@/components/common/Text";
 import { HINT_MODES, type HintMode } from "@/data/hint-mode";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
-import { usePalette } from "@/styles/palette";
+import { useGameAccent, usePalette } from "@/styles/palette";
 import { theme as appTheme } from "@/styles/styles";
 import { View } from "react-native";
 
@@ -21,6 +21,7 @@ export function HintModeRadio({
   const { spacing } = useResponsiveMetrics();
   const { t } = useTranslation("settings");
   const palette = usePalette();
+  const accent = useGameAccent();
   return (
     <View style={{ width: "100%", gap: spacing(8) }}>
       <RadioButtons
@@ -35,7 +36,24 @@ export function HintModeRadio({
         selectedTextStyle={{ color: appTheme.accent }}
       />
       <Text size="sm" weight={400} color={palette.dim} lineHeight={1.3}>
-        {t(`helpFromAbove.${value}Description`)}
+        {/* **Bold** runs (what happens to wins) stand out in the accent. */}
+        {t(`helpFromAbove.${value}Description`)
+          .split("**")
+          .map((run, index) =>
+            index % 2 === 1 ? (
+              <Text
+                key={index}
+                size="sm"
+                weight={700}
+                color={accent}
+                lineHeight={1.3}
+              >
+                {run}
+              </Text>
+            ) : (
+              run
+            ),
+          )}
       </Text>
     </View>
   );

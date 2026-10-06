@@ -16,18 +16,18 @@
     "description": "Cuaca dan pemandangan di balik kartu, serta bintang bergerak di menu."
   },
   "showTips": {
-    "label": "Tampilkan tips",
+    "label": "Tampilkan tips \"Mulai cepat\"",
     "description": "Tampilkan ringkasan mulai cepat untuk permainan baru."
   },
   "helpFromAbove": {
     "label": "Bantuan dari Atas",
-    "description": "UFO di kepala permainan yang membantu saat kamu buntu.",
+    "description": "Tekan UFO untuk bantuan saat kamu buntu!",
     "off": "Mati",
     "beacons": "Suar",
     "autopilot": "Autopilot",
-    "offDescription": "Tidak ada UFO di kepala permainan.",
-    "beaconsDescription": "Suar menyorot langkah yang bagus. Kemenanganmu tetap dihitung.",
-    "autopilotDescription": "UFO turun dan memainkan langkah yang bagus untukmu. Kemenangan dalam permainan yang ia mainkan tidak dihitung."
+    "offDescription": "UFO tidak ditampilkan di kepala permainan.",
+    "beaconsDescription": "Menyorot kartu atau aksi yang disarankan. **Kemenanganmu tetap dihitung!**",
+    "autopilotDescription": "Memainkan langkah yang disarankan untukmu. **Kemenanganmu tidak dihitung!**"
   },
   "keepScreenAwake": {
     "label": "Biarkan layar tetap menyala",
