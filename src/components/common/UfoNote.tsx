@@ -1,4 +1,4 @@
-import { UfoFrame, type UfoFrameStyle } from "@/components/common/UfoFrame";
+import { UfoFrame } from "@/components/common/UfoFrame";
 import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
@@ -103,17 +103,10 @@ function RestlessUfo({ size }: { size: number }) {
 }
 
 /** A short line from the UFO, in its frame (e.g. "it helped"). */
-export function UfoNote({
-  text,
-  variant,
-}: {
-  text: string;
-  variant?: UfoFrameStyle;
-}) {
+export function UfoNote({ text }: { text: string }) {
   const { spacing } = useResponsiveMetrics();
   return (
     <UfoFrame
-      variant={variant}
       radius={spacing(16)}
       style={{
         flexDirection: "row",

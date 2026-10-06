@@ -10,7 +10,7 @@ import {
   rgba,
   textShadow,
   UfoColors,
-  UfoNeon,
+  UfoEffectColors,
 } from "@/styles/styles";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -51,13 +51,13 @@ import {
  */
 
 /** What to pick up, tap or press: the UFO's own green. */
-const MINT = UfoNeon.green;
-const BEACON_INK = UfoNeon.greenGlow;
+const GREEN = UfoEffectColors.green;
+const BEACON_INK = UfoEffectColors.greenGlow;
 /** Where a card goes: pink, so "from" and "to" never look alike. */
-const PINK = UfoNeon.pink;
-const PINK_INK = UfoNeon.pinkGlow;
+const PINK = UfoEffectColors.pink;
+const PINK_INK = UfoEffectColors.pinkGlow;
 /** The tractor beam that carries a card across. */
-const BEAM = UfoNeon.blue;
+const BEAM = UfoEffectColors.blue;
 const DARK = Colors.K950;
 const useNativeDriver = Platform.OS !== "web";
 
@@ -111,7 +111,7 @@ function beaconKind(hint: Hint, stepIndex: number): BeaconKind {
 // —— Beacon ———————————————————————————————————————————————————————————
 
 /**
- * A beacon on a hint target. "from" (what to pick up, tap or press): mint
+ * A beacon on a hint target. "from" (what to pick up, tap or press): green
  * rings ping out of a bright core. "to" (where it goes): pink rings close in
  * on a landing ring.
  */
@@ -127,7 +127,7 @@ function Beacon({
   pings?: number;
 }) {
   const to = kind === "to";
-  const ink = to ? PINK : MINT;
+  const ink = to ? PINK : GREEN;
   const glow = to ? PINK_INK : BEACON_INK;
   const presence = useRef(new Animated.Value(0)).current;
   const ping = useRef(new Animated.Value(0)).current;
@@ -226,7 +226,7 @@ function Beacon({
           width: to ? core * 1.7 : core,
           height: to ? core * 1.7 : core,
           borderRadius: core,
-          backgroundColor: to ? rgba(PINK, 0.25) : MINT,
+          backgroundColor: to ? rgba(PINK, 0.25) : GREEN,
           borderWidth: to ? 3.5 : 2.5,
           borderColor: to ? PINK : Colors.white,
           boxShadow: `0 0 0 1.5px ${rgba(DARK, 0.5)}, 0 0 ${core}px ${glow}`,
@@ -343,7 +343,7 @@ function Zap({ lift, value }: { lift: number; value: Animated.Value }) {
           height: lift - top,
           borderRadius: 2,
           backgroundColor: Colors.white,
-          boxShadow: `0 0 8px 2px ${MINT}`,
+          boxShadow: `0 0 8px 2px ${GREEN}`,
           opacity: value,
           transformOrigin: "top",
           transform: [{ scaleY: value }],
@@ -358,7 +358,7 @@ function Zap({ lift, value }: { lift: number; value: Animated.Value }) {
           width: flash,
           height: flash,
           borderRadius: flash / 2,
-          backgroundColor: rgba(MINT, 0.8),
+          backgroundColor: rgba(GREEN, 0.8),
           borderWidth: 2,
           borderColor: Colors.white,
           opacity: value.interpolate({
@@ -892,7 +892,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
               textAlign: "center",
               fontSize: UFO_FONT_SIZE,
               lineHeight: UFO_FONT_SIZE * 1.4,
-              ...textShadow(rgba(MINT, 0.7), 10),
+              ...textShadow(rgba(GREEN, 0.7), 10),
               transform: [
                 { scale },
                 {

@@ -1,4 +1,4 @@
-import { UfoFrame, type UfoFrameStyle } from "@/components/common/UfoFrame";
+import { UfoFrame } from "@/components/common/UfoFrame";
 import { Text, toDisplayUpperCase } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
@@ -14,7 +14,6 @@ export function UfoPanel({
   title,
   trailing,
   wrapHeading,
-  variant,
   style,
   children,
 }: {
@@ -23,7 +22,6 @@ export function UfoPanel({
   trailing?: ReactNode;
   /** Wraps the heading, e.g. a Pressable that opens the panel. */
   wrapHeading?: (heading: ReactNode) => ReactNode;
-  variant?: UfoFrameStyle;
   style?: StyleProp<ViewStyle>;
   children?: ReactNode;
 }) {
@@ -46,7 +44,6 @@ export function UfoPanel({
   );
   return (
     <UfoFrame
-      variant={variant}
       radius={spacing(14)}
       style={[
         {
