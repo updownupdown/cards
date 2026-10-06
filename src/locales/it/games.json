@@ -285,7 +285,12 @@
     "combatantCaptured": "Un combattente è finito nella pila delle catture nemiche.",
     "allEnemiesCleared": "Tutte le carte nemiche eliminate senza perdere combattenti.",
     "combatantCapturedYouLose": "Un combattente è finito nella pila delle catture nemiche. Hai perso.",
-    "noCardsToPlay": "Nessuna carta da giocare."
+    "noCardsToPlay": "Nessuna carta da giocare.",
+    "hint": {
+      "discard": "Cambia questa carta con una nuova",
+      "letCapture": "Nessuna cattura: lascia che il nemico prenda la tua carta più debole",
+      "sacrifice": "Nessuna cattura: sacrifica due carte deboli per rimandare indietro questo nemico"
+    }
   },
   "fifteenPuzzle": {
     "theCardsAreBackIn": "Le carte sono di nuovo in ordine."
@@ -480,7 +485,15 @@
     "villain": "Cattivo",
     "response": "Risposta",
     "damage": "Danni:",
-    "heal": "Cura:"
+    "heal": "Cura:",
+    "smokeThreat": "Fumogeno su {{card}}",
+    "grappleThreats": "Rampino su {{first}} e {{second}}",
+    "hint": {
+      "smoke": "Usa il fumogeno su questa minaccia",
+      "grapple": "Collega queste due minacce con il rampino e rispondi a entrambe insieme",
+      "dump": "Gioca questa risposta dove non fa danni",
+      "resolve": "Risolvi ora: pescare ancora rischia di fare più male che bene"
+    }
   },
   "ouroboros": {
     "jewels": "Gioielli",
@@ -716,7 +729,13 @@
     "setReserve2": "Metti in riserva ({{length}}/2)",
     "moveToTop": "Sposta {{value}} in cima",
     "doNothing": "Non fare nulla",
-    "noKingSelected": "Nessun Re selezionato"
+    "noKingSelected": "Nessun Re selezionato",
+    "hint": {
+      "reserve": "Tieni queste due in riserva per finire i mostri più avanti",
+      "discard": "Questa carta non ha un buon posto: scartala",
+      "bury": "Metti questa carta in fondo al mazzo invece di scartarla",
+      "double": "Raddoppia un attacco con il Re di picche"
+    }
   },
   "waypoint": {
     "current": "Attuale",

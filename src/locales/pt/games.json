@@ -285,7 +285,12 @@
     "combatantCaptured": "Um combatente entrou na pilha de capturas do inimigo.",
     "allEnemiesCleared": "Todas as cartas inimigas eliminadas sem perder combatentes.",
     "combatantCapturedYouLose": "Um combatente entrou na pilha de capturas do inimigo. Você perdeu.",
-    "noCardsToPlay": "Não há cartas para jogar."
+    "noCardsToPlay": "Não há cartas para jogar.",
+    "hint": {
+      "discard": "Troque esta carta por uma nova",
+      "letCapture": "Sem captura: deixe o inimigo levar sua carta mais fraca",
+      "sacrifice": "Sem captura: sacrifique duas cartas fracas para mandar este inimigo de volta"
+    }
   },
   "fifteenPuzzle": {
     "theCardsAreBackIn": "As cartas voltaram à ordem."
@@ -480,7 +485,15 @@
     "villain": "Vilão",
     "response": "Resposta",
     "damage": "Dano:",
-    "heal": "Cura:"
+    "heal": "Cura:",
+    "smokeThreat": "Bomba de fumaça em {{card}}",
+    "grappleThreats": "Gancho em {{first}} e {{second}}",
+    "hint": {
+      "smoke": "Use sua bomba de fumaça nesta ameaça",
+      "grapple": "Ligue estas duas ameaças com o gancho e responda às duas juntas",
+      "dump": "Jogue esta resposta onde ela não faz mal",
+      "resolve": "Resolva agora: comprar outra arrisca mais do que ajuda"
+    }
   },
   "ouroboros": {
     "jewels": "Joias",
@@ -716,7 +729,13 @@
     "setReserve2": "Reservar ({{length}}/2)",
     "moveToTop": "Mover {{value}} para o topo",
     "doNothing": "Não fazer nada",
-    "noKingSelected": "Nenhum Rei selecionado"
+    "noKingSelected": "Nenhum Rei selecionado",
+    "hint": {
+      "reserve": "Guarde estas duas na reserva para acabar com monstros depois",
+      "discard": "Esta carta não tem um bom lugar: descarte-a",
+      "bury": "Coloque esta carta no fundo do monte em vez de descartá-la",
+      "double": "Dobre um ataque com o Rei de espadas"
+    }
   },
   "waypoint": {
     "current": "Atual",

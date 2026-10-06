@@ -285,7 +285,12 @@
     "combatantCaptured": "A combatant entered the enemy capture pile.",
     "allEnemiesCleared": "All enemy cards cleared without losing combatants.",
     "combatantCapturedYouLose": "A combatant entered the enemy capture pile. You lose.",
-    "noCardsToPlay": "No cards available to play."
+    "noCardsToPlay": "No cards available to play.",
+    "hint": {
+      "discard": "Swap this card for a fresh draw",
+      "letCapture": "No capture: let the enemy take your cheapest card",
+      "sacrifice": "No capture: sacrifice two cheap cards to send this enemy back"
+    }
   },
   "fifteenPuzzle": {
     "theCardsAreBackIn": "The cards are back in order."
@@ -480,7 +485,15 @@
     "villain": "Villain",
     "response": "Response",
     "damage": "Damage:",
-    "heal": "Heal:"
+    "heal": "Heal:",
+    "smokeThreat": "Smoke Bomb on {{card}}",
+    "grappleThreats": "Grapple Line on {{first}} and {{second}}",
+    "hint": {
+      "smoke": "Use your Smoke Bomb on this Threat",
+      "grapple": "Grapple these two Threats: answer them together",
+      "dump": "Play this response where it does no harm",
+      "resolve": "Resolve now: another draw is more likely to hurt than help"
+    }
   },
   "ouroboros": {
     "jewels": "Jewels",
@@ -716,7 +729,13 @@
     "setReserve2": "Set Reserve ({{length}}/2)",
     "moveToTop": "Move {{value}} to top",
     "doNothing": "Do nothing",
-    "noKingSelected": "No King selected"
+    "noKingSelected": "No King selected",
+    "hint": {
+      "reserve": "Keep these two in reserve to finish monsters later",
+      "discard": "No good place for this card: discard it",
+      "bury": "Bury this card instead of discarding it",
+      "double": "Double an attack with the King of Spades"
+    }
   },
   "waypoint": {
     "current": "Current",

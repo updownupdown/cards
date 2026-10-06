@@ -285,7 +285,12 @@
     "combatantCaptured": "Un combatiente ha entrado en la pila de capturas enemiga.",
     "allEnemiesCleared": "Todas las cartas enemigas eliminadas sin perder combatientes.",
     "combatantCapturedYouLose": "Un combatiente ha entrado en la pila de capturas enemiga. Has perdido.",
-    "noCardsToPlay": "No hay cartas para jugar."
+    "noCardsToPlay": "No hay cartas para jugar.",
+    "hint": {
+      "discard": "Cambia esta carta por una nueva",
+      "letCapture": "Sin captura: deja que el enemigo se lleve tu carta más baja",
+      "sacrifice": "Sin captura: sacrifica dos cartas bajas para devolver este enemigo al mazo"
+    }
   },
   "fifteenPuzzle": {
     "theCardsAreBackIn": "Las cartas vuelven a estar en orden."
@@ -480,7 +485,15 @@
     "villain": "Villano",
     "response": "Respuesta",
     "damage": "Daño:",
-    "heal": "Curación:"
+    "heal": "Curación:",
+    "smokeThreat": "Bomba de humo sobre {{card}}",
+    "grappleThreats": "Garfio sobre {{first}} y {{second}}",
+    "hint": {
+      "smoke": "Usa tu Bomba de humo en esta Amenaza",
+      "grapple": "Une estas dos Amenazas con el Garfio y respóndelas juntas",
+      "dump": "Juega esta Respuesta donde no haga daño",
+      "resolve": "Resuelve ya: robar otra vez tiene más riesgo que ventaja"
+    }
   },
   "ouroboros": {
     "jewels": "Joyas",
@@ -716,7 +729,13 @@
     "setReserve2": "Reservar ({{length}}/2)",
     "moveToTop": "Poner {{value}} arriba",
     "doNothing": "No hacer nada",
-    "noKingSelected": "Ningún Rey seleccionado"
+    "noKingSelected": "Ningún Rey seleccionado",
+    "hint": {
+      "reserve": "Guarda estas dos en la reserva para rematar monstruos más adelante",
+      "discard": "Esta carta no tiene buen sitio: descártala",
+      "bury": "Pon esta carta en el fondo del mazo en vez de descartarla",
+      "double": "Duplica un ataque con el Rey de picas"
+    }
   },
   "waypoint": {
     "current": "Actual",

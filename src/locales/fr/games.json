@@ -285,7 +285,12 @@
     "combatantCaptured": "Un combattant est tombé dans la pile de captures ennemie.",
     "allEnemiesCleared": "Toutes les cartes ennemies éliminées sans perdre de combattant.",
     "combatantCapturedYouLose": "Un combattant est tombé dans la pile de captures ennemie. Vous avez perdu.",
-    "noCardsToPlay": "Aucune carte à jouer."
+    "noCardsToPlay": "Aucune carte à jouer.",
+    "hint": {
+      "discard": "Échangez cette carte contre une nouvelle",
+      "letCapture": "Aucune capture possible : laissez l'ennemi prendre votre carte la plus faible",
+      "sacrifice": "Aucune capture possible : sacrifiez deux cartes faibles pour renvoyer cet ennemi"
+    }
   },
   "fifteenPuzzle": {
     "theCardsAreBackIn": "Les cartes sont de nouveau en ordre."
@@ -480,7 +485,15 @@
     "villain": "Méchant",
     "response": "Réponse",
     "damage": "Dégâts :",
-    "heal": "Soin :"
+    "heal": "Soin :",
+    "smokeThreat": "Bombe fumigène sur {{card}}",
+    "grappleThreats": "Grappin sur {{first}} et {{second}}",
+    "hint": {
+      "smoke": "Utilisez votre Bombe fumigène sur cette Menace",
+      "grapple": "Reliez ces deux Menaces au Grappin pour y répondre ensemble",
+      "dump": "Jouez cette Réponse là où elle ne fait pas de mal",
+      "resolve": "Résolvez maintenant : piocher encore risque de nuire plus que d'aider"
+    }
   },
   "ouroboros": {
     "jewels": "Joyaux",
@@ -716,7 +729,13 @@
     "setReserve2": "Mettre en réserve ({{length}}/2)",
     "moveToTop": "Mettre {{value}} en haut",
     "doNothing": "Ne rien faire",
-    "noKingSelected": "Aucun Roi sélectionné"
+    "noKingSelected": "Aucun Roi sélectionné",
+    "hint": {
+      "reserve": "Gardez ces deux cartes en réserve pour achever des monstres plus tard",
+      "discard": "Cette carte n'a pas de bonne place : défaussez-la",
+      "bury": "Placez cette carte sous la pioche plutôt que de la défausser",
+      "double": "Doublez une attaque avec le Roi de pique"
+    }
   },
   "waypoint": {
     "current": "Actuel",
