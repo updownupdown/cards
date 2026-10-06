@@ -4,15 +4,22 @@ import { HINT_MODES, type HintMode } from "@/data/hint-mode";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { usePalette } from "@/styles/palette";
-import { FontWeight, rgba, UfoColors } from "@/styles/styles";
+import { UfoColors } from "@/styles/styles";
 import { View } from "react-native";
 
 /** Each choice lights up in its own UFO ink. */
 const MODE_INKS: Record<HintMode, string> = {
-  off: UfoColors.blue,
+  off: UfoColors.purple,
   beacons: UfoColors.green,
-  autopilot: UfoColors.purple,
+  autopilot: UfoColors.blue,
 };
+
+/** What happens to wins with each choice, where it has a say. */
+const MODE_NOTES = {
+  off: null,
+  beacons: "helpFromAbove.beaconsNote",
+  autopilot: "helpFromAbove.autopilotNote",
+} as const;
 
 /**
  * The "Help from Above" choices side by side, with what the chosen one does
@@ -29,42 +36,45 @@ export function HintModeRadio({
   const { t } = useTranslation("settings");
   const palette = usePalette();
   const ink = MODE_INKS[value];
+  const note = MODE_NOTES[value];
   return (
-    <View style={{ width: "100%", gap: spacing(8) }}>
+    <View style={{ width: "100%", gap: spacing(16) }}>
       <RadioButtons
         options={HINT_MODES.map((option) => ({
           value: option,
           label: t(`helpFromAbove.${option}`),
-          // The chosen one lifts, as in the app's other toggles, and takes
-          // its own ink.
-          selectedBackgroundColor: rgba(MODE_INKS[option], 0.16),
+          // The chosen one fills with its own ink.
+          selectedBackgroundColor: MODE_INKS[option],
         }))}
         selectedValue={value}
         onChange={onChange}
-        containerStyle={{ width: "100%", height: spacing(44) }}
-        buttonStyle={{ flex: 1, paddingHorizontal: spacing(6) }}
-        selectedTextStyle={{ color: ink, fontFamily: FontWeight[600] }}
+        containerStyle={{ width: "100%", height: spacing(48) }}
+        buttonStyle={{ flex: 1 }}
+        selectedInk={UfoColors.black}
       />
-      <Text size="sm" weight={400} color={palette.dim} lineHeight={1.3}>
-        {/* **Bold** runs (what happens to wins) stand out in the choice's ink. */}
-        {t(`helpFromAbove.${value}Description`)
-          .split("**")
-          .map((run, index) =>
-            index % 2 === 1 ? (
-              <Text
-                key={index}
-                size="sm"
-                weight={700}
-                color={ink}
-                lineHeight={1.3}
-              >
-                {run}
-              </Text>
-            ) : (
-              run
-            ),
-          )}
-      </Text>
+      <View style={{ gap: spacing(2) }}>
+        <Text
+          size="sm"
+          weight={400}
+          color={palette.dim}
+          lineHeight={1.3}
+          style={{ textAlign: "center" }}
+        >
+          {t(`helpFromAbove.${value}Description`)}
+        </Text>
+        {/* What happens to wins stands out on its own line, in the choice's ink. */}
+        {note && (
+          <Text
+            size="sm"
+            weight={700}
+            color={ink}
+            lineHeight={1.3}
+            style={{ textAlign: "center" }}
+          >
+            {t(note)}
+          </Text>
+        )}
+      </View>
     </View>
   );
 }

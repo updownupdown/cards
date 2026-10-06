@@ -359,6 +359,8 @@ export default function Beehive() {
 
   function commit(action: (draft: BeehiveGameState) => boolean) {
     if (won || lost) return;
+    // A tap that moves nothing leaves nothing to undo.
+    if (!action(structuredClone(game))) return;
     saveUndoState(structuredClone(game));
     setGame((draft) => {
       if (action(draft)) normalizeState(draft);

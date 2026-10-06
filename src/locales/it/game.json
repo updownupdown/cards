@@ -34,8 +34,6 @@
     "title": "Regole",
     "unavailable": "Le istruzioni non sono disponibili per questo gioco.",
     "helpIntro": {
-      "title": "Aiuto dall'alto",
-      "body": "Bloccato? Tocca l'UFO in cima allo schermo e ti aiuterà. Scegli come:",
       "done": "Ho capito"
     }
   },

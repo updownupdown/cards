@@ -22,12 +22,15 @@
   "helpFromAbove": {
     "label": "Un coup de main d'en haut",
     "description": "Touchez l'OVNI pour de l'aide quand vous êtes bloqué !",
-    "off": "Non",
+    "off": "Masquer",
     "beacons": "Balises",
     "autopilot": "Pilote auto",
     "offDescription": "L'OVNI n'apparaît pas dans l'en-tête du jeu.",
-    "beaconsDescription": "Éclaire les cartes ou actions recommandées. **Vos victoires comptent toujours !**",
-    "autopilotDescription": "Joue le coup recommandé pour vous. **Vos victoires ne comptent pas !**"
+    "beaconsDescription": "Éclaire un coup recommandé.",
+    "beaconsNote": "Vos victoires comptent toujours !",
+    "autopilotDescription": "Joue un coup recommandé.",
+    "autopilotNote": "Vos victoires ne comptent pas !",
+    "unavailable": "Non disponible pour ce jeu."
   },
   "keepScreenAwake": {
     "label": "Garder l'écran allumé",
@@ -38,7 +41,7 @@
     "description": "Vibre lorsque vous déplacez des cartes et quand vous gagnez. Les vibrations doivent être activées dans les réglages de votre téléphone."
   },
   "autoComplete": {
-    "label": "Fin automatique",
+    "label": "Fin automatique du plateau",
     "description": "Quand le reste d'une partie peut se terminer en plaçant les cartes sur les fondations.",
     "ask": "Demander",
     "always": "Toujours",

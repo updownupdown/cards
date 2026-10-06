@@ -1,5 +1,5 @@
 import { usePalette } from "@/styles/palette";
-import { rgba, UFO_INKS } from "@/styles/styles";
+import { rgba, UFO_INKS, UfoColors } from "@/styles/styles";
 import { useEffect, useRef, type ReactNode } from "react";
 import {
   Animated,
@@ -62,13 +62,32 @@ function TurningBorder({ radius }: { radius: number }) {
         bottom: 0,
         left: 0,
         borderRadius: radius,
-        borderWidth: 1,
-        borderColor: rgba(ink, 0.6),
+        borderWidth: 2,
+        borderColor: rgba(ink, 0.75),
         opacity: cycle.interpolate(OPACITIES[index]),
         pointerEvents: "none",
       }}
     />
   ));
+}
+
+/** The border at rest: a faint hairline in the UFO's green. */
+function StillBorder({ radius }: { radius: number }) {
+  return (
+    <View
+      style={{
+        position: "absolute",
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        borderRadius: radius,
+        borderWidth: 0,
+        borderColor: rgba(UfoColors.green, 0),
+        pointerEvents: "none",
+      }}
+    />
+  );
 }
 
 /**
@@ -79,10 +98,13 @@ function TurningBorder({ radius }: { radius: number }) {
  */
 export function UfoFrame({
   radius,
+  still = false,
   style,
   children,
 }: {
   radius: number;
+  /** Keeps the border still (a folded-away panel). */
+  still?: boolean;
   style?: StyleProp<ViewStyle>;
   children?: ReactNode;
 }) {
@@ -94,7 +116,11 @@ export function UfoFrame({
         style,
       ]}
     >
-      <TurningBorder radius={radius} />
+      {still ? (
+        <StillBorder radius={radius} />
+      ) : (
+        <TurningBorder radius={radius} />
+      )}
       {children}
     </View>
   );

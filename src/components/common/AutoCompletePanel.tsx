@@ -7,13 +7,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Icon } from "@/icons";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
-import {
-  Colors,
-  LayerZIndexes,
-  layoutDims,
-  rgba,
-  theme,
-} from "@/styles/styles";
+import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
 import { useState } from "react";
 import { Animated, Pressable, View } from "react-native";
 
@@ -35,9 +29,8 @@ export function AutoCompleteModeRadio({
       }))}
       selectedValue={value}
       onChange={onChange}
-      containerStyle={{ width: "100%", height: spacing(44) }}
-      buttonStyle={{ flex: 1, paddingHorizontal: spacing(6) }}
-      selectedTextStyle={{ color: theme.accent }}
+      containerStyle={{ width: "100%", height: spacing(48) }}
+      buttonStyle={{ flex: 1 }}
     />
   );
 }

@@ -22,12 +22,15 @@
   "helpFromAbove": {
     "label": "Ajuda lá de cima",
     "description": "Toque no OVNI para pedir ajuda quando empacar!",
-    "off": "Não",
+    "off": "Ocultar",
     "beacons": "Sinais",
     "autopilot": "Piloto automático",
     "offDescription": "O OVNI não aparece no cabeçalho do jogo.",
-    "beaconsDescription": "Ilumina as cartas ou ações recomendadas. **Suas vitórias continuam valendo!**",
-    "autopilotDescription": "Faz a jogada recomendada por você. **Suas vitórias não valem!**"
+    "beaconsDescription": "Ilumina uma jogada recomendada.",
+    "beaconsNote": "Suas vitórias continuam valendo!",
+    "autopilotDescription": "Faz uma jogada recomendada.",
+    "autopilotNote": "Suas vitórias não valem!",
+    "unavailable": "Não disponível neste jogo."
   },
   "keepScreenAwake": {
     "label": "Manter a tela ligada",
@@ -38,7 +41,7 @@
     "description": "Vibra ao arrastar e soltar cartas e ao vencer. A vibração precisa estar ativada nas configurações do telefone."
   },
   "autoComplete": {
-    "label": "Completar automaticamente",
+    "label": "Completar a mesa automaticamente",
     "description": "Quando o resto de uma partida pode ser concluído movendo as cartas para as fundações.",
     "ask": "Perguntar",
     "always": "Sempre",

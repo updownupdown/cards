@@ -22,12 +22,15 @@
   "helpFromAbove": {
     "label": "Bantuan dari Atas",
     "description": "Tekan UFO untuk bantuan saat kamu buntu!",
-    "off": "Mati",
+    "off": "Sembunyikan",
     "beacons": "Suar",
     "autopilot": "Autopilot",
     "offDescription": "UFO tidak ditampilkan di kepala permainan.",
-    "beaconsDescription": "Menyorot kartu atau aksi yang disarankan. **Kemenanganmu tetap dihitung!**",
-    "autopilotDescription": "Memainkan langkah yang disarankan untukmu. **Kemenanganmu tidak dihitung!**"
+    "beaconsDescription": "Menyorot langkah yang disarankan.",
+    "beaconsNote": "Kemenanganmu tetap dihitung!",
+    "autopilotDescription": "Memainkan langkah yang disarankan.",
+    "autopilotNote": "Kemenanganmu tidak dihitung!",
+    "unavailable": "Tidak tersedia untuk permainan ini."
   },
   "keepScreenAwake": {
     "label": "Biarkan layar tetap menyala",
@@ -38,7 +41,7 @@
     "description": "Bergetar saat kartu diseret dan dilepas, dan saat menang. Getaran harus diaktifkan di pengaturan ponsel."
   },
   "autoComplete": {
-    "label": "Selesaikan otomatis",
+    "label": "Selesaikan meja otomatis",
     "description": "Saat sisa permainan bisa diselesaikan dengan memindahkan kartu ke fondasi.",
     "ask": "Tanya",
     "always": "Selalu",

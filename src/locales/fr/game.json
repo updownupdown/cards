@@ -34,8 +34,6 @@
     "title": "Règles",
     "unavailable": "Les instructions ne sont pas disponibles pour ce jeu.",
     "helpIntro": {
-      "title": "Un coup de main d'en haut",
-      "body": "Bloqué ? Touchez l'OVNI en haut de l'écran : il vous aidera. Choisissez comment :",
       "done": "Compris"
     }
   },

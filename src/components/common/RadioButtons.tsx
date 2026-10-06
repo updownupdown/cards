@@ -1,6 +1,6 @@
 import { Text } from "@/components/common/Text";
 import { usePalette } from "@/styles/palette";
-import { segmentChosen, segmentTrack } from "@/components/ui/Nocturne";
+import { segmentTrack } from "@/components/ui/Nocturne";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
@@ -33,7 +33,10 @@ type RadioButtonsProps<T extends string> = {
   buttonStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   selectedTextStyle?: StyleProp<TextStyle>;
+  /** The chosen button's fill: the accent, unless given. */
   selectedBackgroundColor?: string;
+  /** The chosen button's text and icon, on that fill. */
+  selectedInk?: string;
 };
 
 export function RadioButtons<T extends string>({
@@ -47,7 +50,8 @@ export function RadioButtons<T extends string>({
   iconSize,
   vertical = false,
   flexAllButFirst = false,
-  selectedBackgroundColor = segmentChosen(),
+  selectedBackgroundColor,
+  selectedInk,
 }: RadioButtonsProps<T>) {
   const { spacing } = useResponsiveMetrics();
   const theme = usePalette();
@@ -71,12 +75,13 @@ export function RadioButtons<T extends string>({
       {options.map((option, i) => {
         const isSelected = option.value === selectedValue;
         const selectedBg =
-          option.selectedBackgroundColor ?? selectedBackgroundColor;
-        // Text on the accent takes the accent's own ink.
+          option.selectedBackgroundColor ??
+          selectedBackgroundColor ??
+          theme.accent;
+        // Dark on the chosen button's colour, which reads better than the
+        // colour on grey.
         const itemColor = isSelected
-          ? selectedBg === theme.accent
-            ? theme.accentInk
-            : theme.ink
+          ? (selectedInk ?? theme.accentInk)
           : theme.dim;
 
         return (
@@ -91,10 +96,9 @@ export function RadioButtons<T extends string>({
                 ...transitionStyles.limited04sec,
                 flex: flexAllButFirst && i !== 0 ? 1 : undefined,
                 borderRadius: 999,
-                paddingVertical: spacing(2),
-                paddingHorizontal: spacing(12),
-                gap: spacing(8),
                 height: "100%",
+                paddingHorizontal: spacing(8),
+                gap: spacing(8),
                 backgroundColor: isSelected ? selectedBg : "transparent",
               },
               buttonStyle,

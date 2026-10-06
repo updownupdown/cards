@@ -22,7 +22,14 @@ import {
   Text,
   View,
 } from "react-native";
-import Svg, { Defs, LinearGradient, Polygon, Stop } from "react-native-svg";
+import Svg, {
+  Defs,
+  Ellipse,
+  LinearGradient,
+  Path,
+  RadialGradient,
+  Stop,
+} from "react-native-svg";
 import type { Hint, HintTarget } from "./hint";
 import {
   getHintBoard,
@@ -58,6 +65,8 @@ const PINK = UfoEffectColors.pink;
 const PINK_INK = UfoEffectColors.pinkGlow;
 /** The tractor beam that carries a card across. */
 const BEAM = UfoEffectColors.blue;
+/** Its highlights: the hot cone under the UFO and the pool on the card. */
+const BEAM_LIGHT = "#c4f1ff";
 const DARK = Colors.K950;
 const useNativeDriver = Platform.OS !== "web";
 
@@ -73,6 +82,13 @@ const UFO_FONT_SIZE = 30;
 const POP_MS = 260;
 const BEAM_MS = 300;
 const BEAM_HOLD_MS = 450;
+/**
+ * The beam's width on the card. It goes by the UFO, which is the same size
+ * on every screen, not by the card: narrower than the UFO's underside.
+ */
+const BEAM_WIDTH = UFO_FONT_SIZE * 0.85;
+/** The beam's width under the UFO, as a share of its width on the card. */
+const BEAM_NECK = 0.68;
 const ZAP_MS = 180;
 /**
  * Hints show only where to look, not words: the move speaks for itself, and
@@ -286,25 +302,32 @@ function Bubble({
 
 // —— Beams ————————————————————————————————————————————————————————————
 
-/** The tractor beam: a soft cone from the UFO down onto the card. */
-function TractorBeam({
-  lift,
-  width,
-  value,
-}: {
-  lift: number;
-  width: number;
-  value: Animated.Value;
-}) {
+/**
+ * The tractor beam: a column of light from the UFO down onto the card, nearly
+ * as wide at the top as at the bottom, bright down its middle and soft at its
+ * edges. Cones of light pick it out: a hot one inside it, under the UFO, and
+ * a faint one spreading outside it. It ends in a pool of light on the card.
+ */
+function TractorBeam({ lift, value }: { lift: number; value: Animated.Value }) {
   const top = UFO_FONT_SIZE * 0.3;
-  const height = lift - top + width * 0.1;
+  const width = BEAM_WIDTH;
+  const neck = width * BEAM_NECK;
+  // The haze and the pool spread wider than the beam itself.
+  const spread = width * 1.7;
+  const pool = spread * 0.14;
+  const base = lift - top;
+  const height = base + pool;
+  const middle = spread / 2;
+  /** A cone down the middle, `from` wide under the UFO and `to` on the card. */
+  const cone = (from: number, to: number, end = base) =>
+    `M${middle - from / 2},0 L${middle + from / 2},0 L${middle + to / 2},${end} L${middle - to / 2},${end} Z`;
   return (
     <Animated.View
       style={{
         position: "absolute",
-        left: -width / 2,
+        left: -middle,
         top,
-        width,
+        width: spread,
         height,
         opacity: value,
         transformOrigin: "top",
@@ -312,16 +335,41 @@ function TractorBeam({
         pointerEvents: "none",
       }}
     >
-      <Svg width={width} height={height}>
+      <Svg width={spread} height={height}>
         <Defs>
-          <LinearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor={BEAM} stopOpacity={0.95} />
-            <Stop offset="1" stopColor={BEAM} stopOpacity={0.45} />
+          <LinearGradient id="beamHaze" x1="0" y1="0" x2="1" y2="0">
+            <Stop offset="0" stopColor={BEAM} stopOpacity={0} />
+            <Stop offset="0.5" stopColor={BEAM} stopOpacity={0.3} />
+            <Stop offset="1" stopColor={BEAM} stopOpacity={0} />
           </LinearGradient>
+          <LinearGradient id="beamColumn" x1="0" y1="0" x2="1" y2="0">
+            <Stop offset="0" stopColor={BEAM} stopOpacity={0.15} />
+            <Stop offset="0.5" stopColor={BEAM} stopOpacity={0.8} />
+            <Stop offset="1" stopColor={BEAM} stopOpacity={0.15} />
+          </LinearGradient>
+          <LinearGradient id="beamCore" x1="0" y1="0" x2="0" y2="1">
+            <Stop offset="0" stopColor={Colors.white} stopOpacity={0.9} />
+            <Stop offset="0.5" stopColor={BEAM_LIGHT} stopOpacity={0.3} />
+            <Stop offset="1" stopColor={BEAM_LIGHT} stopOpacity={0} />
+          </LinearGradient>
+          <RadialGradient id="beamPool">
+            <Stop offset="0" stopColor={Colors.white} stopOpacity={0.9} />
+            <Stop offset="0.4" stopColor={BEAM_LIGHT} stopOpacity={0.6} />
+            <Stop offset="1" stopColor={BEAM} stopOpacity={0} />
+          </RadialGradient>
         </Defs>
-        <Polygon
-          points={`${width / 2 - 7},0 ${width / 2 + 7},0 ${width},${height} 0,${height}`}
-          fill="url(#beam)"
+        <Path d={cone(neck, spread)} fill="url(#beamHaze)" />
+        <Path d={cone(neck, width)} fill="url(#beamColumn)" />
+        <Path
+          d={cone(neck * 0.6, width * 0.5, base * 0.75)}
+          fill="url(#beamCore)"
+        />
+        <Ellipse
+          cx={middle}
+          cy={base}
+          rx={middle}
+          ry={pool}
+          fill="url(#beamPool)"
         />
       </Svg>
     </Animated.View>
@@ -494,7 +542,6 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
   const [stop, setStop] = useState<FlightStop | null>(null);
   const [effect, setEffect] = useState<"beam" | "zap" | null>(null);
   const [lift, setLift] = useState(60);
-  const [beamWidth, setBeamWidth] = useState(60);
   const [bubble, setBubble] = useState<{
     text: string;
     side: "left" | "right";
@@ -644,7 +691,6 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
       const local = toLocal(spot);
       const up = hoverLift(local.size);
       setLift(up);
-      setBeamWidth(Math.max(40, local.size * 0.95));
       if (SHOW_HINT_TEXT) setBubble({ text, side: sideFor(local.x) });
       const distance = Math.hypot(local.x - here.x, local.y - up - here.y);
       return moveTo(
@@ -683,12 +729,15 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
     } else {
       const isMove = hint.steps.length >= 2;
       let grabbed: HintTarget | null = null;
+      // Set once the card has gone where it's going.
+      let carried = false;
       steps: for (const [stepIndex, step] of hint.steps.entries()) {
         for (const [targetIndex, target] of step.entries()) {
           if (flight.aborted) break steps;
           const key = `${stepIndex}-${targetIndex}`;
 
           if (isMove && stepIndex > 0) {
+            if (carried) continue;
             // Carry the card across: tap where it goes, then follow it.
             const destination = board.locate(target);
             if (!(await tapWhenFree(board, target, hint))) break steps;
@@ -696,8 +745,8 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
             setInterruptible(false);
             // Where the card lands shows once the game has taken the tap, a
             // frame or two, which is also when the card sets off. The UFO
-            // flies there in the card's own time and easing, so the beam
-            // keeps hold of it all the way.
+            // flies there in the card's own time and easing (AnimatedCard's
+            // timed move), so the beam keeps hold of it all the way.
             await nextFrames();
             const landed =
               (grabbed && "card" in grabbed && board.locate(grabbed)) ||
@@ -707,7 +756,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
               await flyOver(
                 landed,
                 defaultAnimDuration,
-                Easing.out(Easing.cubic),
+                Easing.out(Easing.quad),
               );
             }
             continue;
@@ -738,6 +787,26 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
             setInterruptible(false);
             if (!(await tapWhenFree(board, target, hint))) break steps;
             grabbed = target;
+            // In a game that moves a card on one tap, it is already on its
+            // way: the UFO goes with it, in the card's own time and easing,
+            // and where it goes isn't tapped as well (that tap would be a
+            // second move, or at least a second step to undo).
+            await nextFrames();
+            const landed = "card" in target ? board.locate(target) : null;
+            if (
+              landed &&
+              Math.hypot(landed.x - spot.x, landed.y - spot.y) > spot.size / 2
+            ) {
+              carried = true;
+              played = true;
+              setStop({ key: `${key}-to`, spot: toLocal(landed), kind: "to" });
+              await flyOver(
+                landed,
+                defaultAnimDuration,
+                Easing.out(Easing.quad),
+              );
+              continue;
+            }
             await settle();
           } else {
             setEffect("zap");
@@ -879,9 +948,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
             pointerEvents: "none",
           }}
         >
-          {effect === "beam" && (
-            <TractorBeam lift={lift} width={beamWidth} value={beam} />
-          )}
+          {effect === "beam" && <TractorBeam lift={lift} value={beam} />}
           {effect === "zap" && <Zap lift={lift} value={zap} />}
           <Animated.Text
             style={{
