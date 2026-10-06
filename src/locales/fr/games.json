@@ -545,6 +545,7 @@
     "diamonds": "Carreaux",
     "allBlackCardsHaveBeen": "Toutes les cartes noires ont été jouées.",
     "thereAreNotEnoughDiamond": "Il n'y a pas assez de carreaux pour regarnir la pile.",
+    "noMovesLeft": "Aucune carte noire ne va sur une pile, et il ne reste plus de carreaux.",
     "hint": {
       "fillPile": "Complétez cette pile pour faire venir de nouveaux carreaux",
       "clearPile": "Videz cette pile pour de nouveaux carreaux",

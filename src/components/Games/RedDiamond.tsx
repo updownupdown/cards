@@ -302,6 +302,16 @@ function redDiamondMoves(state: GameState): RedDiamondMove[] {
   return [...places, ...clears, ...replaces];
 }
 
+/**
+ * Nothing left to do: no hand card fits a pile, and there are no diamonds to
+ * clear a pile with or to swap in.
+ */
+function isDeadPosition(state: GameState) {
+  return (
+    !state.lost && state.hand.length > 0 && redDiamondMoves(state).length === 0
+  );
+}
+
 function bestRedDiamondMove(state: GameState) {
   let best: { move: RedDiamondMove; value: number } | null = null;
   for (const move of redDiamondMoves(state)) {
@@ -358,6 +368,7 @@ export const redDiamondRules = {
   canPlaceCard,
   canReplenish,
   hasLegalPlacement,
+  isDeadPosition,
   pileDefinitions: PILE_DEFINITIONS,
 };
 
@@ -392,7 +403,8 @@ export default function RedDiamond() {
     !game.lost &&
     game.blackStock.length === 0 &&
     game.hand.length === 0;
-  const ended = !isSettingUp && (won || game.lost);
+  const stuck = !isSettingUp && isDeadPosition(game);
+  const ended = !isSettingUp && (won || game.lost || stuck);
   const hasBlockedCard = game.hand.some(
     (card) => !hasLegalPlacement(card, game.piles, game.diamonds),
   );
@@ -636,7 +648,9 @@ export default function RedDiamond() {
           ? i18n.t("games:redDiamond.allBlackCardsHaveBeen")
           : game.lost
             ? i18n.t("games:redDiamond.thereAreNotEnoughDiamond")
-            : undefined
+            : stuck
+              ? i18n.t("games:redDiamond.noMovesLeft")
+              : undefined
       }
       reset={reset}
       undo={undo}

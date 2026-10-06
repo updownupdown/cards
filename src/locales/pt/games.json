@@ -545,6 +545,7 @@
     "diamonds": "Ouros",
     "allBlackCardsHaveBeen": "Todas as cartas pretas foram jogadas.",
     "thereAreNotEnoughDiamond": "Não há cartas de ouros suficientes para repor a pilha.",
+    "noMovesLeft": "Nenhuma carta preta cabe em uma pilha e não restam cartas de ouros.",
     "hint": {
       "fillPile": "Complete esta pilha para trazer novos ouros",
       "clearPile": "Esvazie esta pilha para trazer novos ouros",
