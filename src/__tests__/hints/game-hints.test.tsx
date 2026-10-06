@@ -174,17 +174,29 @@ async function dropHint(hint: Hint) {
   return true;
 }
 
+/**
+ * Lets a move play out: some games move cards one at a time (Accordion
+ * closes up its line pile by pile), so wait until the board is still.
+ */
+async function settleMove() {
+  for (let round = 0; round < 40; round += 1) {
+    const before = boardSnapshot();
+    await settle(8);
+    if (boardSnapshot() === before) return;
+  }
+}
+
 /** Does what the hint shows; returns whether the board changed. */
 async function followHint(hint: Hint) {
   const before = boardSnapshot();
   if (await dropHint(hint)) {
-    await settle(8);
+    await settleMove();
     return boardSnapshot() !== before;
   }
   for (const step of hint.steps) {
     for (const target of step) {
       await tapTarget(target, hint);
-      await settle(8);
+      await settleMove();
       if (boardSnapshot() !== before) return true;
     }
   }
