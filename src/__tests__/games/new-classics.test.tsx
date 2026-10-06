@@ -24,7 +24,7 @@ import {
 import type { PlayingCard } from "@/components/Cards/card-utils";
 import type { ComponentType } from "react";
 import Carpet from "@/components/Games/Carpet";
-import Cruel from "@/components/Games/Cruel";
+import Cruel, { cruelRules } from "@/components/Games/Cruel";
 import Frog from "@/components/Games/Frog";
 import SirTommy from "@/components/Games/SirTommy";
 import RoyalCotillion from "@/components/Games/RoyalCotillion";
@@ -266,6 +266,45 @@ describe("Puss in the Corner redeal", () => {
 });
 
 describe("Cruel", () => {
+  test("every deal opens with a move to make", () => {
+    // Redeals only come after a move: a deal without one would be lost at
+    // once (about 1 in 150 shuffles), so those are shuffled again.
+    const deck = (["clubs", "diamonds", "hearts", "spades"] as const).flatMap(
+      (suit) =>
+        (
+          [
+            "A",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "J",
+            "Q",
+            "K",
+          ] as const
+        ).map((rank) => card(rank, suit)),
+    );
+    for (let deal = 0; deal < 1000; deal += 1) {
+      const layout = cruelRules.dealLayout(
+        cruelRules.shuffleWithOpeningMove(deck),
+      );
+      expect(
+        cruelRules.hasMove({
+          deck: [],
+          canRedeal: false,
+          ended: false,
+          won: false,
+          ...layout,
+        }),
+      ).toBe(true);
+    }
+  });
+
   test("automatically plays the last card home", async () => {
     const king = card("K", "spades");
     const tableau = emptyPiles(12);

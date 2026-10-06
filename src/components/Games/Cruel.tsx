@@ -124,6 +124,35 @@ function hasMove(state: GameState) {
   });
 }
 
+/** The opening layout of a shuffled deck: aces home, the rest in fours. */
+function dealLayout(deck: PlayingCard[]) {
+  const foundations: PlayingCard[][] = emptyPiles(4);
+  const rest: PlayingCard[] = [];
+  deck.forEach((card) => {
+    if (card.rank === "A") {
+      foundations[SUITS.indexOf(card.suit)].push(flipToFace(card));
+    } else {
+      rest.push(flipToFace(card));
+    }
+  });
+  return { foundations, tableau: redealPiles([rest]) };
+}
+
+/**
+ * A shuffle that opens with a move to make. The redeal only comes after a
+ * move, so a deal without one (about 1 in 150) would be lost before the
+ * player touched it.
+ */
+function shuffleWithOpeningMove(cards: PlayingCard[]) {
+  let deck = shuffle(cards);
+  for (let tries = 0; tries < 50; tries += 1) {
+    const layout = dealLayout(deck);
+    if (hasMove({ ...gameStateInitial, ...layout })) break;
+    deck = shuffle(cards);
+  }
+  return deck;
+}
+
 /** Gather the piles in order and deal them out again in fours. */
 function redealPiles(tableau: PlayingCard[][]) {
   const cards = tableau.flat();
@@ -184,6 +213,8 @@ export const cruelRules = {
   hasMove,
   redealPiles,
   evaluateEnd,
+  dealLayout,
+  shuffleWithOpeningMove,
 };
 
 export default function Cruel() {
@@ -214,7 +245,7 @@ export default function Cruel() {
           ...draft.tableau.flat(),
           ...draft.foundations.flat(),
         ];
-        draft.deck = shuffle(cards).map(flipToBack);
+        draft.deck = shuffleWithOpeningMove(cards).map(flipToBack);
         draft.tableau = emptyPiles(pileCount);
         draft.foundations = emptyPiles(4);
         draft.canRedeal = false;
@@ -225,15 +256,9 @@ export default function Cruel() {
       await delay();
 
       setGame((draft) => {
-        const rest: PlayingCard[] = [];
-        draft.deck.forEach((card) => {
-          if (card.rank === "A") {
-            draft.foundations[SUITS.indexOf(card.suit)].push(flipToFace(card));
-          } else {
-            rest.push(flipToFace(card));
-          }
-        });
-        draft.tableau = redealPiles([rest]);
+        const { foundations, tableau } = dealLayout(draft.deck);
+        draft.foundations = foundations;
+        draft.tableau = tableau;
         draft.deck = [];
       });
     },
