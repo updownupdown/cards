@@ -44,9 +44,7 @@ import ModalFull from "./ModalFull";
 import { UnderlineTabs } from "../ui/Nocturne";
 import { useToast } from "../common/Toast";
 import { saveBetaGames, useBetaGamesEnabled } from "@/data/beta-games";
-import { saveHintMode, useHintMode } from "@/data/hint-mode";
-import { HintModeRadio } from "@/components/common/HintModeRadio";
-import { UfoPanel } from "@/components/common/UfoPanel";
+import { HelpFromAbovePanel } from "@/components/common/HelpFromAbovePanel";
 
 /** App version and build type; not translated, since it's for bug reports. */
 const BUILD_LABEL = `v${Constants.expoConfig?.version ?? "?"} · ${__DEV__ ? "dev" : "release"}`;
@@ -88,7 +86,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const scrollRestored = React.useRef(false);
   const versionTaps = React.useRef(0);
   const betaGamesEnabled = useBetaGamesEnabled();
-  const hintMode = useHintMode();
 
   const onVersionPress = () => {
     versionTaps.current += 1;
@@ -203,17 +200,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 void updateSettings({ showTipsForNewGames: val });
               }}
             />
-            <UfoPanel title={t("helpFromAbove.label")}>
-              <Text size="sm" weight={300} color={theme.ink} lineHeight={1.4}>
-                {t("helpFromAbove.description")}
-              </Text>
-              <HintModeRadio
-                value={hintMode}
-                onChange={(value) => {
-                  void saveHintMode(value);
-                }}
-              />
-            </UfoPanel>
             <SettingControl
               label={t("showAnimations.label")}
               description={t("showAnimations.description")}
@@ -260,6 +246,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 }}
               />
             )}
+            <HelpFromAbovePanel />
           </View>
         )}
         {tab === "theme" && (

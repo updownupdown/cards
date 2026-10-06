@@ -1,6 +1,7 @@
 import { LoadingOverlay } from "@/components/common/LoadingOverlay";
 import { GalleryTab } from "@/components/Home/GalleryTab";
 import { HomeTab } from "@/components/Home/HomeTab";
+import { HomeHeader } from "@/components/Home/HomeHeader";
 import { HomeTabBar } from "@/components/Home/HomeTabBar";
 import { SearchTab } from "@/components/Home/SearchTab";
 import { CampaignTab } from "@/components/Campaign/CampaignTab";
@@ -278,7 +279,11 @@ export default function Home() {
       />
     ),
     [CAMPAIGN_HOME_TAB_INDEX]: (
-      <CampaignTab contentPaddingTop={contentPaddingTop} />
+      <CampaignTab
+        contentPaddingTop={contentPaddingTop}
+        onOpenStats={() => setShowStatsModal(true)}
+        onOpenSettings={() => setShowSettingsModal(true)}
+      />
     ),
     [COLLECT_HOME_TAB_INDEX]: (
       <GalleryTab
@@ -368,6 +373,27 @@ export default function Home() {
                   {shownTab === null && (
                     <TabSpinner immediate={!mountedTabs.has(activeTab)} />
                   )}
+                  {/* While the map is built, its logo and buttons stay up,
+                  just where the Campaign tab draws them once it shows. */}
+                  {shownTab === null &&
+                    activeTab === CAMPAIGN_HOME_TAB_INDEX && (
+                      <View
+                        style={[
+                          pointerEventsStyles.boxNone,
+                          {
+                            position: "absolute",
+                            top: contentPaddingTop,
+                            left: 0,
+                            right: 0,
+                          },
+                        ]}
+                      >
+                        <HomeHeader
+                          onOpenStats={() => setShowStatsModal(true)}
+                          onOpenSettings={() => setShowSettingsModal(true)}
+                        />
+                      </View>
+                    )}
                 </View>
               </View>
             )}

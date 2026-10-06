@@ -22,12 +22,15 @@
   "helpFromAbove": {
     "label": "Help from Above",
     "description": "Press the UFO for help when you're stuck!",
-    "off": "Off",
+    "off": "Hide",
     "beacons": "Beacons",
     "autopilot": "Autopilot",
     "offDescription": "The UFO is not shown in the game header.",
-    "beaconsDescription": "Lights up recommended cards or actions. **Your wins still count!**",
-    "autopilotDescription": "Plays the recommended move for you. **Your wins don't count!**"
+    "beaconsDescription": "Lights up a recommended move.",
+    "beaconsNote": "Your wins still count!",
+    "autopilotDescription": "Plays a recommended move.",
+    "autopilotNote": "Your wins don't count!",
+    "unavailable": "Not available for this game."
   },
   "keepScreenAwake": {
     "label": "Keep screen awake",
@@ -38,7 +41,7 @@
     "description": "Vibrates on card drag and drop, and game wins. Haptics must be enabled in your phone settings."
   },
   "autoComplete": {
-    "label": "Auto-complete",
+    "label": "Auto-complete board",
     "description": "When the rest of a game can be finished by moving cards to the foundations.",
     "ask": "Ask",
     "always": "Always",

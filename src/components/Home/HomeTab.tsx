@@ -1,13 +1,13 @@
-import { Logo } from "@/components/common/Logo";
 import {
   ArtShelf,
   ShelfPlaceholder,
   TILE_SIZE,
 } from "@/components/Home/HomeArt";
-import { RoundButton, SectionTitle } from "@/components/ui/Nocturne";
+import { SectionTitle } from "@/components/ui/Nocturne";
 import { DealMeAGame } from "@/components/Home/DealMeAGame";
 import { GameOfTheDaySection } from "@/components/Home/GameOfTheDaySection";
 import { HomeCardFact } from "@/components/Home/HomeCardFact";
+import { HomeHeader } from "@/components/Home/HomeHeader";
 import { WildCardsSection } from "@/components/Home/WildCardsSection";
 import { useWildCardsVisible } from "@/hooks/useWildCards";
 import { isGameEnabled } from "@/data/games-data";
@@ -27,8 +27,6 @@ import { useTabReadyHold } from "./TabReady";
 
 const EASY_GAME_COUNT = 6;
 const JUMP_BACK_IN_COUNT = 6;
-/** Stats and Settings: a fifth larger than a RoundButton's usual 40. */
-export const HEADER_BUTTON_SIZE = 42;
 
 type HomeTabProps = {
   allEnabledGames: HomeGameEntry[];
@@ -157,35 +155,7 @@ export function HomeTab({
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
       >
-        <View
-          style={{
-            width: "100%",
-            maxWidth: contentMaxWidth,
-            alignSelf: "center",
-            paddingHorizontal: scaledPageSidePadding,
-            flexDirection: "row",
-            alignItems: "center",
-            gap: spacing(16),
-          }}
-        >
-          <View style={{ flex: 1 }}>
-            <Logo height={spacing(30)} />
-          </View>
-          <RoundButton
-            iconName="chart"
-            size={HEADER_BUTTON_SIZE}
-            glass
-            accessibilityLabel={t("header.stats")}
-            onPress={() => onOpenStats?.()}
-          />
-          <RoundButton
-            iconName="settings"
-            size={HEADER_BUTTON_SIZE}
-            glass
-            accessibilityLabel={t("header.settings")}
-            onPress={() => onOpenSettings?.()}
-          />
-        </View>
+        <HomeHeader onOpenStats={onOpenStats} onOpenSettings={onOpenSettings} />
 
         {/* Beta (local-only) games */}
         {areBetaGamesVisible() &&

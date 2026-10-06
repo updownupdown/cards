@@ -14,6 +14,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { Platform, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { layoutDims } from "@/styles/styles";
+import { HomeHeader } from "@/components/Home/HomeHeader";
 import { CampaignMap } from "./CampaignMap";
 import { CampaignIntroPanel } from "./CampaignIntroPanel";
 import { UfoContext } from "./UfoContext";
@@ -22,9 +23,15 @@ import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 
 type Props = {
   contentPaddingTop: number;
+  onOpenStats?: () => void;
+  onOpenSettings?: () => void;
 };
 
-export function CampaignTab({ contentPaddingTop }: Props) {
+export function CampaignTab({
+  contentPaddingTop,
+  onOpenStats,
+  onOpenSettings,
+}: Props) {
   const { spacing, ui } = useResponsiveMetrics();
   const {
     progress,
@@ -183,15 +190,18 @@ export function CampaignTab({ contentPaddingTop }: Props) {
             left: 0,
             right: 0,
             alignItems: "center",
-            paddingHorizontal: spacing(layoutDims.pagePadding / 2),
+            gap: spacing(16),
           },
         ]}
       >
+        {/* The same logo and buttons as Home, over the map. */}
+        <HomeHeader onOpenStats={onOpenStats} onOpenSettings={onOpenSettings} />
         {showIntro && (
           <View
             style={{
               width: "100%",
-              maxWidth: ui.contentMaxWidth - spacing(layoutDims.pagePadding),
+              maxWidth: ui.contentMaxWidth,
+              paddingHorizontal: spacing(layoutDims.pagePadding / 2),
             }}
           >
             <CampaignIntroPanel

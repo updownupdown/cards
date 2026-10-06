@@ -22,12 +22,15 @@
   "helpFromAbove": {
     "label": "Yukarıdan Yardım",
     "description": "Takıldığında yardım için UFO'ya dokun!",
-    "off": "Kapalı",
+    "off": "Gizle",
     "beacons": "İşaretler",
     "autopilot": "Otopilot",
     "offDescription": "UFO oyun başlığında gösterilmez.",
-    "beaconsDescription": "Önerilen kartları ya da hamleleri gösterir. **Galibiyetlerin yine sayılır!**",
-    "autopilotDescription": "Önerilen hamleyi senin yerine yapar. **Galibiyetlerin sayılmaz!**"
+    "beaconsDescription": "Önerilen bir hamleyi aydınlatır.",
+    "beaconsNote": "Galibiyetlerin yine sayılır!",
+    "autopilotDescription": "Önerilen bir hamleyi yapar.",
+    "autopilotNote": "Galibiyetlerin sayılmaz!",
+    "unavailable": "Bu oyunda kullanılamaz."
   },
   "keepScreenAwake": {
     "label": "Ekranı açık tut",
@@ -38,7 +41,7 @@
     "description": "Kart sürükleyip bırakırken ve oyun kazanınca titreşir. Titreşimin telefon ayarlarında açık olması gerekir."
   },
   "autoComplete": {
-    "label": "Otomatik tamamla",
+    "label": "Masayı otomatik tamamla",
     "description": "Oyunun geri kalanı kartlar temellere taşınarak bitirilebildiğinde.",
     "ask": "Sor",
     "always": "Her zaman",

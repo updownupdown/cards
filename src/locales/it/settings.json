@@ -22,12 +22,15 @@
   "helpFromAbove": {
     "label": "Aiuto dall'alto",
     "description": "Tocca l'UFO per un aiuto quando sei bloccato!",
-    "off": "No",
+    "off": "Nascondi",
     "beacons": "Segnali",
     "autopilot": "Pilota automatico",
     "offDescription": "L'UFO non compare nell'intestazione del gioco.",
-    "beaconsDescription": "Illumina le carte o le azioni consigliate. **Le tue vittorie contano comunque!**",
-    "autopilotDescription": "Fa la mossa consigliata al posto tuo. **Le tue vittorie non contano!**"
+    "beaconsDescription": "Illumina una mossa consigliata.",
+    "beaconsNote": "Le tue vittorie contano comunque!",
+    "autopilotDescription": "Fa una mossa consigliata.",
+    "autopilotNote": "Le tue vittorie non contano!",
+    "unavailable": "Non disponibile per questo gioco."
   },
   "keepScreenAwake": {
     "label": "Mantieni lo schermo acceso",
@@ -38,7 +41,7 @@
     "description": "Vibra quando trascini e rilasci le carte e quando vinci. La vibrazione deve essere attiva nelle impostazioni del telefono."
   },
   "autoComplete": {
-    "label": "Completamento automatico",
+    "label": "Completamento automatico del tavolo",
     "description": "Quando il resto di una partita si può finire spostando le carte sulle fondazioni.",
     "ask": "Chiedi",
     "always": "Sempre",

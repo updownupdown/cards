@@ -8,21 +8,14 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGame } from "@/i18n/content";
 import { flexStyles } from "@/styles/flexStyles";
-import { Pressable, View, ViewStyle } from "react-native";
+import { View, ViewStyle } from "react-native";
 import { RichText } from "../common/RichText";
 import { ScrollView } from "react-native-gesture-handler";
 import { useModalStyles } from "@/styles/modalStyles";
-import {
-  markHintIntroSeen,
-  saveHintMode,
-  useHintIntroSeen,
-  useHintMode,
-} from "@/data/hint-mode";
+import { markHintIntroSeen, useHintIntroSeen } from "@/data/hint-mode";
 import { useHasHintFinder } from "@/hints/hint-store";
-import { Icon } from "@/icons";
 import { ActionButton } from "@/components/ui/Nocturne";
-import { HintModeRadio } from "@/components/common/HintModeRadio";
-import { UfoPanel } from "@/components/common/UfoPanel";
+import { HelpFromAbovePanel } from "@/components/common/HelpFromAbovePanel";
 import { UfoColors } from "@/styles/styles";
 
 export const RulesModal = ({ onClose }: { onClose: () => void }) => {
@@ -86,7 +79,13 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
             headingColor={headingColor}
           />
 
-          {hasHints && !showIntro && <HelpFromAboveRow />}
+          {!showIntro && (
+            <HelpFromAbovePanel
+              collapsible
+              unavailable={!hasHints}
+              style={{ marginTop: spacing(40) }}
+            />
+          )}
         </View>
       </ScrollView>
     </ModalFull>
@@ -138,36 +137,15 @@ export const QuickStart = ({ gameInfo, style }: QuickStartProps) => {
   );
 };
 
-/** What the UFO does, and the choice of how it helps. */
-function HelpChoice() {
-  const { t } = useTranslation("game");
-  const theme = usePalette();
-  const mode = useHintMode();
-  return (
-    <>
-      <Text size="sm" weight={300} color={theme.ink} lineHeight={1.4}>
-        {t("rules.helpIntro.body")}
-      </Text>
-      <HintModeRadio
-        value={mode}
-        onChange={(value) => {
-          void saveHintMode(value);
-        }}
-      />
-    </>
-  );
-}
-
 /**
  * Introduces the header's UFO ("Help from Above") and lets the player pick
  * how it helps. Once put away it doesn't come back at the top; the Rules keep
- * it as a row at the bottom.
+ * it folded at the bottom.
  */
 function HelpFromAboveIntro({ onDone }: { onDone: () => void }) {
   const { t } = useTranslation("game");
   return (
-    <UfoPanel title={t("rules.helpIntro.title")}>
-      <HelpChoice />
+    <HelpFromAbovePanel>
       <ActionButton
         label={t("rules.helpIntro.done")}
         small
@@ -179,40 +157,6 @@ function HelpFromAboveIntro({ onDone }: { onDone: () => void }) {
           void markHintIntroSeen();
         }}
       />
-    </UfoPanel>
-  );
-}
-
-/**
- * At the bottom of the Rules: the UFO and "Help from Above", which opens to
- * the same choice as the settings.
- */
-function HelpFromAboveRow() {
-  const { t } = useTranslation("game");
-  const { spacing } = useResponsiveMetrics();
-  const [open, setOpen] = useState(false);
-  return (
-    <UfoPanel
-      title={t("rules.helpIntro.title")}
-      style={{ marginTop: spacing(24) }}
-      trailing={
-        <Icon
-          name={open ? "expand-less" : "expand-more"}
-          size={spacing(24)}
-          color={UfoColors.green}
-        />
-      }
-      wrapHeading={(heading) => (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityState={{ expanded: open }}
-          onPress={() => setOpen((value) => !value)}
-        >
-          {heading}
-        </Pressable>
-      )}
-    >
-      {open && <HelpChoice />}
-    </UfoPanel>
+    </HelpFromAbovePanel>
   );
 }
