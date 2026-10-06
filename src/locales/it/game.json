@@ -3,7 +3,7 @@
     "home": "Home",
     "campaign": "Odissea",
     "rules": "Regole",
-    "hint": "Suggerimento",
+    "hint": "Aiuto dall'alto",
     "undo": "Annulla",
     "reset": "Ricomincia",
     "menu": "Menu",
@@ -21,7 +21,8 @@
     "shareText": "Ho vinto a {{game}} in {{time}}! Provalo su Solitarius.",
     "shareTextNoTime": "Ho vinto a {{game}}! Provalo su Solitarius.",
     "shareCopied": "Copiato negli appunti",
-    "shareFailed": "Impossibile condividere questa vittoria"
+    "shareFailed": "Impossibile condividere questa vittoria",
+    "autopilotWin": "L'UFO ti ha aiutato in questa, quindi la vittoria non conta."
   },
   "reset": {
     "hold": "Tieni premuto per ricominciare la partita"
@@ -32,7 +33,12 @@
   "rules": {
     "title": "Regole",
     "unavailable": "Le istruzioni non sono disponibili per questo gioco.",
-    "hintTip": "Premi il pulsante Suggerimento per evidenziare una mossa valida."
+    "helpIntro": {
+      "title": "Aiuto dall'alto",
+      "body": "Bloccato? Tocca l'UFO in cima allo schermo e ti aiuterà. Scegli come:",
+      "done": "Ho capito",
+      "later": "Puoi cambiarlo quando vuoi nelle Impostazioni, dalla schermata iniziale."
+    }
   },
   "mercySkip": {
     "title": "Usa una grazia"

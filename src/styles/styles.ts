@@ -227,6 +227,8 @@ export const LayerZIndexes = {
   tipsCard: 41,
   header: 50,
   autoCompletePanel: 55,
+  /** The header UFO's beacons and flights (Help from Above). */
+  hintUfo: 57,
   winLoseCard: 60,
   loadingOverlay: 100,
   toast: 110,

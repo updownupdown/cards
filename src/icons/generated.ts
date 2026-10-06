@@ -42,7 +42,6 @@ import HeartsIcon from "./Hearts.svg";
 import HelpOutlineIcon from "./HelpOutline.svg";
 import HerbsIcon from "./Herbs.svg";
 import HerbsBowlIcon from "./HerbsBowl.svg";
-import HintIcon from "./Hint.svg";
 import HomeIcon from "./Home.svg";
 import InfoIcon from "./Info.svg";
 import InstructionsIcon from "./Instructions.svg";
@@ -77,6 +76,7 @@ import StarOutlineIcon from "./StarOutline.svg";
 import SwordIcon from "./Sword.svg";
 import TaoIcon from "./Tao.svg";
 import TrophyIcon from "./Trophy.svg";
+import UfoIcon from "./Ufo.svg";
 import UnavailableCellIcon from "./UnavailableCell.svg";
 import UndoIcon from "./Undo.svg";
 import UnlockIcon from "./Unlock.svg";
@@ -119,7 +119,6 @@ export type IconName =
   | "help-outline"
   | "herbs"
   | "herbs-bowl"
-  | "hint"
   | "home"
   | "info"
   | "instructions"
@@ -154,6 +153,7 @@ export type IconName =
   | "sword"
   | "tao"
   | "trophy"
+  | "ufo"
   | "unavailable-cell"
   | "undo"
   | "unlock";
@@ -196,7 +196,6 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "help-outline": HelpOutlineIcon,
   "herbs": HerbsIcon,
   "herbs-bowl": HerbsBowlIcon,
-  "hint": HintIcon,
   "home": HomeIcon,
   "info": InfoIcon,
   "instructions": InstructionsIcon,
@@ -231,6 +230,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "sword": SwordIcon,
   "tao": TaoIcon,
   "trophy": TrophyIcon,
+  "ufo": UfoIcon,
   "unavailable-cell": UnavailableCellIcon,
   "undo": UndoIcon,
   "unlock": UnlockIcon,

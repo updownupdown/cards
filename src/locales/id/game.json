@@ -3,7 +3,7 @@
     "home": "Beranda",
     "campaign": "Pengembaraan",
     "rules": "Aturan",
-    "hint": "Petunjuk",
+    "hint": "Bantuan dari Atas",
     "undo": "Urungkan",
     "reset": "Ulangi",
     "menu": "Menu",
@@ -21,7 +21,8 @@
     "shareText": "Aku memenangkan {{game}} dalam {{time}}! Coba juga di Solitarius.",
     "shareTextNoTime": "Aku memenangkan {{game}}! Coba juga di Solitarius.",
     "shareCopied": "Disalin ke papan klip",
-    "shareFailed": "Kemenangan ini tidak bisa dibagikan"
+    "shareFailed": "Kemenangan ini tidak bisa dibagikan",
+    "autopilotWin": "UFO membantu di permainan ini, jadi kemenangannya tidak dihitung."
   },
   "reset": {
     "hold": "Tahan untuk mengulang permainan"
@@ -32,7 +33,12 @@
   "rules": {
     "title": "Aturan",
     "unavailable": "Petunjuk untuk permainan ini belum tersedia.",
-    "hintTip": "Tekan tombol Petunjuk untuk menyorot langkah yang sah."
+    "helpIntro": {
+      "title": "Bantuan dari Atas",
+      "body": "Buntu? Ketuk UFO di bagian atas layar dan ia akan membantu. Pilih caranya:",
+      "done": "Mengerti",
+      "later": "Kamu bisa mengubahnya kapan saja di Pengaturan, dari layar beranda."
+    }
   },
   "mercySkip": {
     "title": "Gunakan pengampunan"

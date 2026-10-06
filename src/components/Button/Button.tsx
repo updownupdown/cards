@@ -40,6 +40,7 @@ import { roundToPixel } from "@/utils/utils";
 import { HexColor } from "@/data/games-data";
 import { flexStyles } from "@/styles/flexStyles";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { registerHintButton } from "@/hints/hint-taps";
 
 const THEME_COLORS = {
   blue: Colors.buttonBlue,
@@ -179,6 +180,27 @@ export const Button = ({
   label,
 }: Props) => {
   const autoProgressValue = useRef(new Animated.Value(0)).current;
+
+  // A "Press <label>" hint names this button, and Autopilot presses it.
+  const onPressRef = useRef(onPress);
+  onPressRef.current = onPress;
+  const hintLabels = [
+    ...new Set([
+      accessibilityLabel,
+      label,
+      typeof text === "string" ? text.split("\n")[0] : undefined,
+    ]),
+  ]
+    .filter(Boolean)
+    .join("\n");
+  useEffect(() => {
+    if (headerButton || disabled || !hintLabels) return;
+    const press = () => onPressRef.current?.();
+    const unregister = hintLabels
+      .split("\n")
+      .map((hintLabel) => registerHintButton(hintLabel, press));
+    return () => unregister.forEach((done) => done());
+  }, [disabled, headerButton, hintLabels]);
   const { spacing } = useResponsiveMetrics();
   const ui = useResponsiveUiLayout();
   // Inside a game, the game's palette.

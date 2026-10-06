@@ -3,7 +3,7 @@
     "home": "Início",
     "campaign": "Odisseia",
     "rules": "Regras",
-    "hint": "Dica",
+    "hint": "Ajuda lá de cima",
     "undo": "Desfazer",
     "reset": "Reiniciar",
     "menu": "Menu",
@@ -21,7 +21,8 @@
     "shareText": "Venci {{game}} em {{time}}! Experimente no Solitarius.",
     "shareTextNoTime": "Venci {{game}}! Experimente no Solitarius.",
     "shareCopied": "Copiado para a área de transferência",
-    "shareFailed": "Não foi possível compartilhar esta vitória"
+    "shareFailed": "Não foi possível compartilhar esta vitória",
+    "autopilotWin": "O OVNI ajudou nesta, então a vitória não conta."
   },
   "reset": {
     "hold": "Segure para reiniciar a partida"
@@ -32,7 +33,12 @@
   "rules": {
     "title": "Regras",
     "unavailable": "As instruções não estão disponíveis para este jogo.",
-    "hintTip": "Toque no botão Dica para destacar uma jogada válida."
+    "helpIntro": {
+      "title": "Ajuda lá de cima",
+      "body": "Empacou? Toque no OVNI no alto da tela e ele ajuda. Escolha como:",
+      "done": "Entendi",
+      "later": "Você pode mudar isso quando quiser em Ajustes, na tela inicial."
+    }
   },
   "mercySkip": {
     "title": "Usar um indulto"

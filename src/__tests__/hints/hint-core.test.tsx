@@ -18,11 +18,17 @@ import {
 import { locateHintTarget, visibleCardCenter } from "@/hints/locate";
 import { bestLine } from "@/hints/lookahead";
 import {
-  isHintButtonShown,
-  loadHintButton,
-  saveHintButton,
-} from "@/data/hint-button";
-import { HINT_BUTTON_STORAGE_KEY } from "@/data/storage-keys";
+  getHintMode,
+  loadHintMode,
+  markHintIntroSeen,
+  parseHintMode,
+  saveHintMode,
+} from "@/data/hint-mode";
+import {
+  HINT_BUTTON_STORAGE_KEY,
+  HINT_INTRO_STORAGE_KEY,
+} from "@/data/storage-keys";
+import { isAutopilotSession, markAutopilotSession } from "@/hints/hint-store";
 import { act, create } from "react-test-renderer";
 
 let cardCount = 0;
@@ -274,17 +280,44 @@ describe("looking ahead", () => {
   });
 });
 
-describe("the Show hint button setting", () => {
+describe("the Help from Above setting", () => {
   beforeEach(async () => {
     await AsyncStorage.clear();
   });
 
-  test("is on unless the player turned it off, and remembered", async () => {
-    expect(await loadHintButton()).toBe(true);
-    await saveHintButton(false);
-    expect(isHintButtonShown()).toBe(false);
-    expect(await AsyncStorage.getItem(HINT_BUTTON_STORAGE_KEY)).toBe("0");
-    await saveHintButton(true);
-    expect(await loadHintButton()).toBe(true);
+  test("is Beacons unless the player chose otherwise, and remembered", async () => {
+    expect(await loadHintMode()).toBe("beacons");
+    await saveHintMode("autopilot");
+    expect(getHintMode()).toBe("autopilot");
+    expect(await AsyncStorage.getItem(HINT_BUTTON_STORAGE_KEY)).toBe(
+      "autopilot",
+    );
+    expect(await loadHintMode()).toBe("autopilot");
+    await saveHintMode("off");
+    expect(await loadHintMode()).toBe("off");
+  });
+
+  test("reads the old Show hint button choice", async () => {
+    expect(parseHintMode("0")).toBe("off");
+    expect(parseHintMode("1")).toBe("beacons");
+    expect(parseHintMode(null)).toBe("beacons");
+    expect(parseHintMode("something else")).toBe("beacons");
+    await AsyncStorage.setItem(HINT_BUTTON_STORAGE_KEY, "0");
+    expect(await loadHintMode()).toBe("off");
+  });
+
+  test("remembers that the introduction was put away", async () => {
+    await markHintIntroSeen();
+    expect(await AsyncStorage.getItem(HINT_INTRO_STORAGE_KEY)).toBe("1");
+  });
+});
+
+describe("Autopilot wins", () => {
+  test("a deal Autopilot played in is remembered, others aren't", () => {
+    expect(isAutopilotSession("deal-1")).toBe(false);
+    markAutopilotSession("deal-1");
+    expect(isAutopilotSession("deal-1")).toBe(true);
+    expect(isAutopilotSession("deal-2")).toBe(false);
+    expect(isAutopilotSession(undefined)).toBe(false);
   });
 });

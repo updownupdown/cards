@@ -23,8 +23,9 @@ import { CardMapVisualizer } from "./CardMapVisualizer";
 import { CardSizes } from "./CardStyles";
 import { getHeaderHeightWithInset } from "@/styles/styles";
 import { IconName } from "@/icons/generated";
-import { HintLayer } from "@/hints/HintLayer";
-import type { HintTarget } from "@/hints/hint";
+import { HintBoardLink } from "@/hints/HintBoardLink";
+import type { Hint, HintTarget } from "@/hints/hint";
+import { findButtonTap, findDragTap } from "@/hints/hint-taps";
 import { locateHintTarget } from "@/hints/locate";
 
 export type CardPosition = {
@@ -599,7 +600,7 @@ export function useCardMap({
     [cardHeight, cardWidth, getZoneBasePos, zoneMapper, zones],
   );
 
-  // The Hint button's highlights, drawn over the cards they point at.
+  // Where the hint's targets are, for HintUfo's beacons and flights.
   const locateHint = useCallback(
     (target: HintTarget) =>
       locateHintTarget(target, {
@@ -609,6 +610,43 @@ export function useCardMap({
         cardHeight,
       }),
     [cardHeight, cardPositions, cardWidth, zoneBasePosById],
+  );
+
+  // Autopilot taps targets as a player would: a card, else the top card of a
+  // zone, else the zone itself, else the button a "press" hint names.
+  const zoneMapperRef = useRef(zoneMapper);
+  zoneMapperRef.current = zoneMapper;
+  const tapHint = useCallback(
+    (target: HintTarget, hint: Hint) => {
+      if (isBoardInputLocked()) return false;
+      const tapCard = (cardId: string) => {
+        const onPress =
+          pressHandlersRef.current.get(cardId) ?? findDragTap(cardId);
+        onPress?.();
+        return !!onPress;
+      };
+      if ("card" in target) return tapCard(target.card);
+      const topCard = Object.values(cardPositions)
+        .filter((placed) => placed.zoneId === target.zone)
+        .reduce<MappedCard | null>(
+          (top, placed) =>
+            !top || placed.cardIndex > top.cardIndex ? placed : top,
+          null,
+        );
+      if (topCard && tapCard(topCard.card.id)) return true;
+      const zone = zoneById.get(target.zone);
+      const onZonePress = zone && zoneMapperRef.current?.(zone)?.onPress;
+      if (onZonePress) {
+        onZonePress();
+        return true;
+      }
+      const label = hint.message.values?.label;
+      const onButton =
+        typeof label === "string" ? findButtonTap(label) : undefined;
+      onButton?.();
+      return !!onButton;
+    },
+    [cardPositions, zoneById],
   );
 
   const mapVisualizer = useMemo(
@@ -651,7 +689,7 @@ export function useCardMap({
         />
         {mapBackgrounds}
         {mappedCards}
-        <HintLayer locate={locateHint} />
+        <HintBoardLink locate={locateHint} tap={tapHint} />
         {mapVisualizer}
       </>
     ),
@@ -660,6 +698,7 @@ export function useCardMap({
       gameColorDark,
       locateHint,
       mapBackgrounds,
+      tapHint,
       mapVisualizer,
       mappedCards,
     ],

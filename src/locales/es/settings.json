@@ -19,9 +19,15 @@
     "label": "Mostrar consejos",
     "description": "Muestra un resumen de inicio rápido en los juegos nuevos."
   },
-  "showHintButton": {
-    "label": "Mostrar botón de pista",
-    "description": "Una bombilla en la cabecera del juego que resalta una buena jugada."
+  "helpFromAbove": {
+    "label": "Ayuda de las alturas",
+    "description": "Un ovni en la cabecera del juego que te ayuda cuando te atascas.",
+    "off": "No",
+    "beacons": "Balizas",
+    "autopilot": "Piloto automático",
+    "offDescription": "Sin ovni en la cabecera del juego.",
+    "beaconsDescription": "Las balizas iluminan una buena jugada. Tus victorias siguen contando.",
+    "autopilotDescription": "El ovni baja y hace una buena jugada por ti. Una victoria en una partida en la que jugó no cuenta."
   },
   "keepScreenAwake": {
     "label": "Mantener la pantalla encendida",

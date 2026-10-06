@@ -19,9 +19,15 @@
     "label": "Show game tips",
     "description": "Show a quick start summary for new games."
   },
-  "showHintButton": {
-    "label": "Show hint button",
-    "description": "A lightbulb in the game header that highlights a good move."
+  "helpFromAbove": {
+    "label": "Help from Above",
+    "description": "A UFO in the game header that helps when you're stuck.",
+    "off": "Off",
+    "beacons": "Beacons",
+    "autopilot": "Autopilot",
+    "offDescription": "No UFO in the game header.",
+    "beaconsDescription": "Beacons light up a good move. Your wins still count.",
+    "autopilotDescription": "The UFO flies down and plays a good move for you. A win in a game it played doesn't count."
   },
   "keepScreenAwake": {
     "label": "Keep screen awake",

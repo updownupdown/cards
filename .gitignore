@@ -60,3 +60,4 @@ __pycache__/
 # Thumbnail crop review sheets (npm run thumbnails:review)
 .thumbnail-review/
 design/studio/studio.html
+*:Zone.Identifier

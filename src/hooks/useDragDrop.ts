@@ -8,6 +8,7 @@ import {
 } from "@/components/Cards/drop-flight";
 import type { DeckFanDirection } from "@/components/Cards/CardMapBackgrounds";
 import { isBoardInputLocked } from "@/components/Cards/input-lock";
+import { setDragTapLookup } from "@/hints/hint-taps";
 import { haptics } from "@/utils/haptics";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { View as RNView } from "react-native";
@@ -511,6 +512,18 @@ export function useDragDrop<TSource, TTarget>({
     >(),
   );
 
+  // Each handle's tap, by the card it lifts, so Autopilot can tap a card the
+  // way a finger would. Taps read the game fresh, as the gestures' do.
+  const hintTapsRef = useRef(new Map<string, () => void>());
+  useEffect(
+    () =>
+      setDragTapLookup((cardId) => {
+        const onTap = hintTapsRef.current.get(cardId);
+        return onTap && (() => void (!isBoardInputLocked() && onTap()));
+      }),
+    [],
+  );
+
   /**
    * Get the gesture for a draggable hit area. Render it with DragHandle.
    *
@@ -541,6 +554,8 @@ export function useDragDrop<TSource, TTarget>({
 
     entry.callbacks.onDragStart = onDragStart;
     entry.callbacks.onTap = onTap;
+    const cardId = onTap && getDroppedCardIdsRef.current(source)[0];
+    if (onTap && cardId !== undefined) hintTapsRef.current.set(cardId, onTap);
     return entry.gesture;
   }
 

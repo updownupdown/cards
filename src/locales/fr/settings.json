@@ -19,9 +19,15 @@
     "label": "Afficher les conseils",
     "description": "Affiche un résumé de démarrage rapide pour les nouveaux jeux."
   },
-  "showHintButton": {
-    "label": "Afficher le bouton Indice",
-    "description": "Une ampoule dans l’en-tête du jeu qui met en évidence un bon coup."
+  "helpFromAbove": {
+    "label": "Un coup de main d'en haut",
+    "description": "Un OVNI dans l'en-tête du jeu, qui vous aide quand vous êtes bloqué.",
+    "off": "Non",
+    "beacons": "Balises",
+    "autopilot": "Pilote auto",
+    "offDescription": "Pas d'OVNI dans l'en-tête du jeu.",
+    "beaconsDescription": "Des balises montrent un bon coup. Vos victoires comptent toujours.",
+    "autopilotDescription": "L'OVNI descend et joue un bon coup pour vous. Une victoire dans une partie où il a joué ne compte pas."
   },
   "keepScreenAwake": {
     "label": "Garder l'écran allumé",

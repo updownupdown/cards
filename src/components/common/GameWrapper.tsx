@@ -81,9 +81,14 @@ import { GameHeader } from "./GameHeader";
 import { useStableCallback } from "@/hooks/useStableCallback";
 import { requestMercySkipVisit } from "@/components/Campaign/ufo-visit";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
-import { requestHint, useHasHintFinder } from "@/hints/hint-store";
-import { useHintButtonShown } from "@/data/hint-button";
-import { useToast } from "./Toast";
+import {
+  isAutopilotSession,
+  markAutopilotSession,
+  requestHint,
+  useHasHintFinder,
+} from "@/hints/hint-store";
+import { HintUfo } from "@/hints/HintUfo";
+import { useHintMode } from "@/data/hint-mode";
 
 const TIPS_MORPH_DURATION = 350;
 const KEEP_AWAKE_TAG = "solitarius-game";
@@ -185,21 +190,21 @@ export const GameWrapper = ({
     }
   });
   const onHeaderRules = useStableCallback(() => setShowRulesModal(true));
-  const hintButtonShown = useHintButtonShown();
-  const hasHints = useHasHintFinder();
-  const showToast = useToast();
   const { t } = useTranslation("game");
-  // The same position always gets the same hint, so pressing again replays it.
+  const hintMode = useHintMode();
+  const hasHints = useHasHintFinder();
+  // The same position always gets the same hint, so pressing again replays
+  // it. HintUfo shows it.
   const onHeaderHint = useStableCallback(() => {
-    const hint = requestHint();
-    addGameBreadcrumb("hint", { found: !!hint });
-    showToast(
-      hint
-        ? t(`hint.${hint.message.key}`, hint.message.values)
-        : t("hint.none"),
-      { icon: "hint", placement: "belowHeader", duration: 3500 },
+    const hint = requestHint(
+      hintMode === "autopilot" ? "autopilot" : "beacons",
     );
+    addGameBreadcrumb("hint", { found: !!hint, mode: hintMode });
   });
+  // A win in a deal Autopilot played in doesn't count.
+  const onAutopilotMove = useStableCallback(() =>
+    markAutopilotSession(getActiveGameSessionId(pathname)),
+  );
   const onHeaderUndo = useStableCallback(() => {
     addGameBreadcrumb("undo");
     handleUndo?.();
@@ -414,6 +419,8 @@ export const GameWrapper = ({
     });
   });
 
+  const [autopilotWin, setAutopilotWin] = useState(false);
+
   // Record stats
   const resultStateRef = useRef({ pathname, outcome });
   const attemptedPathRef = useRef<string | null>(null);
@@ -439,6 +446,7 @@ export const GameWrapper = ({
     if (outcome === "playing") {
       setCampaignWinResult(null);
       setWinTimes(null);
+      setAutopilotWin(false);
     }
     if (!didEnd) {
       return () => {
@@ -450,17 +458,18 @@ export const GameWrapper = ({
     addGameBreadcrumb(outcome === "won" ? "win" : "loss");
 
     const sessionId = getActiveGameSessionId(pathname);
+    // Autopilot played in this deal: the win is shown, but not counted.
+    if (outcome === "won" && isAutopilotSession(sessionId)) {
+      setAutopilotWin(true);
+      return () => {
+        active = false;
+      };
+    }
     const playTimeMs =
       outcome === "won" ? getSessionPlayTimeMs(pathname) : null;
     if (playTimeMs !== null && playTimeMs > 0) showWinTime(playTimeMs);
     const winTimeMs = outcome === "won" ? playTimeMs : null;
-    recordResult(
-      pathname,
-      outcome === "won",
-      score,
-      sessionId,
-      winTimeMs,
-    )
+    recordResult(pathname, outcome === "won", score, sessionId, winTimeMs)
       .then(() => {
         if (outcome === "won") void maybeRequestStoreReview();
       })
@@ -536,7 +545,13 @@ export const GameWrapper = ({
         score={score}
         hideScore={hideScore}
         reset={handleReset}
-        message={winLoseMessage}
+        message={
+          autopilotWin
+            ? [winLoseMessage, t("result.autopilotWin")]
+                .filter(Boolean)
+                .join("\n")
+            : winLoseMessage
+        }
         handleUndo={handleLossUndo}
         isCampaignMode={isCampaignMode}
         collectibleRewards={getGameDotDefinition(pathname)?.rewards}
@@ -655,7 +670,7 @@ export const GameWrapper = ({
           }
           onHome={onHeaderHome}
           onRules={onHeaderRules}
-          showHint={hintButtonShown}
+          showHint={hintMode !== "off"}
           hintDisabled={!hasHints || ended || autoCompleting}
           onHint={onHeaderHint}
           onUndo={onHeaderUndo}
@@ -707,6 +722,8 @@ export const GameWrapper = ({
             />
           )}
         </View>
+
+        {hintMode !== "off" && <HintUfo onAutopilotMove={onAutopilotMove} />}
       </View>
 
       {taoReward && taoRevealText && revealStarted === campaignWinResult && (

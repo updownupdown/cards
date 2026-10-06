@@ -19,9 +19,15 @@
     "label": "İpuçlarını göster",
     "description": "Yeni oyunlarda hızlı başlangıç özeti gösterir."
   },
-  "showHintButton": {
-    "label": "İpucu düğmesini göster",
-    "description": "Oyun başlığında iyi bir hamleyi vurgulayan bir ampul."
+  "helpFromAbove": {
+    "label": "Yukarıdan Yardım",
+    "description": "Takıldığında yardım eden, oyun başlığındaki bir UFO.",
+    "off": "Kapalı",
+    "beacons": "İşaretler",
+    "autopilot": "Otopilot",
+    "offDescription": "Oyun başlığında UFO yok.",
+    "beaconsDescription": "İşaretler iyi bir hamleyi gösterir. Galibiyetlerin yine sayılır.",
+    "autopilotDescription": "UFO aşağı iner ve senin yerine iyi bir hamle yapar. Onun oynadığı bir oyundaki galibiyet sayılmaz."
   },
   "keepScreenAwake": {
     "label": "Ekranı açık tut",

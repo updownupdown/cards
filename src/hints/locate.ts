@@ -1,5 +1,5 @@
 import type { HintTarget } from "./hint";
-import type { HintSpot } from "./HintLayer";
+import type { HintSpot } from "./hint-store";
 
 type Rect = { x: number; y: number; width: number; height: number };
 

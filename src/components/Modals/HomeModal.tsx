@@ -44,7 +44,8 @@ import ModalFull from "./ModalFull";
 import { UnderlineTabs } from "../ui/Nocturne";
 import { useToast } from "../common/Toast";
 import { saveBetaGames, useBetaGamesEnabled } from "@/data/beta-games";
-import { saveHintButton, useHintButtonShown } from "@/data/hint-button";
+import { saveHintMode, useHintMode } from "@/data/hint-mode";
+import { HintModeRadio } from "@/components/common/HintModeRadio";
 
 /** App version and build type; not translated, since it's for bug reports. */
 const BUILD_LABEL = `v${Constants.expoConfig?.version ?? "?"} · ${__DEV__ ? "dev" : "release"}`;
@@ -86,7 +87,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const scrollRestored = React.useRef(false);
   const versionTaps = React.useRef(0);
   const betaGamesEnabled = useBetaGamesEnabled();
-  const hintButtonShown = useHintButtonShown();
+  const hintMode = useHintMode();
 
   const onVersionPress = () => {
     versionTaps.current += 1;
@@ -201,15 +202,22 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 void updateSettings({ showTipsForNewGames: val });
               }}
             />
-            <SettingControl
-              label={t("showHintButton.label")}
-              description={t("showHintButton.description")}
-              value={hintButtonShown}
-              type="boolean"
-              onChange={(val) => {
-                void saveHintButton(val);
-              }}
-            />
+            <View style={{ width: "100%", gap: spacing(10) }}>
+              <View style={{ gap: spacing(4) }}>
+                <Text weight={500} size="md" color={theme.ink}>
+                  {t("helpFromAbove.label")}
+                </Text>
+                <Text size="sm" weight={400} color={theme.dim}>
+                  {t("helpFromAbove.description")}
+                </Text>
+              </View>
+              <HintModeRadio
+                value={hintMode}
+                onChange={(value) => {
+                  void saveHintMode(value);
+                }}
+              />
+            </View>
             <SettingControl
               label={t("showAnimations.label")}
               description={t("showAnimations.description")}

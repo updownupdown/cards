@@ -2,8 +2,9 @@ import { useTranslation } from "@/i18n";
 import { usePalette } from "@/styles/palette";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
-import { memo } from "react";
+import { memo, useEffect, useRef } from "react";
 import { Animated, View } from "react-native";
+import { setHintDock, useHintUfoOut } from "@/hints/hint-store";
 import { SURFACE_OPACITY } from "@/components/ui/FloatingBar";
 import { Button } from "../Button/Button";
 import { ResetButton } from "./ResetButton";
@@ -23,7 +24,7 @@ type Props = {
   ended: boolean;
   canUndo: boolean;
   undoDisabled: boolean;
-  /** "Show hint button" is on. */
+  /** "Help from Above" isn't off: the header shows its UFO. */
   showHint: boolean;
   /** No hint to ask for: the game has none, has ended, or is busy. */
   hintDisabled: boolean;
@@ -160,14 +161,11 @@ export const GameHeader = memo(function GameHeader({
         </View>
 
         {showHint && (
-          <Button
-            headerButton
-            onPress={onHint}
-            iconName="hint"
-            accessibilityLabel={t("menu.hint")}
+          <HintDock
+            onHint={onHint}
+            label={t("menu.hint")}
             iconColor={hintDisabled ? theme.faint : theme.accent}
             disabled={hintDisabled}
-            style={{ flex: 1, paddingHorizontal: 0 }}
           />
         )}
 
@@ -200,3 +198,72 @@ export const GameHeader = memo(function GameHeader({
     </Animated.View>
   );
 });
+
+/**
+ * The header's UFO, which asks for a hint. It tells the hint system where it
+ * is, so the flying UFO (Autopilot) leaves from it and comes back to it, and
+ * it hides while that UFO is out.
+ */
+function HintDock({
+  onHint,
+  label,
+  iconColor,
+  disabled,
+}: {
+  onHint: () => void;
+  label: string;
+  iconColor: string;
+  disabled: boolean;
+}) {
+  const dock = useRef<View>(null);
+  const out = useHintUfoOut();
+
+  useEffect(
+    () =>
+      setHintDock(
+        () =>
+          new Promise((resolve) => {
+            const node = dock.current;
+            const timer = setTimeout(() => resolve(null), 100);
+            if (!node?.measureInWindow) return;
+            node.measureInWindow((x, y, width, height) => {
+              clearTimeout(timer);
+              resolve(
+                width > 0
+                  ? {
+                      x: x + width / 2,
+                      y: y + height / 2,
+                      size: Math.min(width, height),
+                    }
+                  : null,
+              );
+            });
+          }),
+      ),
+    [],
+  );
+
+  return (
+    <View
+      ref={dock}
+      collapsable={false}
+      style={{
+        flex: 1,
+        height: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        opacity: out ? 0 : 1,
+      }}
+    >
+      <Button
+        headerButton
+        onPress={onHint}
+        iconName="ufo"
+        accessibilityLabel={label}
+        iconColor={iconColor}
+        disabled={disabled || out}
+        style={{ width: "100%", paddingHorizontal: 0 }}
+      />
+    </View>
+  );
+}

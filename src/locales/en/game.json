@@ -3,7 +3,7 @@
     "home": "Home",
     "campaign": "Odyssey",
     "rules": "Rules",
-    "hint": "Hint",
+    "hint": "Help from Above",
     "undo": "Undo",
     "reset": "Reset",
     "menu": "Menu",
@@ -21,7 +21,8 @@
     "shareText": "I won {{game}} in {{time}}! Try it in Solitarius.",
     "shareTextNoTime": "I won {{game}}! Try it in Solitarius.",
     "shareCopied": "Copied to the clipboard",
-    "shareFailed": "Couldn't share this win"
+    "shareFailed": "Couldn't share this win",
+    "autopilotWin": "The UFO helped with this one, so the win doesn't count."
   },
   "reset": {
     "hold": "Hold to reset game"
@@ -32,7 +33,12 @@
   "rules": {
     "title": "Rules",
     "unavailable": "Instructions are not available for this game.",
-    "hintTip": "Press the Hint button to highlight a valid move."
+    "helpIntro": {
+      "title": "Help from Above",
+      "body": "Stuck? Tap the UFO at the top of the screen and it will help. Choose how:",
+      "done": "Got it",
+      "later": "You can change this any time in Settings, from the home screen."
+    }
   },
   "mercySkip": {
     "title": "Use Mercy Skip"

@@ -3,7 +3,7 @@
     "home": "Ana sayfa",
     "campaign": "Yolculuk",
     "rules": "Kurallar",
-    "hint": "İpucu",
+    "hint": "Yukarıdan Yardım",
     "undo": "Geri al",
     "reset": "Yeniden başlat",
     "menu": "Menü",
@@ -21,7 +21,8 @@
     "shareText": "{{game}} oyununu {{time}} sürede kazandım! Sen de Solitarius'ta dene.",
     "shareTextNoTime": "{{game}} oyununu kazandım! Sen de Solitarius'ta dene.",
     "shareCopied": "Panoya kopyalandı",
-    "shareFailed": "Bu galibiyet paylaşılamadı"
+    "shareFailed": "Bu galibiyet paylaşılamadı",
+    "autopilotWin": "Bu oyunda UFO yardım etti, bu yüzden galibiyet sayılmaz."
   },
   "reset": {
     "hold": "Oyunu sıfırlamak için basılı tut"
@@ -32,7 +33,12 @@
   "rules": {
     "title": "Kurallar",
     "unavailable": "Bu oyun için talimat yok.",
-    "hintTip": "Geçerli bir hamleyi vurgulamak için İpucu düğmesine dokunun."
+    "helpIntro": {
+      "title": "Yukarıdan Yardım",
+      "body": "Takıldın mı? Ekranın üstündeki UFO'ya dokun, sana yardım etsin. Nasıl yardım edeceğini seç:",
+      "done": "Anladım",
+      "later": "Bunu istediğin zaman ana ekrandaki Ayarlar'dan değiştirebilirsin."
+    }
   },
   "mercySkip": {
     "title": "Af kullan"

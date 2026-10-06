@@ -3,7 +3,7 @@
     "home": "Accueil",
     "campaign": "Odyssée",
     "rules": "Règles",
-    "hint": "Indice",
+    "hint": "Un coup de main d'en haut",
     "undo": "Annuler",
     "reset": "Recommencer",
     "menu": "Menu",
@@ -21,7 +21,8 @@
     "shareText": "J'ai gagné à {{game}} en {{time}} ! Essayez-le dans Solitarius.",
     "shareTextNoTime": "J'ai gagné à {{game}} ! Essayez-le dans Solitarius.",
     "shareCopied": "Copié dans le presse-papiers",
-    "shareFailed": "Impossible de partager cette victoire"
+    "shareFailed": "Impossible de partager cette victoire",
+    "autopilotWin": "L'OVNI a aidé pour celle-ci : la victoire ne compte pas."
   },
   "reset": {
     "hold": "Maintenez pour recommencer"
@@ -32,7 +33,12 @@
   "rules": {
     "title": "Règles",
     "unavailable": "Les instructions ne sont pas disponibles pour ce jeu.",
-    "hintTip": "Appuyez sur le bouton Indice pour mettre en évidence un coup valide."
+    "helpIntro": {
+      "title": "Un coup de main d'en haut",
+      "body": "Bloqué ? Touchez l'OVNI en haut de l'écran : il vous aidera. Choisissez comment :",
+      "done": "Compris",
+      "later": "Vous pouvez changer cela à tout moment dans les Réglages, depuis l'écran d'accueil."
+    }
   },
   "mercySkip": {
     "title": "Utiliser un passe-droit"

@@ -19,9 +19,15 @@
     "label": "Mostra suggerimenti",
     "description": "Mostra una guida rapida per i giochi nuovi."
   },
-  "showHintButton": {
-    "label": "Mostra pulsante suggerimento",
-    "description": "Una lampadina nell’intestazione del gioco che evidenzia una buona mossa."
+  "helpFromAbove": {
+    "label": "Aiuto dall'alto",
+    "description": "Un UFO nell'intestazione del gioco che ti aiuta quando sei bloccato.",
+    "off": "No",
+    "beacons": "Segnali",
+    "autopilot": "Pilota automatico",
+    "offDescription": "Nessun UFO nell'intestazione del gioco.",
+    "beaconsDescription": "I segnali illuminano una buona mossa. Le tue vittorie contano comunque.",
+    "autopilotDescription": "L'UFO scende e fa una buona mossa al posto tuo. Una vittoria in una partita in cui ha giocato non conta."
   },
   "keepScreenAwake": {
     "label": "Mantieni lo schermo acceso",

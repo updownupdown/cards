@@ -19,9 +19,15 @@
     "label": "Mostrar dicas",
     "description": "Mostra um resumo de início rápido nos jogos novos."
   },
-  "showHintButton": {
-    "label": "Mostrar botão de dica",
-    "description": "Uma lâmpada no cabeçalho do jogo que destaca uma boa jogada."
+  "helpFromAbove": {
+    "label": "Ajuda lá de cima",
+    "description": "Um OVNI no cabeçalho do jogo que ajuda quando você empaca.",
+    "off": "Não",
+    "beacons": "Sinais",
+    "autopilot": "Piloto automático",
+    "offDescription": "Nenhum OVNI no cabeçalho do jogo.",
+    "beaconsDescription": "Sinais iluminam uma boa jogada. Suas vitórias continuam valendo.",
+    "autopilotDescription": "O OVNI desce e faz uma boa jogada por você. Uma vitória num jogo em que ele jogou não conta."
   },
   "keepScreenAwake": {
     "label": "Manter a tela ligada",

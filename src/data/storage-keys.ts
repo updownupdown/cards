@@ -8,5 +8,10 @@ export const GALLERY_LAST_QUOTE_STORAGE_KEY = "cards.gallery.lastQuote.v1";
 export const WILD_CARDS_STORAGE_KEY = "cards.wildCards.v1";
 /** Beta (local-only) games turned on outside dev, from the settings. */
 export const BETA_GAMES_STORAGE_KEY = "cards.betaGames.v1";
-/** Whether the Hint button shows in the game header ("0" hides it). */
+/**
+ * "Help from Above" (the header's UFO): "off", "beacons" or "autopilot".
+ * Once "1" (shown) or "0" (hidden), which still read as beacons and off.
+ */
 export const HINT_BUTTON_STORAGE_KEY = "cards.hintButton.v1";
+/** "1" once the player has put away the Rules modal's UFO introduction. */
+export const HINT_INTRO_STORAGE_KEY = "cards.hintIntro.v1";
