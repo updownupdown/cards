@@ -328,7 +328,13 @@
     "actionUp": "♠ Üst",
     "actionRun": "♥ Dizi",
     "gridClearWon": "Izgara temizlendi. Kazandın!",
-    "allClubsSpent": "13 sineğin hepsi harcandı."
+    "allClubsSpent": "13 sineğin hepsi harcandı.",
+    "hint": {
+      "free_diamonds": "♦ hamlelerini açmak için karoları temizle",
+      "free_spades": "♠ hamlelerini açmak için maçaları temizle",
+      "free_hearts": "♥ hamlesini açmak için kupaları temizle",
+      "any": "Bu sinekle yalnızca bir kart al: diğerlerini daha büyük hamlelere sakla"
+    }
   },
   "fortunesCall": {
     "red": "Kırmızı",
@@ -474,7 +480,13 @@
     "theWolfBeatYou": "Kurt seni {{wolfScore}}-{{playerScore}} yendi.",
     "wolf": "Kurt",
     "round": "Tur",
-    "selectCardsToCapture": "Alınacak kartları seç"
+    "selectCardsToCapture": "Alınacak kartları seç",
+    "hint": {
+      "fold": "Çekil: devam etmek daha pahalıya patlar",
+      "finish": "Kurdun elini boşalt: senin elin puan kazansın",
+      "over_one": "Üstün gel: Kurdun {{count}} kart çekmesine değer",
+      "over_other": "Üstün gel: Kurdun {{count}} kart çekmesine değer"
+    }
   },
   "memory": {
     "matched": "Eşleşen",

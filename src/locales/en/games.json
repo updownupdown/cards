@@ -328,7 +328,13 @@
     "actionUp": "♠ Up",
     "actionRun": "♥ Sequence",
     "gridClearWon": "The grid is clear. Fight Clubs won!",
-    "allClubsSpent": "All 13 Clubs are spent."
+    "allClubsSpent": "All 13 Clubs are spent.",
+    "hint": {
+      "free_diamonds": "Clear diamonds to free the ♦ actions",
+      "free_spades": "Clear spades to free the ♠ actions",
+      "free_hearts": "Clear hearts to free the ♥ action",
+      "any": "Take just one card with this club: keep the others for bigger plays"
+    }
   },
   "fortunesCall": {
     "red": "Red",
@@ -474,7 +480,13 @@
     "theWolfBeatYou": "The Wolf beat you {{wolfScore}}-{{playerScore}}.",
     "wolf": "Wolf",
     "round": "Round",
-    "selectCardsToCapture": "Select cards to capture"
+    "selectCardsToCapture": "Select cards to capture",
+    "hint": {
+      "fold": "Fold now: playing on would cost more",
+      "finish": "Clear the Wolf's hand: yours scores",
+      "over_one": "Overpower: worth the Wolf drawing {{count}} card",
+      "over_other": "Overpower: worth the Wolf drawing {{count}} cards"
+    }
   },
   "memory": {
     "matched": "Matched",

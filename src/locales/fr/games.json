@@ -328,7 +328,13 @@
     "actionUp": "♠ Haut",
     "actionRun": "♥ Suite",
     "gridClearWon": "La grille est vide. Victoire !",
-    "allClubsSpent": "Les 13 trèfles sont épuisés."
+    "allClubsSpent": "Les 13 trèfles sont épuisés.",
+    "hint": {
+      "free_diamonds": "Retirez des carreaux pour libérer les actions ♦",
+      "free_spades": "Retirez des piques pour libérer les actions ♠",
+      "free_hearts": "Retirez des cœurs pour libérer l'action ♥",
+      "any": "Ne prenez qu'une carte avec ce trèfle : gardez les autres pour de plus gros coups"
+    }
   },
   "fortunesCall": {
     "red": "Rouge",
@@ -474,7 +480,13 @@
     "theWolfBeatYou": "Le Loup vous bat {{wolfScore}} à {{playerScore}}.",
     "wolf": "Loup",
     "round": "Manche",
-    "selectCardsToCapture": "Choisissez des cartes à capturer"
+    "selectCardsToCapture": "Choisissez des cartes à capturer",
+    "hint": {
+      "fold": "Couchez-vous : continuer coûterait plus cher",
+      "finish": "Videz la main du Loup : la vôtre marque",
+      "over_one": "Surpassez : le Loup pioche {{count}} carte, ça vaut le coup",
+      "over_other": "Surpassez : le Loup pioche {{count}} cartes, ça vaut le coup"
+    }
   },
   "memory": {
     "matched": "Paires",
