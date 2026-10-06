@@ -27,6 +27,8 @@ import { GameWrapper } from "../common/GameWrapper";
 import { useToast } from "../common/Toast";
 
 import { i18n } from "@/i18n";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
+import { useHint } from "@/hints/hint-store";
 function getColRow(index: number) {
   let row: number[] = [];
   let col: number[] = [];
@@ -199,10 +201,12 @@ function legalPlacements(
   const legalPiles: number[] = [];
   const adjacentPiles = getAdjacentPiles(piles);
 
+  // The card is played face up, though the stock may not have turned it yet.
+  const played = { ...drawCard, faceUp: true };
   for (let i = 0; i < 16; i++) {
     const simulatedPiles = [...piles];
-    simulatedPiles[i] = [...simulatedPiles[i], drawCard];
-    const { newPiles } = applyFlips(simulatedPiles, i, drawCard);
+    simulatedPiles[i] = [...simulatedPiles[i], played];
+    const { newPiles } = applyFlips(simulatedPiles, i, played);
     const tooManyFaceDownCards = numFaceDownTopCards(newPiles) > 4;
     const pileFull = piles[i].length >= 4;
     const isInAdjacentPile = adjacentPiles.includes(i);
@@ -215,6 +219,62 @@ function legalPlacements(
   return legalPiles;
 }
 
+/** The piles once the card is placed, as placeAt leaves them. */
+function placeCard(piles: PlayingCard[][], index: number, card: PlayingCard) {
+  const next = [...piles];
+  next[index] = [
+    ...piles[index].map((entry, position) =>
+      position === piles[index].length - 1
+        ? { ...entry, faceUp: false }
+        : entry,
+    ),
+    { ...card, faceUp: true },
+  ];
+  return applyFlips(next, index, next[index][next[index].length - 1]).newPiles;
+}
+
+/** Piles showing a face, then fewer turned down, then more piles started. */
+function gridWorth(piles: PlayingCard[][]) {
+  if (hasAllFaceUp(piles)) return 1e6;
+  const started = piles.filter((pile) => pile.length > 0).length;
+  const faceDown = numFaceDownTopCards(piles);
+  return 10 * (started - faceDown) - 6 * faceDown + 3 * started;
+}
+
+/**
+ * The hint: the pile for the stock card that does best now and, over the
+ * cards that could come next, after the best place for that one too.
+ */
+function findCityGridHint(state: GameState) {
+  const card = top(state.draw);
+  if (state.ended || !card?.faceUp) return null;
+  const upcoming = state.draw.slice(0, -1);
+  let best: { index: number; worth: number } | null = null;
+  for (const index of legalPlacements(state.piles, card)) {
+    const piles = placeCard(state.piles, index, card);
+    let worth = gridWorth(piles);
+    if (worth < 1e6 && upcoming.length > 0) {
+      let next = 0;
+      for (const following of upcoming) {
+        const options = legalPlacements(piles, following);
+        next +=
+          options.length === 0
+            ? -1000
+            : Math.max(
+                ...options.map((option) =>
+                  gridWorth(placeCard(piles, option, following)),
+                ),
+              );
+      }
+      worth += next / upcoming.length;
+    }
+    if (!best || worth > best.worth) best = { index, worth };
+  }
+  return best
+    ? makeHint("moveCard", cardTarget(card), zoneTarget(`pile-${best.index}`))
+    : null;
+}
+
 export const cityGridRules = {
   getColRow,
   numFaceDownTopCards,
@@ -224,6 +284,7 @@ export const cityGridRules = {
   flipTop,
   applyFlips,
   legalPlacements,
+  findHint: findCityGridHint,
 };
 
 export default function CityGrid() {
@@ -311,6 +372,11 @@ export default function CityGrid() {
       });
     }
   }
+
+  useHint(() => findCityGridHint(game), {
+    game,
+    enabled: !game.ended,
+  });
 
   const legal = useMemo(
     () => legalPlacements(game.piles, top(game.draw)),

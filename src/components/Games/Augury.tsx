@@ -29,6 +29,8 @@ import { ProgressBar } from "../Home/ProgressBar";
 import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
 
 import { i18n } from "@/i18n";
+import { cardTarget, makeHint, pressHint } from "@/hints/hint";
+import { useHint } from "@/hints/hint-store";
 
 // Eleusis (Robert Abbott, 1956) for one: a hidden law decides which cards
 // may follow the path. Tapping a card plays it; cards that break the law are
@@ -473,6 +475,49 @@ function gatherState(state: GameState): GameState {
   };
 }
 
+/**
+ * The laws that agree with everything the path shows: each card played
+ * fitted the cards before it, and each card turned away did not.
+ */
+function lawsInKeeping(state: GameState, difficulty: Difficulty) {
+  const agrees = (law: Law) =>
+    state.path.every((entry, index) => {
+      const before = pathCards(state).slice(0, index);
+      const upTo = pathCards(state).slice(0, index + 1);
+      return (
+        (index === 0 || law.test(before, entry.card)) &&
+        entry.rejected.every((card) => !law.test(upTo, card))
+      );
+    });
+  const pool = LAWS.filter(
+    (law) => difficulty === "difficult" || law.level === "easy",
+  ).filter(agrees);
+  // The law may come from another setting than today's.
+  return pool.length > 0 ? pool : LAWS.filter(agrees);
+}
+
+/**
+ * The hint, reasoning as a player can, without knowing the law: of the laws
+ * that still agree with the path, the guess most of them call right.
+ */
+function findAuguryHint(state: GameState, difficulty: Difficulty) {
+  if (state.ended || state.hand.length === 0) return null;
+  const laws = lawsInKeeping(state, difficulty);
+  if (laws.length === 0) return null;
+  const path = pathCards(state);
+  const fits = state.hand.map(
+    (card) => laws.filter((law) => law.test(path, card)).length,
+  );
+  const noneFit = laws.filter((law) =>
+    state.hand.every((card) => !law.test(path, card)),
+  ).length;
+  const best = Math.max(...fits);
+  if (noneFit > best) {
+    return pressHint("buttons", i18n.t("games:augury.noneFit"));
+  }
+  return makeHint("tapCard", cardTarget(state.hand[fits.indexOf(best)]));
+}
+
 export const auguryRules = {
   HAND_SIZE,
   TARGET,
@@ -483,6 +528,7 @@ export const auguryRules = {
   declareNone,
   pickLaw,
   createInitialState,
+  findHint: findAuguryHint,
 };
 
 const gameStateInitial = createInitialState("easy");
@@ -502,6 +548,11 @@ export default function Augury() {
         redealWith(createInitialState(difficulty), draft.deck),
       );
     },
+  });
+
+  useHint(() => findAuguryHint(game, difficulty), {
+    game,
+    enabled: !game.ended && game.path.length > 0,
   });
 
   function play(handIndex: number) {
