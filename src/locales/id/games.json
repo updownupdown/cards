@@ -174,7 +174,13 @@
     "tierCourtAlchemist": "Alkemis Istana",
     "tierMiracleWorker": "Pembuat Mukjizat",
     "wonWithTier": "{{score}} poin: {{tier}}!",
-    "lostShortOfTarget": "{{score}} poin. Anda butuh {{target}} poin untuk menang."
+    "lostShortOfTarget": "{{score}} poin. Anda butuh {{target}} poin untuk menang.",
+    "hint": {
+      "stop": "Berhenti di sini: risiko meledak {{risk}}% terlalu besar untuk tambahan satu kartu",
+      "keepCoins": "Ambil koinnya: kartu yang lebih baik akan menguntungkan di sisa ronde",
+      "keepPoints": "Ambil poinnya: sisa ronde terlalu sedikit untuk membuat koin menguntungkan",
+      "buy": "Beli kartu terkuat yang bisa dibeli koin Anda: dua, dari jenis berbeda"
+    }
   },
   "cityGrid": {
     "pileIsFull": "Tumpukan penuh!",
@@ -369,7 +375,14 @@
     "missionComplete": "Misi selesai: {{count}} mata-mata kunci direkrut.",
     "missionFailed": "Misi gagal: {{count}} mata-mata kunci direkrut, {{lost}} hilang.",
     "noDoubleAgentsRemain": "Tidak ada agen ganda tersisa. Misi gagal.",
-    "sourceHand": "Tangan"
+    "sourceHand": "Tangan",
+    "hint": {
+      "retire": "Pensiunkan kartu rendah ini, supaya kartu Anda yang lebih kuat lebih sering datang",
+      "assassinate": "Tangan Anda tidak bisa menghentikan mata-mata ini: korbankan agen ganda",
+      "doubleAgent": "As berjenis sama dengan mata-mata adalah agen ganda: kartu Anda yang lain ikut menjadi jenisnya",
+      "counterKey": "Mata-mata kunci ini tidak bisa direkrut: tangkal dengan kartu yang paling tidak Anda perlukan",
+      "counter": "Mata-mata ini tidak bisa direkrut: tangkal dengan kartu yang paling tidak Anda perlukan"
+    }
   },
   "invaders": {
     "wave2": "Gelombang 2",
@@ -633,7 +646,15 @@
     "guardianValue": "Penjaga: {{value}}",
     "aliceAwakened": "Alice terbangun dengan {{count}} nyawa.",
     "guardiansLost": "Semua Penjaga khusus yang bukan As telah hilang.",
-    "nightmaresOverwhelmed": "Para Mimpi Buruk menguasai Alice."
+    "nightmaresOverwhelmed": "Para Mimpi Buruk menguasai Alice.",
+    "hint": {
+      "eliminate": "Hapus Mimpi buruk ini",
+      "defend": "Lemahkan serangan Mimpi buruk ini: ia tidak bisa dihapus giliran ini",
+      "mold": "Bentuk Penjaga ini agar masuk ke dek Anda",
+      "exile": "Asingkan Mimpi buruk ini: ia akan merenggut lebih dari 5 nyawa Alice",
+      "deepBreath": "Tidak ada yang layak ditugaskan: tukar kartu terlemah Anda dengan yang baru",
+      "remSleep": "Alice tidak akan selamat dari papan ini: gunakan Tidur REM untuk mulai lagi"
+    }
   },
   "spiderSolitaire": {
     "allEightKToA": "Kedelapan urutan K sampai A sudah lengkap."

@@ -174,7 +174,13 @@
     "tierCourtAlchemist": "Court Alchemist",
     "tierMiracleWorker": "Miracle Worker",
     "wonWithTier": "{{score}} points: {{tier}}!",
-    "lostShortOfTarget": "{{score}} points. You need {{target}} points to win."
+    "lostShortOfTarget": "{{score}} points. You need {{target}} points to win.",
+    "hint": {
+      "stop": "Stop here: a {{risk}}% chance to boil over is too much for what another card adds",
+      "keepCoins": "Keep the coins: better cards will pay off over the rounds left",
+      "keepPoints": "Keep the points: too few rounds are left for coins to pay off",
+      "buy": "Buy the strongest cards your coins allow: two, of different suits"
+    }
   },
   "cityGrid": {
     "pileIsFull": "Pile is full!",
@@ -369,7 +375,14 @@
     "missionComplete": "Mission complete: {{count}} Key Spies recruited.",
     "missionFailed": "Mission failed: {{count}} Key Spies recruited, {{lost}} lost.",
     "noDoubleAgentsRemain": "No Double Agents remain. Mission failed.",
-    "sourceHand": "Hand"
+    "sourceHand": "Hand",
+    "hint": {
+      "retire": "Retire these low cards, so your stronger cards come round more often",
+      "assassinate": "Your hand can't stop this spy: sacrifice a Double Agent",
+      "doubleAgent": "The Ace of the spy's suit is a Double Agent: it turns your other cards to its suit",
+      "counterKey": "This Key Spy can't be recruited: counter it with the cards you need least",
+      "counter": "This spy can't be recruited: counter it with the cards you need least"
+    }
   },
   "invaders": {
     "wave2": "Wave 2",
@@ -633,7 +646,15 @@
     "guardianValue": "Guardian: {{value}}",
     "aliceAwakened": "Alice awakened with {{count}} life.",
     "guardiansLost": "Every non-Ace special Guardian was lost.",
-    "nightmaresOverwhelmed": "The Nightmares overwhelmed Alice."
+    "nightmaresOverwhelmed": "The Nightmares overwhelmed Alice.",
+    "hint": {
+      "eliminate": "Eliminate this Nightmare",
+      "defend": "Weaken this Nightmare's attack: it can't be eliminated this turn",
+      "mold": "Mold this Guardian into your deck",
+      "exile": "Exile this Nightmare: it would cost Alice more than 5 life",
+      "deepBreath": "Nothing worth assigning: swap your weakest card for a new one",
+      "remSleep": "Alice won't survive this board: use REM Sleep to start afresh"
+    }
   },
   "spiderSolitaire": {
     "allEightKToA": "All eight K-to-A suit runs are complete."

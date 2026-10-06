@@ -26,6 +26,15 @@ import { Text } from "../common/Text";
 import { ProgressBar } from "../Home/ProgressBar";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { seededRandom, shuffledWith } from "@/hints/random";
+import {
+  cardTarget,
+  makeHint,
+  pressHint,
+  withNote,
+  zoneTarget,
+} from "@/hints/hint";
 const AUTO_PROGRESS_DELAY = 1000;
 const FACE_SPIES = 12;
 const NUMBER_SPIES = 24;
@@ -305,7 +314,198 @@ function SpyScoreBar({
   );
 }
 
+// —— Hints ——
+
+/** Every way to pick some of the hand (a hand holds five cards at most). */
+function handSubsets(hand: PlayingCard[]) {
+  const subsets: PlayingCard[][] = [];
+  for (let mask = 1; mask < 1 << hand.length; mask += 1) {
+    subsets.push(hand.filter((_, index) => mask & (1 << index)));
+  }
+  return subsets;
+}
+
+/**
+ * What playing these cards gives up: the cards left in hand meet the next
+ * spy, so spend the low ones, and keep Aces (Double Agents) back.
+ */
+function spendCost(cards: PlayingCard[]) {
+  return cards.reduce(
+    (total, card) => total + (card.rank === "A" ? 8 : cardValue(card)) + 0.1,
+    0,
+  );
+}
+
+/** The spy deck comes in tiers: 5-7, then 8-10, then the Key Spies. */
+function spyTier(card: PlayingCard) {
+  return isFace(card) ? 2 : cardValue(card) >= 8 ? 1 : 0;
+}
+
+/** How well a hand meets a spy: recruit it (a Key Spy most), or counter it. */
+function handAnswer(hand: PlayingCard[], spy: PlayingCard) {
+  const subsets = handSubsets(hand);
+  if (subsets.some((cards) => canRecruit(cards, spy))) {
+    return isFace(spy) ? 4 : 1;
+  }
+  return selectedValue(hand) >= cardValue(spy) ? 0 : -2;
+}
+
+const LOOK_SAMPLES = 24;
+
+/**
+ * Of the ways to play this spy, the one that leaves the best hand for the
+ * next: each is tried against the same few guesses at the next spy (from
+ * the spies left in the next tier) and the cards to come (from your stock,
+ * whose cards you know but not their order).
+ */
+function bestPlay(
+  state: InfiltratorGameState,
+  spy: PlayingCard,
+  plays: PlayingCard[][],
+) {
+  if (plays.length <= 1) return plays[0] ?? null;
+  const random = seededRandom(
+    [
+      spy.id,
+      ...state.hand.map((card) => card.id),
+      state.drawDeck.length,
+    ].join(),
+  );
+  const spies = state.spyDeck.slice(0, -1);
+  const tier = Math.min(...spies.map(spyTier));
+  const nextSpies = spies.filter((card) => spyTier(card) === tier);
+  const samples = Array.from({ length: LOOK_SAMPLES }, () => ({
+    spy: nextSpies[Math.floor(random() * nextSpies.length)],
+    stock: shuffledWith(state.drawDeck, random),
+    discard: shuffledWith(state.drawDiscard, random),
+  }));
+
+  let best: { cards: PlayingCard[]; score: number } | null = null;
+  for (const cards of plays) {
+    const ids = new Set(cards.map((card) => card.id));
+    const kept = state.hand.filter((card) => !ids.has(card.id));
+    let score = -spendCost(cards) * 0.001;
+    for (const sample of samples) {
+      if (!sample.spy) break;
+      // The stock first, then the discard shuffled (the played cards in it).
+      const coming = [...sample.stock, ...cards, ...sample.discard];
+      const hand = [...kept, ...coming.slice(0, 5 - kept.length)];
+      score += handAnswer(hand, sample.spy);
+    }
+    if (!best || score > best.score) best = { cards, score };
+  }
+  return best?.cards ?? null;
+}
+
+/**
+ * The set worth retiring: low cards (2 to 4) thin the deck so the strong
+ * spies come round more often, as long as enough cards are left to fill a
+ * hand. Aces are Double Agents, and Key Spies are the score: never those.
+ */
+function retireSet(state: InfiltratorGameState) {
+  const deckSize =
+    state.hand.length + state.drawDeck.length + state.drawDiscard.length;
+  const ranks = ["2", "3", "4"].filter(
+    (rank) => state.hand.filter((card) => card.rank === rank).length >= 2,
+  );
+  for (const rank of ranks) {
+    const set = state.hand.filter((card) => card.rank === rank);
+    if (deckSize - set.length >= RETIRE_KEEP) return set;
+  }
+  return null;
+}
+
+const RETIRE_KEEP = 12;
+
+/** Where to take the Ace from: never one about to be drawn, if avoidable. */
+function assassinationSource(state: InfiltratorGameState) {
+  return (["drawDiscard", "hand", "drawDeck"] as AceSource[]).find((source) =>
+    state[source].some((card) => card.rank === "A"),
+  );
+}
+
+function findInfiltratorHint(state: InfiltratorGameState) {
+  if (state.ended) return null;
+  const spy = state.spyDeck.at(-1);
+
+  if (state.phase === "retire") {
+    if (!hasRetireSet(state.hand)) return null; // Moves on by itself.
+    const set = retireSet(state);
+    if (!set) return pressHint("actions", i18n.t("games:infiltrator.skip"));
+    return withNote(
+      makeHint("removeCards", set.map(cardTarget)),
+      i18n.t("games:infiltrator.hint.retire"),
+    );
+  }
+
+  if (state.phase === "assassinate") {
+    const source = assassinationSource(state);
+    if (!source) return null;
+    const names: Record<AceSource, string> = {
+      hand: i18n.t("games:infiltrator.sourceHand"),
+      drawDeck: i18n.t("cards:stock"),
+      drawDiscard: i18n.t("cards:discard"),
+    };
+    return pressHint("actions", names[source]);
+  }
+
+  if (!spy) return null;
+  const subsets = handSubsets(state.hand);
+  // Recruit when the hand can: the spy joins your deck (or your score).
+  // Else counter it, at the least cost; with no counter, an Ace must go.
+  const recruit = bestPlay(
+    state,
+    spy,
+    subsets.filter((cards) => canRecruit(cards, spy)),
+  );
+  const counter = recruit
+    ? null
+    : bestPlay(
+        state,
+        spy,
+        subsets.filter((cards) => isMinimalCounter(cards, spy)),
+      );
+  const cards = recruit ?? counter;
+  if (!cards) {
+    return withNote(
+      pressHint("actions", i18n.t("games:infiltrator.assassinate")),
+      i18n.t("games:infiltrator.hint.assassinate"),
+    );
+  }
+
+  // Tap the cards to play, and off any others picked.
+  const ids = new Set(cards.map((card) => card.id));
+  const picked = new Set(state.selectedCards.map((card) => card.id));
+  const taps = state.hand
+    .filter((card) => ids.has(card.id) !== picked.has(card.id))
+    .map(cardTarget);
+  const label = recruit
+    ? i18n.t("games:infiltrator.recruit")
+    : i18n.t("games:infiltrator.counter");
+  const hint = makeHint(
+    { key: "press", values: { label } },
+    ...taps,
+    zoneTarget("actions"),
+  );
+  if (recruit) {
+    return cards.some((card) => card.rank === "A" && card.suit === spy.suit) &&
+      cards.some((card) => card.suit !== spy.suit)
+      ? withNote(hint, i18n.t("games:infiltrator.hint.doubleAgent"))
+      : hint;
+  }
+  return withNote(
+    hint,
+    i18n.t(
+      isFace(spy)
+        ? "games:infiltrator.hint.counterKey"
+        : "games:infiltrator.hint.counter",
+    ),
+  );
+}
+
 export const infiltratorRules = {
+  findHint: findInfiltratorHint,
+  retireSet,
   cardValue,
   selectedValue,
   isMinimalCounter,
@@ -378,6 +578,16 @@ export default function Infiltrator() {
   const recruitValid = spy ? canRecruit(game.selectedCards, spy) : false;
   const retireValid = canRetire(game.selectedCards);
   const retireSetAvailable = hasRetireSet(game.hand);
+
+  // Picking cards keeps the hint up: it lights the next ones to pick.
+  useHint(() => findInfiltratorHint(game), {
+    game: [
+      game.phase,
+      game.spyDeck.length,
+      game.drawDeck.length,
+      game.hand.map((card) => card.id),
+    ].join("|"),
+  });
 
   function toggleCard(card: PlayingCard) {
     if (game.ended || game.phase === "assassinate") return;

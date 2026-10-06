@@ -174,7 +174,13 @@
     "tierCourtAlchemist": "Alchimista di corte",
     "tierMiracleWorker": "Operatore di miracoli",
     "wonWithTier": "{{score}} punti: {{tier}}!",
-    "lostShortOfTarget": "{{score}} punti. Te ne servono {{target}} per vincere."
+    "lostShortOfTarget": "{{score}} punti. Te ne servono {{target}} per vincere.",
+    "hint": {
+      "stop": "Fermati qui: un rischio di esplosione del {{risk}}% è troppo per quello che aggiunge un'altra carta",
+      "keepCoins": "Tieni le monete: carte migliori renderanno nei round che restano",
+      "keepPoints": "Tieni i punti: restano troppo pochi round perché le monete rendano",
+      "buy": "Compra le carte migliori che le tue monete permettono: due, di semi diversi"
+    }
   },
   "cityGrid": {
     "pileIsFull": "La pila è piena!",
@@ -369,7 +375,14 @@
     "missionComplete": "Missione compiuta: {{count}} spie chiave reclutate.",
     "missionFailed": "Missione fallita: {{count}} spie chiave reclutate, {{lost}} perse.",
     "noDoubleAgentsRemain": "Non restano doppiogiochisti. Missione fallita.",
-    "sourceHand": "Mano"
+    "sourceHand": "Mano",
+    "hint": {
+      "retire": "Ritira queste carte basse, così le tue carte migliori tornano più spesso",
+      "assassinate": "La tua mano non può fermare questa spia: sacrifica un doppiogiochista",
+      "doubleAgent": "L'Asso del seme della spia è un doppiogiochista: porta le tue altre carte al suo seme",
+      "counterKey": "Questa spia chiave non si può reclutare: contrastala con le carte che ti servono meno",
+      "counter": "Questa spia non si può reclutare: contrastala con le carte che ti servono meno"
+    }
   },
   "invaders": {
     "wave2": "Ondata 2",
@@ -633,7 +646,15 @@
     "guardianValue": "Guardiano: {{value}}",
     "aliceAwakened": "Alice si è svegliata con {{count}} punti vita.",
     "guardiansLost": "Tutti i guardiani speciali non Assi sono andati persi.",
-    "nightmaresOverwhelmed": "Gli incubi hanno sopraffatto Alice."
+    "nightmaresOverwhelmed": "Gli incubi hanno sopraffatto Alice.",
+    "hint": {
+      "eliminate": "Elimina questo incubo",
+      "defend": "Indebolisci l'attacco di questo incubo: in questo turno non si può eliminare",
+      "mold": "Plasma questo guardiano per aggiungerlo al tuo mazzo",
+      "exile": "Esilia questo incubo: costerebbe ad Alice più di 5 vite",
+      "deepBreath": "Niente vale la pena di essere assegnato: cambia la tua carta più debole con una nuova",
+      "remSleep": "Alice non sopravviverà a questo tavolo: usa il sonno REM per ricominciare da capo"
+    }
   },
   "spiderSolitaire": {
     "allEightKToA": "Tutte e otto le sequenze da K ad A per seme sono complete."

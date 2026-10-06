@@ -174,7 +174,13 @@
     "tierCourtAlchemist": "Alquimista da corte",
     "tierMiracleWorker": "Fazedor de milagres",
     "wonWithTier": "{{score}} pontos: {{tier}}!",
-    "lostShortOfTarget": "{{score}} pontos. Você precisa de {{target}} pontos para vencer."
+    "lostShortOfTarget": "{{score}} pontos. Você precisa de {{target}} pontos para vencer.",
+    "hint": {
+      "stop": "Pare aqui: {{risk}}% de risco de explosão é demais para o que outra carta acrescenta",
+      "keepCoins": "Fique com as moedas: cartas melhores vão render nas rodadas que restam",
+      "keepPoints": "Fique com os pontos: restam poucas rodadas para as moedas renderem",
+      "buy": "Compre as melhores cartas que suas moedas permitem: duas, de naipes diferentes"
+    }
   },
   "cityGrid": {
     "pileIsFull": "A pilha está cheia!",
@@ -369,7 +375,14 @@
     "missionComplete": "Missão cumprida: {{count}} espiões-chave recrutados.",
     "missionFailed": "Missão fracassada: {{count}} espiões-chave recrutados, {{lost}} perdidos.",
     "noDoubleAgentsRemain": "Não restam agentes duplos. Missão fracassada.",
-    "sourceHand": "Mão"
+    "sourceHand": "Mão",
+    "hint": {
+      "retire": "Aposente estas cartas baixas, para que suas melhores cartas voltem mais vezes",
+      "assassinate": "Sua mão não consegue deter este espião: sacrifique um agente duplo",
+      "doubleAgent": "O Ás do naipe do espião é um agente duplo: ele passa suas outras cartas para o naipe dele",
+      "counterKey": "Este espião-chave não pode ser recrutado: neutralize-o com as cartas de que você menos precisa",
+      "counter": "Este espião não pode ser recrutado: neutralize-o com as cartas de que você menos precisa"
+    }
   },
   "invaders": {
     "wave2": "Onda 2",
@@ -633,7 +646,15 @@
     "guardianValue": "Guardião: {{value}}",
     "aliceAwakened": "Alice acordou com {{count}} de vida.",
     "guardiansLost": "Todos os guardiões especiais que não são Ases foram perdidos.",
-    "nightmaresOverwhelmed": "Os pesadelos dominaram Alice."
+    "nightmaresOverwhelmed": "Os pesadelos dominaram Alice.",
+    "hint": {
+      "eliminate": "Elimine este pesadelo",
+      "defend": "Enfraqueça o ataque deste pesadelo: ele não pode ser eliminado neste turno",
+      "mold": "Molde este guardião para que ele entre no seu baralho",
+      "exile": "Exile este pesadelo: ele custaria a Alice mais de 5 de vida",
+      "deepBreath": "Não vale a pena atribuir nada: troque sua carta mais fraca por uma nova",
+      "remSleep": "Alice não vai sobreviver a esta mesa: use o sono REM para recomeçar"
+    }
   },
   "spiderSolitaire": {
     "allEightKToA": "As oito sequências de K a A por naipe estão completas."
