@@ -133,7 +133,12 @@
     "guildPts": "Pt gilda",
     "pass": "Passa",
     "trade": "Scambia",
-    "offer": "Offerta"
+    "offer": "Offerta",
+    "hint": {
+      "trade": "Vendi questi libri per ${{value}}",
+      "tradeGuild": "Vendi questi libri per ${{value}}: +{{count}} pt gilda",
+      "pass": "Nessun gruppo di libri fa questa offerta: passa"
+    }
   },
   "boilingOver": {
     "statusStart": "Tocca il tuo mazzo per iniziare la pozione.",
@@ -314,7 +319,11 @@
     "tierMaster": "Maestro vetraio",
     "tierCathedral": "Vetrata da cattedrale",
     "wonWithTier": "{{score}} punti: {{tier}}!",
-    "lostShortOfTarget": "{{score}} punti. Te ne servono {{target}} per vincere."
+    "lostShortOfTarget": "{{score}} punti. Te ne servono {{target}} per vincere.",
+    "hint": {
+      "cell": "Posa il vetro qui: +{{count}}",
+      "shards": "Nessun telaio può usarli: rompili in schegge"
+    }
   },
   "gremlin": {
     "helper": "Aiutante",
@@ -401,7 +410,12 @@
       "shield": "Scudo"
     },
     "roundsSurvived": "{{count}} round superati{{rating}}. Punteggio finale: {{score}}.",
-    "roundNumber": "Round {{round}}"
+    "roundNumber": "Round {{round}}",
+    "hint": {
+      "play": "Gioca la mano: {{hand}}",
+      "discard": "Scarta queste: pescando dovresti fare una mano migliore",
+      "double": "Raddoppia la prossima mano: è una mano forte"
+    }
   },
   "lycan": {
     "youBeatTheWolf": "Hai battuto il Lupo {{playerScore}}-{{wolfScore}}!",

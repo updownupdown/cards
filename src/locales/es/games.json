@@ -133,7 +133,12 @@
     "guildPts": "Pts gremio",
     "pass": "Pasar",
     "trade": "Intercambiar",
-    "offer": "Oferta"
+    "offer": "Oferta",
+    "hint": {
+      "trade": "Vende estos libros por ${{value}}",
+      "tradeGuild": "Vende estos libros por ${{value}}: +{{count}} pts gremio",
+      "pass": "Ningún grupo de libros suma esta oferta: pasa"
+    }
   },
   "boilingOver": {
     "statusStart": "Toca tu mazo para empezar la poción.",
@@ -314,7 +319,11 @@
     "tierMaster": "Maestro vidriero",
     "tierCathedral": "Vitral de catedral",
     "wonWithTier": "{{score}} puntos: ¡{{tier}}!",
-    "lostShortOfTarget": "{{score}} puntos. Necesitas {{target}} puntos para ganar."
+    "lostShortOfTarget": "{{score}} puntos. Necesitas {{target}} puntos para ganar.",
+    "hint": {
+      "cell": "Coloca el cristal aquí: +{{count}}",
+      "shards": "Ningún marco puede usarlos: rómpelos en esquirlas"
+    }
   },
   "gremlin": {
     "helper": "Ayudante",
@@ -401,7 +410,12 @@
       "shield": "Escudo"
     },
     "roundsSurvived": "{{count}} rondas superadas{{rating}}. Puntuación final: {{score}}.",
-    "roundNumber": "Ronda {{round}}"
+    "roundNumber": "Ronda {{round}}",
+    "hint": {
+      "play": "Juega tu {{hand}}",
+      "discard": "Descarta estas: robar debería darte una mano mejor",
+      "double": "Duplica tu próxima mano: es de las grandes"
+    }
   },
   "lycan": {
     "youBeatTheWolf": "¡Has vencido al Lobo {{playerScore}}-{{wolfScore}}!",

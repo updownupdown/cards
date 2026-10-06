@@ -133,7 +133,12 @@
     "guildPts": "Lonca p.",
     "pass": "Pas",
     "trade": "Takas",
-    "offer": "Teklif"
+    "offer": "Teklif",
+    "hint": {
+      "trade": "Bu kitapları ${{value}} karşılığında sat",
+      "tradeGuild": "Bu kitapları ${{value}} karşılığında sat: +{{count}} lonca p.",
+      "pass": "Hiçbir kitap bu teklifi tutmuyor: pas geç"
+    }
   },
   "boilingOver": {
     "statusStart": "İksiri kaynatmaya başlamak için destenize dokunun.",
@@ -314,7 +319,11 @@
     "tierMaster": "Usta Camcı",
     "tierCathedral": "Katedral Vitrayı",
     "wonWithTier": "{{score}} puan: {{tier}}!",
-    "lostShortOfTarget": "{{score}} puan. Kazanmak için {{target}} puan gerekiyor."
+    "lostShortOfTarget": "{{score}} puan. Kazanmak için {{target}} puan gerekiyor.",
+    "hint": {
+      "cell": "Camı buraya yerleştir: +{{count}}",
+      "shards": "Hiçbir çerçeve bunları alamıyor: kırıklara at"
+    }
   },
   "gremlin": {
     "helper": "Yardımcı",
@@ -401,7 +410,12 @@
       "shield": "Kalkan"
     },
     "roundsSurvived": "{{count}} tur dayanıldı{{rating}}. Son puan: {{score}}.",
-    "roundNumber": "{{round}}. tur"
+    "roundNumber": "{{round}}. tur",
+    "hint": {
+      "play": "Elini oyna: {{hand}}",
+      "discard": "Bunları ıskartaya at: yeni kartlar daha iyi bir el yapmalı",
+      "double": "Sıradaki elini ikiye katla: güçlü bir el"
+    }
   },
   "lycan": {
     "youBeatTheWolf": "Kurdu {{playerScore}}-{{wolfScore}} yendin!",

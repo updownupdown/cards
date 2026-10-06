@@ -133,7 +133,12 @@
     "guildPts": "Poin Serikat",
     "pass": "Lewati",
     "trade": "Jual",
-    "offer": "Tawaran"
+    "offer": "Tawaran",
+    "hint": {
+      "trade": "Jual buku-buku ini seharga ${{value}}",
+      "tradeGuild": "Jual buku-buku ini seharga ${{value}}: +{{count}} Poin Serikat",
+      "pass": "Tak ada buku yang pas dengan tawaran ini: lewati"
+    }
   },
   "boilingOver": {
     "statusStart": "Ketuk dek Anda untuk mulai meracik ramuan.",
@@ -314,7 +319,11 @@
     "tierMaster": "Ahli Kaca",
     "tierCathedral": "Jendela Katedral",
     "wonWithTier": "{{score}} poin: {{tier}}!",
-    "lostShortOfTarget": "{{score}} poin. Anda butuh {{target}} poin untuk menang."
+    "lostShortOfTarget": "{{score}} poin. Anda butuh {{target}} poin untuk menang.",
+    "hint": {
+      "cell": "Pasang kaca di sini: +{{count}}",
+      "shards": "Tak ada bingkai yang bisa memakainya: jadikan pecahan"
+    }
   },
   "gremlin": {
     "helper": "Pembantu",
@@ -401,7 +410,12 @@
       "shield": "Perisai"
     },
     "roundsSurvived": "Bertahan {{count}} ronde{{rating}}. Skor akhir: {{score}}.",
-    "roundNumber": "Ronde {{round}}"
+    "roundNumber": "Ronde {{round}}",
+    "hint": {
+      "play": "Mainkan {{hand}}",
+      "discard": "Buang kartu ini: kartu baru seharusnya membuat tangan lebih baik",
+      "double": "Gandakan tangan berikutnya: ini tangan besar"
+    }
   },
   "lycan": {
     "youBeatTheWolf": "Kamu mengalahkan Serigala {{playerScore}}-{{wolfScore}}!",

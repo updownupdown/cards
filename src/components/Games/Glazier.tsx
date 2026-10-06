@@ -14,6 +14,7 @@ import {
   flipToFace,
   shuffle,
   sortCardsBySuit,
+  SUITS,
   type CardSuit,
   type PlayingCard,
 } from "../Cards/card-utils";
@@ -24,6 +25,8 @@ import { useToast } from "../common/Toast";
 
 import { i18n } from "@/i18n";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, withNote, zoneTarget } from "@/hints/hint";
 
 // Azul-style drafting: 3 kilns of 4 panes plus 1 on the workbench each round
 // uses the 52-card deck in exactly four rounds.
@@ -341,7 +344,286 @@ function buildAutoSteps(state: GameState): AutoStep[] {
   return steps;
 }
 
+// —— Hints ——
+
+/**
+ * The draft as the hints see it: suits only, since a pane's rank never
+ * counts. Every card of a round is on the table, so the draft can be
+ * played out in full without peeking at the deck.
+ */
+type DraftPlan = {
+  kilns: CardSuit[][];
+  bench: CardSuit[];
+  frames: { suit: CardSuit | null; count: number }[];
+  shards: number;
+};
+
+type DraftMove = { source: Source; suit: CardSuit; target: number | "shards" };
+
+function draftPlan(state: GameState): DraftPlan {
+  return {
+    kilns: state.kilns.map((kiln) => kiln.map((card) => card.suit)),
+    bench: state.bench.map((card) => card.suit),
+    frames: state.frames.map((frame) => ({
+      suit: frame[0]?.suit ?? null,
+      count: frame.length,
+    })),
+    shards: state.shards.length,
+  };
+}
+
+function planMoves(
+  plan: DraftPlan,
+  canSet: (row: number, suit: CardSuit) => boolean,
+): DraftMove[] {
+  const sources: { source: Source; suits: CardSuit[] }[] = [
+    ...plan.kilns.map((suits, k) => ({ source: k as Source, suits })),
+    { source: "bench", suits: plan.bench },
+  ];
+  const moves: DraftMove[] = [];
+  for (const { source, suits } of sources) {
+    for (const suit of new Set(suits)) {
+      plan.frames.forEach((frame, row) => {
+        if (
+          frame.count < frameCapacity(row) &&
+          (frame.suit === null || frame.suit === suit) &&
+          canSet(row, suit)
+        ) {
+          moves.push({ source, suit, target: row });
+        }
+      });
+      moves.push({ source, suit, target: "shards" });
+    }
+  }
+  return moves;
+}
+
+function applyPlanMove(plan: DraftPlan, move: DraftMove): DraftPlan {
+  const from = move.source === "bench" ? plan.bench : plan.kilns[move.source];
+  const taken = from.filter((suit) => suit === move.suit).length;
+  const rest = from.filter((suit) => suit !== move.suit);
+  const next: DraftPlan = {
+    kilns:
+      move.source === "bench"
+        ? plan.kilns
+        : plan.kilns.map((kiln, k) => (k === move.source ? [] : kiln)),
+    bench: move.source === "bench" ? rest : [...plan.bench, ...rest],
+    frames: plan.frames,
+    shards: plan.shards,
+  };
+  if (move.target === "shards") {
+    next.shards += taken;
+    return next;
+  }
+  const row = move.target;
+  const frame = plan.frames[row];
+  const kept = Math.min(taken, frameCapacity(row) - frame.count);
+  next.frames = plan.frames.map((other, index) =>
+    index === row ? { suit: move.suit, count: frame.count + kept } : other,
+  );
+  next.shards += taken - kept;
+  return next;
+}
+
+/**
+ * How promising a window is beyond the points already scored: rows and
+ * columns on their way to a bonus, and cells no suit can fill any more
+ * (they spoil a row and a column for good). On the last round, the bonus.
+ */
+function windowOutlook(window: Window, lastRound: boolean) {
+  if (lastRound) return endBonus(window);
+  // The suits in each row and column, as bits.
+  const rowSuits = Array<number>(WINDOW_SIZE).fill(0);
+  const columnSuits = Array<number>(WINDOW_SIZE).fill(0);
+  const rowPanes = Array<number>(WINDOW_SIZE).fill(0);
+  const columnPanes = Array<number>(WINDOW_SIZE).fill(0);
+  window.forEach((cells, row) =>
+    cells.forEach((pane, col) => {
+      if (!pane) return;
+      const bit = 1 << SUITS.indexOf(pane.suit);
+      rowSuits[row] |= bit;
+      columnSuits[col] |= bit;
+      rowPanes[row] += 1;
+      columnPanes[col] += 1;
+    }),
+  );
+  const allSuits = (1 << SUITS.length) - 1;
+  let outlook = 0;
+  for (let i = 0; i < WINDOW_SIZE; i++) {
+    outlook += ROW_BONUS * (rowPanes[i] / WINDOW_SIZE) ** 2;
+    outlook += COLUMN_BONUS * (columnPanes[i] / WINDOW_SIZE) ** 2;
+    for (let col = 0; col < WINDOW_SIZE; col++) {
+      const blocked = (rowSuits[i] | columnSuits[col]) === allSuits;
+      if (!window[i][col] && blocked) outlook -= 2;
+    }
+  }
+  return outlook;
+}
+
+/** A window with a pane (only its suit matters here) set at (row, col). */
+function withPane(window: Window, row: number, col: number, suit: CardSuit) {
+  return window.map((cells, r) =>
+    r === row
+      ? cells.map((pane, c) =>
+          c === col
+            ? ({ suit, rank: "A", id: "", faceUp: true } as const)
+            : pane,
+        )
+      : cells,
+  );
+}
+
+/** The best cell for a pane of this suit in a row: points and outlook. */
+function bestCell(
+  window: Window,
+  row: number,
+  suit: CardSuit,
+  lastRound: boolean,
+) {
+  let best: { col: number; points: number; value: number } | null = null;
+  for (const col of legalCells(window, row, suit)) {
+    const next = withPane(window, row, col, suit);
+    const points = paneScore(next, row, col);
+    const value = points + windowOutlook(next, lastRound);
+    if (!best || value > best.value) best = { col, points, value };
+  }
+  return best;
+}
+
+/** What the frames are worth, and the panes they will lose as shards. */
+type FramesWorth = { value: number; lost: number };
+
+/**
+ * What the frames are worth once the round is over: the panes the full
+ * ones set (in row order, as the game sets them) and the window they leave,
+ * and the frames still filling, which pay in a later round.
+ */
+function framesWorth(frames: DraftPlan["frames"], state: GameState) {
+  const lastRound = state.round >= ROUNDS;
+  let window = state.window;
+  let value = 0;
+  let lost = 0;
+  frames.forEach((frame, row) => {
+    if (!frame.suit) return;
+    const cell = bestCell(window, row, frame.suit, lastRound);
+    if (!cell) {
+      lost += frame.count;
+      return;
+    }
+    if (frame.count === frameCapacity(row)) {
+      window = withPane(window, row, cell.col, frame.suit);
+      value += cell.points;
+    } else if (!lastRound) {
+      value += (2 * frame.count) / frameCapacity(row);
+    }
+  });
+  return { value: value + windowOutlook(window, lastRound), lost };
+}
+
+/**
+ * The draft move to make: each move is played out to the end of the round,
+ * every later pick the one that leaves the best position (its frames, less
+ * its shards).
+ */
+function bestDraftMove(state: GameState) {
+  // Many draft positions share their frames: work each out once, and
+  // where each suit may still be set, once.
+  const fits = new Map<string, boolean>();
+  const canSet = (row: number, suit: CardSuit) => {
+    const key = `${row}-${suit}`;
+    let fit = fits.get(key);
+    if (fit === undefined) {
+      fit = legalCells(state.window, row, suit).length > 0;
+      fits.set(key, fit);
+    }
+    return fit;
+  };
+  const worths = new Map<string, FramesWorth>();
+  const planValue = (plan: DraftPlan) => {
+    const key = plan.frames
+      .map((frame) => `${frame.suit}${frame.count}`)
+      .join();
+    let worth = worths.get(key);
+    if (!worth) {
+      worth = framesWorth(plan.frames, state);
+      worths.set(key, worth);
+    }
+    const shards = Math.min(plan.shards + worth.lost, SHARD_PENALTIES.length);
+    return worth.value - shardPenalty(shards);
+  };
+  const root = draftPlan(state);
+  // Lines of play meet again: each position is played out once.
+  const ends = new Map<string, number>();
+  const rollout = (plan: DraftPlan): number => {
+    const key = [
+      ...plan.kilns.map((kiln) => kiln.join()),
+      [...plan.bench].sort().join(),
+      ...plan.frames.map((frame) => `${frame.suit}${frame.count}`),
+      plan.shards,
+    ].join("/");
+    const known = ends.get(key);
+    if (known !== undefined) return known;
+    let best: { plan: DraftPlan; value: number } | null = null;
+    for (const move of planMoves(plan, canSet)) {
+      const next = applyPlanMove(plan, move);
+      const value = planValue(next);
+      if (!best || value > best.value) best = { plan: next, value };
+    }
+    const end = best ? rollout(best.plan) : planValue(plan);
+    ends.set(key, end);
+    return end;
+  };
+  let best: { move: DraftMove; value: number } | null = null;
+  for (const move of planMoves(root, canSet)) {
+    const value = rollout(applyPlanMove(root, move));
+    if (!best || value > best.value + 1e-9) best = { move, value };
+  }
+  return best?.move ?? null;
+}
+
+function findGlazierHint(state: GameState, selection: Selection | null) {
+  if (state.ended || state.round === 0) return null;
+
+  const row = pendingFrame(state);
+  if (row !== -1) {
+    const frame = state.frames[row];
+    const cell = bestCell(
+      state.window,
+      row,
+      frame[0].suit,
+      state.round >= ROUNDS,
+    );
+    if (!cell) return null;
+    return withNote(
+      makeHint(
+        "moveCard",
+        cardTarget(frame[frame.length - 1]),
+        zoneTarget(`cell-${row}-${cell.col}`),
+      ),
+      i18n.t("games:glazier.hint.cell", { count: cell.points }),
+    );
+  }
+  if (isDraftOver(state)) return null;
+
+  const move = bestDraftMove(state);
+  if (!move) return null;
+  const group = groupFrom(state, move.source, move.suit);
+  const chosen =
+    selection?.source === move.source && selection.suit === move.suit;
+  const hint = makeHint(
+    group.length > 1 ? "moveCards" : "moveCard",
+    chosen ? [] : cardTarget(group[0]),
+    zoneTarget(
+      move.target === "shards" ? "shards" : `frameSlot-${move.target}`,
+    ),
+  );
+  return move.target === "shards"
+    ? withNote(hint, i18n.t("games:glazier.hint.shards"))
+    : hint;
+}
+
 export const glazierRules = {
+  findHint: findGlazierHint,
   emptyWindow,
   legalCells,
   canFrameTake,
@@ -483,6 +765,11 @@ export default function Glazier() {
   );
 
   const inputLocked = busy || game.ended || game.round === 0;
+
+  useHint(() => findGlazierHint(game, activeSelection), {
+    game,
+    enabled: !busy,
+  });
 
   // Round end: run whatever needs no decision (also resumes a saved game
   // that was closed part-way through).

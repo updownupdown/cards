@@ -133,7 +133,12 @@
     "guildPts": "Pts guilde",
     "pass": "Passer",
     "trade": "Échanger",
-    "offer": "Offre"
+    "offer": "Offre",
+    "hint": {
+      "trade": "Vendez ces livres pour ${{value}}",
+      "tradeGuild": "Vendez ces livres pour ${{value}} : +{{count}} pts guilde",
+      "pass": "Aucun choix de livres ne fait cette offre : passez"
+    }
   },
   "boilingOver": {
     "statusStart": "Touchez votre paquet pour commencer la potion.",
@@ -314,7 +319,11 @@
     "tierMaster": "Maître verrier",
     "tierCathedral": "Vitrail de cathédrale",
     "wonWithTier": "{{score}} points : {{tier}} !",
-    "lostShortOfTarget": "{{score}} points. Il vous faut {{target}} points pour gagner."
+    "lostShortOfTarget": "{{score}} points. Il vous faut {{target}} points pour gagner.",
+    "hint": {
+      "cell": "Posez la vitre ici : +{{count}}",
+      "shards": "Aucun cadre ne peut les prendre : brisez-les en éclats"
+    }
   },
   "gremlin": {
     "helper": "Assistant",
@@ -401,7 +410,12 @@
       "shield": "Bouclier"
     },
     "roundsSurvived": "{{count}} manches survécues{{rating}}. Score final : {{score}}.",
-    "roundNumber": "Manche {{round}}"
+    "roundNumber": "Manche {{round}}",
+    "hint": {
+      "play": "Jouez votre {{hand}}",
+      "discard": "Défaussez-les : la pioche devrait améliorer votre main",
+      "double": "Doublez votre prochaine main : elle vaut gros"
+    }
   },
   "lycan": {
     "youBeatTheWolf": "Vous battez le Loup {{playerScore}} à {{wolfScore}} !",
