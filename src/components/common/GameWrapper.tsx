@@ -153,13 +153,10 @@ export const GameWrapper = ({
   const { settings: globalSettings, isLoading: isGlobalSettingsLoading } =
     useGlobalSettings();
   const spacing = (value: number) => value * ui.scale;
-  const [isDevWin, setIsDevWin] = useState(false);
-  const displayedOutcome = isDevWin ? "won" : outcome;
-  const ended = displayedOutcome !== "playing";
-  const won = displayedOutcome === "won";
+  const ended = outcome !== "playing";
+  const won = outcome === "won";
   const canUndoLoss = outcome === "lost" && canUndo && !!handleUndo;
   const handleReset = () => {
-    setIsDevWin(false);
     reset();
   };
 
@@ -187,7 +184,6 @@ export const GameWrapper = ({
       if (applied) requestMercySkipVisit();
     }
   });
-  const onHeaderInstantWin = useStableCallback(() => setIsDevWin(true));
   const onHeaderRules = useStableCallback(() => setShowRulesModal(true));
   const hintButtonShown = useHintButtonShown();
   const hasHints = useHasHintFinder();
@@ -419,7 +415,7 @@ export const GameWrapper = ({
   });
 
   // Record stats
-  const resultStateRef = useRef({ pathname, outcome: displayedOutcome });
+  const resultStateRef = useRef({ pathname, outcome });
   const attemptedPathRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -437,10 +433,10 @@ export const GameWrapper = ({
     const didEnd =
       previous.pathname === pathname &&
       previous.outcome === "playing" &&
-      displayedOutcome !== "playing";
+      outcome !== "playing";
 
-    resultStateRef.current = { pathname, outcome: displayedOutcome };
-    if (displayedOutcome === "playing") {
+    resultStateRef.current = { pathname, outcome };
+    if (outcome === "playing") {
       setCampaignWinResult(null);
       setWinTimes(null);
     }
@@ -450,31 +446,29 @@ export const GameWrapper = ({
       };
     }
 
-    if (displayedOutcome === "won") haptics.win();
-    addGameBreadcrumb(displayedOutcome === "won" ? "win" : "loss");
+    if (outcome === "won") haptics.win();
+    addGameBreadcrumb(outcome === "won" ? "win" : "loss");
 
     const sessionId = getActiveGameSessionId(pathname);
-    // Only a real win records its time; the dev instant-win button still
-    // shows it, so the box can be checked.
     const playTimeMs =
-      displayedOutcome === "won" ? getSessionPlayTimeMs(pathname) : null;
+      outcome === "won" ? getSessionPlayTimeMs(pathname) : null;
     if (playTimeMs !== null && playTimeMs > 0) showWinTime(playTimeMs);
     const winTimeMs = outcome === "won" ? playTimeMs : null;
     recordResult(
       pathname,
-      displayedOutcome === "won",
+      outcome === "won",
       score,
       sessionId,
       winTimeMs,
     )
       .then(() => {
-        if (displayedOutcome === "won") void maybeRequestStoreReview();
+        if (outcome === "won") void maybeRequestStoreReview();
       })
       .catch(() => {});
-    if (displayedOutcome === "won") {
+    if (outcome === "won") {
       recordDailyWin(pathname).catch(() => {});
     }
-    if (isCampaignMode && displayedOutcome === "won") {
+    if (isCampaignMode && outcome === "won") {
       recordCampaignWin(pathname, sessionId)
         .then((result) => {
           if (
@@ -491,7 +485,7 @@ export const GameWrapper = ({
     return () => {
       active = false;
     };
-  }, [displayedOutcome, isCampaignMode, pathname, score]);
+  }, [outcome, isCampaignMode, pathname, score]);
 
   if (!gameInfo) return null;
 
@@ -660,7 +654,6 @@ export const GameWrapper = ({
             ended || !canUndo || handleUndo === undefined || autoCompleting
           }
           onHome={onHeaderHome}
-          onInstantWin={onHeaderInstantWin}
           onRules={onHeaderRules}
           showHint={hintButtonShown}
           hintDisabled={!hasHints || ended || autoCompleting}
