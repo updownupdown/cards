@@ -8,7 +8,7 @@ import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useStateManager } from "@/hooks/useStateManager";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { delay } from "@/utils/utils";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
@@ -167,6 +167,8 @@ const gameStateInitial = createInitialState();
 
 export default function TowerOfHanoi() {
   const { width: windowWidth, height: windowHeight } = useViewportDimensions();
+  // The pile whose top card was picked by a tap, to be tapped where it goes.
+  const [selected, setSelected] = useState<number | null>(null);
   const dropHitAreasRef = useRef<DropHitArea<DropTarget>[]>([]);
 
   const {
@@ -181,6 +183,7 @@ export default function TowerOfHanoi() {
   } = useStateManager<GameState>({
     gameStateInitial,
     resetNonGameStates: () => {
+      setSelected(null);
       clearDragGhost();
     },
     resetAndSetup: async () => {
@@ -248,38 +251,52 @@ export default function TowerOfHanoi() {
     updateBoardOffset,
     makeDragHandlers,
   } = useDragDrop<MoveSource, DropTarget>({
-    canDropOnTarget: (source, target) => {
-      if (source.pileIndex === target.pileIndex) return false;
-
-      const moving = game.piles[source.pileIndex].at(-1);
-      const destination = game.piles[target.pileIndex].at(-1);
-      return !!moving && canPlaceOnPile(moving, destination);
-    },
-    onSuccessfulDrop: (source, target) => {
-      saveUndoState(structuredClone(game));
-      setGame((draft) => {
-        const moving = draft.piles[source.pileIndex].at(-1);
-        const destination = draft.piles[target.pileIndex].at(-1);
-        if (
-          !moving ||
-          source.pileIndex === target.pileIndex ||
-          !canPlaceOnPile(moving, destination)
-        ) {
-          return;
-        }
-
-        draft.piles[source.pileIndex].pop();
-        draft.piles[target.pileIndex].push(moving);
-        draft.moves = (draft.moves ?? 0) + 1;
-      });
-    },
+    canDropOnTarget: (source, target) => canMove(source, target),
+    onSuccessfulDrop: (source, target) => moveCard(source, target),
     getDroppedCardIds: (source) => {
       const card = game.piles[source.pileIndex].at(-1);
       return card ? [card.id] : [];
     },
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
+    getTapHandler: (source) => () => onPilePress(source.pileIndex),
   });
+
+  function canMove(source: MoveSource, target: DropTarget) {
+    if (source.pileIndex === target.pileIndex) return false;
+    const moving = game.piles[source.pileIndex].at(-1);
+    const destination = game.piles[target.pileIndex].at(-1);
+    return !!moving && canPlaceOnPile(moving, destination);
+  }
+
+  function moveCard(source: MoveSource, target: DropTarget) {
+    setSelected(null);
+    if (!canMove(source, target)) return;
+    saveUndoState(structuredClone(game));
+    setGame((draft) => {
+      const moving = draft.piles[source.pileIndex].pop();
+      if (!moving) return;
+      draft.piles[target.pileIndex].push(moving);
+      draft.moves = (draft.moves ?? 0) + 1;
+    });
+  }
+
+  /**
+   * A tap on a pile (its top card or the empty spot): picks its top card, or
+   * moves the picked card here. Tapping the picked card again, or a pile it
+   * can't go on, drops the selection.
+   */
+  function onPilePress(pileIndex: number) {
+    if (dragGhost || isSettingUp) {
+      setSelected(null);
+      return;
+    }
+    if (selected === null) {
+      if (game.piles[pileIndex].length > 0) setSelected(pileIndex);
+      return;
+    }
+    moveCard({ pileIndex: selected }, { pileIndex });
+  }
 
   const cardMapper = (
     mappedCard: MappedCard,
@@ -289,11 +306,15 @@ export default function TowerOfHanoi() {
       !!dragGhost &&
       mappedCard.topOfZone &&
       hoverTarget?.pileIndex === mappedCard.pileIndex;
+    const isPicked =
+      mappedCard.zoneName === "pile" &&
+      mappedCard.topOfZone &&
+      selected === mappedCard.pileIndex;
 
     return {
       isVisible: !isDragged,
-      isSelected: isHoverTarget,
-      selectColor: isHoverTarget ? "green" : "none",
+      isSelected: isHoverTarget || isPicked,
+      selectColor: isHoverTarget ? "green" : isPicked ? "blue" : "none",
       animDuration:
         justDroppedCardIds.current?.has(mappedCard.card.id) === true
           ? 0
@@ -304,7 +325,12 @@ export default function TowerOfHanoi() {
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
     const isHoverTarget =
       !!dragGhost && hoverTarget?.pileIndex === zone.pileIndex;
+    const pileIndex = zone.pileIndex;
     return {
+      onPress:
+        zone.name === "pile" && pileIndex !== undefined
+          ? () => onPilePress(pileIndex)
+          : undefined,
       isDisabled: !!dragGhost,
       isSelected: isHoverTarget,
       selectColor: isHoverTarget ? "green" : "none",
@@ -409,6 +435,7 @@ export default function TowerOfHanoi() {
     const rect = getSourceRect(source);
     if (!card || !rect) return;
 
+    setSelected(null);
     startDrag(source, [card], { x: rect.x, y: rect.y });
   }
 

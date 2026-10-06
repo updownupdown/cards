@@ -9,7 +9,12 @@ import { isGameEnabled } from "@/data/games-data";
 import { GAME_DEFINITIONS } from "@/data/games-registry";
 import * as utils from "@/utils/utils";
 
-const betaGame = GAME_DEFINITIONS.find((game) => game.enabledOnLocalOnly)!;
+// A real beta game if there is one; when none is in beta, any game marked
+// as one does.
+const betaGame = GAME_DEFINITIONS.find((game) => game.enabledOnLocalOnly) ?? {
+  ...GAME_DEFINITIONS[0],
+  enabledOnLocalOnly: true,
+};
 
 afterEach(async () => {
   await saveBetaGames(false);

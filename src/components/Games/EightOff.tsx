@@ -70,11 +70,12 @@ type ReserveCellBoardProps = {
   cellsAcceptCards?: boolean;
 };
 
-type Selection = { zone: "free"; slotIndex: number } | null;
-
 type MoveSource =
   | { zone: "cascade"; pileIndex: number; startIndex: number }
   | { zone: "free"; slotIndex: number };
+
+/** A card (or run) picked by tapping, to be tapped where it should go. */
+type Selection = MoveSource | null;
 
 type DropTarget =
   | { zone: "cascade"; pileIndex: number }
@@ -514,9 +515,13 @@ export function ReserveCellBoard({
         mappedCard.topOfZone &&
         hoverTarget?.zone === "cascade" &&
         hoverTarget.pileIndex === pileIndex;
+      const isSelected =
+        selected?.zone === "cascade" &&
+        selected.pileIndex === pileIndex &&
+        mappedCard.cardIndex >= selected.startIndex;
       return {
-        selectColor: isHoverTargetTop ? "green" : "none",
-        isSelected: isHoverTargetTop,
+        selectColor: isHoverTargetTop ? "green" : isSelected ? "blue" : "none",
+        isSelected: isSelected || isHoverTargetTop,
         isVisible: !isBeingDragged,
         animDuration: animDuration,
       };
@@ -878,15 +883,20 @@ export function ReserveCellBoard({
     return createRect(origin.x, origin.y, cardWidth, cardHeight);
   }
 
-  function startGhostDrag(source: MoveSource) {
+  /** Can these cards be picked up together (dragged, or selected by a tap)? */
+  function canLift(source: MoveSource) {
     const cards = getDraggedCards(source, game);
-    if (
-      cards.length === 0 ||
-      cards.length > getMaxMovableStackSize(game) ||
-      (source.zone === "cascade" && !isValidCascadeStack(cards))
-    ) {
-      return;
-    }
+    return (
+      cards.length > 0 &&
+      cards.length <= getMaxMovableStackSize(game) &&
+      (source.zone !== "cascade" || isValidCascadeStack(cards))
+    );
+  }
+
+  function startGhostDrag(source: MoveSource) {
+    if (!canLift(source)) return;
+    setSelected(null);
+    const cards = getDraggedCards(source, game);
     const origin = getSourceOrigin(source);
     if (!origin) return;
     startDrag(source, cards, origin);
@@ -898,9 +908,24 @@ export function ReserveCellBoard({
 
   // ── Tap handlers ─────────────────────────────────────────────────────────────
 
-  function onCascadePress(pileIndex: number, source?: MoveSource) {
+  /**
+   * A tap on a cascade: on one of its cards (`source`, the run from that card
+   * down) or on the pile itself. With nothing selected it selects the run;
+   * with a selection it moves it here (or deselects, if it can't go here).
+   * A double tap on a top card sends it to a foundation.
+   */
+  function onCascadePress(
+    pileIndex: number,
+    source?: Extract<MoveSource, { zone: "cascade" }>,
+  ) {
+    if (dragGhost) {
+      setSelected(null);
+      return;
+    }
     const now = Date.now();
-    const tapKey = `cascade-${pileIndex}`;
+    const tapKey = source
+      ? `cascade-${pileIndex}-${source.startIndex}`
+      : `cascade-${pileIndex}`;
 
     if (lastTap?.key === tapKey && now - lastTap.at < DOUBLE_TAP_MS) {
       setLastTap(null);
@@ -919,6 +944,7 @@ export function ReserveCellBoard({
     setLastTap({ key: tapKey, at: now });
 
     if (!selected) {
+      if (source && canLift(source)) setSelected(source);
       return;
     }
 
@@ -931,6 +957,10 @@ export function ReserveCellBoard({
   }
 
   function onFreeCellPress(slotIndex: number) {
+    if (dragGhost) {
+      setSelected(null);
+      return;
+    }
     const now = Date.now();
     const tapKey = `free-${slotIndex}`;
 
@@ -962,7 +992,10 @@ export function ReserveCellBoard({
   }
 
   function onFoundationPress(pileIndex: number) {
-    if (!selected) return;
+    if (!selected || dragGhost) {
+      setSelected(null);
+      return;
+    }
 
     if (!canDropOnTarget(selected, { zone: "foundation", pileIndex })) {
       setSelected(null);

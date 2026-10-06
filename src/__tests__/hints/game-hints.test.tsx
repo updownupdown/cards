@@ -28,8 +28,8 @@ import { act } from "react-test-renderer";
 // cards and zones on the board, doing what it shows must change the game,
 // and following hints must never go round in circles. A hint is played the
 // way a player would: tap the cards it lights, then the places, until
-// something moves (or, in drag-and-drop games, drop the card where the hint
-// points).
+// something moves. Drag-and-drop games too: hint auto-play taps, so their
+// hints must play by taps alone (see followHint).
 
 const STEPS = Number(process.env.HINT_STEPS ?? 40);
 
@@ -186,13 +186,28 @@ async function settleMove() {
   }
 }
 
-/** Does what the hint shows; returns whether the board changed. */
+/**
+ * Hint auto-play taps a hint's targets, so drag-and-drop games must play
+ * every hint by taps too. HINT_ALLOW_DROP=1 lets a hint that taps can't play
+ * fall back to a drag (to see what else fails while fixing one).
+ */
+const ALLOW_DROP = process.env.HINT_ALLOW_DROP === "1";
+
+/**
+ * Does what the hint shows, by tapping its targets (and, if allowed, by a
+ * drag when taps do nothing); returns whether the board changed.
+ */
 async function followHint(hint: Hint) {
   const before = boardSnapshot();
+  const tapped = await tapHint(hint, before);
+  if (tapped || !ALLOW_DROP) return tapped;
   if (await dropHint(hint)) {
     await settleMove();
-    return boardSnapshot() !== before;
   }
+  return boardSnapshot() !== before;
+}
+
+async function tapHint(hint: Hint, before: string) {
   for (const step of hint.steps) {
     for (const target of step) {
       await tapTarget(target, hint);

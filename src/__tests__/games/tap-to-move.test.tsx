@@ -26,6 +26,8 @@ import EightOff from "@/components/Games/EightOff";
 import FortyThieves from "@/components/Games/FortyThieves";
 import FreeCell from "@/components/Games/FreeCell";
 import Klondike from "@/components/Games/Klondike";
+import Stalactites from "@/components/Games/Stalactites";
+import TowerOfHanoi from "@/components/Games/TowerOfHanoi";
 import Yukon from "@/components/Games/Yukon";
 
 // Drag-and-drop games also play by tapping: tap a card to select it, then tap
@@ -404,5 +406,243 @@ describe("stock-and-tableau games (Forty Thieves: Josephine)", () => {
     await tapZone((entry) => entry.id === "foundation-0");
 
     expect(zoneCardIds("foundation-0")).toContain(two.id);
+  });
+});
+
+describe("FreeCell taps", () => {
+  function freecell(
+    cascades: PlayingCard[][],
+    {
+      freeCells = [null, null, null, null] as (PlayingCard | null)[],
+      foundations = emptyPiles(4),
+    } = {},
+  ) {
+    const piles = emptyPiles(8);
+    cascades.forEach((pile, index) => (piles[index] = pile));
+    // An unplayable card keeps auto-complete from finishing the game.
+    piles[7] = [card("K", "hearts"), ...piles[7]];
+    return renderVariant("/freecell", "freecell", FreeCell, {
+      cascades: piles,
+      freeCells,
+      foundations,
+    });
+  }
+  const cascade = (pileIndex: number, startIndex: number) => ({
+    zone: "cascade",
+    pileIndex,
+    startIndex,
+  });
+
+  test("a cascade card taps onto another cascade", async () => {
+    const seven = card("7", "hearts");
+    await freecell([[card("2", "clubs"), seven], [card("8", "spades")]]);
+
+    await tapSource(cascade(0, 1));
+    expect(selectedCardIds()).toEqual([seven.id]);
+
+    await tapSource(cascade(1, 0));
+    expect(zoneCardIds("cascade-1").at(-1)).toBe(seven.id);
+    expect(zoneCardIds("cascade-0")).not.toContain(seven.id);
+    expect(selectedCardIds()).toEqual([]);
+  });
+
+  test("tapping into a run selects it, and the run moves", async () => {
+    const run = [card("8", "hearts"), card("7", "clubs")];
+    await freecell([[card("2", "clubs"), ...run], [card("9", "spades")]]);
+
+    await tapSource(cascade(0, 1));
+    expect(selectedCardIds().sort()).toEqual(ids(run).sort());
+
+    await tapSource(cascade(1, 0));
+    expect(zoneCardIds("cascade-1").slice(1)).toEqual(ids(run));
+  });
+
+  test("a card under cards out of sequence is not selected", async () => {
+    await freecell([
+      [card("9", "spades"), card("5", "hearts"), card("2", "clubs")],
+    ]);
+
+    await tapSource(cascade(0, 1));
+    expect(selectedCardIds()).toEqual([]);
+  });
+
+  test("a cascade card taps into a free cell, and back out", async () => {
+    const five = card("5", "hearts");
+    await freecell([[card("2", "clubs"), five], [card("6", "spades")]]);
+
+    await tapSource(cascade(0, 1));
+    await tapZone((entry) => entry.id === "free-2");
+    expect(zoneCardIds("free-2")).toEqual([five.id]);
+    expect(selectedCardIds()).toEqual([]);
+
+    await tapSource({ zone: "free", slotIndex: 2 });
+    expect(selectedCardIds()).toEqual([five.id]);
+    await tapSource(cascade(1, 0));
+    expect(zoneCardIds("cascade-1").at(-1)).toBe(five.id);
+    expect(zoneCardIds("free-2")).toEqual([]);
+  });
+
+  test("a card taps into an empty cascade", async () => {
+    const five = card("5", "hearts");
+    await freecell([[card("2", "clubs"), five]]);
+
+    await tapSource(cascade(0, 1));
+    await tapZone((entry) => entry.id === "cascade-3");
+    expect(zoneCardIds("cascade-3")).toEqual([five.id]);
+  });
+
+  test("a cascade card taps onto a foundation", async () => {
+    const two = card("2", "spades");
+    await freecell([[card("9", "hearts"), two]], {
+      foundations: [[card("A", "spades")], [], [], []],
+    });
+
+    await tapSource(cascade(0, 1));
+    await tapZone((entry) => entry.id === "foundation-0");
+    expect(zoneCardIds("foundation-0")).toContain(two.id);
+  });
+
+  test("tapping the selection again, or a place it can't go, deselects", async () => {
+    const seven = card("7", "hearts");
+    await freecell([[card("2", "clubs"), seven], [card("Q", "spades")]]);
+
+    await tapSource(cascade(0, 1));
+    await tapSource(cascade(0, 1));
+    expect(selectedCardIds()).toEqual([]);
+
+    await tapSource(cascade(0, 1));
+    await tapSource(cascade(1, 0));
+    expect(selectedCardIds()).toEqual([]);
+    expect(zoneCardIds("cascade-0").at(-1)).toBe(seven.id);
+
+    await tapSource(cascade(0, 1));
+    await tapZone((entry) => entry.id === "foundation-0");
+    expect(selectedCardIds()).toEqual([]);
+    expect(zoneCardIds("foundation-0")).toEqual([]);
+  });
+
+  test("a double tap sends a top card to its foundation", async () => {
+    const two = card("2", "spades");
+    await freecell([[card("9", "hearts"), two]], {
+      foundations: [[card("A", "spades")], [], [], []],
+    });
+
+    await tapSource(cascade(0, 1), { settle: false });
+    await tapSource(cascade(0, 1));
+    expect(zoneCardIds("foundation-0")).toContain(two.id);
+  });
+});
+
+describe("Tower of Hanoi taps", () => {
+  test("a top card taps onto another pile; a bad target deselects", async () => {
+    const [two, five, nine] = [
+      card("2", "clubs"),
+      card("5", "clubs"),
+      card("9", "clubs"),
+    ];
+    await renderGame("/tower-of-hanoi", TowerOfHanoi, {
+      deal: [],
+      piles: [[nine, two], [five], []],
+      moves: 0,
+    });
+
+    await tapSource({ pileIndex: 0 });
+    expect(selectedCardIds()).toEqual([two.id]);
+    await tapSource({ pileIndex: 1 });
+    expect(zoneCardIds("pile-1")).toEqual([five.id, two.id]);
+    expect(selectedCardIds()).toEqual([]);
+
+    // Nine can't go on two: the selection drops, nothing moves.
+    await tapSource({ pileIndex: 0 });
+    await tapSource({ pileIndex: 1 });
+    expect(selectedCardIds()).toEqual([]);
+    expect(zoneCardIds("pile-0")).toEqual([nine.id]);
+
+    // An empty pile takes any card.
+    await tapSource({ pileIndex: 0 });
+    await tapZone((entry) => entry.id === "pile-2");
+    expect(zoneCardIds("pile-2")).toEqual([nine.id]);
+  });
+});
+
+describe("Stalactites taps", () => {
+  function stalactites(state: {
+    tableau: PlayingCard[][];
+    foundations: PlayingCard[][];
+    cells?: PlayingCard[][];
+    step: 1 | 2 | null;
+  }) {
+    const tableau = emptyPiles(8);
+    state.tableau.forEach((pile, index) => (tableau[index] = pile));
+    return renderGame("/stalactites", Stalactites, {
+      deck: [],
+      tableau,
+      foundations: state.foundations,
+      cells: state.cells ?? emptyPiles(2),
+      step: state.step,
+      ended: false,
+      won: false,
+    });
+  }
+
+  test("a card taps onto the foundation picked, not just the first", async () => {
+    const six = card("6", "hearts");
+    await stalactites({
+      tableau: [[card("K", "clubs"), six], [card("Q", "clubs")]],
+      foundations: [
+        [card("5", "clubs")],
+        [card("5", "spades")],
+        [card("J", "spades")],
+        [card("J", "hearts")],
+      ],
+      step: 1,
+    });
+
+    await tapSource({ zone: "tableau", pile: 0 });
+    expect(selectedCardIds()).toEqual([six.id]);
+    await tapZone((entry) => entry.id === "foundation-1");
+    expect(zoneCardIds("foundation-1").at(-1)).toBe(six.id);
+    expect(selectedCardIds()).toEqual([]);
+  });
+
+  test("a card taps into a cell; a bad target deselects", async () => {
+    const king = card("K", "clubs");
+    await stalactites({
+      tableau: [[card("2", "clubs"), king], [card("Q", "clubs")]],
+      foundations: [
+        [card("5", "clubs")],
+        [card("5", "spades")],
+        [card("J", "spades")],
+        [card("J", "hearts")],
+      ],
+      step: 1,
+    });
+
+    await tapSource({ zone: "tableau", pile: 0 });
+    await tapZone((entry) => entry.id === "foundation-0");
+    expect(selectedCardIds()).toEqual([]);
+    expect(zoneCardIds("tableau-0").at(-1)).toBe(king.id);
+
+    await tapSource({ zone: "tableau", pile: 0 });
+    await tapZone((entry) => entry.id === "cell-1");
+    expect(zoneCardIds("cell-1")).toEqual([king.id]);
+  });
+
+  test("a double tap sends a card on its own", async () => {
+    const six = card("6", "hearts");
+    await stalactites({
+      tableau: [[card("K", "clubs"), six], [card("Q", "clubs")]],
+      foundations: [
+        [card("5", "clubs")],
+        [card("9", "spades")],
+        [card("J", "spades")],
+        [card("J", "hearts")],
+      ],
+      step: 1,
+    });
+
+    await tapSource({ zone: "tableau", pile: 0 }, { settle: false });
+    await tapSource({ zone: "tableau", pile: 0 });
+    expect(zoneCardIds("foundation-0").at(-1)).toBe(six.id);
   });
 });

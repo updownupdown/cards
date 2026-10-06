@@ -9,8 +9,8 @@ import {
 import { DragGhostCards, DragHandle } from "@/components/Cards/DragDrop";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useGameColors } from "@/hooks/useGameColors";
-import { delay } from "@/utils/utils";
-import { useEffect, useMemo, useRef } from "react";
+import { delay, DOUBLE_TAP_MS } from "@/utils/utils";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { flexStyles } from "@/styles/flexStyles";
@@ -77,9 +77,11 @@ type GameState = {
 export type StalactitesGameState = GameState;
 
 type Source =
-  { zone: "tableau"; pile: number } | { zone: "cell"; pile: number };
+  | { zone: "tableau"; pile: number }
+  | { zone: "cell"; pile: number };
 type Target =
-  { zone: "foundation"; pile: number } | { zone: "cell"; pile: number };
+  | { zone: "foundation"; pile: number }
+  | { zone: "cell"; pile: number };
 
 function emptyPiles(count: number) {
   return Array.from({ length: count }, () => [] as PlayingCard[]);
@@ -262,6 +264,11 @@ const gameStateInitial = createInitialState();
 
 export default function Stalactites() {
   const { colorPale } = useGameColors();
+  // A card picked by a tap, to be tapped where it should go.
+  const [selected, setSelected] = useState<Source | null>(null);
+  const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
+    null,
+  );
   const {
     isLoaded,
     isSettingUp,
@@ -274,6 +281,8 @@ export default function Stalactites() {
   } = useStateManager<GameState>({
     gameStateInitial,
     resetNonGameStates: () => {
+      setSelected(null);
+      setLastTap(null);
       clearDragGhost();
     },
     resetAndSetup: async () => {
@@ -348,6 +357,7 @@ export default function Stalactites() {
   });
 
   function moveCard(source: Source, target: Target) {
+    setSelected(null);
     if (!canMove(game, source, target)) return false;
     saveUndoState(structuredClone(game));
     setGame((draft) => applyMove(draft, source, target));
@@ -355,11 +365,52 @@ export default function Stalactites() {
   }
 
   /**
-   * A tap sends the card to a foundation, or else a column card to a cell.
-   * Before the step is chosen, a card that could set either step does
-   * nothing: that choice is made by dragging it or with the buttons.
+   * A tap on a card selects it; a tap on a foundation or a free cell then
+   * moves it there (tapping anywhere else drops the selection). A double tap
+   * sends the card on its own, as sendCard does.
    */
   function onSourcePress(source: Source) {
+    if (dragGhost || game.ended) {
+      setSelected(null);
+      return;
+    }
+    const now = Date.now();
+    const tapKey = `${source.zone}-${source.pile}`;
+    if (lastTap?.key === tapKey && now - lastTap.at < DOUBLE_TAP_MS) {
+      setLastTap(null);
+      sendCard(source);
+      return;
+    }
+    setLastTap({ key: tapKey, at: now });
+
+    if (!selected) {
+      if (top(sourcePile(game, source))) setSelected(source);
+      return;
+    }
+    // A card in a cell is also a place to tap: the selection goes there if
+    // it can (it can't: cells hold one card), else it is dropped.
+    if (source.zone === "cell") {
+      onTargetPress({ zone: "cell", pile: source.pile });
+      return;
+    }
+    setSelected(null);
+  }
+
+  /** A tap on a foundation or a free cell: moves the selected card there. */
+  function onTargetPress(target: Target) {
+    const source = selected;
+    setSelected(null);
+    if (!source || dragGhost) return;
+    moveCard(source, target);
+  }
+
+  /**
+   * Sends the card to a foundation, or else a column card to a cell.
+   * Before the step is chosen, a card that could set either step does
+   * nothing: that choice is made by moving it to a foundation or with the
+   * buttons.
+   */
+  function sendCard(source: Source) {
     const card = top(sourcePile(game, source));
     if (!card) return;
     const foundations = game.foundations.flatMap((pile, index) =>
@@ -469,10 +520,14 @@ export default function Stalactites() {
       hoverTarget.pile === card.pileIndex;
 
     if (card.zoneName === "tableau" || card.zoneName === "cell") {
+      const isPicked =
+        card.topOfZone &&
+        selected?.zone === card.zoneName &&
+        selected.pile === card.pileIndex;
       return {
         isDisabled: game.ended,
-        isSelected: isHoverTarget,
-        selectColor: isHoverTarget ? "green" : "none",
+        isSelected: isHoverTarget || isPicked,
+        selectColor: isHoverTarget ? "green" : isPicked ? "blue" : "none",
         isVisible: !isBeingDragged,
         animDuration,
       };
@@ -483,20 +538,27 @@ export default function Stalactites() {
         selectColor: isHoverTarget ? "green" : "none",
         isVisible: !isBeingDragged,
         animDuration,
+        // Taps go through to the zone, which places the selected card.
+        clickThroughCards: true,
       };
     }
     return {};
   };
 
   const zoneMapper = (zone: MapZone): CardMapBGMapping | undefined => {
-    if (zone.name === "cell") {
+    if (
+      (zone.name === "cell" || zone.name === "foundation") &&
+      zone.pileIndex !== undefined
+    ) {
+      const target: Target = { zone: zone.name, pile: zone.pileIndex };
       return {
+        onPress: () => onTargetPress(target),
         isSelected:
           !!dragGhost &&
-          hoverTarget?.zone === "cell" &&
+          hoverTarget?.zone === zone.name &&
           hoverTarget.pile === zone.pileIndex,
         selectColor: "green",
-        isDisabled: true,
+        isDisabled: !selected || !!dragGhost,
       };
     }
     return {};
@@ -583,6 +645,7 @@ export default function Stalactites() {
     const card = top(sourcePile(game, source));
     const rect = getSourceRect(source);
     if (!card || !rect || game.ended) return;
+    setSelected(null);
     startDrag(source, [card], { x: rect.x, y: rect.y });
   }
 
