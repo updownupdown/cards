@@ -39,7 +39,14 @@
     "outOfCardsWhileMakingCamp": "Sin cartas al montar el campamento.",
     "deckAndFatigueRanDry": "El mazo y la pila de fatiga se han agotado.",
     "handOverflowed": "Tu mano se ha desbordado (18 cartas o más).",
-    "baseClimb": "Ascenso base"
+    "baseClimb": "Ascenso base",
+    "hint": {
+      "route_one": "Juega esta ruta: te hace robar {{count}} carta",
+      "route_other": "Juega esta ruta: te hace robar {{count}} cartas",
+      "camp": "Juega tus últimas cartas para montar el campamento",
+      "rest": "Descansa: toma la pila de fatiga en la mano y empieza de nuevo",
+      "discard": "Descarta la carta que menos le sirve a tu mano"
+    }
   },
   "bakersDozen": {
     "allFourSuitsAreComplete": "¡Los cuatro palos están completos!"
@@ -237,7 +244,12 @@
     "extract": "Extraer",
     "reassign": "Reasignar",
     "allTwelveRoyalsAreDown": "Las doce figuras han caído.",
-    "youRanOutOfCards": "Te quedaste sin cartas antes de derrotar a las doce figuras."
+    "youRanOutOfCards": "Te quedaste sin cartas antes de derrotar a las doce figuras.",
+    "hint": {
+      "kill": "Esto derriba una figura",
+      "extract": "Usa un as: este montón vuelve bajo el mazo",
+      "reassign": "Usa un comodín: mueve esta carta"
+    }
   },
   "ebbAndFlow": {
     "stock": "Mazo",
@@ -420,7 +432,12 @@
     "difficultyMedium": "Media",
     "difficultyHard": "Difícil",
     "difficultyVeryHard": "Muy difícil",
-    "difficultyExtreme": "Extrema"
+    "difficultyExtreme": "Extrema",
+    "hint": {
+      "match": "Ya viste su pareja aquí",
+      "knownPair": "Sabes dónde están las dos cartas de esta pareja",
+      "newCard": "Destapa una carta que aún no hayas visto"
+    }
   },
   "monteCarlo": {
     "youClearedAllCards": "¡Has retirado todas las cartas!",

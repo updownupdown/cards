@@ -23,6 +23,14 @@ import { Text } from "../common/Text";
 import { rgba } from "@/styles/styles";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import {
+  cardTarget,
+  makeHint,
+  withNote,
+  zoneTarget,
+  type HintTarget,
+} from "@/hints/hint";
 const shieldColor = "#ffc671";
 
 type RoyalSlot = { cards: PlayingCard[]; armour: number; dead: boolean };
@@ -256,7 +264,248 @@ function createInitialState(): GameState {
   return state;
 }
 
+// —— Hints ——
+
+type DynastyMove =
+  | { kind: "place"; cell: number }
+  | { kind: "extract"; cell: number }
+  | { kind: "reassign"; from: number; to: number };
+
+function dynastyMoves(state: GameState): DynastyMove[] {
+  const moves: DynastyMove[] = [];
+  const cells = state.grid.map((_, cell) => cell);
+  const pending = state.pending;
+  if (pending) {
+    cells.forEach((cell) => {
+      if (canPlaceNumber(state, pending, cell))
+        moves.push({ kind: "place", cell });
+    });
+  }
+  if (hasAvailablePloy(state.jokers)) {
+    cells.forEach((from) => {
+      const card = topCard(state.grid[from]);
+      if (!card) return;
+      cells.forEach((to) => {
+        if (to !== from && canPlaceNumber(state, card, to))
+          moves.push({ kind: "reassign", from, to });
+      });
+    });
+  }
+  if (hasAvailablePloy(state.aces)) {
+    cells.forEach((cell) => {
+      if (state.grid[cell].length) moves.push({ kind: "extract", cell });
+    });
+  }
+  return moves;
+}
+
+/** A copy to try moves on (cheaper than structuredClone, run many times). */
+function cloneState(state: GameState): GameState {
+  return {
+    ...state,
+    stock: [...state.stock],
+    discard: [...state.discard],
+    grid: state.grid.map((pile) => [...pile]),
+    royals: state.royals.map((slot) => ({
+      ...slot,
+      cards: slot.cards.map((card) => ({ ...card })),
+    })),
+    aces: [...state.aces],
+    jokers: [...state.jokers],
+  };
+}
+
+function applyDynastyMove(state: GameState, move: DynastyMove) {
+  const next = cloneState(state);
+  if (move.kind === "place") {
+    next.grid[move.cell].push(next.pending!);
+    next.pending = null;
+    resolveAttacks(next, move.cell);
+  } else if (move.kind === "extract") {
+    next.stock.unshift(...next.grid[move.cell]);
+    next.grid[move.cell] = [];
+    next.aces.unshift({ ...next.aces.pop()!, faceUp: false });
+  } else {
+    next.grid[move.to].push(next.grid[move.from].pop()!);
+    next.jokers.unshift({ ...next.jokers.pop()!, faceUp: false });
+    resolveAttacks(next, move.to);
+  }
+  return next;
+}
+
+/**
+ * How good a position is to play on from: royals down above all, then the
+ * ploys still in hand (they're the score), royals one card from falling, and
+ * piles the cards still in the deck (seen only as a set) can go on.
+ */
+function dynastyScore(state: GameState) {
+  const ploys =
+    state.aces.filter((card) => card.faceUp).length +
+    state.jokers.filter((card) => card.faceUp).length;
+  let score =
+    state.royals.filter((slot) => slot.dead).length * 1000 + ploys * 120;
+  const numbers = state.stock.filter(
+    (card) => !isFace(card) && card.rank !== "A" && card.rank !== "Joker",
+  );
+  const fits = (cell: number) => {
+    const top = topCard(state.grid[cell]);
+    if (!top || numbers.length === 0) return 1;
+    return (
+      numbers.filter((card) => rankValue(card) >= rankValue(top)).length /
+      numbers.length
+    );
+  };
+  state.grid.forEach((_, cell) => {
+    score += 60 * fits(cell);
+  });
+  // Lines aimed at a royal: one ready to fire when its trigger pile takes a
+  // card, or how close it comes.
+  Object.entries(ATTACKS).forEach(([trigger, lines]) => {
+    for (const [slotIndex, first, second] of lines) {
+      const slot = state.royals[slotIndex];
+      const royal = topCard(slot.cards);
+      if (!royal || slot.dead) continue;
+      const attackers = [
+        topCard(state.grid[first]),
+        topCard(state.grid[second]),
+      ].filter((card): card is PlayingCard => !!card);
+      const need = rankValue(royal) + slot.armour;
+      const attack = attackValue(royal, attackers);
+      score +=
+        attackers.length === 2 && attack >= need
+          ? 150 * fits(Number(trigger))
+          : (20 * Math.min(attack, need)) / need;
+    }
+  });
+  // A card with nowhere to go becomes armour.
+  if (
+    state.pending &&
+    !dynastyMoves(state).some((move) => move.kind === "place") &&
+    ploys === 0
+  ) {
+    score -= 300;
+  }
+  return score;
+}
+
+/** The move that leaves the best position (see dynastyScore), or null. */
+function bestDynastyMove(state: GameState) {
+  if (state.ended) return null;
+  // Between draws the next card is on its way, unless the deck is empty
+  // and only a ploy can go on.
+  if (!state.pending && state.stock.length > 0) return null;
+  const ranked = dynastyMoves(state)
+    .map((move) => {
+      const next = applyDynastyMove(state, move);
+      return { move, next, score: dynastyScore(next) };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, LOOKAHEAD_MOVES);
+  let best = null as { move: DynastyMove; score: number } | null;
+  for (const { move, next } of ranked) {
+    const score = nextDrawScore(next);
+    if (!best || score > best.score) best = { move, score };
+  }
+  return best?.move ?? null;
+}
+
+// The best moves by dynastyScore, looked at again over the next draw.
+const LOOKAHEAD_MOVES = 12;
+
+/**
+ * A position's worth once the next card is drawn and placed as well as it
+ * can be, averaged over the cards still in the deck (seen as a set: any of
+ * them may come next).
+ */
+function nextDrawScore(state: GameState) {
+  if (state.ended || state.pending || state.stock.length === 0) {
+    return dynastyScore(state);
+  }
+  let total = 0;
+  state.stock.forEach((card, index) => {
+    const next = cloneState(state);
+    next.stock.splice(index, 1);
+    next.stock.push({ ...card });
+    processDraw(next);
+    if (!next.pending) {
+      total += dynastyScore(next);
+      return;
+    }
+    let best = -Infinity;
+    next.grid.forEach((_, cell) => {
+      if (!canPlaceNumber(next, next.pending!, cell)) return;
+      best = Math.max(
+        best,
+        dynastyScore(applyDynastyMove(next, { kind: "place", cell })),
+      );
+    });
+    if (best === -Infinity) {
+      // Nowhere to go: a ploy, or armour.
+      best = dynastyScore(next);
+    }
+    total += best;
+  });
+  return total / state.stock.length;
+}
+
+function findDynastyHint(state: GameState) {
+  const move = bestDynastyMove(state);
+  if (!move) return null;
+  const kills =
+    applyDynastyMove(state, move).royals.filter((slot) => slot.dead).length >
+    state.royals.filter((slot) => slot.dead).length;
+
+  const ace = state.aces.at(-1);
+  const joker = state.jokers.at(-1);
+  const steps: HintTarget[][] = [];
+  const cellTarget = (cell: number) => {
+    const top = topCard(state.grid[cell]);
+    return top ? cardTarget(top) : zoneTarget(`grid-${cell}`);
+  };
+  // Put down a ploy picked up that isn't the one to use.
+  if (state.mode === "extract" && move.kind !== "extract")
+    steps.push([cardTarget(ace!)]);
+  if (state.mode.startsWith("reassign") && move.kind !== "reassign")
+    steps.push([cardTarget(joker!)]);
+
+  let hint;
+  if (move.kind === "place") {
+    hint = makeHint(
+      "moveCard",
+      ...steps,
+      cardTarget(state.pending!),
+      zoneTarget(`grid-${move.cell}`),
+    );
+  } else if (move.kind === "extract") {
+    if (state.mode !== "extract") steps.push([cardTarget(ace!)]);
+    hint = withNote(
+      makeHint("tapCard", ...steps, cellTarget(move.cell)),
+      i18n.t("games:dynasty.hint.extract"),
+    );
+  } else {
+    const picked =
+      state.mode === "reassign-target" ? state.selectedStack : null;
+    if (picked !== null && picked !== move.from) {
+      // Put the picked card back first.
+      steps.push([cellTarget(picked)]);
+    }
+    if (!state.mode.startsWith("reassign")) steps.push([cardTarget(joker!)]);
+    if (picked !== move.from) steps.push([cellTarget(move.from)]);
+    hint = withNote(
+      makeHint("moveCard", ...steps, zoneTarget(`grid-${move.to}`)),
+      i18n.t("games:dynasty.hint.reassign"),
+    );
+  }
+  return kills ? withNote(hint, i18n.t("games:dynasty.hint.kill")) : hint;
+}
+
 export const dynastyRules = {
+  findHint: findDynastyHint,
+  bestMove: bestDynastyMove,
+  applyMove: applyDynastyMove,
+  createInitialState,
+  processDraw,
+  addArmour,
   attackValue,
   canPlaceNumber,
   resolveAttacks,
@@ -300,6 +549,8 @@ export default function Dynasty() {
         setGame((draft) => redealWith(createInitialState(), draft.stock));
       },
     });
+
+  useHint(() => findDynastyHint(game), { game });
 
   function mutate(action: (draft: GameState) => void) {
     saveUndoState(structuredClone(game));

@@ -39,7 +39,14 @@
     "outOfCardsWhileMakingCamp": "As cartas acabaram ao montar o acampamento.",
     "deckAndFatigueRanDry": "O baralho e a pilha de fadiga acabaram.",
     "handOverflowed": "Sua mão transbordou (18 cartas ou mais).",
-    "baseClimb": "Subida básica"
+    "baseClimb": "Subida básica",
+    "hint": {
+      "route_one": "Jogue esta rota: ela faz comprar {{count}} carta",
+      "route_other": "Jogue esta rota: ela faz comprar {{count}} cartas",
+      "camp": "Jogue suas últimas cartas para montar o acampamento",
+      "rest": "Descanse: pegue a pilha de fadiga na mão e recomece",
+      "discard": "Descarte a carta que menos faz falta à sua mão"
+    }
   },
   "bakersDozen": {
     "allFourSuitsAreComplete": "Os quatro naipes estão completos!"
@@ -237,7 +244,12 @@
     "extract": "Extrair",
     "reassign": "Reatribuir",
     "allTwelveRoyalsAreDown": "As doze figuras caíram.",
-    "youRanOutOfCards": "Suas cartas acabaram antes de você derrotar as doze figuras."
+    "youRanOutOfCards": "Suas cartas acabaram antes de você derrotar as doze figuras.",
+    "hint": {
+      "kill": "Isto derruba uma figura",
+      "extract": "Use um ás: esta pilha volta para baixo do baralho",
+      "reassign": "Use um curinga: mova esta carta"
+    }
   },
   "ebbAndFlow": {
     "stock": "Monte",
@@ -420,7 +432,12 @@
     "difficultyMedium": "Médio",
     "difficultyHard": "Difícil",
     "difficultyVeryHard": "Muito difícil",
-    "difficultyExtreme": "Extremo"
+    "difficultyExtreme": "Extremo",
+    "hint": {
+      "match": "Você já viu o par dela aqui",
+      "knownPair": "Você sabe onde estão as duas cartas deste par",
+      "newCard": "Vire uma carta que você ainda não viu"
+    }
   },
   "monteCarlo": {
     "youClearedAllCards": "Você removeu todas as cartas!",

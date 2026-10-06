@@ -39,7 +39,14 @@
     "outOfCardsWhileMakingCamp": "Carte finite mentre montavi il campo.",
     "deckAndFatigueRanDry": "Il mazzo e la pila della fatica sono esauriti.",
     "handOverflowed": "La tua mano è troppo piena (18+ carte).",
-    "baseClimb": "Salita base"
+    "baseClimb": "Salita base",
+    "hint": {
+      "route_one": "Gioca questa via: ti fa pescare {{count}} carta",
+      "route_other": "Gioca questa via: ti fa pescare {{count}} carte",
+      "camp": "Gioca le ultime carte per montare il campo",
+      "rest": "Riposa: prendi in mano la pila della fatica e riparti",
+      "discard": "Scarta la carta di cui la tua mano fa meglio a meno"
+    }
   },
   "bakersDozen": {
     "allFourSuitsAreComplete": "Tutti e quattro i semi sono completi!"
@@ -237,7 +244,12 @@
     "extract": "Estrai",
     "reassign": "Riassegna",
     "allTwelveRoyalsAreDown": "Tutte e dodici le figure sono cadute.",
-    "youRanOutOfCards": "Hai finito le carte prima di sconfiggere tutte e dodici le figure."
+    "youRanOutOfCards": "Hai finito le carte prima di sconfiggere tutte e dodici le figure.",
+    "hint": {
+      "kill": "Questo abbatte una figura",
+      "extract": "Usa un asso: questa pila torna sotto il mazzo",
+      "reassign": "Usa un jolly: sposta questa carta"
+    }
   },
   "ebbAndFlow": {
     "stock": "Mazzo",
@@ -420,7 +432,12 @@
     "difficultyMedium": "Media",
     "difficultyHard": "Difficile",
     "difficultyVeryHard": "Molto difficile",
-    "difficultyExtreme": "Estrema"
+    "difficultyExtreme": "Estrema",
+    "hint": {
+      "match": "Hai già visto la sua coppia qui",
+      "knownPair": "Sai dove sono entrambe le carte di questa coppia",
+      "newCard": "Scopri una carta che non hai ancora visto"
+    }
   },
   "monteCarlo": {
     "youClearedAllCards": "Hai rimosso tutte le carte!",
