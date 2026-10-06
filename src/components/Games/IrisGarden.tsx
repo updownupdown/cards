@@ -14,6 +14,9 @@ import {
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint } from "@/hints/hint";
+import { planMove } from "@/hints/lookahead";
 
 import { i18n } from "@/i18n";
 
@@ -246,7 +249,33 @@ function isCleared(grid: (PlayingCard | null)[]) {
   return grid.every((card) => !card);
 }
 
+/**
+ * Every card is on view, and every deal can be cleared: the hint looks
+ * ahead for a line that clears the most pairs (taking the wrong two of a
+ * rank's four cards can strand the others), and keeps to it.
+ */
+function findIrisGardenHint(state: GameState) {
+  if (state.deal.length > 0) return null;
+  const pair = planMove<(PlayingCard | null)[], [number, number]>(state.grid, {
+    key: (grid) => grid.map((card) => card?.id ?? "-").join(","),
+    moves: availableMatches,
+    apply: (grid, [a, b]) =>
+      grid.map((card, cell) => (cell === a || cell === b ? null : card)),
+    score: (grid) => grid.filter((card) => !card).length,
+    positionKey: (grid) => grid.map((card) => (card ? "x" : "-")).join(""),
+    budget: 1500,
+  });
+  return pair
+    ? makeHint(
+        "removeCards",
+        cardTarget(state.grid[pair[0]]!),
+        cardTarget(state.grid[pair[1]]!),
+      )
+    : null;
+}
+
 export const irisGardenRules = {
+  findHint: findIrisGardenHint,
   COLS,
   ROWS,
   CELLS,
@@ -292,6 +321,11 @@ export default function IrisGarden() {
   );
   const won = dealt && !isSettingUp && game.cleared.length === CELLS;
   const lost = dealt && !isSettingUp && !won && matches.length === 0;
+
+  useHint(() => findIrisGardenHint(game), {
+    game,
+    enabled: dealt && !isSettingUp && !won && !lost,
+  });
 
   function onCardPress(cell: number) {
     if (won || lost) return;

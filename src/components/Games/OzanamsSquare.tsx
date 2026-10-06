@@ -25,6 +25,8 @@ import {
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 
 import { i18n } from "@/i18n";
 
@@ -271,7 +273,38 @@ function gatherState(state: GameState): GameState {
   };
 }
 
+/**
+ * The deal has one solution, found from the cards dealt into place. The hint
+ * moves a card the player put in the wrong space to its own (any card there
+ * swaps out), else places a tray card.
+ */
+function findOzanamsSquareHint(state: GameState) {
+  if (state.deal.length > 0 || isSolved(state.grid)) return null;
+  const givens = state.grid.map((card, cell) =>
+    state.given[cell] ? card : null,
+  );
+  const solution = solve(givens, 1)[0];
+  if (!solution) return null;
+  const home = (card: PlayingCard) =>
+    solution.findIndex(
+      (key) => key?.rank === card.rank && key.suit === card.suit,
+    );
+  const hint = (card: PlayingCard) =>
+    makeHint("moveCard", cardTarget(card), zoneTarget(`cell-${home(card)}`));
+
+  const misplaced = state.grid.find(
+    (card, cell) => card && !state.given[cell] && home(card) !== cell,
+  );
+  if (misplaced) return hint(misplaced);
+  const placeable = state.tray
+    .flat()
+    .sort((a, b) => home(a) - home(b))
+    .find((card) => !state.grid[home(card)]);
+  return placeable ? hint(placeable) : null;
+}
+
 export const ozanamsSquareRules = {
+  findHint: findOzanamsSquareHint,
   SIZE,
   CELLS,
   EASY_GIVENS,
@@ -313,6 +346,8 @@ export default function OzanamsSquare() {
 
   const solved = useMemo(() => isSolved(game.grid), [game.grid]);
   const conflicts = useMemo(() => conflictCells(game.grid), [game.grid]);
+
+  useHint(() => findOzanamsSquareHint(game), { game, enabled: !solved });
 
   function move(source: Source, target: Target) {
     if (!canMove(game, source, target)) return false;

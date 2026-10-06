@@ -18,6 +18,8 @@ import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 import { ProgressBar } from "../Home/ProgressBar";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useHint } from "@/hints/hint-store";
+import { pressHint } from "@/hints/hint";
 
 import { i18n } from "@/i18n";
 type Prediction = "red" | "black" | "higher" | "lower";
@@ -63,7 +65,95 @@ function predictionMatches(
   return rankValue(next) < rankValue(anchor);
 }
 
-export const fortunesCallRules = { predictionMatches };
+const PREDICTIONS: Prediction[] = ["higher", "lower", "red", "black"];
+
+function predictionLabel(prediction: Prediction) {
+  return {
+    red: i18n.t("games:fortunesCall.red"),
+    black: i18n.t("cards:black"),
+    higher: i18n.t("games:fortunesCall.higher"),
+    lower: i18n.t("games:fortunesCall.lower"),
+  }[prediction];
+}
+
+function callPoints(prediction: Prediction) {
+  return prediction === "red" || prediction === "black" ? 1 : 2;
+}
+
+/**
+ * The chance of winning from each score and number of misses, calling as
+ * well as possible against a fresh anchor of any rank (a full deck's odds):
+ * WIN_CHANCE[score][misses].
+ */
+const WIN_CHANCE: number[][] = (() => {
+  const chance = (score: number, misses: number): number =>
+    score >= TARGET_SCORE ? 1 : misses >= MAX_MISSES ? 0 : table[score][misses];
+  const table = Array.from({ length: TARGET_SCORE }, () =>
+    Array<number>(MAX_MISSES).fill(0),
+  );
+  for (let score = TARGET_SCORE - 1; score >= 0; score -= 1) {
+    for (let misses = MAX_MISSES - 1; misses >= 0; misses -= 1) {
+      let total = 0;
+      for (let rank = 1; rank <= 13; rank += 1) {
+        const odds = [
+          { points: 1, hit: 0.5 },
+          { points: 2, hit: (13 - rank) / 13 },
+          { points: 2, hit: (rank - 1) / 13 },
+        ];
+        total += Math.max(
+          ...odds.map(
+            ({ points, hit }) =>
+              hit * chance(score + points, misses) +
+              (1 - hit) * chance(score, misses + 1),
+          ),
+        );
+      }
+      table[score][misses] = total / 13;
+    }
+  }
+  return table;
+})();
+
+function winChance(score: number, misses: number) {
+  if (score >= TARGET_SCORE) return 1;
+  if (misses >= MAX_MISSES) return 0;
+  return WIN_CHANCE[score][misses];
+}
+
+/**
+ * The call most likely to win the game: the odds of each call come from the
+ * cards not yet seen (the deck and the hidden card), and what a hit or a miss
+ * is worth from WIN_CHANCE. Close to the target, a safe colour call can beat
+ * a riskier higher or lower call.
+ */
+function bestPrediction(state: GameState): Prediction | null {
+  const { anchor } = state;
+  if (!anchor || !state.next || state.revealed || state.ended) return null;
+  const seen = new Set([anchor, ...state.discard].map((card) => card.id));
+  const unseen = createDeck().filter((card) => !seen.has(card.id));
+  let best: { prediction: Prediction; value: number } | null = null;
+  for (const prediction of PREDICTIONS) {
+    const hit =
+      unseen.filter((card) => predictionMatches(prediction, anchor, card))
+        .length / unseen.length;
+    const value =
+      hit * winChance(state.score + callPoints(prediction), state.misses) +
+      (1 - hit) * winChance(state.score, state.misses + 1);
+    if (!best || value > best.value) best = { prediction, value };
+  }
+  return best?.prediction ?? null;
+}
+
+function findFortunesCallHint(state: GameState) {
+  const prediction = bestPrediction(state);
+  return prediction ? pressHint("hud", predictionLabel(prediction)) : null;
+}
+
+export const fortunesCallRules = {
+  predictionMatches,
+  bestPrediction,
+  findHint: findFortunesCallHint,
+};
 const gameStateInitial = createInitialState();
 
 export default function FortunesCall() {
@@ -102,6 +192,8 @@ export default function FortunesCall() {
       },
     });
 
+  useHint(() => findFortunesCallHint(game), { game });
+
   function predict(prediction: Prediction) {
     if (game.revealed || game.ended || !game.anchor || !game.next) return;
     saveUndoState(structuredClone(game));
@@ -113,8 +205,7 @@ export default function FortunesCall() {
         draft.anchor!,
         draft.next!,
       );
-      if (draft.lastCorrect)
-        draft.score += prediction === "red" || prediction === "black" ? 1 : 2;
+      if (draft.lastCorrect) draft.score += callPoints(prediction);
       else draft.misses += 1;
       draft.won = draft.score >= TARGET_SCORE;
       draft.ended = draft.won || draft.misses >= MAX_MISSES;

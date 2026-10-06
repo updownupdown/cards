@@ -17,6 +17,9 @@ import {
   useCardMap,
 } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
+import { bestLine, planMove } from "@/hints/lookahead";
 
 import { i18n } from "@/i18n";
 const BOARD_COLS = 5;
@@ -175,7 +178,114 @@ function dealInitialGame(
   };
 }
 
+type Conquest = [source: number, target: number];
+
+function conquests(board: PlayingCard[][]): Conquest[] {
+  return board.flatMap((source, sourceIndex) =>
+    source.length === 0
+      ? []
+      : board.flatMap((_, targetIndex): Conquest[] =>
+          canConquer(board, sourceIndex, targetIndex)
+            ? [[sourceIndex, targetIndex]]
+            : [],
+        ),
+  );
+}
+
+function afterConquest(board: PlayingCard[][], [source, target]: Conquest) {
+  const next = [...board];
+  conquerPile(next, source, target);
+  return next;
+}
+
+function boardKey(board: PlayingCard[][]) {
+  return board.map((pile) => topCard(pile)?.id ?? "-").join(",");
+}
+
+/**
+ * Fewer cards on the board is better, but a card with no partner left can
+ * never be conquered, and choices left keep the board alive.
+ */
+function boardScore(board: PlayingCard[][]) {
+  const piles = board.filter((pile) => pile.length > 0).length;
+  const stranded = findIsolatedCard(board) && piles > 1 ? 1 : 0;
+  return -1000 * stranded - 10 * piles + Math.min(conquests(board).length, 9);
+}
+
+// Cards on the board at which the hint turns to the reserve. Drawing it
+// sooner leaves more cards to clear; later, fewer partners for it.
+const DRAW_RESERVE_AT = 10;
+
+const searchOptions = {
+  moves: conquests,
+  apply: afterConquest,
+  score: boardScore,
+  positionKey: boardKey,
+};
+
+/**
+ * The reserve is face down, so the look ahead only plays the conquests on
+ * view. Reserve cards must all enter play: they're drawn once the board is
+ * down to DRAW_RESERVE_AT cards (or no conquest helps), and go where the
+ * board has most partners for them. Once the reserve is used up, the hint
+ * plans the conquests to the last card.
+ */
+function findDominionHint(state: GameState) {
+  if (state.ended) return null;
+  const { board, reserveActive } = state;
+  const empty = board.flatMap((pile, index) => (pile.length ? [] : [index]));
+
+  if (reserveActive) {
+    const placements = empty.map((index) => {
+      const next = [...board];
+      next[index] = [reserveActive];
+      const line = bestLine(next, { ...searchOptions, budget: 600 });
+      const end = line.reduce(afterConquest, next);
+      return { index, value: boardScore(next) + boardScore(end) };
+    });
+    const best = placements.reduce<(typeof placements)[number] | null>(
+      (top, option) => (!top || option.value > top.value ? option : top),
+      null,
+    );
+    // The card waits to one side; its space is all there is to tap.
+    return best
+      ? makeHint("moveCard", zoneTarget(`board-${best.index}`))
+      : null;
+  }
+
+  const inPlay = board.length - empty.length;
+  const conquestHelps =
+    bestLine(board, { ...searchOptions, maxDepth: 1 }).length > 0;
+  if (
+    state.reserve.length > 0 &&
+    empty.length > 0 &&
+    (inPlay <= DRAW_RESERVE_AT || !conquestHelps)
+  ) {
+    return makeHint("draw", cardTarget(topCard(state.reserve)));
+  }
+
+  const move =
+    (state.reserve.length > 0
+      ? bestLine(board, { ...searchOptions, maxDepth: 2 })[0]
+      : planMove(board, { ...searchOptions, key: boardKey, budget: 4000 })) ??
+    // Every line loses from here: play on all the same.
+    conquests(board)
+      .map((option) => ({
+        option,
+        value: boardScore(afterConquest(board, option)),
+      }))
+      .sort((a, b) => b.value - a.value)[0]?.option;
+  if (!move) return null;
+  const [source, target] = move;
+  return makeHint(
+    "moveCard",
+    cardTarget(topCard(board[source])),
+    cardTarget(topCard(board[target])),
+  );
+}
+
 export const dominionRules = {
+  findHint: findDominionHint,
   topCard,
   collectCards,
   canConquer,
@@ -250,6 +360,8 @@ export default function Dominion() {
       setSelectedIndex(null);
     }
   }, [game.board, selectedIndex]);
+
+  useHint(() => findDominionHint(game), { game });
 
   const legalTargets = useMemo(
     () =>
