@@ -136,6 +136,67 @@
     }
   },
   "augury": {
+    "howToPlay": {
+      "hash": "be872579",
+      "value": [
+        "## Tujuan",
+        "Pahami **hukum tersembunyi** cukup baik untuk menebak benar **delapan kali berturut-turut**.",
+        "## Cara bermain",
+        "Setiap permainan punya hukum rahasia tentang kartu mana yang boleh menyusul kartu terakhir di jalur.",
+        "- Ketuk kartu di tanganmu jika menurutmu kartu itu cocok dengan hukum tersembunyi.",
+        "- Jika menurutmu tidak ada kartu di tanganmu yang cocok, ketuk **Tak ada yang cocok**.",
+        "- Jika ternyata ada kartu yang cocok, kartu itu dimainkan untukmu (ditandai merah), dan rangkaian tebakan benarmu diulang dari nol.",
+        "Untuk semua hukum: A = 1, Jack = 11, Queen = 12, King = 13.",
+        "## Hukum",
+        "Pengaturan tingkat kesulitan menentukan hukum mana yang dipakai dalam permainan. Pengaturan Sulit juga memilih dari hukum-hukum mudah.",
+        "**Mudah:**",
+        "- Harus berselang warna",
+        "- Harus sama jenis atau sama nilai",
+        "- Harus berselang antara nilai ganjil dan genap",
+        "- Harus bernilai lebih tinggi; kartu apa pun boleh menyusul J/Q/K",
+        "- Selisih nilainya paling banyak dua",
+        "- Harus sama warna",
+        "- Harus berbeda jenis",
+        "- Harus berselang antara tinggi (8-K) dan rendah (A-7)",
+        "- Harus berselang antara kartu bergambar dan kartu angka",
+        "- Harus bernilai lebih rendah; kartu apa pun boleh menyusul A",
+        "- Selisih nilainya paling sedikit tiga",
+        "- Ganjil harus menyusul ganjil, genap harus menyusul genap",
+        "- Selisih nilainya paling banyak dua (As dan King bersebelahan)",
+        "- Harus mengikuti urutan jenis: sekop, hati, wajik, keriting",
+        "- Jenis yang sama dengan kartu terakhir harus lebih tinggi; jenis lain yang sewarna harus lebih rendah; warna lain boleh menyusul apa saja",
+        "- Kartu merah harus bernilai 8 atau lebih; kartu hitam harus bernilai 7 atau kurang",
+        "**Sulit:**",
+        "- Setelah merah harus lebih tinggi, setelah hitam harus lebih rendah; kartu apa pun boleh menyusul K merah atau A hitam",
+        "- Harus mengikuti urutan jenis: hati, keriting, wajik, sekop",
+        "- Nilai genap harus merah, nilai ganjil harus hitam",
+        "- Harus sewarna dengan kartu dua langkah sebelumnya",
+        "- Kartu hitam harus bernilai lebih tinggi; kartu merah boleh menyusul apa saja",
+        "- Warna yang sama dengan kartu terakhir harus lebih tinggi; warna lain boleh menyusul apa saja",
+        "- Harus berlawanan warna dengan kartu dua langkah sebelumnya",
+        "- Harus sejenis dengan kartu dua langkah sebelumnya",
+        "- Harus berbeda jenis dari kedua kartu terakhir",
+        "- Harus zigzag: lebih tinggi setelah turun, lebih rendah setelah naik; kartu apa pun boleh menyusul dua nilai yang sama",
+        "- Setelah merah harus bernilai 7 atau kurang, setelah hitam harus bernilai 8 atau lebih",
+        "- Hati boleh menyusul apa saja; kartu lain harus bernilai lebih tinggi",
+        "- Jumlah dua nilai harus 14 atau kurang",
+        "- Setelah kartu bergambar harus sama jenis, setelah kartu angka harus berbeda jenis",
+        "- Setelah tinggi (8-K) harus warna lain, setelah rendah (A-7) harus sama warna",
+        "- Harus sama warna tetapi berbeda jenis",
+        "- Harus jenis yang lebih tinggi (keriting, wajik, hati, sekop) atau nilai yang lebih tinggi; kartu apa pun boleh menyusul K sekop",
+        "- Harus berada di antara dua nilai terakhir, atau sama dengan salah satunya",
+        "- Tidak boleh membuat tiga kartu sewarna berturut-turut",
+        "- Setelah naik harus sejenis dengan kartu dua langkah sebelumnya, setelah turun harus sewarna dengannya; kartu apa pun boleh menyusul dua nilai yang sama"
+      ]
+    },
+    "quickStart": {
+      "hash": "d4bd6572",
+      "value": [
+        "Sebuah hukum tersembunyi menentukan kartu mana yang boleh menyusul kartu terakhir di jalur.",
+        "Mainkan kartu yang menurutmu cocok, atau nyatakan bahwa tidak ada kartu di tanganmu yang cocok.",
+        "Tebak benar delapan kali berturut-turut untuk menang."
+      ]
+    },
     "title": {
       "hash": "f453f554",
       "value": "Pertanda"
@@ -880,6 +941,27 @@
     }
   },
   "crossword": {
+    "howToPlay": {
+      "hash": "05a15314",
+      "value": [
+        "## Tujuan",
+        "Isi **kisi 7×7**, seperti teka-teki silang, dengan 49 dari 52 kartu.",
+        "## Cara bermain",
+        "Taruh kartu di petak kosong **di sebelah kartu yang sudah ditaruh**, bersisian atau diagonal.",
+        "- Jack, Queen, dan King adalah **kotak hitam**. Dua di antaranya tidak boleh bersentuhan sisi (diagonal boleh).",
+        "- Kartu angka adalah “huruf” yang membentuk “kata” di antara kotak hitam atau tepi.",
+        "Saat kisi sudah penuh, setiap “kata” harus **berjumlah genap**. As bernilai 1.",
+        "Saat 48 petak sudah terisi, empat kartu terakhir dibuka, dan kamu memilih satu untuk mengisi petak terakhir."
+      ]
+    },
+    "quickStart": {
+      "hash": "bc7ca504",
+      "value": [
+        "Isi kisi dengan 49 dari 52 kartu, membentuk pola seperti teka-teki silang.",
+        "Kartu bergambar seperti kotak hitam; dua di antaranya tidak boleh bersentuhan sisi.",
+        "Kartu angka membentuk “kata” di antara kotak hitam atau tepi, dan jumlahnya harus genap."
+      ]
+    },
     "title": {
       "hash": "6c831cdf",
       "value": "Teka-Teki Silang"
@@ -1175,6 +1257,29 @@
     }
   },
   "ebb-and-flow": {
+    "howToPlay": {
+      "hash": "8b86f554",
+      "value": [
+        "## Tujuan",
+        "Mainkan ke-**52 kartu** ke empat tumpukan.",
+        "## Cara bermain",
+        "Kartu apa pun boleh memulai tumpukan kosong. As terendah dan King tertinggi.",
+        "- **Tumpukan naik:** mainkan kartu yang nilainya sama dengan kartu teratas, atau lebih tinggi.",
+        "- **Tumpukan turun:** mainkan kartu yang nilainya sama dengan kartu teratas, atau lebih rendah.",
+        "Kartu yang **satu nilai mundur dengan jenis yang sama** selalu boleh dimainkan:",
+        "- {7H} di atas {8H} pada tumpukan naik,",
+        "- {9S} di atas {8S} pada tumpukan turun, dan seterusnya.",
+        "Kamu boleh mengisi ulang tanganmu dari dek kapan pun tanganmu kurang 2 kartu."
+      ]
+    },
+    "quickStart": {
+      "hash": "491ccd55",
+      "value": [
+        "Mainkan kartu dari tanganmu: tumpukan naik bergerak naik, tumpukan turun bergerak turun.",
+        "Kamu boleh mengisi ulang tanganmu dari dek saat tanganmu kurang 2 kartu.",
+        "Kartu yang satu nilai mundur dengan jenis yang sama membalikkan arah tumpukan."
+      ]
+    },
     "title": {
       "hash": "6cff71c4",
       "value": "Pasang Surut"
@@ -1230,6 +1335,38 @@
     "title": {
       "hash": "1f84944a",
       "value": "Detektif cilik"
+    }
+  },
+  "elevens": {
+    "howToPlay": {
+      "hash": "48901e1c",
+      "value": [
+        "## Tujuan",
+        "Habiskan seluruh dek dengan membuang pasangan kartu yang berjumlah **11**, atau trio kerajaan **Jack-Queen-King**.",
+        "## Pembagian",
+        "- Kartu dibagikan terbuka dalam kisi: 5x3 di Mudah, 4x3 di Sedang, atau 3x3 di Sulit (bawaan).",
+        "- Sisa kartu menjadi dek.",
+        "## Nilai kartu",
+        "- As bernilai 1 dan kartu angka bernilai sesuai angkanya.",
+        "- Jack, Queen, dan King tidak bernilai dan hanya bisa dibuang bersama-sama.",
+        "## Cara bermain",
+        "- Pilih dua kartu yang berjumlah 11: As dan 10, 2 dan 9, 3 dan 8, 4 dan 7, atau 5 dan 6.",
+        "- Atau pilih satu Jack, satu Queen, dan satu King, dalam urutan apa pun.",
+        "- Kartu yang dibuang langsung diganti dari dek.",
+        "## Menang dan kalah",
+        "- Kamu menang saat kisi dan dek sama-sama kosong.",
+        "- Kamu kalah saat tidak ada pasangan atau trio kerajaan yang bisa dibentuk dan masih ada kartu tersisa."
+      ]
+    },
+    "quickStart": {
+      "hash": "be04eab8",
+      "value": [
+        "Buang pasangan yang berjumlah 11, atau Jack, Queen, dan King sekaligus."
+      ]
+    },
+    "title": {
+      "hash": "b11d7c71",
+      "value": "Sebelasan"
     }
   },
   "field-command": {
@@ -1829,6 +1966,23 @@
     }
   },
   "iris-garden": {
+    "howToPlay": {
+      "hash": "5531c4fb",
+      "value": [
+        "## Tujuan",
+        "Bersihkan ke-**48 kartu** (As sampai Queen) dari taman secara berpasangan.",
+        "## Cara bermain",
+        "Dua kartu dengan **nilai yang sama** membentuk pasangan, apa pun jenisnya.",
+        "Sepasang kartu **bernilai sama** bisa dibuang jika keduanya bersebelahan secara ortogonal, atau terhubung melalui **petak kosong** dengan jalur yang terdiri dari paling banyak tiga garis lurus."
+      ]
+    },
+    "quickStart": {
+      "hash": "92195cad",
+      "value": [
+        "Bersihkan seluruh taman dengan memilih pasangan yang cocok.",
+        "Pasangan harus bersebelahan, atau bisa dihubungkan dengan jalur melalui petak kosong yang terdiri dari paling banyak tiga garis."
+      ]
+    },
     "title": {
       "hash": "b023f43f",
       "value": "Taman Iris"
@@ -2001,6 +2155,37 @@
       "value": "Lampu padam"
     }
   },
+  "little-windmill": {
+    "howToPlay": {
+      "hash": "f34f0359",
+      "value": [
+        "## Tujuan",
+        "Pindahkan ke-52 kartu ke empat fondasi sudut.",
+        "## Fondasi",
+        "- Satu **As** diambil dari dek untuk memulai fondasi pertama. Tiga lainnya dimulai dengan As lainnya saat As itu muncul.",
+        "- Susun setiap fondasi **naik per jenis**, dari As sampai King.",
+        "## Salib",
+        "- Susun kelima tumpukan salib **turun, apa pun jenisnya**. Tidak ada kartu yang boleh ditaruh di atas As.",
+        "- Hanya kartu teratas setiap tumpukan yang tersedia, dan kartu dipindah satu per satu.",
+        "- Kartu tersedia mana pun boleh mengisi petak kosong di salib.",
+        "## Dek",
+        "- Buka dek satu kartu setiap kali ke tumpukan terbuka.",
+        "- Di Normal tidak ada bagi ulang. Di Mudah, tumpukan terbuka boleh dibalik sekali untuk melewati dek lagi."
+      ]
+    },
+    "quickStart": {
+      "hash": "a1f0545c",
+      "value": [
+        "Satu As memulai fondasi sudut pertama; As lainnya memulai sisanya.",
+        "Fondasi disusun naik per jenis, dari As sampai King.",
+        "Susun salib turun apa pun jenisnya, satu kartu setiap kali."
+      ]
+    },
+    "title": {
+      "hash": "241c9f73",
+      "value": "Kincir angin kecil"
+    }
+  },
   "lone-joker": {
     "howToPlay": {
       "hash": "11835fe7",
@@ -2152,6 +2337,28 @@
     }
   },
   "miss-milligan": {
+    "howToPlay": {
+      "hash": "d95de4df",
+      "value": [
+        "## Tujuan",
+        "Pindahkan kedua dek ke delapan fondasi, masing-masing disusun naik per jenis dari As sampai King.",
+        "## Aturan",
+        "- Susun kolom **turun dengan warna berselang**. Urutan yang tersusun benar bisa dipindah sekaligus.",
+        "- Hanya **King** (atau urutan yang diawali King) yang boleh mengisi kolom kosong.",
+        "- Ketuk **dek** untuk membagikan satu kartu ke setiap kolom, kosong atau tidak.",
+        "## Varian",
+        "- **Miss Milligan**: Setelah dek habis, kamu boleh menyisihkan satu kartu atau urutan ke **saku**.",
+        "- **Raksasa**: Kartu atau urutan apa pun boleh mengisi kolom kosong, tetapi tidak ada saku."
+      ]
+    },
+    "quickStart": {
+      "hash": "d6a2a898",
+      "value": [
+        "Susun delapan fondasi naik per jenis, dari A sampai K.",
+        "Susun kolom turun dengan warna berselang; kamu bisa memindahkan urutan.",
+        "Ketuk dek untuk membagikan satu kartu ke setiap kolom."
+      ]
+    },
     "title": {
       "hash": "71a70424",
       "value": "Miss Milligan"
@@ -2293,6 +2500,27 @@
     }
   },
   "ozanams-square": {
+    "howToPlay": {
+      "hash": "580fe3be",
+      "value": [
+        "## Tujuan",
+        "Isi kisi sehingga setiap **baris, kolom, dan diagonal** berisi **satu kartu dari setiap nilai dan satu kartu dari setiap jenis**.",
+        "## Cara bermain",
+        "- Beberapa kartu sudah dibagikan ke tempatnya sejak awal, dan tidak bisa dipindah.",
+        "- Pindahkan kartu dari baki ke petak kosong; kartu yang kamu taruh bisa dipindah ke petak lain, ditukar, atau diseret kembali ke baki.",
+        "- Kartu yang mengulang nilai atau jenis di salah satu garisnya ditandai merah.",
+        "- Setiap pembagian punya **tepat satu** solusi.",
+        "## Sejarah",
+        "Jacques Ozanam menyusun teka-teki ini dengan kartu remi dalam bukunya *Récréations mathématiques et physiques* (1725). Leonhard Euler kemudian mempelajari persegi seperti ini, yang ia sebut persegi Graeco-Latin."
+      ]
+    },
+    "quickStart": {
+      "hash": "f0ab22cd",
+      "value": [
+        "Isi persegi dengan keenam belas As, King, Queen, dan Jack.",
+        "Tidak boleh ada baris, kolom, atau diagonal panjang yang berisi dua kartu dengan nilai atau jenis yang sama."
+      ]
+    },
     "title": {
       "hash": "e2c5ab80",
       "value": "Persegi Ozanam"
@@ -2383,6 +2611,45 @@
     }
   },
   "picket-fence": {
+    "howToPlay": {
+      "hash": "ec23d938",
+      "value": [
+        "## Tujuan",
+        "Raih **60 poin** atau lebih dengan memagari jalan-jalanmu menjadi kompleks dan mengisinya dengan rumah, taman, dan kolam. Permainan berlanjut sampai dek habis, jadi terus tingkatkan skormu.",
+        "## Giliranmu",
+        "Kamu memegang tiga kartu, dan memainkan dua di antaranya setiap giliran: satu untuk angkanya, lalu satu untuk jenisnya. Lalu ambil kartu sampai kembali tiga.",
+        "## Membangun",
+        "- Bangun kartu sebagai rumah di kavling kosong. Nomor rumah harus naik dari kiri ke kanan di sepanjang jalan (As bernilai 1, Jack 11, Queen 12, dan King 13). Kavling kosong tidak dihitung.",
+        "- Atau **renovasi**: bangun kartu di atas rumah yang sudah ada, jika nomor di jalan itu tetap naik. Rumah lama dibuang; taman atau kolamnya tetap ada.",
+        "- Atau buang kartu itu dan tidak membangun apa pun giliran ini.",
+        "## Efek",
+        "- **♥ Taman:** kartu hati diselipkan di bawah rumah yang baru kamu bangun atau renovasi, sebagai taman.",
+        "- **♦ Kolam:** kartu wajik diselipkan di bawah rumah itu sebagai kolam, jika rumah itu berdiri di kavling kolam.",
+        "- **♠ Pagar:** pasang pagar di antara dua kavling, di jalan mana pun.",
+        "- **♣ Rumah kedua:** bangun juga kartu keriting sebagai rumah, atau gunakan untuk renovasi.",
+        "- Satu rumah memuat satu taman atau kolam. Kartu yang tidak terpakai dibuang.",
+        "## Skor",
+        "- Pagar dan ujung jalan membagi setiap jalan menjadi **kompleks**. Hanya kompleks yang **selesai** yang mendapat poin: kompleks yang setiap kavlingnya sudah terbangun.",
+        "- Rumah-rumahnya bernilai 1, 3, 6, atau 10 poin untuk kompleks berisi 1, 2, 3, atau 4 rumah. **Kompleks berisi lima rumah atau lebih tidak mendapat poin**, jadi setiap jalan butuh pagar.",
+        "- Setiap taman di kompleks yang selesai menambah 2 poin, dan setiap kolam 4 poin.",
+        "## Peringkat",
+        "- 60+: Tetangga Baik",
+        "- 70+: Perumahan Teladan",
+        "- 80+: Sempurna bak Lukisan",
+        "## Tips",
+        "- Kompleks yang lebih besar bernilai lebih tinggi, tetapi satu kavling yang belum terbangun membuat seluruh kompleks, beserta taman dan kolamnya, tidak mendapat poin. Pagar bisa membatasi kerugianmu.",
+        "- Sisakan ruang di antara angka: kavling di antara 5 dan 6 tidak bisa dibangun sampai salah satunya direnovasi.",
+        "- Label di atas setiap kompleks menunjukkan poinnya setelah selesai, atau ✕ jika kompleks itu tidak bisa diselesaikan dalam keadaannya sekarang."
+      ]
+    },
+    "quickStart": {
+      "hash": "616845be",
+      "value": [
+        "Setiap giliran, bangun satu kartu sebagai rumah dan gunakan jenis kartu lain sebagai efeknya.",
+        "Nomor rumah harus naik dari kiri ke kanan di sepanjang setiap jalan.",
+        "Hanya kompleks berpagar berisi paling banyak empat rumah yang mendapat poin, setelah setiap kavling di dalamnya terbangun."
+      ]
+    },
     "title": {
       "hash": "63ac8afa",
       "value": "Pagar Kayu"
@@ -2672,6 +2939,34 @@
     "title": {
       "hash": "850a8f8b",
       "value": "Utusan kerajaan"
+    }
+  },
+  "royal-marriage": {
+    "howToPlay": {
+      "hash": "f2ecd27f",
+      "value": [
+        "## Tujuan",
+        "Buang semua kartu kecuali **Queen** dan **King hati**, yang harus berakhir bersebelahan.",
+        "## Pembagian",
+        "- Ke-52 kartu dijajarkan dalam satu barisan bersambung, berlanjut dari baris ke baris.",
+        "- Queen hati mengawali barisan dan King hati mengakhirinya.",
+        "## Membuang",
+        "- Pilih kartu yang akan dibuang, lalu tekan **Buangan**.",
+        "- Satu kartu, atau dua kartu yang bersebelahan, boleh dibuang jika kartu di kedua sisinya sama **nilai atau jenis**.",
+        "- Urutan yang lebih panjang hanya boleh dibuang jika setiap kartunya **sejenis**, dan kartu di kedua sisinya sama nilai atau jenis.",
+        "- Queen dan King hati tidak pernah meninggalkan barisan.",
+        "- Barisan merapat setelah setiap pembuangan."
+      ]
+    },
+    "quickStart": {
+      "hash": "11cc1c79",
+      "value": [
+        "Buang kartu yang berada di antara dua kartu dengan nilai atau jenis yang sama, sampai Queen dan King hati bersebelahan."
+      ]
+    },
+    "title": {
+      "hash": "52d2c562",
+      "value": "Pernikahan kerajaan"
     }
   },
   "royal-rest": {
@@ -3107,6 +3402,10 @@
         "Ketuk dek untuk menambahkan kartu ke ujung baris.",
         "Ketuk kartu pertama dan terakhir suatu urutan untuk menyingkirkannya."
       ]
+    },
+    "title": {
+      "hash": "ca23c5f9",
+      "value": "Sepuluh-Dua Puluh-Tiga Puluh"
     }
   },
   "terrace": {

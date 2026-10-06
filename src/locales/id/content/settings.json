@@ -241,6 +241,41 @@
       }
     }
   },
+  "elevens": {
+    "elevensDifficulty": {
+      "hash": "80558fd7",
+      "value": {
+        "description": "Kisi yang lebih besar lebih mudah.",
+        "label": "Kesulitan",
+        "options": [
+          {
+            "label": "Mudah (5 x 3)"
+          },
+          {
+            "label": "Sedang (4 x 3)"
+          },
+          {
+            "label": "Sulit (3 x 3)"
+          }
+        ]
+      }
+    },
+    "elevensEliminateBadDeals": {
+      "hash": "f6b716b7",
+      "value": {
+        "description": "Memastikan setiap pembagian bisa dimainkan setidaknya 3 langkah.",
+        "label": "Singkirkan pembagian buruk",
+        "options": [
+          {
+            "label": "Mati"
+          },
+          {
+            "label": "Nyala"
+          }
+        ]
+      }
+    }
+  },
   "fight-clubs": {
     "fightClubsDifficulty": {
       "hash": "d82ad464",
@@ -468,6 +503,23 @@
           {
             "label": "Semanggi",
             "description": "Susun naik atau turun dengan jenis apa pun, paling banyak tiga kartu per kipas, tanpa bagi ulang."
+          }
+        ]
+      }
+    }
+  },
+  "little-windmill": {
+    "littleWindmillDifficulty": {
+      "hash": "e02074c2",
+      "value": {
+        "description": "Mudah mengizinkan satu kali bagi ulang tumpukan terbuka.",
+        "label": "Kesulitan",
+        "options": [
+          {
+            "label": "Mudah (1 kali bagi ulang)"
+          },
+          {
+            "label": "Normal (tanpa bagi ulang)"
           }
         ]
       }
