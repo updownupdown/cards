@@ -33,6 +33,8 @@ import { useToast } from "../common/Toast";
 import { Colors, rgba } from "@/styles/styles";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, zoneTarget } from "@/hints/hint";
 const maxAttackersNum = 3;
 const maxDefendersNum = 6;
 
@@ -112,7 +114,68 @@ function getScore(state: GameState) {
   );
 }
 
+type InvadersAction = {
+  kind: "dual" | "single" | "sacrifice";
+  defenders: number[];
+};
+
+function actionLabel(kind: InvadersAction["kind"]) {
+  return kind === "sacrifice"
+    ? i18n.t("cards:sacrifice")
+    : i18n.t("games:invaders.attack", { value: kind === "dual" ? " x2" : "" });
+}
+
+/**
+ * The best answer to the lead attacker, losing as few defenders as can be:
+ * a dual attack that costs none (any in the first wave), else a single
+ * attack with the weakest defender that beats it (a swap: the attacker
+ * joins the defence), else the cheapest dual attack, else a sacrifice of
+ * the weakest defender. The decks are face down, so it looks no further.
+ */
+function bestInvadersAction(state: GameState): InvadersAction | null {
+  const attacker = state.currentAttackers.at(-1);
+  if (state.ended || !attacker) return null;
+  const defenders = state.currentDefenders.flatMap((card, index) =>
+    card ? [{ card, index }] : [],
+  );
+  const options: (InvadersAction & { cost: number })[] = [];
+  defenders.forEach((first, at) =>
+    defenders.slice(at + 1).forEach((second) => {
+      if (!canDualAttack([first.card, second.card], attacker)) return;
+      const lost =
+        state.wave === 2
+          ? [first, second].filter(
+              ({ card }) => isRed(card.suit) === isRed(attacker.suit),
+            ).length
+          : 0;
+      options.push({
+        kind: "dual",
+        defenders: [first.index, second.index],
+        // Ahead of a swap only when it costs nothing.
+        cost: lost * 100,
+      });
+    }),
+  );
+  defenders.forEach(({ card, index }) => {
+    if (!canSingleAttack(card, attacker)) return;
+    options.push({
+      kind: "single",
+      defenders: [index],
+      cost: 1 + rankValue(card) - rankValue(attacker),
+    });
+  });
+  defenders.forEach(({ card, index }) =>
+    options.push({
+      kind: "sacrifice",
+      defenders: [index],
+      cost: 150 + rankValue(card),
+    }),
+  );
+  return options.sort((a, b) => a.cost - b.cost)[0] ?? null;
+}
+
 export const invadersRules = {
+  bestAction: bestInvadersAction,
   canSingleAttack,
   canDualAttack,
   isLost,
@@ -206,6 +269,24 @@ export default function Invaders() {
       currentAttacker,
     );
   }, [selectedDefenders, currentAttacker, game.currentDefenders]);
+
+  useHint(
+    () => {
+      const action = bestInvadersAction(game);
+      if (!action) return null;
+      // Picks to undo first, then the defenders the action needs.
+      const taps = [
+        ...selectedDefenders.filter((i) => !action.defenders.includes(i)),
+        ...action.defenders.filter((i) => !selectedDefenders.includes(i)),
+      ];
+      return makeHint(
+        { key: "press", values: { label: actionLabel(action.kind) } },
+        ...taps.map((index) => cardTarget(game.currentDefenders[index]!)),
+        zoneTarget("buttons"),
+      );
+    },
+    { game },
+  );
 
   // ========== Actions ========== //
   function toggleDefender(index: number) {
@@ -422,7 +503,10 @@ export default function Invaders() {
         row: rowOffset * 0,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: i18n.t("games:invaders.attacks"), infoPos: "above" },
+        placeholder: {
+          text: i18n.t("games:invaders.attacks"),
+          infoPos: "above",
+        },
       },
       ...attackers,
       {
@@ -443,7 +527,10 @@ export default function Invaders() {
         row: rowOffset * 2,
         fan: { maxVisible: 3 },
         baseZIndex: 50,
-        placeholder: { text: i18n.t("games:invaders.defenses"), infoPos: "above" },
+        placeholder: {
+          text: i18n.t("games:invaders.defenses"),
+          infoPos: "above",
+        },
       },
       ...defenders,
       {
