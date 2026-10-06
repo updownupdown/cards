@@ -133,7 +133,12 @@
     "guildPts": "Pts guilda",
     "pass": "Passar",
     "trade": "Trocar",
-    "offer": "Oferta"
+    "offer": "Oferta",
+    "hint": {
+      "trade": "Venda estes livros por ${{value}}",
+      "tradeGuild": "Venda estes livros por ${{value}}: +{{count}} pts guilda",
+      "pass": "Nenhum conjunto de livros soma esta oferta: passe"
+    }
   },
   "boilingOver": {
     "statusStart": "Toque no seu baralho para começar a poção.",
@@ -314,7 +319,11 @@
     "tierMaster": "Mestre vidraceiro",
     "tierCathedral": "Vitral de catedral",
     "wonWithTier": "{{score}} pontos: {{tier}}!",
-    "lostShortOfTarget": "{{score}} pontos. Você precisa de {{target}} pontos para vencer."
+    "lostShortOfTarget": "{{score}} pontos. Você precisa de {{target}} pontos para vencer.",
+    "hint": {
+      "cell": "Coloque o vidro aqui: +{{count}}",
+      "shards": "Nenhuma moldura pode usá-los: quebre-os em cacos"
+    }
   },
   "gremlin": {
     "helper": "Ajudante",
@@ -401,7 +410,12 @@
       "shield": "Escudo"
     },
     "roundsSurvived": "{{count}} rodadas sobrevividas{{rating}}. Pontuação final: {{score}}.",
-    "roundNumber": "Rodada {{round}}"
+    "roundNumber": "Rodada {{round}}",
+    "hint": {
+      "play": "Jogue a mão: {{hand}}",
+      "discard": "Descarte estas: comprar deve fazer uma mão melhor",
+      "double": "Dobre sua próxima mão: é uma mão forte"
+    }
   },
   "lycan": {
     "youBeatTheWolf": "Você venceu o Lobo por {{playerScore}} a {{wolfScore}}!",

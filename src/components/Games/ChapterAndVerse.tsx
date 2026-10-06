@@ -29,6 +29,14 @@ import { Icon } from "@/icons";
 import { ProgressBar } from "../Home/ProgressBar";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import {
+  cardTarget,
+  makeHint,
+  pressHint,
+  withNote,
+  zoneTarget,
+} from "@/hints/hint";
 type GameState = {
   inventory: PlayingCard[];
   shelves: (PlayingCard | null)[];
@@ -41,6 +49,8 @@ type GameState = {
   ended: boolean;
   won: boolean;
 };
+
+export type ChapterAndVerseGameState = GameState;
 
 const BOOK_RANKS: CardRank[] = [
   "A",
@@ -57,7 +67,7 @@ const BOOK_RANKS: CardRank[] = [
 const CUSTOMER_RANKS: CardRank[] = ["J", "Q", "K"];
 const SHELF_COUNT = 8;
 
-type ChapterAndVerseSettings = {
+export type ChapterAndVerseSettings = {
   loyalPatrons: boolean;
   checkBack: boolean;
   superExclusive: boolean;
@@ -122,7 +132,150 @@ function outcomeMessage(score: number) {
   return i18n.t("games:chapterAndVerse.executiveLordshipProgram");
 }
 
+// —— Hints ——
+
+/** A book's place in a trade: left out, sold, or (an Ace) sold for $1. */
+type BookUse = "out" | "in" | "low";
+
+/** The player's picks on screen, which a hint taps from. */
+type TradePicks = { selectedIds: string[]; aceAtOneIds: string[] };
+
+/** The books on offer: unlocked shelves, and the stock's top if allowed. */
+function tradeableBooks(state: GameState, settings: ChapterAndVerseSettings) {
+  const books = state.shelves.filter(
+    (book, index): book is PlayingCard =>
+      book !== null && book.faceUp && !state.lockedShelves[index],
+  );
+  const stockTop = top(state.inventory);
+  return { books, stockTop: settings.checkBack ? stockTop : undefined };
+}
+
+/**
+ * The best trade for the customer at the counter: books worth exactly the
+ * offer, earning the most Guild points (books in the customer's suit, and a
+ * loyal patron for more than three books) for the fewest books: every book
+ * sold leaves the stock thinner for the customers to come, so a point is
+ * worth selling two more books for, no more.
+ */
+function bestTrade(state: GameState, settings: ChapterAndVerseSettings) {
+  const customer = top(state.line);
+  const usedBook = top(state.usedBooks);
+  if (!customer || !usedBook || customer.rank === "Joker") return null;
+  const offer = customerMoney(customer) + bookValue(usedBook);
+  const { books, stockTop } = tradeableBooks(state, settings);
+  const candidates = [...books, ...(stockTop ? [stockTop] : [])];
+
+  const options = candidates.map((book): BookUse[] => {
+    const exclusive = isExclusiveOffer(book, usedBook, settings.superExclusive);
+    // Only shelf Aces can be offered at $1.
+    return book.rank === "A" && !exclusive && book !== stockTop
+      ? ["out", "in", "low"]
+      : ["out", "in"];
+  });
+  const worth = (book: PlayingCard, use: BookUse) =>
+    use === "out" || isExclusiveOffer(book, usedBook, settings.superExclusive)
+      ? 0
+      : bookValue(book, use === "low");
+
+  let best: { uses: BookUse[]; guild: number; value: number } | null = null;
+  const uses: BookUse[] = [];
+  const visit = (index: number, total: number) => {
+    if (total > offer) return;
+    if (index === candidates.length) {
+      const sold = candidates.filter((_, i) => uses[i] !== "out");
+      if (total !== offer || sold.length === 0) return;
+      const guild =
+        sold.filter((book) => book.suit === customer.suit).length +
+        (settings.loyalPatrons && sold.length > 3 ? 1 : 0);
+      const value = guild - 0.5 * sold.length;
+      if (!best || value > best.value + 1e-9) {
+        best = { uses: [...uses], guild, value };
+      }
+      return;
+    }
+    for (const use of options[index]) {
+      uses[index] = use;
+      visit(index + 1, total + worth(candidates[index], use));
+    }
+  };
+  visit(0, 0);
+  if (!best) return null;
+  const { uses: chosen, guild } = best as { uses: BookUse[]; guild: number };
+  return {
+    offer,
+    guild,
+    picks: candidates.map((book, i) => ({
+      book,
+      use: chosen[i],
+      onShelf: book !== stockTop,
+    })),
+  };
+}
+
+/** Taps that turn the picks on screen into the trade's. */
+function pickTaps(
+  picks: { book: PlayingCard; use: BookUse; onShelf: boolean }[],
+  current: TradePicks,
+  usedBook: PlayingCard,
+  settings: ChapterAndVerseSettings,
+) {
+  return picks.flatMap(({ book, use, onShelf }) => {
+    const now: BookUse = !current.selectedIds.includes(book.id)
+      ? "out"
+      : current.aceAtOneIds.includes(book.id)
+        ? "low"
+        : "in";
+    // A shelf Ace goes out → $11 → $1 → out; any other book out ↔ in.
+    const cycle: BookUse[] =
+      onShelf &&
+      book.rank === "A" &&
+      !isExclusiveOffer(book, usedBook, settings.superExclusive)
+        ? ["out", "in", "low"]
+        : ["out", "in"];
+    const taps =
+      (cycle.indexOf(use) - cycle.indexOf(now) + cycle.length) % cycle.length;
+    return Array.from({ length: taps }, () => cardTarget(book));
+  });
+}
+
+function findChapterAndVerseHint(
+  state: GameState,
+  settings: ChapterAndVerseSettings,
+  current: TradePicks,
+) {
+  const customer = top(state.line);
+  const usedBook = top(state.usedBooks);
+  if (state.ended || !customer || !usedBook || customer.rank === "Joker") {
+    return null;
+  }
+  const trade = bestTrade(state, settings);
+  if (!trade) {
+    return withNote(
+      pressHint("buttons", i18n.t("games:chapterAndVerse.pass")),
+      i18n.t("games:chapterAndVerse.hint.pass"),
+    );
+  }
+  const hint = makeHint(
+    { key: "press", values: { label: i18n.t("games:chapterAndVerse.trade") } },
+    pickTaps(trade.picks, current, usedBook, settings),
+    zoneTarget("buttons"),
+  );
+  return withNote(
+    hint,
+    trade.guild > 0
+      ? i18n.t("games:chapterAndVerse.hint.tradeGuild", {
+          value: trade.offer,
+          count: trade.guild,
+        })
+      : i18n.t("games:chapterAndVerse.hint.trade", { value: trade.offer }),
+  );
+}
+
 export const chapterAndVerseRules = {
+  findHint: findChapterAndVerseHint,
+  bestTrade,
+  createInitialState,
+  dealFromDiscard,
   bookValue,
   customerMoney,
   customerPenalty,
@@ -252,6 +405,15 @@ export default function ChapterAndVerse() {
   const customer = game.line[game.line.length - 1];
   const usedBook = game.usedBooks[game.usedBooks.length - 1];
   const vandalShown = customer?.rank === "Joker";
+
+  useHint(
+    () =>
+      findChapterAndVerseHint(game, settingsRef.current, {
+        selectedIds,
+        aceAtOneIds,
+      }),
+    { game, enabled: !vandalShown },
+  );
 
   useEffect(() => {
     if (!vandalShown) return;

@@ -133,7 +133,12 @@
     "guildPts": "Guild Pts.",
     "pass": "Pass",
     "trade": "Trade",
-    "offer": "Offer"
+    "offer": "Offer",
+    "hint": {
+      "trade": "Sell these books for ${{value}}",
+      "tradeGuild": "Sell these books for ${{value}}: +{{count}} Guild Pts.",
+      "pass": "No books add up to this offer: pass"
+    }
   },
   "boilingOver": {
     "statusStart": "Tap your deck to start brewing.",
@@ -314,7 +319,11 @@
     "tierMaster": "Master Glazier",
     "tierCathedral": "Cathedral Window",
     "wonWithTier": "{{score}} points: {{tier}}!",
-    "lostShortOfTarget": "{{score}} points. You need {{target}} points to win."
+    "lostShortOfTarget": "{{score}} points. You need {{target}} points to win.",
+    "hint": {
+      "cell": "Set the pane here: +{{count}}",
+      "shards": "No frame can use these: break them as shards"
+    }
   },
   "gremlin": {
     "helper": "Helper",
@@ -401,7 +410,12 @@
       "shield": "Shield"
     },
     "roundsSurvived": "{{count}} rounds survived{{rating}}. Final score: {{score}}.",
-    "roundNumber": "Round {{round}}"
+    "roundNumber": "Round {{round}}",
+    "hint": {
+      "play": "Play your {{hand}}",
+      "discard": "Throw these back: a draw should make a better hand",
+      "double": "Double your next hand: it's a big one"
+    }
   },
   "lycan": {
     "youBeatTheWolf": "You beat the Wolf {{playerScore}}-{{wolfScore}}!",
