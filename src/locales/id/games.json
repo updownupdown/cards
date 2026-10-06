@@ -545,6 +545,7 @@
     "diamonds": "Wajik",
     "allBlackCardsHaveBeen": "Semua kartu hitam sudah dimainkan.",
     "thereAreNotEnoughDiamond": "Kartu wajik tidak cukup untuk mengisi ulang tumpukan.",
+    "noMovesLeft": "Tidak ada kartu hitam yang cocok dengan tumpukan, dan kartu wajik sudah habis.",
     "hint": {
       "fillPile": "Penuhi tumpukan ini untuk mendatangkan wajik baru",
       "clearPile": "Kosongkan tumpukan ini untuk wajik baru",

@@ -545,6 +545,7 @@
     "diamonds": "Karolar",
     "allBlackCardsHaveBeen": "Bütün siyah kartlar oynandı.",
     "thereAreNotEnoughDiamond": "Yığını yenilemeye yetecek karo kartı yok.",
+    "noMovesLeft": "Hiçbir siyah kart bir yığına uymuyor ve karo kartı kalmadı.",
     "hint": {
       "fillPile": "Yeni karolar getirmek için bu desteyi doldur",
       "clearPile": "Yeni karolar için bu desteyi boşalt",

@@ -545,6 +545,7 @@
     "diamonds": "Quadri",
     "allBlackCardsHaveBeen": "Tutte le carte nere sono state giocate.",
     "thereAreNotEnoughDiamond": "Non ci sono abbastanza carte di quadri per rifornire la pila.",
+    "noMovesLeft": "Nessuna carta nera va su una pila e non restano più carte di quadri.",
     "hint": {
       "fillPile": "Completa questa pila per far arrivare nuovi quadri",
       "clearPile": "Svuota questa pila per nuovi quadri",

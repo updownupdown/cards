@@ -24,7 +24,7 @@ import type {
 import Calculation from "@/components/Games/Calculation";
 import CribbageSquares from "@/components/Games/CribbageSquares";
 import Dominion from "@/components/Games/Dominion";
-import RedDiamond from "@/components/Games/RedDiamond";
+import RedDiamond, { redDiamondRules } from "@/components/Games/RedDiamond";
 
 beforeEach(() => {
   jest.useFakeTimers();
@@ -131,6 +131,55 @@ describe("Red Diamond", () => {
 
     await pressCardId(five.id);
     await pressZone((zone) => zone.name === "pile" && zone.pileIndex === 0);
+
+    expect(outcome()).toBe("lost");
+  });
+
+  // Hand 9♣ J♣ against diamonds Q 6 7 3: only the north-west pile (12 - 3)
+  // and the center would take the nine, and both are topped by clubs.
+  const deadPosition = () => {
+    const piles = emptyPiles();
+    piles[7] = [card("9", "spades"), card("2", "clubs")];
+    piles[8] = [card("10", "clubs")];
+    return {
+      diamonds: [
+        card("Q", "diamonds"),
+        card("6", "diamonds"),
+        card("7", "diamonds"),
+        card("3", "diamonds"),
+      ],
+      diamondStock: [],
+      blackStock: [card("4", "spades", false)],
+      discard: [],
+      hand: [card("9", "clubs"), card("J", "clubs")],
+      piles,
+      lost: false,
+    };
+  };
+
+  test("no fitting card and no diamonds left is a dead position", () => {
+    const state = deadPosition();
+    expect(redDiamondRules.isDeadPosition(state)).toBe(true);
+    expect(redDiamondRules.bestMove(state)).toBeNull();
+
+    // A single diamond in stock still allows a swap.
+    expect(
+      redDiamondRules.isDeadPosition({
+        ...state,
+        diamondStock: [card("8", "diamonds", false)],
+      }),
+    ).toBe(false);
+    // A card that fits somewhere can still be played.
+    expect(
+      redDiamondRules.isDeadPosition({
+        ...state,
+        hand: [card("9", "spades")],
+      }),
+    ).toBe(false);
+  });
+
+  test("a dead position ends the game as a loss", async () => {
+    await renderGame("/red-diamond", RedDiamond, deadPosition());
 
     expect(outcome()).toBe("lost");
   });

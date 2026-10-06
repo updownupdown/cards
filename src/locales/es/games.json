@@ -545,6 +545,7 @@
     "diamonds": "Diamantes",
     "allBlackCardsHaveBeen": "Se han jugado todas las cartas negras.",
     "thereAreNotEnoughDiamond": "No hay suficientes diamantes para reponer la pila.",
+    "noMovesLeft": "Ninguna carta negra cabe en una pila y no quedan diamantes.",
     "hint": {
       "fillPile": "Llena esta pila para traer diamantes nuevos",
       "clearPile": "Vacía esta pila para traer diamantes nuevos",

@@ -545,6 +545,7 @@
     "diamonds": "Diamonds",
     "allBlackCardsHaveBeen": "All black cards have been played.",
     "thereAreNotEnoughDiamond": "There are not enough Diamond cards to replenish the pile.",
+    "noMovesLeft": "No black card fits a pile, and no diamonds are left.",
     "hint": {
       "fillPile": "Fill this pile to bring in new diamonds",
       "clearPile": "Clear this pile for new diamonds",
