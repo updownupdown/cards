@@ -25,6 +25,14 @@ import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { infoSize } from "../Cards/CardMapBackgrounds";
 import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
+import { useHint } from "@/hints/hint-store";
+import {
+  cardTarget,
+  makeHint,
+  pressHint,
+  withNote,
+  zoneTarget,
+} from "@/hints/hint";
 
 import { i18n } from "@/i18n";
 const handWidth = 6;
@@ -315,9 +323,10 @@ function createLycanCapturePlan(
     playerIds: uniquePlayerIds,
     wolfIds: uniqueWolfIds,
     effect,
+    // The Wolf draws after a split or an overpower, unless the deck is out.
     roundWillEnd:
-      (effect.action === "perfect" || effect.action === "sum") &&
-      selectedWolf.length === state.wolf.length,
+      selectedWolf.length === state.wolf.length &&
+      (effect.drawFor === "player" || state.deck.length === 0),
   };
 }
 
@@ -366,7 +375,298 @@ function executeLycanCaptureAction(
   return plan;
 }
 
+// ── Hints ────────────────────────────────────────────────────────────────────
+
+/** The capture button's label, named after the capture. */
+function lycanActionLabel(action: LycanAction) {
+  return action.charAt(0).toUpperCase() + action.slice(1);
+}
+
+/**
+ * A round as the player knows it: card values in sorted hands, the deck's
+ * face-up top (0 when the deck is out), and how many of each value are
+ * still unseen (the rest of the deck, face down).
+ */
+type LycanView = {
+  player: number[];
+  wolf: number[];
+  top: number;
+  unseen: number[];
+};
+
+/** A capture, as indexes into the player's and the Wolf's hands. */
+type LycanMove = { player: number[]; wolf: number[] };
+
+/** Positions the hint may weigh before it settles for a shallower look. */
+const HINT_BUDGET = 3000;
+/** Captures the hint looks ahead. */
+const HINT_MAX_DEPTH = 3;
+/** Past the first capture, how many of the likeliest captures it follows. */
+const HINT_WIDTH = 4;
+
+class OutOfBudget extends Error {}
+
+type LycanSearch = { memo: Map<string, number>; left: number };
+
+function sumValues(values: readonly number[]) {
+  return values.reduce((sum, value) => sum + value, 0);
+}
+
+/**
+ * Each set of two or more cards (by value: equal cards are one choice) whose
+ * values add up to `target`. `values` is sorted.
+ */
+function subsetsSumming(values: readonly number[], target: number) {
+  const found: number[][] = [];
+  const picked: number[] = [];
+  const visit = (start: number, left: number) => {
+    if (left === 0) {
+      if (picked.length >= 2) found.push([...picked]);
+      return;
+    }
+    for (let index = start; index < values.length; index += 1) {
+      if (values[index] > left) break;
+      if (index > start && values[index] === values[index - 1]) continue;
+      picked.push(index);
+      visit(index + 1, left - values[index]);
+      picked.pop();
+    }
+  };
+  visit(0, target);
+  return found;
+}
+
+/** Every capture on offer, one per choice of values. */
+function lycanMoves(player: readonly number[], wolf: readonly number[]) {
+  const moves: LycanMove[] = [];
+  player.forEach((value, index) => {
+    if (index > 0 && value === player[index - 1]) return;
+    wolf.forEach((wolfValue, wolfIndex) => {
+      if (wolfIndex > 0 && wolfValue === wolf[wolfIndex - 1]) return;
+      // Perfect, or an overpower.
+      if (value >= wolfValue) {
+        moves.push({ player: [index], wolf: [wolfIndex] });
+      }
+    });
+    for (const split of subsetsSumming(wolf, value)) {
+      moves.push({ player: [index], wolf: split });
+    }
+  });
+  wolf.forEach((value, index) => {
+    if (index > 0 && value === wolf[index - 1]) return;
+    for (const sum of subsetsSumming(player, value)) {
+      moves.push({ player: sum, wolf: [index] });
+    }
+  });
+  return moves;
+}
+
+/**
+ * What the round is worth from here, `depth` captures ahead: the player's
+ * hand once the Wolf's is cleared, else at worst minus the Wolf's hand (a
+ * fold, always on offer).
+ */
+function lycanDecide(view: LycanView, depth: number, search: LycanSearch) {
+  if (view.wolf.length === 0) return sumValues(view.player);
+  const fold = -sumValues(view.wolf);
+  if (depth === 0) return fold;
+  const key = `${view.player.join(",")}/${view.wolf.join(",")}/${view.top}/${view.unseen.join(",")}/${depth}`;
+  const known = search.memo.get(key);
+  if (known !== undefined) return known;
+  search.left -= 1;
+  if (search.left < 0) throw new OutOfBudget();
+  let moves = lycanMoves(view.player, view.wolf);
+  if (depth > 1 && moves.length > HINT_WIDTH) {
+    // Deeper down, only the captures that look best a capture ahead.
+    const shallow = moves.map((move) => lycanMoveValue(view, move, 1, search));
+    moves = moves
+      .map((move, index) => ({ move, value: shallow[index] }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, HINT_WIDTH)
+      .map(({ move }) => move);
+  }
+  let best = fold;
+  for (const move of moves) {
+    best = Math.max(best, lycanMoveValue(view, move, depth, search));
+  }
+  search.memo.set(key, best);
+  return best;
+}
+
+function lycanMoveValue(
+  view: LycanView,
+  move: LycanMove,
+  depth: number,
+  search: LycanSearch,
+) {
+  const playerValue = view.player[move.player[0]];
+  const wolfValue = view.wolf[move.wolf[0]];
+  const single = move.player.length === 1 && move.wolf.length === 1;
+  // Perfect and sum draw the player a card; split and overpower, the Wolf.
+  const toPlayer =
+    (single && playerValue === wolfValue) || move.player.length >= 2;
+  return lycanDraw(
+    {
+      ...view,
+      player: view.player.filter((_, index) => !move.player.includes(index)),
+      wolf: view.wolf.filter((_, index) => !move.wolf.includes(index)),
+    },
+    toPlayer,
+    single && !toPlayer ? playerValue - wolfValue : 1,
+    depth,
+    search,
+  );
+}
+
+/**
+ * Draws `count` cards into a hand, then decides. Each draw takes the
+ * face-up top and turns the next card up: that one could be any unseen
+ * value, so the last draw is weighed over each. (Cards drawn before it, in
+ * an overpower, take the likeliest value, to keep the look ahead quick.)
+ */
+function lycanDraw(
+  view: LycanView,
+  toPlayer: boolean,
+  count: number,
+  depth: number,
+  search: LycanSearch,
+): number {
+  if (count === 0 || view.top === 0) {
+    return lycanDecide(view, depth - 1, search);
+  }
+  const hand = [...(toPlayer ? view.player : view.wolf), view.top].sort(
+    (a, b) => a - b,
+  );
+  const drawn = {
+    player: toPlayer ? hand : view.player,
+    wolf: toPlayer ? view.wolf : hand,
+  };
+  const turnUp = (value: number) => {
+    const unseen = [...view.unseen];
+    unseen[value] -= 1;
+    return lycanDraw(
+      { ...drawn, top: value, unseen },
+      toPlayer,
+      count - 1,
+      depth,
+      search,
+    );
+  };
+  const total = sumValues(view.unseen);
+  // The card turned up last only matters to captures still to come.
+  if (total === 0 || (count === 1 && depth === 1)) {
+    return lycanDraw(
+      { ...drawn, top: 0, unseen: view.unseen },
+      toPlayer,
+      count - 1,
+      depth,
+      search,
+    );
+  }
+  if (count > 1) {
+    return turnUp(
+      view.unseen.reduce(
+        (best, left, value) => (left >= view.unseen[best] ? value : best),
+        0,
+      ),
+    );
+  }
+  return view.unseen.reduce(
+    (expected, left, value) =>
+      left === 0 ? expected : expected + (left / total) * turnUp(value),
+    0,
+  );
+}
+
+/**
+ * The capture (or the fold) worth the most from this round. Only the deck's
+ * top card shows, so the cards it turns up next are weighed over the values
+ * not yet seen. The look ahead goes as many captures deep as the budget
+ * allows a full look at every capture.
+ */
+function bestLycanMove(state: Readonly<LycanGameState>) {
+  const view: LycanView = {
+    player: state.player.map((card) => rankValue(card)),
+    wolf: state.wolf.map((card) => rankValue(card)),
+    top: 0,
+    unseen: Array.from({ length: 11 }, () => 0),
+  };
+  state.deck.forEach((card, index) => {
+    if (index === state.deck.length - 1 && card.faceUp) {
+      view.top = rankValue(card);
+    } else {
+      view.unseen[rankValue(card)] += 1;
+    }
+  });
+
+  const moves = lycanMoves(view.player, view.wolf);
+  let values: number[] = [];
+  const search: LycanSearch = { memo: new Map(), left: HINT_BUDGET };
+  for (let depth = 1; depth <= HINT_MAX_DEPTH; depth += 1) {
+    try {
+      values = moves.map((move) => lycanMoveValue(view, move, depth, search));
+    } catch (error) {
+      if (!(error instanceof OutOfBudget)) throw error;
+      break;
+    }
+  }
+  // A capture must beat folding now to be worth it.
+  let best: { move: LycanMove | null; value: number } = {
+    move: null,
+    value: -sumValues(view.wolf),
+  };
+  moves.forEach((move, index) => {
+    if (values[index] > best.value) best = { move, value: values[index] };
+  });
+  return best.move;
+}
+
+function findLycanHint(
+  state: Readonly<LycanGameState>,
+  selectedPlayer: readonly string[] = [],
+  selectedWolf: readonly string[] = [],
+) {
+  if (state.ended || state.roundOver || state.wolf.length === 0) return null;
+  const move = bestLycanMove(state);
+  if (!move) {
+    return withNote(
+      pressHint("buttons", i18n.t("cards:fold")),
+      i18n.t("games:lycan.hint.fold"),
+    );
+  }
+  const playerIds = move.player.map((index) => state.player[index].id);
+  const wolfIds = move.wolf.map((index) => state.wolf[index].id);
+  const plan = createLycanCapturePlan(state, playerIds, wolfIds);
+  if (!plan) return null;
+  const hint = makeHint(
+    { key: "press", values: { label: lycanActionLabel(plan.effect.action) } },
+    // Picks to undo first, then the cards to take.
+    [
+      ...selectedPlayer.filter((id) => !playerIds.includes(id)),
+      ...selectedWolf.filter((id) => !wolfIds.includes(id)),
+    ].map((id) => cardTarget(id)),
+    playerIds
+      .filter((id) => !selectedPlayer.includes(id))
+      .map((id) => cardTarget(id)),
+    wolfIds
+      .filter((id) => !selectedWolf.includes(id))
+      .map((id) => cardTarget(id)),
+    zoneTarget("buttons"),
+  );
+  if (wolfIds.length === state.wolf.length) {
+    return withNote(hint, i18n.t("games:lycan.hint.finish"));
+  }
+  if (plan.effect.action === "over") {
+    return withNote(
+      hint,
+      i18n.t("games:lycan.hint.over", { count: plan.effect.drawCount }),
+    );
+  }
+  return hint;
+}
+
 export const lycanRules = {
+  findHint: findLycanHint,
   buildDeck: buildLycanDeck,
   detectAction: detectLycanAction,
   getCaptureEffect: getLycanCaptureEffect,
@@ -394,34 +694,42 @@ export default function Lycan() {
   const [selectedPlayer, setSelectedPlayer] = useState<string[]>([]);
   const [selectedWolf, setSelectedWolf] = useState<string[]>([]);
 
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      gameStateInitial,
-      resetAndSetup: async () => {
-        setGame((draft) => {
-          resetDeck(draft, modeRef.current);
-        });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    gameStateInitial,
+    resetAndSetup: async () => {
+      setGame((draft) => {
+        resetDeck(draft, modeRef.current);
+      });
 
-        // Reset game state and deal a new round
-        setGame((draft) => {
-          draft.playerScore = 0;
-          draft.wolfScore = 0;
-          draft.round = 1;
-          draft.ended = false;
-          draft.won = false;
-        });
+      // Reset game state and deal a new round
+      setGame((draft) => {
+        draft.playerScore = 0;
+        draft.wolfScore = 0;
+        draft.round = 1;
+        draft.ended = false;
+        draft.won = false;
+      });
 
-        await delay(600);
+      await delay(600);
 
-        setGame((draft) => {
-          dealRound(draft);
-        });
-      },
-      resetNonGameStates: () => {
-        setSelectedPlayer([]);
-        setSelectedWolf([]);
-      },
-    });
+      setGame((draft) => {
+        dealRound(draft);
+      });
+    },
+    resetNonGameStates: () => {
+      setSelectedPlayer([]);
+      setSelectedWolf([]);
+    },
+  });
 
   const selPlayerCards = useMemo(
     () => game.player.filter((c) => selectedPlayer.includes(c.id)),
@@ -432,6 +740,11 @@ export default function Lycan() {
     [game.wolf, selectedWolf],
   );
   const action = detectLycanAction(selPlayerCards, selWolfCards);
+
+  useHint(() => findLycanHint(game, selectedPlayer, selectedWolf), {
+    game,
+    enabled: !isSettingUp,
+  });
 
   function toggle(list: string[], id: string) {
     return list.includes(id) ? list.filter((x) => x !== id) : [...list, id];
@@ -612,9 +925,7 @@ export default function Lycan() {
     cardSize: "small",
   });
 
-  const actionLabel = action
-    ? action.charAt(0).toUpperCase() + action.slice(1)
-    : undefined;
+  const actionLabel = action ? lycanActionLabel(action) : undefined;
 
   const countTextColor = (wolf: boolean) => {
     let baseColor = colorPale;

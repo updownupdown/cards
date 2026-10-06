@@ -283,7 +283,13 @@
     "actionUp": "♠ Naik",
     "actionRun": "♥ Urutan",
     "gridClearWon": "Kisi sudah bersih. Kamu menang!",
-    "allClubsSpent": "Ke-13 kartu keriting sudah terpakai."
+    "allClubsSpent": "Ke-13 kartu keriting sudah terpakai.",
+    "hint": {
+      "free_diamonds": "Singkirkan wajik untuk membuka aksi ♦",
+      "free_spades": "Singkirkan sekop untuk membuka aksi ♠",
+      "free_hearts": "Singkirkan hati untuk membuka aksi ♥",
+      "any": "Ambil satu kartu saja dengan keriting ini: simpan yang lain untuk langkah lebih besar"
+    }
   },
   "fortunesCall": {
     "red": "Merah",
@@ -408,7 +414,13 @@
     "theWolfBeatYou": "Serigala mengalahkanmu {{wolfScore}}-{{playerScore}}.",
     "wolf": "Serigala",
     "round": "Ronde",
-    "selectCardsToCapture": "Pilih kartu untuk ditangkap"
+    "selectCardsToCapture": "Pilih kartu untuk ditangkap",
+    "hint": {
+      "fold": "Menyerahlah: lanjut bermain akan lebih merugikan",
+      "finish": "Habiskan kartu Serigala: kartumu mendapat poin",
+      "over_one": "Lampaui: layak walau Serigala menarik {{count}} kartu",
+      "over_other": "Lampaui: layak walau Serigala menarik {{count}} kartu"
+    }
   },
   "memory": {
     "matched": "Cocok",

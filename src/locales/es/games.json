@@ -283,7 +283,13 @@
     "actionUp": "♠ Arriba",
     "actionRun": "♥ Escalera",
     "gridClearWon": "La cuadrícula está despejada. ¡Victoria!",
-    "allClubsSpent": "Se han gastado los 13 tréboles."
+    "allClubsSpent": "Se han gastado los 13 tréboles.",
+    "hint": {
+      "free_diamonds": "Quita diamantes para liberar las acciones ♦",
+      "free_spades": "Quita picas para liberar las acciones ♠",
+      "free_hearts": "Quita corazones para liberar la acción ♥",
+      "any": "Llévate solo una carta con este trébol: guarda los demás para jugadas mayores"
+    }
   },
   "fortunesCall": {
     "red": "Rojo",
@@ -408,7 +414,13 @@
     "theWolfBeatYou": "El Lobo te ha vencido {{wolfScore}}-{{playerScore}}.",
     "wolf": "Lobo",
     "round": "Ronda",
-    "selectCardsToCapture": "Elige cartas para capturar"
+    "selectCardsToCapture": "Elige cartas para capturar",
+    "hint": {
+      "fold": "Retírate: seguir costaría más",
+      "finish": "Vacía la mano del Lobo: la tuya puntúa",
+      "over_one": "Supéralo: vale la pena que el Lobo robe {{count}} carta",
+      "over_other": "Supéralo: vale la pena que el Lobo robe {{count}} cartas"
+    }
   },
   "memory": {
     "matched": "Parejas",

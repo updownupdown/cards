@@ -283,7 +283,13 @@
     "actionUp": "♠ Su",
     "actionRun": "♥ Sequenza",
     "gridClearWon": "La griglia è libera. Hai vinto!",
-    "allClubsSpent": "Tutti i 13 fiori sono stati usati."
+    "allClubsSpent": "Tutti i 13 fiori sono stati usati.",
+    "hint": {
+      "free_diamonds": "Togli dei quadri per liberare le azioni ♦",
+      "free_spades": "Togli delle picche per liberare le azioni ♠",
+      "free_hearts": "Togli dei cuori per liberare l'azione ♥",
+      "any": "Prendi solo una carta con questo fiori: tieni gli altri per mosse più grandi"
+    }
   },
   "fortunesCall": {
     "red": "Rosso",
@@ -408,7 +414,13 @@
     "theWolfBeatYou": "Il Lupo ti ha battuto {{wolfScore}}-{{playerScore}}.",
     "wolf": "Lupo",
     "round": "Round",
-    "selectCardsToCapture": "Scegli le carte da catturare"
+    "selectCardsToCapture": "Scegli le carte da catturare",
+    "hint": {
+      "fold": "Lascia: continuare costerebbe di più",
+      "finish": "Svuota la mano del Lupo: la tua fa punti",
+      "over_one": "Supera: conviene anche se il Lupo pesca {{count}} carta",
+      "over_other": "Supera: conviene anche se il Lupo pesca {{count}} carte"
+    }
   },
   "memory": {
     "matched": "Coppie",

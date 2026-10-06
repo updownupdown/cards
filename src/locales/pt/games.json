@@ -283,7 +283,13 @@
     "actionUp": "♠ Cima",
     "actionRun": "♥ Sequência",
     "gridClearWon": "A grade está limpa. Vitória!",
-    "allClubsSpent": "As 13 cartas de paus foram gastas."
+    "allClubsSpent": "As 13 cartas de paus foram gastas.",
+    "hint": {
+      "free_diamonds": "Tire cartas de ouros para liberar as ações ♦",
+      "free_spades": "Tire cartas de espadas para liberar as ações ♠",
+      "free_hearts": "Tire cartas de copas para liberar a ação ♥",
+      "any": "Pegue só uma carta com esta de paus: guarde as outras para jogadas maiores"
+    }
   },
   "fortunesCall": {
     "red": "Vermelho",
@@ -408,7 +414,13 @@
     "theWolfBeatYou": "O Lobo venceu você por {{wolfScore}} a {{playerScore}}.",
     "wolf": "Lobo",
     "round": "Rodada",
-    "selectCardsToCapture": "Escolha cartas para capturar"
+    "selectCardsToCapture": "Escolha cartas para capturar",
+    "hint": {
+      "fold": "Desista: continuar custaria mais",
+      "finish": "Esvazie a mão do Lobo: a sua pontua",
+      "over_one": "Supere: vale a pena o Lobo comprar {{count}} carta",
+      "over_other": "Supere: vale a pena o Lobo comprar {{count}} cartas"
+    }
   },
   "memory": {
     "matched": "Pares",
