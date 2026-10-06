@@ -12,6 +12,8 @@ import { cardTarget, makeHint, zoneTarget, type Hint } from "@/hints/hint";
 import {
   getActiveHint,
   hasHintFinder,
+  isAutopilotSession,
+  markAutopilotSession,
   requestHint,
   useHint,
 } from "@/hints/hint-store";
