@@ -169,7 +169,13 @@
     "tierCourtAlchemist": "Alchimiste de la cour",
     "tierMiracleWorker": "Faiseur de miracles",
     "wonWithTier": "{{score}} points : {{tier}} !",
-    "lostShortOfTarget": "{{score}} points. Il vous faut {{target}} points pour gagner."
+    "lostShortOfTarget": "{{score}} points. Il vous faut {{target}} points pour gagner.",
+    "hint": {
+      "stop": "Arrêtez-vous : {{risk}} % de risque d'explosion, c'est trop pour ce qu'une carte de plus apporterait",
+      "keepCoins": "Gardez les pièces : de meilleures cartes rapporteront sur les manches restantes",
+      "keepPoints": "Gardez les points : il reste trop peu de manches pour que les pièces rapportent",
+      "buy": "Achetez les meilleures cartes que vos pièces permettent : deux, de couleurs différentes"
+    }
   },
   "cityGrid": {
     "pileIsFull": "La pile est pleine !",
@@ -360,7 +366,14 @@
     "missionComplete": "Mission accomplie : {{count}} espions clés recrutés.",
     "missionFailed": "Mission échouée : {{count}} espions clés recrutés, {{lost}} perdus.",
     "noDoubleAgentsRemain": "Plus aucun agent double. Mission échouée.",
-    "sourceHand": "Main"
+    "sourceHand": "Main",
+    "hint": {
+      "retire": "Retirez ces petites cartes, pour que vos meilleures cartes reviennent plus souvent",
+      "assassinate": "Votre main ne peut pas arrêter cet espion : sacrifiez un agent double",
+      "doubleAgent": "L'As de la couleur de l'espion est un agent double : il fait passer vos autres cartes à sa couleur",
+      "counterKey": "Cet espion clé ne peut pas être recruté : contrez-le avec les cartes dont vous avez le moins besoin",
+      "counter": "Cet espion ne peut pas être recruté : contrez-le avec les cartes dont vous avez le moins besoin"
+    }
   },
   "invaders": {
     "wave2": "Vague 2",
@@ -619,7 +632,15 @@
     "guardianValue": "Gardien : {{value}}",
     "aliceAwakened": "Alice s'est réveillée avec {{count}} points de vie.",
     "guardiansLost": "Tous les gardiens spéciaux hors As ont été perdus.",
-    "nightmaresOverwhelmed": "Les cauchemars ont submergé Alice."
+    "nightmaresOverwhelmed": "Les cauchemars ont submergé Alice.",
+    "hint": {
+      "eliminate": "Éliminez ce cauchemar",
+      "defend": "Affaiblissez l'attaque de ce cauchemar : il ne peut pas être éliminé ce tour-ci",
+      "mold": "Façonnez ce gardien pour l'ajouter à votre paquet",
+      "exile": "Exilez ce cauchemar : il coûterait plus de 5 vies à Alice",
+      "deepBreath": "Rien ne vaut la peine d'être affecté : échangez votre carte la plus faible contre une nouvelle",
+      "remSleep": "Alice ne survivra pas à ce plateau : utilisez le sommeil REM pour repartir de zéro"
+    }
   },
   "spiderSolitaire": {
     "allEightKToA": "Les huit suites de K à A par couleur sont complètes."

@@ -169,7 +169,13 @@
     "tierCourtAlchemist": "Alquimista de la corte",
     "tierMiracleWorker": "Hacedor de milagros",
     "wonWithTier": "{{score}} puntos: ¡{{tier}}!",
-    "lostShortOfTarget": "{{score}} puntos. Necesitas {{target}} puntos para ganar."
+    "lostShortOfTarget": "{{score}} puntos. Necesitas {{target}} puntos para ganar.",
+    "hint": {
+      "stop": "Para aquí: un {{risk}} % de riesgo de explosión es demasiado para lo que aporta otra carta",
+      "keepCoins": "Quédate con las monedas: las mejores cartas darán fruto en las rondas que quedan",
+      "keepPoints": "Quédate con los puntos: quedan muy pocas rondas para que las monedas den fruto",
+      "buy": "Compra las mejores cartas que te permitan tus monedas: dos, de palos distintos"
+    }
   },
   "cityGrid": {
     "pileIsFull": "¡La pila está llena!",
@@ -360,7 +366,14 @@
     "missionComplete": "Misión cumplida: {{count}} espías clave reclutados.",
     "missionFailed": "Misión fallida: {{count}} espías clave reclutados, {{lost}} perdidos.",
     "noDoubleAgentsRemain": "No quedan agentes dobles. Misión fallida.",
-    "sourceHand": "Mano"
+    "sourceHand": "Mano",
+    "hint": {
+      "retire": "Retira estas cartas bajas, para que tus mejores cartas vuelvan más a menudo",
+      "assassinate": "Tu mano no puede detener a este espía: sacrifica un agente doble",
+      "doubleAgent": "El As del palo del espía es un agente doble: convierte tus demás cartas a su palo",
+      "counterKey": "Este espía clave no se puede reclutar: contrarréstalo con las cartas que menos necesitas",
+      "counter": "Este espía no se puede reclutar: contrarréstalo con las cartas que menos necesitas"
+    }
   },
   "invaders": {
     "wave2": "Oleada 2",
@@ -619,7 +632,15 @@
     "guardianValue": "Guardián: {{value}}",
     "aliceAwakened": "Alice ha despertado con {{count}} de vida.",
     "guardiansLost": "Se han perdido todos los guardianes especiales que no son ases.",
-    "nightmaresOverwhelmed": "Las pesadillas han vencido a Alice."
+    "nightmaresOverwhelmed": "Las pesadillas han vencido a Alice.",
+    "hint": {
+      "eliminate": "Elimina esta pesadilla",
+      "defend": "Debilita el ataque de esta pesadilla: este turno no se puede eliminar",
+      "mold": "Moldea este guardián para añadirlo a tu mazo",
+      "exile": "Exilia esta pesadilla: le costaría a Alice más de 5 de vida",
+      "deepBreath": "No merece la pena asignar nada: cambia tu carta más débil por una nueva",
+      "remSleep": "Alice no sobrevivirá a este tablero: usa el sueño REM para empezar de nuevo"
+    }
   },
   "spiderSolitaire": {
     "allEightKToA": "Las ocho escaleras de K a A por palo están completas."

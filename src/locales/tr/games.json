@@ -169,7 +169,13 @@
     "tierCourtAlchemist": "Saray Simyacısı",
     "tierMiracleWorker": "Mucize Yaratıcı",
     "wonWithTier": "{{score}} puan: {{tier}}!",
-    "lostShortOfTarget": "{{score}} puan. Kazanmak için {{target}} puan gerekiyor."
+    "lostShortOfTarget": "{{score}} puan. Kazanmak için {{target}} puan gerekiyor.",
+    "hint": {
+      "stop": "Burada dur: %{{risk}} taşma riski, bir kart daha eklemeye değmez",
+      "keepCoins": "Altınları al: daha iyi kartlar kalan turlarda kazandırır",
+      "keepPoints": "Puanları al: altınların kazandırması için çok az tur kaldı",
+      "buy": "Altınlarının yettiği en güçlü kartları al: farklı renklerden iki tane"
+    }
   },
   "cityGrid": {
     "pileIsFull": "Yığın dolu!",
@@ -360,7 +366,14 @@
     "missionComplete": "Görev tamamlandı: {{count}} kilit casus devşirildi.",
     "missionFailed": "Görev başarısız: {{count}} kilit casus devşirildi, {{lost}} kaybedildi.",
     "noDoubleAgentsRemain": "Çift ajan kalmadı. Görev başarısız.",
-    "sourceHand": "El"
+    "sourceHand": "El",
+    "hint": {
+      "retire": "Bu düşük kartları emekli et, böylece güçlü kartların daha sık gelir",
+      "assassinate": "Elin bu casusu durduramaz: bir çift ajanı feda et",
+      "doubleAgent": "Casusun rengindeki As bir çift ajandır: diğer kartlarını kendi rengine çevirir",
+      "counterKey": "Bu kilit casus devşirilemez: en az ihtiyacın olan kartlarla ona karşı koy",
+      "counter": "Bu casus devşirilemez: en az ihtiyacın olan kartlarla ona karşı koy"
+    }
   },
   "invaders": {
     "wave2": "2. dalga",
@@ -619,7 +632,15 @@
     "guardianValue": "Koruyucu: {{value}}",
     "aliceAwakened": "Alice {{count}} canla uyandı.",
     "guardiansLost": "As olmayan bütün özel koruyucular kaybedildi.",
-    "nightmaresOverwhelmed": "Kâbuslar Alice'i alt etti."
+    "nightmaresOverwhelmed": "Kâbuslar Alice'i alt etti.",
+    "hint": {
+      "eliminate": "Bu kâbusu yok et",
+      "defend": "Bu kâbusun saldırısını zayıflat: bu tur yok edilemez",
+      "mold": "Bu koruyucuyu şekillendirip destene kat",
+      "exile": "Bu kâbusu sürgün et: Alice'e 5 candan fazlasına mal olur",
+      "deepBreath": "Atamaya değer bir şey yok: en zayıf kartını yenisiyle değiştir",
+      "remSleep": "Alice bu masadan sağ çıkamaz: baştan başlamak için REM uykusunu kullan"
+    }
   },
   "spiderSolitaire": {
     "allEightKToA": "K'dan A'ya sekiz takım dizisinin hepsi tamamlandı."
