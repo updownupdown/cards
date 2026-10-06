@@ -241,6 +241,41 @@
       }
     }
   },
+  "elevens": {
+    "elevensDifficulty": {
+      "hash": "80558fd7",
+      "value": {
+        "description": "Las cuadrículas más grandes son más fáciles.",
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Fácil (5 x 3)"
+          },
+          {
+            "label": "Media (4 x 3)"
+          },
+          {
+            "label": "Difícil (3 x 3)"
+          }
+        ]
+      }
+    },
+    "elevensEliminateBadDeals": {
+      "hash": "f6b716b7",
+      "value": {
+        "description": "Garantiza que en todos los repartos se puedan jugar al menos 3 movimientos.",
+        "label": "Evitar malos repartos",
+        "options": [
+          {
+            "label": "Desactivado"
+          },
+          {
+            "label": "Activado"
+          }
+        ]
+      }
+    }
+  },
   "fight-clubs": {
     "fightClubsDifficulty": {
       "hash": "d82ad464",
@@ -468,6 +503,23 @@
           {
             "label": "Tréboles irlandeses",
             "description": "Sube o baja con cualquier palo, como mucho tres cartas por abanico y sin nuevos repartos."
+          }
+        ]
+      }
+    }
+  },
+  "little-windmill": {
+    "littleWindmillDifficulty": {
+      "hash": "e02074c2",
+      "value": {
+        "description": "El modo fácil permite volver a repartir el montón una vez.",
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Fácil (1 nuevo reparto)"
+          },
+          {
+            "label": "Normal (sin nuevos repartos)"
           }
         ]
       }

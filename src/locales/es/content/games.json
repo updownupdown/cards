@@ -136,6 +136,67 @@
     }
   },
   "augury": {
+    "howToPlay": {
+      "hash": "be872579",
+      "value": [
+        "## Objetivo",
+        "Descifra la **ley oculta** lo bastante bien como para acertar **ocho veces seguidas**.",
+        "## Cómo se juega",
+        "Cada partida tiene una ley secreta sobre qué cartas pueden seguir a la última o las últimas cartas del camino.",
+        "- Toca una carta de tu mano si crees que encaja con la ley oculta.",
+        "- Si crees que ninguna carta de tu mano encaja, toca **Ninguna encaja**.",
+        "- Si alguna carta sí encajaba, se juega por ti (se muestra en rojo) y tu racha de aciertos vuelve a cero.",
+        "Para todas las leyes: As = 1, Jotas = 11, Reina = 12, Rey = 13.",
+        "## Leyes",
+        "El ajuste de dificultad determina qué leyes se incluyen en la partida. El ajuste Difícil también elige entre las leyes fáciles.",
+        "**Fáciles:**",
+        "- Debe alternar el color",
+        "- Debe ser del mismo palo o del mismo valor",
+        "- Debe alternar entre valores impares y pares",
+        "- Debe ser de valor más alto; cualquiera puede seguir a J/Q/K",
+        "- Debe estar a dos valores como mucho",
+        "- Debe ser del mismo color",
+        "- Debe ser de otro palo",
+        "- Debe alternar entre alta (8 a K) y baja (A a 7)",
+        "- Debe alternar entre figuras y cartas numéricas",
+        "- Debe ser de valor más bajo; cualquiera puede seguir a un A",
+        "- Debe estar al menos a tres valores de distancia",
+        "- Una impar debe seguir a una impar, una par a una par",
+        "- Debe estar a dos valores como mucho (el As y el Rey son vecinos)",
+        "- Debe seguir los palos en orden: picas, corazones, diamantes, tréboles",
+        "- Mismo palo que la última: más alta; otro palo del mismo color: más baja; el otro color puede seguir a cualquiera",
+        "- Las cartas rojas deben ser 8 o más; las negras, 7 o menos",
+        "**Difíciles:**",
+        "- Tras una roja, más alta; tras una negra, más baja; cualquiera puede seguir a una K roja o a un A negro",
+        "- Debe seguir los palos en orden: corazones, tréboles, diamantes, picas",
+        "- Los valores pares deben ser rojos y los impares negros",
+        "- Debe ser del mismo color que la penúltima carta",
+        "- Una negra debe ser de valor más alto; una roja puede seguir a cualquiera",
+        "- Mismo color que la última: más alta; el otro color puede seguir a cualquiera",
+        "- Debe ser del color opuesto al de la penúltima carta",
+        "- Debe ser del mismo palo que la penúltima carta",
+        "- Debe ser de un palo distinto al de las dos últimas cartas",
+        "- Debe zigzaguear: más alta tras una bajada, más baja tras una subida; cualquiera puede seguir a dos valores iguales",
+        "- Tras una roja, 7 o menos; tras una negra, 8 o más",
+        "- Los corazones pueden seguir a cualquiera; las demás cartas deben ser de valor más alto",
+        "- Los dos valores deben sumar 14 o menos",
+        "- Tras una figura, mismo palo; tras una carta numérica, otro palo",
+        "- Tras una alta (8 a K), el otro color; tras una baja (A a 7), el mismo color",
+        "- Debe ser del mismo color pero de otro palo",
+        "- Debe ser de un palo superior (tréboles, diamantes, corazones, picas) o de valor más alto; cualquiera puede seguir a la K de picas",
+        "- Debe estar entre los dos últimos valores, o ser igual a uno de ellos",
+        "- No debe formar tres cartas seguidas del mismo color",
+        "- Tras una subida, mismo palo que la penúltima; tras una bajada, mismo color; cualquiera puede seguir a dos valores iguales"
+      ]
+    },
+    "quickStart": {
+      "hash": "d4bd6572",
+      "value": [
+        "Una ley oculta decide qué cartas pueden seguir a la última o las últimas cartas del camino.",
+        "Juega una carta que creas que encaja, o declara que ninguna de tu mano encaja.",
+        "Acierta ocho veces seguidas para ganar."
+      ]
+    },
     "title": {
       "hash": "f453f554",
       "value": "Augurio"
@@ -880,6 +941,27 @@
     }
   },
   "crossword": {
+    "howToPlay": {
+      "hash": "05a15314",
+      "value": [
+        "## Objetivo",
+        "Llena la **cuadrícula de 7×7**, como un crucigrama, con 49 de las 52 cartas.",
+        "## Cómo se juega",
+        "Coloca las cartas en una casilla vacía **junto a una carta ya colocada**, lado con lado o en diagonal.",
+        "- Las Jotas, Reinas y Reyes son las **casillas negras**. Dos de ellas nunca pueden tocarse lado con lado (en diagonal sí).",
+        "- Las cartas numéricas son las «letras», que forman «palabras» entre casillas negras o bordes.",
+        "Cuando la cuadrícula esté completa, las «palabras» deben **sumar un número par**. Los Ases valen 1.",
+        "Cuando hay 48 casillas llenas, se descubren las cuatro últimas cartas y eliges una para llenar la última casilla."
+      ]
+    },
+    "quickStart": {
+      "hash": "bc7ca504",
+      "value": [
+        "Llena la cuadrícula con 49 de las 52 cartas, como en un crucigrama.",
+        "Las figuras son como casillas negras; dos de ellas no pueden tocarse lado con lado.",
+        "Las cartas numéricas forman «palabras» entre casillas negras o bordes, y deben sumar un número par."
+      ]
+    },
     "title": {
       "hash": "6c831cdf",
       "value": "Crucigrama"
@@ -1175,6 +1257,29 @@
     }
   },
   "ebb-and-flow": {
+    "howToPlay": {
+      "hash": "8b86f554",
+      "value": [
+        "## Objetivo",
+        "Juega las **52 cartas** en las cuatro pilas.",
+        "## Cómo se juega",
+        "Cualquier carta puede empezar una pila vacía. Los Ases son bajos y los Reyes altos.",
+        "- **Pilas ascendentes:** juega una carta del mismo valor que la carta superior, o más alta.",
+        "- **Pilas descendentes:** juega una carta del mismo valor que la carta superior, o más baja.",
+        "Una carta **un valor por detrás en el mismo palo** siempre se puede jugar:",
+        "- un {7H} sobre un {8H} ascendente,",
+        "- un {9S} sobre un {8S} descendente, etc.",
+        "Puedes rellenar tu mano desde el mazo siempre que te falten 2 cartas."
+      ]
+    },
+    "quickStart": {
+      "hash": "491ccd55",
+      "value": [
+        "Juega cartas de tu mano: las pilas ascendentes suben y las descendentes bajan.",
+        "Puedes rellenar tu mano desde el mazo cuando te falten 2 cartas.",
+        "Una carta un valor por detrás del mismo palo invierte el sentido de una pila."
+      ]
+    },
     "title": {
       "hash": "6cff71c4",
       "value": "Flujo y reflujo"
@@ -1230,6 +1335,38 @@
     "title": {
       "hash": "1f84944a",
       "value": "Detective elemental"
+    }
+  },
+  "elevens": {
+    "howToPlay": {
+      "hash": "48901e1c",
+      "value": [
+        "## Objetivo",
+        "Vacía todo el mazo retirando parejas de cartas que sumen **11**, o tríos reales de **Jota-Reina-Rey**.",
+        "## Reparto",
+        "- Las cartas se reparten boca arriba en una cuadrícula: 5x3 en Fácil, 4x3 en Media o 3x3 en Difícil (la predeterminada).",
+        "- El resto de la baraja forma el mazo.",
+        "## Valor de las cartas",
+        "- El As vale 1 y las cartas numéricas valen su número.",
+        "- Las Jotas, Reinas y Reyes no tienen valor y solo salen juntos.",
+        "## Cómo se juega",
+        "- Selecciona dos cartas que sumen 11: As y 10, 2 y 9, 3 y 8, 4 y 7, o 5 y 6.",
+        "- O selecciona una Jota, una Reina y un Rey, en cualquier orden.",
+        "- Las cartas retiradas se reponen al instante desde el mazo.",
+        "## Ganar y perder",
+        "- Ganas cuando la cuadrícula y el mazo están vacíos.",
+        "- Pierdes cuando no se puede formar ninguna pareja ni trío real y quedan cartas."
+      ]
+    },
+    "quickStart": {
+      "hash": "be04eab8",
+      "value": [
+        "Retira parejas que sumen 11, o una Jota, una Reina y un Rey juntos."
+      ]
+    },
+    "title": {
+      "hash": "b11d7c71",
+      "value": "Once"
     }
   },
   "field-command": {
@@ -1829,6 +1966,23 @@
     }
   },
   "iris-garden": {
+    "howToPlay": {
+      "hash": "5531c4fb",
+      "value": [
+        "## Objetivo",
+        "Retira del jardín las **48 cartas** (del As a la Reina) por parejas.",
+        "## Cómo se juega",
+        "Dos cartas del **mismo valor** forman pareja, sean cuales sean sus palos.",
+        "Una pareja de cartas del **mismo valor** se puede descartar si están contiguas en horizontal o en vertical, o unidas a través de **huecos vacíos** por un camino formado por tres líneas rectas como mucho."
+      ]
+    },
+    "quickStart": {
+      "hash": "92195cad",
+      "value": [
+        "Despeja todo el jardín seleccionando parejas.",
+        "Las parejas deben estar contiguas, o poder unirse por un camino a través de huecos vacíos formado por tres líneas como mucho."
+      ]
+    },
     "title": {
       "hash": "b023f43f",
       "value": "Jardín de lirios"
@@ -2001,6 +2155,37 @@
       "value": "Apaga las luces"
     }
   },
+  "little-windmill": {
+    "howToPlay": {
+      "hash": "f34f0359",
+      "value": [
+        "## Objetivo",
+        "Lleva las 52 cartas a las cuatro fundaciones de las esquinas.",
+        "## Fundaciones",
+        "- Se saca un **As** del mazo para empezar la primera fundación. Las otras tres empiezan con los demás Ases a medida que salen.",
+        "- Sube cada fundación **por palo**, del As al Rey.",
+        "## La cruz",
+        "- Baja las cinco pilas de la cruz **sin importar el palo**. Sobre un As no va nada.",
+        "- Solo está disponible la carta superior de cada pila, y las cartas se mueven de una en una.",
+        "- Cualquier carta disponible puede ocupar un hueco vacío de la cruz.",
+        "## Mazo",
+        "- Pasa las cartas del mazo al montón de una en una.",
+        "- En Normal no se vuelve a repartir. En Fácil, se puede dar la vuelta al montón una vez para recorrer de nuevo el mazo."
+      ]
+    },
+    "quickStart": {
+      "hash": "a1f0545c",
+      "value": [
+        "Un As empieza la primera fundación de esquina; los demás Ases empiezan las otras.",
+        "Las fundaciones suben por palo, del As al Rey.",
+        "Baja la cruz sin importar el palo, de carta en carta."
+      ]
+    },
+    "title": {
+      "hash": "241c9f73",
+      "value": "Molinillo"
+    }
+  },
   "lone-joker": {
     "howToPlay": {
       "hash": "11835fe7",
@@ -2152,6 +2337,28 @@
     }
   },
   "miss-milligan": {
+    "howToPlay": {
+      "hash": "d95de4df",
+      "value": [
+        "## Objetivo",
+        "Lleva las dos barajas a las ocho fundaciones, cada una ordenada por palo del As al Rey.",
+        "## Reglas",
+        "- Construye las columnas **bajando de valor y alternando colores**. Una secuencia bien ordenada se puede mover entera.",
+        "- Solo un **Rey** (o una secuencia que empiece por un Rey) puede ocupar una columna vacía.",
+        "- Toca el **mazo** para repartir una carta sobre cada columna, esté vacía o no.",
+        "## Variantes",
+        "- **Miss Milligan**: cuando el mazo se vacía, puedes apartar una carta o secuencia en el **bolsillo**.",
+        "- **Gigante**: cualquier carta o secuencia puede ocupar una columna vacía, pero no hay bolsillo."
+      ]
+    },
+    "quickStart": {
+      "hash": "d6a2a898",
+      "value": [
+        "Sube ocho fundaciones por palo, del A a la K.",
+        "Baja las columnas alternando colores; puedes mover secuencias.",
+        "Toca el mazo para repartir una carta sobre cada columna."
+      ]
+    },
     "title": {
       "hash": "71a70424",
       "value": "Miss Milligan"
@@ -2293,6 +2500,27 @@
     }
   },
   "ozanams-square": {
+    "howToPlay": {
+      "hash": "580fe3be",
+      "value": [
+        "## Objetivo",
+        "Llena la cuadrícula de modo que cada **fila, columna y diagonal** tenga **una carta de cada valor y una carta de cada palo**.",
+        "## Cómo se juega",
+        "- Algunas cartas se reparten en su sitio al principio y no se pueden mover.",
+        "- Mueve cartas de la bandeja a una casilla vacía; las cartas que colocas se pueden mover a otra casilla, intercambiar o arrastrar de vuelta a la bandeja.",
+        "- Una carta que repite un valor o un palo en una de sus líneas se marca en rojo.",
+        "- Cada reparto tiene **exactamente una** solución.",
+        "## Historia",
+        "Jacques Ozanam planteó este rompecabezas con naipes en sus *Récréations mathématiques et physiques* (1725). Más tarde, Leonhard Euler estudió cuadrados como este, a los que llamó cuadrados grecolatinos."
+      ]
+    },
+    "quickStart": {
+      "hash": "f0ab22cd",
+      "value": [
+        "Llena el cuadrado con los dieciséis Ases, Reyes, Reinas y Jotas.",
+        "Ninguna fila, columna o diagonal principal puede tener dos cartas del mismo valor o palo."
+      ]
+    },
     "title": {
       "hash": "e2c5ab80",
       "value": "Cuadrado de Ozanam"
@@ -2383,6 +2611,45 @@
     }
   },
   "picket-fence": {
+    "howToPlay": {
+      "hash": "ec23d938",
+      "value": [
+        "## Objetivo",
+        "Consigue **60 puntos** o más dividiendo tus calles en urbanizaciones con vallas y llenándolas de casas, parques y piscinas. La partida sigue hasta que se acaba la baraja, así que sigue sumando puntos.",
+        "## Tu turno",
+        "Tienes tres cartas y juegas dos en cada turno: una por su número y luego otra por su palo. Después roba hasta volver a tener tres.",
+        "## Construir",
+        "- Construye una carta como casa en un solar vacío. Los números de las casas deben subir de izquierda a derecha a lo largo de una calle (los Ases valen 1, las Jotas 11, las Reinas 12 y los Reyes 13). Los solares vacíos no cuentan.",
+        "- O **reforma**: construye la carta sobre una casa existente, si los números de la calle siguen subiendo. La casa antigua se descarta; su parque o piscina se queda.",
+        "- O descarta la carta y no construyas nada este turno.",
+        "## Efectos",
+        "- **♥ Parque:** el corazón se coloca bajo la casa que acabas de construir o reformar, como parque.",
+        "- **♦ Piscina:** el diamante se coloca bajo esa casa como piscina, si está en un solar con piscina.",
+        "- **♠ Valla:** pon una valla entre dos solares, en cualquier calle.",
+        "- **♣ Segunda casa:** construye también el trébol como casa, o reforma con él.",
+        "- Una casa admite un parque o una piscina. Una carta sin uso se descarta.",
+        "## Puntuación",
+        "- Las vallas y los extremos de las calles dividen cada calle en **urbanizaciones**. Solo puntúa una urbanización **terminada**: la que tiene todos sus solares construidos.",
+        "- Sus casas dan 1, 3, 6 o 10 puntos en una urbanización de 1, 2, 3 o 4. **Las urbanizaciones de cinco o más no puntúan**, así que todas las calles necesitan vallas.",
+        "- Cada parque de una urbanización terminada suma 2 puntos, y cada piscina 4.",
+        "## Clasificación",
+        "- 60+: Buenos vecinos",
+        "- 70+: Barrio modelo",
+        "- 80+: De postal",
+        "## Consejos",
+        "- Las urbanizaciones más grandes valen más, pero un solo solar sin construir deja toda la urbanización, con sus parques y piscinas, sin puntuar. Una valla puede limitar las pérdidas.",
+        "- Deja espacio entre los números: un solar entre un 5 y un 6 no se puede construir hasta que se reforme una de esas casas.",
+        "- La etiqueta sobre cada urbanización muestra lo que puntuará una vez terminada, o ✕ si tal como está no se puede terminar."
+      ]
+    },
+    "quickStart": {
+      "hash": "616845be",
+      "value": [
+        "En cada turno, construye una carta como casa y usa el palo de otra carta como su efecto.",
+        "Los números de las casas deben subir de izquierda a derecha a lo largo de cada calle.",
+        "Solo puntúan las urbanizaciones valladas de hasta cuatro casas, una vez construidos todos sus solares."
+      ]
+    },
     "title": {
       "hash": "63ac8afa",
       "value": "Cerca de estacas"
@@ -2672,6 +2939,34 @@
     "title": {
       "hash": "850a8f8b",
       "value": "Enviado real"
+    }
+  },
+  "royal-marriage": {
+    "howToPlay": {
+      "hash": "f2ecd27f",
+      "value": [
+        "## Objetivo",
+        "Descarta todas las cartas excepto la **Reina** y el **Rey de corazones**, que deben acabar juntos.",
+        "## Reparto",
+        "- Las 52 cartas se disponen en una sola línea continua que pasa de una fila a la siguiente.",
+        "- La Reina de corazones empieza la línea y el Rey de corazones la termina.",
+        "## Descartar",
+        "- Selecciona la carta o cartas que quieras retirar y pulsa **Descarte**.",
+        "- Una carta, o dos cartas juntas, pueden salir si las cartas a ambos lados coinciden en **valor o palo**.",
+        "- Una secuencia más larga solo puede salir si todas sus cartas son del **mismo palo** y las cartas a ambos lados coinciden en valor o palo.",
+        "- La Reina y el Rey de corazones nunca salen de la línea.",
+        "- La línea se cierra después de cada descarte."
+      ]
+    },
+    "quickStart": {
+      "hash": "11cc1c79",
+      "value": [
+        "Descarta las cartas que estén entre dos cartas del mismo valor o palo, hasta que la Reina y el Rey de corazones queden juntos."
+      ]
+    },
+    "title": {
+      "hash": "52d2c562",
+      "value": "Matrimonio real"
     }
   },
   "royal-rest": {
@@ -3107,6 +3402,10 @@
         "Toca el mazo para añadir una carta al final de la fila.",
         "Toca la primera y la última carta de un grupo para retirarlo."
       ]
+    },
+    "title": {
+      "hash": "ca23c5f9",
+      "value": "Diez-veinte-treinta"
     }
   },
   "terrace": {
