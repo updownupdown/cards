@@ -35,24 +35,15 @@ export function HintModeRadio({
         options={HINT_MODES.map((option) => ({
           value: option,
           label: t(`helpFromAbove.${option}`),
-          selectedBackgroundColor: MODE_INKS[option],
-          selectedButtonStyle: {
-            boxShadow: `0 0 ${spacing(8)}px ${rgba(MODE_INKS[option], 0.35)}`,
-          },
+          // The chosen one lifts, as in the app's other toggles, and takes
+          // its own ink.
+          selectedBackgroundColor: rgba(MODE_INKS[option], 0.16),
         }))}
         selectedValue={value}
         onChange={onChange}
-        containerStyle={{
-          width: "100%",
-          height: spacing(44),
-          backgroundColor: UfoColors.black,
-          borderColor: rgba(ink, 0.45),
-        }}
+        containerStyle={{ width: "100%", height: spacing(44) }}
         buttonStyle={{ flex: 1, paddingHorizontal: spacing(6) }}
-        selectedTextStyle={{
-          color: UfoColors.black,
-          fontFamily: FontWeight[700],
-        }}
+        selectedTextStyle={{ color: ink, fontFamily: FontWeight[600] }}
       />
       <Text size="sm" weight={400} color={palette.dim} lineHeight={1.3}>
         {/* **Bold** runs (what happens to wins) stand out in the choice's ink. */}

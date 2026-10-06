@@ -104,17 +104,17 @@ export const UfoColors = {
 export const UFO_INKS = [UfoColors.green, UfoColors.purple, UfoColors.blue];
 
 /**
- * The same three, turned up to neon, for the UFO's moving effects only (hint
- * beacons, beams and zaps), which need to stand out on any card. Each `glow`
- * is a deeper shade of its ink, for halos.
+ * The same three, turned up halfway to neon, for the UFO's moving effects
+ * only (hint beacons, beams and zaps), which need to stand out on any card.
+ * Each `glow` is a deeper shade of its ink, for halos.
  */
 export const UfoNeon = {
-  green: "#2bff9a",
-  pink: "#f048ff",
-  blue: "#2ed3ff",
-  greenGlow: "#00d977",
-  pinkGlow: "#c81ee6",
-  blueGlow: "#0aa5e6",
+  green: "#54ffa5",
+  pink: "#dc72ff",
+  blue: "#4eddff",
+  greenGlow: "#2ed98a",
+  pinkGlow: "#b04fe6",
+  blueGlow: "#2db5e6",
 } as const;
 
 /**

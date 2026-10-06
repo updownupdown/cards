@@ -928,15 +928,12 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
   );
 }
 
-// As Mercy Skip's bubble: pure black, a fine green shadow under it, in the
-// interface's softer green.
 const bubbleStyle = {
   width: BUBBLE_WIDTH,
-  backgroundColor: UfoColors.black,
-  borderColor: UfoColors.green,
+  backgroundColor: rgba(Colors.K950, 0.95),
+  borderColor: rgba(UfoColors.green, 0.4),
   borderWidth: 1,
   borderRadius: 16,
-  boxShadow: `0 2px 0 0 ${rgba(UfoColors.green, 0.45)}`,
   paddingHorizontal: 12,
   paddingVertical: 8,
 };
@@ -945,8 +942,8 @@ const tailStyle = {
   position: "absolute" as const,
   width: 12,
   height: 12,
-  backgroundColor: UfoColors.black,
-  borderColor: UfoColors.green,
+  backgroundColor: rgba(Colors.K950, 0.95),
+  borderColor: rgba(UfoColors.green, 0.4),
   borderTopWidth: 1,
   borderLeftWidth: 1,
 };

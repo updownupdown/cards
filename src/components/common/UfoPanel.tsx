@@ -1,4 +1,4 @@
-import { NeonFrame } from "@/components/common/NeonFrame";
+import { UfoFrame, type UfoFrameStyle } from "@/components/common/UfoFrame";
 import { Text, toDisplayUpperCase } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon } from "@/icons";
@@ -8,12 +8,13 @@ import { View, type StyleProp, type ViewStyle } from "react-native";
 
 /**
  * A "Help from Above" box: the UFO and its title in green capitals, in the
- * UFO's glowing frame. The Rules modal and the settings both show one.
+ * UFO's frame. The Rules modal and the settings both show one.
  */
 export function UfoPanel({
   title,
   trailing,
   wrapHeading,
+  variant,
   style,
   children,
 }: {
@@ -22,6 +23,7 @@ export function UfoPanel({
   trailing?: ReactNode;
   /** Wraps the heading, e.g. a Pressable that opens the panel. */
   wrapHeading?: (heading: ReactNode) => ReactNode;
+  variant?: UfoFrameStyle;
   style?: StyleProp<ViewStyle>;
   children?: ReactNode;
 }) {
@@ -43,7 +45,8 @@ export function UfoPanel({
     </View>
   );
   return (
-    <NeonFrame
+    <UfoFrame
+      variant={variant}
       radius={spacing(14)}
       style={[
         {
@@ -57,6 +60,6 @@ export function UfoPanel({
     >
       {wrapHeading ? wrapHeading(heading) : heading}
       {children}
-    </NeonFrame>
+    </UfoFrame>
   );
 }

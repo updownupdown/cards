@@ -1,6 +1,6 @@
 import { useTranslation } from "@/i18n";
 import { Icon } from "@/icons/Icon";
-import { NeonFrame } from "@/components/common/NeonFrame";
+import { UfoFrame } from "@/components/common/UfoFrame";
 import {
   Colors,
   FontWeight,
@@ -613,7 +613,7 @@ export function CampaignUFO({
 
       {caught && (
         <View style={bubbleContainerStyle}>
-          <NeonFrame radius={BUBBLE_RADIUS} style={bubbleStyle}>
+          <UfoFrame radius={BUBBLE_RADIUS} style={bubbleStyle}>
             <AlienLine message={message} shimmer={shimmer} />
             <Text style={bubbleCaptionStyle}>
               {boldRuns(t("mercySkip.granted")).map(({ text, bold }, index) =>
@@ -626,7 +626,7 @@ export function CampaignUFO({
                 ),
               )}
             </Text>
-          </NeonFrame>
+          </UfoFrame>
           {/* Outside the bubble's corner and in the ship's own green, so it
               reads as the one way to close the message. Nothing else does:
               the UFO stays until this is pressed. */}
@@ -645,12 +645,12 @@ export function CampaignUFO({
       {visiting && showVisitBubble && (
         <View style={bubbleContainerStyle}>
           {/* Just the short alien line, so the bubble shrinks to fit it. */}
-          <NeonFrame
+          <UfoFrame
             radius={BUBBLE_RADIUS}
             style={[bubbleStyle, { alignSelf: "center" }]}
           >
             <AlienLine message={message} shimmer={shimmer} />
-          </NeonFrame>
+          </UfoFrame>
         </View>
       )}
     </RNAnimated.View>
