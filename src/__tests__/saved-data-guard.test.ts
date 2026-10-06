@@ -311,23 +311,35 @@ async function launchApp(storage: Record<string, unknown>): Promise<App> {
  * What the golden save's five wins had open on the September 2026 map, read
  * off that map by hand. A later map may open more; it must never open less.
  */
+// The games the save had open, and those its wins open on the current map
+// (redone in October 2026, which opened a few more).
 const GOLDEN_UNLOCKED_PATHS = [
   "/bakers-dozen",
   "/beehive",
   "/blackberry-pie",
+  "/boiling-over",
   "/bowling",
   "/crescent",
+  "/delta-21",
+  "/diplomat",
+  "/eight-off",
   "/fifteen-puzzle",
   "/freecell",
   "/frog",
+  "/golf",
   "/grandfathers-clock",
   "/klondike",
   "/memory",
   "/ouroboros",
   "/penguin",
   "/pocket-poker",
+  "/red-diamond",
+  "/simple-simon",
+  "/stalactites",
   "/sultan",
+  "/three-peaks",
   "/tower-of-hanoi",
+  "/twelve-trials",
   "/yukon",
 ];
 
