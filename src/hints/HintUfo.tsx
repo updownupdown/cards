@@ -1,4 +1,5 @@
 import { isBoardInputLocked } from "@/components/Cards/input-lock";
+import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useTranslation } from "@/i18n";
 import {
@@ -76,7 +77,7 @@ function beaconsDuration(lastDelay: number) {
 
 /** How high over its target the UFO hovers: the length of its beam. */
 function hoverLift(size: number) {
-  return Math.max(44, Math.min(96, size * 0.9));
+  return Math.max(58, Math.min(110, size * 1.25));
 }
 
 type Translate = (key: string, values?: Record<string, unknown>) => string;
@@ -129,15 +130,18 @@ function Beacon({
     return () => animation.stop();
   }, [delay, ping, pings, presence]);
 
-  const size = Math.max(56, spot.size * 1.1);
-  const core = Math.max(14, Math.round(spot.size * 0.18));
+  const size = Math.max(64, spot.size * 1.5);
+  const core = Math.max(16, Math.round(spot.size * 0.22));
 
   // Two rings, half a ping apart, each growing out of the core and fading.
   const ring = (offset: number) => {
-    const phase = ping.interpolate({
-      inputRange: [0, 1 - offset, 1 - offset + 0.0001, 1],
-      outputRange: [offset, 1, 0, offset],
-    });
+    const phase =
+      offset === 0
+        ? ping
+        : ping.interpolate({
+            inputRange: [0, 1 - offset, 1 - offset + 0.0001, 1],
+            outputRange: [offset, 1, 0, offset],
+          });
     return (
       <Animated.View
         style={{
@@ -278,8 +282,8 @@ function TractorBeam({
       <Svg width={width} height={height}>
         <Defs>
           <LinearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor={MINT} stopOpacity={0.75} />
-            <Stop offset="1" stopColor={MINT} stopOpacity={0.25} />
+            <Stop offset="0" stopColor={MINT} stopOpacity={0.95} />
+            <Stop offset="1" stopColor={MINT} stopOpacity={0.45} />
           </LinearGradient>
         </Defs>
         <Polygon
@@ -748,15 +752,17 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
     <View
       ref={root}
       collapsable={false}
-      style={{
-        position: "absolute",
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        zIndex: LayerZIndexes.hintUfo,
-        pointerEvents: "box-none",
-      }}
+      style={[
+        pointerEventsStyles.boxNone,
+        {
+          position: "absolute",
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          zIndex: LayerZIndexes.hintUfo,
+        },
+      ]}
     >
       {beacons?.spots.map(({ key, spot, delay }) => (
         <Beacon key={key} spot={spot} delay={delay} />
