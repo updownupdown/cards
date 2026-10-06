@@ -38,12 +38,13 @@ import {
  * "Help from Above": what the header's UFO does when pressed.
  *
  * - Beacons: each place in the hint lights up with a beacon (a bright core
- *   and rings pinging out from it), one step after another, and the hint's
- *   words show in a bubble under the header's UFO.
+ *   and rings pinging out from it), one step after another. A hint with a
+ *   note (a move worth explaining) says it in a bubble under the header's
+ *   UFO.
  * - Autopilot: the UFO flies out of the header to the hint and plays it. To
  *   move a card, it hovers over it, switches on its tractor beam and carries
  *   it across; to press a button or tap a card, it zaps it. Then it flies
- *   home. The hint's words ride along in its bubble. Tapping anywhere before
+ *   home. A note rides along in its bubble. Tapping anywhere before
  *   it acts sends it home without playing.
  *
  * It plays a hint by tapping its targets as a player would (HintBoard.tap),
@@ -76,8 +77,8 @@ const BEAM_HOLD_MS = 450;
 const ZAP_MS = 180;
 /**
  * Hints show only where to look, not words: the move speaks for itself, and
- * games would otherwise each need their own messages. The wiring stays, for
- * moves that may need explaining one day; "No hint available" always shows.
+ * games would otherwise each need their own messages. A hint with a note
+ * (a move worth explaining) says it, and "No hint available" always shows.
  */
 const SHOW_HINT_TEXT = false;
 const NOTHING_TO_SAY_MS = 1800;
@@ -96,9 +97,15 @@ function hoverLift(size: number) {
 type Translate = (key: string, values?: Record<string, unknown>) => string;
 
 function hintText(t: Translate, hint: Hint | null) {
-  return hint
-    ? t(`hint.${hint.message.key}`, hint.message.values)
-    : t("hint.none");
+  if (!hint) return t("hint.none");
+  return (
+    hint.message.note ?? t(`hint.${hint.message.key}`, hint.message.values)
+  );
+}
+
+/** Whether the UFO says the hint's words: always for a note or no hint. */
+function saysText(hint: Hint | null) {
+  return !hint || !!hint.message.note || SHOW_HINT_TEXT;
 }
 
 type BeaconKind = "from" | "to";
@@ -482,6 +489,8 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
   const [beacons, setBeacons] = useState<{
     id: number;
     hasHint: boolean;
+    /** Whether the bubble under the dock shows the hint's words. */
+    says: boolean;
     spots: { key: string; spot: HintSpot; delay: number; kind: BeaconKind }[];
     text: string;
     dock: HintSpot | null;
@@ -598,6 +607,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
     setBeacons({
       id,
       hasHint: !!hint,
+      says: saysText(hint),
       spots,
       text,
       dock: dock && toLocal(dock),
@@ -645,7 +655,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
       const up = hoverLift(local.size);
       setLift(up);
       setBeamWidth(Math.max(40, local.size * 0.95));
-      if (SHOW_HINT_TEXT) setBubble({ text, side: sideFor(local.x) });
+      if (saysText(hint)) setBubble({ text, side: sideFor(local.x) });
       const distance = Math.hypot(local.x - here.x, local.y - up - here.y);
       return moveTo(
         local.x,
@@ -829,7 +839,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
       {beacons?.spots.map(({ key, spot, delay, kind }) => (
         <Beacon key={key} spot={spot} delay={delay} kind={kind} />
       ))}
-      {beacons?.dock && (!beacons.hasHint || SHOW_HINT_TEXT) && (
+      {beacons?.dock && beacons.says && (
         <View
           style={{
             position: "absolute",

@@ -28,6 +28,8 @@ import { GameWrapper } from "../common/GameWrapper";
 import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { makeHint, pressHint, withNote, zoneTarget } from "@/hints/hint";
 type SelectedPos = { queueIndex: number; cardIndex: number };
 
 export type CafeQueueSelectedPos = SelectedPos;
@@ -146,7 +148,120 @@ function evaluateEnd(state: GameState): { ended: boolean; won: boolean } {
   return { ended: false, won: false };
 }
 
+const SLOT_ZONE = (queueIndex: number, cardIndex: number) =>
+  `slot-${queueIndex}-${cardIndex}`;
+
+/** The unseen cards that would fit between a slot's neighbours. */
+function slotFit(
+  queue: PlayingCard[],
+  cardIndex: number,
+  unseen: PlayingCard[],
+) {
+  const fits = unseen.filter((card) =>
+    checkNextCustomerFits({ queueIndex: 0, cardIndex }, card, queue),
+  ).length;
+  return unseen.length ? fits / unseen.length : 0;
+}
+
+/**
+ * The slot the next customer most likely fits (the deck is face down: odds
+ * from the cards not yet seen), a miss weighed by what clearing it costs.
+ */
+function bestSlot(state: GameState) {
+  const unseen = state.deck;
+  let best = null as { pos: SelectedPos; value: number } | null;
+  state.queues.forEach((queue, queueIndex) => {
+    for (let cardIndex = 0; cardIndex <= queue.length; cardIndex += 1) {
+      const fit = slotFit(queue, cardIndex, unseen);
+      // A miss may cost the whole queue (if the customer stays).
+      const value = fit - (1 - fit) * 0.1 * queue.length;
+      if (!best || value > best.value) {
+        best = { pos: { queueIndex, cardIndex }, value };
+      }
+    }
+  });
+  return best?.pos ?? null;
+}
+
+/**
+ * What discarding these cards risks: the game is lost on a rank's fourth
+ * discard, so each card counts by how many of its rank are already out.
+ */
+function discardRisk(
+  counts: Record<PlayingCard["rank"], number>,
+  cards: PlayingCard[],
+) {
+  const after = { ...counts };
+  let risk = 0;
+  for (const card of cards) {
+    after[card.rank] += 1;
+    risk += after[card.rank] >= 4 ? 1000 : after[card.rank] ** 2;
+  }
+  return risk;
+}
+
+/** Seat the customer (losing the queue) or turn away two: the safer. */
+function bestDecision(state: GameState): "stay" | "kick" | null {
+  const pos = state.selectedPos;
+  const customer = top(state.deck);
+  if (!pos || !customer || !state.decisionNeeded) return null;
+  const stay = discardRisk(state.discardsByRank, state.queues[pos.queueIndex]);
+  // The next card is face down: average over what it may be.
+  const unseen = state.deck.slice(0, -1);
+  const kick = unseen.length
+    ? unseen.reduce(
+        (sum, card) =>
+          sum + discardRisk(state.discardsByRank, [customer, card]),
+        0,
+      ) / unseen.length
+    : discardRisk(state.discardsByRank, [customer]);
+  return stay <= kick ? "stay" : "kick";
+}
+
+function findCafeQueueHint(state: GameState) {
+  if (state.ended || state.queues.every((queue) => queue.length === 0)) {
+    return null;
+  }
+  if (state.decisionNeeded) {
+    const decision = bestDecision(state);
+    if (!decision) return null;
+    return decision === "stay"
+      ? withNote(
+          pressHint("actionBtns", i18n.t("games:cafeQueue.letThemStay")),
+          i18n.t("games:cafeQueue.hint.letThemStay"),
+        )
+      : withNote(
+          pressHint("actionBtns", i18n.t("games:cafeQueue.kickThemOut")),
+          i18n.t("games:cafeQueue.hint.kickThemOut"),
+        );
+  }
+  if (top(state.deck)?.faceUp) return null;
+  const slot = bestSlot(state);
+  if (!slot) return null;
+  const chosen =
+    state.selectedPos?.queueIndex === slot.queueIndex &&
+    state.selectedPos?.cardIndex === slot.cardIndex;
+  if (chosen) {
+    return pressHint(
+      "actionBtns",
+      i18n.t("games:cafeQueue.revealNextCustomer"),
+    );
+  }
+  const fit = slotFit(
+    state.queues[slot.queueIndex],
+    slot.cardIndex,
+    state.deck,
+  );
+  return withNote(
+    makeHint("tapCard", zoneTarget(SLOT_ZONE(slot.queueIndex, slot.cardIndex))),
+    i18n.t("games:cafeQueue.hint.slot", { chance: Math.round(fit * 100) }),
+  );
+}
+
 export const cafeQueueRules = {
+  findHint: findCafeQueueHint,
+  bestSlot,
+  bestDecision,
   createDiscardCount,
   totalInQueues,
   checkNextCustomerFits,
@@ -194,6 +309,21 @@ export default function CafeQueue() {
   } = useFade(showRevealNextCustomerButton, 220);
   const { isRendered: renderDecisionButtons, opacity: decisionButtonsOpacity } =
     useFade(showDecisionButtons, 220);
+
+  useHint(() => findCafeQueueHint(game), {
+    game,
+    enabled: !isResolvingCustomerAction,
+  });
+
+  function toggleSlot(queueIndex: number, cardIndex: number) {
+    if (game.decisionNeeded) return;
+    const isSelected =
+      game.selectedPos?.queueIndex === queueIndex &&
+      game.selectedPos.cardIndex === cardIndex;
+    setGame((draft) => {
+      draft.selectedPos = isSelected ? undefined : { queueIndex, cardIndex };
+    });
+  }
 
   // ===== Reveal Next Customer ===== //
   async function revealNextCustomer(gameState: GameState) {
@@ -351,6 +481,23 @@ export default function CafeQueue() {
           center: false,
         },
       });
+      // Where each position's button sits (drawn over the map, below):
+      // hints point at these, and Autopilot presses them here.
+      for (let slot = 0; slot <= game.queues[i].length; slot++) {
+        queueZones.push({
+          id: SLOT_ZONE(i, slot),
+          name: "slot",
+          pileIndex: i,
+          refIndex: slot,
+          col: i * (positioning.btnColWidth + 1) + 1,
+          row:
+            positioning.queueRowStart +
+            slot * positioning.queueCardOffset +
+            0.1,
+          width: 0.5,
+          height: 0.35,
+        });
+      }
       queueZones.push({
         id: `btns-${i}`,
         col: i * (positioning.btnColWidth + 1) + 1,
@@ -469,6 +616,18 @@ export default function CafeQueue() {
     gap: 0,
     cardMapper,
     zoneMapper: (zone) => {
+      if (
+        zone.name === "slot" &&
+        zone.pileIndex !== undefined &&
+        zone.refIndex !== undefined
+      ) {
+        const queueIndex = zone.pileIndex;
+        const cardIndex = zone.refIndex;
+        return {
+          onPress: () => toggleSlot(queueIndex, cardIndex),
+          isDisabled: game.decisionNeeded,
+        };
+      }
       if (zone.id !== "deck") return;
 
       return {
@@ -614,17 +773,7 @@ export default function CafeQueue() {
             return (
               <Pressable
                 key={`select-pos-${queueIndex}-${i}`}
-                onPress={() => {
-                  if (isSelected) {
-                    setGame((draft) => {
-                      draft.selectedPos = undefined;
-                    });
-                  } else {
-                    setGame((draft) => {
-                      draft.selectedPos = { queueIndex, cardIndex: i };
-                    });
-                  }
-                }}
+                onPress={() => toggleSlot(queueIndex, i)}
                 disabled={game.decisionNeeded}
                 style={[
                   flexStyles.colCentered,

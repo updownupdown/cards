@@ -28,6 +28,8 @@ import { Text } from "../common/Text";
 import { useGameColors } from "@/hooks/useGameColors";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { makeHint, pressHint, withNote, zoneTarget } from "@/hints/hint";
 const GRID_SIZE = 5;
 const TARGET_SCORE = 200;
 
@@ -181,7 +183,145 @@ function placeCardOnGrid(state: GameState, index: number) {
   return true;
 }
 
+// —— Hints ——
+
+type LineAim = "sets" | "flush" | "straight";
+
+// How much of a flush or straight a line with this many cards is worth:
+// the further along, the likelier it gets there.
+const FLUSH_ODDS = [0, 0.175, 0.25, 0.35, 0.5];
+const STRAIGHT_ODDS = [0, 0.1, 0.15, 0.3, 0.5];
+
+function lineCells(index: number) {
+  return index < GRID_SIZE
+    ? Array.from({ length: GRID_SIZE }, (_, col) => index * GRID_SIZE + col)
+    : Array.from(
+        { length: GRID_SIZE },
+        (_, row) => row * GRID_SIZE + (index - GRID_SIZE),
+      );
+}
+
+/**
+ * What a row or column is worth so far: a full line its points; a partial
+ * one the hand its ranks make, or what its flush or straight draw may come
+ * to. Returns the value and what the line is best aiming for.
+ */
+function lineValue(cards: PlayingCard[]): { value: number; aim: LineAim } {
+  if (cards.length === GRID_SIZE) {
+    return { value: AMERICAN_POINTS[handCategory(cards)], aim: "sets" };
+  }
+  if (cards.length === 0) return { value: 0, aim: "sets" };
+  const counts = Object.values(
+    cards.reduce<Record<string, number>>((result, card) => {
+      result[card.rank] = (result[card.rank] ?? 0) + 1;
+      return result;
+    }, {}),
+  ).sort((a, b) => b - a);
+  const free = GRID_SIZE - cards.length;
+  const setsCategory =
+    counts[0] === 4
+      ? 7
+      : counts[0] === 3 && counts[1] === 2
+        ? 6
+        : counts[0] === 3
+          ? 3
+          : counts[0] === 2 && counts[1] === 2
+            ? 2
+            : counts[0] === 2
+              ? 1
+              : 0;
+  // Room left to improve a set is worth something too.
+  const sets =
+    AMERICAN_POINTS[setsCategory] + (setsCategory > 0 ? free * 3 : 0);
+
+  const flush = cards.every((card) => card.suit === cards[0].suit)
+    ? 20 * FLUSH_ODDS[cards.length]
+    : 0;
+
+  const values = cards.map(cardValue);
+  const lowValues = values.map((v) => (v === 14 ? 1 : v));
+  const distinct = new Set(values).size === values.length;
+  const spans = [values, lowValues].map(
+    (vs) => Math.max(...vs) - Math.min(...vs),
+  );
+  const straight =
+    distinct && Math.min(...spans) < GRID_SIZE
+      ? 15 * STRAIGHT_ODDS[cards.length]
+      : 0;
+
+  const best = Math.max(sets, flush, straight);
+  return {
+    value: best,
+    aim:
+      best === flush && flush > 0
+        ? "flush"
+        : best === straight && straight > 0
+          ? "straight"
+          : "sets",
+  };
+}
+
+function gridValue(grid: (PlayingCard | null)[]) {
+  let total = 0;
+  for (let line = 0; line < GRID_SIZE * 2; line += 1) {
+    total += lineValue(
+      lineCells(line).flatMap((cell) => (grid[cell] ? [grid[cell]!] : [])),
+    ).value;
+  }
+  return total;
+}
+
+/**
+ * Places the card where the grid gains most, scoring partial rows and
+ * columns by the hands they're building. The note says what the card is
+ * for: the line that gains most, and what it aims at.
+ */
+function bestPlacement(state: GameState) {
+  const card = top(state.deck);
+  if (!card) return null;
+  const before = gridValue(state.grid);
+  let best: { cell: number; value: number } | null = null;
+  state.grid.forEach((placed, cell) => {
+    if (placed) return;
+    const grid = [...state.grid];
+    grid[cell] = card;
+    const value = gridValue(grid) - before;
+    if (!best || value > best.value) best = { cell, value };
+  });
+  if (!best) return null;
+  const { cell, value } = best as { cell: number; value: number };
+  const lines = [Math.floor(cell / GRID_SIZE), GRID_SIZE + (cell % GRID_SIZE)];
+  const gains = lines.map((line) => {
+    const cells = lineCells(line);
+    const without = cells.flatMap((c) =>
+      state.grid[c] ? [state.grid[c]!] : [],
+    );
+    return {
+      gain: lineValue([...without, card]).value - lineValue(without).value,
+      aim: lineValue([...without, card]).aim,
+    };
+  });
+  const main = gains[0].gain >= gains[1].gain ? gains[0] : gains[1];
+  return {
+    cell,
+    aim: value <= 0 || main.gain <= 0 ? ("park" as const) : main.aim,
+  };
+}
+
+function findPokerSquaresHint(state: GameState) {
+  if (state.ended || state.isTransitioning) return null;
+  if (state.scoresReady) return pressHint("end-game", i18n.t("cards:endGame"));
+  const placement = bestPlacement(state);
+  if (!placement) return null;
+  return withNote(
+    makeHint("moveCard", zoneTarget(`grid-${placement.cell}`)),
+    i18n.t(`games:pokerSquares.hint.${placement.aim}`),
+  );
+}
+
 export const pokerSquaresRules = {
+  findHint: findPokerSquaresHint,
+  bestPlacement,
   cardValue,
   handCategory,
   handCategoryName,
@@ -248,6 +388,8 @@ export default function PokerSquares() {
     [lineScores],
   );
   const scoreFade = useFade(game.scoresReady, 1000);
+
+  useHint(() => findPokerSquaresHint(game), { game });
 
   function placeCard(index: number) {
     if (

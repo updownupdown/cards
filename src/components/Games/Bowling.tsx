@@ -24,6 +24,15 @@ import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { seededRandom, shuffledWith } from "@/hints/random";
+import {
+  cardTarget,
+  makeHint,
+  pressHint,
+  withNote,
+  zoneTarget,
+} from "@/hints/hint";
 const BACK_ROW = new Set([6, 7, 8, 9]);
 const CENTER_PIN = 4;
 const PINS_COUNT = 10;
@@ -414,7 +423,201 @@ function recalculateScores(frames: Frame[], bonusRolls: number[]) {
   return running;
 }
 
+// —— Hints ——
+
+type Throw = { pile: number; pins: number[] };
+
+function validCombos(
+  pins: (PlayingCard | null)[],
+  isFirstTurnOfFrame: boolean,
+) {
+  const standing = pins.flatMap((pin, index) => (pin ? [index] : []));
+  const combos: number[][] = [];
+  standing.forEach((a, i) => {
+    combos.push([a]);
+    standing.slice(i + 1).forEach((b, j) => {
+      combos.push([a, b]);
+      standing.slice(i + j + 2).forEach((c) => combos.push([a, b, c]));
+    });
+  });
+  return combos.filter((combo) =>
+    isValidPinCombo({ combo, pins, isFirstTurnOfFrame }),
+  );
+}
+
+// Ways the face-down balls may lie, tried for each first throw.
+const BALL_SAMPLES = 12;
+
+/**
+ * The best first throw for this ball. The balls under each pile's top are
+ * face down: they're tried as the cards not yet seen, dealt a few ways, and
+ * each way is played out as well as it can be (every pin down it can get).
+ * Returns the throw and the pins the ball gets on average from there.
+ */
+function planBall(state: GameState) {
+  const tops = state.ballPiles.map((pile) => pile.at(-1));
+  const hidden = state.ballPiles.flatMap((pile) => pile.slice(0, -1));
+  const random = seededRandom(
+    [
+      ...state.pins.map((pin) => pin?.id ?? "-"),
+      ...tops.map((top) => top?.id),
+    ].join(","),
+  );
+  const deals = Array.from({ length: BALL_SAMPLES }, () => {
+    const cards = shuffledWith(hidden, random);
+    let at = 0;
+    // Each pile's balls, top first.
+    return state.ballPiles.map((pile) => {
+      const below = cards.slice(at, at + pile.length - 1);
+      at += pile.length - 1;
+      return [pile.at(-1)!, ...below];
+    });
+  });
+
+  const mask = (pins: (PlayingCard | null)[]) =>
+    pins.reduce((bits, pin, index) => (pin ? bits | (1 << index) : bits), 0);
+
+  const bestMore = (
+    deal: PlayingCard[][],
+    pins: (PlayingCard | null)[],
+    used: number[],
+    first: boolean,
+    memo: Map<string, number>,
+  ): number => {
+    const key = `${mask(pins)}:${used.join(",")}:${first}`;
+    const known = memo.get(key);
+    if (known !== undefined) return known;
+    let best = 0;
+    deal.forEach((balls, pile) => {
+      const ball = balls[used[pile]];
+      if (!ball) return;
+      for (const combo of validCombos(pins, first)) {
+        const sum = combo.reduce(
+          (total, pin) => total + getCardValue(pins[pin]),
+          0,
+        );
+        if (sum % 10 !== getCardValue(ball) % 10) continue;
+        const next = pins.map((pin, index) =>
+          combo.includes(index) ? null : pin,
+        );
+        const nextUsed = used.map((count, index) =>
+          index === pile ? count + 1 : count,
+        );
+        best = Math.max(
+          best,
+          combo.length + bestMore(deal, next, nextUsed, false, memo),
+        );
+      }
+    });
+    memo.set(key, best);
+    return best;
+  };
+
+  let best = null as { throw: Throw; pins: number } | null;
+  tops.forEach((ball, pile) => {
+    if (!ball) return;
+    for (const combo of validCombos(state.pins, state.isFirstTurnOfFrame)) {
+      const sum = combo.reduce(
+        (total, pin) => total + getCardValue(state.pins[pin]),
+        0,
+      );
+      if (sum % 10 !== getCardValue(ball) % 10) continue;
+      const next = state.pins.map((pin, index) =>
+        combo.includes(index) ? null : pin,
+      );
+      const used = state.ballPiles.map((_, index) => (index === pile ? 1 : 0));
+      const total = deals.reduce(
+        (sum, deal) =>
+          sum + combo.length + bestMore(deal, next, used, false, new Map()),
+        0,
+      );
+      const pins = total / deals.length;
+      if (!best || pins > best.pins)
+        best = { throw: { pile, pins: combo }, pins };
+    }
+  });
+  return best;
+}
+
+/**
+ * The taps that turn the pins picked now into `combo`, as togglePin takes
+ * them (a pick that can't join the others starts afresh), or null.
+ */
+function pinTaps(state: GameState, combo: number[]) {
+  let picked = [...state.selectedPins];
+  const taps: number[] = [];
+  const tap = (pin: number) => {
+    taps.push(pin);
+    const args = {
+      pins: state.pins,
+      isFirstTurnOfFrame: state.isFirstTurnOfFrame,
+    };
+    if (!canAddPinToSelection({ pinIdx: pin, selectedPins: picked, ...args })) {
+      if (picked.length > 0 && isValidPinCombo({ combo: [pin], ...args })) {
+        picked = [pin];
+      }
+      return;
+    }
+    if (picked.includes(pin)) {
+      const rest = picked.filter((other) => other !== pin);
+      picked =
+        rest.length > 0 && !isValidPinCombo({ combo: rest, ...args })
+          ? []
+          : rest;
+      return;
+    }
+    picked = [...picked, pin];
+  };
+  for (let round = 0; round < 12; round += 1) {
+    const extra = picked.find((pin) => !combo.includes(pin));
+    if (extra !== undefined) {
+      tap(extra);
+      continue;
+    }
+    const missing = combo.filter((pin) => !picked.includes(pin));
+    if (missing.length === 0) return taps;
+    const args = {
+      pins: state.pins,
+      isFirstTurnOfFrame: state.isFirstTurnOfFrame,
+    };
+    const next =
+      missing.find((pin) =>
+        canAddPinToSelection({ pinIdx: pin, selectedPins: picked, ...args }),
+      ) ?? missing[0];
+    tap(next);
+  }
+  return null;
+}
+
+function findBowlingHint(state: GameState) {
+  if (state.phase === "gameEnd" || state.pins.every((pin) => !pin)) {
+    return null;
+  }
+  const plan = planBall(state);
+  if (!plan) {
+    return withNote(
+      pressHint("actions", i18n.t("games:bowling.endBall")),
+      i18n.t("games:bowling.hint.endBall"),
+    );
+  }
+  const { pile, pins } = plan.throw;
+  const taps = pinTaps(state, pins);
+  if (!taps) return null;
+  const ball = state.ballPiles[pile].at(-1)!;
+  return withNote(
+    makeHint(
+      { key: "press", values: { label: i18n.t("games:bowling.throw") } },
+      state.selectedBallPile === pile ? [] : cardTarget(ball),
+      ...taps.map((pin) => cardTarget(state.pins[pin]!)),
+      zoneTarget("actions"),
+    ),
+    i18n.t("games:bowling.hint.throw", { count: Math.round(plan.pins) }),
+  );
+}
+
 export const bowlingRules = {
+  findHint: findBowlingHint,
+  planBall,
   getCardValue,
   countKnockedPins,
   isSelectionConnected,
@@ -440,6 +643,8 @@ export default function Bowling() {
     });
 
   // const isBonusMode = game.bonusBallsRemaining > 0;
+
+  useHint(() => findBowlingHint(game), { game });
 
   const selectedBallCard =
     game.selectedBallPile !== null
