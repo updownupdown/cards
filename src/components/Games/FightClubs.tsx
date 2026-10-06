@@ -2,7 +2,7 @@ import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useStateManager } from "@/hooks/useStateManager";
 import { Colors, rgba } from "@/styles/styles";
-import { useMemo, useRef, useState } from "react";
+import { Fragment, useMemo, useRef, useState } from "react";
 import { View } from "react-native";
 import { Button } from "../Button/Button";
 import { AnimatedCardMapping } from "../Cards/AnimatedCard";
@@ -33,6 +33,9 @@ import { DeckPreviewModal } from "../Modals/DeckPreviewModal";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { ProgressBar } from "../Home/ProgressBar";
 import { textStyles } from "@/styles/textStyles";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, withNote, zoneTarget } from "@/hints/hint";
+import { seededRandom, shuffledWith } from "@/hints/random";
 
 import { i18n } from "@/i18n";
 type FightClubsDifficulty = "easy" | "hard";
@@ -83,6 +86,43 @@ export type FightClubsGameState = {
 
 const HAND_LIMIT = 4;
 const GRID_SIZE = 9;
+
+/** The suit actions, a row each, in the column left of the grid. */
+const SUIT_ACTIONS: { suit: CardSuit; actions: Action[] }[] = [
+  { suit: "diamonds", actions: ["column", "row"] },
+  { suit: "spades", actions: ["up", "down"] },
+  { suit: "hearts", actions: ["run"] },
+];
+const ALWAYS_ACTIONS: Action[] = ["match", "sum", "any"];
+
+/**
+ * The action column: a zone for each suit's row and one for each button
+ * (`action-<name>`), so hints can point at a button and Autopilot press it.
+ */
+const actionZones: MapZone[] = [
+  ...SUIT_ACTIONS.flatMap(({ suit, actions }, index) => {
+    const row = 1.5 + index * 0.9;
+    // Buttons share the row to the right of the suit's icon.
+    const width = (1.48 - 0.06 * (actions.length - 1)) / actions.length;
+    return [
+      { id: `actions-${suit}`, col: 0, row, width: 2, height: 0.8 },
+      ...actions.map((action, place) => ({
+        id: `action-${action}`,
+        col: 0.45 + place * (width + 0.06),
+        row: row + 0.07,
+        width,
+        height: 0.66,
+      })),
+    ];
+  }),
+  ...ALWAYS_ACTIONS.map((action, index) => ({
+    id: `action-${action}`,
+    col: 0,
+    row: 4.2 + index * 0.625,
+    width: 2,
+    height: 0.55,
+  })),
+];
 
 const gameStateInitial: FightClubsGameState = {
   clubsDeck: [],
@@ -195,7 +235,7 @@ function actionLine(action: Action, selectedIndexes: number[]) {
 }
 
 function getClearIndexes(
-  state: Readonly<FightClubsGameState>,
+  state: { readonly grid: readonly (PlayingCard | null)[] },
   club: PlayingCard,
   action: Action,
   selectedIndexes: number[],
@@ -346,7 +386,263 @@ function playAction(
   return true;
 }
 
+// ── Hints ────────────────────────────────────────────────────────────────────
+
+/** A play: the club, the button to press and the grid cards to pick. */
+type FightClubsMove = {
+  club: PlayingCard;
+  action: Exclude<Action, "line">;
+  selected: number[];
+  clears: number[];
+};
+
+/** The cards a hint's look ahead plays with (the decks in a dealt order). */
+type FightClubsBoard = {
+  grid: (PlayingCard | null)[];
+  hand: PlayingCard[];
+  gridDeck: PlayingCard[];
+  clubsDeck: PlayingCard[];
+};
+
+const BLOCKING_SUITS = ["diamonds", "spades", "hearts"] as const;
+const HINT_CANDIDATES = 6;
+const HINT_SAMPLES = 6;
+
+/** The zone of an action's button, where hints point. */
+function actionZone(action: Action) {
+  return `action-${action}`;
+}
+
+/**
+ * Every play on offer: for Sum and Sequence only the pick that clears the
+ * most cards, for Any each card.
+ */
+function fightClubsMoves(
+  grid: readonly (PlayingCard | null)[],
+  hand: readonly PlayingCard[],
+) {
+  const valued = grid.flatMap((card, index) => (isValued(card) ? [index] : []));
+  const value = (index: number) => rankValue(grid[index]!);
+  // The largest pick adding up to each value, and making a run with it,
+  // built mask by mask from the mask without its lowest card.
+  const size = 1 << valued.length;
+  const total = new Int32Array(size);
+  const count = new Int32Array(size);
+  const low = new Int32Array(size).fill(99);
+  const high = new Int32Array(size);
+  const seen = new Int32Array(size);
+  const distinct = new Uint8Array(size).fill(1);
+  const sums = new Map<number, number>();
+  const runs = new Map<number, number>();
+  for (let mask = 1; mask < size; mask += 1) {
+    const bit = 31 - Math.clz32(mask & -mask);
+    const rest = mask & (mask - 1);
+    const next = value(valued[bit]);
+    total[mask] = total[rest] + next;
+    count[mask] = count[rest] + 1;
+    low[mask] = Math.min(low[rest], next);
+    high[mask] = Math.max(high[rest], next);
+    distinct[mask] = distinct[rest] && !(seen[rest] & (1 << next)) ? 1 : 0;
+    seen[mask] = seen[rest] | (1 << next);
+    if (count[mask] > count[sums.get(total[mask]) ?? 0]) {
+      sums.set(total[mask], mask);
+    }
+    if (!distinct[mask] || high[mask] - low[mask] + 1 !== count[mask]) {
+      continue;
+    }
+    for (const end of [low[mask] - 1, high[mask] + 1]) {
+      if (count[mask] > count[runs.get(end) ?? 0]) runs.set(end, mask);
+    }
+  }
+  const picked = (mask: number | undefined) =>
+    mask === undefined
+      ? undefined
+      : valued.filter((_, bit) => mask & (1 << bit));
+
+  const occupied = grid.flatMap((card, index) => (card ? [index] : []));
+  const moves: FightClubsMove[] = [];
+  for (const club of hand) {
+    const clubValue = rankValue(club);
+    const add = (
+      action: FightClubsMove["action"],
+      selected: number[],
+      clears: number[],
+    ) => {
+      if (clears.length > 0) moves.push({ club, action, selected, clears });
+    };
+    const matches = valued.filter((index) => value(index) === clubValue);
+    add("match", [], matches);
+    const sum = picked(sums.get(clubValue));
+    if (sum) add("sum", sum, sum);
+    const run = picked(runs.get(clubValue));
+    if (run && !isBlocked(grid, "run")) add("run", run, run);
+    for (const action of ["up", "down"] as const) {
+      const clears = getClearIndexes({ grid }, club, action, [], null);
+      add(action, [], clears);
+    }
+    if (!isBlocked(grid, "line")) {
+      for (let line = 0; line < 6; line += 1) {
+        const indexes = lineIndexes(line).filter((index) => grid[index]);
+        if (indexes.some((index) => matches.includes(index))) {
+          add(line < 3 ? "row" : "column", indexes, indexes);
+        }
+      }
+    }
+    for (const index of occupied) add("any", [index], [index]);
+  }
+  return moves;
+}
+
+/**
+ * How good a play looks on the cards in view: the cards it clears, jokers
+ * (which only Any or a whole line can take) above the rest, and the suit
+ * actions it frees by taking a blocking suit under three.
+ */
+function quickValue(
+  grid: readonly (PlayingCard | null)[],
+  move: FightClubsMove,
+) {
+  let value = move.clears.length;
+  for (const index of move.clears) {
+    if (grid[index]?.rank === "Joker") value += 0.5;
+  }
+  return value + freedSuits(grid, move.clears).length * 0.7;
+}
+
+/** The blocking suits that drop under three when these cards go. */
+function freedSuits(
+  grid: readonly (PlayingCard | null)[],
+  clears: readonly number[],
+) {
+  return BLOCKING_SUITS.filter((suit) => {
+    const count = suitCount(grid, suit);
+    const gone = clears.filter(
+      (index) => isValued(grid[index]) && grid[index]!.suit === suit,
+    ).length;
+    return count >= 3 && count - gone < 3;
+  });
+}
+
+function bestQuickMove(board: FightClubsBoard) {
+  let best: { move: FightClubsMove; value: number } | null = null;
+  for (const move of fightClubsMoves(board.grid, board.hand)) {
+    const value = quickValue(board.grid, move);
+    if (!best || value > best.value) best = { move, value };
+  }
+  return best?.move ?? null;
+}
+
+/** Plays a move on a look-ahead board, dealing from its decks. */
+function playOnBoard(board: FightClubsBoard, move: FightClubsMove) {
+  const grid = [...board.grid];
+  for (const index of move.clears) grid[index] = null;
+  const gridDeck = [...board.gridDeck];
+  for (let index = 0; index < GRID_SIZE; index += 1) {
+    if (grid[index] === null && gridDeck.length > 0)
+      grid[index] = gridDeck.pop()!;
+  }
+  const hand = board.hand.filter((card) => card.id !== move.club.id);
+  const clubsDeck = [...board.clubsDeck];
+  while (hand.length < HAND_LIMIT && clubsDeck.length > 0) {
+    hand.push(clubsDeck.pop()!);
+  }
+  return { grid, hand, gridDeck, clubsDeck };
+}
+
+/**
+ * Plays the deal out from here, each club on the play that looks best:
+ * a win (the more clubs left, the better), else the fewer cards left.
+ */
+function playOut(board: FightClubsBoard) {
+  let current = board;
+  for (;;) {
+    const left =
+      current.gridDeck.length + current.grid.filter((card) => card).length;
+    if (left === 0) return 100 + current.hand.length + current.clubsDeck.length;
+    const move = bestQuickMove(current);
+    if (!move) return -left;
+    current = playOnBoard(current, move);
+  }
+}
+
+/**
+ * The play that gets furthest. The grid's deck and the clubs to come are
+ * face down, so the most promising plays on view are each played out over
+ * a few deals of the cards not yet seen.
+ */
+function findFightClubsMove(state: Readonly<FightClubsGameState>) {
+  if (state.ended || state.hand.length === 0) return null;
+  const candidates = fightClubsMoves(state.grid, state.hand)
+    .map((move) => ({ move, value: quickValue(state.grid, move) }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, HINT_CANDIDATES);
+  if (candidates.length <= 1) return candidates[0]?.move ?? null;
+
+  const random = seededRandom(
+    [
+      ...state.grid.map((card) => card?.id ?? "-"),
+      ...state.hand.map((card) => card.id),
+      state.gridDeck.length,
+      state.clubsDeck.length,
+    ].join(":"),
+  );
+  const deals = Array.from({ length: HINT_SAMPLES }, () => ({
+    gridDeck: shuffledWith(state.gridDeck, random),
+    clubsDeck: shuffledWith(state.clubsDeck, random),
+  }));
+  let best: { move: FightClubsMove; value: number } | null = null;
+  for (const { move, value: quick } of candidates) {
+    let total = 0;
+    for (const deal of deals) {
+      total += playOut(
+        playOnBoard({ grid: state.grid, hand: state.hand, ...deal }, move),
+      );
+    }
+    // Ties go to the play that looks best now.
+    const value = total / deals.length + quick * 0.001;
+    if (!best || value > best.value) best = { move, value };
+  }
+  return best!.move;
+}
+
+function findFightClubsHint(
+  state: Readonly<FightClubsGameState>,
+  selectedClubId: string | null = null,
+  selectedGridIndexes: readonly number[] = [],
+) {
+  const move = findFightClubsMove(state);
+  if (!move) return null;
+  const hint = makeHint(
+    { key: "press", values: { label: i18n.t(ActionNames[move.action]) } },
+    // Picks to undo first, then the club, the cards and the action.
+    selectedGridIndexes
+      .filter((index) => !move.selected.includes(index) && state.grid[index])
+      .map((index) => cardTarget(state.grid[index]!)),
+    selectedClubId === move.club.id ? [] : cardTarget(move.club),
+    move.selected
+      .filter((index) => !selectedGridIndexes.includes(index))
+      .map((index) => cardTarget(state.grid[index]!)),
+    zoneTarget(actionZone(move.action)),
+  );
+  const freed = freedSuits(state.grid, move.clears);
+  if (freed.length > 0) {
+    return withNote(hint, i18n.t(`games:fightClubs.hint.free_${freed[0]}`));
+  }
+  // Taking one card when a club could take more saves the bigger plays.
+  if (
+    move.action === "any" &&
+    fightClubsMoves(state.grid, state.hand).some(
+      (other) => other.clears.length > 1,
+    )
+  ) {
+    return withNote(hint, i18n.t("games:fightClubs.hint.any"));
+  }
+  return hint;
+}
+
 export const fightClubsRules = {
+  findHint: findFightClubsHint,
+  fightClubsMoves,
   createDecks: createFightClubsDecks,
   createDiscard: createFightClubsDiscard,
   collectCards: collectFightClubsCards,
@@ -375,50 +671,59 @@ export default function FightClubs() {
   const [selectedGridIndexes, setSelectedGridIndexes] = useState<number[]>([]);
   const [showDeckPreview, setShowDeckPreview] = useState(false);
 
-  const { isLoaded, game, setGame, undo, canUndo, saveUndoState, reset } =
-    useStateManager({
-      gameStateInitial,
-      resetNonGameStates: () => {
-        setSelectedClubId(null);
-        setSelectedGridIndexes([]);
-      },
-      resetAndSetup: async () => {
-        setGame((draft) => {
-          draft.discard = collectFightClubsCards(draft);
-          if (draft.discard.length === 0) {
-            draft.discard = createFightClubsDiscard(difficultyRef.current);
-          }
-          draft.clubsDeck = [];
-          draft.gridDeck = [];
-          draft.hand = [];
-          draft.grid = Array.from({ length: GRID_SIZE }, () => null);
-          draft.ended = false;
-          draft.won = false;
-          draft.winLoseMessage = "";
-        });
+  const {
+    isLoaded,
+    isSettingUp,
+    game,
+    setGame,
+    undo,
+    canUndo,
+    saveUndoState,
+    reset,
+  } = useStateManager({
+    gameStateInitial,
+    resetNonGameStates: () => {
+      setSelectedClubId(null);
+      setSelectedGridIndexes([]);
+    },
+    resetAndSetup: async () => {
+      setGame((draft) => {
+        draft.discard = collectFightClubsCards(draft);
+        if (draft.discard.length === 0) {
+          draft.discard = createFightClubsDiscard(difficultyRef.current);
+        }
+        draft.clubsDeck = [];
+        draft.gridDeck = [];
+        draft.hand = [];
+        draft.grid = Array.from({ length: GRID_SIZE }, () => null);
+        draft.ended = false;
+        draft.won = false;
+        draft.winLoseMessage = "";
+      });
 
-        await delay();
+      await delay();
 
-        setGame((draft) => {
-          const shuffledCards = shuffleFightClubsCards(
-            draft.discard,
-            difficultyRef.current,
-          );
-          draft.clubsDeck = shuffledCards.filter(
-            (card) => card.suit === "clubs",
-          );
-          draft.gridDeck = shuffledCards.filter(
-            (card) => card.suit !== "clubs",
-          );
-          draft.discard = [];
-          refreshGrid(draft);
-          refreshHand(draft);
-        });
-      },
-    });
+      setGame((draft) => {
+        const shuffledCards = shuffleFightClubsCards(
+          draft.discard,
+          difficultyRef.current,
+        );
+        draft.clubsDeck = shuffledCards.filter((card) => card.suit === "clubs");
+        draft.gridDeck = shuffledCards.filter((card) => card.suit !== "clubs");
+        draft.discard = [];
+        refreshGrid(draft);
+        refreshHand(draft);
+      });
+    },
+  });
 
   const selectedClub =
     game.hand.find((card) => card.id === selectedClubId) ?? null;
+
+  useHint(() => findFightClubsHint(game, selectedClubId, selectedGridIndexes), {
+    game,
+    enabled: !isSettingUp,
+  });
 
   function clearSelections() {
     setSelectedClubId(null);
@@ -517,14 +822,7 @@ export default function FightClubs() {
         },
       },
       ...gridZones,
-      {
-        id: "actions",
-        name: "actions",
-        col: 0,
-        row: 1.5,
-        width: 2,
-        height: 4.5,
-      },
+      ...actionZones,
 
       {
         id: "clearButton",
@@ -682,69 +980,45 @@ export default function FightClubs() {
       </View>
 
       {/* Actions */}
-      <View
-        style={[
-          flexStyles.colCentered,
-          getZoneStylesById("actions"),
-          {
-            gap: spacing(12),
-          },
-        ]}
-      >
-        {/* Suit Actions */}
-        {(
-          [
-            {
-              label: i18n.t("games:fightClubs.rowCol"),
-              suit: "diamonds",
-              actions: ["column", "row"],
-            },
-            {
-              label: i18n.t("games:fightClubs.upDown"),
-              suit: "spades",
-              actions: ["up", "down"],
-            },
-            {
-              label: i18n.t("games:fightClubs.sequence"),
-              suit: "hearts",
-              actions: ["run"],
-            },
-          ] as { label: string; suit: string; actions: Action[] }[]
-        ).map((group, groupIndex) => {
-          const count = suitCount(game.grid, group.suit as CardSuit);
-          const isBlocked = game.hand.length === 0 || count >= 3;
+      {SUIT_ACTIONS.map((group) => {
+        const count = suitCount(game.grid, group.suit);
+        const isBlocked = game.hand.length === 0 || count >= 3;
 
-          return (
+        return (
+          <Fragment key={group.suit}>
             <View
-              key={groupIndex}
               style={[
                 flexStyles.rowCentered,
-                flexStyles.fullWidth,
-                flexStyles.flex1,
+                getZoneStylesById(`actions-${group.suit}`),
                 {
+                  justifyContent: "flex-start",
                   borderRadius: spacing(12),
-                  padding: spacing(6),
-                  gap: spacing(6),
-                  backgroundColor: isBlocked
-                    ? rgba(Colors.K900, 0.8)
-                    : rgba(Colors.K900, 0.8),
+                  backgroundColor: rgba(Colors.K900, 0.8),
                 },
               ]}
             >
-              <View style={[flexStyles.colCentered, { padding: spacing(6) }]}>
+              <View style={[flexStyles.colCentered, { width: "22.5%" }]}>
                 <Icon
                   name={group.suit as IconName}
                   size={20}
                   color={isBlocked ? Colors.accentRed : Colors.accentBlue}
                 />
               </View>
+            </View>
 
-              {group.actions.map((action) => {
-                const canExecuteAction = !game.ended && canExecute(action);
+            {group.actions.map((action) => {
+              const canExecuteAction = !game.ended && canExecute(action);
 
-                return (
+              return (
+                <View
+                  key={action}
+                  style={[
+                    flexStyles.colCentered,
+                    getZoneStylesById(actionZone(action)),
+                  ]}
+                >
                   <Button
-                    key={action}
+                    accessibilityLabel={i18n.t(ActionNames[action])}
                     iconName={ActionIcons[action]}
                     size="md"
                     theme={canExecuteAction ? "green" : "blue"}
@@ -753,7 +1027,7 @@ export default function FightClubs() {
                     halfTaller
                     style={[
                       {
-                        flex: 1,
+                        width: "100%",
                         paddingHorizontal: 0,
                         paddingVertical: 0,
                         opacity: isBlocked ? 0.3 : 1,
@@ -763,16 +1037,22 @@ export default function FightClubs() {
                       },
                     ]}
                   />
-                );
-              })}
-            </View>
-          );
-        })}
+                </View>
+              );
+            })}
+          </Fragment>
+        );
+      })}
 
-        {/* Always Available Actions */}
-        {(["match", "sum", "any"] as Action[]).map((action) => (
+      {ALWAYS_ACTIONS.map((action) => (
+        <View
+          key={action}
+          style={[
+            flexStyles.colCentered,
+            getZoneStylesById(actionZone(action)),
+          ]}
+        >
           <Button
-            key={action}
             text={i18n.t(ActionNames[action])}
             iconName={ActionIcons[action]}
             size="md"
@@ -788,8 +1068,8 @@ export default function FightClubs() {
             textStyle={{ flex: 1 }}
             halfTaller
           />
-        ))}
-      </View>
+        </View>
+      ))}
 
       {/* Clear button */}
       <View style={[getZoneStylesById("clearButton")]}>

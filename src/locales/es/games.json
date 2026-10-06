@@ -39,7 +39,14 @@
     "outOfCardsWhileMakingCamp": "Sin cartas al montar el campamento.",
     "deckAndFatigueRanDry": "El mazo y la pila de fatiga se han agotado.",
     "handOverflowed": "Tu mano se ha desbordado (18 cartas o más).",
-    "baseClimb": "Ascenso base"
+    "baseClimb": "Ascenso base",
+    "hint": {
+      "route_one": "Juega esta ruta: te hace robar {{count}} carta",
+      "route_other": "Juega esta ruta: te hace robar {{count}} cartas",
+      "camp": "Juega tus últimas cartas para montar el campamento",
+      "rest": "Descansa: toma la pila de fatiga en la mano y empieza de nuevo",
+      "discard": "Descarta la carta que menos le sirve a tu mano"
+    }
   },
   "bakersDozen": {
     "allFourSuitsAreComplete": "¡Los cuatro palos están completos!"
@@ -133,7 +140,12 @@
     "guildPts": "Pts gremio",
     "pass": "Pasar",
     "trade": "Intercambiar",
-    "offer": "Oferta"
+    "offer": "Oferta",
+    "hint": {
+      "trade": "Vende estos libros por ${{value}}",
+      "tradeGuild": "Vende estos libros por ${{value}}: +{{count}} pts gremio",
+      "pass": "Ningún grupo de libros suma esta oferta: pasa"
+    }
   },
   "boilingOver": {
     "statusStart": "Toca tu mazo para empezar la poción.",
@@ -169,7 +181,13 @@
     "tierCourtAlchemist": "Alquimista de la corte",
     "tierMiracleWorker": "Hacedor de milagros",
     "wonWithTier": "{{score}} puntos: ¡{{tier}}!",
-    "lostShortOfTarget": "{{score}} puntos. Necesitas {{target}} puntos para ganar."
+    "lostShortOfTarget": "{{score}} puntos. Necesitas {{target}} puntos para ganar.",
+    "hint": {
+      "stop": "Para aquí: un {{risk}} % de riesgo de explosión es demasiado para lo que aporta otra carta",
+      "keepCoins": "Quédate con las monedas: las mejores cartas darán fruto en las rondas que quedan",
+      "keepPoints": "Quédate con los puntos: quedan muy pocas rondas para que las monedas den fruto",
+      "buy": "Compra las mejores cartas que te permitan tus monedas: dos, de palos distintos"
+    }
   },
   "cityGrid": {
     "pileIsFull": "¡La pila está llena!",
@@ -214,7 +232,16 @@
     "victoryGold": "¡Todos los enemigos derrotados! ¡Victoria de ORO!",
     "victorySilver": "¡Todos los enemigos derrotados! ¡Victoria de PLATA!",
     "victoryBronze": "¡Todos los enemigos derrotados! ¡Victoria de BRONCE!",
-    "failedToBlock": "No has podido bloquear {{damage}} de daño. ¡Fin de la partida!"
+    "failedToBlock": "No has podido bloquear {{damage}} de daño. ¡Fin de la partida!",
+    "hint": {
+      "kill": "Derrota a este enemigo",
+      "exactKill": "Golpe exacto: el enemigo se une a tu taberna",
+      "shield": "Las picas debilitan su ataque antes de que golpee",
+      "draw": "Los diamantes rellenan tu mano",
+      "heal": "Los corazones devuelven los descartes a la taberna",
+      "defend": "Bloquea con las cartas que menos necesitas",
+      "jester": "Llama a un bufón para tener una mano nueva"
+    }
   },
   "cruel": {
     "crueltyConquered": "¡Crueldad vencida!"
@@ -237,7 +264,12 @@
     "extract": "Extraer",
     "reassign": "Reasignar",
     "allTwelveRoyalsAreDown": "Las doce figuras han caído.",
-    "youRanOutOfCards": "Te quedaste sin cartas antes de derrotar a las doce figuras."
+    "youRanOutOfCards": "Te quedaste sin cartas antes de derrotar a las doce figuras.",
+    "hint": {
+      "kill": "Esto derriba una figura",
+      "extract": "Usa un as: este montón vuelve bajo el mazo",
+      "reassign": "Usa un comodín: mueve esta carta"
+    }
   },
   "ebbAndFlow": {
     "stock": "Mazo",
@@ -247,7 +279,15 @@
   },
   "elementaryDetective": {
     "youScored20ToWin": "Has conseguido {{score}} (20 para ganar)",
-    "score": "Puntos"
+    "score": "Puntos",
+    "hint": {
+      "reveal_one": "Descubre a este compañero: debería puntuar unas {{count}} suposición",
+      "reveal_other": "Descubre a este compañero: deberían puntuar unas {{count}} suposiciones",
+      "revealInfo": "Descubre a un compañero para saber qué pueden ser los demás",
+      "place": "Una suposición aquí puntúa el {{chance}}% de las veces",
+      "discard": "Esta carta no puede puntuar: ponla donde no cueste nada",
+      "withdraw": "Esta suposición ya no puede puntuar: libera su espacio (la siguiente carta del mazo también se va)"
+    }
   },
   "fanSolitaire": {
     "theFoundationsAreComplete": "¡Las fundaciones están completas!"
@@ -262,7 +302,12 @@
     "combatantCaptured": "Un combatiente ha entrado en la pila de capturas enemiga.",
     "allEnemiesCleared": "Todas las cartas enemigas eliminadas sin perder combatientes.",
     "combatantCapturedYouLose": "Un combatiente ha entrado en la pila de capturas enemiga. Has perdido.",
-    "noCardsToPlay": "No hay cartas para jugar."
+    "noCardsToPlay": "No hay cartas para jugar.",
+    "hint": {
+      "discard": "Cambia esta carta por una nueva",
+      "letCapture": "Sin captura: deja que el enemigo se lleve tu carta más baja",
+      "sacrifice": "Sin captura: sacrifica dos cartas bajas para devolver este enemigo al mazo"
+    }
   },
   "fifteenPuzzle": {
     "theCardsAreBackIn": "Las cartas vuelven a estar en orden."
@@ -283,7 +328,13 @@
     "actionUp": "♠ Arriba",
     "actionRun": "♥ Escalera",
     "gridClearWon": "La cuadrícula está despejada. ¡Victoria!",
-    "allClubsSpent": "Se han gastado los 13 tréboles."
+    "allClubsSpent": "Se han gastado los 13 tréboles.",
+    "hint": {
+      "free_diamonds": "Quita diamantes para liberar las acciones ♦",
+      "free_spades": "Quita picas para liberar las acciones ♠",
+      "free_hearts": "Quita corazones para liberar la acción ♥",
+      "any": "Llévate solo una carta con este trébol: guarda los demás para jugadas mayores"
+    }
   },
   "fortunesCall": {
     "red": "Rojo",
@@ -314,7 +365,11 @@
     "tierMaster": "Maestro vidriero",
     "tierCathedral": "Vitral de catedral",
     "wonWithTier": "{{score}} puntos: ¡{{tier}}!",
-    "lostShortOfTarget": "{{score}} puntos. Necesitas {{target}} puntos para ganar."
+    "lostShortOfTarget": "{{score}} puntos. Necesitas {{target}} puntos para ganar.",
+    "hint": {
+      "cell": "Coloca el cristal aquí: +{{count}}",
+      "shards": "Ningún marco puede usarlos: rómpelos en esquirlas"
+    }
   },
   "gremlin": {
     "helper": "Ayudante",
@@ -340,7 +395,12 @@
     "harvestGood": "Buena cosecha: quedan {{count}} hierbas.",
     "harvestExcellent": "Cosecha excelente: quedan {{count}} hierbas.",
     "harvestPerfect": "Cosecha perfecta: quedan {{count}} hierbas.",
-    "noHerbsRemain": "No quedan hierbas para sanar el reino."
+    "noHerbsRemain": "No quedan hierbas para sanar el reino.",
+    "hint": {
+      "heal": "Recoge estas hierbas: bien sembradas, curan a una criatura",
+      "setUp": "Recoge estas hierbas: bien sembradas, preparan una curación",
+      "noCure": "Ya no hay cura para el reino: sigue sembrando para acabar la partida"
+    }
   },
   "infiltrator": {
     "retired": "Retirados",
@@ -360,7 +420,14 @@
     "missionComplete": "Misión cumplida: {{count}} espías clave reclutados.",
     "missionFailed": "Misión fallida: {{count}} espías clave reclutados, {{lost}} perdidos.",
     "noDoubleAgentsRemain": "No quedan agentes dobles. Misión fallida.",
-    "sourceHand": "Mano"
+    "sourceHand": "Mano",
+    "hint": {
+      "retire": "Retira estas cartas bajas, para que tus mejores cartas vuelvan más a menudo",
+      "assassinate": "Tu mano no puede detener a este espía: sacrifica un agente doble",
+      "doubleAgent": "El As del palo del espía es un agente doble: convierte tus demás cartas a su palo",
+      "counterKey": "Este espía clave no se puede reclutar: contrarréstalo con las cartas que menos necesitas",
+      "counter": "Este espía no se puede reclutar: contrarréstalo con las cartas que menos necesitas"
+    }
   },
   "invaders": {
     "wave2": "Oleada 2",
@@ -401,14 +468,25 @@
       "shield": "Escudo"
     },
     "roundsSurvived": "{{count}} rondas superadas{{rating}}. Puntuación final: {{score}}.",
-    "roundNumber": "Ronda {{round}}"
+    "roundNumber": "Ronda {{round}}",
+    "hint": {
+      "play": "Juega tu {{hand}}",
+      "discard": "Descarta estas: robar debería darte una mano mejor",
+      "double": "Duplica tu próxima mano: es de las grandes"
+    }
   },
   "lycan": {
     "youBeatTheWolf": "¡Has vencido al Lobo {{playerScore}}-{{wolfScore}}!",
     "theWolfBeatYou": "El Lobo te ha vencido {{wolfScore}}-{{playerScore}}.",
     "wolf": "Lobo",
     "round": "Ronda",
-    "selectCardsToCapture": "Elige cartas para capturar"
+    "selectCardsToCapture": "Elige cartas para capturar",
+    "hint": {
+      "fold": "Retírate: seguir costaría más",
+      "finish": "Vacía la mano del Lobo: la tuya puntúa",
+      "over_one": "Supéralo: vale la pena que el Lobo robe {{count}} carta",
+      "over_other": "Supéralo: vale la pena que el Lobo robe {{count}} cartas"
+    }
   },
   "memory": {
     "matched": "Parejas",
@@ -420,7 +498,12 @@
     "difficultyMedium": "Media",
     "difficultyHard": "Difícil",
     "difficultyVeryHard": "Muy difícil",
-    "difficultyExtreme": "Extrema"
+    "difficultyExtreme": "Extrema",
+    "hint": {
+      "match": "Ya viste su pareja aquí",
+      "knownPair": "Sabes dónde están las dos cartas de esta pareja",
+      "newCard": "Destapa una carta que aún no hayas visto"
+    }
   },
   "monteCarlo": {
     "youClearedAllCards": "¡Has retirado todas las cartas!",
@@ -436,7 +519,15 @@
     "villain": "Villano",
     "response": "Respuesta",
     "damage": "Daño:",
-    "heal": "Curación:"
+    "heal": "Curación:",
+    "smokeThreat": "Bomba de humo sobre {{card}}",
+    "grappleThreats": "Garfio sobre {{first}} y {{second}}",
+    "hint": {
+      "smoke": "Usa tu Bomba de humo en esta Amenaza",
+      "grapple": "Une estas dos Amenazas con el Garfio y respóndelas juntas",
+      "dump": "Juega esta Respuesta donde no haga daño",
+      "resolve": "Resuelve ya: robar otra vez tiene más riesgo que ventaja"
+    }
   },
   "ouroboros": {
     "jewels": "Joyas",
@@ -619,7 +710,15 @@
     "guardianValue": "Guardián: {{value}}",
     "aliceAwakened": "Alice ha despertado con {{count}} de vida.",
     "guardiansLost": "Se han perdido todos los guardianes especiales que no son ases.",
-    "nightmaresOverwhelmed": "Las pesadillas han vencido a Alice."
+    "nightmaresOverwhelmed": "Las pesadillas han vencido a Alice.",
+    "hint": {
+      "eliminate": "Elimina esta pesadilla",
+      "defend": "Debilita el ataque de esta pesadilla: este turno no se puede eliminar",
+      "mold": "Moldea este guardián para añadirlo a tu mazo",
+      "exile": "Exilia esta pesadilla: le costaría a Alice más de 5 de vida",
+      "deepBreath": "No merece la pena asignar nada: cambia tu carta más débil por una nueva",
+      "remSleep": "Alice no sobrevivirá a este tablero: usa el sueño REM para empezar de nuevo"
+    }
   },
   "spiderSolitaire": {
     "allEightKToA": "Las ocho escaleras de K a A por palo están completas."
@@ -664,7 +763,13 @@
     "setReserve2": "Reservar ({{length}}/2)",
     "moveToTop": "Poner {{value}} arriba",
     "doNothing": "No hacer nada",
-    "noKingSelected": "Ningún Rey seleccionado"
+    "noKingSelected": "Ningún Rey seleccionado",
+    "hint": {
+      "reserve": "Guarda estas dos en la reserva para rematar monstruos más adelante",
+      "discard": "Esta carta no tiene buen sitio: descártala",
+      "bury": "Pon esta carta en el fondo del mazo en vez de descartarla",
+      "double": "Duplica un ataque con el Rey de picas"
+    }
   },
   "waypoint": {
     "current": "Actual",
@@ -682,7 +787,13 @@
     "dsq": "Descalificado: el reloj ha llegado a 16 penalizaciones.",
     "stage": "Etapa",
     "sector": "Sector",
-    "speed": "Velocidad"
+    "speed": "Velocidad",
+    "hint": {
+      "boosts": "Usa el gas para alcanzar la velocidad objetivo",
+      "brakes": "Frena: mejor lento que pasarte de la velocidad objetivo",
+      "finishUnder": "Cierra ya: otra carta probablemente te pasaría",
+      "finishOver": "Demasiado rápido y sin freno: cierra y acepta la penalización"
+    }
   },
   "windmill": {
     "theSailsTurnFreely": "¡Las aspas giran libremente!"

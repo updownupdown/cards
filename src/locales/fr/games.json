@@ -39,7 +39,14 @@
     "outOfCardsWhileMakingCamp": "Plus de cartes en installant le camp.",
     "deckAndFatigueRanDry": "La pioche et la pile de fatigue sont épuisées.",
     "handOverflowed": "Votre main déborde (18 cartes ou plus).",
-    "baseClimb": "Ascension de base"
+    "baseClimb": "Ascension de base",
+    "hint": {
+      "route_one": "Jouez cette voie : elle fait piocher {{count}} carte",
+      "route_other": "Jouez cette voie : elle fait piocher {{count}} cartes",
+      "camp": "Jouez vos dernières cartes pour installer le camp",
+      "rest": "Reposez-vous : prenez la pile de fatigue en main et repartez",
+      "discard": "Défaussez la carte dont votre main se passe le mieux"
+    }
   },
   "bakersDozen": {
     "allFourSuitsAreComplete": "Les quatre couleurs sont complètes !"
@@ -133,7 +140,12 @@
     "guildPts": "Pts guilde",
     "pass": "Passer",
     "trade": "Échanger",
-    "offer": "Offre"
+    "offer": "Offre",
+    "hint": {
+      "trade": "Vendez ces livres pour ${{value}}",
+      "tradeGuild": "Vendez ces livres pour ${{value}} : +{{count}} pts guilde",
+      "pass": "Aucun choix de livres ne fait cette offre : passez"
+    }
   },
   "boilingOver": {
     "statusStart": "Touchez votre paquet pour commencer la potion.",
@@ -169,7 +181,13 @@
     "tierCourtAlchemist": "Alchimiste de la cour",
     "tierMiracleWorker": "Faiseur de miracles",
     "wonWithTier": "{{score}} points : {{tier}} !",
-    "lostShortOfTarget": "{{score}} points. Il vous faut {{target}} points pour gagner."
+    "lostShortOfTarget": "{{score}} points. Il vous faut {{target}} points pour gagner.",
+    "hint": {
+      "stop": "Arrêtez-vous : {{risk}} % de risque d'explosion, c'est trop pour ce qu'une carte de plus apporterait",
+      "keepCoins": "Gardez les pièces : de meilleures cartes rapporteront sur les manches restantes",
+      "keepPoints": "Gardez les points : il reste trop peu de manches pour que les pièces rapportent",
+      "buy": "Achetez les meilleures cartes que vos pièces permettent : deux, de couleurs différentes"
+    }
   },
   "cityGrid": {
     "pileIsFull": "La pile est pleine !",
@@ -214,7 +232,16 @@
     "victoryGold": "Tous les ennemis sont vaincus ! Victoire OR !",
     "victorySilver": "Tous les ennemis sont vaincus ! Victoire ARGENT !",
     "victoryBronze": "Tous les ennemis sont vaincus ! Victoire BRONZE !",
-    "failedToBlock": "Impossible de bloquer {{damage}} dégâts. Partie terminée !"
+    "failedToBlock": "Impossible de bloquer {{damage}} dégâts. Partie terminée !",
+    "hint": {
+      "kill": "Battez cet ennemi",
+      "exactKill": "Coup exact : l'ennemi rejoint votre taverne",
+      "shield": "Les piques affaiblissent son attaque avant qu'il frappe",
+      "draw": "Les carreaux remplissent votre main",
+      "heal": "Les cœurs renvoient la défausse dans la taverne",
+      "defend": "Bloquez avec les cartes dont vous avez le moins besoin",
+      "jester": "Appelez un bouffon pour une nouvelle main"
+    }
   },
   "cruel": {
     "crueltyConquered": "La cruauté est vaincue !"
@@ -237,7 +264,12 @@
     "extract": "Extraire",
     "reassign": "Réattribuer",
     "allTwelveRoyalsAreDown": "Les douze figures sont tombées.",
-    "youRanOutOfCards": "Vous n'avez plus de cartes avant d'avoir vaincu les douze figures."
+    "youRanOutOfCards": "Vous n'avez plus de cartes avant d'avoir vaincu les douze figures.",
+    "hint": {
+      "kill": "Ceci fait tomber une figure",
+      "extract": "Utilisez un as : cette pile repart sous le paquet",
+      "reassign": "Utilisez un joker : déplacez cette carte"
+    }
   },
   "ebbAndFlow": {
     "stock": "Pioche",
@@ -247,7 +279,15 @@
   },
   "elementaryDetective": {
     "youScored20ToWin": "Vous avez marqué {{score}} (20 pour gagner)",
-    "score": "Score"
+    "score": "Score",
+    "hint": {
+      "reveal_one": "Révélez ce camarade : environ {{count}} hypothèse devrait marquer",
+      "reveal_other": "Révélez ce camarade : environ {{count}} hypothèses devraient marquer",
+      "revealInfo": "Révélez un camarade pour savoir ce que les autres peuvent être",
+      "place": "Une hypothèse ici marque {{chance}} % du temps",
+      "discard": "Cette carte ne peut pas marquer : posez-la là où elle ne coûte rien",
+      "withdraw": "Cette hypothèse ne peut plus marquer : libérez sa case (la carte suivante de la pioche part aussi)"
+    }
   },
   "fanSolitaire": {
     "theFoundationsAreComplete": "Les fondations sont complètes !"
@@ -262,7 +302,12 @@
     "combatantCaptured": "Un combattant est tombé dans la pile de captures ennemie.",
     "allEnemiesCleared": "Toutes les cartes ennemies éliminées sans perdre de combattant.",
     "combatantCapturedYouLose": "Un combattant est tombé dans la pile de captures ennemie. Vous avez perdu.",
-    "noCardsToPlay": "Aucune carte à jouer."
+    "noCardsToPlay": "Aucune carte à jouer.",
+    "hint": {
+      "discard": "Échangez cette carte contre une nouvelle",
+      "letCapture": "Aucune capture possible : laissez l'ennemi prendre votre carte la plus faible",
+      "sacrifice": "Aucune capture possible : sacrifiez deux cartes faibles pour renvoyer cet ennemi"
+    }
   },
   "fifteenPuzzle": {
     "theCardsAreBackIn": "Les cartes sont de nouveau en ordre."
@@ -283,7 +328,13 @@
     "actionUp": "♠ Haut",
     "actionRun": "♥ Suite",
     "gridClearWon": "La grille est vide. Victoire !",
-    "allClubsSpent": "Les 13 trèfles sont épuisés."
+    "allClubsSpent": "Les 13 trèfles sont épuisés.",
+    "hint": {
+      "free_diamonds": "Retirez des carreaux pour libérer les actions ♦",
+      "free_spades": "Retirez des piques pour libérer les actions ♠",
+      "free_hearts": "Retirez des cœurs pour libérer l'action ♥",
+      "any": "Ne prenez qu'une carte avec ce trèfle : gardez les autres pour de plus gros coups"
+    }
   },
   "fortunesCall": {
     "red": "Rouge",
@@ -314,7 +365,11 @@
     "tierMaster": "Maître verrier",
     "tierCathedral": "Vitrail de cathédrale",
     "wonWithTier": "{{score}} points : {{tier}} !",
-    "lostShortOfTarget": "{{score}} points. Il vous faut {{target}} points pour gagner."
+    "lostShortOfTarget": "{{score}} points. Il vous faut {{target}} points pour gagner.",
+    "hint": {
+      "cell": "Posez la vitre ici : +{{count}}",
+      "shards": "Aucun cadre ne peut les prendre : brisez-les en éclats"
+    }
   },
   "gremlin": {
     "helper": "Assistant",
@@ -340,7 +395,12 @@
     "harvestGood": "Bonne récolte : il reste {{count}} herbes.",
     "harvestExcellent": "Excellente récolte : il reste {{count}} herbes.",
     "harvestPerfect": "Récolte parfaite : il reste {{count}} herbes.",
-    "noHerbsRemain": "Il ne reste plus d'herbes pour soigner le royaume."
+    "noHerbsRemain": "Il ne reste plus d'herbes pour soigner le royaume.",
+    "hint": {
+      "heal": "Ramassez ces herbes : bien semées, elles soignent une créature",
+      "setUp": "Ramassez ces herbes : bien semées, elles préparent une guérison",
+      "noCure": "Plus aucun remède pour le royaume : semez pour finir la partie"
+    }
   },
   "infiltrator": {
     "retired": "Retirés",
@@ -360,7 +420,14 @@
     "missionComplete": "Mission accomplie : {{count}} espions clés recrutés.",
     "missionFailed": "Mission échouée : {{count}} espions clés recrutés, {{lost}} perdus.",
     "noDoubleAgentsRemain": "Plus aucun agent double. Mission échouée.",
-    "sourceHand": "Main"
+    "sourceHand": "Main",
+    "hint": {
+      "retire": "Retirez ces petites cartes, pour que vos meilleures cartes reviennent plus souvent",
+      "assassinate": "Votre main ne peut pas arrêter cet espion : sacrifiez un agent double",
+      "doubleAgent": "L'As de la couleur de l'espion est un agent double : il fait passer vos autres cartes à sa couleur",
+      "counterKey": "Cet espion clé ne peut pas être recruté : contrez-le avec les cartes dont vous avez le moins besoin",
+      "counter": "Cet espion ne peut pas être recruté : contrez-le avec les cartes dont vous avez le moins besoin"
+    }
   },
   "invaders": {
     "wave2": "Vague 2",
@@ -401,14 +468,25 @@
       "shield": "Bouclier"
     },
     "roundsSurvived": "{{count}} manches survécues{{rating}}. Score final : {{score}}.",
-    "roundNumber": "Manche {{round}}"
+    "roundNumber": "Manche {{round}}",
+    "hint": {
+      "play": "Jouez votre {{hand}}",
+      "discard": "Défaussez-les : la pioche devrait améliorer votre main",
+      "double": "Doublez votre prochaine main : elle vaut gros"
+    }
   },
   "lycan": {
     "youBeatTheWolf": "Vous battez le Loup {{playerScore}} à {{wolfScore}} !",
     "theWolfBeatYou": "Le Loup vous bat {{wolfScore}} à {{playerScore}}.",
     "wolf": "Loup",
     "round": "Manche",
-    "selectCardsToCapture": "Choisissez des cartes à capturer"
+    "selectCardsToCapture": "Choisissez des cartes à capturer",
+    "hint": {
+      "fold": "Couchez-vous : continuer coûterait plus cher",
+      "finish": "Videz la main du Loup : la vôtre marque",
+      "over_one": "Surpassez : le Loup pioche {{count}} carte, ça vaut le coup",
+      "over_other": "Surpassez : le Loup pioche {{count}} cartes, ça vaut le coup"
+    }
   },
   "memory": {
     "matched": "Paires",
@@ -420,7 +498,12 @@
     "difficultyMedium": "Moyen",
     "difficultyHard": "Difficile",
     "difficultyVeryHard": "Très difficile",
-    "difficultyExtreme": "Extrême"
+    "difficultyExtreme": "Extrême",
+    "hint": {
+      "match": "Vous avez déjà vu sa paire ici",
+      "knownPair": "Vous savez où sont les deux cartes de cette paire",
+      "newCard": "Retournez une carte que vous n'avez pas encore vue"
+    }
   },
   "monteCarlo": {
     "youClearedAllCards": "Vous avez retiré toutes les cartes !",
@@ -436,7 +519,15 @@
     "villain": "Méchant",
     "response": "Réponse",
     "damage": "Dégâts :",
-    "heal": "Soin :"
+    "heal": "Soin :",
+    "smokeThreat": "Bombe fumigène sur {{card}}",
+    "grappleThreats": "Grappin sur {{first}} et {{second}}",
+    "hint": {
+      "smoke": "Utilisez votre Bombe fumigène sur cette Menace",
+      "grapple": "Reliez ces deux Menaces au Grappin pour y répondre ensemble",
+      "dump": "Jouez cette Réponse là où elle ne fait pas de mal",
+      "resolve": "Résolvez maintenant : piocher encore risque de nuire plus que d'aider"
+    }
   },
   "ouroboros": {
     "jewels": "Joyaux",
@@ -619,7 +710,15 @@
     "guardianValue": "Gardien : {{value}}",
     "aliceAwakened": "Alice s'est réveillée avec {{count}} points de vie.",
     "guardiansLost": "Tous les gardiens spéciaux hors As ont été perdus.",
-    "nightmaresOverwhelmed": "Les cauchemars ont submergé Alice."
+    "nightmaresOverwhelmed": "Les cauchemars ont submergé Alice.",
+    "hint": {
+      "eliminate": "Éliminez ce cauchemar",
+      "defend": "Affaiblissez l'attaque de ce cauchemar : il ne peut pas être éliminé ce tour-ci",
+      "mold": "Façonnez ce gardien pour l'ajouter à votre paquet",
+      "exile": "Exilez ce cauchemar : il coûterait plus de 5 vies à Alice",
+      "deepBreath": "Rien ne vaut la peine d'être affecté : échangez votre carte la plus faible contre une nouvelle",
+      "remSleep": "Alice ne survivra pas à ce plateau : utilisez le sommeil REM pour repartir de zéro"
+    }
   },
   "spiderSolitaire": {
     "allEightKToA": "Les huit suites de K à A par couleur sont complètes."
@@ -664,7 +763,13 @@
     "setReserve2": "Mettre en réserve ({{length}}/2)",
     "moveToTop": "Mettre {{value}} en haut",
     "doNothing": "Ne rien faire",
-    "noKingSelected": "Aucun Roi sélectionné"
+    "noKingSelected": "Aucun Roi sélectionné",
+    "hint": {
+      "reserve": "Gardez ces deux cartes en réserve pour achever des monstres plus tard",
+      "discard": "Cette carte n'a pas de bonne place : défaussez-la",
+      "bury": "Placez cette carte sous la pioche plutôt que de la défausser",
+      "double": "Doublez une attaque avec le Roi de pique"
+    }
   },
   "waypoint": {
     "current": "Actuel",
@@ -682,7 +787,13 @@
     "dsq": "Disqualifié : le chrono a atteint 16 pénalités.",
     "stage": "Spéciale",
     "sector": "Secteur",
-    "speed": "Vitesse"
+    "speed": "Vitesse",
+    "hint": {
+      "boosts": "Mettez les gaz pour atteindre la vitesse visée",
+      "brakes": "Freinez : mieux vaut trop lent qu'au-delà de la vitesse visée",
+      "finishUnder": "Finissez maintenant : une autre carte dépasserait sans doute",
+      "finishOver": "Trop vite et plus de frein : finissez et prenez la pénalité"
+    }
   },
   "windmill": {
     "theSailsTurnFreely": "Les ailes tournent librement !"

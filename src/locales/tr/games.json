@@ -39,7 +39,14 @@
     "outOfCardsWhileMakingCamp": "Kamp kurarken kartların bitti.",
     "deckAndFatigueRanDry": "Deste ve yorgunluk yığını tükendi.",
     "handOverflowed": "Elin taştı (18+ kart).",
-    "baseClimb": "Temel tırmanış"
+    "baseClimb": "Temel tırmanış",
+    "hint": {
+      "route_one": "Bu rotayı oyna: {{count}} kart çektirir",
+      "route_other": "Bu rotayı oyna: {{count}} kart çektirir",
+      "camp": "Kamp kurmak için son kartlarını oyna",
+      "rest": "Dinlen: yorgunluk destesini eline al ve yeniden başla",
+      "discard": "Elinin en az ihtiyaç duyduğu kartı at"
+    }
   },
   "bakersDozen": {
     "allFourSuitsAreComplete": "Dört takım da tamamlandı!"
@@ -133,7 +140,12 @@
     "guildPts": "Lonca p.",
     "pass": "Pas",
     "trade": "Takas",
-    "offer": "Teklif"
+    "offer": "Teklif",
+    "hint": {
+      "trade": "Bu kitapları ${{value}} karşılığında sat",
+      "tradeGuild": "Bu kitapları ${{value}} karşılığında sat: +{{count}} lonca p.",
+      "pass": "Hiçbir kitap bu teklifi tutmuyor: pas geç"
+    }
   },
   "boilingOver": {
     "statusStart": "İksiri kaynatmaya başlamak için destenize dokunun.",
@@ -169,7 +181,13 @@
     "tierCourtAlchemist": "Saray Simyacısı",
     "tierMiracleWorker": "Mucize Yaratıcı",
     "wonWithTier": "{{score}} puan: {{tier}}!",
-    "lostShortOfTarget": "{{score}} puan. Kazanmak için {{target}} puan gerekiyor."
+    "lostShortOfTarget": "{{score}} puan. Kazanmak için {{target}} puan gerekiyor.",
+    "hint": {
+      "stop": "Burada dur: %{{risk}} taşma riski, bir kart daha eklemeye değmez",
+      "keepCoins": "Altınları al: daha iyi kartlar kalan turlarda kazandırır",
+      "keepPoints": "Puanları al: altınların kazandırması için çok az tur kaldı",
+      "buy": "Altınlarının yettiği en güçlü kartları al: farklı renklerden iki tane"
+    }
   },
   "cityGrid": {
     "pileIsFull": "Yığın dolu!",
@@ -214,7 +232,16 @@
     "victoryGold": "Bütün düşmanlar yenildi! ALTIN zafer!",
     "victorySilver": "Bütün düşmanlar yenildi! GÜMÜŞ zafer!",
     "victoryBronze": "Bütün düşmanlar yenildi! BRONZ zafer!",
-    "failedToBlock": "{{damage}} hasar engellenemedi. Oyun bitti!"
+    "failedToBlock": "{{damage}} hasar engellenemedi. Oyun bitti!",
+    "hint": {
+      "kill": "Bu düşmanı yen",
+      "exactKill": "Tam isabet: düşman meyhanene katılır",
+      "shield": "Maçalar, o vurmadan önce saldırısını zayıflatır",
+      "draw": "Karolar elini doldurur",
+      "heal": "Kupalar ıskartayı meyhaneye geri gönderir",
+      "defend": "En az ihtiyacın olan kartlarla engelle",
+      "jester": "Yeni bir el için soytarı çağır"
+    }
   },
   "cruel": {
     "crueltyConquered": "Zulüm yenildi!"
@@ -237,7 +264,12 @@
     "extract": "Çıkar",
     "reassign": "Yeniden ata",
     "allTwelveRoyalsAreDown": "On iki soylunun hepsi düştü.",
-    "youRanOutOfCards": "On iki soylunun hepsini yenemeden kartların bitti."
+    "youRanOutOfCards": "On iki soylunun hepsini yenemeden kartların bitti.",
+    "hint": {
+      "kill": "Bu bir soyluyu düşürür",
+      "extract": "Bir as kullan: bu deste destenin altına döner",
+      "reassign": "Bir joker kullan: bu kartı taşı"
+    }
   },
   "ebbAndFlow": {
     "stock": "Deste",
@@ -247,7 +279,15 @@
   },
   "elementaryDetective": {
     "youScored20ToWin": "Puanın: {{score}} (kazanmak için 20)",
-    "score": "Puan"
+    "score": "Puan",
+    "hint": {
+      "reveal_one": "Bu oyun arkadaşını aç: yaklaşık {{count}} tahmin puan almalı",
+      "reveal_other": "Bu oyun arkadaşını aç: yaklaşık {{count}} tahmin puan almalı",
+      "revealInfo": "Diğerlerinin ne olabileceğini öğrenmek için bir oyun arkadaşını aç",
+      "place": "Buradaki bir tahmin %{{chance}} oranında puan alır",
+      "discard": "Bu kart puan alamaz: hiçbir şeye mal olmayacağı yere koy",
+      "withdraw": "Bu tahmin artık puan alamaz: yerini boşalt (destedeki sonraki kart da gider)"
+    }
   },
   "fanSolitaire": {
     "theFoundationsAreComplete": "Temeller tamamlandı!"
@@ -262,7 +302,12 @@
     "combatantCaptured": "Bir savaşçı düşmanın ele geçirme yığınına girdi.",
     "allEnemiesCleared": "Hiç savaşçı kaybetmeden bütün düşman kartları temizlendi.",
     "combatantCapturedYouLose": "Bir savaşçı düşmanın ele geçirme yığınına girdi. Kaybettin.",
-    "noCardsToPlay": "Oynanacak kart yok."
+    "noCardsToPlay": "Oynanacak kart yok.",
+    "hint": {
+      "discard": "Bu kartı yeni bir kartla değiştir",
+      "letCapture": "Ele geçirme yok: düşmanın en zayıf kartını almasına izin ver",
+      "sacrifice": "Ele geçirme yok: bu düşmanı geri göndermek için iki zayıf kartı feda et"
+    }
   },
   "fifteenPuzzle": {
     "theCardsAreBackIn": "Kartlar yeniden sıraya girdi."
@@ -283,7 +328,13 @@
     "actionUp": "♠ Üst",
     "actionRun": "♥ Dizi",
     "gridClearWon": "Izgara temizlendi. Kazandın!",
-    "allClubsSpent": "13 sineğin hepsi harcandı."
+    "allClubsSpent": "13 sineğin hepsi harcandı.",
+    "hint": {
+      "free_diamonds": "♦ hamlelerini açmak için karoları temizle",
+      "free_spades": "♠ hamlelerini açmak için maçaları temizle",
+      "free_hearts": "♥ hamlesini açmak için kupaları temizle",
+      "any": "Bu sinekle yalnızca bir kart al: diğerlerini daha büyük hamlelere sakla"
+    }
   },
   "fortunesCall": {
     "red": "Kırmızı",
@@ -314,7 +365,11 @@
     "tierMaster": "Usta Camcı",
     "tierCathedral": "Katedral Vitrayı",
     "wonWithTier": "{{score}} puan: {{tier}}!",
-    "lostShortOfTarget": "{{score}} puan. Kazanmak için {{target}} puan gerekiyor."
+    "lostShortOfTarget": "{{score}} puan. Kazanmak için {{target}} puan gerekiyor.",
+    "hint": {
+      "cell": "Camı buraya yerleştir: +{{count}}",
+      "shards": "Hiçbir çerçeve bunları alamıyor: kırıklara at"
+    }
   },
   "gremlin": {
     "helper": "Yardımcı",
@@ -340,7 +395,12 @@
     "harvestGood": "İyi mahsul: {{count}} ot kaldı.",
     "harvestExcellent": "Harika mahsul: {{count}} ot kaldı.",
     "harvestPerfect": "Kusursuz mahsul: {{count}} ot kaldı.",
-    "noHerbsRemain": "Diyarı iyileştirecek ot kalmadı."
+    "noHerbsRemain": "Diyarı iyileştirecek ot kalmadı.",
+    "hint": {
+      "heal": "Bu otları topla: iyi ekilirse bir yaratığı iyileştirir",
+      "setUp": "Bu otları topla: iyi ekilirse bir iyileştirmeye zemin hazırlar",
+      "noCure": "Diyar için çare kalmadı: oyunu bitirmek için ekmeye devam et"
+    }
   },
   "infiltrator": {
     "retired": "Emekli",
@@ -360,7 +420,14 @@
     "missionComplete": "Görev tamamlandı: {{count}} kilit casus devşirildi.",
     "missionFailed": "Görev başarısız: {{count}} kilit casus devşirildi, {{lost}} kaybedildi.",
     "noDoubleAgentsRemain": "Çift ajan kalmadı. Görev başarısız.",
-    "sourceHand": "El"
+    "sourceHand": "El",
+    "hint": {
+      "retire": "Bu düşük kartları emekli et, böylece güçlü kartların daha sık gelir",
+      "assassinate": "Elin bu casusu durduramaz: bir çift ajanı feda et",
+      "doubleAgent": "Casusun rengindeki As bir çift ajandır: diğer kartlarını kendi rengine çevirir",
+      "counterKey": "Bu kilit casus devşirilemez: en az ihtiyacın olan kartlarla ona karşı koy",
+      "counter": "Bu casus devşirilemez: en az ihtiyacın olan kartlarla ona karşı koy"
+    }
   },
   "invaders": {
     "wave2": "2. dalga",
@@ -401,14 +468,25 @@
       "shield": "Kalkan"
     },
     "roundsSurvived": "{{count}} tur dayanıldı{{rating}}. Son puan: {{score}}.",
-    "roundNumber": "{{round}}. tur"
+    "roundNumber": "{{round}}. tur",
+    "hint": {
+      "play": "Elini oyna: {{hand}}",
+      "discard": "Bunları ıskartaya at: yeni kartlar daha iyi bir el yapmalı",
+      "double": "Sıradaki elini ikiye katla: güçlü bir el"
+    }
   },
   "lycan": {
     "youBeatTheWolf": "Kurdu {{playerScore}}-{{wolfScore}} yendin!",
     "theWolfBeatYou": "Kurt seni {{wolfScore}}-{{playerScore}} yendi.",
     "wolf": "Kurt",
     "round": "Tur",
-    "selectCardsToCapture": "Alınacak kartları seç"
+    "selectCardsToCapture": "Alınacak kartları seç",
+    "hint": {
+      "fold": "Çekil: devam etmek daha pahalıya patlar",
+      "finish": "Kurdun elini boşalt: senin elin puan kazansın",
+      "over_one": "Üstün gel: Kurdun {{count}} kart çekmesine değer",
+      "over_other": "Üstün gel: Kurdun {{count}} kart çekmesine değer"
+    }
   },
   "memory": {
     "matched": "Eşleşen",
@@ -420,7 +498,12 @@
     "difficultyMedium": "Orta",
     "difficultyHard": "Zor",
     "difficultyVeryHard": "Çok zor",
-    "difficultyExtreme": "Aşırı zor"
+    "difficultyExtreme": "Aşırı zor",
+    "hint": {
+      "match": "Eşini burada görmüştün",
+      "knownPair": "Bu çiftin iki kartının da yerini biliyorsun",
+      "newCard": "Henüz görmediğin bir kartı aç"
+    }
   },
   "monteCarlo": {
     "youClearedAllCards": "Bütün kartları temizledin!",
@@ -436,7 +519,15 @@
     "villain": "Kötü adam",
     "response": "Karşılık",
     "damage": "Hasar:",
-    "heal": "İyileşme:"
+    "heal": "İyileşme:",
+    "smokeThreat": "{{card}} üzerine sis bombası",
+    "grappleThreats": "{{first}} ve {{second}} üzerine kanca",
+    "hint": {
+      "smoke": "Sis bombanı bu tehdide kullan",
+      "grapple": "Bu iki tehdidi kancayla bağla ve birlikte karşıla",
+      "dump": "Bu karşılığı zarar vermeyeceği yere oyna",
+      "resolve": "Şimdi çöz: bir kart daha çekmek yarardan çok zarar getirebilir"
+    }
   },
   "ouroboros": {
     "jewels": "Mücevherler",
@@ -619,7 +710,15 @@
     "guardianValue": "Koruyucu: {{value}}",
     "aliceAwakened": "Alice {{count}} canla uyandı.",
     "guardiansLost": "As olmayan bütün özel koruyucular kaybedildi.",
-    "nightmaresOverwhelmed": "Kâbuslar Alice'i alt etti."
+    "nightmaresOverwhelmed": "Kâbuslar Alice'i alt etti.",
+    "hint": {
+      "eliminate": "Bu kâbusu yok et",
+      "defend": "Bu kâbusun saldırısını zayıflat: bu tur yok edilemez",
+      "mold": "Bu koruyucuyu şekillendirip destene kat",
+      "exile": "Bu kâbusu sürgün et: Alice'e 5 candan fazlasına mal olur",
+      "deepBreath": "Atamaya değer bir şey yok: en zayıf kartını yenisiyle değiştir",
+      "remSleep": "Alice bu masadan sağ çıkamaz: baştan başlamak için REM uykusunu kullan"
+    }
   },
   "spiderSolitaire": {
     "allEightKToA": "K'dan A'ya sekiz takım dizisinin hepsi tamamlandı."
@@ -664,7 +763,13 @@
     "setReserve2": "Yedeğe koy ({{length}}/2)",
     "moveToTop": "{{value}} üste taşı",
     "doNothing": "Hiçbir şey yapma",
-    "noKingSelected": "Papaz seçilmedi"
+    "noKingSelected": "Papaz seçilmedi",
+    "hint": {
+      "reserve": "Canavarları sonra bitirmek için bu ikisini yedekte tut",
+      "discard": "Bu kartın iyi bir yeri yok: at",
+      "bury": "Bu kartı atmak yerine destenin altına koy",
+      "double": "Maça Papazıyla bir saldırıyı ikiye katla"
+    }
   },
   "waypoint": {
     "current": "Şu an",
@@ -682,7 +787,13 @@
     "dsq": "DSQ: saat 16 süre cezasına ulaştı.",
     "stage": "Etap",
     "sector": "Sektör",
-    "speed": "Hız"
+    "speed": "Hız",
+    "hint": {
+      "boosts": "Hedef hıza ulaşmak için gaza bas",
+      "brakes": "Fren yap: yavaş kalmak hedef hızı aşmaktan iyidir",
+      "finishUnder": "Şimdi bitir: bir kart daha büyük ihtimalle hedefi aşar",
+      "finishOver": "Çok hızlı ve fren kalmadı: bitir ve cezayı al"
+    }
   },
   "windmill": {
     "theSailsTurnFreely": "Kanatlar serbestçe dönüyor!"

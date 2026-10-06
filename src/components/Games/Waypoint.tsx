@@ -23,6 +23,8 @@ import { Colors } from "@/styles/styles";
 import { ProgressBar } from "../Home/ProgressBar";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { makeHint, pressHint, withNote, zoneTarget } from "@/hints/hint";
 const cardSize = "tableau";
 
 const topHugHeight = 1;
@@ -319,7 +321,227 @@ function finishSector(draft: WaypointGameState) {
   return true;
 }
 
+// —— Hints ——
+
+type WaypointMove = GearName | "boosts" | "brakes" | "finish";
+
+const GEAR_RANGES: Record<GearName, readonly [number, number]> = {
+  gearOne: [1, 3],
+  gearTwo: [4, 6],
+  gearThree: [7, 10],
+};
+
+const MOVE_ZONES: Record<Exclude<WaypointMove, "finish">, string> = {
+  gearOne: "gear-one",
+  gearTwo: "gear-two",
+  gearThree: "gear-three",
+  boosts: "boosts",
+  brakes: "brakes",
+};
+
+// Losing the rally (a third crash, or 16 penalties) outweighs everything.
+const RALLY_LOST = -100;
+
+/**
+ * What a gear may give, as value -> chance: its cards are face down, so from
+ * the values of its range not yet seen face up (on the road or played).
+ */
+function gearOdds(game: WaypointGameState, gear: GearName) {
+  const seen = new Map<number, number>();
+  for (const card of game.sectors.flat()) {
+    if (card.faceUp) {
+      seen.set(rankValue(card), (seen.get(rankValue(card)) ?? 0) + 1);
+    }
+  }
+  const [low, high] = GEAR_RANGES[gear];
+  const counts: [number, number][] = [];
+  for (let value = low; value <= high; value += 1) {
+    counts.push([value, Math.max(0, 4 - (seen.get(value) ?? 0))]);
+  }
+  const total = counts.reduce((sum, [, count]) => sum + count, 0);
+  return counts.map(([value, count]): [number, number] => [
+    value,
+    total ? count / total : 1 / counts.length,
+  ]);
+}
+
+/**
+ * How finishing the sector at this total scores. Penalties and crashes
+ * draw on budgets for the whole rally (16 penalties, two crashes), so they
+ * weigh more as the budgets run low against the sectors still to drive.
+ */
+function finishValue(
+  game: WaypointGameState,
+  target: number,
+  total: number,
+  played: number,
+) {
+  if (total === target) return played === 1 ? 1 : 0;
+  const ahead =
+    STAGE_CONFIGS[game.stage].sectors -
+    game.completedSectors -
+    1 +
+    [2, 3].reduce(
+      (sum, stage) =>
+        sum + (stage > game.stage ? STAGE_CONFIGS[stage].sectors : 0),
+      0,
+    );
+  const left = 15 - game.penalties;
+  const perPenalty = Math.max(1, (0.6 * ahead) / Math.max(1, left));
+  if (total > target) {
+    // A crash: a penalty, and the car can only take two.
+    if (game.damage >= 2 || left < 1) return RALLY_LOST;
+    const crash = 3 * (game.damage + 1) * (ahead / 36 + 0.3);
+    return -perPenalty - crash;
+  }
+  const penalty = target - total;
+  return penalty > left ? RALLY_LOST : -penalty * perPenalty;
+}
+
+/**
+ * What drawing from each gear costs the sectors still to come: each needs
+ * a card from its own gear (the low ones especially, with nothing smaller
+ * to make them up), and the gears are only just big enough. A gear with
+ * cards to spare costs little; the stage's leftovers are shuffled away.
+ */
+function drawCosts(game: WaypointGameState): Record<GearName, number> {
+  const config = STAGE_CONFIGS[game.stage];
+  const shown = game.sectors
+    .slice(0, game.completedSectors + 1)
+    .map((sector) => rankValue(sector[0]));
+  const gears = ["gearOne", "gearTwo", "gearThree"] as const;
+  return Object.fromEntries(
+    gears.map((gear, index) => {
+      const [low, high] = GEAR_RANGES[gear];
+      const ahead =
+        config.gears[index] -
+        shown.filter((value) => value >= low && value <= high).length;
+      const spare = game[gear].length - ahead;
+      return [gear, spare <= 0 ? 1.5 : spare <= 2 ? 0.6 : 0.15];
+    }),
+  ) as Record<GearName, number>;
+}
+
+/**
+ * The best move for the current sector, weighing each draw over what the
+ * gear may give; Gas and Brake cards are kept for later sectors unless they
+ * pay for themselves now.
+ */
+function bestWaypointMove(game: WaypointGameState): WaypointMove | null {
+  const sector = game.sectors[game.completedSectors];
+  if (game.ended || !sector?.[0]?.faceUp) return null;
+  const target = rankValue(sector[0]);
+  const config = STAGE_CONFIGS[game.stage];
+  // A Gas or Brake card is worth keeping while sectors remain to use it
+  // in: it's what saves a sector when the gears have nothing that fits.
+  const keep = game.completedSectors < config.sectors - 1 ? 1.2 : 0;
+  const usable = (source: "boosts" | "brakes") =>
+    game[source].filter((card) => card.faceUp).length;
+  const gears = (["gearOne", "gearTwo", "gearThree"] as const).filter(
+    (gear) => game[gear].length > 0,
+  );
+  const odds = new Map(gears.map((gear) => [gear, gearOdds(game, gear)]));
+  const cost = drawCosts(game);
+  const memo = new Map<string, number>();
+
+  const best = (
+    total: number,
+    played: number,
+    boosts: number,
+    brakes: number,
+  ): { value: number; move: WaypointMove | null } => {
+    let choice: { value: number; move: WaypointMove | null } = {
+      value: -Infinity,
+      move: null,
+    };
+    const consider = (value: number, move: WaypointMove) => {
+      if (value > choice.value) choice = { value, move };
+    };
+    if (played > 0) {
+      consider(finishValue(game, target, total, played), "finish");
+    }
+    // Any gear card takes a total at the target past it.
+    if (total < target) {
+      for (const gear of gears) {
+        consider(
+          odds
+            .get(gear)!
+            .reduce(
+              (sum, [value, chance]) =>
+                sum + chance * worth(total + value, played + 1, boosts, brakes),
+              0,
+            ) - cost[gear],
+          gear,
+        );
+      }
+    }
+    if (boosts > 0 && total < target) {
+      consider(
+        worth(total + 1, played + 1, boosts - 1, brakes) - keep,
+        "boosts",
+      );
+    }
+    // Even below zero: a sector short is better than a crash.
+    if (brakes > 0) {
+      consider(
+        worth(total - 1, played + 1, boosts, brakes - 1) - keep,
+        "brakes",
+      );
+    }
+    return choice;
+  };
+
+  function worth(
+    total: number,
+    played: number,
+    boosts: number,
+    brakes: number,
+  ): number {
+    const key = `${total},${Math.min(played, 2)},${boosts},${brakes}`;
+    let value = memo.get(key);
+    if (value === undefined) {
+      value = best(total, played, boosts, brakes).value;
+      memo.set(key, value);
+    }
+    return value;
+  }
+
+  return best(
+    currentTotal(game),
+    sector.length - 1,
+    usable("boosts"),
+    usable("brakes"),
+  ).move;
+}
+
+function findWaypointHint(game: WaypointGameState) {
+  const move = bestWaypointMove(game);
+  if (!move) return null;
+  if (move === "finish") {
+    const sector = game.sectors[game.completedSectors];
+    const total = currentTotal(game);
+    const target = rankValue(sector[0]);
+    const hint = pressHint("actions", i18n.t("games:waypoint.finishSector"));
+    if (total === target) return hint;
+    return withNote(
+      hint,
+      i18n.t(
+        total > target
+          ? "games:waypoint.hint.finishOver"
+          : "games:waypoint.hint.finishUnder",
+      ),
+    );
+  }
+  const hint = makeHint("tapCard", zoneTarget(MOVE_ZONES[move]));
+  if (move === "boosts" || move === "brakes") {
+    return withNote(hint, i18n.t(`games:waypoint.hint.${move}`));
+  }
+  return hint;
+}
+
 export const waypointRules = {
+  findHint: findWaypointHint,
+  bestMove: bestWaypointMove,
   STAGE_CONFIGS,
   createInitialState,
   currentTotal,
@@ -346,6 +568,8 @@ export default function Waypoint() {
         await delay(400);
       },
     });
+
+  useHint(() => findWaypointHint(game), { game });
 
   function act(action: (draft: WaypointGameState) => boolean) {
     saveUndoState(structuredClone(game));

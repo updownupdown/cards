@@ -33,6 +33,14 @@ import { i18n } from "@/i18n";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { Icon } from "@/icons";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { useHint } from "@/hints/hint-store";
+import {
+  cardTarget,
+  makeHint,
+  pressHint,
+  withNote,
+  zoneTarget,
+} from "@/hints/hint";
 
 // A push-your-luck deck builder in cards (The Quacks of Quedlinburg): each
 // round, cards are flipped from your own deck into the cauldron until you stop
@@ -254,7 +262,222 @@ function gatherState(state: BoilingOverGameState): BoilingOverGameState {
 
 const gameStateInitial = createInitialState();
 
+// ========== Hints ========== //
+/**
+ * What a coin is worth in points: it buys a card that brews again in every
+ * round left (about half the time, before the potion stops or boils over).
+ */
+function coinWorth(state: BoilingOverGameState) {
+  return 0.45 * (ROUNDS - state.round);
+}
+
+/** Coins beyond the two dearest cards (of different suits) on sale buy nothing. */
+function usefulCoins(state: BoilingOverGameState, coins: number) {
+  const dearest = state.market
+    .map((row) => Math.max(0, ...row.map(costOf)))
+    .sort((a, b) => b - a);
+  return Math.min(coins, (dearest[0] ?? 0) + (dearest[1] ?? 0));
+}
+
+/** Stopping: the points now, and what the coins will bring. */
+function stopWorth(state: BoilingOverGameState, cauldron: PlayingCard[]) {
+  const strength = strengthOf(cauldron) + diamondBonus(cauldron);
+  if (isFinalRound(state)) return strength;
+  return strength + coinWorth(state) * usefulCoins(state, coinsFor(strength));
+}
+
+/** Boiled over: the better of the points and the coins. */
+function boiledOverWorth(state: BoilingOverGameState, cauldron: PlayingCard[]) {
+  const strength = strengthOf(cauldron);
+  if (isFinalRound(state)) return strength;
+  return Math.max(
+    strength,
+    coinWorth(state) * usefulCoins(state, coinsFor(strength)),
+  );
+}
+
+/** Cards that brew alike, so the look ahead weighs each kind once. */
+function brewKind(card: PlayingCard) {
+  return isDud(card)
+    ? `dud-${rankValue(card)}`
+    : `${card.suit}-${rankValue(card)}`;
+}
+
+/**
+ * What the potion is worth played on well from here, stopping or adding a
+ * card, a few cards ahead. The player knows the cards in their own deck,
+ * though not their order: each draw weighs every card it may be.
+ */
+function brewWorth(
+  state: BoilingOverGameState,
+  cauldron: PlayingCard[],
+  unseen: PlayingCard[],
+  next: PlayingCard | null,
+  depth: number,
+): { worth: number; draw: boolean } {
+  const stop = cauldron.length > 0 ? stopWorth(state, cauldron) : -Infinity;
+  if (depth === 0 || unseen.length === 0) return { worth: stop, draw: false };
+  const draw = next
+    ? drawWorth(state, cauldron, unseen, next, depth)
+    : averageOver(unseen, (card) =>
+        drawWorth(state, cauldron, unseen, card, depth),
+      );
+  return draw > stop
+    ? { worth: draw, draw: true }
+    : { worth: stop, draw: false };
+}
+
+/** The average of a worth over these cards, each kind worked out once. */
+function averageOver(
+  cards: PlayingCard[],
+  worth: (card: PlayingCard) => number,
+) {
+  const kinds = new Map<string, { card: PlayingCard; count: number }>();
+  for (const card of cards) {
+    const kind = kinds.get(brewKind(card));
+    if (kind) kind.count += 1;
+    else kinds.set(brewKind(card), { card, count: 1 });
+  }
+  let total = 0;
+  kinds.forEach(({ card, count }) => {
+    total += count * worth(card);
+  });
+  return total / cards.length;
+}
+
+function drawWorth(
+  state: BoilingOverGameState,
+  cauldron: PlayingCard[],
+  unseen: PlayingCard[],
+  card: PlayingCard,
+  depth: number,
+): number {
+  const rest = unseen.filter((other) => other !== card);
+  const potion = [...cauldron, card];
+  if (isDud(card)) {
+    return dudTotal(potion) > DUD_LIMIT
+      ? boiledOverWorth(state, potion)
+      : brewWorth(state, potion, rest, null, depth - 1).worth;
+  }
+  const previous = cauldron[cauldron.length - 1];
+  if (card.suit === "clubs" && previous && isDud(previous)) {
+    // The dud goes back into the deck, somewhere.
+    return brewWorth(
+      state,
+      [...cauldron.slice(0, -1), card],
+      [...rest, previous],
+      null,
+      depth - 1,
+    ).worth;
+  }
+  if (card.suit === "spades" && rest.length > 0) {
+    // The next card shows before you choose: weigh each one it may be.
+    return averageOver(
+      rest,
+      (shown) => brewWorth(state, potion, rest, shown, depth - 1).worth,
+    );
+  }
+  return brewWorth(state, potion, rest, null, depth - 1).worth;
+}
+
+/** How well a card brews: its value, and a little for its effect. */
+function cardWorth(card: PlayingCard) {
+  const effect: Partial<Record<CardSuit, number>> = {
+    diamonds: 0.6,
+    clubs: 1,
+    spades: 0.6,
+  };
+  return rankValue(card) + (effect[card.suit] ?? 0);
+}
+
+/**
+ * The card to buy: of the best one or two (of different suits) the coins
+ * can buy, the dearer. Buying never hurts: every card dilutes the duds.
+ */
+function bestBuy(state: BoilingOverGameState) {
+  const options = state.market.flatMap((row) =>
+    row.filter((card) => canBuy(state, card)),
+  );
+  let best: { card: PlayingCard; worth: number } | null = null;
+  for (const card of options) {
+    let worth = cardWorth(card);
+    if (state.bought.length + 1 < MAX_BUYS) {
+      const left = state.coins - costOf(card);
+      const seconds = options.filter(
+        (other) => other.suit !== card.suit && costOf(other) <= left,
+      );
+      worth += Math.max(0, ...seconds.map(cardWorth));
+    }
+    if (
+      !best ||
+      worth > best.worth ||
+      (worth === best.worth && costOf(card) > costOf(best.card))
+    ) {
+      best = { card, worth };
+    }
+  }
+  return best?.card ?? null;
+}
+
+const LOOK_AHEAD = 3;
+
+function findBoilingOverHint(state: BoilingOverGameState) {
+  if (state.phase === "brewing") {
+    const top = state.deck[state.deck.length - 1];
+    const stop = pressHint("controls", i18n.t("games:boilingOver.stop"));
+    if (!top) return state.cauldron.length > 0 ? stop : null;
+    const { draw } = brewWorth(
+      state,
+      state.cauldron,
+      state.deck,
+      top.faceUp ? top : null,
+      LOOK_AHEAD,
+    );
+    if (draw) return makeHint("draw", zoneTarget("deck"));
+    return withNote(
+      stop,
+      i18n.t("games:boilingOver.hint.stop", {
+        risk: Math.round(bustChance(state) * 100),
+      }),
+    );
+  }
+  if (state.phase === "boiledOver") {
+    const strength = strengthOf(state.cauldron);
+    const coins = coinsFor(strength);
+    const keepCoins = coinWorth(state) * usefulCoins(state, coins) > strength;
+    return withNote(
+      pressHint(
+        "controls",
+        keepCoins
+          ? i18n.t("games:boilingOver.keepCoins", { value: coins })
+          : i18n.t("games:boilingOver.keepPoints", { value: strength }),
+      ),
+      i18n.t(
+        keepCoins
+          ? "games:boilingOver.hint.keepCoins"
+          : "games:boilingOver.hint.keepPoints",
+      ),
+    );
+  }
+  if (state.phase === "market") {
+    const buy = bestBuy(state);
+    if (buy) {
+      return withNote(
+        makeHint("tapCard", cardTarget(buy)),
+        i18n.t("games:boilingOver.hint.buy"),
+      );
+    }
+    return pressHint(
+      "controls",
+      i18n.t("games:boilingOver.continueToRound", { round: state.round + 1 }),
+    );
+  }
+  return null;
+}
+
 export const boilingOverRules = {
+  findHint: findBoilingOverHint,
+  bestBuy,
   ROUNDS,
   DUD_LIMIT,
   WIN_SCORE,
@@ -416,6 +639,8 @@ export default function BoilingOver() {
   const strength = strengthOf(game.cauldron);
   const bonus = game.phase === "brewing" ? diamondBonus(game.cauldron) : 0;
   const risk = useMemo(() => bustChance(game), [game]);
+
+  useHint(() => findBoilingOverHint(game), { game });
 
   function update(change: (draft: BoilingOverGameState) => void) {
     setGame(produce(game, change));

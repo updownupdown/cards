@@ -1,7 +1,7 @@
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   collectCards,
@@ -25,6 +25,8 @@ import { flexStyles } from "@/styles/flexStyles";
 import { useGameColors } from "@/hooks/useGameColors";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, withNote } from "@/hints/hint";
 const GRID_CONFIG = {
   veryeasy: { cols: 4, rows: 3 },
   easy: { cols: 5, rows: 4 },
@@ -133,7 +135,73 @@ function cardsMatch(first: PlayingCard, second: PlayingCard) {
   return first.rank === second.rank && first.suit === second.suit;
 }
 
+// —— Hints ——
+
+/** The face of a card, as the player remembers it. */
+function faceOf(card: PlayingCard) {
+  return `${card.rank}-${card.suit}`;
+}
+
+/**
+ * The card to turn up next, using only what the player has seen: `seen` has
+ * the face of every card on the grid that has been turned up. `selected` is
+ * the card turned up as the first of a guess; `shown` the two of a guess
+ * still face up (tapping another card turns them back down).
+ */
+function findMemoryHint(
+  grid: (PlayingCard | null)[],
+  seen: ReadonlyMap<string, string>,
+  selected: number | null,
+  shown: readonly number[] = [],
+) {
+  const face = (index: number) => {
+    const card = grid[index];
+    return card ? (card.faceUp ? faceOf(card) : seen.get(card.id)) : undefined;
+  };
+  const cells = grid.flatMap((card, index) => (card ? [index] : []));
+  // A card never turned up, first in reading order.
+  const unseen = (except: number | null) =>
+    cells.find((index) => index !== except && face(index) === undefined);
+  const tap = (index: number | undefined, note?: string) => {
+    if (index === undefined) return null;
+    const hint = makeHint("tapCard", cardTarget(grid[index]!));
+    return note ? withNote(hint, note) : hint;
+  };
+
+  if (selected !== null && grid[selected]?.faceUp) {
+    // The second card of a guess: its match, if it has been seen.
+    const match = cells.find(
+      (index) => index !== selected && face(index) === face(selected),
+    );
+    if (match !== undefined) {
+      return tap(match, i18n.t("games:memory.hint.match"));
+    }
+    return tap(unseen(selected), i18n.t("games:memory.hint.newCard"));
+  }
+
+  // A pair already seen, both cards known: start with a face-down one (the
+  // last guess's cards still showing can't be tapped).
+  for (const first of cells) {
+    const known = face(first);
+    if (known === undefined) continue;
+    const second = cells.find(
+      (index) => index !== first && face(index) === known,
+    );
+    if (second === undefined) continue;
+    const start = shown.includes(first) ? second : first;
+    if (shown.includes(start)) continue;
+    return tap(start, i18n.t("games:memory.hint.knownPair"));
+  }
+  return tap(
+    cells.find(
+      (index) => !shown.includes(index) && face(index) === undefined,
+    ) ?? cells.find((index) => !shown.includes(index)),
+    i18n.t("games:memory.hint.newCard"),
+  );
+}
+
 export const memoryRules = {
+  findHint: findMemoryHint,
   createMemoryDeck,
   cardsMatch,
   gridConfig: GRID_CONFIG,
@@ -151,6 +219,8 @@ export default function Memory() {
   const [matchedPair, setMatchedPair] = useState<MatchedPair | null>(null);
   const [isGameModalOpen, setIsGameModalOpen] = useState(false);
   const pendingPair = useRef<PendingPair | null>(null);
+  // The face of every card the player has seen turned up, by card id.
+  const seenFaces = useRef(new Map<string, string>());
   const { colorPale } = useGameColors();
 
   const { isLoaded, game, setGame, reset } = useStateManager({
@@ -160,12 +230,33 @@ export default function Memory() {
     gameStateInitial,
     resetNonGameStates: () => {
       pendingPair.current = null;
+      seenFaces.current = new Map();
       setSelectedIndex(null);
       setIsResolving(false);
       setGuesses(0);
       setMatchedPair(null);
     },
   });
+
+  useEffect(() => {
+    for (const card of game.grid) {
+      if (card?.faceUp) seenFaces.current.set(card.id, faceOf(card));
+    }
+  }, [game.grid]);
+
+  useHint(
+    () => {
+      const pair = pendingPair.current;
+      return findMemoryHint(
+        game.grid,
+        seenFaces.current,
+        isResolving ? null : selectedIndex,
+        pair ? [pair.firstIndex, pair.secondIndex] : [],
+      );
+    },
+    // A matched pair is being taken away: wait for it.
+    { game, enabled: !game.ended && !matchedPair },
+  );
 
   async function selectCard(index: number) {
     if (game.ended || !game.grid[index]) return;
@@ -305,7 +396,8 @@ export default function Memory() {
     const isMatched =
       matchedPair?.firstIndex === index || matchedPair?.secondIndex === index;
     return {
-      onPress: () => selectCard(index),
+      // Not awaited: a guess resolves on its own while play goes on.
+      onPress: () => void selectCard(index),
       isDisabled: game.ended || mappedCard.card.faceUp,
       forceOverlayColor: isMatched,
       forceSelectColor: isMatched,

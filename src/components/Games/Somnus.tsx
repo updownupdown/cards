@@ -27,6 +27,14 @@ import { Text } from "../common/Text";
 import { useToast } from "../common/Toast";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import {
+  cardTarget,
+  makeHint,
+  withNote,
+  zoneTarget,
+  type HintTarget,
+} from "@/hints/hint";
 const MAX_LIFE = 40;
 const BOARD_SIZE = 3;
 const MAX_HAND = 4;
@@ -396,7 +404,244 @@ function createGame(cards = createDeck({ includeJokers: true })) {
   return state;
 }
 
+// —— Hints ——
+
+/** A turn's plan: which hand cards go to which Dream card, and any Exile. */
+type SomnusPlan = {
+  /** By board slot, the hand cards to assign there. */
+  groups: PlayingCard[][];
+  exile: { slot: number; card: PlayingCard } | null;
+  score: number;
+};
+
+/** A copy of what resolving the board touches, to try a plan on. */
+function previewState(state: SomnusGameState): SomnusGameState {
+  return {
+    ...state,
+    board: [...state.board],
+    assignments: state.assignments.map((cards) => [...cards]),
+    removedGuardians: [...state.removedGuardians],
+    removedNightmares: [...state.removedNightmares],
+    guardianDiscard: [],
+    dreamDiscard: [],
+  };
+}
+
+/** What a Guardian card is worth to keep: Aces double, so count them high. */
+function guardianWorth(card: PlayingCard) {
+  return card.rank === "A" ? 7 : isJoker(card) ? 10 : rankValue(card);
+}
+
+/**
+ * How good the board is once a plan is resolved: Alice's life, Nightmares
+ * eliminated for good, Guardians molded into the deck, less what still
+ * threatens: Nightmares that will strike again, and a special Guardian
+ * about to leave unmolded (lose seven and the game is lost). The weights
+ * were tuned by playing many deals.
+ */
+function scorePlan(before: SomnusGameState, after: SomnusGameState) {
+  if (after.ended && !after.won) return -10000;
+  let score = after.life;
+  before.board.forEach((target, slot) => {
+    if (!target || after.board[slot]) return;
+    if (isNightmare(target)) {
+      score += target.rank === "A" ? 4 : 12;
+    } else {
+      score +=
+        0.5 * guardianWorth(target) + (isNonAceSpecialGuardian(target) ? 4 : 0);
+    }
+  });
+  after.board.forEach((card, slot) => {
+    if (!card) return;
+    if (isNightmare(card)) {
+      // It strikes again for each turn it stays: once more for each card
+      // that stays to its right (the rightmost leaves now).
+      const stays =
+        slot === BOARD_SIZE - 1
+          ? 0
+          : 1 +
+            after.board.slice(slot + 1, BOARD_SIZE - 1).filter(Boolean).length;
+      score -=
+        0.4 *
+        stays *
+        dreamCardValue(card, after.removedGuardians, after.removedNightmares);
+    } else if (slot === BOARD_SIZE - 1 && isNonAceSpecialGuardian(card)) {
+      const lost = after.removedGuardians.filter(
+        isNonAceSpecialGuardian,
+      ).length;
+      score -= 12 + 4 * lost;
+    }
+  });
+  return score;
+}
+
+const EXILE_ABOVE = 20;
+
+/** Tries a plan: Exile first, then the assignments, then resolve. */
+function tryPlan(
+  state: SomnusGameState,
+  groups: PlayingCard[][],
+  exile: SomnusPlan["exile"],
+) {
+  const preview = previewState(state);
+  if (exile) {
+    preview.board[exile.slot] = null;
+    preview.life -= 5;
+  }
+  groups.forEach((cards, slot) => preview.assignments[slot].push(...cards));
+  const before = previewState(preview);
+  resolveBoard(preview);
+  return scorePlan(before, preview);
+}
+
+/**
+ * The best plan for the rest of this turn, over every way to share the
+ * hand out (four cards at most, three slots), with and without an Exile.
+ */
+function bestSomnusPlan(state: SomnusGameState): SomnusPlan {
+  const exiles: SomnusPlan["exile"][] = [null];
+  // Exiling costs 5 life, and the Nightmare comes back: only while there's
+  // life to spare.
+  if (!state.exileUsedThisTurn && state.life >= EXILE_ABOVE) {
+    state.board.forEach((target, slot) => {
+      if (!target || !isNightmare(target)) return;
+      state.hand.forEach((card) => exiles.push({ slot, card }));
+    });
+  }
+
+  let best: SomnusPlan | null = null;
+  for (const exile of exiles) {
+    const board = [...state.board];
+    if (exile) board[exile.slot] = null;
+    const after = { ...state, board };
+    const hand = state.hand.filter((card) => card !== exile?.card);
+    const slots = [-1, ...board.flatMap((card, slot) => (card ? [slot] : []))];
+    const choices = slots.length ** hand.length;
+    for (let choice = 0; choice < choices; choice += 1) {
+      const groups: PlayingCard[][] = [[], [], []];
+      let rest = choice;
+      hand.forEach((card) => {
+        const slot = slots[rest % slots.length];
+        rest = Math.floor(rest / slots.length);
+        if (slot >= 0) groups[slot].push(card);
+      });
+      const valid = groups.every(
+        (cards, slot) =>
+          cards.length === 0 ||
+          canAssignToTarget(
+            board[slot]!,
+            state.assignments[slot],
+            cards,
+            after,
+          ),
+      );
+      if (!valid) continue;
+      // Ties go to the plan that spends least: kept cards stay in hand.
+      const spent = groups
+        .flat()
+        .reduce((sum, card) => sum + guardianWorth(card), 0);
+      const score =
+        tryPlan(state, groups, exile) - spent * 0.01 - (exile ? 0.5 : 0);
+      if (!best || score > best.score) best = { groups, exile, score };
+    }
+  }
+  return best!;
+}
+
+function findSomnusHint(
+  state: SomnusGameState,
+  selectedHandIds: string[],
+  selectedBoardSlot: number | null,
+) {
+  if (state.ended) return null;
+  const noAssignments = state.assignments.every((cards) => cards.length === 0);
+
+  /** Taps to pick exactly these hand cards and this Dream card. */
+  const pick = (cards: PlayingCard[], slot: number | null) => {
+    const ids = new Set(cards.map((card) => card.id));
+    const taps = state.hand
+      .filter((card) => ids.has(card.id) !== selectedHandIds.includes(card.id))
+      .map(cardTarget);
+    if (slot !== null && selectedBoardSlot !== slot) {
+      taps.push(cardTarget(state.board[slot]!));
+    }
+    return taps;
+  };
+  const press = (
+    label: string,
+    taps: HintTarget[],
+    note?:
+      | "eliminate"
+      | "defend"
+      | "mold"
+      | "exile"
+      | "deepBreath"
+      | "remSleep",
+  ) => {
+    const hint = makeHint(
+      { key: "press", values: { label } },
+      ...taps,
+      zoneTarget("actions"),
+    );
+    return note ? withNote(hint, i18n.t(`games:somnus.hint.${note}`)) : hint;
+  };
+
+  const plan = bestSomnusPlan(state);
+  if (
+    plan.score <= -10000 &&
+    state.life <= 10 &&
+    !state.remSleepUsed &&
+    noAssignments
+  ) {
+    return press(i18n.t("games:somnus.remSleep"), [], "remSleep");
+  }
+  if (plan.exile) {
+    return press(
+      i18n.t("games:somnus.exile"),
+      pick([plan.exile.card], plan.exile.slot),
+      "exile",
+    );
+  }
+  // The rightmost first: it resolves first.
+  for (let slot = BOARD_SIZE - 1; slot >= 0; slot -= 1) {
+    const cards = plan.groups[slot];
+    const target = state.board[slot];
+    if (cards.length === 0 || !target) continue;
+    const preview = previewState(state);
+    preview.assignments[slot].push(...cards);
+    resolveBoard(preview);
+    const note = isGuardian(target)
+      ? "mold"
+      : preview.board[slot] === null
+        ? "eliminate"
+        : "defend";
+    return press(i18n.t("games:somnus.assign"), pick(cards, slot), note);
+  }
+
+  // Nothing worth assigning: swap the weakest card for a new one, if the
+  // deck holds better on average.
+  if (noAssignments && !state.playedThisTurn && state.hand.length > 0) {
+    const weakest = state.hand.reduce((low, card) =>
+      guardianWorth(card) < guardianWorth(low) ? card : low,
+    );
+    const pool = [...state.guardianDeck, ...state.guardianDiscard];
+    const average =
+      pool.reduce((sum, card) => sum + guardianWorth(card), 0) /
+      Math.max(1, pool.length);
+    if (guardianWorth(weakest) < average) {
+      return press(
+        i18n.t("games:somnus.deepBreath"),
+        pick([weakest], null),
+        "deepBreath",
+      );
+    }
+  }
+  return press(i18n.t("cards:resolve"), []);
+}
+
 export const somnusRules = {
+  findHint: findSomnusHint,
+  bestPlan: bestSomnusPlan,
   isGuardian,
   isNightmare,
   dreamCardValue,
@@ -434,6 +679,10 @@ export default function Somnus() {
         await delay(100);
       },
     });
+
+  useHint(() => findSomnusHint(game, selectedHandIds, selectedBoardSlot), {
+    game,
+  });
 
   const selectedCards = game.hand.filter((card) =>
     selectedHandIds.includes(card.id),

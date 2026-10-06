@@ -39,7 +39,14 @@
     "outOfCardsWhileMakingCamp": "Out of cards while making camp.",
     "deckAndFatigueRanDry": "The deck and fatigue pile ran dry.",
     "handOverflowed": "Your hand overflowed (18+ cards).",
-    "baseClimb": "Base Climb"
+    "baseClimb": "Base Climb",
+    "hint": {
+      "route_one": "Play this route: it draws {{count}} card",
+      "route_other": "Play this route: it draws {{count}} cards",
+      "camp": "Play your last cards to make camp",
+      "rest": "Rest: take the fatigue pile into your hand and start a new climb",
+      "discard": "Discard the card your hand climbs best without"
+    }
   },
   "bakersDozen": {
     "allFourSuitsAreComplete": "All four suits are complete!"
@@ -133,7 +140,12 @@
     "guildPts": "Guild Pts.",
     "pass": "Pass",
     "trade": "Trade",
-    "offer": "Offer"
+    "offer": "Offer",
+    "hint": {
+      "trade": "Sell these books for ${{value}}",
+      "tradeGuild": "Sell these books for ${{value}}: +{{count}} Guild Pts.",
+      "pass": "No books add up to this offer: pass"
+    }
   },
   "boilingOver": {
     "statusStart": "Tap your deck to start brewing.",
@@ -169,7 +181,13 @@
     "tierCourtAlchemist": "Court Alchemist",
     "tierMiracleWorker": "Miracle Worker",
     "wonWithTier": "{{score}} points: {{tier}}!",
-    "lostShortOfTarget": "{{score}} points. You need {{target}} points to win."
+    "lostShortOfTarget": "{{score}} points. You need {{target}} points to win.",
+    "hint": {
+      "stop": "Stop here: a {{risk}}% chance to boil over is too much for what another card adds",
+      "keepCoins": "Keep the coins: better cards will pay off over the rounds left",
+      "keepPoints": "Keep the points: too few rounds are left for coins to pay off",
+      "buy": "Buy the strongest cards your coins allow: two, of different suits"
+    }
   },
   "cityGrid": {
     "pileIsFull": "Pile is full!",
@@ -214,7 +232,16 @@
     "victoryGold": "All enemies defeated! GOLD victory!",
     "victorySilver": "All enemies defeated! SILVER victory!",
     "victoryBronze": "All enemies defeated! BRONZE victory!",
-    "failedToBlock": "Failed to block {{damage}} damage. Game Over!"
+    "failedToBlock": "Failed to block {{damage}} damage. Game Over!",
+    "hint": {
+      "kill": "Defeat this enemy",
+      "exactKill": "Exact kill: the enemy joins your tavern",
+      "shield": "Spades weaken its attack before it strikes",
+      "draw": "Diamonds refill your hand",
+      "heal": "Hearts send discards back to the tavern",
+      "defend": "Block with the cards you need least",
+      "jester": "Call a jester for a fresh hand"
+    }
   },
   "cruel": {
     "crueltyConquered": "Cruelty conquered!"
@@ -237,7 +264,12 @@
     "extract": "Extract",
     "reassign": "Reassign",
     "allTwelveRoyalsAreDown": "All twelve royals are down.",
-    "youRanOutOfCards": "You ran out of cards before defeating all twelve royals."
+    "youRanOutOfCards": "You ran out of cards before defeating all twelve royals.",
+    "hint": {
+      "kill": "This brings down a royal",
+      "extract": "Spend an ace: send this pile back under the deck",
+      "reassign": "Spend a joker: move this card"
+    }
   },
   "ebbAndFlow": {
     "stock": "Stock",
@@ -247,7 +279,15 @@
   },
   "elementaryDetective": {
     "youScored20ToWin": "You scored {{score}} (20 to win)",
-    "score": "Score"
+    "score": "Score",
+    "hint": {
+      "reveal_one": "Reveal this playmate: about {{count}} guess should score",
+      "reveal_other": "Reveal this playmate: about {{count}} guesses should score",
+      "revealInfo": "Reveal a playmate to learn what the others can be",
+      "place": "A guess here scores {{chance}}% of the time",
+      "discard": "This card can't score: put it where it costs nothing",
+      "withdraw": "This guess can't score any more: clear its space (the next stock card goes too)"
+    }
   },
   "fanSolitaire": {
     "theFoundationsAreComplete": "The foundations are complete!"
@@ -262,7 +302,12 @@
     "combatantCaptured": "A combatant entered the enemy capture pile.",
     "allEnemiesCleared": "All enemy cards cleared without losing combatants.",
     "combatantCapturedYouLose": "A combatant entered the enemy capture pile. You lose.",
-    "noCardsToPlay": "No cards available to play."
+    "noCardsToPlay": "No cards available to play.",
+    "hint": {
+      "discard": "Swap this card for a fresh draw",
+      "letCapture": "No capture: let the enemy take your cheapest card",
+      "sacrifice": "No capture: sacrifice two cheap cards to send this enemy back"
+    }
   },
   "fifteenPuzzle": {
     "theCardsAreBackIn": "The cards are back in order."
@@ -283,7 +328,13 @@
     "actionUp": "♠ Up",
     "actionRun": "♥ Sequence",
     "gridClearWon": "The grid is clear. Fight Clubs won!",
-    "allClubsSpent": "All 13 Clubs are spent."
+    "allClubsSpent": "All 13 Clubs are spent.",
+    "hint": {
+      "free_diamonds": "Clear diamonds to free the ♦ actions",
+      "free_spades": "Clear spades to free the ♠ actions",
+      "free_hearts": "Clear hearts to free the ♥ action",
+      "any": "Take just one card with this club: keep the others for bigger plays"
+    }
   },
   "fortunesCall": {
     "red": "Red",
@@ -314,7 +365,11 @@
     "tierMaster": "Master Glazier",
     "tierCathedral": "Cathedral Window",
     "wonWithTier": "{{score}} points: {{tier}}!",
-    "lostShortOfTarget": "{{score}} points. You need {{target}} points to win."
+    "lostShortOfTarget": "{{score}} points. You need {{target}} points to win.",
+    "hint": {
+      "cell": "Set the pane here: +{{count}}",
+      "shards": "No frame can use these: break them as shards"
+    }
   },
   "gremlin": {
     "helper": "Helper",
@@ -340,7 +395,12 @@
     "harvestGood": "Good harvest: {{count}} herbs remain.",
     "harvestExcellent": "Excellent harvest: {{count}} herbs remain.",
     "harvestPerfect": "Perfect harvest: {{count}} herbs remain.",
-    "noHerbsRemain": "No herbs remain to heal the realm."
+    "noHerbsRemain": "No herbs remain to heal the realm.",
+    "hint": {
+      "heal": "Pick up these herbs: sown well, they heal a creature",
+      "setUp": "Pick up these herbs: sown well, they set up a healing",
+      "noCure": "No cure is left for the realm: sow on to end the game"
+    }
   },
   "infiltrator": {
     "retired": "Retired",
@@ -360,7 +420,14 @@
     "missionComplete": "Mission complete: {{count}} Key Spies recruited.",
     "missionFailed": "Mission failed: {{count}} Key Spies recruited, {{lost}} lost.",
     "noDoubleAgentsRemain": "No Double Agents remain. Mission failed.",
-    "sourceHand": "Hand"
+    "sourceHand": "Hand",
+    "hint": {
+      "retire": "Retire these low cards, so your stronger cards come round more often",
+      "assassinate": "Your hand can't stop this spy: sacrifice a Double Agent",
+      "doubleAgent": "The Ace of the spy's suit is a Double Agent: it turns your other cards to its suit",
+      "counterKey": "This Key Spy can't be recruited: counter it with the cards you need least",
+      "counter": "This spy can't be recruited: counter it with the cards you need least"
+    }
   },
   "invaders": {
     "wave2": "Wave 2",
@@ -401,14 +468,25 @@
       "shield": "Shield"
     },
     "roundsSurvived": "{{count}} rounds survived{{rating}}. Final score: {{score}}.",
-    "roundNumber": "Round {{round}}"
+    "roundNumber": "Round {{round}}",
+    "hint": {
+      "play": "Play your {{hand}}",
+      "discard": "Throw these back: a draw should make a better hand",
+      "double": "Double your next hand: it's a big one"
+    }
   },
   "lycan": {
     "youBeatTheWolf": "You beat the Wolf {{playerScore}}-{{wolfScore}}!",
     "theWolfBeatYou": "The Wolf beat you {{wolfScore}}-{{playerScore}}.",
     "wolf": "Wolf",
     "round": "Round",
-    "selectCardsToCapture": "Select cards to capture"
+    "selectCardsToCapture": "Select cards to capture",
+    "hint": {
+      "fold": "Fold now: playing on would cost more",
+      "finish": "Clear the Wolf's hand: yours scores",
+      "over_one": "Overpower: worth the Wolf drawing {{count}} card",
+      "over_other": "Overpower: worth the Wolf drawing {{count}} cards"
+    }
   },
   "memory": {
     "matched": "Matched",
@@ -420,7 +498,12 @@
     "difficultyMedium": "Medium",
     "difficultyHard": "Hard",
     "difficultyVeryHard": "Very Hard",
-    "difficultyExtreme": "Extreme"
+    "difficultyExtreme": "Extreme",
+    "hint": {
+      "match": "You've seen its pair here",
+      "knownPair": "You know where both cards of this pair are",
+      "newCard": "Turn up a card you haven't seen yet"
+    }
   },
   "monteCarlo": {
     "youClearedAllCards": "You cleared all cards!",
@@ -436,7 +519,15 @@
     "villain": "Villain",
     "response": "Response",
     "damage": "Damage:",
-    "heal": "Heal:"
+    "heal": "Heal:",
+    "smokeThreat": "Smoke Bomb on {{card}}",
+    "grappleThreats": "Grapple Line on {{first}} and {{second}}",
+    "hint": {
+      "smoke": "Use your Smoke Bomb on this Threat",
+      "grapple": "Grapple these two Threats: answer them together",
+      "dump": "Play this response where it does no harm",
+      "resolve": "Resolve now: another draw is more likely to hurt than help"
+    }
   },
   "ouroboros": {
     "jewels": "Jewels",
@@ -619,7 +710,15 @@
     "guardianValue": "Guardian: {{value}}",
     "aliceAwakened": "Alice awakened with {{count}} life.",
     "guardiansLost": "Every non-Ace special Guardian was lost.",
-    "nightmaresOverwhelmed": "The Nightmares overwhelmed Alice."
+    "nightmaresOverwhelmed": "The Nightmares overwhelmed Alice.",
+    "hint": {
+      "eliminate": "Eliminate this Nightmare",
+      "defend": "Weaken this Nightmare's attack: it can't be eliminated this turn",
+      "mold": "Mold this Guardian into your deck",
+      "exile": "Exile this Nightmare: it would cost Alice more than 5 life",
+      "deepBreath": "Nothing worth assigning: swap your weakest card for a new one",
+      "remSleep": "Alice won't survive this board: use REM Sleep to start afresh"
+    }
   },
   "spiderSolitaire": {
     "allEightKToA": "All eight K-to-A suit runs are complete."
@@ -664,7 +763,13 @@
     "setReserve2": "Set Reserve ({{length}}/2)",
     "moveToTop": "Move {{value}} to top",
     "doNothing": "Do nothing",
-    "noKingSelected": "No King selected"
+    "noKingSelected": "No King selected",
+    "hint": {
+      "reserve": "Keep these two in reserve to finish monsters later",
+      "discard": "No good place for this card: discard it",
+      "bury": "Bury this card instead of discarding it",
+      "double": "Double an attack with the King of Spades"
+    }
   },
   "waypoint": {
     "current": "Current",
@@ -682,7 +787,13 @@
     "dsq": "DSQ: the clock reached 16 time penalties.",
     "stage": "Stage",
     "sector": "Sector",
-    "speed": "Speed"
+    "speed": "Speed",
+    "hint": {
+      "boosts": "Use Gas to reach the target speed",
+      "brakes": "Brake: slower beats going over the target speed",
+      "finishUnder": "Finish now: another card would likely overshoot",
+      "finishOver": "Too fast and no brake left: finish and take the penalty"
+    }
   },
   "windmill": {
     "theSailsTurnFreely": "The sails turn freely!"

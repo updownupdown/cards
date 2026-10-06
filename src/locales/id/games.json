@@ -39,7 +39,14 @@
     "outOfCardsWhileMakingCamp": "Kartu habis saat mendirikan kemah.",
     "deckAndFatigueRanDry": "Dek dan tumpukan kelelahan sudah habis.",
     "handOverflowed": "Tanganmu kepenuhan (18+ kartu).",
-    "baseClimb": "Pendakian dasar"
+    "baseClimb": "Pendakian dasar",
+    "hint": {
+      "route_one": "Mainkan rute ini: kamu mengambil {{count}} kartu",
+      "route_other": "Mainkan rute ini: kamu mengambil {{count}} kartu",
+      "camp": "Mainkan kartu terakhirmu untuk mendirikan kemah",
+      "rest": "Istirahat: ambil tumpukan lelah ke tanganmu dan mulai lagi",
+      "discard": "Buang kartu yang paling tidak dibutuhkan tanganmu"
+    }
   },
   "bakersDozen": {
     "allFourSuitsAreComplete": "Keempat jenis sudah lengkap!"
@@ -133,7 +140,12 @@
     "guildPts": "Poin Serikat",
     "pass": "Lewati",
     "trade": "Jual",
-    "offer": "Tawaran"
+    "offer": "Tawaran",
+    "hint": {
+      "trade": "Jual buku-buku ini seharga ${{value}}",
+      "tradeGuild": "Jual buku-buku ini seharga ${{value}}: +{{count}} Poin Serikat",
+      "pass": "Tak ada buku yang pas dengan tawaran ini: lewati"
+    }
   },
   "boilingOver": {
     "statusStart": "Ketuk dek Anda untuk mulai meracik ramuan.",
@@ -169,7 +181,13 @@
     "tierCourtAlchemist": "Alkemis Istana",
     "tierMiracleWorker": "Pembuat Mukjizat",
     "wonWithTier": "{{score}} poin: {{tier}}!",
-    "lostShortOfTarget": "{{score}} poin. Anda butuh {{target}} poin untuk menang."
+    "lostShortOfTarget": "{{score}} poin. Anda butuh {{target}} poin untuk menang.",
+    "hint": {
+      "stop": "Berhenti di sini: risiko meledak {{risk}}% terlalu besar untuk tambahan satu kartu",
+      "keepCoins": "Ambil koinnya: kartu yang lebih baik akan menguntungkan di sisa ronde",
+      "keepPoints": "Ambil poinnya: sisa ronde terlalu sedikit untuk membuat koin menguntungkan",
+      "buy": "Beli kartu terkuat yang bisa dibeli koin Anda: dua, dari jenis berbeda"
+    }
   },
   "cityGrid": {
     "pileIsFull": "Tumpukan penuh!",
@@ -214,7 +232,16 @@
     "victoryGold": "Semua musuh kalah! Kemenangan EMAS!",
     "victorySilver": "Semua musuh kalah! Kemenangan PERAK!",
     "victoryBronze": "Semua musuh kalah! Kemenangan PERUNGGU!",
-    "failedToBlock": "Gagal menahan {{damage}} kerusakan. Permainan berakhir!"
+    "failedToBlock": "Gagal menahan {{damage}} kerusakan. Permainan berakhir!",
+    "hint": {
+      "kill": "Kalahkan musuh ini",
+      "exactKill": "Serangan pas: musuh bergabung ke kedaimu",
+      "shield": "Sekop melemahkan serangannya sebelum ia menyerang",
+      "draw": "Wajik mengisi ulang tanganmu",
+      "heal": "Hati mengembalikan buangan ke kedai",
+      "defend": "Tahan dengan kartu yang paling tidak kamu perlukan",
+      "jester": "Panggil badut untuk tangan baru"
+    }
   },
   "cruel": {
     "crueltyConquered": "Kekejaman ditaklukkan!"
@@ -237,7 +264,12 @@
     "extract": "Tarik",
     "reassign": "Pindahkan",
     "allTwelveRoyalsAreDown": "Kedua belas bangsawan sudah tumbang.",
-    "youRanOutOfCards": "Kartumu habis sebelum semua bangsawan dikalahkan."
+    "youRanOutOfCards": "Kartumu habis sebelum semua bangsawan dikalahkan.",
+    "hint": {
+      "kill": "Ini menumbangkan seorang bangsawan",
+      "extract": "Pakai as: tumpukan ini kembali ke bawah dek",
+      "reassign": "Pakai joker: pindahkan kartu ini"
+    }
   },
   "ebbAndFlow": {
     "stock": "Dek",
@@ -247,7 +279,15 @@
   },
   "elementaryDetective": {
     "youScored20ToWin": "Skormu {{score}} (20 untuk menang)",
-    "score": "Skor"
+    "score": "Skor",
+    "hint": {
+      "reveal_one": "Buka teman bermain ini: sekitar {{count}} tebakan seharusnya dapat skor",
+      "reveal_other": "Buka teman bermain ini: sekitar {{count}} tebakan seharusnya dapat skor",
+      "revealInfo": "Buka satu teman bermain untuk tahu apa saja kemungkinan yang lain",
+      "place": "Tebakan di sini dapat skor {{chance}}% dari waktu",
+      "discard": "Kartu ini tidak bisa dapat skor: taruh di tempat yang tidak merugikan",
+      "withdraw": "Tebakan ini tidak bisa dapat skor lagi: kosongkan ruangnya (kartu dek berikutnya ikut dibuang)"
+    }
   },
   "fanSolitaire": {
     "theFoundationsAreComplete": "Fondasi sudah lengkap!"
@@ -262,7 +302,12 @@
     "combatantCaptured": "Seorang petarung masuk ke tumpukan tangkapan musuh.",
     "allEnemiesCleared": "Semua kartu musuh dibersihkan tanpa kehilangan petarung.",
     "combatantCapturedYouLose": "Seorang petarung masuk ke tumpukan tangkapan musuh. Kamu kalah.",
-    "noCardsToPlay": "Tidak ada kartu untuk dimainkan."
+    "noCardsToPlay": "Tidak ada kartu untuk dimainkan.",
+    "hint": {
+      "discard": "Tukar kartu ini dengan kartu baru",
+      "letCapture": "Tidak ada tangkapan: biarkan musuh mengambil kartumu yang paling lemah",
+      "sacrifice": "Tidak ada tangkapan: korbankan dua kartu lemah untuk mengirim musuh ini kembali"
+    }
   },
   "fifteenPuzzle": {
     "theCardsAreBackIn": "Kartu-kartu kembali berurutan."
@@ -283,7 +328,13 @@
     "actionUp": "♠ Naik",
     "actionRun": "♥ Urutan",
     "gridClearWon": "Kisi sudah bersih. Kamu menang!",
-    "allClubsSpent": "Ke-13 kartu keriting sudah terpakai."
+    "allClubsSpent": "Ke-13 kartu keriting sudah terpakai.",
+    "hint": {
+      "free_diamonds": "Singkirkan wajik untuk membuka aksi ♦",
+      "free_spades": "Singkirkan sekop untuk membuka aksi ♠",
+      "free_hearts": "Singkirkan hati untuk membuka aksi ♥",
+      "any": "Ambil satu kartu saja dengan keriting ini: simpan yang lain untuk langkah lebih besar"
+    }
   },
   "fortunesCall": {
     "red": "Merah",
@@ -314,7 +365,11 @@
     "tierMaster": "Ahli Kaca",
     "tierCathedral": "Jendela Katedral",
     "wonWithTier": "{{score}} poin: {{tier}}!",
-    "lostShortOfTarget": "{{score}} poin. Anda butuh {{target}} poin untuk menang."
+    "lostShortOfTarget": "{{score}} poin. Anda butuh {{target}} poin untuk menang.",
+    "hint": {
+      "cell": "Pasang kaca di sini: +{{count}}",
+      "shards": "Tak ada bingkai yang bisa memakainya: jadikan pecahan"
+    }
   },
   "gremlin": {
     "helper": "Pembantu",
@@ -340,7 +395,12 @@
     "harvestGood": "Panen bagus: tersisa {{count}} tanaman obat.",
     "harvestExcellent": "Panen luar biasa: tersisa {{count}} tanaman obat.",
     "harvestPerfect": "Panen sempurna: tersisa {{count}} tanaman obat.",
-    "noHerbsRemain": "Tidak ada tanaman obat tersisa untuk menyembuhkan negeri."
+    "noHerbsRemain": "Tidak ada tanaman obat tersisa untuk menyembuhkan negeri.",
+    "hint": {
+      "heal": "Ambil tanaman obat ini: jika disebar dengan tepat, satu makhluk sembuh",
+      "setUp": "Ambil tanaman obat ini: jika disebar dengan tepat, ini menyiapkan penyembuhan",
+      "noCure": "Tidak ada lagi obat untuk negeri: terus sebar untuk mengakhiri permainan"
+    }
   },
   "infiltrator": {
     "retired": "Pensiun",
@@ -360,7 +420,14 @@
     "missionComplete": "Misi selesai: {{count}} mata-mata kunci direkrut.",
     "missionFailed": "Misi gagal: {{count}} mata-mata kunci direkrut, {{lost}} hilang.",
     "noDoubleAgentsRemain": "Tidak ada agen ganda tersisa. Misi gagal.",
-    "sourceHand": "Tangan"
+    "sourceHand": "Tangan",
+    "hint": {
+      "retire": "Pensiunkan kartu rendah ini, supaya kartu Anda yang lebih kuat lebih sering datang",
+      "assassinate": "Tangan Anda tidak bisa menghentikan mata-mata ini: korbankan agen ganda",
+      "doubleAgent": "As berjenis sama dengan mata-mata adalah agen ganda: kartu Anda yang lain ikut menjadi jenisnya",
+      "counterKey": "Mata-mata kunci ini tidak bisa direkrut: tangkal dengan kartu yang paling tidak Anda perlukan",
+      "counter": "Mata-mata ini tidak bisa direkrut: tangkal dengan kartu yang paling tidak Anda perlukan"
+    }
   },
   "invaders": {
     "wave2": "Gelombang 2",
@@ -401,14 +468,25 @@
       "shield": "Perisai"
     },
     "roundsSurvived": "Bertahan {{count}} ronde{{rating}}. Skor akhir: {{score}}.",
-    "roundNumber": "Ronde {{round}}"
+    "roundNumber": "Ronde {{round}}",
+    "hint": {
+      "play": "Mainkan {{hand}}",
+      "discard": "Buang kartu ini: kartu baru seharusnya membuat tangan lebih baik",
+      "double": "Gandakan tangan berikutnya: ini tangan besar"
+    }
   },
   "lycan": {
     "youBeatTheWolf": "Kamu mengalahkan Serigala {{playerScore}}-{{wolfScore}}!",
     "theWolfBeatYou": "Serigala mengalahkanmu {{wolfScore}}-{{playerScore}}.",
     "wolf": "Serigala",
     "round": "Ronde",
-    "selectCardsToCapture": "Pilih kartu untuk ditangkap"
+    "selectCardsToCapture": "Pilih kartu untuk ditangkap",
+    "hint": {
+      "fold": "Menyerahlah: lanjut bermain akan lebih merugikan",
+      "finish": "Habiskan kartu Serigala: kartumu mendapat poin",
+      "over_one": "Lampaui: layak walau Serigala menarik {{count}} kartu",
+      "over_other": "Lampaui: layak walau Serigala menarik {{count}} kartu"
+    }
   },
   "memory": {
     "matched": "Cocok",
@@ -420,7 +498,12 @@
     "difficultyMedium": "Sedang",
     "difficultyHard": "Sulit",
     "difficultyVeryHard": "Sangat sulit",
-    "difficultyExtreme": "Ekstrem"
+    "difficultyExtreme": "Ekstrem",
+    "hint": {
+      "match": "Kamu sudah melihat pasangannya di sini",
+      "knownPair": "Kamu tahu letak kedua kartu pasangan ini",
+      "newCard": "Buka kartu yang belum pernah kamu lihat"
+    }
   },
   "monteCarlo": {
     "youClearedAllCards": "Kamu membersihkan semua kartu!",
@@ -436,7 +519,15 @@
     "villain": "Penjahat",
     "response": "Respons",
     "damage": "Luka:",
-    "heal": "Pulih:"
+    "heal": "Pulih:",
+    "smokeThreat": "Bom Asap pada {{card}}",
+    "grappleThreats": "Tali Kait pada {{first}} dan {{second}}",
+    "hint": {
+      "smoke": "Pakai Bom Asap pada ancaman ini",
+      "grapple": "Kaitkan dua ancaman ini dan tandingi keduanya sekaligus",
+      "dump": "Mainkan respons ini di tempat yang tidak merugikan",
+      "resolve": "Selesaikan sekarang: mengambil lagi lebih berisiko daripada membantu"
+    }
   },
   "ouroboros": {
     "jewels": "Permata",
@@ -619,7 +710,15 @@
     "guardianValue": "Penjaga: {{value}}",
     "aliceAwakened": "Alice terbangun dengan {{count}} nyawa.",
     "guardiansLost": "Semua Penjaga khusus yang bukan As telah hilang.",
-    "nightmaresOverwhelmed": "Para Mimpi Buruk menguasai Alice."
+    "nightmaresOverwhelmed": "Para Mimpi Buruk menguasai Alice.",
+    "hint": {
+      "eliminate": "Hapus Mimpi buruk ini",
+      "defend": "Lemahkan serangan Mimpi buruk ini: ia tidak bisa dihapus giliran ini",
+      "mold": "Bentuk Penjaga ini agar masuk ke dek Anda",
+      "exile": "Asingkan Mimpi buruk ini: ia akan merenggut lebih dari 5 nyawa Alice",
+      "deepBreath": "Tidak ada yang layak ditugaskan: tukar kartu terlemah Anda dengan yang baru",
+      "remSleep": "Alice tidak akan selamat dari papan ini: gunakan Tidur REM untuk mulai lagi"
+    }
   },
   "spiderSolitaire": {
     "allEightKToA": "Kedelapan urutan K sampai A sudah lengkap."
@@ -664,7 +763,13 @@
     "setReserve2": "Simpan cadangan ({{length}}/2)",
     "moveToTop": "Pindahkan {{value}} ke atas",
     "doNothing": "Jangan lakukan apa-apa",
-    "noKingSelected": "Belum ada King dipilih"
+    "noKingSelected": "Belum ada King dipilih",
+    "hint": {
+      "reserve": "Simpan dua kartu ini di cadangan untuk menghabisi monster nanti",
+      "discard": "Kartu ini tidak punya tempat yang bagus: buang saja",
+      "bury": "Taruh kartu ini di bawah dek, jangan dibuang",
+      "double": "Gandakan serangan dengan King sekop"
+    }
   },
   "waypoint": {
     "current": "Saat ini",
@@ -682,7 +787,13 @@
     "dsq": "DSQ: jam mencapai 16 penalti waktu.",
     "stage": "Etape",
     "sector": "Sektor",
-    "speed": "Kecepatan"
+    "speed": "Kecepatan",
+    "hint": {
+      "boosts": "Injak gas untuk mencapai kecepatan target",
+      "brakes": "Rem: lebih baik lambat daripada melewati kecepatan target",
+      "finishUnder": "Selesaikan sekarang: kartu lain kemungkinan akan melewati target",
+      "finishOver": "Terlalu cepat dan rem habis: selesaikan dan terima penaltinya"
+    }
   },
   "windmill": {
     "theSailsTurnFreely": "Baling-baling berputar bebas!"

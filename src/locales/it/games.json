@@ -39,7 +39,14 @@
     "outOfCardsWhileMakingCamp": "Carte finite mentre montavi il campo.",
     "deckAndFatigueRanDry": "Il mazzo e la pila della fatica sono esauriti.",
     "handOverflowed": "La tua mano è troppo piena (18+ carte).",
-    "baseClimb": "Salita base"
+    "baseClimb": "Salita base",
+    "hint": {
+      "route_one": "Gioca questa via: ti fa pescare {{count}} carta",
+      "route_other": "Gioca questa via: ti fa pescare {{count}} carte",
+      "camp": "Gioca le ultime carte per montare il campo",
+      "rest": "Riposa: prendi in mano la pila della fatica e riparti",
+      "discard": "Scarta la carta di cui la tua mano fa meglio a meno"
+    }
   },
   "bakersDozen": {
     "allFourSuitsAreComplete": "Tutti e quattro i semi sono completi!"
@@ -133,7 +140,12 @@
     "guildPts": "Pt gilda",
     "pass": "Passa",
     "trade": "Scambia",
-    "offer": "Offerta"
+    "offer": "Offerta",
+    "hint": {
+      "trade": "Vendi questi libri per ${{value}}",
+      "tradeGuild": "Vendi questi libri per ${{value}}: +{{count}} pt gilda",
+      "pass": "Nessun gruppo di libri fa questa offerta: passa"
+    }
   },
   "boilingOver": {
     "statusStart": "Tocca il tuo mazzo per iniziare la pozione.",
@@ -169,7 +181,13 @@
     "tierCourtAlchemist": "Alchimista di corte",
     "tierMiracleWorker": "Operatore di miracoli",
     "wonWithTier": "{{score}} punti: {{tier}}!",
-    "lostShortOfTarget": "{{score}} punti. Te ne servono {{target}} per vincere."
+    "lostShortOfTarget": "{{score}} punti. Te ne servono {{target}} per vincere.",
+    "hint": {
+      "stop": "Fermati qui: un rischio di esplosione del {{risk}}% è troppo per quello che aggiunge un'altra carta",
+      "keepCoins": "Tieni le monete: carte migliori renderanno nei round che restano",
+      "keepPoints": "Tieni i punti: restano troppo pochi round perché le monete rendano",
+      "buy": "Compra le carte migliori che le tue monete permettono: due, di semi diversi"
+    }
   },
   "cityGrid": {
     "pileIsFull": "La pila è piena!",
@@ -214,7 +232,16 @@
     "victoryGold": "Tutti i nemici sconfitti! Vittoria d'ORO!",
     "victorySilver": "Tutti i nemici sconfitti! Vittoria d'ARGENTO!",
     "victoryBronze": "Tutti i nemici sconfitti! Vittoria di BRONZO!",
-    "failedToBlock": "Non sei riuscito a bloccare {{damage}} danni. Partita finita!"
+    "failedToBlock": "Non sei riuscito a bloccare {{damage}} danni. Partita finita!",
+    "hint": {
+      "kill": "Sconfiggi questo nemico",
+      "exactKill": "Colpo esatto: il nemico si unisce alla tua taverna",
+      "shield": "Le picche indeboliscono il suo attacco prima che colpisca",
+      "draw": "I quadri ti riempiono la mano",
+      "heal": "I cuori rimandano gli scarti nella taverna",
+      "defend": "Blocca con le carte che ti servono meno",
+      "jester": "Chiama un buffone per una mano nuova"
+    }
   },
   "cruel": {
     "crueltyConquered": "Crudeltà sconfitta!"
@@ -237,7 +264,12 @@
     "extract": "Estrai",
     "reassign": "Riassegna",
     "allTwelveRoyalsAreDown": "Tutte e dodici le figure sono cadute.",
-    "youRanOutOfCards": "Hai finito le carte prima di sconfiggere tutte e dodici le figure."
+    "youRanOutOfCards": "Hai finito le carte prima di sconfiggere tutte e dodici le figure.",
+    "hint": {
+      "kill": "Questo abbatte una figura",
+      "extract": "Usa un asso: questa pila torna sotto il mazzo",
+      "reassign": "Usa un jolly: sposta questa carta"
+    }
   },
   "ebbAndFlow": {
     "stock": "Mazzo",
@@ -247,7 +279,15 @@
   },
   "elementaryDetective": {
     "youScored20ToWin": "Hai fatto {{score}} punti (20 per vincere)",
-    "score": "Punti"
+    "score": "Punti",
+    "hint": {
+      "reveal_one": "Rivela questo compagno: dovrebbe fare punti circa {{count}} ipotesi",
+      "reveal_other": "Rivela questo compagno: dovrebbero fare punti circa {{count}} ipotesi",
+      "revealInfo": "Rivela un compagno per capire cosa possono essere gli altri",
+      "place": "Un'ipotesi qui fa punti il {{chance}}% delle volte",
+      "discard": "Questa carta non può fare punti: mettila dove non costa nulla",
+      "withdraw": "Questa ipotesi non può più fare punti: libera il suo spazio (se ne va anche la prossima carta del mazzo)"
+    }
   },
   "fanSolitaire": {
     "theFoundationsAreComplete": "Le fondazioni sono complete!"
@@ -262,7 +302,12 @@
     "combatantCaptured": "Un combattente è finito nella pila delle catture nemiche.",
     "allEnemiesCleared": "Tutte le carte nemiche eliminate senza perdere combattenti.",
     "combatantCapturedYouLose": "Un combattente è finito nella pila delle catture nemiche. Hai perso.",
-    "noCardsToPlay": "Nessuna carta da giocare."
+    "noCardsToPlay": "Nessuna carta da giocare.",
+    "hint": {
+      "discard": "Cambia questa carta con una nuova",
+      "letCapture": "Nessuna cattura: lascia che il nemico prenda la tua carta più debole",
+      "sacrifice": "Nessuna cattura: sacrifica due carte deboli per rimandare indietro questo nemico"
+    }
   },
   "fifteenPuzzle": {
     "theCardsAreBackIn": "Le carte sono di nuovo in ordine."
@@ -283,7 +328,13 @@
     "actionUp": "♠ Su",
     "actionRun": "♥ Sequenza",
     "gridClearWon": "La griglia è libera. Hai vinto!",
-    "allClubsSpent": "Tutti i 13 fiori sono stati usati."
+    "allClubsSpent": "Tutti i 13 fiori sono stati usati.",
+    "hint": {
+      "free_diamonds": "Togli dei quadri per liberare le azioni ♦",
+      "free_spades": "Togli delle picche per liberare le azioni ♠",
+      "free_hearts": "Togli dei cuori per liberare l'azione ♥",
+      "any": "Prendi solo una carta con questo fiori: tieni gli altri per mosse più grandi"
+    }
   },
   "fortunesCall": {
     "red": "Rosso",
@@ -314,7 +365,11 @@
     "tierMaster": "Maestro vetraio",
     "tierCathedral": "Vetrata da cattedrale",
     "wonWithTier": "{{score}} punti: {{tier}}!",
-    "lostShortOfTarget": "{{score}} punti. Te ne servono {{target}} per vincere."
+    "lostShortOfTarget": "{{score}} punti. Te ne servono {{target}} per vincere.",
+    "hint": {
+      "cell": "Posa il vetro qui: +{{count}}",
+      "shards": "Nessun telaio può usarli: rompili in schegge"
+    }
   },
   "gremlin": {
     "helper": "Aiutante",
@@ -340,7 +395,12 @@
     "harvestGood": "Buon raccolto: restano {{count}} erbe.",
     "harvestExcellent": "Raccolto eccellente: restano {{count}} erbe.",
     "harvestPerfect": "Raccolto perfetto: restano {{count}} erbe.",
-    "noHerbsRemain": "Non restano erbe per curare il regno."
+    "noHerbsRemain": "Non restano erbe per curare il regno.",
+    "hint": {
+      "heal": "Raccogli queste erbe: seminate bene, curano una creatura",
+      "setUp": "Raccogli queste erbe: seminate bene, preparano una guarigione",
+      "noCure": "Non c'è più cura per il regno: continua a seminare per finire la partita"
+    }
   },
   "infiltrator": {
     "retired": "Ritirate",
@@ -360,7 +420,14 @@
     "missionComplete": "Missione compiuta: {{count}} spie chiave reclutate.",
     "missionFailed": "Missione fallita: {{count}} spie chiave reclutate, {{lost}} perse.",
     "noDoubleAgentsRemain": "Non restano doppiogiochisti. Missione fallita.",
-    "sourceHand": "Mano"
+    "sourceHand": "Mano",
+    "hint": {
+      "retire": "Ritira queste carte basse, così le tue carte migliori tornano più spesso",
+      "assassinate": "La tua mano non può fermare questa spia: sacrifica un doppiogiochista",
+      "doubleAgent": "L'Asso del seme della spia è un doppiogiochista: porta le tue altre carte al suo seme",
+      "counterKey": "Questa spia chiave non si può reclutare: contrastala con le carte che ti servono meno",
+      "counter": "Questa spia non si può reclutare: contrastala con le carte che ti servono meno"
+    }
   },
   "invaders": {
     "wave2": "Ondata 2",
@@ -401,14 +468,25 @@
       "shield": "Scudo"
     },
     "roundsSurvived": "{{count}} round superati{{rating}}. Punteggio finale: {{score}}.",
-    "roundNumber": "Round {{round}}"
+    "roundNumber": "Round {{round}}",
+    "hint": {
+      "play": "Gioca la mano: {{hand}}",
+      "discard": "Scarta queste: pescando dovresti fare una mano migliore",
+      "double": "Raddoppia la prossima mano: è una mano forte"
+    }
   },
   "lycan": {
     "youBeatTheWolf": "Hai battuto il Lupo {{playerScore}}-{{wolfScore}}!",
     "theWolfBeatYou": "Il Lupo ti ha battuto {{wolfScore}}-{{playerScore}}.",
     "wolf": "Lupo",
     "round": "Round",
-    "selectCardsToCapture": "Scegli le carte da catturare"
+    "selectCardsToCapture": "Scegli le carte da catturare",
+    "hint": {
+      "fold": "Lascia: continuare costerebbe di più",
+      "finish": "Svuota la mano del Lupo: la tua fa punti",
+      "over_one": "Supera: conviene anche se il Lupo pesca {{count}} carta",
+      "over_other": "Supera: conviene anche se il Lupo pesca {{count}} carte"
+    }
   },
   "memory": {
     "matched": "Coppie",
@@ -420,7 +498,12 @@
     "difficultyMedium": "Media",
     "difficultyHard": "Difficile",
     "difficultyVeryHard": "Molto difficile",
-    "difficultyExtreme": "Estrema"
+    "difficultyExtreme": "Estrema",
+    "hint": {
+      "match": "Hai già visto la sua coppia qui",
+      "knownPair": "Sai dove sono entrambe le carte di questa coppia",
+      "newCard": "Scopri una carta che non hai ancora visto"
+    }
   },
   "monteCarlo": {
     "youClearedAllCards": "Hai rimosso tutte le carte!",
@@ -436,7 +519,15 @@
     "villain": "Cattivo",
     "response": "Risposta",
     "damage": "Danni:",
-    "heal": "Cura:"
+    "heal": "Cura:",
+    "smokeThreat": "Fumogeno su {{card}}",
+    "grappleThreats": "Rampino su {{first}} e {{second}}",
+    "hint": {
+      "smoke": "Usa il fumogeno su questa minaccia",
+      "grapple": "Collega queste due minacce con il rampino e rispondi a entrambe insieme",
+      "dump": "Gioca questa risposta dove non fa danni",
+      "resolve": "Risolvi ora: pescare ancora rischia di fare più male che bene"
+    }
   },
   "ouroboros": {
     "jewels": "Gioielli",
@@ -619,7 +710,15 @@
     "guardianValue": "Guardiano: {{value}}",
     "aliceAwakened": "Alice si è svegliata con {{count}} punti vita.",
     "guardiansLost": "Tutti i guardiani speciali non Assi sono andati persi.",
-    "nightmaresOverwhelmed": "Gli incubi hanno sopraffatto Alice."
+    "nightmaresOverwhelmed": "Gli incubi hanno sopraffatto Alice.",
+    "hint": {
+      "eliminate": "Elimina questo incubo",
+      "defend": "Indebolisci l'attacco di questo incubo: in questo turno non si può eliminare",
+      "mold": "Plasma questo guardiano per aggiungerlo al tuo mazzo",
+      "exile": "Esilia questo incubo: costerebbe ad Alice più di 5 vite",
+      "deepBreath": "Niente vale la pena di essere assegnato: cambia la tua carta più debole con una nuova",
+      "remSleep": "Alice non sopravviverà a questo tavolo: usa il sonno REM per ricominciare da capo"
+    }
   },
   "spiderSolitaire": {
     "allEightKToA": "Tutte e otto le sequenze da K ad A per seme sono complete."
@@ -664,7 +763,13 @@
     "setReserve2": "Metti in riserva ({{length}}/2)",
     "moveToTop": "Sposta {{value}} in cima",
     "doNothing": "Non fare nulla",
-    "noKingSelected": "Nessun Re selezionato"
+    "noKingSelected": "Nessun Re selezionato",
+    "hint": {
+      "reserve": "Tieni queste due in riserva per finire i mostri più avanti",
+      "discard": "Questa carta non ha un buon posto: scartala",
+      "bury": "Metti questa carta in fondo al mazzo invece di scartarla",
+      "double": "Raddoppia un attacco con il Re di picche"
+    }
   },
   "waypoint": {
     "current": "Attuale",
@@ -682,7 +787,13 @@
     "dsq": "Squalificato: il cronometro è arrivato a 16 penalità.",
     "stage": "Tappa",
     "sector": "Settore",
-    "speed": "Velocità"
+    "speed": "Velocità",
+    "hint": {
+      "boosts": "Usa il gas per raggiungere la velocità obiettivo",
+      "brakes": "Frena: meglio lenti che oltre la velocità obiettivo",
+      "finishUnder": "Chiudi ora: un'altra carta probabilmente andrebbe oltre",
+      "finishOver": "Troppo veloce e niente freni: chiudi e accetta la penalità"
+    }
   },
   "windmill": {
     "theSailsTurnFreely": "Le pale girano libere!"

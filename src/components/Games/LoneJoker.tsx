@@ -32,6 +32,15 @@ import { Icon } from "@/icons";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import {
+  cardTarget,
+  makeHint,
+  pressHint,
+  withNote,
+  zoneTarget,
+} from "@/hints/hint";
+import { seededRandom, shuffledWith } from "@/hints/random";
 const BASE_HAND_LIMIT = 8;
 const BASE_PLAYS = 3;
 const BASE_DISCARDS = 3;
@@ -411,7 +420,347 @@ function prepareNextRound(state: LoneJokerGameState) {
   return true;
 }
 
+// —— Hints ——
+
+const STRAIGHT_WINDOWS = [
+  [14, 2, 3, 4, 5],
+  ...Array.from({ length: 9 }, (_, low) =>
+    Array.from({ length: 5 }, (_, step) => low + 2 + step),
+  ),
+];
+
+/**
+ * The points of the best hand in these cards (any number of them; five
+ * make the hand), with `wilds` Jokers to stand in for missing cards. Fast
+ * enough to score many dealt hands, unlike trying every Joker card.
+ */
+function bestHandPoints(cards: PlayingCard[], wilds = 0): number {
+  if (cards.length + wilds === 0) return 0;
+  const rankCounts = new Map<number, number>();
+  const suitRanks = new Map<string, Set<number>>();
+  for (const card of cards) {
+    const value = RANK_ORDER[card.rank];
+    rankCounts.set(value, (rankCounts.get(value) ?? 0) + 1);
+    const ranks = suitRanks.get(card.suit) ?? new Set<number>();
+    ranks.add(value);
+    suitRanks.set(card.suit, ranks);
+  }
+  const reach = (ranks: Set<number> | Map<number, number>, window: number[]) =>
+    window.filter((value) => !ranks.has(value)).length <= wilds;
+
+  let straightFlush = 0;
+  for (const ranks of suitRanks.values()) {
+    for (const window of STRAIGHT_WINDOWS) {
+      if (!reach(ranks, window)) continue;
+      straightFlush = Math.max(
+        straightFlush,
+        window[0] === 10
+          ? HAND_POINTS["Royal Flush"]
+          : HAND_POINTS["Straight Flush"],
+      );
+    }
+  }
+  if (straightFlush) return straightFlush;
+
+  const [first = 0, second = 0] = [...rankCounts.values()].sort(
+    (left, right) => right - left,
+  );
+  if (first + wilds >= 4) return HAND_POINTS["Four of a Kind"];
+  if (
+    second > 0 &&
+    3 - Math.min(first, 3) + (2 - Math.min(second, 2)) <= wilds
+  ) {
+    return HAND_POINTS["Full House"];
+  }
+  const longestSuit = Math.max(
+    0,
+    ...[...suitRanks.values()].map((ranks) => ranks.size),
+  );
+  if (longestSuit + wilds >= 5) return HAND_POINTS.Flush;
+  if (STRAIGHT_WINDOWS.some((window) => reach(rankCounts, window))) {
+    return HAND_POINTS.Straight;
+  }
+  if (first + wilds >= 3) return HAND_POINTS["Three of a Kind"];
+  if (first >= 2 && second >= 2) return HAND_POINTS["Two Pair"];
+  if (first + wilds >= 2) return HAND_POINTS.Pair;
+  return HAND_POINTS["High Card"];
+}
+
+/** Every way to pick `min`..`max` of these cards. */
+function subsets<T>(items: T[], max: number, min = 1): T[][] {
+  const result: T[][] = [];
+  const pick: T[] = [];
+  const visit = (start: number) => {
+    if (pick.length >= min) result.push([...pick]);
+    if (pick.length === max) return;
+    for (let index = start; index < items.length; index++) {
+      pick.push(items[index]);
+      visit(index + 1);
+      pick.pop();
+    }
+  };
+  visit(0);
+  return result;
+}
+
+/**
+ * How much a card helps the rest of the hand: cards of its rank, of its
+ * suit, and near it in rank. The least helpful are the ones to let go.
+ */
+function cardUse(card: PlayingCard, others: PlayingCard[]) {
+  const value = RANK_ORDER[card.rank];
+  let use = 0;
+  for (const other of others) {
+    if (other.id === card.id) continue;
+    const gap = Math.abs(RANK_ORDER[other.rank] - value);
+    if (gap === 0) use += 3;
+    else if (gap <= 2) use += 0.5;
+    if (other.suit === card.suit) use += 1;
+  }
+  return use + value / 100;
+}
+
+/** The `count` least helpful of these cards, to the rest of the hand. */
+function leastUseful(cards: PlayingCard[], count: number, hand: PlayingCard[]) {
+  return [...cards]
+    .sort((left, right) => cardUse(left, hand) - cardUse(right, hand))
+    .slice(0, Math.max(0, count));
+}
+
+/**
+ * The best hand to play now: the fewest cards that make it (the Joker only
+ * if it adds points), topped up to five with the cards least worth
+ * keeping, since played cards are replaced like discards.
+ */
+function bestPlay(state: LoneJokerGameState) {
+  const joker = state.bankedJoker && state.bankedJokerCard ? 1 : 0;
+  let best: { core: PlayingCard[]; joker: boolean; points: number } | null =
+    null;
+  for (const useJoker of joker ? [false, true] : [false]) {
+    for (const core of subsets(state.hand, useJoker ? 4 : 5)) {
+      const points = bestHandPoints(core, useJoker ? 1 : 0);
+      if (
+        !best ||
+        points > best.points ||
+        (points === best.points &&
+          useJoker === best.joker &&
+          core.length < best.core.length)
+      ) {
+        best = { core, joker: useJoker, points };
+      }
+    }
+  }
+  if (!best) return null;
+  const { core, joker: useJoker, points } = best;
+  const rest = state.hand.filter((card) => !core.includes(card));
+  const room = 5 - core.length - (useJoker ? 1 : 0);
+  const cards = [...core, ...leastUseful(rest, room, rest)];
+  return { cards, joker: useJoker, points };
+}
+
+/** Keeps worth drawing to: made hands, and suits and runs in the making. */
+function keepOptions(state: LoneJokerGameState, made: PlayingCard[]) {
+  const hand = state.hand;
+  const byRank = new Map<CardRank, PlayingCard[]>();
+  const bySuit = new Map<string, PlayingCard[]>();
+  for (const card of hand) {
+    byRank.set(card.rank, [...(byRank.get(card.rank) ?? []), card]);
+    bySuit.set(card.suit, [...(bySuit.get(card.suit) ?? []), card]);
+  }
+  const groups = [...byRank.values()].filter((cards) => cards.length >= 2);
+  const keeps: PlayingCard[][] = [made, groups.flat(), ...groups];
+  for (const cards of bySuit.values()) {
+    if (cards.length >= 2) keeps.push(cards);
+  }
+  for (const window of STRAIGHT_WINDOWS) {
+    const run = window.flatMap((value) => {
+      const card = hand.find(
+        (candidate) => RANK_ORDER[candidate.rank] === value,
+      );
+      return card ? [card] : [];
+    });
+    if (run.length >= 3) keeps.push(run);
+  }
+  return keeps;
+}
+
+const DRAW_SAMPLES = 40;
+
+/**
+ * The discard that most raises the next hand, as an average over draws
+ * from the cards not yet seen this round (the deck, in no known order).
+ */
+function bestDiscard(state: LoneJokerGameState, made: PlayingCard[]) {
+  const hand = state.hand;
+  const seen = new Set<string>();
+  const random = seededRandom(
+    `lone-joker:${hand.map((card) => card.id).join(",")}:${state.deck.length}:${state.bankedJoker}`,
+  );
+  let best: { discard: PlayingCard[]; value: number } | null = null;
+  for (const keep of keepOptions(state, made)) {
+    const rest = hand.filter((card) => !keep.includes(card));
+    // At most five go; any more stay, the most helpful of them.
+    const discard = leastUseful(rest, Math.min(5, rest.length), rest);
+    if (discard.length === 0) continue;
+    const key = discard
+      .map((card) => card.id)
+      .sort()
+      .join(",");
+    if (seen.has(key)) continue;
+    seen.add(key);
+
+    const kept = hand.filter((card) => !discard.includes(card));
+    let total = 0;
+    for (let sample = 0; sample < DRAW_SAMPLES; sample++) {
+      const deck = shuffledWith(state.deck, random);
+      const drawn = [...kept];
+      let wilds = state.bankedJoker ? 1 : 0;
+      // As drawToLimit deals: a Joker is banked, or a second one is lost.
+      while (drawn.length < state.handLimit && deck.length > 0) {
+        const next = deck.pop()!;
+        if (isJoker(next)) wilds = wilds ? 0 : 1;
+        else drawn.push(next);
+      }
+      total += bestHandPoints(drawn, wilds);
+    }
+    const value = total / DRAW_SAMPLES;
+    if (!best || value > best.value) best = { discard, value };
+  }
+  return best;
+}
+
+/** What each bonus is worth, in round points, for choosing in the shop. */
+const BONUS_WORTH: Record<BonusName, number> = {
+  shield: 80,
+  doubleScore: 45,
+  extraHand: 35,
+  pocketPoints: 25,
+  extraDiscard: 10,
+  extraCard: 6,
+};
+
+/**
+ * The bonus to buy, if any: the one worth most of those the points pay
+ * for. One per visit: a second purchase changes nothing on the board, so
+ * hints would seem to go round in circles (and the first is the big one).
+ */
+function bestPurchase(state: LoneJokerGameState) {
+  const earned = Math.max(0, state.roundScore - targetForRound(state.round));
+  if (state.shopPoints < earned) return null;
+  return (
+    BONUS_NAMES.filter(
+      (bonus) =>
+        !state.bonuses[bonus] && BONUS_DETAILS[bonus].cost <= state.shopPoints,
+    ).sort((left, right) => BONUS_WORTH[right] - BONUS_WORTH[left])[0] ?? null
+  );
+}
+
+/** A hand worth doubling (any hand is, on the last play). */
+const DOUBLE_WORTHY = HAND_POINTS.Straight;
+
+/**
+ * The bonus to use before this play, if any: x2 Score on a big hand or the
+ * last; on the last play, + Hand (to play on) or + 25 pts. One at a time,
+ * each with the hand it's for, so none is used where another would do.
+ */
+function bonusBeforePlay(state: LoneJokerGameState, points: number) {
+  const { bonuses, doubleNextPlay, playsRemaining } = state;
+  if (doubleNextPlay) return null;
+  const last = playsRemaining === 1;
+  if (bonuses.doubleScore && (points >= DOUBLE_WORTHY || last)) {
+    return "doubleScore";
+  }
+  if (last && bonuses.extraHand) return "extraHand";
+  if (last && bonuses.pocketPoints) return "pocketPoints";
+  return null;
+}
+
+/**
+ * Buys the bonus worth most in the shop; uses bonuses when they pay (see
+ * bonusBeforePlay); then plays the best hand, or first throws back cards
+ * when a draw is likely to make a clearly better one.
+ */
+function findLoneJokerHint(
+  state: LoneJokerGameState,
+  selectedIds: string[],
+  jokerSelected: boolean,
+) {
+  if (state.ended) return null;
+  const bonusLabel = (bonus: BonusName) =>
+    i18n.t(`games:loneJoker.bonuses.${bonus}`);
+
+  if (state.phase === "shop") {
+    const buy = bestPurchase(state);
+    if (buy) return pressHint("shop", bonusLabel(buy));
+    return pressHint(
+      "shop",
+      i18n.t("games:loneJoker.startRound", { value: state.round + 1 }),
+    );
+  }
+  if (state.phase !== "playing" || state.hand.length === 0) return null;
+
+  // A bigger hand is better at once.
+  if (state.bonuses.extraCard) {
+    return pressHint("items", bonusLabel("extraCard"));
+  }
+
+  const play = bestPlay(state);
+  if (!play) return null;
+  const canDraw = state.discardsRemaining > 0 || state.bonuses.extraDiscard;
+  const discard = canDraw ? bestDiscard(state, play.cards) : null;
+  // A discard is spent for the round: draw only for a clearly better hand,
+  // the more so while plays to come may want it.
+  const margin = 8 + (state.playsRemaining - 1) * 5;
+  const drawing = !!discard && discard.value > play.points + margin;
+
+  if (drawing && state.discardsRemaining === 0) {
+    return pressHint("items", bonusLabel("extraDiscard"));
+  }
+  const bonus = drawing ? null : bonusBeforePlay(state, play.points);
+  if (bonus) {
+    const hint = pressHint("items", bonusLabel(bonus));
+    return bonus === "doubleScore" && play.points >= DOUBLE_WORTHY
+      ? withNote(hint, i18n.t("games:loneJoker.hint.double"))
+      : hint;
+  }
+
+  const wanted = drawing ? discard!.discard : play.cards;
+  const wantJoker = !drawing && play.joker;
+  const wantedIds = new Set(wanted.map((card) => card.id));
+  // Picks to undo first (only five may be picked), then the cards to pick.
+  const taps = [
+    ...selectedIds.filter((id) => !wantedIds.has(id)).map(cardTarget),
+    ...(jokerSelected && !wantJoker && state.bankedJokerCard
+      ? [cardTarget(state.bankedJokerCard)]
+      : []),
+    ...wanted.filter((card) => !selectedIds.includes(card.id)).map(cardTarget),
+    ...(wantJoker && !jokerSelected && state.bankedJokerCard
+      ? [cardTarget(state.bankedJokerCard)]
+      : []),
+  ];
+  const label = i18n.t(drawing ? "cards:discardAction" : "cards:play");
+  const hint = makeHint(
+    { key: "press", values: { label } },
+    ...taps,
+    zoneTarget("controls"),
+  );
+  if (drawing) return withNote(hint, i18n.t("games:loneJoker.hint.discard"));
+  const name = scorePokerHand([
+    ...play.cards,
+    ...(play.joker && state.bankedJokerCard ? [state.bankedJokerCard] : []),
+  ]).name;
+  return withNote(
+    hint,
+    i18n.t("games:loneJoker.hint.play", { hand: i18n.t(HAND_LABELS[name]) }),
+  );
+}
+
 export const loneJokerRules = {
+  findHint: findLoneJokerHint,
+  bestHandPoints,
+  bestPlay,
+  bestDiscard,
+  bestPurchase,
   scorePokerHand,
   targetForRound,
   ratingForRounds,
@@ -621,6 +970,10 @@ export default function LoneJoker() {
     bankedJokerConsumedRef.current = false;
     previousBankedJoker.current = game.bankedJoker;
   }, [game.bankedJoker]);
+
+  useHint(() => findLoneJokerHint(game, selectedIds, useBankedJoker), {
+    game,
+  });
 
   const selectedCards = game.hand.filter((card) =>
     selectedIds.includes(card.id),

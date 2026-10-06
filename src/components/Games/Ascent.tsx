@@ -30,6 +30,15 @@ import { GameWrapper } from "../common/GameWrapper";
 import { Text } from "../common/Text";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { bestLine } from "@/hints/lookahead";
+import {
+  cardTarget,
+  makeHint,
+  pressHint,
+  withNote,
+  zoneTarget,
+} from "@/hints/hint";
 // ── Rules configuration ────────────────────────────────────────────────────
 export type AscentRouteType = "ascent" | "traverse" | "descent";
 export type AscentDifficulty = "gentle" | "standard" | "intense";
@@ -348,7 +357,325 @@ function milestoneQualifies(
   return true;
 }
 
+// —— Hints ——
+
+type AscentSettings = {
+  difficulty: AscentDifficulty;
+  challenge: AscentChallenge;
+};
+
+/** A route the hand can make, with the hand cards it takes as bits. */
+type HandRoute = { route: AscentRouteRecord; mask: number };
+
+// Routes listed at most, so a long hand can't make the list huge.
+const MAX_ROUTES = 800;
+
+/**
+ * Every route the hand can make, its cards in the order they are tapped
+ * (the anchor last), checked by analyzeRoute so challenges' rules apply.
+ */
+function handRoutes(hand: PlayingCard[], challenge: AscentChallenge) {
+  const routes: HandRoute[] = [];
+  const add = (indexes: number[]) => {
+    if (routes.length >= MAX_ROUTES) return;
+    const route = analyzeRoute(
+      indexes.map((index) => hand[index]),
+      challenge,
+    );
+    if (route) {
+      routes.push({
+        route,
+        mask: indexes.reduce((bits, index) => bits | (1 << index), 0),
+      });
+    }
+  };
+  const indexes = hand.map((_, index) => index);
+  const byValue = new Map<number, number[]>();
+  indexes.forEach((index) => {
+    const value = v(hand[index]);
+    byValue.set(value, [...(byValue.get(value) ?? []), index]);
+  });
+
+  // Traverses: cards of one value, any of them the anchor.
+  byValue.forEach((group) => {
+    for (let bits = 1; bits < 1 << group.length; bits++) {
+      const picked = group.filter((_, i) => bits & (1 << i));
+      picked.forEach((anchor) =>
+        add([...picked.filter((index) => index !== anchor), anchor]),
+      );
+    }
+  });
+
+  // Ascents: values rising by a step (only Nanga Parbat allows more than
+  // one), a card of each, the highest last.
+  const steps = challenge === "nanga-parbat" ? [1, 2, 3, 4, 5, 6] : [1];
+  const values = [...byValue.keys()].sort((a, b) => a - b);
+  for (const step of steps) {
+    for (const start of values) {
+      const extend = (picked: number[], value: number) => {
+        if (picked.length >= 2) add(picked);
+        for (const index of byValue.get(value + step) ?? []) {
+          extend([...picked, index], value + step);
+        }
+      };
+      for (const index of byValue.get(start)!) extend([index], start);
+    }
+  }
+
+  // Descents: cards of one suit, falling, the lowest last.
+  const suits = new Map<string, number[]>();
+  indexes.forEach((index) => {
+    const suit = hand[index].suit;
+    suits.set(suit, [...(suits.get(suit) ?? []), index]);
+  });
+  suits.forEach((group) => {
+    const falling = [...group].sort((a, b) => v(hand[b]) - v(hand[a]));
+    for (let bits = 1; bits < 1 << Math.min(falling.length, 10); bits++) {
+      const picked = falling.filter((_, i) => bits & (1 << i));
+      if (picked.length >= 2) add(picked);
+    }
+  });
+  return routes;
+}
+
+/**
+ * A climb as the player can plan it: the hand cards on view (as bits of the
+ * hand), how many cards come in unseen (drawn, or the fatigue pile), and what
+ * is left to draw from.
+ */
+type ClimbPlan = {
+  handMask: number;
+  unseen: number;
+  deck: number;
+  fatigue: number;
+  played: AscentRouteRecord[];
+  camp: "milestone" | "missed" | null;
+  lost: boolean;
+};
+
+type ClimbMove = { kind: "route"; route: HandRoute } | { kind: "rest" };
+
+function bitCount(bits: number) {
+  let count = 0;
+  for (let rest = bits; rest; rest &= rest - 1) count++;
+  return count;
+}
+
+/**
+ * The move to make, by trying lines of routes over the cards in hand: a line
+ * that empties the hand makes camp, which is best of all when the last route
+ * makes a milestone; otherwise fewer cards left to climb with (counting the
+ * unseen ones a line draws) and less of the deck spent are better.
+ */
+function planClimb(
+  state: GameState,
+  settings: AscentSettings,
+  budget = 3000,
+): ClimbMove | null {
+  const { difficulty, challenge } = settings;
+  const hand = state.hand;
+  const routes = handRoutes(hand, challenge);
+  const unseenCards = state.deck.length + state.fatigue.length;
+  // An unseen card's chance to be higher (or lower) than a value, or a
+  // diamond: for the draws a route makes, with unseen cards in hand.
+  const drawCount = (route: AscentRouteRecord, plan: ClimbPlan) => {
+    const rest = hand.filter(
+      (card, index) =>
+        plan.handMask & (1 << index) &&
+        !route.cards.some((other) => other.id === card.id),
+    );
+    const known = computeDraw(route, rest, challenge);
+    const odds =
+      route.anchorSuit === "hearts"
+        ? (13 - route.anchorValue) / 13
+        : route.anchorSuit === "clubs"
+          ? (route.anchorValue - 1) / 13
+          : route.anchorSuit === "diamonds"
+            ? 1 / 4
+            : 0;
+    const draws = known + plan.unseen * odds;
+    return challenge === "k2" ? draws : Math.min(route.size, draws);
+  };
+
+  const root: ClimbPlan = {
+    handMask: (1 << hand.length) - 1,
+    unseen: 0,
+    deck: state.deck.length,
+    fatigue: state.fatigue.length,
+    played: state.playedRoutes,
+    camp: null,
+    lost: false,
+  };
+
+  const moves = (plan: ClimbPlan): ClimbMove[] => {
+    if (plan.camp || plan.lost) return [];
+    const prev = plan.played.at(-1) ?? null;
+    const playable = routes
+      .filter(
+        ({ route, mask }) =>
+          (plan.handMask & mask) === mask &&
+          canPlayRoute(route, prev, challenge, prev?.anchorSuit ?? null).ok,
+      )
+      // The cheapest climbs first: fewest draws, then smallest.
+      .map((route) => ({ route, draws: drawCount(route.route, plan) }))
+      .sort(
+        (a, b) =>
+          a.draws - b.draws ||
+          compareRoutes(a.route.route, b.route.route) ||
+          a.route.mask - b.route.mask,
+      )
+      .slice(0, plan === root ? ROOT_MOVES : 5)
+      .map(({ route }): ClimbMove => ({ kind: "route", route }));
+    const canRest = plan.played.length > 0 || playable.length === 0;
+    return canRest ? [...playable, { kind: "rest" }] : playable;
+  };
+
+  const apply = (plan: ClimbPlan, move: ClimbMove): ClimbPlan => {
+    if (move.kind === "rest") {
+      const refill = Math.min(
+        plan.deck,
+        challenge === "manaslu" ? 1 : plan.fatigue + 1,
+      );
+      return {
+        ...plan,
+        unseen: plan.unseen + plan.fatigue,
+        deck: plan.deck - refill,
+        fatigue: refill,
+        played: [],
+      };
+    }
+    const { route, mask } = move.route;
+    const handMask = plan.handMask & ~mask;
+    const played = [...plan.played, route];
+    if (handMask === 0 && plan.unseen < 0.5) {
+      const qualifies = milestoneQualifies(
+        route,
+        state.trail,
+        difficulty,
+        challenge,
+        played,
+      );
+      const fresh = challenge === "everest" ? 7 : 10;
+      return {
+        ...plan,
+        handMask,
+        played,
+        camp: qualifies ? "milestone" : "missed",
+        lost: plan.deck + plan.fatigue < fresh,
+      };
+    }
+    const draws = drawCount(route, plan);
+    const fromDeck = Math.min(plan.deck, draws);
+    return {
+      ...plan,
+      handMask,
+      played,
+      unseen: plan.unseen + draws,
+      deck: plan.deck - fromDeck,
+      fatigue: plan.fatigue - (draws - fromDeck),
+      lost: plan.deck + plan.fatigue < draws,
+    };
+  };
+
+  const score = (plan: ClimbPlan) => {
+    if (plan.lost) return -1e6;
+    const spent = unseenCards - plan.deck - plan.fatigue;
+    if (plan.camp === "milestone") return 1e5 - spent;
+    // A camp without a milestone starts over with a fresh hand.
+    if (plan.camp === "missed") return -1500 - spent;
+    return -100 * bitCount(plan.handMask) - 150 * plan.unseen - spent;
+  };
+
+  const positionKey = (plan: ClimbPlan) =>
+    `${plan.handMask}:${Math.round(plan.unseen * 10)}:${plan.deck}:${plan.fatigue}:${plan.played
+      .map(
+        (route) =>
+          `${route.size}${route.type}${route.anchorValue}${route.anchorSuit}`,
+      )
+      .join(",")}`;
+  // Each first move gets its share of the search, so the first few can't
+  // use it all up.
+  const first = moves(root);
+  let best = null as { move: ClimbMove; score: number } | null;
+  for (const move of first) {
+    const child = apply(root, move);
+    const line = bestLine(child, {
+      moves,
+      apply,
+      score,
+      budget: Math.ceil(budget / first.length),
+      maxDepth: 10,
+      positionKey,
+    });
+    const end = line.reduce(apply, child);
+    const value = score(end);
+    if (!best || value > best.score) best = { move, score: value };
+  }
+  return best?.move ?? null;
+}
+
+// First moves weighed by planClimb (the cheapest climbs, see moves).
+const ROOT_MOVES = 14;
+
+function findAscentHint(
+  state: GameState,
+  selected: string[],
+  settings: AscentSettings,
+) {
+  if (state.ended) return null;
+  if (state.phase === "makaluDiscard") {
+    // Makalu: let go of the card the hand climbs best without.
+    let best = null as { card: PlayingCard; score: number } | null;
+    for (const card of state.hand) {
+      const rest = {
+        ...state,
+        phase: "play" as Phase,
+        hand: state.hand.filter((other) => other.id !== card.id),
+      };
+      const move = planClimb(rest, settings, 300);
+      const score =
+        move?.kind === "route" ? move.route.route.size : move ? -1 : -2;
+      if (!best || score > best.score) best = { card, score };
+    }
+    return best
+      ? withNote(
+          makeHint("tapCard", cardTarget(best.card)),
+          i18n.t("games:ascent.hint.discard"),
+        )
+      : pressHint("buttons", i18n.t("games:ascent.skipDiscard"));
+  }
+
+  const move = planClimb(state, settings);
+  if (!move) return null;
+  if (move.kind === "rest") {
+    return withNote(
+      pressHint("buttons", i18n.t("games:ascent.rest")),
+      i18n.t("games:ascent.hint.rest"),
+    );
+  }
+  const { route } = move.route;
+  const order = route.cards.map((card) => card.id);
+  // Picked cards that don't start the route: clear them first.
+  if (selected.some((id, index) => order[index] !== id)) {
+    return pressHint("buttons", i18n.t("cards:clear"));
+  }
+  const camps = route.size === state.hand.length;
+  const hint = makeHint(
+    { key: "press", values: { label: i18n.t("games:ascent.playRoute") } },
+    ...route.cards.slice(selected.length).map((card) => cardTarget(card)),
+    zoneTarget("buttons"),
+  );
+  if (camps) return withNote(hint, i18n.t("games:ascent.hint.camp"));
+  const rest = state.hand.filter(
+    (card) => !route.cards.some((other) => other.id === card.id),
+  );
+  const draws = computeDraw(route, rest, settings.challenge);
+  return withNote(hint, i18n.t("games:ascent.hint.route", { count: draws }));
+}
+
 export const ascentRules = {
+  findHint: findAscentHint,
+  handRoutes,
   analyzeRoute,
   compareRoutes,
   canPlayRoute,
@@ -458,6 +785,10 @@ export default function Ascent() {
         });
       },
     });
+
+  useHint(() => findAscentHint(game, selected, { difficulty, challenge }), {
+    game,
+  });
 
   const prevRoute =
     game.playedRoutes.length > 0

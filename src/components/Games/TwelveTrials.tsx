@@ -31,6 +31,15 @@ import { flexStyles } from "@/styles/flexStyles";
 import { rgba } from "@/styles/styles";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import {
+  cardTarget,
+  makeHint,
+  withNote,
+  zoneTarget,
+  type Hint,
+  type HintTarget,
+} from "@/hints/hint";
 const maxDamage = 7;
 
 // Row sizes (top to bottom) per dungeon level; each sums to 12.
@@ -165,7 +174,475 @@ function canPlace(
   return false;
 }
 
+// ── Hints ─────────────────────────────────────────────────────────────────────
+export type TwelveTrialsHintOptions = {
+  boomer: boolean;
+  abilitiesOn: boolean;
+  selected: { zone: "hand" | "reserve"; index: number } | null;
+  reservePick: string[];
+  selectedKing: PlayingCard | null;
+  kingMode: { type: "return" | "double" | "move"; kingId: string } | null;
+};
+
+type TrialsAction =
+  | {
+      type: "place";
+      from: "hand" | "reserve";
+      card: PlayingCard;
+      slot: number;
+      doubled: boolean;
+    }
+  | { type: "discard"; card: PlayingCard }
+  | { type: "bury"; card: PlayingCard };
+
+/** What a line of moves through the hand changes. */
+type TrialsSim = {
+  slots: TwelveTrialsSlot[];
+  hand: PlayingCard[];
+  reserve: PlayingCard[];
+  kings: PlayingCard[];
+  damage: number;
+  /** Cards a King of Hearts put back under the deck. */
+  buried: PlayingCard[];
+};
+
+// Positions a hint looks through: plenty for a hand of three or five.
+const SEARCH_BUDGET = 4000;
+
+function kingOf(sim: TrialsSim, suit: CardSuit) {
+  return sim.kings.find((king) => king.suit === suit);
+}
+
+function trialsActions(
+  sim: TrialsSim,
+  boomer: boolean,
+  mode: TwelveTrialsHintOptions["kingMode"],
+  holdReserve = false,
+): TrialsAction[] {
+  if (mode?.type === "return") {
+    return sim.hand.map((card) => ({ type: "bury", card }));
+  }
+  const actions: TrialsAction[] = [];
+  const canDouble = mode?.type === "double" || !!kingOf(sim, "spades");
+  const sources = [
+    ...sim.hand.map((card) => ({ from: "hand" as const, card })),
+    ...(holdReserve ? [] : sim.reserve).map((card) => ({
+      from: "reserve" as const,
+      card,
+    })),
+  ];
+  for (const { from, card } of sources) {
+    sim.slots.forEach((slot, idx) => {
+      // Reserve cards wait for a monster they help finish (or for the end,
+      // when they're all that's left).
+      if (from === "reserve" && sim.hand.length > 0 && !slot.placed.length) {
+        return;
+      }
+      const attack = slot.placed.length < 2;
+      for (const doubled of attack && canDouble ? [false, true] : [false]) {
+        // A King of Spades in play doubles the next attack.
+        if (mode?.type === "double" && attack && !doubled) continue;
+        if (canPlace(sim.slots, idx, card, boomer, doubled)) {
+          actions.push({ type: "place", from, card, slot: idx, doubled });
+        }
+      }
+    });
+  }
+  if (mode?.type !== "double") {
+    for (const card of sim.hand) {
+      actions.push({ type: "discard", card });
+      if (kingOf(sim, "hearts")) actions.push({ type: "bury", card });
+    }
+  }
+  return actions;
+}
+
+function applyTrialsAction(
+  sim: TrialsSim,
+  action: TrialsAction,
+  boomer: boolean,
+  abilitiesOn: boolean,
+): TrialsSim {
+  const next: TrialsSim = {
+    ...sim,
+    hand: sim.hand.filter((card) => card.id !== action.card.id),
+  };
+  if (action.type === "discard") {
+    next.damage += 1;
+    return next;
+  }
+  if (action.type === "bury") {
+    const hearts = kingOf(sim, "hearts")!;
+    next.kings = sim.kings.filter((king) => king.id !== hearts.id);
+    next.buried = [...sim.buried, action.card];
+    return next;
+  }
+  if (action.from === "reserve") {
+    next.hand = sim.hand;
+    next.reserve = sim.reserve.filter((card) => card.id !== action.card.id);
+  }
+  const slot = sim.slots[action.slot];
+  const role = slot.placed.length < 2 ? "attack" : "trigger";
+  const doubled = action.doubled && role === "attack";
+  if (doubled) {
+    const spades = kingOf(sim, "spades");
+    if (spades) next.kings = sim.kings.filter((king) => king.id !== spades.id);
+  }
+  next.slots = sim.slots.map((other, idx) =>
+    idx !== action.slot
+      ? other
+      : role === "attack"
+        ? {
+            ...other,
+            placed: [
+              ...other.placed,
+              { card: action.card, role, doubled: doubled || undefined },
+            ],
+          }
+        : { ...other, placed: [], defeated: true },
+  );
+  if (role === "trigger") {
+    if (boomer && action.card.rank === "A") {
+      next.hand = [...next.hand, action.card];
+    }
+    if (abilitiesOn && slot.monster.rank === "K") {
+      next.kings = [...next.kings, slot.monster];
+    }
+  }
+  return next;
+}
+
+/** The cards still to come (the deck, as a set), counted once per hint. */
+type TrialsPool = {
+  cards: { value: number; suit: CardSuit; joker: boolean }[];
+  /** Attack values, highest first. */
+  values: number[];
+  suits: Record<CardSuit, number>;
+  jokers: number;
+};
+
+function trialsPool(cards: PlayingCard[], boomer: boolean): TrialsPool {
+  const pool: TrialsPool = {
+    cards: cards.map((card) => ({
+      value: attackValue(card, boomer),
+      suit: card.suit,
+      joker: isJoker(card),
+    })),
+    values: [],
+    suits: { hearts: 0, diamonds: 0, clubs: 0, spades: 0 },
+    jokers: 0,
+  };
+  pool.values = pool.cards.map((card) => card.value).sort((a, b) => b - a);
+  for (const card of pool.cards) {
+    if (card.joker) pool.jokers += 1;
+    else pool.suits[card.suit] += 1;
+  }
+  return pool;
+}
+
+/**
+ * How good a position is to draw the next hand in, judged against the cards
+ * still to come (the deck, the reserve and buried cards):
+ * - every card placed is one fewer needed, every discard costs health;
+ * - the attackers to come must still add up to what the monsters need (a
+ *   high card spent on a trigger, or an attack overshooting, costs that);
+ * - the next hand's cards should find a monster to go on;
+ * - a monster no card left can finish loses the game.
+ */
+function trialsStanding(sim: TrialsSim, pool: TrialsPool, boomer: boolean) {
+  const left = sim.slots.filter((slot) => !slot.defeated);
+  if (left.length === 0) return 1e6;
+  if (sim.damage >= maxDamage) return -1e6;
+  const extras = [...sim.buried, ...sim.reserve];
+  const needed = left.reduce((sum, slot) => sum + 3 - slot.placed.length, 0);
+  const spare = pool.cards.length + extras.length - needed;
+  let value =
+    150 * spare -
+    150 * sim.damage +
+    30 * (sim.slots.length - left.length) +
+    60 * sim.kings.length;
+  if (spare < 0) value -= 2000 * -spare;
+
+  const extraValues = extras
+    .map((card) => attackValue(card, boomer))
+    .sort((a, b) => b - a);
+  const doubling = !!kingOf(sim, "spades");
+  const best =
+    Math.max(pool.values[0] ?? 0, extraValues[0] ?? 0) * (doubling ? 2 : 1);
+  let attackers = 0;
+  let demand = 0;
+  for (const slot of left) {
+    const power = monsterPower(slot.monster);
+    if (slot.placed.length === 0) {
+      attackers += 2;
+      demand += power;
+    } else if (slot.placed.length === 1) {
+      const need = power - attackerSum(slot, boomer);
+      attackers += 1;
+      demand += Math.max(0, need);
+      if (need > best) value -= 5000;
+    }
+  }
+  // The best attackers to come, as many as are needed.
+  let supply = 0;
+  for (let i = 0, j = 0; i + j < attackers; ) {
+    const fromPool = pool.values[i];
+    const fromExtras = extraValues[j];
+    if (fromPool === undefined && fromExtras === undefined) break;
+    if (
+      fromExtras === undefined ||
+      (fromPool !== undefined && fromPool >= fromExtras)
+    ) {
+      supply += fromPool;
+      i += 1;
+    } else {
+      supply += fromExtras;
+      j += 1;
+    }
+  }
+  const slack = supply - demand;
+  value += 25 * Math.min(slack, 20) + 50 * Math.min(0, slack);
+
+  // The next hand is drawn from the deck: each card that will find no
+  // monster to go on is likely a discard. A monster with nothing on it
+  // takes any card; one waiting for a high attacker, few.
+  const open = sim.slots.filter((_, idx) => isAttackable(sim.slots, idx));
+  if (pool.cards.length > 0 && !open.some((slot) => !slot.placed.length)) {
+    const needs = open
+      .filter((slot) => slot.placed.length === 1)
+      .map((slot) => monsterPower(slot.monster) - attackerSum(slot, boomer));
+    const suits = open
+      .filter((slot) => slot.placed.length === 2)
+      .map((slot) => slot.monster.suit);
+    const homeless = pool.cards.filter(
+      (card) =>
+        !card.joker &&
+        !suits.includes(card.suit) &&
+        !needs.some((need) => card.value >= need),
+    ).length;
+    value -= (300 * homeless) / pool.cards.length;
+  }
+
+  // Each monster needs a trigger of its suit (or a joker).
+  let jokers = pool.jokers;
+  const suitCards = { ...pool.suits };
+  for (const card of extras) {
+    if (isJoker(card)) jokers += 1;
+    else suitCards[card.suit] += 1;
+  }
+  let missing = 0;
+  for (const suit of ["hearts", "diamonds", "clubs", "spades"] as const) {
+    const triggers = left.filter((slot) => slot.monster.suit === suit).length;
+    missing += Math.max(0, triggers - suitCards[suit]);
+  }
+  value -= 3000 * Math.max(0, missing - jokers);
+  return value;
+}
+
+/**
+ * The best way to play out the hand (every order, every monster, the reserve
+ * to finish monsters), judged by trialsStanding once the hand is spent.
+ */
+function planTrials(
+  root: TrialsSim,
+  pool: TrialsPool,
+  options: Pick<TwelveTrialsHintOptions, "boomer" | "abilitiesOn"> & {
+    mode?: TwelveTrialsHintOptions["kingMode"];
+    /** Keep the reserve out of this hand (it's there for later). */
+    holdReserve?: boolean;
+  },
+) {
+  const { boomer, abilitiesOn } = options;
+  const seen = new Map<string, number>();
+  let visited = 0;
+  const keyOf = (sim: TrialsSim) =>
+    [
+      sim.slots
+        .map((slot) =>
+          slot.defeated ? "x" : slot.placed.map((p) => p.card.id).join("+"),
+        )
+        .join("|"),
+      sim.hand.map((card) => card.id).join("+"),
+      sim.reserve.map((card) => card.id).join("+"),
+      sim.kings.length,
+      sim.damage,
+    ].join("/");
+
+  const visit = (
+    sim: TrialsSim,
+    depth: number,
+  ): { value: number; first: TrialsAction | null } => {
+    // The same cards played in another order end in the same place.
+    const key = depth > 0 ? keyOf(sim) : "";
+    const known = seen.get(key);
+    if (known !== undefined) return { value: known, first: null };
+    const over =
+      sim.damage >= maxDamage || sim.slots.every((slot) => slot.defeated);
+    if (over || (depth > 0 && sim.hand.length === 0)) {
+      const value = trialsStanding(sim, pool, boomer);
+      seen.set(key, value);
+      return { value, first: null };
+    }
+    let best: { value: number; first: TrialsAction | null } = {
+      value: -Infinity,
+      first: null,
+    };
+    visited += 1;
+    const actions = trialsActions(
+      sim,
+      boomer,
+      depth === 0 ? (options.mode ?? null) : null,
+      options.holdReserve,
+    );
+    for (const action of actions) {
+      if (visited > SEARCH_BUDGET && best.first) break;
+      const value = visit(
+        applyTrialsAction(sim, action, boomer, abilitiesOn),
+        depth + 1,
+      ).value;
+      if (value > best.value) best = { value, first: action };
+    }
+    if (!best.first) {
+      // Only reserve cards that can't go anywhere yet: the hand is done.
+      best.value = trialsStanding(sim, pool, boomer);
+    }
+    seen.set(key, best.value);
+    return best;
+  };
+  return visit(root, 0);
+}
+
+function simOf(state: GameState): TrialsSim {
+  return {
+    slots: state.slots,
+    hand: state.hand,
+    reserve: state.reserve,
+    kings: state.kings,
+    damage: state.damage,
+    buried: [],
+  };
+}
+
+/** The two cards to keep in reserve: the pair whose hand plays out best. */
+function bestReserve(state: GameState, options: TwelveTrialsHintOptions) {
+  const pool = trialsPool(state.deck, options.boomer);
+  let best: { pair: PlayingCard[]; value: number } | null = null;
+  state.hand.forEach((first, i) => {
+    state.hand.slice(i + 1).forEach((second) => {
+      const pair = [first, second];
+      const value = planTrials(
+        {
+          ...simOf(state),
+          hand: state.hand.filter((card) => !pair.includes(card)),
+          reserve: pair,
+        },
+        pool,
+        { ...options, holdReserve: true },
+      ).value;
+      if (!best || value > best.value) best = { pair, value };
+    });
+  });
+  return best!.pair;
+}
+
+/**
+ * Plays out the hand the way that leaves the dungeon most winnable: cards
+ * on monsters rather than discarded, attacks that don't overshoot, low
+ * cards as triggers, and no monster left that no card to come can finish.
+ */
+function findTwelveTrialsHint(
+  state: GameState,
+  options: TwelveTrialsHintOptions,
+): Hint | null {
+  if (state.ended || state.slots.length === 0) return null;
+  const { selected, kingMode, selectedKing } = options;
+  const controls = (label: string, ...taps: HintTarget[]) =>
+    makeHint(
+      { key: "press", values: { label } },
+      ...taps,
+      zoneTarget("controls"),
+    );
+
+  if (state.reserveSetup) {
+    if (state.hand.length < 2) return null;
+    const pair = bestReserve(state, options).map((card) => card.id);
+    const taps = [
+      ...options.reservePick.filter((id) => !pair.includes(id)),
+      ...pair.filter((id) => !options.reservePick.includes(id)),
+    ].map((id) => cardTarget(id));
+    return withNote(
+      controls(
+        i18n.t("games:twelveTrials.setReserve2", { length: 2 }),
+        ...taps,
+      ),
+      i18n.t("games:twelveTrials.hint.reserve"),
+    );
+  }
+
+  if (kingMode?.type === "move") {
+    // The bottom card shows on the button: worth drawing next if it attacks.
+    const bottom = state.deck[0];
+    return bottom && attackValue(bottom, options.boomer) >= 7
+      ? controls(
+          i18n.t("games:twelveTrials.moveToTop", { value: cardLabel(bottom) }),
+        )
+      : controls(i18n.t("games:twelveTrials.doNothing"));
+  }
+
+  const pool = trialsPool(state.deck, options.boomer);
+  const plan = planTrials(simOf(state), pool, { ...options, mode: kingMode });
+  if (kingMode) {
+    // A King's power in play: use it, or put it away if there's better.
+    const free = planTrials(simOf(state), pool, { ...options, mode: null });
+    if (!plan.first || free.value > plan.value) {
+      return controls(i18n.t("cards:cancel"));
+    }
+  }
+  const action = plan.first;
+  if (!action) return null;
+
+  const selectedCard =
+    selected &&
+    (selected.zone === "hand" ? state.hand : state.reserve)[selected.index];
+  const pick = (card: PlayingCard) =>
+    selectedCard?.id === card.id ? [] : [cardTarget(card)];
+  const kingPower = (suit: CardSuit) => {
+    const king = state.kings.find((card) => card.suit === suit)!;
+    return controls(
+      kingHint(suit),
+      ...(selectedKing?.id === king.id ? [] : [cardTarget(king)]),
+    );
+  };
+
+  if (action.type === "bury") {
+    return kingMode?.type === "return"
+      ? withNote(
+          makeHint("tapCard", cardTarget(action.card)),
+          i18n.t("games:twelveTrials.hint.bury"),
+        )
+      : withNote(kingPower("hearts"), i18n.t("games:twelveTrials.hint.bury"));
+  }
+  if (action.type === "discard") {
+    return withNote(
+      controls(i18n.t("cards:discard"), ...pick(action.card)),
+      i18n.t("games:twelveTrials.hint.discard"),
+    );
+  }
+  if (action.doubled && kingMode?.type !== "double") {
+    return withNote(
+      kingPower("spades"),
+      i18n.t("games:twelveTrials.hint.double"),
+    );
+  }
+  return makeHint(
+    "moveCard",
+    pick(action.card),
+    cardTarget(state.slots[action.slot].monster),
+  );
+}
+
 export const twelveTrialsRules = {
+  findHint: findTwelveTrialsHint,
   attackValue,
   monsterPower,
   attackerSum,
@@ -286,6 +763,19 @@ export default function TwelveTrials() {
         await delay();
       },
     });
+
+  useHint(
+    () =>
+      findTwelveTrialsHint(game, {
+        boomer,
+        abilitiesOn,
+        selected,
+        reservePick,
+        selectedKing,
+        kingMode,
+      }),
+    { game },
+  );
 
   // Keep a stale selection from pointing at a missing card.
   useEffect(() => {

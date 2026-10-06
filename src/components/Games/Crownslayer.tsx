@@ -17,9 +17,11 @@ import {
   flipToFace,
   isAce,
   isNumberRank,
+  RANKS,
   rankValue,
   shuffle,
   sortCardsBySuit,
+  SUITS,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
@@ -29,6 +31,8 @@ import { Text } from "../common/Text";
 import { ProgressBar } from "../Home/ProgressBar";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import { cardTarget, makeHint, withNote, zoneTarget } from "@/hints/hint";
 // ---------- Types ---------- //
 type EnemyType = "J" | "Q" | "K";
 
@@ -322,7 +326,308 @@ function getDefenseValue(cards: PlayingCard[]) {
   );
 }
 
+// ---------- Hints ---------- //
+
+// What a card in hand is worth beyond its value: one more card to play or
+// block with, and its suit's power (diamonds most: only they refill the
+// hand).
+const CARD_WORTH = 2;
+const SUIT_WORTH: Record<CardSuit, number> = {
+  hearts: 1,
+  diamonds: 4,
+  clubs: 1,
+  spades: 1,
+};
+// Using a jester throws the hand away: worth it only to stay alive.
+const JESTER_COST = 60;
+const KILL_BONUS = 15;
+const LOST = -1000;
+
+type Keepable = { card?: PlayingCard; value: number; worth: number };
+
+/** What keeping a card is worth (a card of the enemy's suit has no power). */
+function keepWorth(card: PlayingCard, enemySuit: CardSuit | undefined) {
+  return (
+    getCardAttackValue(card) +
+    CARD_WORTH +
+    (card.suit === enemySuit ? 0 : SUIT_WORTH[card.suit])
+  );
+}
+
+/**
+ * The tavern is face down, but what is in it is no secret: every number
+ * card not in the hand or the discard, and the royals beaten exactly. (The
+ * castle deals Jacks, then Queens, then Kings, so the royals of a rank not
+ * seen and not still in the castle are in the tavern.) What an average card
+ * drawn from it is worth.
+ */
+function tavernCardWorth(game: GameState) {
+  const seen = [
+    ...game.hand,
+    ...game.discardPile,
+    ...(game.currentEnemy ? [game.currentEnemy.card] : []),
+  ];
+  const castle = game.castleDeck.length;
+  const inCastle: Record<EnemyType, number> = {
+    K: Math.min(castle, 4),
+    Q: Math.min(Math.max(castle - 4, 0), 4),
+    J: Math.max(castle - 8, 0),
+  };
+  const values: number[] = [];
+  for (const suit of SUITS) {
+    for (const rank of RANKS) {
+      if (seen.some((card) => card.rank === rank && card.suit === suit)) {
+        continue;
+      }
+      if (rank in inCastle && inCastle[rank as EnemyType]-- > 0) continue;
+      values.push(
+        getCardAttackValue({ rank, suit } as PlayingCard) + CARD_WORTH + 1,
+      );
+    }
+  }
+  if (values.length === 0) return 0;
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
+/**
+ * The cards to block an attack with that cost least to lose (null if the
+ * hand can't block it).
+ */
+function cheapestCover<T extends Keepable>(cards: T[], attack: number) {
+  if (attack <= 0) return { cards: [] as T[], cost: 0 };
+  let best: { cards: T[]; cost: number } | null = null;
+  for (let mask = 1; mask < 1 << cards.length; mask += 1) {
+    let value = 0;
+    let cost = 0;
+    for (let index = 0; index < cards.length; index += 1) {
+      if (mask & (1 << index)) {
+        value += cards[index].value;
+        cost += cards[index].worth;
+      }
+    }
+    if (value < attack || (best && cost >= best.cost)) continue;
+    best = {
+      cards: cards.filter((_, index) => mask & (1 << index)),
+      cost,
+    };
+  }
+  return best;
+}
+
+function validPlays(hand: PlayingCard[]) {
+  const plays: PlayingCard[][] = [];
+  for (let mask = 1; mask < 1 << hand.length; mask += 1) {
+    const play = hand.filter((_, index) => mask & (1 << index));
+    if (play.length <= 4 && isValidPlaySelection(play)) plays.push(play);
+  }
+  return plays;
+}
+
+type AttackPlan = { play: PlayingCard[]; value: number; kills: boolean };
+
+/**
+ * How good a play is: the damage it does (a kill most of all), what its
+ * powers bring, and what the hand is left with once the enemy's attack is
+ * blocked; with `ahead`, a play that doesn't kill is judged by the best
+ * play the hand then has left. The cards a diamond draws are unknown: they
+ * count at the tavern's average.
+ */
+function judgeAttack(
+  game: GameState,
+  play: PlayingCard[],
+  drawnWorth: number,
+  ahead: number,
+): AttackPlan {
+  const enemy = game.currentEnemy!;
+  const enemySuit = enemy.card.suit;
+  const health = enemy.maxHealth - game.damageDealt;
+  const { totalAttack, damage, suitEffects } = evaluateAttackSelection(
+    play,
+    enemy.card,
+  );
+  const ids = new Set(play.map((card) => card.id));
+  const rest: Keepable[] = game.hand
+    .filter((card) => !ids.has(card.id))
+    .map((card) => ({
+      card,
+      value: getCardAttackValue(card),
+      worth: keepWorth(card, enemySuit),
+    }));
+  const drawn = suitEffects.includes("diamonds")
+    ? Math.min(totalAttack, 8 - rest.length, game.tavernDeck.length)
+    : 0;
+  for (let index = 0; index < drawn; index += 1) {
+    rest.push({ value: drawnWorth - CARD_WORTH - 1, worth: drawnWorth });
+  }
+  let value = 0;
+  if (suitEffects.includes("hearts")) {
+    // Healed cards come back to the tavern (there's no other way back for
+    // them), worth most when it runs low.
+    const healed = Math.min(totalAttack, game.discardPile.length);
+    value += healed * (game.tavernDeck.length < 10 ? 4 : 2);
+  }
+  const kept = rest.reduce((sum, card) => sum + card.worth, 0);
+
+  if (damage >= health) {
+    // An exact kill puts the royal on top of the tavern: a strong card.
+    const exact = damage === health ? 0.4 * getCardAttackValue(enemy.card) : 0;
+    return {
+      play,
+      value: value + health + KILL_BONUS + exact + kept,
+      kills: true,
+    };
+  }
+
+  const attack = suitEffects.includes("spades")
+    ? Math.max(0, enemy.attack - totalAttack)
+    : enemy.attack;
+  const cover = cheapestCover(rest, attack);
+  if (cover && ahead > 0) {
+    const left = rest.filter((card) => !cover.cards.includes(card));
+    const hand = left.flatMap((card) => (card.card ? [card.card] : []));
+    // Cards still to draw can't be planned with: they count as they are.
+    value += left
+      .filter((card) => !card.card)
+      .reduce((sum, card) => sum + card.worth, 0);
+    const next = bestAttack(
+      {
+        ...game,
+        hand,
+        damageDealt: game.damageDealt + damage,
+        currentEnemy: { ...enemy, attack },
+      },
+      ahead - 1,
+      drawnWorth,
+    );
+    if (next) return { play, value: value + next.value, kills: false };
+  }
+  // A shield lasts the whole fight, not just this attack.
+  value += damage + 0.5 * (enemy.attack - attack);
+  if (cover) return { play, value: value + kept - cover.cost, kills: false };
+  if (game.jestersDeck.length === 0) {
+    return { play, value: LOST + damage, kills: false };
+  }
+  // A jester's fresh hand, less what blocking the attack takes from it.
+  const fresh = Math.min(8, game.tavernDeck.length) * drawnWorth;
+  const blockCost = attack * (drawnWorth / Math.max(1, drawnWorth - 3));
+  return {
+    play,
+    value: value - JESTER_COST + fresh - blockCost,
+    kills: false,
+  };
+}
+
+/**
+ * The best attack: every play the hand allows, judged by judgeAttack, a
+ * turn ahead (deeper finds little more on the cards in hand).
+ */
+function bestAttack(
+  game: GameState,
+  ahead = 1,
+  drawnWorth = tavernCardWorth(game),
+) {
+  let best: AttackPlan | null = null;
+  for (const play of validPlays(game.hand)) {
+    const plan = judgeAttack(game, play, drawnWorth, ahead);
+    if (!best || plan.value > best.value) best = plan;
+  }
+  return best;
+}
+
+/** The cards to block with: the least worth keeping that cover the attack. */
+function bestDefense(game: GameState) {
+  const enemySuit = game.currentEnemy?.card.suit;
+  return (
+    cheapestCover(
+      game.hand.map((card) => ({
+        card,
+        value: getCardAttackValue(card),
+        worth: keepWorth(card, enemySuit),
+      })),
+      game.currentEnemy?.attack ?? 0,
+    )?.cards.map(({ card }) => card) ?? null
+  );
+}
+
+/** Taps that turn the selection into `wanted`: undo wrong picks first. */
+function selectionTaps(game: GameState, wanted: PlayingCard[]) {
+  const wantedIds = new Set(wanted.map((card) => card.id));
+  const selectedIds = new Set(game.selectedCards.map((card) => card.id));
+  return [
+    ...game.selectedCards.filter((card) => !wantedIds.has(card.id)),
+    ...wanted.filter((card) => !selectedIds.has(card.id)),
+  ].map((card) => cardTarget(card));
+}
+
+function jesterHint(game: GameState) {
+  const jester = game.jestersDeck.at(-1);
+  if (!jester) return null;
+  return withNote(
+    makeHint("tapCard", ...selectionTaps(game, []), cardTarget(jester)),
+    i18n.t("games:crownslayer.hint.jester"),
+  );
+}
+
+function pressAfter(label: string, taps: ReturnType<typeof cardTarget>[]) {
+  return makeHint(
+    { key: "press", values: { label } },
+    ...taps,
+    zoneTarget("actions"),
+  );
+}
+
+/**
+ * Attack with the play that does most for the fight and keeps the hand
+ * strongest; block with the cards least worth keeping; call a jester only
+ * when the hand can't go on.
+ */
+function findCrownslayerHint(game: GameState) {
+  const enemy = game.currentEnemy;
+  if (game.ended || !enemy) return null;
+
+  if (game.phase === "defend") {
+    // An enemy without attack lets the hand be: the fight goes on.
+    if (enemy.attack <= 0) return null;
+    const cover = bestDefense(game);
+    if (!cover) return jesterHint(game);
+    return withNote(
+      pressAfter(
+        i18n.t("games:crownslayer.defend"),
+        selectionTaps(game, cover),
+      ),
+      i18n.t("games:crownslayer.hint.defend"),
+    );
+  }
+
+  const plan = bestAttack(game);
+  if (!plan) return jesterHint(game);
+  const hint = pressAfter(
+    i18n.t("games:crownslayer.attack"),
+    selectionTaps(game, plan.play),
+  );
+  const health = enemy.maxHealth - game.damageDealt;
+  const { damage, suitEffects } = evaluateAttackSelection(
+    plan.play,
+    enemy.card,
+  );
+  const note = plan.kills
+    ? damage === health
+      ? "exactKill"
+      : "kill"
+    : suitEffects.includes("spades")
+      ? "shield"
+      : suitEffects.includes("diamonds")
+        ? "draw"
+        : suitEffects.includes("hearts")
+          ? "heal"
+          : null;
+  return note ? withNote(hint, i18n.t(`games:crownslayer.hint.${note}`)) : hint;
+}
+
 export const crownslayerRules = {
+  findHint: findCrownslayerHint,
+  bestAttack,
+  bestDefense,
   createEnemy,
   getCardAttackValue,
   getCardDamageValue,
@@ -362,6 +667,8 @@ export default function Crownslayer() {
       });
     },
   });
+
+  useHint(() => findCrownslayerHint(game), { game, enabled: !isSettingUp });
 
   const playSelection = useMemo(() => {
     const evaluated = game.currentEnemy
