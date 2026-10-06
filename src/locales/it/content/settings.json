@@ -241,6 +241,41 @@
       }
     }
   },
+  "elevens": {
+    "elevensDifficulty": {
+      "hash": "80558fd7",
+      "value": {
+        "description": "Le griglie più grandi sono più facili.",
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile (5 x 3)"
+          },
+          {
+            "label": "Media (4 x 3)"
+          },
+          {
+            "label": "Difficile (3 x 3)"
+          }
+        ]
+      }
+    },
+    "elevensEliminateBadDeals": {
+      "hash": "f6b716b7",
+      "value": {
+        "description": "Garantisce che ogni distribuzione si possa giocare per almeno 3 mosse.",
+        "label": "Elimina le distribuzioni sfavorevoli",
+        "options": [
+          {
+            "label": "No"
+          },
+          {
+            "label": "Sì"
+          }
+        ]
+      }
+    }
+  },
   "fight-clubs": {
     "fightClubsDifficulty": {
       "hash": "d82ad464",
@@ -468,6 +503,23 @@
           {
             "label": "Trifogli",
             "description": "Costruisci su o giù con qualsiasi seme, al massimo tre carte per ventaglio e nessuna ridistribuzione."
+          }
+        ]
+      }
+    }
+  },
+  "little-windmill": {
+    "littleWindmillDifficulty": {
+      "hash": "e02074c2",
+      "value": {
+        "description": "In Facile puoi ridistribuire il pozzo una volta.",
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile (1 ridistribuzione)"
+          },
+          {
+            "label": "Normale (nessuna ridistribuzione)"
           }
         ]
       }

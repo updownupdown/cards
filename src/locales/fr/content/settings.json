@@ -241,6 +241,41 @@
       }
     }
   },
+  "elevens": {
+    "elevensDifficulty": {
+      "hash": "80558fd7",
+      "value": {
+        "description": "Plus la grille est grande, plus c'est facile.",
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile (5 x 3)"
+          },
+          {
+            "label": "Moyen (4 x 3)"
+          },
+          {
+            "label": "Difficile (3 x 3)"
+          }
+        ]
+      }
+    },
+    "elevensEliminateBadDeals": {
+      "hash": "f6b716b7",
+      "value": {
+        "description": "Garantit que chaque donne permet de jouer au moins 3 coups.",
+        "label": "Éliminer les mauvaises donnes",
+        "options": [
+          {
+            "label": "Désactivé"
+          },
+          {
+            "label": "Activé"
+          }
+        ]
+      }
+    }
+  },
   "fight-clubs": {
     "fightClubsDifficulty": {
       "hash": "d82ad464",
@@ -468,6 +503,23 @@
           {
             "label": "Trèfles irlandais",
             "description": "Montez ou descendez sans tenir compte de la couleur, trois cartes au plus par éventail, sans redistribution."
+          }
+        ]
+      }
+    }
+  },
+  "little-windmill": {
+    "littleWindmillDifficulty": {
+      "hash": "e02074c2",
+      "value": {
+        "description": "Le mode Facile permet une redistribution du talon.",
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile (1 redistribution)"
+          },
+          {
+            "label": "Normal (sans redistribution)"
           }
         ]
       }

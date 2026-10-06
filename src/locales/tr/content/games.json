@@ -136,6 +136,67 @@
     }
   },
   "augury": {
+    "howToPlay": {
+      "hash": "be872579",
+      "value": [
+        "## Amaç",
+        "**Gizli kuralı**, **art arda sekiz doğru tahmin** yapacak kadar iyi çöz.",
+        "## Oynanış",
+        "Her oyunda, yoldaki son karttan (ya da kartlardan) sonra hangi kartların gelebileceğini belirleyen gizli bir kural vardır.",
+        "- Elindeki bir kartın gizli kurala uyduğunu düşünüyorsan ona dokun.",
+        "- Elindeki hiçbir kartın uymadığını düşünüyorsan **Hiçbiri uymuyor**'a dokun.",
+        "- Uyan bir kart varsa senin yerine oynanır (kırmızıyla gösterilir) ve doğru tahmin serin sıfırlanır.",
+        "Bütün kurallarda: A = 1, Vale = 11, Kız = 12, Papaz = 13.",
+        "## Kurallar",
+        "Zorluk ayarı, oyuna hangi kuralların dahil edileceğini belirler. Zor ayarı kolay kurallar arasından da seçer.",
+        "**Kolay:**",
+        "- Renkler sırayla değişmeli",
+        "- Aynı takımdan ya da aynı değerde olmalı",
+        "- Tek ve çift değerler sırayla gelmeli",
+        "- Daha yüksek değerde olmalı; J/Q/K'den sonra her şey gelebilir",
+        "- En fazla iki değer uzakta olmalı",
+        "- Aynı renkte olmalı",
+        "- Farklı takımdan olmalı",
+        "- Yüksek (8-K) ile düşük (A-7) sırayla gelmeli",
+        "- Resimli kartlarla sayı kartları sırayla gelmeli",
+        "- Daha düşük değerde olmalı; A'dan sonra her şey gelebilir",
+        "- En az üç değer uzakta olmalı",
+        "- Tekten sonra tek, çiftten sonra çift gelmeli",
+        "- En fazla iki değer uzakta olmalı (As ile Papaz komşudur)",
+        "- Takımlar şu sırayla gelmeli: maça, kupa, karo, sinek",
+        "- Sonuncuyla aynı takımdan olan daha yüksek olmalı; aynı renkteki öbür takımdan olan daha düşük olmalı; öbür renk her şeyden sonra gelebilir",
+        "- Kırmızı kartlar 8 ya da daha yüksek, siyah kartlar 7 ya da daha düşük olmalı",
+        "**Zor:**",
+        "- Kırmızıdan sonra daha yüksek, siyahtan sonra daha düşük olmalı; kırmızı K ya da siyah A'dan sonra her şey gelebilir",
+        "- Takımlar şu sırayla gelmeli: kupa, sinek, karo, maça",
+        "- Çift değerler kırmızı, tek değerler siyah olmalı",
+        "- İki önceki kartla aynı renkte olmalı",
+        "- Siyah daha yüksek değerde olmalı; kırmızı her şeyden sonra gelebilir",
+        "- Sonuncuyla aynı renkte olan daha yüksek olmalı; öbür renk her şeyden sonra gelebilir",
+        "- İki önceki kartın zıt renginde olmalı",
+        "- İki önceki kartla aynı takımdan olmalı",
+        "- Son iki kartın ikisinden de farklı takımdan olmalı",
+        "- Zikzak yapmalı: düşüşten sonra daha yüksek, yükselişten sonra daha düşük; eşit değerlerden sonra her şey gelebilir",
+        "- Kırmızıdan sonra 7 ya da daha düşük, siyahtan sonra 8 ya da daha yüksek olmalı",
+        "- Kupalar her şeyden sonra gelebilir; diğer kartlar daha yüksek değerde olmalı",
+        "- İki değerin toplamı 14 ya da daha az olmalı",
+        "- Resimli karttan sonra aynı takımdan, sayı kartından sonra farklı takımdan olmalı",
+        "- Yüksekten (8-K) sonra öbür renk, düşükten (A-7) sonra aynı renk olmalı",
+        "- Aynı renkte ama farklı takımdan olmalı",
+        "- Daha üstün takımdan (sinek, karo, kupa, maça) ya da daha yüksek değerde olmalı; maça K'den sonra her şey gelebilir",
+        "- Son iki değerin arasında ya da birine eşit olmalı",
+        "- Art arda aynı renkten üç kart oluşturmamalı",
+        "- Yükselişten sonra iki önceki kartla aynı takımdan, düşüşten sonra aynı renkte olmalı; eşit değerlerden sonra her şey gelebilir"
+      ]
+    },
+    "quickStart": {
+      "hash": "d4bd6572",
+      "value": [
+        "Gizli bir kural, yoldaki son karttan (ya da kartlardan) sonra hangi kartların gelebileceğini belirler.",
+        "Uyduğunu düşündüğün bir kartı oyna ya da elindeki hiçbir kartın uymadığını söyle.",
+        "Kazanmak için art arda sekiz doğru tahmin yap."
+      ]
+    },
     "title": {
       "hash": "f453f554",
       "value": "Kehanet"
@@ -880,6 +941,27 @@
     }
   },
   "crossword": {
+    "howToPlay": {
+      "hash": "05a15314",
+      "value": [
+        "## Amaç",
+        "**7×7'lik tabloyu**, bir bulmaca gibi, 52 karttan 49'uyla doldur.",
+        "## Oynanış",
+        "Kartları, **önceden yerleştirilmiş bir kartın yanındaki** (yan yana ya da çapraz) boş bir kareye koy.",
+        "- Valeler, Kızlar ve Papazlar **siyah karelerdir**. İkisi asla yan yana değemez (çapraz değmeleri sorun değil).",
+        "- Sayı kartları, siyah kareler ya da kenarlar arasında “kelimeler” oluşturan “harflerdir”.",
+        "Tablo tamamlandığında “kelimelerin” **toplamı çift sayı olmalıdır**. Aslar 1 sayılır.",
+        "48 kare dolduğunda son dört kart açılır ve son kareyi doldurmak için birini seçersin."
+      ]
+    },
+    "quickStart": {
+      "hash": "bc7ca504",
+      "value": [
+        "Tabloyu 52 karttan 49'uyla, bir bulmaca düzeninde doldur.",
+        "Resimli kartlar siyah kareler gibidir; ikisi yan yana değemez.",
+        "Sayı kartları siyah kareler ya da kenarlar arasında “kelimeler” oluşturur ve toplamları çift sayı olmalıdır."
+      ]
+    },
     "title": {
       "hash": "6c831cdf",
       "value": "Bulmaca"
@@ -1175,6 +1257,29 @@
     }
   },
   "ebb-and-flow": {
+    "howToPlay": {
+      "hash": "8b86f554",
+      "value": [
+        "## Amaç",
+        "**52 kartın** hepsini dört yığına oyna.",
+        "## Oynanış",
+        "Boş bir yığına herhangi bir kartla başlanabilir. Aslar düşük, Papazlar yüksektir.",
+        "- **Artan yığınlar:** en üstteki kartla aynı değerde ya da daha yüksek bir kart oyna.",
+        "- **Azalan yığınlar:** en üstteki kartla aynı değerde ya da daha düşük bir kart oyna.",
+        "**Aynı takımdan bir değer geri** bir kart her zaman oynanabilir:",
+        "- artan bir {8H} üstüne bir {7H},",
+        "- azalan bir {8S} üstüne bir {9S} vb.",
+        "Elinde 2 kart eksik olduğunda elini istediğin zaman desteden tamamlayabilirsin."
+      ]
+    },
+    "quickStart": {
+      "hash": "491ccd55",
+      "value": [
+        "Elindeki kartları oyna: artan yığınlar yukarı, azalan yığınlar aşağı gider.",
+        "Elinde 2 kart eksik olduğunda elini desteden tamamlayabilirsin.",
+        "Aynı takımdan bir değer geri bir kart, yığının yönünü tersine çevirir."
+      ]
+    },
     "title": {
       "hash": "6cff71c4",
       "value": "Med ve Cezir"
@@ -1230,6 +1335,38 @@
     "title": {
       "hash": "1f84944a",
       "value": "Basit dedektif"
+    }
+  },
+  "elevens": {
+    "howToPlay": {
+      "hash": "48901e1c",
+      "value": [
+        "## Amaç",
+        "Toplamı **11** eden kart çiftlerini ya da **Vale-Kız-Papaz** kraliyet üçlüsünü çıkararak bütün desteyi temizle.",
+        "## Dağıtım",
+        "- Kartlar bir tabloya açık dağıtılır: Kolay'da 5x3, Orta'da 4x3, Zor'da (varsayılan) 3x3.",
+        "- Destenin geri kalanı desteyi oluşturur.",
+        "## Kart değerleri",
+        "- As 1'dir, sayı kartları üzerlerindeki sayı kadar değerlidir.",
+        "- Valeler, Kızlar ve Papazların değeri yoktur ve yalnızca birlikte çıkarlar.",
+        "## Oynama",
+        "- Toplamı 11 eden iki kart seç: As ve 10, 2 ve 9, 3 ve 8, 4 ve 7 ya da 5 ve 6.",
+        "- Ya da herhangi bir sırayla bir Vale, bir Kız ve bir Papaz seç.",
+        "- Çıkarılan kartların yerine hemen desteden yenileri konur.",
+        "## Kazanma ve kaybetme",
+        "- Hem tablo hem deste boşaldığında kazanırsın.",
+        "- Hiçbir çift ya da kraliyet üçlüsü yapılamıyorsa ve hâlâ kart varsa kaybedersin."
+      ]
+    },
+    "quickStart": {
+      "hash": "be04eab8",
+      "value": [
+        "Toplamı 11 eden çiftleri ya da bir arada Vale, Kız ve Papaz'ı çıkar."
+      ]
+    },
+    "title": {
+      "hash": "b11d7c71",
+      "value": "On birler"
     }
   },
   "field-command": {
@@ -1829,6 +1966,23 @@
     }
   },
   "iris-garden": {
+    "howToPlay": {
+      "hash": "5531c4fb",
+      "value": [
+        "## Amaç",
+        "**48 kartın** (As'tan Kız'a) hepsini çiftler halinde bahçeden temizle.",
+        "## Oynanış",
+        "Takımları ne olursa olsun, **aynı değerdeki** iki kart bir çift oluşturur.",
+        "**Değerleri eşleşen** iki kart, yatay ya da dikey olarak bitişikse veya en fazla üç düz çizgiden oluşan, **boş alanlardan** geçen bir yolla birleşiyorsa ıskartaya atılabilir."
+      ]
+    },
+    "quickStart": {
+      "hash": "92195cad",
+      "value": [
+        "Eşleşen çiftleri seçerek bütün bahçeyi temizle.",
+        "Çiftler bitişik olmalı ya da boş alanlardan geçen ve en fazla üç çizgiden oluşan bir yolla birleştirilebilmelidir."
+      ]
+    },
     "title": {
       "hash": "b023f43f",
       "value": "Süsen Bahçesi"
@@ -2001,6 +2155,37 @@
       "value": "Işıkları söndür"
     }
   },
+  "little-windmill": {
+    "howToPlay": {
+      "hash": "f34f0359",
+      "value": [
+        "## Amaç",
+        "52 kartın hepsini dört köşe temeline taşı.",
+        "## Temeller",
+        "- İlk temeli başlatmak için desteden bir **As** çıkarılır. Diğer üçü, öbür Aslar açıldıkça onlarla başlar.",
+        "- Her temeli As'tan Papaz'a **takıma göre artan sırayla** diz.",
+        "## Haç",
+        "- Haçın beş yığınını **takıma bakmadan azalan sırayla** diz. As'ın üstüne hiçbir şey konmaz.",
+        "- Her yığının yalnızca en üstteki kartı kullanılabilir ve kartlar birer birer taşınır.",
+        "- Kullanılabilir herhangi bir kart, haçtaki boş bir yeri doldurabilir.",
+        "## Deste",
+        "- Desteden açık desteye kartları birer birer aç.",
+        "- Normal'de yeniden dağıtma yoktur. Kolay'da, desteden bir kez daha geçmek için açık deste bir kez çevrilebilir."
+      ]
+    },
+    "quickStart": {
+      "hash": "a1f0545c",
+      "value": [
+        "Bir As ilk köşe temelini başlatır; diğer Aslar geri kalanları başlatır.",
+        "Temeller As'tan Papaz'a takıma göre artan sırayla dizilir.",
+        "Haçı takıma bakmadan azalan sırayla, kartları birer birer taşıyarak diz."
+      ]
+    },
+    "title": {
+      "hash": "241c9f73",
+      "value": "Küçük yel değirmeni"
+    }
+  },
   "lone-joker": {
     "howToPlay": {
       "hash": "11835fe7",
@@ -2152,6 +2337,28 @@
     }
   },
   "miss-milligan": {
+    "howToPlay": {
+      "hash": "d95de4df",
+      "value": [
+        "## Amaç",
+        "İki destenin tamamını, her biri As'tan Papaz'a takıma göre artan sırayla dizilen sekiz temele taşı.",
+        "## Kurallar",
+        "- Sütunları **kırmızı ve siyah sırayla, azalan şekilde** diz. Doğru sıralanmış bir dizi tek parça halinde taşınabilir.",
+        "- Boş bir sütuna yalnızca bir **Papaz** (ya da Papaz'la başlayan bir dizi) konabilir.",
+        "- Boş olsun olmasın her sütuna birer kart dağıtmak için **desteye** dokun.",
+        "## Varyantlar",
+        "- **Miss Milligan**: Deste boşaldıktan sonra bir kartı ya da diziyi **cebe** ayırabilirsin.",
+        "- **Dev**: Boş bir sütuna herhangi bir kart ya da dizi konabilir, ama cep yoktur."
+      ]
+    },
+    "quickStart": {
+      "hash": "d6a2a898",
+      "value": [
+        "Sekiz temeli A'dan K'ya, takıma göre artan sırayla diz.",
+        "Sütunları kırmızı ve siyah sırayla azalan şekilde diz; dizileri taşıyabilirsin.",
+        "Her sütuna birer kart dağıtmak için desteye dokun."
+      ]
+    },
     "title": {
       "hash": "71a70424",
       "value": "Miss Milligan"
@@ -2293,6 +2500,27 @@
     }
   },
   "ozanams-square": {
+    "howToPlay": {
+      "hash": "580fe3be",
+      "value": [
+        "## Amaç",
+        "Tabloyu, her **satır, sütun ve köşegende** **her değerden bir kart ve her takımdan bir kart** olacak şekilde doldur.",
+        "## Oynanış",
+        "- Bazı kartlar başta yerlerine dağıtılır ve taşınamaz.",
+        "- Kartları tepsiden boş bir yere taşı; yerleştirdiğin kartlar başka bir yere taşınabilir, yer değiştirilebilir ya da tepsiye geri sürüklenebilir.",
+        "- Çizgilerinden birinde bir değeri ya da takımı tekrarlayan kart kırmızıyla işaretlenir.",
+        "- Her dağıtımın **tam olarak bir** çözümü vardır.",
+        "## Tarihçe",
+        "Jacques Ozanam bu bulmacayı oyun kartlarıyla *Récréations mathématiques et physiques* (1725) adlı eserinde sordu. Leonhard Euler daha sonra buna benzer kareleri inceledi ve onlara Greko-Latin kareler adını verdi."
+      ]
+    },
+    "quickStart": {
+      "hash": "f0ab22cd",
+      "value": [
+        "Kareyi on altı As, Papaz, Kız ve Vale ile doldur.",
+        "Hiçbir satır, sütun ya da uzun köşegende aynı değerde ya da aynı takımdan iki kart olamaz."
+      ]
+    },
     "title": {
       "hash": "e2c5ab80",
       "value": "Ozanam Karesi"
@@ -2383,6 +2611,45 @@
     }
   },
   "picket-fence": {
+    "howToPlay": {
+      "hash": "ec23d938",
+      "value": [
+        "## Amaç",
+        "Sokaklarını çitlerle sitelere ayırıp onları ev, park ve havuzlarla doldurarak **60 puan** ya da daha fazlasını topla. Oyun deste bitene kadar sürer, bu yüzden puanını artırmaya devam et.",
+        "## Sıran",
+        "Elinde üç kart tutarsın ve her turda ikisini oynarsın: birini sayısı için, sonra birini takımı için. Sonra yeniden üç karta tamamlayacak kadar çek.",
+        "## İnşa",
+        "- Bir kartı boş bir arsaya ev olarak inşa et. Ev numaraları sokak boyunca soldan sağa artmalıdır (Aslar 1, Valeler 11, Kızlar 12 ve Papazlar 13). Boş arsalar sayılmaz.",
+        "- Ya da **yenile**: sokağın numaraları hâlâ artıyorsa kartı mevcut bir evin üstüne inşa et. Eski ev ıskartaya gider; parkı ya da havuzu yerinde kalır.",
+        "- Ya da kartı ıskartaya at ve bu tur hiçbir şey inşa etme.",
+        "## Etkiler",
+        "- **♥ Park:** kupa, az önce inşa ettiğin ya da yenilediğin evin altına park olarak yerleştirilir.",
+        "- **♦ Havuz:** karo, o ev bir havuz arsasındaysa evin altına havuz olarak yerleştirilir.",
+        "- **♠ Çit:** herhangi bir sokakta iki arsanın arasına bir çit çek.",
+        "- **♣ İkinci ev:** sineği de ev olarak inşa et ya da onunla bir evi yenile.",
+        "- Bir evde bir park ya da bir havuz olabilir. Kullanılamayan kart ıskartaya gider.",
+        "## Puanlama",
+        "- Çitler ve sokak uçları her sokağı **sitelere** böler. Yalnızca **tamamlanmış** bir site puan getirir: her arsası inşa edilmiş olan.",
+        "- Evleri 1, 2, 3 ya da 4 evlik bir sitede 1, 3, 6 ya da 10 puan getirir. **Beş ya da daha fazla evlik siteler puan getirmez**, bu yüzden her sokağa çit gerekir.",
+        "- Tamamlanmış bir sitedeki her park 2, her havuz 4 puan ekler.",
+        "## Dereceler",
+        "- 60+: İyi Komşular",
+        "- 70+: Örnek Mahalle",
+        "- 80+: Kartpostal Gibi",
+        "## İpuçları",
+        "- Büyük siteler daha değerlidir, ama inşa edilmemiş tek bir arsa bütün siteyi, parkları ve havuzlarıyla birlikte puansız bırakır. Bir çit kaybını sınırlayabilir.",
+        "- Numaralar arasında boşluk bırak: bir 5 ile bir 6 arasındaki arsaya, onlardan biri yenilenene kadar inşa yapılamaz.",
+        "- Her sitenin üstündeki etiket, tamamlandığında kaç puan getireceğini, ya da bu haliyle tamamlanamıyorsa ✕ gösterir."
+      ]
+    },
+    "quickStart": {
+      "hash": "616845be",
+      "value": [
+        "Her turda bir kartı ev olarak inşa et ve başka bir kartın takımını etkisi olarak kullan.",
+        "Ev numaraları her sokakta soldan sağa artmalıdır.",
+        "Yalnızca çitle ayrılmış, en fazla dört evlik siteler, içlerindeki her arsa inşa edildiğinde puan getirir."
+      ]
+    },
     "title": {
       "hash": "63ac8afa",
       "value": "Bahçe Çiti"
@@ -2672,6 +2939,34 @@
     "title": {
       "hash": "850a8f8b",
       "value": "Kraliyet elçisi"
+    }
+  },
+  "royal-marriage": {
+    "howToPlay": {
+      "hash": "f2ecd27f",
+      "value": [
+        "## Amaç",
+        "Sonunda yan yana gelmesi gereken **kupa Kızı** ve **kupa Papazı** dışındaki bütün kartları ıskartaya at.",
+        "## Dağıtım",
+        "- 52 kartın hepsi, sıradan sıraya geçen tek ve kesintisiz bir hat halinde dizilir.",
+        "- Kupa Kızı hattın başında, kupa Papazı sonundadır.",
+        "## Iskartaya atma",
+        "- Çıkarılacak kartı ya da kartları seç, sonra **Iskarta**'ya bas.",
+        "- İki yanındaki kartlar **değer ya da takım** olarak eşleşiyorsa tek bir kart ya da yan yana iki kart atılabilir.",
+        "- Daha uzun bir dizi ancak içindeki her kart **aynı takımdan** ise ve iki yanındaki kartlar değer ya da takım olarak eşleşiyorsa atılabilir.",
+        "- Kupa Kızı ve kupa Papazı hattan asla ayrılmaz.",
+        "- Her ıskartadan sonra hattaki boşluk kapanır."
+      ]
+    },
+    "quickStart": {
+      "hash": "11cc1c79",
+      "value": [
+        "Kupa Kızı ile kupa Papazı yan yana gelene kadar, aynı değerde ya da aynı takımdan iki kartın arasında kalan kartları ıskartaya at."
+      ]
+    },
+    "title": {
+      "hash": "52d2c562",
+      "value": "Kraliyet evliliği"
     }
   },
   "royal-rest": {
@@ -3107,6 +3402,10 @@
         "Sıranın sonuna bir kart eklemek için desteye dokun.",
         "Kaldırmak için bir dizinin ilk ve son kartına dokun."
       ]
+    },
+    "title": {
+      "hash": "ca23c5f9",
+      "value": "On-Yirmi-Otuz"
     }
   },
   "terrace": {

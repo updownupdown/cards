@@ -136,6 +136,67 @@
     }
   },
   "augury": {
+    "howToPlay": {
+      "hash": "be872579",
+      "value": [
+        "## Obiettivo",
+        "Scopri la **legge nascosta** abbastanza bene da indovinare **otto volte di fila**.",
+        "## Come si gioca",
+        "Ogni partita ha una legge segreta che stabilisce quali carte possono seguire l'ultima carta (o le ultime carte) del percorso.",
+        "- Tocca una carta della tua mano se pensi che rispetti la legge nascosta.",
+        "- Se pensi che nessuna carta della tua mano vada bene, tocca **Nessuna va bene**.",
+        "- Se invece una carta andava bene, viene giocata al posto tuo (in rosso) e la tua serie di risposte giuste si azzera.",
+        "Per tutte le leggi: A = 1, Fante = 11, Donna = 12, Re = 13.",
+        "## Leggi",
+        "L'impostazione della difficoltà stabilisce quali leggi entrano in gioco. Il livello Difficile sceglie anche tra le leggi facili.",
+        "**Facile:**",
+        "- Deve alternare il colore",
+        "- Deve avere lo stesso seme o lo stesso valore",
+        "- Deve alternare valori dispari e pari",
+        "- Deve essere più alta; dopo J/Q/K va bene tutto",
+        "- Deve stare entro due valori",
+        "- Deve essere dello stesso colore",
+        "- Deve essere di un altro seme",
+        "- Deve alternare tra alta (8-K) e bassa (A-7)",
+        "- Deve alternare tra figure e carte numerali",
+        "- Deve essere più bassa; dopo un A va bene tutto",
+        "- Deve distare almeno tre valori",
+        "- Una dispari deve seguire una dispari, una pari deve seguire una pari",
+        "- Deve stare entro due valori (Asso e Re sono vicini)",
+        "- Deve seguire i semi in ordine: picche, cuori, quadri, fiori",
+        "- Stesso seme dell'ultima: più alta; altro seme dello stesso colore: più bassa; l'altro colore può seguire qualsiasi carta",
+        "- Le rosse devono essere 8 o più; le nere, 7 o meno",
+        "**Difficile:**",
+        "- Dopo una rossa deve essere più alta, dopo una nera più bassa; dopo un K rosso o un A nero va bene tutto",
+        "- Deve seguire i semi in ordine: cuori, fiori, quadri, picche",
+        "- I valori pari devono essere rossi, quelli dispari neri",
+        "- Deve essere dello stesso colore della penultima carta",
+        "- Una nera deve essere più alta; una rossa può seguire qualsiasi carta",
+        "- Stesso colore dell'ultima: più alta; l'altro colore può seguire qualsiasi carta",
+        "- Deve essere del colore opposto alla penultima carta",
+        "- Deve essere dello stesso seme della penultima carta",
+        "- Deve essere di un seme diverso da entrambe le ultime due carte",
+        "- Deve andare a zigzag: più alta dopo una discesa, più bassa dopo una salita; dopo due valori uguali va bene tutto",
+        "- Dopo una rossa, 7 o meno; dopo una nera, 8 o più",
+        "- I cuori possono seguire qualsiasi carta; le altre devono essere più alte",
+        "- I due valori devono sommare 14 o meno",
+        "- Dopo una figura, stesso seme; dopo una carta numerale, seme diverso",
+        "- Dopo un'alta (8-K), l'altro colore; dopo una bassa (A-7), lo stesso colore",
+        "- Deve essere dello stesso colore ma di un altro seme",
+        "- Deve essere di un seme superiore (fiori, quadri, cuori, picche) o di valore più alto; dopo il K di picche va bene tutto",
+        "- Deve stare tra gli ultimi due valori, o essere uguale a uno di essi",
+        "- Non deve formare tre carte dello stesso colore di fila",
+        "- Dopo una salita, stesso seme della penultima; dopo una discesa, stesso colore; dopo due valori uguali va bene tutto"
+      ]
+    },
+    "quickStart": {
+      "hash": "d4bd6572",
+      "value": [
+        "Una legge nascosta decide quali carte possono seguire l'ultima carta (o le ultime carte) del percorso.",
+        "Gioca una carta che secondo te va bene, oppure dichiara che nessuna carta della tua mano va bene.",
+        "Indovina otto volte di fila per vincere."
+      ]
+    },
     "title": {
       "hash": "f453f554",
       "value": "Auspicio"
@@ -880,6 +941,27 @@
     }
   },
   "crossword": {
+    "howToPlay": {
+      "hash": "05a15314",
+      "value": [
+        "## Obiettivo",
+        "Riempi la **griglia 7×7**, come un cruciverba, con 49 delle 52 carte.",
+        "## Come si gioca",
+        "Metti le carte in uno spazio vuoto **accanto a una carta già posata**, di lato o in diagonale.",
+        "- Fanti, Donne e Re sono le **caselle nere**. Due di loro non possono mai toccarsi di lato (in diagonale va bene).",
+        "- Le carte numerali sono le «lettere» e formano «parole» tra caselle nere o bordi.",
+        "Quando la griglia è completa, le «parole» devono **sommare a un numero pari**. Gli Assi valgono 1.",
+        "Quando 48 spazi sono pieni, le ultime quattro carte vengono scoperte e ne scegli una per riempire l'ultimo spazio."
+      ]
+    },
+    "quickStart": {
+      "hash": "bc7ca504",
+      "value": [
+        "Riempi la griglia con 49 delle 52 carte, come in un cruciverba.",
+        "Le figure sono come caselle nere: due non possono mai toccarsi di lato.",
+        "Le carte numerali formano «parole» tra caselle nere o bordi, e ogni parola deve sommare a un numero pari."
+      ]
+    },
     "title": {
       "hash": "6c831cdf",
       "value": "Cruciverba"
@@ -1175,6 +1257,29 @@
     }
   },
   "ebb-and-flow": {
+    "howToPlay": {
+      "hash": "8b86f554",
+      "value": [
+        "## Obiettivo",
+        "Gioca tutte le **52 carte** sulle quattro pile.",
+        "## Come si gioca",
+        "Qualsiasi carta può iniziare una pila vuota. Gli Assi sono bassi e i Re alti.",
+        "- **Pile crescenti:** gioca una carta dello stesso valore della carta in cima, o più alta.",
+        "- **Pile decrescenti:** gioca una carta dello stesso valore della carta in cima, o più bassa.",
+        "Una carta **di un valore indietro, dello stesso seme**, si può sempre giocare:",
+        "- un {7H} su un {8H} crescente,",
+        "- un {9S} su un {8S} decrescente, ecc.",
+        "Puoi ricompletare la mano dal mazzo ogni volta che ti mancano 2 carte."
+      ]
+    },
+    "quickStart": {
+      "hash": "491ccd55",
+      "value": [
+        "Gioca le carte dalla mano: le pile crescenti salgono, quelle decrescenti scendono.",
+        "Puoi ricompletare la mano dal mazzo quando ti mancano 2 carte.",
+        "Una carta di un valore indietro, dello stesso seme, fa tornare indietro una pila."
+      ]
+    },
     "title": {
       "hash": "6cff71c4",
       "value": "Flusso e Riflusso"
@@ -1230,6 +1335,38 @@
     "title": {
       "hash": "1f84944a",
       "value": "Detective elementare"
+    }
+  },
+  "elevens": {
+    "howToPlay": {
+      "hash": "48901e1c",
+      "value": [
+        "## Obiettivo",
+        "Smaltisci tutto il mazzo togliendo coppie di carte che sommano **11**, oppure un tris reale **Fante-Donna-Re**.",
+        "## Distribuzione",
+        "- Le carte vengono distribuite scoperte in una griglia: 5x3 in Facile, 4x3 in Media o 3x3 in Difficile (l'impostazione predefinita).",
+        "- Il resto delle carte forma il mazzo.",
+        "## Valori delle carte",
+        "- L'Asso vale 1 e le carte numerali valgono il loro numero.",
+        "- Fanti, Donne e Re non hanno valore e si tolgono solo insieme.",
+        "## Come si gioca",
+        "- Seleziona due carte che sommano 11: Asso e 10, 2 e 9, 3 e 8, 4 e 7, oppure 5 e 6.",
+        "- Oppure seleziona un Fante, una Donna e un Re, in qualsiasi ordine.",
+        "- Le carte tolte vengono subito sostituite con carte del mazzo.",
+        "## Vittoria e sconfitta",
+        "- Vinci quando la griglia e il mazzo sono entrambi vuoti.",
+        "- Perdi quando non puoi formare né una coppia né un tris reale e restano delle carte."
+      ]
+    },
+    "quickStart": {
+      "hash": "be04eab8",
+      "value": [
+        "Togli le coppie che sommano 11, oppure un Fante, una Donna e un Re insieme."
+      ]
+    },
+    "title": {
+      "hash": "b11d7c71",
+      "value": "Undici"
     }
   },
   "field-command": {
@@ -1829,6 +1966,23 @@
     }
   },
   "iris-garden": {
+    "howToPlay": {
+      "hash": "5531c4fb",
+      "value": [
+        "## Obiettivo",
+        "Togli dal giardino tutte le **48 carte** (dall'Asso alla Donna), a coppie.",
+        "## Come si gioca",
+        "Due carte dello **stesso valore** formano una coppia, qualunque sia il loro seme.",
+        "Una coppia di carte **dello stesso valore** si può scartare se le carte sono adiacenti in orizzontale o in verticale, oppure collegate attraverso **spazi vuoti** da un percorso fatto al massimo di tre linee rette."
+      ]
+    },
+    "quickStart": {
+      "hash": "92195cad",
+      "value": [
+        "Sgombra tutto il giardino selezionando coppie uguali.",
+        "Le coppie devono essere adiacenti, o collegabili con un percorso attraverso spazi vuoti fatto al massimo di tre linee."
+      ]
+    },
     "title": {
       "hash": "b023f43f",
       "value": "Giardino di Iris"
@@ -2001,6 +2155,37 @@
       "value": "Luci spente"
     }
   },
+  "little-windmill": {
+    "howToPlay": {
+      "hash": "f34f0359",
+      "value": [
+        "## Obiettivo",
+        "Porta tutte le 52 carte sulle quattro fondazioni d'angolo.",
+        "## Fondazioni",
+        "- Un **Asso** viene tolto dal mazzo per iniziare la prima fondazione. Le altre tre iniziano con gli altri Assi man mano che escono.",
+        "- Costruisci ogni fondazione **in ordine crescente per seme**, dall'Asso al Re.",
+        "## La croce",
+        "- Costruisci le cinque pile della croce **in ordine decrescente, indipendentemente dal seme**. Su un Asso non va niente.",
+        "- È disponibile solo la carta in cima a ogni pila, e le carte si spostano una alla volta.",
+        "- Qualsiasi carta disponibile può riempire uno spazio vuoto della croce.",
+        "## Mazzo",
+        "- Gira le carte del mazzo una alla volta sul pozzo.",
+        "- In Normale non si ridistribuisce. In Facile puoi girare il pozzo una volta per ripassare il mazzo."
+      ]
+    },
+    "quickStart": {
+      "hash": "a1f0545c",
+      "value": [
+        "Un Asso inizia la prima fondazione d'angolo; gli altri Assi iniziano le altre.",
+        "Le fondazioni si costruiscono per seme in ordine crescente, dall'Asso al Re.",
+        "Costruisci la croce in ordine decrescente con qualsiasi seme, una carta alla volta."
+      ]
+    },
+    "title": {
+      "hash": "241c9f73",
+      "value": "Piccolo mulino a vento"
+    }
+  },
   "lone-joker": {
     "howToPlay": {
       "hash": "11835fe7",
@@ -2152,6 +2337,28 @@
     }
   },
   "miss-milligan": {
+    "howToPlay": {
+      "hash": "d95de4df",
+      "value": [
+        "## Obiettivo",
+        "Porta entrambi i mazzi sulle otto fondazioni, ognuna costruita per seme dall'Asso al Re.",
+        "## Regole",
+        "- Costruisci le colonne **in ordine decrescente, alternando rosso e nero**. Una sequenza costruita correttamente si può spostare in blocco.",
+        "- Solo un **Re** (o una sequenza che inizia con un Re) può riempire una colonna vuota.",
+        "- Tocca il **mazzo** per distribuire una carta su ogni colonna, vuota o no.",
+        "## Varianti",
+        "- **Miss Milligan**: quando il mazzo è finito, puoi mettere da parte nella **tasca** una carta o una sequenza.",
+        "- **Gigante**: qualsiasi carta o sequenza può riempire una colonna vuota, ma non c'è la tasca."
+      ]
+    },
+    "quickStart": {
+      "hash": "d6a2a898",
+      "value": [
+        "Costruisci otto fondazioni per seme in ordine crescente, da A a K.",
+        "Costruisci le colonne in ordine decrescente alternando rosso e nero; puoi spostare sequenze.",
+        "Tocca il mazzo per distribuire una carta su ogni colonna."
+      ]
+    },
     "title": {
       "hash": "71a70424",
       "value": "Miss Milligan"
@@ -2293,6 +2500,27 @@
     }
   },
   "ozanams-square": {
+    "howToPlay": {
+      "hash": "580fe3be",
+      "value": [
+        "## Obiettivo",
+        "Riempi la griglia in modo che ogni **riga, colonna e diagonale** contenga **una carta di ogni valore e una carta di ogni seme**.",
+        "## Come si gioca",
+        "- Alcune carte sono già al loro posto all'inizio e non si possono spostare.",
+        "- Sposta le carte dal vassoio in uno spazio vuoto; le carte che posi si possono spostare in un altro spazio, scambiare o trascinare di nuovo nel vassoio.",
+        "- Una carta che ripete un valore o un seme in una delle sue linee viene segnata in rosso.",
+        "- Ogni distribuzione ha **esattamente una** soluzione.",
+        "## Storia",
+        "Jacques Ozanam propose questo rompicapo con le carte da gioco nelle sue *Récréations mathématiques et physiques* (1725). In seguito Leonhard Euler studiò quadrati simili, che chiamò quadrati greco-latini."
+      ]
+    },
+    "quickStart": {
+      "hash": "f0ab22cd",
+      "value": [
+        "Riempi il quadrato con i sedici Assi, Re, Donne e Fanti.",
+        "Nessuna riga, colonna o diagonale maggiore può contenere due carte dello stesso valore o dello stesso seme."
+      ]
+    },
     "title": {
       "hash": "e2c5ab80",
       "value": "Quadrato di Ozanam"
@@ -2383,6 +2611,45 @@
     }
   },
   "picket-fence": {
+    "howToPlay": {
+      "hash": "ec23d938",
+      "value": [
+        "## Obiettivo",
+        "Fai **60 punti** o più dividendo le tue vie in isolati con gli steccati e riempiendoli di case, parchi e piscine. Si gioca finché il mazzo non è finito, quindi continua ad aumentare il punteggio.",
+        "## Il tuo turno",
+        "Hai in mano tre carte e ne giochi due a ogni turno: una per il suo numero, poi una per il suo seme. Poi peschi fino ad averne di nuovo tre.",
+        "## Costruire",
+        "- Costruisci una carta come casa su un lotto vuoto. I numeri delle case devono salire da sinistra a destra lungo una via (gli Assi valgono 1, i Fanti 11, le Donne 12 e i Re 13). I lotti vuoti non contano.",
+        "- Oppure **ristruttura**: costruisci la carta sopra una casa esistente, se i numeri della via continuano a salire. La vecchia casa viene scartata; il suo parco o la sua piscina restano.",
+        "- Oppure scarta la carta e non costruire niente in questo turno.",
+        "## Effetti",
+        "- **♥ Parco:** la carta di cuori va sotto la casa che hai appena costruito o ristrutturato, come parco.",
+        "- **♦ Piscina:** la carta di quadri va sotto quella casa come piscina, se la casa sorge su un lotto da piscina.",
+        "- **♠ Steccato:** metti uno steccato tra due lotti, su una via qualsiasi.",
+        "- **♣ Seconda casa:** costruisci anche la carta di fiori come casa, oppure usala per ristrutturare.",
+        "- Una casa può avere un solo parco o una sola piscina. Una carta che non serve a niente viene scartata.",
+        "## Punteggio",
+        "- Gli steccati e le estremità delle vie dividono ogni via in **isolati**. Fa punti solo un isolato **finito**, cioè con tutti i lotti costruiti.",
+        "- Le sue case valgono 1, 3, 6 o 10 punti per un isolato di 1, 2, 3 o 4. **Gli isolati di cinque o più non valgono niente**, quindi ogni via ha bisogno di steccati.",
+        "- Ogni parco in un isolato finito aggiunge 2 punti, e ogni piscina 4.",
+        "## Classifiche",
+        "- 60+: Buoni vicini",
+        "- 70+: Quartiere modello",
+        "- 80+: Da cartolina",
+        "## Consigli",
+        "- Gli isolati più grandi valgono di più, ma un solo lotto non costruito lascia tutto l'isolato, con i suoi parchi e le sue piscine, senza punti. Uno steccato può limitare le perdite.",
+        "- Lascia spazio tra i numeri: un lotto tra un 5 e un 6 non si può costruire finché una delle due case non viene ristrutturata.",
+        "- L'etichetta sopra ogni isolato mostra quanto vale una volta finito, oppure ✕ se così com'è non si può finire."
+      ]
+    },
+    "quickStart": {
+      "hash": "616845be",
+      "value": [
+        "A ogni turno costruisci una carta come casa e usa il seme di un'altra carta come effetto.",
+        "I numeri delle case devono salire da sinistra a destra lungo ogni via.",
+        "Fanno punti solo gli isolati chiusi da steccati con al massimo quattro case, e solo quando tutti i loro lotti sono costruiti."
+      ]
+    },
     "title": {
       "hash": "63ac8afa",
       "value": "Staccionata"
@@ -2672,6 +2939,34 @@
     "title": {
       "hash": "850a8f8b",
       "value": "Inviato reale"
+    }
+  },
+  "royal-marriage": {
+    "howToPlay": {
+      "hash": "f2ecd27f",
+      "value": [
+        "## Obiettivo",
+        "Scarta tutte le carte tranne la **Donna** e il **Re di cuori**, che alla fine devono stare uno accanto all'altra.",
+        "## Distribuzione",
+        "- Tutte le 52 carte sono disposte in un'unica fila continua, che va a capo da una riga all'altra.",
+        "- La Donna di cuori apre la fila e il Re di cuori la chiude.",
+        "## Scartare",
+        "- Seleziona la carta o le carte da togliere, poi premi **Scarti**.",
+        "- Una carta, o due carte vicine, si possono togliere se le carte ai loro due lati hanno lo stesso **valore o seme**.",
+        "- Una sequenza più lunga si può togliere solo se tutte le sue carte sono dello **stesso seme** e le carte ai due lati hanno lo stesso valore o seme.",
+        "- La Donna e il Re di cuori non lasciano mai la fila.",
+        "- Dopo ogni scarto la fila si ricompatta."
+      ]
+    },
+    "quickStart": {
+      "hash": "11cc1c79",
+      "value": [
+        "Scarta le carte che stanno tra due carte dello stesso valore o dello stesso seme, finché la Donna e il Re di cuori non sono uno accanto all'altra."
+      ]
+    },
+    "title": {
+      "hash": "52d2c562",
+      "value": "Matrimonio reale"
     }
   },
   "royal-rest": {
@@ -3107,6 +3402,10 @@
         "Tocca il mazzo per aggiungere una carta in fondo alla fila.",
         "Tocca la prima e l’ultima carta di una sequenza per rimuoverla."
       ]
+    },
+    "title": {
+      "hash": "ca23c5f9",
+      "value": "Dieci-Venti-Trenta"
     }
   },
   "terrace": {

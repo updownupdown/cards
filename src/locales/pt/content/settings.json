@@ -241,6 +241,41 @@
       }
     }
   },
+  "elevens": {
+    "elevensDifficulty": {
+      "hash": "80558fd7",
+      "value": {
+        "description": "Grades maiores são mais fáceis.",
+        "label": "Dificuldade",
+        "options": [
+          {
+            "label": "Fácil (5 x 3)"
+          },
+          {
+            "label": "Médio (4 x 3)"
+          },
+          {
+            "label": "Difícil (3 x 3)"
+          }
+        ]
+      }
+    },
+    "elevensEliminateBadDeals": {
+      "hash": "f6b716b7",
+      "value": {
+        "description": "Garante que todas as distribuições permitam pelo menos 3 jogadas.",
+        "label": "Eliminar distribuições ruins",
+        "options": [
+          {
+            "label": "Desativado"
+          },
+          {
+            "label": "Ativado"
+          }
+        ]
+      }
+    }
+  },
   "fight-clubs": {
     "fightClubsDifficulty": {
       "hash": "d82ad464",
@@ -468,6 +503,23 @@
           {
             "label": "Trevos",
             "description": "Suba ou desça com qualquer naipe, no máximo três cartas por leque e sem redistribuições."
+          }
+        ]
+      }
+    }
+  },
+  "little-windmill": {
+    "littleWindmillDifficulty": {
+      "hash": "e02074c2",
+      "value": {
+        "description": "O modo Fácil permite redistribuir o descarte uma vez.",
+        "label": "Dificuldade",
+        "options": [
+          {
+            "label": "Fácil (1 redistribuição)"
+          },
+          {
+            "label": "Normal (sem redistribuição)"
           }
         ]
       }

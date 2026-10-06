@@ -136,6 +136,67 @@
     }
   },
   "augury": {
+    "howToPlay": {
+      "hash": "be872579",
+      "value": [
+        "## Objetivo",
+        "Desvende a **lei oculta** o suficiente para acertar **oito palpites seguidos**.",
+        "## Como jogar",
+        "Cada partida tem uma lei secreta sobre quais cartas podem seguir a(s) última(s) carta(s) do caminho.",
+        "- Toque em uma carta da sua mão se achar que ela segue a lei oculta.",
+        "- Se achar que nenhuma carta da sua mão serve, toque em **Nenhuma serve**.",
+        "- Se alguma carta servia, ela é jogada por você (mostrada em vermelho), e sua sequência de acertos é zerada.",
+        "Para todas as leis: A = 1, Valetes = 11, Dama = 12, Rei = 13.",
+        "## Leis",
+        "A configuração de dificuldade determina quais leis entram no jogo. A configuração Difícil também sorteia entre as leis fáceis.",
+        "**Fáceis:**",
+        "- Deve alternar a cor",
+        "- Deve ser do mesmo naipe ou valor",
+        "- Deve alternar entre valores ímpares e pares",
+        "- Deve ser de valor mais alto; qualquer uma pode seguir J/Q/K",
+        "- Deve estar a no máximo dois valores de distância",
+        "- Deve ser da mesma cor",
+        "- Deve ser de outro naipe",
+        "- Deve alternar entre alta (8-K) e baixa (A-7)",
+        "- Deve alternar entre figuras e cartas numéricas",
+        "- Deve ser de valor mais baixo; qualquer uma pode seguir um A",
+        "- Deve estar a pelo menos três valores de distância",
+        "- Ímpar deve seguir ímpar, par deve seguir par",
+        "- Deve estar a no máximo dois valores de distância (Ás e Rei são vizinhos)",
+        "- Deve seguir os naipes em ordem: espadas, copas, ouros, paus",
+        "- Do mesmo naipe da última, deve ser mais alta; de outro naipe da mesma cor, deve ser mais baixa; a outra cor pode seguir qualquer carta",
+        "- Cartas vermelhas devem ser 8 ou mais; cartas pretas devem ser 7 ou menos",
+        "**Difíceis:**",
+        "- Após uma vermelha deve ser mais alta, após uma preta deve ser mais baixa; qualquer uma pode seguir um K vermelho ou um A preto",
+        "- Deve seguir os naipes em ordem: copas, paus, ouros, espadas",
+        "- Valores pares devem ser vermelhos, valores ímpares devem ser pretos",
+        "- Deve ser da mesma cor da penúltima carta",
+        "- Uma preta deve ser de valor mais alto; uma vermelha pode seguir qualquer carta",
+        "- Da mesma cor da última, deve ser mais alta; a outra cor pode seguir qualquer carta",
+        "- Deve ser da cor oposta à da penúltima carta",
+        "- Deve ser do mesmo naipe da penúltima carta",
+        "- Deve ser de um naipe diferente das duas últimas cartas",
+        "- Deve ziguezaguear: mais alta após uma queda, mais baixa após uma subida; qualquer uma pode seguir dois valores iguais",
+        "- Após uma vermelha deve ser 7 ou menos, após uma preta deve ser 8 ou mais",
+        "- Copas podem seguir qualquer carta; as outras cartas devem ser de valor mais alto",
+        "- Os dois valores devem somar 14 ou menos",
+        "- Após uma figura deve ser do mesmo naipe, após uma carta numérica deve ser de outro naipe",
+        "- Após uma alta (8-K) deve ser da outra cor, após uma baixa (A-7) deve ser da mesma cor",
+        "- Deve ser da mesma cor, mas de outro naipe",
+        "- Deve ser de um naipe superior (paus, ouros, copas, espadas) ou de valor mais alto; qualquer uma pode seguir o K de espadas",
+        "- Deve ficar entre os dois últimos valores, ou ser igual a um deles",
+        "- Não pode formar três cartas seguidas da mesma cor",
+        "- Após uma subida deve ser do mesmo naipe da penúltima, após uma queda deve ser da mesma cor; qualquer uma pode seguir dois valores iguais"
+      ]
+    },
+    "quickStart": {
+      "hash": "d4bd6572",
+      "value": [
+        "Uma lei oculta decide quais cartas podem seguir a(s) última(s) carta(s) do caminho.",
+        "Jogue uma carta que você acha que serve, ou declare que nenhuma da sua mão serve.",
+        "Acerte oito palpites seguidos para vencer."
+      ]
+    },
     "title": {
       "hash": "f453f554",
       "value": "Augúrio"
@@ -880,6 +941,27 @@
     }
   },
   "crossword": {
+    "howToPlay": {
+      "hash": "05a15314",
+      "value": [
+        "## Objetivo",
+        "Preencha a **grade 7×7**, como numas palavras cruzadas, com 49 das 52 cartas.",
+        "## Como jogar",
+        "Coloque cartas num espaço vazio **ao lado de uma carta já colocada**, lado a lado ou na diagonal.",
+        "- Valetes, Damas e Reis são as **casas pretas**. Duas delas nunca podem se tocar lado a lado (na diagonal pode).",
+        "- As cartas numéricas são as “letras”, formando “palavras”, entre casas pretas ou bordas.",
+        "Quando a grade estiver completa, as “palavras” devem **somar um número par**. Ases valem 1.",
+        "Quando 48 espaços estiverem preenchidos, as quatro últimas cartas são viradas para cima, e você escolhe uma para preencher o último espaço."
+      ]
+    },
+    "quickStart": {
+      "hash": "bc7ca504",
+      "value": [
+        "Preencha a grade com 49 das 52 cartas, num padrão de palavras cruzadas.",
+        "As figuras são como as casas pretas; duas delas nunca podem se tocar lado a lado.",
+        "As cartas numéricas formam “palavras” entre casas pretas ou bordas, e elas devem somar um número par."
+      ]
+    },
     "title": {
       "hash": "6c831cdf",
       "value": "Palavras Cruzadas"
@@ -1175,6 +1257,29 @@
     }
   },
   "ebb-and-flow": {
+    "howToPlay": {
+      "hash": "8b86f554",
+      "value": [
+        "## Objetivo",
+        "Jogue as **52 cartas** nas quatro pilhas.",
+        "## Como jogar",
+        "Qualquer carta pode iniciar uma pilha vazia. O Ás é a carta mais baixa e o Rei, a mais alta.",
+        "- **Pilhas crescentes:** jogue uma carta do mesmo valor da carta do topo, ou mais alta.",
+        "- **Pilhas decrescentes:** jogue uma carta do mesmo valor da carta do topo, ou mais baixa.",
+        "Uma carta **um valor atrás, do mesmo naipe,** sempre pode ser jogada:",
+        "- um {7H} sobre um {8H} numa pilha crescente,",
+        "- um {9S} sobre um {8S} numa pilha decrescente etc.",
+        "Você pode completar sua mão com o monte sempre que faltarem 2 cartas nela."
+      ]
+    },
+    "quickStart": {
+      "hash": "491ccd55",
+      "value": [
+        "Jogue cartas da sua mão: as pilhas crescentes sobem, as pilhas decrescentes descem.",
+        "Você pode completar sua mão com o monte quando faltarem 2 cartas nela.",
+        "Uma carta do mesmo naipe e um valor atrás faz uma pilha voltar."
+      ]
+    },
     "title": {
       "hash": "6cff71c4",
       "value": "Fluxo e Refluxo"
@@ -1230,6 +1335,38 @@
     "title": {
       "hash": "1f84944a",
       "value": "Detetive elementar"
+    }
+  },
+  "elevens": {
+    "howToPlay": {
+      "hash": "48901e1c",
+      "value": [
+        "## Objetivo",
+        "Esvazie o baralho inteiro removendo pares de cartas que somem **11**, ou um trio real **Valete-Dama-Rei**.",
+        "## Distribuição",
+        "- As cartas são distribuídas viradas para cima numa grade: 5x3 no Fácil, 4x3 no Médio ou 3x3 no Difícil (o padrão).",
+        "- O resto do baralho forma o monte.",
+        "## Valores das cartas",
+        "- O Ás vale 1 e as cartas numéricas valem o número que mostram.",
+        "- Valetes, Damas e Reis não têm valor e só saem juntos.",
+        "## Como jogar",
+        "- Selecione duas cartas que somem 11: Ás e 10, 2 e 9, 3 e 8, 4 e 7, ou 5 e 6.",
+        "- Ou selecione um Valete, uma Dama e um Rei, em qualquer ordem.",
+        "- As cartas removidas são repostas na hora com cartas do monte.",
+        "## Vitória e derrota",
+        "- Você vence quando a grade e o monte estiverem ambos vazios.",
+        "- Você perde quando não for possível formar nenhum par nem trio real e ainda restarem cartas."
+      ]
+    },
+    "quickStart": {
+      "hash": "be04eab8",
+      "value": [
+        "Remova pares que somem 11, ou um Valete, uma Dama e um Rei juntos."
+      ]
+    },
+    "title": {
+      "hash": "b11d7c71",
+      "value": "Onze"
     }
   },
   "field-command": {
@@ -1829,6 +1966,23 @@
     }
   },
   "iris-garden": {
+    "howToPlay": {
+      "hash": "5531c4fb",
+      "value": [
+        "## Objetivo",
+        "Remova do jardim as **48 cartas** (do Ás à Dama) em pares.",
+        "## Como jogar",
+        "Duas cartas do **mesmo valor** formam um par, sejam quais forem seus naipes.",
+        "Um par de cartas **do mesmo valor** pode ser descartado se estiverem adjacentes na horizontal ou na vertical, ou ligadas através de **espaços vazios** por um caminho de no máximo três linhas retas."
+      ]
+    },
+    "quickStart": {
+      "hash": "92195cad",
+      "value": [
+        "Limpe o jardim inteiro selecionando pares iguais.",
+        "Os pares precisam estar adjacentes, ou poder ser ligados por um caminho através de espaços vazios formado por no máximo três linhas."
+      ]
+    },
     "title": {
       "hash": "b023f43f",
       "value": "Jardim de Íris"
@@ -2001,6 +2155,37 @@
       "value": "Luzes apagadas"
     }
   },
+  "little-windmill": {
+    "howToPlay": {
+      "hash": "f34f0359",
+      "value": [
+        "## Objetivo",
+        "Leve as 52 cartas para as quatro fundações dos cantos.",
+        "## Fundações",
+        "- Um **Ás** é tirado do monte para iniciar a primeira fundação. As outras três começam com os outros Ases, à medida que forem aparecendo.",
+        "- Construa cada fundação **por naipe em ordem crescente**, do Ás ao Rei.",
+        "## A cruz",
+        "- Construa as cinco pilhas da cruz **em ordem decrescente, independentemente do naipe**. Nada pode ir sobre um Ás.",
+        "- Só a carta do topo de cada pilha está disponível, e as cartas se movem uma de cada vez.",
+        "- Qualquer carta disponível pode preencher um espaço vazio na cruz.",
+        "## Monte",
+        "- Vire o monte uma carta de cada vez para o descarte.",
+        "- No Normal, não há redistribuição. No Fácil, o descarte pode ser virado uma vez para percorrer o monte de novo."
+      ]
+    },
+    "quickStart": {
+      "hash": "a1f0545c",
+      "value": [
+        "Um Ás inicia a primeira fundação de canto; os outros Ases iniciam as demais.",
+        "As fundações são construídas por naipe em ordem crescente, do Ás ao Rei.",
+        "Construa a cruz em ordem decrescente, independentemente do naipe, uma carta de cada vez."
+      ]
+    },
+    "title": {
+      "hash": "241c9f73",
+      "value": "Pequeno moinho"
+    }
+  },
   "lone-joker": {
     "howToPlay": {
       "hash": "11835fe7",
@@ -2152,6 +2337,28 @@
     }
   },
   "miss-milligan": {
+    "howToPlay": {
+      "hash": "d95de4df",
+      "value": [
+        "## Objetivo",
+        "Leve os dois baralhos para as oito fundações, cada uma construída por naipe em ordem crescente, do Ás ao Rei.",
+        "## Regras",
+        "- Construa as colunas **em ordem decrescente, alternando cores**. Uma sequência construída corretamente pode ser movida inteira.",
+        "- Só um **Rei** (ou uma sequência começando por um Rei) pode preencher uma coluna vazia.",
+        "- Toque no **monte** para distribuir uma carta em cada coluna, vazia ou não.",
+        "## Variantes",
+        "- **Miss Milligan**: quando o monte estiver vazio, você pode deixar uma carta ou sequência de lado no **bolso**.",
+        "- **Gigante**: qualquer carta ou sequência pode preencher uma coluna vazia, mas não há bolso."
+      ]
+    },
+    "quickStart": {
+      "hash": "d6a2a898",
+      "value": [
+        "Construa oito fundações por naipe em ordem crescente, do A ao K.",
+        "Construa as colunas em ordem decrescente, alternando cores; você pode mover sequências.",
+        "Toque no monte para distribuir uma carta em cada coluna."
+      ]
+    },
     "title": {
       "hash": "71a70424",
       "value": "Miss Milligan"
@@ -2293,6 +2500,27 @@
     }
   },
   "ozanams-square": {
+    "howToPlay": {
+      "hash": "580fe3be",
+      "value": [
+        "## Objetivo",
+        "Preencha a grade de modo que cada **linha, coluna e diagonal** tenha **uma carta de cada valor e uma carta de cada naipe**.",
+        "## Como jogar",
+        "- Algumas cartas já começam no lugar e não podem ser movidas.",
+        "- Mova cartas da bandeja para um espaço vazio; as cartas que você colocar podem ser movidas para outro espaço, trocadas de lugar ou arrastadas de volta para a bandeja.",
+        "- Uma carta que repete um valor ou naipe em uma de suas linhas fica marcada em vermelho.",
+        "- Cada distribuição tem **exatamente uma** solução.",
+        "## História",
+        "Jacques Ozanam propôs este quebra-cabeça com cartas de baralho em suas *Récréations mathématiques et physiques* (1725). Mais tarde, Leonhard Euler estudou quadrados como este, que chamou de quadrados greco-latinos."
+      ]
+    },
+    "quickStart": {
+      "hash": "f0ab22cd",
+      "value": [
+        "Preencha o quadrado com os dezesseis Ases, Reis, Damas e Valetes.",
+        "Nenhuma linha, coluna ou diagonal principal pode ter duas cartas do mesmo valor ou naipe."
+      ]
+    },
     "title": {
       "hash": "e2c5ab80",
       "value": "Quadrado de Ozanam"
@@ -2383,6 +2611,45 @@
     }
   },
   "picket-fence": {
+    "howToPlay": {
+      "hash": "ec23d938",
+      "value": [
+        "## Objetivo",
+        "Faça **60 pontos** ou mais cercando suas ruas em loteamentos e enchendo-os de casas, parques e piscinas. O jogo continua até o baralho acabar, então continue aumentando sua pontuação.",
+        "## Seu turno",
+        "Você tem três cartas e joga duas delas a cada turno: uma pelo número e depois uma pelo naipe. Depois, compre até voltar a ter três.",
+        "## Construção",
+        "- Construa uma carta como casa num lote vazio. Os números das casas devem subir da esquerda para a direita ao longo de uma rua (Ases valem 1, Valetes 11, Damas 12 e Reis 13). Lotes vazios não contam.",
+        "- Ou **reforme**: construa a carta sobre uma casa existente, se os números da rua continuarem subindo. A casa antiga é descartada; seu parque ou piscina fica.",
+        "- Ou descarte a carta e não construa nada neste turno.",
+        "## Efeitos",
+        "- **♥ Parque:** a carta de copas é colocada sob a casa que você acabou de construir ou reformar, como parque.",
+        "- **♦ Piscina:** a carta de ouros é colocada sob essa casa como piscina, se ela estiver num lote de piscina.",
+        "- **♠ Cerca:** coloque uma cerca entre dois lotes, em qualquer rua.",
+        "- **♣ Segunda casa:** construa também a carta de paus como casa, ou reforme com ela.",
+        "- Uma casa comporta um parque ou uma piscina. Uma carta sem uso é descartada.",
+        "## Pontuação",
+        "- As cercas e as pontas das ruas dividem cada rua em **loteamentos**. Só um loteamento **concluído** pontua: aquele com todos os lotes construídos.",
+        "- Suas casas valem 1, 3, 6 ou 10 pontos para um loteamento de 1, 2, 3 ou 4. **Loteamentos de cinco ou mais não valem nada**, então toda rua precisa de cercas.",
+        "- Cada parque num loteamento concluído acrescenta 2 pontos, e cada piscina, 4.",
+        "## Classificações",
+        "- 60+: Bons vizinhos",
+        "- 70+: Bairro modelo",
+        "- 80+: Cartão-postal",
+        "## Dicas",
+        "- Loteamentos maiores valem mais, mas um único lote sem construção deixa o loteamento inteiro, com seus parques e piscinas, sem pontuar nada. Uma cerca pode limitar o prejuízo.",
+        "- Deixe espaço entre os números: um lote entre um 5 e um 6 não pode ser construído até que uma das duas casas seja reformada.",
+        "- O rótulo acima de cada loteamento mostra quanto ele vale quando concluído, ou ✕ se ele não puder ser concluído do jeito que está."
+      ]
+    },
+    "quickStart": {
+      "hash": "616845be",
+      "value": [
+        "A cada turno, construa uma carta como casa e use o naipe de outra carta como efeito.",
+        "Os números das casas devem subir da esquerda para a direita ao longo de cada rua.",
+        "Só pontuam loteamentos cercados de até quatro casas, depois que todos os lotes deles estiverem construídos."
+      ]
+    },
     "title": {
       "hash": "63ac8afa",
       "value": "Cerca Branca"
@@ -2672,6 +2939,34 @@
     "title": {
       "hash": "850a8f8b",
       "value": "Enviado real"
+    }
+  },
+  "royal-marriage": {
+    "howToPlay": {
+      "hash": "f2ecd27f",
+      "value": [
+        "## Objetivo",
+        "Descarte todas as cartas, exceto a **Dama** e o **Rei de copas**, que devem terminar lado a lado.",
+        "## Distribuição",
+        "- As 52 cartas são dispostas numa única linha contínua, que passa de uma fileira para a seguinte.",
+        "- A Dama de copas abre a linha e o Rei de copas a fecha.",
+        "## Descarte",
+        "- Selecione a carta ou as cartas a remover e pressione **Lixo**.",
+        "- Uma carta, ou duas cartas lado a lado, podem sair se as cartas de cada lado delas forem do mesmo **valor ou naipe**.",
+        "- Uma sequência mais longa só pode sair se todas as cartas dela forem do **mesmo naipe** e as cartas de cada lado forem do mesmo valor ou naipe.",
+        "- A Dama e o Rei de copas nunca saem da linha.",
+        "- A linha se fecha depois de cada descarte."
+      ]
+    },
+    "quickStart": {
+      "hash": "11cc1c79",
+      "value": [
+        "Descarte as cartas que estiverem entre duas cartas do mesmo valor ou naipe, até a Dama e o Rei de copas ficarem lado a lado."
+      ]
+    },
+    "title": {
+      "hash": "52d2c562",
+      "value": "Casamento real"
     }
   },
   "royal-rest": {
@@ -3107,6 +3402,10 @@
         "Toque no monte para adicionar uma carta ao fim da fileira.",
         "Toque na primeira e na última carta de uma sequência para removê-la."
       ]
+    },
+    "title": {
+      "hash": "ca23c5f9",
+      "value": "Dez-Vinte-Trinta"
     }
   },
   "terrace": {

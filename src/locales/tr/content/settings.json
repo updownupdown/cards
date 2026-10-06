@@ -241,6 +241,41 @@
       }
     }
   },
+  "elevens": {
+    "elevensDifficulty": {
+      "hash": "80558fd7",
+      "value": {
+        "description": "Büyük tablolar daha kolaydır.",
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay (5 x 3)"
+          },
+          {
+            "label": "Orta (4 x 3)"
+          },
+          {
+            "label": "Zor (3 x 3)"
+          }
+        ]
+      }
+    },
+    "elevensEliminateBadDeals": {
+      "hash": "f6b716b7",
+      "value": {
+        "description": "Her dağıtımın en az 3 hamle oynanabilmesini sağlar.",
+        "label": "Kötü dağıtımları ele",
+        "options": [
+          {
+            "label": "Kapalı"
+          },
+          {
+            "label": "Açık"
+          }
+        ]
+      }
+    }
+  },
   "fight-clubs": {
     "fightClubsDifficulty": {
       "hash": "d82ad464",
@@ -468,6 +503,23 @@
           {
             "label": "Yoncalar",
             "description": "Herhangi bir takımda artan ya da azalan diz; yelpaze başına en fazla üç kart; yeniden dağıtma yok."
+          }
+        ]
+      }
+    }
+  },
+  "little-windmill": {
+    "littleWindmillDifficulty": {
+      "hash": "e02074c2",
+      "value": {
+        "description": "Kolay, açık destenin bir kez yeniden dağıtılmasına izin verir.",
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay (1 yeniden dağıtma)"
+          },
+          {
+            "label": "Normal (yeniden dağıtma yok)"
           }
         ]
       }
