@@ -142,5 +142,5 @@ letter and the accent at build time. Anything it still can't write is drawn as
 - The reveal computes the portrait's series when it starts (about 20 ms on a
   desktop); if that shows as a hitch on slow phones, the series can be
   precomputed by `scripts/portraits/export.py` instead.
-- The collection draws all 101 portraits at once (static paths).
+- The collection draws all the portraits at once (137 of them; static paths).
 - Swipes in the collection, and that they don't fight the Android back gesture.

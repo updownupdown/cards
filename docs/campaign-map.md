@@ -23,7 +23,7 @@ Every game has a node, local-only games included. They sit on the rim as dead en
 
 - Every game has two or three rewards: a Tao chapter and one or two quotes, or two or three quotes.
 - The 81 Tao chapters go one each to the 81 easiest released games, by progression score, so the hardest games and local-only games have none. They are numbered outwards from Klondike (chapter 1), so the chapters are met roughly in order.
-- The quotes are shuffled and dealt: first so every game has two rewards, then the rest to released games at random, up to three each. Every quote is currently assigned.
+- The quotes are shuffled and dealt: first so every game has two rewards, then the rest to released games at random, up to three each. Quotes 1-184 are assigned; the rest wait for new games.
 - Rewards are awarded one per win, in the order the node lists them: a Tao chapter first.
 - `npm run campaign:generate -- --rebalance-rewards` deals them again without moving any node.
 
