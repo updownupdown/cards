@@ -8,12 +8,39 @@ import {
   type WildGameId,
 } from "@/data/wild-cards";
 import { useWildCardsVisible } from "@/hooks/useWildCards";
-import { Redirect, Stack, useLocalSearchParams } from "expo-router";
+import { useToast } from "@/components/common/Toast";
+import { i18n } from "@/i18n";
+import { reportCrash } from "@/utils/crash-reporting";
+import {
+  Redirect,
+  router,
+  Stack,
+  useLocalSearchParams,
+  type ErrorBoundaryProps,
+} from "expo-router";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 
 export function generateStaticParams() {
   return WILD_GAMES.map(({ id }) => ({ game: id }));
+}
+
+/**
+ * Catches render errors thrown by a Wild Cards game and returns to the home
+ * screen, as the classic games' route does. A Wild Cards game keeps no session
+ * to resume, so there is nothing to clear.
+ */
+export function ErrorBoundary({ error }: ErrorBoundaryProps) {
+  const showToast = useToast();
+
+  useEffect(() => {
+    console.error("Wild Cards game crashed, returning home:", error);
+    reportCrash(error);
+    showToast(i18n.t("game:errors.gameCrashed"));
+    router.replace("/");
+  }, [error, showToast]);
+
+  return <View style={{ flex: 1, backgroundColor: "#07080d" }} />;
 }
 
 export default function WildGameRoute() {

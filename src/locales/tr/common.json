@@ -17,5 +17,9 @@
     "wins": "Galibiyet"
   },
   "undo": "Geri al",
-  "winToCollect": "Toplamak için **{{game}}** oyununu kazan"
+  "winToCollect": "Toplamak için **{{game}}** oyununu kazan",
+  "errors": {
+    "appCrashed": "Bir şeyler ters gitti.",
+    "tryAgain": "Tekrar dene"
+  }
 }

@@ -17,5 +17,9 @@
     "wins": "Victorias"
   },
   "undo": "Deshacer",
-  "winToCollect": "Gana en **{{game}}** para desbloquear"
+  "winToCollect": "Gana en **{{game}}** para desbloquear",
+  "errors": {
+    "appCrashed": "Algo salió mal.",
+    "tryAgain": "Reintentar"
+  }
 }
