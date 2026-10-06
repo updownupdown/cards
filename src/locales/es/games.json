@@ -232,7 +232,16 @@
     "victoryGold": "¡Todos los enemigos derrotados! ¡Victoria de ORO!",
     "victorySilver": "¡Todos los enemigos derrotados! ¡Victoria de PLATA!",
     "victoryBronze": "¡Todos los enemigos derrotados! ¡Victoria de BRONCE!",
-    "failedToBlock": "No has podido bloquear {{damage}} de daño. ¡Fin de la partida!"
+    "failedToBlock": "No has podido bloquear {{damage}} de daño. ¡Fin de la partida!",
+    "hint": {
+      "kill": "Derrota a este enemigo",
+      "exactKill": "Golpe exacto: el enemigo se une a tu taberna",
+      "shield": "Las picas debilitan su ataque antes de que golpee",
+      "draw": "Los diamantes rellenan tu mano",
+      "heal": "Los corazones devuelven los descartes a la taberna",
+      "defend": "Bloquea con las cartas que menos necesitas",
+      "jester": "Llama a un bufón para tener una mano nueva"
+    }
   },
   "cruel": {
     "crueltyConquered": "¡Crueldad vencida!"
@@ -270,7 +279,15 @@
   },
   "elementaryDetective": {
     "youScored20ToWin": "Has conseguido {{score}} (20 para ganar)",
-    "score": "Puntos"
+    "score": "Puntos",
+    "hint": {
+      "reveal_one": "Descubre a este compañero: debería puntuar unas {{count}} suposición",
+      "reveal_other": "Descubre a este compañero: deberían puntuar unas {{count}} suposiciones",
+      "revealInfo": "Descubre a un compañero para saber qué pueden ser los demás",
+      "place": "Una suposición aquí puntúa el {{chance}}% de las veces",
+      "discard": "Esta carta no puede puntuar: ponla donde no cueste nada",
+      "withdraw": "Esta suposición ya no puede puntuar: libera su espacio (la siguiente carta del mazo también se va)"
+    }
   },
   "fanSolitaire": {
     "theFoundationsAreComplete": "¡Las fundaciones están completas!"
@@ -372,7 +389,12 @@
     "harvestGood": "Buena cosecha: quedan {{count}} hierbas.",
     "harvestExcellent": "Cosecha excelente: quedan {{count}} hierbas.",
     "harvestPerfect": "Cosecha perfecta: quedan {{count}} hierbas.",
-    "noHerbsRemain": "No quedan hierbas para sanar el reino."
+    "noHerbsRemain": "No quedan hierbas para sanar el reino.",
+    "hint": {
+      "heal": "Recoge estas hierbas: bien sembradas, curan a una criatura",
+      "setUp": "Recoge estas hierbas: bien sembradas, preparan una curación",
+      "noCure": "Ya no hay cura para el reino: sigue sembrando para acabar la partida"
+    }
   },
   "infiltrator": {
     "retired": "Retirados",
@@ -753,7 +775,13 @@
     "dsq": "Descalificado: el reloj ha llegado a 16 penalizaciones.",
     "stage": "Etapa",
     "sector": "Sector",
-    "speed": "Velocidad"
+    "speed": "Velocidad",
+    "hint": {
+      "boosts": "Usa el gas para alcanzar la velocidad objetivo",
+      "brakes": "Frena: mejor lento que pasarte de la velocidad objetivo",
+      "finishUnder": "Cierra ya: otra carta probablemente te pasaría",
+      "finishOver": "Demasiado rápido y sin freno: cierra y acepta la penalización"
+    }
   },
   "windmill": {
     "theSailsTurnFreely": "¡Las aspas giran libremente!"

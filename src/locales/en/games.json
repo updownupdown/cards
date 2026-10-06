@@ -232,7 +232,16 @@
     "victoryGold": "All enemies defeated! GOLD victory!",
     "victorySilver": "All enemies defeated! SILVER victory!",
     "victoryBronze": "All enemies defeated! BRONZE victory!",
-    "failedToBlock": "Failed to block {{damage}} damage. Game Over!"
+    "failedToBlock": "Failed to block {{damage}} damage. Game Over!",
+    "hint": {
+      "kill": "Defeat this enemy",
+      "exactKill": "Exact kill: the enemy joins your tavern",
+      "shield": "Spades weaken its attack before it strikes",
+      "draw": "Diamonds refill your hand",
+      "heal": "Hearts send discards back to the tavern",
+      "defend": "Block with the cards you need least",
+      "jester": "Call a jester for a fresh hand"
+    }
   },
   "cruel": {
     "crueltyConquered": "Cruelty conquered!"
@@ -270,7 +279,15 @@
   },
   "elementaryDetective": {
     "youScored20ToWin": "You scored {{score}} (20 to win)",
-    "score": "Score"
+    "score": "Score",
+    "hint": {
+      "reveal_one": "Reveal this playmate: about {{count}} guess should score",
+      "reveal_other": "Reveal this playmate: about {{count}} guesses should score",
+      "revealInfo": "Reveal a playmate to learn what the others can be",
+      "place": "A guess here scores {{chance}}% of the time",
+      "discard": "This card can't score: put it where it costs nothing",
+      "withdraw": "This guess can't score any more: clear its space (the next stock card goes too)"
+    }
   },
   "fanSolitaire": {
     "theFoundationsAreComplete": "The foundations are complete!"
@@ -372,7 +389,12 @@
     "harvestGood": "Good harvest: {{count}} herbs remain.",
     "harvestExcellent": "Excellent harvest: {{count}} herbs remain.",
     "harvestPerfect": "Perfect harvest: {{count}} herbs remain.",
-    "noHerbsRemain": "No herbs remain to heal the realm."
+    "noHerbsRemain": "No herbs remain to heal the realm.",
+    "hint": {
+      "heal": "Pick up these herbs: sown well, they heal a creature",
+      "setUp": "Pick up these herbs: sown well, they set up a healing",
+      "noCure": "No cure is left for the realm: sow on to end the game"
+    }
   },
   "infiltrator": {
     "retired": "Retired",
@@ -753,7 +775,13 @@
     "dsq": "DSQ: the clock reached 16 time penalties.",
     "stage": "Stage",
     "sector": "Sector",
-    "speed": "Speed"
+    "speed": "Speed",
+    "hint": {
+      "boosts": "Use Gas to reach the target speed",
+      "brakes": "Brake: slower beats going over the target speed",
+      "finishUnder": "Finish now: another card would likely overshoot",
+      "finishOver": "Too fast and no brake left: finish and take the penalty"
+    }
   },
   "windmill": {
     "theSailsTurnFreely": "The sails turn freely!"
