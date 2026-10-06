@@ -262,7 +262,12 @@
     "combatantCaptured": "Seorang petarung masuk ke tumpukan tangkapan musuh.",
     "allEnemiesCleared": "Semua kartu musuh dibersihkan tanpa kehilangan petarung.",
     "combatantCapturedYouLose": "Seorang petarung masuk ke tumpukan tangkapan musuh. Kamu kalah.",
-    "noCardsToPlay": "Tidak ada kartu untuk dimainkan."
+    "noCardsToPlay": "Tidak ada kartu untuk dimainkan.",
+    "hint": {
+      "discard": "Tukar kartu ini dengan kartu baru",
+      "letCapture": "Tidak ada tangkapan: biarkan musuh mengambil kartumu yang paling lemah",
+      "sacrifice": "Tidak ada tangkapan: korbankan dua kartu lemah untuk mengirim musuh ini kembali"
+    }
   },
   "fifteenPuzzle": {
     "theCardsAreBackIn": "Kartu-kartu kembali berurutan."
@@ -436,7 +441,15 @@
     "villain": "Penjahat",
     "response": "Respons",
     "damage": "Luka:",
-    "heal": "Pulih:"
+    "heal": "Pulih:",
+    "smokeThreat": "Bom Asap pada {{card}}",
+    "grappleThreats": "Tali Kait pada {{first}} dan {{second}}",
+    "hint": {
+      "smoke": "Pakai Bom Asap pada ancaman ini",
+      "grapple": "Kaitkan dua ancaman ini dan tandingi keduanya sekaligus",
+      "dump": "Mainkan respons ini di tempat yang tidak merugikan",
+      "resolve": "Selesaikan sekarang: mengambil lagi lebih berisiko daripada membantu"
+    }
   },
   "ouroboros": {
     "jewels": "Permata",
@@ -664,7 +677,13 @@
     "setReserve2": "Simpan cadangan ({{length}}/2)",
     "moveToTop": "Pindahkan {{value}} ke atas",
     "doNothing": "Jangan lakukan apa-apa",
-    "noKingSelected": "Belum ada King dipilih"
+    "noKingSelected": "Belum ada King dipilih",
+    "hint": {
+      "reserve": "Simpan dua kartu ini di cadangan untuk menghabisi monster nanti",
+      "discard": "Kartu ini tidak punya tempat yang bagus: buang saja",
+      "bury": "Taruh kartu ini di bawah dek, jangan dibuang",
+      "double": "Gandakan serangan dengan King sekop"
+    }
   },
   "waypoint": {
     "current": "Saat ini",

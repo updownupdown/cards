@@ -262,7 +262,12 @@
     "combatantCaptured": "Bir savaşçı düşmanın ele geçirme yığınına girdi.",
     "allEnemiesCleared": "Hiç savaşçı kaybetmeden bütün düşman kartları temizlendi.",
     "combatantCapturedYouLose": "Bir savaşçı düşmanın ele geçirme yığınına girdi. Kaybettin.",
-    "noCardsToPlay": "Oynanacak kart yok."
+    "noCardsToPlay": "Oynanacak kart yok.",
+    "hint": {
+      "discard": "Bu kartı yeni bir kartla değiştir",
+      "letCapture": "Ele geçirme yok: düşmanın en zayıf kartını almasına izin ver",
+      "sacrifice": "Ele geçirme yok: bu düşmanı geri göndermek için iki zayıf kartı feda et"
+    }
   },
   "fifteenPuzzle": {
     "theCardsAreBackIn": "Kartlar yeniden sıraya girdi."
@@ -436,7 +441,15 @@
     "villain": "Kötü adam",
     "response": "Karşılık",
     "damage": "Hasar:",
-    "heal": "İyileşme:"
+    "heal": "İyileşme:",
+    "smokeThreat": "{{card}} üzerine sis bombası",
+    "grappleThreats": "{{first}} ve {{second}} üzerine kanca",
+    "hint": {
+      "smoke": "Sis bombanı bu tehdide kullan",
+      "grapple": "Bu iki tehdidi kancayla bağla ve birlikte karşıla",
+      "dump": "Bu karşılığı zarar vermeyeceği yere oyna",
+      "resolve": "Şimdi çöz: bir kart daha çekmek yarardan çok zarar getirebilir"
+    }
   },
   "ouroboros": {
     "jewels": "Mücevherler",
@@ -664,7 +677,13 @@
     "setReserve2": "Yedeğe koy ({{length}}/2)",
     "moveToTop": "{{value}} üste taşı",
     "doNothing": "Hiçbir şey yapma",
-    "noKingSelected": "Papaz seçilmedi"
+    "noKingSelected": "Papaz seçilmedi",
+    "hint": {
+      "reserve": "Canavarları sonra bitirmek için bu ikisini yedekte tut",
+      "discard": "Bu kartın iyi bir yeri yok: at",
+      "bury": "Bu kartı atmak yerine destenin altına koy",
+      "double": "Maça Papazıyla bir saldırıyı ikiye katla"
+    }
   },
   "waypoint": {
     "current": "Şu an",

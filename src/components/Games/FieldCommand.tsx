@@ -23,6 +23,16 @@ import { useToast } from "../common/Toast";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 import { i18n } from "@/i18n";
+import { useHint } from "@/hints/hint-store";
+import {
+  cardTarget,
+  makeHint,
+  pressHint,
+  withNote,
+  zoneTarget,
+  type Hint,
+} from "@/hints/hint";
+import { seededRandom, shuffledWith } from "@/hints/random";
 const ENEMY_SLOTS = 4;
 const HAND_SIZE = 4;
 
@@ -332,7 +342,188 @@ function executeSacrificeAction(
   return "applied";
 }
 
+// —— Hints ——
+
+type FieldCommandPlan =
+  | { kind: "capture"; target: number; cards: PlayingCard[] }
+  | { kind: "letCapture"; card: PlayingCard }
+  | { kind: "sacrifice"; target: number; cards: PlayingCard[] };
+
+// Hands tried for what discarding may draw: the deck is face down, so it's
+// dealt from what's in it, a few ways.
+const DRAW_SAMPLES = 24;
+
+/**
+ * What losing a card for good costs (let capture and sacrifice give cards to
+ * the enemy; captured cards join the player's deck): the higher, the more it
+ * captures, and jokers capture in any suit.
+ */
+function cardLoss(card: PlayingCard) {
+  return card.rank === "Joker" ? 12 : getCardValue(card) + 1;
+}
+
+function subsets<T>(items: T[]): T[][] {
+  return items.reduce<T[][]>(
+    (all, item) => [...all, ...all.map((subset) => [...subset, item])],
+    [[]],
+  );
+}
+
+/**
+ * The best capture option for a hand: a capture spending as little as it
+ * can (combatants above all, as few hands can take them), else letting the
+ * enemy take the cheapest card, else sacrificing the cheapest two.
+ */
+function bestFieldCommandPlan(
+  hand: PlayingCard[],
+  enemyRow: (PlayingCard | null)[],
+): { plan: FieldCommandPlan; value: number } | null {
+  let best: { plan: FieldCommandPlan; value: number } | null = null;
+  const consider = (plan: FieldCommandPlan, value: number) => {
+    if (!best || value > best.value) best = { plan, value };
+  };
+  const groups = subsets(hand).filter((cards) => cards.length > 0);
+  enemyRow.forEach((enemy, target) => {
+    if (!enemy) return;
+    for (const cards of groups) {
+      if (!canCaptureWithCards(cards, enemy)) continue;
+      const jokers = cards.filter((card) => card.rank === "Joker").length;
+      const spent = cards.reduce((sum, card) => sum + getCardValue(card), 0);
+      consider(
+        { kind: "capture", target, cards },
+        10 +
+          (isEnemyCombatant(enemy) ? 6 : 0) +
+          (target === ENEMY_SLOTS - 1 ? 0.5 : 0) -
+          0.5 * cards.length -
+          jokers -
+          0.05 * spent,
+      );
+    }
+  });
+  const front = enemyRow[ENEMY_SLOTS - 1];
+  if (front) {
+    for (const card of hand) {
+      consider(
+        { kind: "letCapture", card },
+        isEnemyCombatant(front) || isEnemyCombatant(card)
+          ? -1000
+          : 9 - cardLoss(card),
+      );
+    }
+  }
+  // Combatants can't be sacrificed.
+  const cheapest = hand
+    .filter((card) => !isEnemyCombatant(card))
+    .sort((a, b) => cardLoss(a) - cardLoss(b));
+  if (cheapest.length >= 2) {
+    // A combatant up front can't be let capture: send it back instead.
+    const target =
+      front && isEnemyCombatant(front)
+        ? ENEMY_SLOTS - 1
+        : enemyRow.findIndex((enemy) => enemy !== null);
+    if (target >= 0) {
+      consider(
+        { kind: "sacrifice", target, cards: cheapest.slice(0, 2) },
+        -cardLoss(cheapest[0]) - cardLoss(cheapest[1]),
+      );
+    }
+  }
+  return best;
+}
+
+/** Cards as the player names them, in a fixed order: unseen cards are a set. */
+function faceKey(card: PlayingCard) {
+  return `${card.rank}${card.suit[0]}`;
+}
+
+function sortedByFace(cards: PlayingCard[]) {
+  return [...cards].sort((a, b) => faceKey(a).localeCompare(faceKey(b)));
+}
+
+/**
+ * The cards worth keeping before drawing up: each choice is tried against
+ * hands drawn from the unseen deck (then the discard, as the game reshuffles
+ * it), and judged by its best capture option.
+ */
+function cardsToKeep(state: GameState) {
+  const key = [
+    ...state.hand.map(faceKey),
+    ...state.enemyRow.map((card) => (card ? faceKey(card) : "-")),
+    state.personalDeck.length,
+  ].join(",");
+  const deck = sortedByFace(state.personalDeck);
+  const decks = Array.from({ length: DRAW_SAMPLES }, (_, sample) =>
+    shuffledWith(deck, seededRandom(`${key}:${sample}`)),
+  );
+  let best: { keep: PlayingCard[]; value: number } | null = null;
+  // Keeping everything is tried first: drawing must do better to be worth it.
+  for (const keep of subsets(state.hand).reverse()) {
+    const thrown = state.hand.filter((card) => !keep.includes(card));
+    const reshuffled = sortedByFace([...state.personalDiscard, ...thrown]);
+    let total = 0;
+    decks.forEach((dealt, sample) => {
+      const pool = [
+        ...dealt,
+        ...shuffledWith(reshuffled, seededRandom(`${key}:${sample}:discard`)),
+      ];
+      const hand = [...keep, ...pool.slice(0, HAND_SIZE - keep.length)];
+      total += bestFieldCommandPlan(hand, state.enemyRow)?.value ?? -1000;
+    });
+    const value = total / DRAW_SAMPLES;
+    if (!best || value > best.value + 1e-9) best = { keep, value };
+  }
+  return best?.keep ?? state.hand;
+}
+
+function findFieldCommandHint(state: GameState): Hint | null {
+  if (state.ended) return null;
+  if (state.phase === "discardPhase") {
+    const keep = cardsToKeep(state);
+    const discard = state.hand.find((card) => !keep.includes(card));
+    if (!discard) {
+      return pressHint("actions", i18n.t("games:fieldCommand.doneDiscarding"));
+    }
+    return withNote(
+      makeHint("moveCard", cardTarget(discard), zoneTarget("personal-discard")),
+      i18n.t("games:fieldCommand.hint.discard"),
+    );
+  }
+  if (state.phase !== "capturePhase") return null;
+
+  const best = bestFieldCommandPlan(state.hand, state.enemyRow);
+  if (!best) return null;
+  const { plan } = best;
+  const cards = plan.kind === "letCapture" ? [plan.card] : plan.cards;
+  const wanted = new Set(cards.map((card) => card.id));
+  // Picks to undo first, then the cards and the enemy the option needs.
+  const taps = [
+    ...state.selectedHandIds.filter((id) => !wanted.has(id)),
+    ...cards
+      .map((card) => card.id)
+      .filter((id) => !state.selectedHandIds.includes(id)),
+  ].map((id) => cardTarget(id));
+  if (plan.kind !== "letCapture" && state.selectedEnemyIdx !== plan.target) {
+    taps.push(cardTarget(state.enemyRow[plan.target]!));
+  }
+  const label =
+    plan.kind === "capture"
+      ? i18n.t("games:fieldCommand.capture")
+      : plan.kind === "letCapture"
+        ? i18n.t("games:fieldCommand.letCapture")
+        : i18n.t("cards:sacrifice");
+  const hint = makeHint(
+    { key: "press", values: { label } },
+    ...taps,
+    zoneTarget("actions"),
+  );
+  if (plan.kind === "capture") return hint;
+  return withNote(hint, i18n.t(`games:fieldCommand.hint.${plan.kind}`));
+}
+
 export const fieldCommandRules = {
+  findHint: findFieldCommandHint,
+  bestPlan: bestFieldCommandPlan,
+  cardsToKeep,
   isEnemyCombatant,
   getCardValue,
   recyclePersonalDeckIfNeeded,
@@ -367,6 +558,8 @@ export default function FieldCommand() {
       await resetAndSetup(setGame);
     },
   });
+
+  useHint(() => findFieldCommandHint(game), { game, enabled: !isSettingUp });
 
   async function doEnemyPhase() {
     setGame((draft) => {
