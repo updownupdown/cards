@@ -16,7 +16,7 @@ import {
   UfoColors,
   UfoEffectColors,
 } from "@/styles/styles";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   AccessibilityInfo,
   Animated,
@@ -29,6 +29,7 @@ import {
 import Svg, {
   Defs,
   Ellipse,
+  Line,
   LinearGradient,
   Path,
   RadialGradient,
@@ -69,10 +70,10 @@ import {
 const GREEN = UfoEffectColors.green;
 const BEACON_INK = UfoEffectColors.greenGlow;
 const PINK_INK = UfoEffectColors.pinkGlow;
-/** The tractor beam that carries a card across. */
+/** The tractor beam that carries a card across, in shades of blue. */
 const BEAM = UfoEffectColors.blue;
-/** Its highlights: the hot cone under the UFO and the pool on the card. */
-const BEAM_LIGHT = "#c4f1ff";
+const BEAM_DEEP = UfoEffectColors.blueGlow;
+const BEAM_PALE = "#9fe0ff";
 const DARK = Colors.K950;
 const useNativeDriver = Platform.OS !== "web";
 
@@ -91,7 +92,6 @@ const TINT_MS = 1400;
 /** The laser's reach from the header's UFO to a beacon, and its fade after. */
 const LASER_MS = 100;
 const LASER_FADE_MS = 200;
-const LASER_THICKNESS = 1;
 const BURST_LEAD_MS = 100;
 const BURST_MS = 1100;
 const BURST_SCALE = 3;
@@ -177,21 +177,19 @@ function Beacon({
   kind,
   delay = 0,
   pings = PINGS,
-  showBurst = true,
   laserFrom,
 }: {
   spot: HintSpot;
   kind: BeaconKind;
   delay?: number;
   pings?: number;
-  showBurst?: boolean;
   /** Where a laser comes from (the header's UFO), in the same space as the spot. */
   laserFrom?: { x: number; y: number } | null;
 }) {
   const to = kind === "to";
   const glow = to ? PINK_INK : BEACON_INK;
   const size = Math.max(64, spot.size * 1.5);
-  const core = Math.max(16, Math.round(spot.size * 0.22));
+  const core = Math.max(13.6, Math.round(spot.size * 0.22 * 0.85));
   const presence = useRef(new Animated.Value(0)).current;
   const ping = useRef(new Animated.Value(0)).current;
   const burst = useRef(new Animated.Value(0)).current;
@@ -252,12 +250,12 @@ function Beacon({
         // The burst announces the beacon: it goes first, and the rest follows.
         Animated.timing(burst, {
           toValue: 1,
-          duration: showBurst ? BURST_MS : 0,
+          duration: BURST_MS,
           easing: Easing.out(Easing.quad),
           useNativeDriver,
         }),
         Animated.sequence([
-          Animated.delay(showBurst ? BURST_LEAD_MS : 0),
+          Animated.delay(BURST_LEAD_MS),
           Animated.timing(presence, {
             toValue: 1,
             duration: APPEAR_MS,
@@ -283,7 +281,7 @@ function Beacon({
     ]);
     animation.start();
     return () => animation.stop();
-  }, [burst, delay, hasLaser, laser, ping, pings, presence, showBurst]);
+  }, [burst, delay, hasLaser, laser, ping, pings, presence]);
 
   // Two rings, half a ping apart, each growing out of the core and fading
   // (or, for "to", closing in on it).
@@ -305,10 +303,13 @@ function Beacon({
             presence,
             phase.interpolate(
               to
-                ? { inputRange: [0, 0.2, 0.85, 1], outputRange: [0, 1, 0.8, 0] }
+                ? {
+                    inputRange: [0, 0.2, 0.85, 1],
+                    outputRange: [0, 0.85, 0.68, 0],
+                  }
                 : {
                     inputRange: [0, 0.1, 0.7, 1],
-                    outputRange: [0, 1, 0.85, 0],
+                    outputRange: [0, 0.85, 0.7225, 0],
                   },
             ),
           ),
@@ -316,7 +317,7 @@ function Beacon({
             {
               scale: phase.interpolate({
                 inputRange: [0, 1],
-                outputRange: to ? [1.15, 0.3] : [0.2, 1.15],
+                outputRange: to ? [0.9775, 0.255] : [0.17, 0.9775],
               }),
             },
           ],
@@ -324,10 +325,10 @@ function Beacon({
       >
         {tinted((color) => ({
           borderRadius: size / 2,
-          borderWidth: 3,
+          borderWidth: 2,
           borderColor: color,
           // A dark edge keeps the ring clear on pale cards.
-          boxShadow: `0 0 0 1.5px ${rgba(DARK, 0.45)}`,
+          boxShadow: `0 0 0 1px ${rgba(DARK, 0.45)}`,
         }))}
       </Animated.View>
     );
@@ -374,9 +375,9 @@ function Beacon({
             style={{
               position: "absolute",
               left: size / 2 - dx,
-              top: size / 2 - dy - LASER_THICKNESS / 2,
+              top: size / 2 - dy - LASER_HEIGHT / 2,
               width: length,
-              height: LASER_THICKNESS,
+              height: LASER_HEIGHT,
               transformOrigin: "left center",
               opacity: laser.interpolate({
                 inputRange: [0, 0.05, 1, 2],
@@ -393,13 +394,7 @@ function Beacon({
               ],
             }}
           >
-            {tinted((color) => ({
-              backgroundColor: color,
-              width: "100%",
-              height: "100%",
-              borderRadius: LASER_THICKNESS / 2,
-              boxShadow: `0 0 6px ${color}`,
-            }))}
+            <LaserBeam length={length} tints={tints} tint={tint} />
           </Animated.View>
         );
       })()
@@ -419,7 +414,7 @@ function Beacon({
       }}
     >
       {beam}
-      {showBurst && burstRing}
+      {burstRing}
       {ring(0)}
       {ring(0.5)}
       <Animated.View
@@ -493,6 +488,159 @@ function Bubble({
 
 // —— Beams ————————————————————————————————————————————————————————————
 
+/** The laser's wave: how far it swings, and how long one wave is. */
+const LASER_AMPLITUDE = 2;
+const LASER_WAVELENGTH = 40;
+const LASER_HEIGHT = LASER_AMPLITUDE * 2 + 10;
+const FLOW_MS = 700;
+
+/** A value that runs 0 to 1, over and over, until the component goes. */
+function useLoop(duration: number) {
+  const value = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.timing(value, {
+        toValue: 1,
+        duration,
+        easing: Easing.linear,
+        useNativeDriver,
+      }),
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [duration, value]);
+  return value;
+}
+
+/** Two layers, one per colour, that fade into each other and back with `tint`. */
+function shifting(
+  tint: Animated.Value,
+  colors: readonly [string, string],
+  layer: (color: string) => React.ReactNode,
+) {
+  return colors.map((color, index) => (
+    <Animated.View
+      key={color}
+      style={{
+        position: "absolute",
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        opacity: tint.interpolate({
+          inputRange: [0, 0.5, 1],
+          outputRange: index === 0 ? [1, 0, 1] : [0, 1, 0],
+        }),
+      }}
+    >
+      {layer(color)}
+    </Animated.View>
+  ));
+}
+
+/** A sine wave along x, `phase` radians in, as an SVG path. */
+function wavePath(length: number, phase: number) {
+  const points: string[] = [];
+  for (let x = 0; x <= length; x += 2) {
+    const y =
+      LASER_HEIGHT / 2 +
+      LASER_AMPLITUDE * Math.sin((x / LASER_WAVELENGTH) * 2 * Math.PI + phase);
+    points.push(`${x === 0 ? "M" : "L"}${x},${y.toFixed(2)}`);
+  }
+  return points.join(" ");
+}
+
+/**
+ * A laser along x, `length` long: a hard white core, with two strands of
+ * coloured light winding about it in a sine wave that flows along the beam,
+ * and a soft glow around all of it. Its colour shifts between `colors`.
+ */
+function LaserBeam({
+  length,
+  tints,
+  tint,
+}: {
+  length: number;
+  tints: readonly [string, string];
+  tint: Animated.Value;
+}) {
+  const flow = useLoop(FLOW_MS);
+  // Drawn a wave longer at each end, and slid one wave along: seamless.
+  const total = length + LASER_WAVELENGTH * 2;
+  const paths = useMemo(
+    () => [wavePath(total, 0), wavePath(total, Math.PI)],
+    [total],
+  );
+  return (
+    <View
+      style={{
+        width: length,
+        height: LASER_HEIGHT,
+        overflow: "hidden",
+        pointerEvents: "none",
+      }}
+    >
+      {shifting(tint, tints, (color) => (
+        <Animated.View
+          style={{
+            position: "absolute",
+            left: -LASER_WAVELENGTH,
+            width: total,
+            height: LASER_HEIGHT,
+            transform: [
+              {
+                translateX: flow.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, LASER_WAVELENGTH],
+                }),
+              },
+            ],
+          }}
+        >
+          <Svg width={total} height={LASER_HEIGHT}>
+            <Path
+              d={paths[0]}
+              stroke={color}
+              strokeWidth={6}
+              strokeOpacity={0.18}
+              fill="none"
+            />
+            <Path
+              d={paths[0]}
+              stroke={color}
+              strokeWidth={1.6}
+              strokeOpacity={0.95}
+              fill="none"
+            />
+            <Path
+              d={paths[1]}
+              stroke={color}
+              strokeWidth={1.6}
+              strokeOpacity={0.6}
+              fill="none"
+            />
+          </Svg>
+        </Animated.View>
+      ))}
+      <Svg
+        width={length}
+        height={LASER_HEIGHT}
+        style={{ position: "absolute", left: 0, top: 0 }}
+      >
+        <Line
+          x1={0}
+          y1={LASER_HEIGHT / 2}
+          x2={length}
+          y2={LASER_HEIGHT / 2}
+          stroke={Colors.white}
+          strokeWidth={1}
+          strokeOpacity={0.95}
+        />
+      </Svg>
+    </View>
+  );
+}
+
 /**
  * The tractor beam: a column of light from the UFO down onto the card, nearly
  * as wide at the top as at the bottom, bright down its middle and soft at its
@@ -512,6 +660,21 @@ function TractorBeam({ lift, value }: { lift: number; value: Animated.Value }) {
   /** A cone down the middle, `from` wide under the UFO and `to` on the card. */
   const cone = (from: number, to: number, end = base) =>
     `M${middle - from / 2},0 L${middle + from / 2},0 L${middle + to / 2},${end} L${middle - to / 2},${end} Z`;
+  /** A cone's fill: bright to the sides' edges at `edge`, `centre` in the middle. */
+  const across = (id: string, color: string, edge: number, centre: number) => (
+    <LinearGradient id={id} x1="0" y1="0" x2="1" y2="0">
+      <Stop offset="0" stopColor={color} stopOpacity={edge} />
+      <Stop offset="0.5" stopColor={color} stopOpacity={centre} />
+      <Stop offset="1" stopColor={color} stopOpacity={edge} />
+    </LinearGradient>
+  );
+  /** A cone's fill that fades out down its length. */
+  const down = (id: string, color: string, start: number, end: number) => (
+    <LinearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+      <Stop offset="0" stopColor={color} stopOpacity={start} />
+      <Stop offset="1" stopColor={color} stopOpacity={end} />
+    </LinearGradient>
+  );
   return (
     <Animated.View
       style={{
@@ -528,33 +691,34 @@ function TractorBeam({ lift, value }: { lift: number; value: Animated.Value }) {
     >
       <Svg width={spread} height={height}>
         <Defs>
-          <LinearGradient id="beamHaze" x1="0" y1="0" x2="1" y2="0">
-            <Stop offset="0" stopColor={BEAM} stopOpacity={0} />
-            <Stop offset="0.5" stopColor={BEAM} stopOpacity={0.3} />
-            <Stop offset="1" stopColor={BEAM} stopOpacity={0} />
-          </LinearGradient>
-          <LinearGradient id="beamColumn" x1="0" y1="0" x2="1" y2="0">
-            <Stop offset="0" stopColor={BEAM} stopOpacity={0.15} />
-            <Stop offset="0.5" stopColor={BEAM} stopOpacity={0.8} />
-            <Stop offset="1" stopColor={BEAM} stopOpacity={0.15} />
-          </LinearGradient>
-          <LinearGradient id="beamCore" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor={Colors.white} stopOpacity={0.9} />
-            <Stop offset="0.5" stopColor={BEAM_LIGHT} stopOpacity={0.3} />
-            <Stop offset="1" stopColor={BEAM_LIGHT} stopOpacity={0} />
-          </LinearGradient>
+          {across("beamHaze", BEAM_DEEP, 0, 0.35)}
+          {across("beamColumn", BEAM, 0.12, 0.7)}
+          {across("beamSheen", BEAM_PALE, 0, 0.55)}
+          {down("beamCore", Colors.white, 0.95, 0)}
+          {down("beamThread", Colors.white, 1, 0.35)}
+          {down("beamGlint", BEAM_PALE, 0.7, 0)}
           <RadialGradient id="beamPool">
             <Stop offset="0" stopColor={Colors.white} stopOpacity={0.9} />
-            <Stop offset="0.4" stopColor={BEAM_LIGHT} stopOpacity={0.6} />
+            <Stop offset="0.4" stopColor={BEAM_PALE} stopOpacity={0.6} />
             <Stop offset="1" stopColor={BEAM} stopOpacity={0} />
           </RadialGradient>
         </Defs>
+        {/* Deep blue, wide and faint, for depth. */}
         <Path d={cone(neck, spread)} fill="url(#beamHaze)" />
         <Path d={cone(neck, width)} fill="url(#beamColumn)" />
+        {/* A paler cone, narrowing to the card. */}
+        <Path d={cone(neck * 0.85, width * 0.6)} fill="url(#beamSheen)" />
+        {/* A faint pale one flaring out under the UFO. */}
+        <Path
+          d={cone(neck * 0.3, width * 0.95, base * 0.55)}
+          fill="url(#beamGlint)"
+        />
+        {/* Hot white ones: a wide one fading down, a thread right through. */}
         <Path
           d={cone(neck * 0.6, width * 0.5, base * 0.75)}
           fill="url(#beamCore)"
         />
+        <Path d={cone(neck * 0.14, width * 0.12)} fill="url(#beamThread)" />
         <Ellipse
           cx={middle}
           cy={base}
@@ -571,24 +735,25 @@ function TractorBeam({ lift, value }: { lift: number; value: Animated.Value }) {
 function Zap({ lift, value }: { lift: number; value: Animated.Value }) {
   const top = BEAM_TOP;
   const flash = 26;
+  const tint = useLoop(TINT_MS);
+  const length = lift - top;
   return (
     <>
       <Animated.View
         style={{
           position: "absolute",
-          left: -2,
-          top,
-          width: 4,
-          height: lift - top,
-          borderRadius: 2,
-          backgroundColor: Colors.white,
-          boxShadow: `0 0 8px 2px ${GREEN}`,
+          left: 0,
+          top: top - LASER_HEIGHT / 2,
+          width: length,
+          height: LASER_HEIGHT,
           opacity: value,
-          transformOrigin: "top",
-          transform: [{ scaleY: value }],
+          transformOrigin: "left center",
+          transform: [{ rotate: "90deg" }, { scaleX: value }],
           pointerEvents: "none",
         }}
-      />
+      >
+        <LaserBeam length={length} tints={GREEN_TINTS} tint={tint} />
+      </Animated.View>
       <Animated.View
         style={{
           position: "absolute",
@@ -622,9 +787,7 @@ function Zap({ lift, value }: { lift: number; value: Animated.Value }) {
 // —— The UFO ————————————————————————————————————————————————————————————
 
 type AnimatedNumber =
-  | number
-  | Animated.AnimatedInterpolation<number>
-  | Animated.Value;
+  number | Animated.AnimatedInterpolation<number> | Animated.Value;
 
 /**
  * The UFO itself, in a soft green glow. Out and about, it's the flying
@@ -856,8 +1019,6 @@ const nextFrames = () =>
     requestAnimationFrame(() => requestAnimationFrame(resolve)),
   );
 
-type FlightStop = { key: string; spot: HintSpot; kind: BeaconKind };
-
 // —— HintUfo ——————————————————————————————————————————————————————————
 
 /**
@@ -914,7 +1075,6 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
   const flightRef = useRef<Flight | null>(null);
   const [flying, setFlying] = useState(false);
   const [interruptible, setInterruptible] = useState(false);
-  const [stop, setStop] = useState<FlightStop | null>(null);
   const [effect, setEffect] = useState<"beam" | "zap" | null>(null);
   const [lift, setLift] = useState(60);
   const [bubble, setBubble] = useState<{
@@ -1110,7 +1270,6 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
     opacity.setValue(1);
     beam.setValue(0);
     zap.setValue(0);
-    setStop(null);
     setEffect(null);
     setBubble(null);
     setInterruptible(true);
@@ -1146,7 +1305,6 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
       steps: for (const [stepIndex, step] of hint.steps.entries()) {
         for (const [targetIndex, target] of step.entries()) {
           if (flight.aborted) break steps;
-          const key = `${stepIndex}-${targetIndex}`;
 
           if (isMove && stepIndex > 0) {
             if (carried) continue;
@@ -1174,7 +1332,6 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
                 ? moved
                 : destination;
             if (landed) {
-              setStop({ key, spot: toLocal(landed), kind: "to" });
               await flyOver(
                 landed,
                 defaultAnimDuration,
@@ -1186,11 +1343,6 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
 
           const spot = board.locate(target);
           if (!spot) break steps;
-          setStop({
-            key,
-            spot: toLocal(spot),
-            kind: beaconKind(hint, stepIndex),
-          });
           if (!(await flyOver(spot))) break steps;
           if (stepIndex === 0 && targetIndex === 0 && saidAt !== null) {
             const left = READ_MS - (Date.now() - saidAt);
@@ -1226,7 +1378,6 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
             ) {
               carried = true;
               played = true;
-              setStop({ key: `${key}-to`, spot: toLocal(landed), kind: "to" });
               await flyOver(
                 landed,
                 defaultAnimDuration,
@@ -1276,7 +1427,6 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
     }).start();
     await home.wait(flight.aborted ? 0 : HOME_DELAY_MS);
     setEffect(null);
-    setStop(null);
     setBubble(null);
     await home.run(
       Animated.parallel([
@@ -1365,17 +1515,6 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
             setHover((current) => (current?.hovering ? current : null));
             setHintUfoHovering(false);
           }}
-        />
-      )}
-
-      {flying && stop && (
-        // Long enough to last the UFO's wait while its note is read.
-        <Beacon
-          key={stop.key}
-          spot={stop.spot}
-          kind={stop.kind}
-          pings={bubble ? beaconPings(true) : 2}
-          showBurst={false}
         />
       )}
 
