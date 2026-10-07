@@ -1314,12 +1314,13 @@
   },
   "elementary-detective": {
     "howToPlay": {
-      "hash": "cc00bd38",
+      "hash": "fa3fc6ca",
       "value": [
         "## Objectif",
         "Marquez au moins 20 points après avoir révélé les 12 camarades de jeu cachés.",
         "## Déroulement",
         "- Les 12 camarades face cachée sont des Valets, des Dames et des Rois. Les autres cartes forment la pioche.",
+        "- Chaque colonne de la grille contient un Valet, une Dame et un Roi, tous de couleurs différentes.",
         "- Placez la carte du dessus de la pioche sur une case d'hypothèse vide autour de la grille des camarades.",
         "- Vous pouvez retirer une carte d'hypothèse, mais vous devez alors aussi défausser la carte suivante de la pioche.",
         "- À tout moment, révélez un camarade caché. Chaque carte d'hypothèse de la même couleur sur la même ligne horizontale ou verticale va dans votre pile de score."
