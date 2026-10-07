@@ -434,12 +434,13 @@ function findBoilingOverHint(state: BoilingOverGameState) {
       LOOK_AHEAD,
     );
     if (draw) return makeHint("draw", zoneTarget("deck"));
-    return withNote(
-      stop,
-      i18n.t("games:boilingOver.hint.stop", {
-        risk: Math.round(bustChance(state) * 100),
-      }),
-    );
+    const risk = Math.round(bustChance(state) * 100);
+    if (risk > 0) {
+      return withNote(stop, i18n.t("games:boilingOver.hint.stop", { risk }));
+    }
+    return diamondBonus(state.cauldron) > 0
+      ? withNote(stop, i18n.t("games:boilingOver.hint.stopDiamond"))
+      : stop;
   }
   if (state.phase === "boiledOver") {
     const strength = strengthOf(state.cauldron);
@@ -462,9 +463,25 @@ function findBoilingOverHint(state: BoilingOverGameState) {
   if (state.phase === "market") {
     const buy = bestBuy(state);
     if (buy) {
+      // Whether a second card, of another suit, fits the coins left.
+      const left = state.coins - costOf(buy);
+      const pair =
+        state.bought.length + 1 < MAX_BUYS &&
+        state.market.some((row) =>
+          row.some(
+            (card) =>
+              card.suit !== buy.suit &&
+              !state.bought.includes(card.suit) &&
+              costOf(card) <= left,
+          ),
+        );
       return withNote(
         makeHint("tapCard", cardTarget(buy)),
-        i18n.t("games:boilingOver.hint.buy"),
+        i18n.t(
+          pair
+            ? "games:boilingOver.hint.buyPair"
+            : "games:boilingOver.hint.buy",
+        ),
       );
     }
     return pressHint(

@@ -43,8 +43,9 @@
     "hint": {
       "route_one": "Play this route: it draws {{count}} card",
       "route_other": "Play this route: it draws {{count}} cards",
-      "camp": "Play your last cards to make camp",
-      "rest": "Rest: take the fatigue pile into your hand and start a new climb",
+      "camp": "Play your last cards: this route reaches the next camp",
+      "campMissed": "Play your last cards: this misses the camp, but deals a fresh hand",
+      "rest": "Rest: add the fatigue pile to your hand and start your routes over",
       "discard": "Discard the card your hand climbs best without"
     }
   },
@@ -89,9 +90,9 @@
     "killAZombie": "Kill a zombie",
     "noKillableZombies": "No killable zombies!",
     "hint": {
-      "kill": "Kill this zombie",
+      "kill": "Kill the highest zombie: Kings and Queens are harder to line up again",
       "playToKill": "Play here to kill a zombie",
-      "prepareKill": "Prepare a zombie kill"
+      "prepareKill": "Play here: it lines up support cards for a zombie kill"
     }
   },
   "cafeQueue": {
@@ -103,7 +104,7 @@
     "hint": {
       "slot": "The next customer fits here {{chance}}% of the time",
       "letThemStay": "Let them stay: losing this queue is the safer discard",
-      "kickThemOut": "Turn them away: safer than losing this queue"
+      "kickThemOut": "Kick them out: losing them and the next customer is safer than losing this queue"
     }
   },
   "calculation": {
@@ -142,8 +143,8 @@
     "trade": "Trade",
     "offer": "Offer",
     "hint": {
-      "trade": "Sell these books for ${{value}}",
-      "tradeGuild": "Sell these books for ${{value}}: +{{count}} Guild Pts.",
+      "trade": "Trade these books: they make the offer but earn no Guild Pts.",
+      "tradeGuild": "Trade these books: +{{count}} Guild Pts.",
       "pass": "No books add up to this offer: pass"
     }
   },
@@ -183,10 +184,14 @@
     "wonWithTier": "{{score}} points: {{tier}}!",
     "lostShortOfTarget": "{{score}} points. You need {{target}} points to win.",
     "hint": {
-      "stop": "Stop here: a {{risk}}% chance to boil over is too much for what another card adds",
+      "stop": "Stop here: a {{risk}}% chance to boil over isn't worth another card",
+      "stopDiamond": "Stop here: your last diamond counts twice only if you stop now",
+      "stopDiamond": "Stop here: your last diamond counts twice only if you stop now",
       "keepCoins": "Keep the coins: better cards will pay off over the rounds left",
       "keepPoints": "Keep the points: too few rounds are left for coins to pay off",
-      "buy": "Buy the strongest cards your coins allow: two, of different suits"
+      "buyPair": "Buy this card: with a second buy of another suit, it's the best your coins allow",
+      "buyPair": "Buy this card: with a second buy of another suit, it's the best your coins allow",
+      "buy": "Buy the best card your coins allow"
     }
   },
   "cityGrid": {
@@ -211,7 +216,7 @@
     "youScoredPoints": "You scored {{score}} points!",
     "youScoredReachToWin": "You scored {{score}}. Reach {{TARGET_SCORE}} to win.",
     "hint": {
-      "fifteens": "Make fifteens here",
+      "fifteens": "Line up fifteens here",
       "pairs": "Pair it up here",
       "runs": "Build a run here",
       "flush": "Build toward a flush here"
@@ -237,7 +242,7 @@
       "kill": "Defeat this enemy",
       "exactKill": "Exact kill: the enemy joins your tavern",
       "shield": "Spades weaken its attack before it strikes",
-      "draw": "Diamonds refill your hand",
+      "draw": "Diamonds draw you as many cards as this play's value",
       "heal": "Hearts send discards back to the tavern",
       "defend": "Block with the cards you need least",
       "jester": "Call a jester for a fresh hand"

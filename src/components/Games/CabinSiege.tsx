@@ -350,15 +350,16 @@ function findCabinSiegeHint(state: GameState) {
     return hidden ? makeHint("tapCard", cardTarget(hidden.card)) : null;
   }
   if (state.phase === "kill") {
-    const best = getAvailableAttacks(state)
+    const targets = getAvailableAttacks(state)
       .map((index) => state.zombies[index])
-      .sort((a, b) => zombiePriority(b) - zombiePriority(a))[0];
-    return best
-      ? withNote(
-          makeHint("tapCard", cardTarget(best.card)),
-          i18n.t("games:cabinSiege.hint.kill"),
-        )
-      : null;
+      .sort((a, b) => zombiePriority(b) - zombiePriority(a));
+    const best = targets[0];
+    if (!best) return null;
+    const hint = makeHint("tapCard", cardTarget(best.card));
+    // Only one zombie dies per card: say why when a lesser one could too.
+    return targets.some((other) => zombiePriority(other) < zombiePriority(best))
+      ? withNote(hint, i18n.t("games:cabinSiege.hint.kill"))
+      : hint;
   }
   const before = setUpKills(state);
   const options = state.piles.flatMap((_, pileIndex) => {

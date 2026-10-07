@@ -43,8 +43,9 @@
     "hint": {
       "route_one": "Jogue esta rota: ela faz comprar {{count}} carta",
       "route_other": "Jogue esta rota: ela faz comprar {{count}} cartas",
-      "camp": "Jogue suas últimas cartas para montar o acampamento",
-      "rest": "Descanse: pegue a pilha de fadiga na mão e recomece",
+      "camp": "Jogue suas últimas cartas: esta rota chega ao próximo acampamento",
+      "campMissed": "Jogue suas últimas cartas: você não chega ao acampamento, mas recebe uma mão nova",
+      "rest": "Descanse: junte a pilha de fadiga à sua mão e recomece suas rotas",
       "discard": "Descarte a carta que menos faz falta à sua mão"
     }
   },
@@ -89,9 +90,9 @@
     "killAZombie": "Mate um zumbi",
     "noKillableZombies": "Nenhum zumbi para matar!",
     "hint": {
-      "kill": "Mate este zumbi",
+      "kill": "Mate o zumbi mais alto: Reis e Damas são mais difíceis de alinhar de novo",
       "playToKill": "Jogue aqui para matar um zumbi",
-      "prepareKill": "Prepare a morte de um zumbi"
+      "prepareKill": "Jogue aqui: isto alinha cartas de apoio para matar um zumbi"
     }
   },
   "cafeQueue": {
@@ -103,7 +104,7 @@
     "hint": {
       "slot": "O próximo cliente cabe aqui {{chance}}% das vezes",
       "letThemStay": "Deixe ficar: perder esta fila é o descarte mais seguro",
-      "kickThemOut": "Mande embora: é mais seguro que perder esta fila"
+      "kickThemOut": "Mande embora: perder este e o próximo cliente é mais seguro que perder esta fila"
     }
   },
   "calculation": {
@@ -142,8 +143,8 @@
     "trade": "Trocar",
     "offer": "Oferta",
     "hint": {
-      "trade": "Venda estes livros por ${{value}}",
-      "tradeGuild": "Venda estes livros por ${{value}}: +{{count}} pts guilda",
+      "trade": "Troque estes livros: cobrem a oferta, mas não dão pts guilda",
+      "tradeGuild": "Troque estes livros: +{{count}} pts guilda",
       "pass": "Nenhum conjunto de livros soma esta oferta: passe"
     }
   },
@@ -183,10 +184,14 @@
     "wonWithTier": "{{score}} pontos: {{tier}}!",
     "lostShortOfTarget": "{{score}} pontos. Você precisa de {{target}} pontos para vencer.",
     "hint": {
-      "stop": "Pare aqui: {{risk}}% de risco de explosão é demais para o que outra carta acrescenta",
+      "stop": "Pare aqui: {{risk}}% de risco de explosão não compensa outra carta",
+      "stopDiamond": "Pare aqui: seu último ouros só conta em dobro se você parar agora",
+      "stopDiamond": "Pare aqui: seu último ouros só conta em dobro se você parar agora",
       "keepCoins": "Fique com as moedas: cartas melhores vão render nas rodadas que restam",
       "keepPoints": "Fique com os pontos: restam poucas rodadas para as moedas renderem",
-      "buy": "Compre as melhores cartas que suas moedas permitem: duas, de naipes diferentes"
+      "buyPair": "Compre esta carta: com uma segunda compra de outro naipe, é o melhor que suas moedas permitem",
+      "buyPair": "Compre esta carta: com uma segunda compra de outro naipe, é o melhor que suas moedas permitem",
+      "buy": "Compre a melhor carta que suas moedas permitem"
     }
   },
   "cityGrid": {
@@ -211,7 +216,7 @@
     "youScoredPoints": "Você fez {{score}} pontos!",
     "youScoredReachToWin": "Você fez {{score}}. Chegue a {{TARGET_SCORE}} para vencer.",
     "hint": {
-      "fifteens": "Faça quinzes aqui",
+      "fifteens": "Alinhe quinzes aqui",
       "pairs": "Forme um par aqui",
       "runs": "Monte uma sequência aqui",
       "flush": "Busque um flush aqui"
@@ -237,7 +242,7 @@
       "kill": "Derrote este inimigo",
       "exactKill": "Golpe exato: o inimigo entra na sua taverna",
       "shield": "Espadas enfraquecem o ataque dele antes que ele golpeie",
-      "draw": "Ouros reabastecem sua mão",
+      "draw": "Ouros fazem você comprar tantas cartas quanto o valor desta jogada",
       "heal": "Copas devolvem o descarte à taverna",
       "defend": "Bloqueie com as cartas de que você menos precisa",
       "jester": "Chame um bobo para ter uma mão nova"

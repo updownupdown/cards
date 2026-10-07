@@ -245,7 +245,7 @@ describe("Invaders hints", () => {
 // —— The second batch ——
 
 describe("Cabin Siege hints", () => {
-  test("kills a zombie it can, and says so", () => {
+  test("kills a zombie it can (no note when it is the only one)", () => {
     const piles = Array.from({ length: 9 }, () => [card("2", "clubs")]);
     piles[4] = [card("5", "hearts")];
     piles[7] = [card("6", "hearts")];
@@ -264,7 +264,7 @@ describe("Cabin Siege hints", () => {
       won: false,
     });
     expect(hint?.steps).toEqual([[{ card: zombie.id }]]);
-    expect(hint?.message.note).toBe("Kill this zombie");
+    expect(hint?.message.note).toBeUndefined();
   });
 });
 
