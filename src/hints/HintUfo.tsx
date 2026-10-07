@@ -83,8 +83,11 @@ const APPEAR_MS = 200;
 const PING_MS = 1250;
 const PINGS = 3;
 const FADE_MS = 300;
-/** The white lines that frame a target, above, below and to either side. */
-const TICK_THICKNESS = 3;
+/**
+ * The white lines that frame where a card goes ("to"), above, below and to
+ * either side.
+ */
+const TICK_THICKNESS = 2.5;
 const TICK_GAP = 4;
 
 // The flying UFO
@@ -153,8 +156,8 @@ function beaconKind(hint: Hint, stepIndex: number): BeaconKind {
 /**
  * A beacon on a hint target. "from" (what to pick up, tap or press): green
  * rings ping out of a bright core. "to" (where it goes): pink rings close in
- * on a landing ring. Either way, four white lines frame the target, above,
- * below and to either side, and nudge in on it with each ping.
+ * on a landing ring, framed by four short white lines, above, below and to
+ * either side, that close in on it with each ping.
  */
 function Beacon({
   spot,
@@ -246,13 +249,17 @@ function Beacon({
     );
   };
 
-  // The frame's lines: each points at the target's middle from just
-  // outside it, half the target's smaller side off.
-  const tickLength = Math.max(12, Math.round(spot.size * 0.24));
+  // The frame's lines ("to" only): each points at the target's middle from
+  // just outside it, half the target's smaller side off, and closes in on
+  // it with each ping, with the rings.
+  const tickLength = Math.max(8, Math.round(spot.size * 0.15));
   const tickReach = spot.size / 2 + TICK_GAP;
+  const inward = Math.max(8, Math.round(spot.size * 0.16));
   const nudge = ping.interpolate({
-    inputRange: [0, 0.15, 0.4, 1],
-    outputRange: [0, -4, 0, 0],
+    // In with the rings, a beat there, then back out (eased by hand: the
+    // native driver can't take an easing here).
+    inputRange: [0, 0.15, 0.3, 0.45, 0.7, 0.85, 1],
+    outputRange: [0, -0.2, -0.75, -1, -1, -0.3, 0].map((at) => at * inward),
   });
   const tick = (side: "top" | "bottom" | "left" | "right") => {
     const vertical = side === "top" || side === "bottom";
@@ -309,10 +316,14 @@ function Beacon({
     >
       {ring(0)}
       {ring(0.5)}
-      {tick("top")}
-      {tick("bottom")}
-      {tick("left")}
-      {tick("right")}
+      {to && (
+        <>
+          {tick("top")}
+          {tick("bottom")}
+          {tick("left")}
+          {tick("right")}
+        </>
+      )}
       <Animated.View
         style={{
           // "to" lands on a ring (a landing pad), "from" glows as a dot.
