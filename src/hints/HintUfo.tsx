@@ -103,6 +103,11 @@ const BEAM_HOLD_MS = 450;
 const BEAM_WIDTH = UFO_FONT_SIZE * 0.85;
 /** The beam's width under the UFO, as a share of its width on the card. */
 const BEAM_NECK = 0.68;
+/**
+ * Where the beam and the zap start, below the UFO's middle: up inside its
+ * disc, so the saucer (drawn over them) hides the beam's flat top.
+ */
+const BEAM_TOP = UFO_FONT_SIZE * 0.1;
 const ZAP_MS = 180;
 /**
  * Hints show only where to look, not words: the move speaks for itself, and
@@ -398,7 +403,7 @@ function Bubble({
  * a faint one spreading outside it. It ends in a pool of light on the card.
  */
 function TractorBeam({ lift, value }: { lift: number; value: Animated.Value }) {
-  const top = UFO_FONT_SIZE * 0.3;
+  const top = BEAM_TOP;
   const width = BEAM_WIDTH;
   const neck = width * BEAM_NECK;
   // The haze and the pool spread wider than the beam itself.
@@ -467,7 +472,7 @@ function TractorBeam({ lift, value }: { lift: number; value: Animated.Value }) {
 
 /** The zap: a quick bolt down onto a button or card, with a flash. */
 function Zap({ lift, value }: { lift: number; value: Animated.Value }) {
-  const top = UFO_FONT_SIZE * 0.3;
+  const top = BEAM_TOP;
   const flash = 26;
   return (
     <>
@@ -1305,9 +1310,11 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
         >
           {effect === "beam" && <TractorBeam lift={lift} value={beam} />}
           {effect === "zap" && <Zap lift={lift} value={zap} />}
+          {/* Over the beam and the zap, which start up inside it. */}
           <Animated.View
             style={{
               position: "absolute",
+              zIndex: 1,
               left: -UFO_FONT_SIZE / 2,
               top: -UFO_FONT_SIZE / 2,
               transform: [
