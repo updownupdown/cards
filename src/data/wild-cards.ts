@@ -33,12 +33,19 @@ export const WILD_GAMES: readonly WildGameDefinition[] = [
 
 /**
  * Off while the games are being finished: every game is open to anyone who
- * can see Wild Cards (dev builds, or beta games turned on in Settings).
+ * can see Wild Cards (SHOW_WILD_CARDS, below).
  * Before release: turn this on, so games stay locked until won with credits
  * (the 12-tap "just this once" still lets a locked one be played daily), and
  * finish the translations and tests.
  */
 export const WILD_CARDS_LOCKED = false;
+
+/**
+ * Whether Wild Cards show at all: the Home tab's section and their screens.
+ * Off until they're refined after launch; turn it on locally to work on them.
+ * Players' Wild Cards progress is kept either way.
+ */
+export const SHOW_WILD_CARDS = false;
 
 export const GAMES_PER_WILD_CARD = 10;
 

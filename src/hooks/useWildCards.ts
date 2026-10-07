@@ -1,8 +1,7 @@
 import { useCampaignProgress } from "@/hooks/useCampaignProgress";
-import { useBetaGamesEnabled } from "@/data/beta-games";
-import { isLocalDevEnvironment } from "@/utils/utils";
 import {
   DEFAULT_WILD_CARDS_PROGRESS,
+  SHOW_WILD_CARDS,
   WILD_CARDS_LOCKED,
   WILD_GAMES,
   getWildCardsStatus,
@@ -48,7 +47,7 @@ export function useWildCards() {
   };
 }
 
-/** Wild Cards are only shown on dev builds, or with beta games turned on. */
+/** Wild Cards are hidden until SHOW_WILD_CARDS is turned on in the code. */
 export function useWildCardsVisible() {
-  return useBetaGamesEnabled() || isLocalDevEnvironment();
+  return SHOW_WILD_CARDS;
 }
