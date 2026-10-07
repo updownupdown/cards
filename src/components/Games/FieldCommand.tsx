@@ -517,7 +517,11 @@ function findFieldCommandHint(state: GameState): Hint | null {
     zoneTarget("actions"),
   );
   if (plan.kind === "capture") return hint;
-  return withNote(hint, i18n.t(`games:fieldCommand.hint.${plan.kind}`));
+  // Only a losing option is left when letting the enemy capture scores as a
+  // loss (see bestFieldCommandPlan): a Jack, Queen, King or Ace goes over.
+  const note =
+    plan.kind === "letCapture" && best.value <= -1000 ? "lost" : plan.kind;
+  return withNote(hint, i18n.t(`games:fieldCommand.hint.${note}`));
 }
 
 export const fieldCommandRules = {

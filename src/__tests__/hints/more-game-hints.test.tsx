@@ -339,7 +339,7 @@ describe("Gremlin hints", () => {
       won: false,
     });
     expect(hint?.steps[0]).toEqual([{ card: king.id }]);
-    expect(hint?.message.note).toBe("Start a column with this King");
+    expect(hint?.message.note).toBeUndefined();
   });
 });
 

@@ -267,8 +267,9 @@
     "youRanOutOfCards": "Kartumu habis sebelum semua bangsawan dikalahkan.",
     "hint": {
       "kill": "Ini menumbangkan seorang bangsawan",
-      "extract": "Pakai as: tumpukan ini kembali ke bawah dek",
-      "reassign": "Pakai joker: pindahkan kartu ini"
+      "extract": "Pakai satu As: kembalikan tumpukan ini ke bawah dek",
+      "reassign": "Pakai joker: pindahkan kartu ini",
+      "reassignKill": "Pakai satu Joker: memindahkan kartu ini menumbangkan seorang bangsawan"
     }
   },
   "ebbAndFlow": {
@@ -306,7 +307,8 @@
     "hint": {
       "discard": "Tukar kartu ini dengan kartu baru",
       "letCapture": "Tidak ada tangkapan: biarkan musuh mengambil kartumu yang paling lemah",
-      "sacrifice": "Tidak ada tangkapan: korbankan dua kartu lemah untuk mengirim musuh ini kembali"
+      "sacrifice": "Tidak ada tangkapan: korbankan dua kartu lemah untuk mengirim musuh ini kembali",
+      "lost": "Semua pilihan kalah: sebuah Jack, Queen, King, atau As masuk ke tumpukan tangkapan musuh"
     }
   },
   "fifteenPuzzle": {
@@ -330,10 +332,10 @@
     "gridClearWon": "Kisi sudah bersih. Kamu menang!",
     "allClubsSpent": "Ke-13 kartu keriting sudah terpakai.",
     "hint": {
-      "free_diamonds": "Singkirkan wajik untuk membuka aksi ♦",
-      "free_spades": "Singkirkan sekop untuk membuka aksi ♠",
-      "free_hearts": "Singkirkan hati untuk membuka aksi ♥",
-      "any": "Ambil satu kartu saja dengan keriting ini: simpan yang lain untuk langkah lebih besar"
+      "free_diamonds": "Tersisa kurang dari 3 wajik: aksi ♦ terbuka, kecuali dek kisi membawa lagi",
+      "free_spades": "Tersisa kurang dari 3 sekop: aksi ♠ terbuka, kecuali dek kisi membawa lagi",
+      "free_hearts": "Tersisa kurang dari 3 hati: aksi ♥ terbuka, kecuali dek kisi membawa lagi",
+      "any": "Bersihkan kartu ini saja: langkah yang membersihkan lebih banyak berakhir lebih buruk"
     }
   },
   "fortunesCall": {
@@ -368,7 +370,8 @@
     "lostShortOfTarget": "{{score}} poin. Anda butuh {{target}} poin untuk menang.",
     "hint": {
       "cell": "Pasang kaca di sini: +{{count}}",
-      "shards": "Tak ada bingkai yang bisa memakainya: jadikan pecahan"
+      "shards": "Tak ada bingkai yang bisa menerimanya: pecahkan",
+      "shardsOnPurpose": "Sengaja pecahkan ini: memasangnya di bingkai berakhir lebih buruk"
     }
   },
   "gremlin": {
@@ -384,8 +387,8 @@
     "noRoomForHelper": "Tidak ada tempat untuk kartu pembantu di {{count}} kolom.",
     "hint": {
       "helper": "Taruh kartu pembantu di tempat yang paling sedikit memakan kolom",
-      "king": "Mulai kolom dengan King ini",
-      "discard": "Buang kartu ini: sekarang akan memakan satu kolom, dan nanti kembali lagi"
+      "discard": "Buang kartu ini: memainkannya sekarang memakan kolom, dan nanti kembali lagi",
+      "discardNoFit": "Buang kartu ini: belum ada kolom yang bisa menerimanya, dan nanti kembali lagi"
     }
   },
   "herbalist": {
@@ -397,9 +400,9 @@
     "harvestPerfect": "Panen sempurna: tersisa {{count}} tanaman obat.",
     "noHerbsRemain": "Tidak ada tanaman obat tersisa untuk menyembuhkan negeri.",
     "hint": {
-      "heal": "Ambil tanaman obat ini: jika disebar dengan tepat, satu makhluk sembuh",
-      "setUp": "Ambil tanaman obat ini: jika disebar dengan tepat, ini menyiapkan penyembuhan",
-      "noCure": "Tidak ada lagi obat untuk negeri: terus sebar untuk mengakhiri permainan"
+      "heal": "Ambil tanaman obat ini: jika ditaruh dengan tepat, satu makhluk sembuh",
+      "setUp": "Ambil tanaman obat ini: jika ditaruh dengan tepat, penyembuhan makin dekat",
+      "noCure": "Tanaman obat yang tersisa tak bisa menyembuhkan semua makhluk: permainan ini tak bisa dimenangkan"
     }
   },
   "infiltrator": {

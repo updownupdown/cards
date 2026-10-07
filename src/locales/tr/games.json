@@ -267,8 +267,9 @@
     "youRanOutOfCards": "On iki soylunun hepsini yenemeden kartların bitti.",
     "hint": {
       "kill": "Bu bir soyluyu düşürür",
-      "extract": "Bir as kullan: bu deste destenin altına döner",
-      "reassign": "Bir joker kullan: bu kartı taşı"
+      "extract": "Bir As harca: bu yığını destenin altına gönder",
+      "reassign": "Bir joker kullan: bu kartı taşı",
+      "reassignKill": "Bir Joker harca: bu kartı taşımak bir soyluyu düşürür"
     }
   },
   "ebbAndFlow": {
@@ -306,7 +307,8 @@
     "hint": {
       "discard": "Bu kartı yeni bir kartla değiştir",
       "letCapture": "Ele geçirme yok: düşmanın en zayıf kartını almasına izin ver",
-      "sacrifice": "Ele geçirme yok: bu düşmanı geri göndermek için iki zayıf kartı feda et"
+      "sacrifice": "Ele geçirme yok: bu düşmanı geri göndermek için iki zayıf kartı feda et",
+      "lost": "Her seçenek kaybettirir: bir Vale, Kız, Papaz ya da As düşmanın ele geçirme yığınına girer"
     }
   },
   "fifteenPuzzle": {
@@ -330,10 +332,10 @@
     "gridClearWon": "Izgara temizlendi. Kazandın!",
     "allClubsSpent": "13 sineğin hepsi harcandı.",
     "hint": {
-      "free_diamonds": "♦ hamlelerini açmak için karoları temizle",
-      "free_spades": "♠ hamlelerini açmak için maçaları temizle",
-      "free_hearts": "♥ hamlesini açmak için kupaları temizle",
-      "any": "Bu sinekle yalnızca bir kart al: diğerlerini daha büyük hamlelere sakla"
+      "free_diamonds": "3'ten az karo kalır: ızgara destesi yenisini getirmezse ♦ hamleleri açılır",
+      "free_spades": "3'ten az maça kalır: ızgara destesi yenisini getirmezse ♠ hamleleri açılır",
+      "free_hearts": "3'ten az kupa kalır: ızgara destesi yenisini getirmezse ♥ hamlesi açılır",
+      "any": "Yalnızca bu kartı temizle: daha çok kart temizleyen hamleler daha kötü sonuçlanır"
     }
   },
   "fortunesCall": {
@@ -368,7 +370,8 @@
     "lostShortOfTarget": "{{score}} puan. Kazanmak için {{target}} puan gerekiyor.",
     "hint": {
       "cell": "Camı buraya yerleştir: +{{count}}",
-      "shards": "Hiçbir çerçeve bunları alamıyor: kırıklara at"
+      "shards": "Hiçbir çerçeve bunları alamaz: bunları kır",
+      "shardsOnPurpose": "Bunları bilerek kır: çerçeveye koymak daha kötü sonuçlanır"
     }
   },
   "gremlin": {
@@ -384,8 +387,8 @@
     "noRoomForHelper": "Yardımcının kartına {{count}} sütunda yer yok.",
     "hint": {
       "helper": "Yardımcının kartını en az sütun harcayacağı yere koy",
-      "king": "Bu Papazla bir sütun başlat",
-      "discard": "Bu kartı at: şimdi bir sütuna mal olur, sonra geri gelir"
+      "discard": "Bu kartı at: şimdi oynamak sütun harcar, sonra geri gelir",
+      "discardNoFit": "Bu kartı at: şu an hiçbir sütun onu alamaz, sonra geri gelir"
     }
   },
   "herbalist": {
@@ -397,9 +400,9 @@
     "harvestPerfect": "Kusursuz mahsul: {{count}} ot kaldı.",
     "noHerbsRemain": "Diyarı iyileştirecek ot kalmadı.",
     "hint": {
-      "heal": "Bu otları topla: iyi ekilirse bir yaratığı iyileştirir",
-      "setUp": "Bu otları topla: iyi ekilirse bir iyileştirmeye zemin hazırlar",
-      "noCure": "Diyar için çare kalmadı: oyunu bitirmek için ekmeye devam et"
+      "heal": "Bu otları al: iyi bırakılırsa bir hayvanı iyileştirir",
+      "setUp": "Bu otları al: iyi bırakılırsa bir iyileşmeyi yaklaştırır",
+      "noCure": "Kalan otlar bütün hayvanları iyileştiremez: bu oyun kazanılamaz"
     }
   },
   "infiltrator": {

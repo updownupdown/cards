@@ -267,8 +267,9 @@
     "youRanOutOfCards": "Vous n'avez plus de cartes avant d'avoir vaincu les douze figures.",
     "hint": {
       "kill": "Ceci fait tomber une figure",
-      "extract": "Utilisez un as : cette pile repart sous le paquet",
-      "reassign": "Utilisez un joker : déplacez cette carte"
+      "extract": "Dépensez un As : renvoyez cette pile sous la pioche",
+      "reassign": "Utilisez un joker : déplacez cette carte",
+      "reassignKill": "Dépensez un Joker : déplacer cette carte fait tomber une figure"
     }
   },
   "ebbAndFlow": {
@@ -306,7 +307,8 @@
     "hint": {
       "discard": "Échangez cette carte contre une nouvelle",
       "letCapture": "Aucune capture possible : laissez l'ennemi prendre votre carte la plus faible",
-      "sacrifice": "Aucune capture possible : sacrifiez deux cartes faibles pour renvoyer cet ennemi"
+      "sacrifice": "Aucune capture possible : sacrifiez deux cartes faibles pour renvoyer cet ennemi",
+      "lost": "Toutes les options perdent : un Valet, une Dame, un Roi ou un As entre dans la pile de capture ennemie"
     }
   },
   "fifteenPuzzle": {
@@ -330,10 +332,10 @@
     "gridClearWon": "La grille est vide. Victoire !",
     "allClubsSpent": "Les 13 trèfles sont épuisés.",
     "hint": {
-      "free_diamonds": "Retirez des carreaux pour libérer les actions ♦",
-      "free_spades": "Retirez des piques pour libérer les actions ♠",
-      "free_hearts": "Retirez des cœurs pour libérer l'action ♥",
-      "any": "Ne prenez qu'une carte avec ce trèfle : gardez les autres pour de plus gros coups"
+      "free_diamonds": "Il restera moins de 3 carreaux : les actions ♦ se débloquent, sauf si le paquet de la grille en ramène",
+      "free_spades": "Il restera moins de 3 piques : les actions ♠ se débloquent, sauf si le paquet de la grille en ramène",
+      "free_hearts": "Il restera moins de 3 cœurs : l'action ♥ se débloque, sauf si le paquet de la grille en ramène",
+      "any": "Retirez seulement cette carte : les coups qui en retirent plus finissent moins bien"
     }
   },
   "fortunesCall": {
@@ -368,7 +370,8 @@
     "lostShortOfTarget": "{{score}} points. Il vous faut {{target}} points pour gagner.",
     "hint": {
       "cell": "Posez la vitre ici : +{{count}}",
-      "shards": "Aucun cadre ne peut les prendre : brisez-les en éclats"
+      "shards": "Aucun cadre ne peut les prendre : brisez-les",
+      "shardsOnPurpose": "Brisez-les exprès : les mettre dans un cadre finit moins bien"
     }
   },
   "gremlin": {
@@ -384,8 +387,8 @@
     "noRoomForHelper": "Plus de place pour la carte de l'assistant dans les {{count}} colonnes.",
     "hint": {
       "helper": "Placez la carte de l'assistant là où elle coûte le moins de colonnes",
-      "king": "Commencez une colonne avec ce Roi",
-      "discard": "Défaussez cette carte : elle coûterait une colonne maintenant, et elle reviendra"
+      "discard": "Défaussez cette carte : la jouer maintenant coûte des colonnes, et elle reviendra",
+      "discardNoFit": "Défaussez cette carte : aucune colonne ne peut la prendre maintenant, et elle reviendra"
     }
   },
   "herbalist": {
@@ -397,9 +400,9 @@
     "harvestPerfect": "Récolte parfaite : il reste {{count}} herbes.",
     "noHerbsRemain": "Il ne reste plus d'herbes pour soigner le royaume.",
     "hint": {
-      "heal": "Ramassez ces herbes : bien semées, elles soignent une créature",
-      "setUp": "Ramassez ces herbes : bien semées, elles préparent une guérison",
-      "noCure": "Plus aucun remède pour le royaume : semez pour finir la partie"
+      "heal": "Ramassez ces herbes : bien déposées, elles soignent une créature",
+      "setUp": "Ramassez ces herbes : bien déposées, elles rapprochent une guérison",
+      "noCure": "Les herbes restantes ne peuvent pas soigner toutes les créatures : cette partie ne peut pas être gagnée"
     }
   },
   "infiltrator": {
