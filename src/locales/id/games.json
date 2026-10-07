@@ -72,12 +72,7 @@
     "pins": "Pin",
     "ball": "Bola",
     "throw": "Lempar",
-    "finalScore": "Skor: {{score}} (butuh {{target}} untuk menang)",
-    "hint": {
-      "throw_one": "Bola ini bisa merobohkan sekitar {{count}} pin",
-      "throw_other": "Bola ini bisa merobohkan sekitar {{count}} pin",
-      "endBall": "Tidak ada lemparan lagi: akhiri bola ini"
-    }
+    "finalScore": "Skor: {{score}} (butuh {{target}} untuk menang)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Kamu membunuh semua zombi!",

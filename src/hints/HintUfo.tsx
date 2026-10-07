@@ -47,12 +47,13 @@ import {
  * - Beacons: each place in the hint lights up with a beacon (a bright core
  *   and rings pinging out from it), one step after another. A hint with a
  *   note (a move worth explaining) says it in a bubble under the header's
- *   UFO.
+ *   UFO, and the beacons keep pinging until it has been up READ_MS.
  * - Autopilot: the UFO flies out of the header to the hint and plays it. To
  *   move a card, it hovers over it, switches on its tractor beam and carries
  *   it across; to press a button or tap a card, it zaps it. Then it flies
- *   home. A note rides along in its bubble. Tapping anywhere before
- *   it acts sends it home without playing.
+ *   home. A note rides along in its bubble: the UFO hovers over the first
+ *   target until the note has been up READ_MS, then plays on. Tapping
+ *   anywhere before it acts sends it home without playing.
  *
  * It plays a hint by tapping its targets as a player would (HintBoard.tap),
  * so nothing in a game knows Autopilot is there.
@@ -97,12 +98,20 @@ const ZAP_MS = 180;
  * (a move worth explaining) says it, and "No hint available" always shows.
  */
 const SHOW_HINT_TEXT = false;
-const NOTHING_TO_SAY_MS = 1800;
+/** How long words stay up, long or short, so there's time to read them. */
+export const READ_MS = 4000;
 const HOME_DELAY_MS = 450;
 const BUBBLE_WIDTH = 168;
 
-function beaconsDuration(lastDelay: number) {
-  return lastDelay + APPEAR_MS + PINGS * PING_MS + FADE_MS;
+/** Pings enough for the beacons to last READ_MS when there are words. */
+function beaconPings(says: boolean) {
+  return says
+    ? Math.max(PINGS, Math.ceil((READ_MS - APPEAR_MS - FADE_MS) / PING_MS))
+    : PINGS;
+}
+
+function beaconsDuration(lastDelay: number, says: boolean) {
+  return lastDelay + APPEAR_MS + beaconPings(says) * PING_MS + FADE_MS;
 }
 
 /** How high over its target the UFO hovers: the length of its beam. */
@@ -613,7 +622,9 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
     );
     const timer = setTimeout(
       () => setBeacons((current) => (current === beacons ? null : current)),
-      beacons.hasHint ? beaconsDuration(lastDelay) + 100 : NOTHING_TO_SAY_MS,
+      beacons.hasHint
+        ? beaconsDuration(lastDelay, beacons.says) + 100
+        : READ_MS,
     );
     return () => clearTimeout(timer);
   }, [beacons]);
@@ -693,6 +704,9 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
         }),
       );
     };
+    // When the note went up: the UFO waits over the first target until it
+    // has been up READ_MS.
+    let saidAt: number | null = null;
     const flyOver = async (
       spot: HintSpot,
       duration?: number,
@@ -701,7 +715,10 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
       const local = toLocal(spot);
       const up = hoverLift(local.size);
       setLift(up);
-      if (saysText(hint)) setBubble({ text, side: sideFor(local.x) });
+      if (saysText(hint)) {
+        setBubble({ text, side: sideFor(local.x) });
+        saidAt ??= Date.now();
+      }
       const distance = Math.hypot(local.x - here.x, local.y - up - here.y);
       return moveTo(
         local.x,
@@ -735,7 +752,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
     let played = false;
     if (!hint || !board) {
       setBubble({ text, side: sideFor(dock.x) });
-      await flight.wait(NOTHING_TO_SAY_MS);
+      await flight.wait(READ_MS);
     } else {
       const isMove = hint.steps.length >= 2;
       let grabbed: HintTarget | null = null;
@@ -780,6 +797,10 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
             kind: beaconKind(hint, stepIndex),
           });
           if (!(await flyOver(spot))) break steps;
+          if (stepIndex === 0 && targetIndex === 0 && saidAt !== null) {
+            const left = READ_MS - (Date.now() - saidAt);
+            if (left > 0 && !(await flight.wait(left))) break steps;
+          }
 
           if (isMove) {
             // Tractor beam on; nothing is tapped until it's ready to carry,
@@ -906,7 +927,13 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
       ]}
     >
       {beacons?.spots.map(({ key, spot, delay, kind }) => (
-        <Beacon key={key} spot={spot} delay={delay} kind={kind} />
+        <Beacon
+          key={key}
+          spot={spot}
+          delay={delay}
+          kind={kind}
+          pings={beaconPings(beacons.says)}
+        />
       ))}
       {beacons?.dock && beacons.says && (
         <View
@@ -926,7 +953,13 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
       )}
 
       {flying && stop && (
-        <Beacon key={stop.key} spot={stop.spot} kind={stop.kind} pings={2} />
+        // Long enough to last the UFO's wait while its note is read.
+        <Beacon
+          key={stop.key}
+          spot={stop.spot}
+          kind={stop.kind}
+          pings={bubble ? beaconPings(true) : 2}
+        />
       )}
 
       {/* Tapping anywhere calls the UFO home, until it acts. */}

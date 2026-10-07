@@ -98,6 +98,23 @@ function compactEnemyRowRight(
   return [...createNullArray(emptyCount), ...cards];
 }
 
+/**
+ * Deals enemy cards into the empty slots. A short deck fills only the back
+ * slots, so the row is lined up at the front again: an empty front slot left
+ * nothing to let capture, and a hand that couldn't capture or sacrifice had no
+ * move at all.
+ */
+function refillEnemyRow(draft: GameState) {
+  for (let i = 0; i < ENEMY_SLOTS; i += 1) {
+    if (draft.enemyRow[i] !== null) continue;
+
+    const next = draft.enemyDeck.pop();
+    if (!next) break;
+    draft.enemyRow[i] = flipToFace(next);
+  }
+  draft.enemyRow = compactEnemyRowRight(draft.enemyRow);
+}
+
 function canCaptureWithCards(
   selectedCards: PlayingCard[],
   enemyCard: PlayingCard,
@@ -529,6 +546,7 @@ export const fieldCommandRules = {
   recyclePersonalDeckIfNeeded,
   drawToHand,
   compactEnemyRowRight,
+  refillEnemyRow,
   canCaptureWithCards,
   cardById,
   clearCaptureSelections,
@@ -569,13 +587,7 @@ export default function FieldCommand() {
     await delay();
 
     setGame((draft) => {
-      for (let i = 0; i < ENEMY_SLOTS; i += 1) {
-        if (draft.enemyRow[i] !== null) continue;
-
-        const next = draft.enemyDeck.pop();
-        if (!next) break;
-        draft.enemyRow[i] = flipToFace(next);
-      }
+      refillEnemyRow(draft);
 
       draft.phase = draft.hand.length === 0 ? "drawPhase" : "discardPhase";
 

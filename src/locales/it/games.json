@@ -72,12 +72,7 @@
     "pins": "Birilli",
     "ball": "Palla",
     "throw": "Tira",
-    "finalScore": "Punteggio: {{score}} (serve {{target}} per vincere)",
-    "hint": {
-      "throw_one": "Questa palla può abbattere circa {{count}} birillo",
-      "throw_other": "Questa palla può abbattere circa {{count}} birilli",
-      "endBall": "Nessun tiro rimasto: chiudi questa palla"
-    }
+    "finalScore": "Punteggio: {{score}} (serve {{target}} per vincere)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Hai ucciso tutti gli zombie!",

@@ -72,12 +72,7 @@
     "pins": "Bolos",
     "ball": "Bola",
     "throw": "Lanzar",
-    "finalScore": "Puntuación: {{score}} (se necesitan {{target}} para ganar)",
-    "hint": {
-      "throw_one": "Esta bola puede derribar unos {{count}} bolo",
-      "throw_other": "Esta bola puede derribar unos {{count}} bolos",
-      "endBall": "No quedan tiros: termina esta bola"
-    }
+    "finalScore": "Puntuación: {{score}} (se necesitan {{target}} para ganar)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "¡Has matado a todos los zombis!",

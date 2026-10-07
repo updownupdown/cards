@@ -72,12 +72,7 @@
     "pins": "Lobut",
     "ball": "Top",
     "throw": "At",
-    "finalScore": "Puan: {{score}} (kazanmak için {{target}} gerekli)",
-    "hint": {
-      "throw_one": "Bu top yaklaşık {{count}} lobut devirebilir",
-      "throw_other": "Bu top yaklaşık {{count}} lobut devirebilir",
-      "endBall": "Atış kalmadı: bu topu bitir"
-    }
+    "finalScore": "Puan: {{score}} (kazanmak için {{target}} gerekli)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Bütün zombileri öldürdün!",

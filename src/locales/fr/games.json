@@ -72,12 +72,7 @@
     "pins": "Quilles",
     "ball": "Boule",
     "throw": "Lancer",
-    "finalScore": "Score : {{score}} ({{target}} nécessaires pour gagner)",
-    "hint": {
-      "throw_one": "Cette boule peut faire tomber environ {{count}} quille",
-      "throw_other": "Cette boule peut faire tomber environ {{count}} quilles",
-      "endBall": "Plus aucun lancer : terminez cette boule"
-    }
+    "finalScore": "Score : {{score}} ({{target}} nécessaires pour gagner)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Vous avez tué tous les zombies !",

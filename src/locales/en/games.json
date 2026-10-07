@@ -72,12 +72,7 @@
     "pins": "Pins",
     "ball": "Ball",
     "throw": "Throw",
-    "finalScore": "Score: {{score}} ({{target}} needed to win)",
-    "hint": {
-      "throw_one": "This ball can knock down about {{count}} pin",
-      "throw_other": "This ball can knock down about {{count}} pins",
-      "endBall": "No throw left: end this ball"
-    }
+    "finalScore": "Score: {{score}} ({{target}} needed to win)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "You killed all the zombies!",

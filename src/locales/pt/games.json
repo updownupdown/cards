@@ -72,12 +72,7 @@
     "pins": "Pinos",
     "ball": "Bola",
     "throw": "Lançar",
-    "finalScore": "Pontuação: {{score}} (é necessário {{target}} para vencer)",
-    "hint": {
-      "throw_one": "Esta bola pode derrubar cerca de {{count}} pino",
-      "throw_other": "Esta bola pode derrubar cerca de {{count}} pinos",
-      "endBall": "Não há mais jogadas: encerre esta bola"
-    }
+    "finalScore": "Pontuação: {{score}} (é necessário {{target}} para vencer)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Você matou todos os zumbis!",

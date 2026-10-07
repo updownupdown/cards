@@ -19,7 +19,9 @@ import {
   run,
 } from "../../../jest/game-harness";
 import type { PlayingCard } from "@/components/Cards/card-utils";
-import FieldCommand from "@/components/Games/FieldCommand";
+import FieldCommand, {
+  fieldCommandRules,
+} from "@/components/Games/FieldCommand";
 import FortyThieves from "@/components/Games/FortyThieves";
 import NightVigil from "@/components/Games/NightVigil";
 import Penguin from "@/components/Games/Penguin";
@@ -81,6 +83,22 @@ describe("Field Command", () => {
     await pressButton(renderer, "Let Capture");
 
     expect(outcome()).toBe("lost");
+  });
+
+  test("the last enemy cards are dealt to the front", () => {
+    const last = card("A", "diamonds", false);
+    const state = {
+      ...captureState(card("5", "spades"), []),
+      enemyRow: [null, null, null, null],
+      enemyDeck: [last],
+    } as Parameters<typeof fieldCommandRules.refillEnemyRow>[0];
+    fieldCommandRules.refillEnemyRow(state);
+    expect(state.enemyRow.map((slot) => slot?.id ?? null)).toEqual([
+      null,
+      null,
+      null,
+      last.id,
+    ]);
   });
 });
 
