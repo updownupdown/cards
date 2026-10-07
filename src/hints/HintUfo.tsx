@@ -1,3 +1,4 @@
+import FlyingSaucer from "@/assets/images/flying-saucer.svg";
 import { isBoardInputLocked } from "@/components/Cards/input-lock";
 import { defaultAnimDuration } from "@/constants/animation";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
@@ -91,7 +92,7 @@ const TICK_THICKNESS = 2.5;
 const TICK_GAP = 4;
 
 // The flying UFO
-const UFO_FONT_SIZE = 30;
+const UFO_FONT_SIZE = 34;
 const POP_MS = 260;
 const BEAM_MS = 300;
 const BEAM_HOLD_MS = 450;
@@ -102,6 +103,11 @@ const BEAM_HOLD_MS = 450;
 const BEAM_WIDTH = UFO_FONT_SIZE * 0.85;
 /** The beam's width under the UFO, as a share of its width on the card. */
 const BEAM_NECK = 0.68;
+/**
+ * Where the beam and the zap start, below the UFO's middle: up inside its
+ * disc, so the saucer (drawn over them) hides the beam's flat top.
+ */
+const BEAM_TOP = UFO_FONT_SIZE * 0.1;
 const ZAP_MS = 180;
 /**
  * Hints show only where to look, not words: the move speaks for itself, and
@@ -397,7 +403,7 @@ function Bubble({
  * a faint one spreading outside it. It ends in a pool of light on the card.
  */
 function TractorBeam({ lift, value }: { lift: number; value: Animated.Value }) {
-  const top = UFO_FONT_SIZE * 0.3;
+  const top = BEAM_TOP;
   const width = BEAM_WIDTH;
   const neck = width * BEAM_NECK;
   // The haze and the pool spread wider than the beam itself.
@@ -466,7 +472,7 @@ function TractorBeam({ lift, value }: { lift: number; value: Animated.Value }) {
 
 /** The zap: a quick bolt down onto a button or card, with a flash. */
 function Zap({ lift, value }: { lift: number; value: Animated.Value }) {
-  const top = UFO_FONT_SIZE * 0.3;
+  const top = BEAM_TOP;
   const flash = 26;
   return (
     <>
@@ -518,19 +524,33 @@ function Zap({ lift, value }: { lift: number; value: Animated.Value }) {
 
 // —— The UFO ————————————————————————————————————————————————————————————
 
+type AnimatedNumber =
+  | number
+  | Animated.AnimatedInterpolation<number>
+  | Animated.Value;
+
 /**
- * The UFO itself: the header button's own icon (level, as it sits in the
- * header, where the emoji would fly tilted), in a soft green glow.
+ * The UFO itself, in a soft green glow. Out and about, it's the flying
+ * saucer, its pilot waving from under the dome; on its button, it's the
+ * header's icon.
+ * It turns from one into the other as it lifts off and lands.
  */
 function UfoGlyph({
   size,
   glowing = 1,
+  saucer = 1,
 }: {
   size: number;
   /** How much of its glow shows (it fades in as it lifts off its button). */
-  glowing?: number | Animated.AnimatedInterpolation<number> | Animated.Value;
+  glowing?: AnimatedNumber;
+  /** 1 for the flying saucer, 0 for the header's icon. */
+  saucer?: AnimatedNumber;
 }) {
   const glow = size * 1.6;
+  const icon =
+    typeof saucer === "number"
+      ? 1 - saucer
+      : saucer.interpolate({ inputRange: [0, 1], outputRange: [1, 0] });
   return (
     <View style={{ width: size, height: size }}>
       <Animated.View
@@ -558,7 +578,12 @@ function UfoGlyph({
           />
         </Svg>
       </Animated.View>
-      <Icon name="ufo" size={size} color={theme.accent} />
+      <Animated.View style={{ position: "absolute", opacity: icon }}>
+        <Icon name="ufo" size={size} color={theme.accent} />
+      </Animated.View>
+      <Animated.View style={{ position: "absolute", opacity: saucer }}>
+        <FlyingSaucer width={size} height={size} />
+      </Animated.View>
     </View>
   );
 }
@@ -664,7 +689,7 @@ function HoverUfo({
         ],
       }}
     >
-      <UfoGlyph size={size} glowing={amount} />
+      <UfoGlyph size={size} glowing={amount} saucer={amount} />
     </Animated.View>
   );
 }
@@ -800,6 +825,8 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
   } | null>(null);
   const position = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const scale = useRef(new Animated.Value(0)).current;
+  /** The header's icon (0) turning into the flying saucer (1). */
+  const saucer = useRef(new Animated.Value(0)).current;
   const opacity = useRef(new Animated.Value(0)).current;
   const beam = useRef(new Animated.Value(0)).current;
   const zap = useRef(new Animated.Value(0)).current;
@@ -981,6 +1008,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
     const docked = latest.current.dockIconSize / UFO_FONT_SIZE;
     position.setValue(here);
     scale.setValue(docked);
+    saucer.setValue(0);
     opacity.setValue(1);
     beam.setValue(0);
     zap.setValue(0);
@@ -991,12 +1019,19 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
     setFlying(true);
     setHintUfoOut(true);
     await flight.run(
-      Animated.timing(scale, {
-        toValue: 1,
-        duration: POP_MS,
-        easing: Easing.out(Easing.back(2)),
-        useNativeDriver,
-      }),
+      Animated.parallel([
+        Animated.timing(scale, {
+          toValue: 1,
+          duration: POP_MS,
+          easing: Easing.out(Easing.back(2)),
+          useNativeDriver,
+        }),
+        Animated.timing(saucer, {
+          toValue: 1,
+          duration: POP_MS,
+          useNativeDriver,
+        }),
+      ]),
     );
 
     let played = false;
@@ -1159,6 +1194,13 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
           easing: Easing.in(Easing.quad),
           useNativeDriver,
         }),
+        // Back into the header's icon as it lands.
+        Animated.timing(saucer, {
+          toValue: 0,
+          duration: 600,
+          easing: Easing.in(Easing.cubic),
+          useNativeDriver,
+        }),
       ]),
     );
     opacity.setValue(0);
@@ -1268,9 +1310,11 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
         >
           {effect === "beam" && <TractorBeam lift={lift} value={beam} />}
           {effect === "zap" && <Zap lift={lift} value={zap} />}
+          {/* Over the beam and the zap, which start up inside it. */}
           <Animated.View
             style={{
               position: "absolute",
+              zIndex: 1,
               left: -UFO_FONT_SIZE / 2,
               top: -UFO_FONT_SIZE / 2,
               transform: [
@@ -1284,7 +1328,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
               ],
             }}
           >
-            <UfoGlyph size={UFO_FONT_SIZE} />
+            <UfoGlyph size={UFO_FONT_SIZE} saucer={saucer} />
           </Animated.View>
           {bubble && (
             <View
