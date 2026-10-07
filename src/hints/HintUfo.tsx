@@ -101,7 +101,7 @@ const SHOW_HINT_TEXT = false;
 /** How long words stay up, long or short, so there's time to read them. */
 export const READ_MS = 4000;
 const HOME_DELAY_MS = 450;
-const BUBBLE_WIDTH = 168;
+const BUBBLE_WIDTH = 200;
 
 /** Pings enough for the beacons to last READ_MS when there are words. */
 function beaconPings(says: boolean) {
@@ -1061,7 +1061,7 @@ const tailStyle = {
 const bubbleTextStyle = {
   color: Colors.K100,
   fontFamily: FontWeight[400],
-  fontSize: 13,
-  lineHeight: 17,
+  fontSize: 17,
+  lineHeight: 22,
   textAlign: "center" as const,
 };

@@ -1314,12 +1314,13 @@
   },
   "elementary-detective": {
     "howToPlay": {
-      "hash": "cc00bd38",
+      "hash": "fa3fc6ca",
       "value": [
         "## Amaç",
         "12 gizli oyun arkadaşının hepsini açtıktan sonra en az 20 puan topla.",
         "## Oynanış",
         "- Kapalı duran 12 oyun arkadaşı Valeler, Kızlar ve Papazlardır. Kalan kartlar desteyi oluşturur.",
+        "- Izgaranın her sütununda bir Vale, bir Kız ve bir Papaz bulunur; üçü de farklı takımdandır.",
         "- Destenin en üstteki kartını, oyun arkadaşı ızgarasının çevresindeki boş bir tahmin yerine koy.",
         "- Bir tahmin kartını geri çekebilirsin; bunun bedeli destedeki sonraki kartı da ıskartaya atmaktır.",
         "- İstediğin zaman gizli bir oyun arkadaşını aç. Aynı yatay ya da dikey hattaki aynı takımdan her tahmin kartı puan yığınına gider."

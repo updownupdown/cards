@@ -1314,12 +1314,13 @@
   },
   "elementary-detective": {
     "howToPlay": {
-      "hash": "cc00bd38",
+      "hash": "fa3fc6ca",
       "value": [
         "## Obiettivo",
         "Fai almeno 20 punti dopo aver rivelato tutti e 12 i compagni di gioco nascosti.",
         "## Come si gioca",
         "- I 12 compagni coperti sono Fanti, Donne e Re. Le altre carte formano il mazzo.",
+        "- Ogni colonna della griglia contiene un Fante, una Donna e un Re, tutti di semi diversi.",
         "- Piazza la carta in cima al mazzo in uno spazio vuoto per le ipotesi intorno alla griglia dei compagni.",
         "- Puoi ritirare una carta ipotesi, al costo di scartare anche la carta successiva del mazzo.",
         "- In qualsiasi momento puoi rivelare un compagno nascosto. Ogni carta ipotesi dello stesso seme sulla stessa linea orizzontale o verticale va nella tua pila dei punti."

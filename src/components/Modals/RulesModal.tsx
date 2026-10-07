@@ -76,7 +76,6 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
 
           <RichText
             content={gameInfo.howToPlay ?? [t("rules.unavailable")]}
-            size={RULES_TEXT_SIZE}
             headingColor={headingColor}
           />
 
@@ -92,9 +91,6 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
     </ModalFull>
   );
 };
-
-/** The rules are read through, so they're set larger than the interface. */
-const RULES_TEXT_SIZE = "xl";
 
 type QuickStartProps = {
   gameInfo: ReturnType<typeof getGameInfo>;
@@ -126,7 +122,7 @@ export const QuickStart = ({ gameInfo, style }: QuickStartProps) => {
               {itemIndex + 1}.
             </Text>
             <Text
-              size={RULES_TEXT_SIZE}
+              size="md"
               weight={300}
               color={theme.ink}
               style={{ flex: 1 }}

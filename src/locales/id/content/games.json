@@ -1314,12 +1314,13 @@
   },
   "elementary-detective": {
     "howToPlay": {
-      "hash": "cc00bd38",
+      "hash": "fa3fc6ca",
       "value": [
         "## Tujuan",
         "Raih minimal 20 poin setelah membuka ke-12 teman bermain yang tersembunyi.",
         "## Cara bermain",
         "- Ke-12 teman bermain yang tertutup adalah Jack, Queen, dan King. Kartu lainnya membentuk dek.",
+        "- Setiap kolom kisi berisi satu Jack, satu Queen, dan satu King, masing-masing dari jenis yang berbeda.",
         "- Taruh kartu teratas dek di ruang tebakan kosong di sekitar kisi teman bermain.",
         "- Kamu boleh menarik kembali kartu tebakan, dengan konsekuensi kartu dek berikutnya juga dibuang.",
         "- Kapan saja, buka satu teman bermain yang tersembunyi. Setiap kartu tebakan sejenis di garis mendatar atau tegak yang sama masuk ke tumpukan skormu."

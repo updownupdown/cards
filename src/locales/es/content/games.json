@@ -1314,12 +1314,13 @@
   },
   "elementary-detective": {
     "howToPlay": {
-      "hash": "cc00bd38",
+      "hash": "fa3fc6ca",
       "value": [
         "## Objetivo",
         "Consigue al menos 20 puntos tras descubrir a los 12 compañeros de juego ocultos.",
         "## Cómo se juega",
         "- Los 12 compañeros boca abajo son Jotas, Reinas y Reyes. El resto de las cartas forman el mazo.",
+        "- Cada columna de la cuadrícula tiene una Jota, una Reina y un Rey, todos de palos distintos.",
         "- Coloca la carta superior del mazo en un espacio de suposición vacío alrededor de la cuadrícula de compañeros.",
         "- Puedes retirar una carta de suposición, a cambio de descartar también la siguiente carta del mazo.",
         "- En cualquier momento, descubre a un compañero oculto. Cada carta de suposición del mismo palo en la misma línea horizontal o vertical pasa a tu pila de puntuación."

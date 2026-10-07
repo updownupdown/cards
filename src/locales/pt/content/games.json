@@ -1314,12 +1314,13 @@
   },
   "elementary-detective": {
     "howToPlay": {
-      "hash": "cc00bd38",
+      "hash": "fa3fc6ca",
       "value": [
         "## Objetivo",
         "Faça pelo menos 20 pontos depois de revelar os 12 companheiros de brincadeira escondidos.",
         "## Como jogar",
         "- Os 12 companheiros virados para baixo são Valetes, Damas e Reis. As outras cartas formam o monte.",
+        "- Cada coluna da grade tem um Valete, uma Dama e um Rei, todos de naipes diferentes.",
         "- Coloque a carta do topo do monte num espaço de palpite vazio ao redor da grade dos companheiros.",
         "- Você pode retirar uma carta de palpite, ao custo de também descartar a próxima carta do monte.",
         "- A qualquer momento, revele um companheiro escondido. Toda carta de palpite do mesmo naipe na mesma linha horizontal ou vertical vai para sua pilha de pontos."
