@@ -1,0 +1,47 @@
+<!-- The flying saucer the hint UFO flies as: a pilot waving from under its dome. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 1.5 64 64">
+  <defs>
+    <linearGradient id="saucerDisc" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eef1f4"/>
+      <stop offset="0.55" stop-color="#bcc3cb"/>
+      <stop offset="1" stop-color="#8b939d"/>
+    </linearGradient>
+    <linearGradient id="saucerHull" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7d8590"/>
+      <stop offset="1" stop-color="#4f565f"/>
+    </linearGradient>
+    <linearGradient id="saucerDome" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d9f1ff"/>
+      <stop offset="1" stop-color="#8fcdf2"/>
+    </linearGradient>
+  </defs>
+  <g stroke="#14181d" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+    <!-- Underside -->
+    <path d="M14 42 Q17 53 32 54 Q47 53 50 42 Z" fill="url(#saucerHull)"/>
+    <!-- Dome -->
+    <path d="M18.5 37 Q18 15 32 14 Q46 15 45.5 37 Z" fill="url(#saucerDome)"/>
+  </g>
+  <!-- The pilot, waving -->
+  <path d="M38.5 31 Q39 24 41.5 21.5" fill="none" stroke="#2fb544" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="41.8" cy="20.6" r="1.9" fill="#3fd256"/>
+  <path d="M24 37 Q24 30 32 30 Q40 30 40 37 Z" fill="#2a2f36"/>
+  <ellipse cx="31" cy="25" rx="6.2" ry="6.6" fill="#3fd256"/>
+  <path d="M26.2 27.8 Q31 32.6 35.8 27.8 Q33.5 30.5 31 30.5 Q28.5 30.5 26.2 27.8 Z" fill="#2fb544"/>
+  <ellipse cx="28.4" cy="25" rx="1.9" ry="2.5" transform="rotate(-22 28.4 25)" fill="#14181d"/>
+  <ellipse cx="33.6" cy="25" rx="1.9" ry="2.5" transform="rotate(22 33.6 25)" fill="#14181d"/>
+  <circle cx="28" cy="24.2" r="0.6" fill="#fff"/>
+  <circle cx="33.2" cy="24.2" r="0.6" fill="#fff"/>
+  <!-- Glass shine -->
+  <path d="M22.5 26 Q23 19 28.5 17" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity="0.85"/>
+  <g stroke="#14181d" stroke-width="2.6" stroke-linejoin="round">
+    <!-- Dome's seat -->
+    <ellipse cx="32" cy="37" rx="14.5" ry="3.4" fill="#1f6fd1"/>
+    <!-- Disc -->
+    <path d="M5 42 Q5 36 18.5 35.5 Q22 39 32 39 Q42 39 45.5 35.5 Q59 36 59 42 Q59 48 32 48 Q5 48 5 42 Z" fill="url(#saucerDisc)"/>
+  </g>
+  <!-- Rim and lights -->
+  <path d="M7.5 43.5 Q32 49 56.5 43.5" fill="none" stroke="#8b939d" stroke-width="1.2"/>
+  <circle cx="14" cy="42" r="2" fill="#3b8eea"/>
+  <circle cx="32" cy="44" r="2.2" fill="#3b8eea"/>
+  <circle cx="50" cy="42" r="2" fill="#3b8eea"/>
+</svg>
