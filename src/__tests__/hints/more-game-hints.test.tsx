@@ -362,6 +362,37 @@ describe("Poker Squares hints", () => {
     ).toBe(true);
     expect(placement?.aim).toBe("sets");
   });
+
+  test("names no aim for a lone card in an empty grid", () => {
+    const placement = pokerSquaresRules.bestPlacement({
+      deck: [card("7", "hearts")],
+      grid: Array<PlayingCard | null>(25).fill(null),
+      score: 0,
+      scoresReady: false,
+      isTransitioning: false,
+      ended: false,
+      won: false,
+    });
+    expect(placement?.aim).toBeNull();
+  });
+
+  test("a card completing a flush aims at the flush", () => {
+    const grid = Array<PlayingCard | null>(25).fill(null);
+    ["2", "5", "9", "J"].forEach((rank, col) => {
+      grid[col] = card(rank as PlayingCard["rank"], "clubs");
+    });
+    const placement = pokerSquaresRules.bestPlacement({
+      deck: [card("K", "clubs")],
+      grid,
+      score: 0,
+      scoresReady: false,
+      isTransitioning: false,
+      ended: false,
+      won: false,
+    });
+    expect(placement?.cell).toBe(4);
+    expect(placement?.aim).toBe("flush");
+  });
 });
 
 describe("Rogue Run hints", () => {

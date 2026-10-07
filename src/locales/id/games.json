@@ -657,7 +657,7 @@
     },
     "hint": {
       "run": "Kabur: ruangan ini akan membunuhmu",
-      "fightWeapon": "Lawan monster ini dengan senjatamu",
+      "runWeak": "Kabur: ruangan ini akan membuatmu terlalu lemah untuk lanjut",
       "fightBare": "Lawan yang ini dengan tangan kosong: simpan senjatamu untuk monster yang lebih besar"
     }
   },
@@ -716,11 +716,11 @@
     "nightmaresOverwhelmed": "Para Mimpi Buruk menguasai Alice.",
     "hint": {
       "eliminate": "Hapus Mimpi buruk ini",
-      "defend": "Lemahkan serangan Mimpi buruk ini: ia tidak bisa dihapus giliran ini",
+      "defend": "Lemahkan serangan Mimpi buruk ini: Alice hanya kehilangan selisihnya",
       "mold": "Bentuk Penjaga ini agar masuk ke dek Anda",
-      "exile": "Asingkan Mimpi buruk ini: ia akan merenggut lebih dari 5 nyawa Alice",
-      "deepBreath": "Tidak ada yang layak ditugaskan: tukar kartu terlemah Anda dengan yang baru",
-      "remSleep": "Alice tidak akan selamat dari papan ini: gunakan Tidur REM untuk mulai lagi"
+      "exile": "Asingkan Mimpi buruk ini: jika dibiarkan, ia akan merugikan Alice lebih dari pengasingan",
+      "deepBreath": "Tidak ada yang layak ditugaskan: gunakan Tarik napas untuk membuang kartu terlemah Anda dan mengakhiri giliran",
+      "remSleep": "Alice tidak akan selamat dari papan ini: gunakan Tidur REM untuk membagikan ulang papan dan tangan Anda"
     }
   },
   "spiderSolitaire": {
@@ -768,10 +768,11 @@
     "doNothing": "Jangan lakukan apa-apa",
     "noKingSelected": "Belum ada King dipilih",
     "hint": {
-      "reserve": "Simpan dua kartu ini di cadangan untuk menghabisi monster nanti",
+      "reserve": "Sisihkan cadanganmu: sisa kartu di tangan lebih baik dimainkan tanpanya",
       "discard": "Kartu ini tidak punya tempat yang bagus: buang saja",
       "bury": "Taruh kartu ini di bawah dek, jangan dibuang",
-      "double": "Gandakan serangan dengan King sekop"
+      "buryWithKing": "Pakai King hati untuk menaruh satu kartu di bawah dek, jangan dibuang",
+      "double": "Pakai King sekop: penyerangmu berikutnya dihitung dua kali"
     }
   },
   "waypoint": {
@@ -793,9 +794,10 @@
     "speed": "Kecepatan",
     "hint": {
       "boosts": "Injak gas untuk mencapai kecepatan target",
-      "brakes": "Rem: lebih baik lambat daripada melewati kecepatan target",
-      "finishUnder": "Selesaikan sekarang: kartu lain kemungkinan akan melewati target",
-      "finishOver": "Terlalu cepat dan rem habis: selesaikan dan terima penaltinya"
+      "brakes": "Rem kembali ke kecepatan target: kelebihan yang diperbaiki tidak memakan biaya",
+      "finishUnder": "Selesaikan sekarang: kurang dari target lebih murah daripada lanjut",
+      "finishOver": "Terlalu cepat dan rem tidak cukup: selesaikan dan terima 1 penalti dan 1 kerusakan",
+      "finishOverKeep": "Tetap selesaikan: simpan rem untuk sektor berikutnya dan terima 1 penalti dan 1 kerusakan"
     }
   },
   "windmill": {

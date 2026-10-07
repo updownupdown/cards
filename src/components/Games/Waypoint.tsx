@@ -517,24 +517,34 @@ function bestWaypointMove(game: WaypointGameState): WaypointMove | null {
 function findWaypointHint(game: WaypointGameState) {
   const move = bestWaypointMove(game);
   if (!move) return null;
+  const sector = game.sectors[game.completedSectors];
+  const total = currentTotal(game);
+  const target = rankValue(sector[0]);
   if (move === "finish") {
-    const sector = game.sectors[game.completedSectors];
-    const total = currentTotal(game);
-    const target = rankValue(sector[0]);
     const hint = pressHint("actions", i18n.t("games:waypoint.finishSector"));
     if (total === target) return hint;
+    if (total < target) {
+      return withNote(hint, i18n.t("games:waypoint.hint.finishUnder"));
+    }
+    // A bust costs 1 penalty and 1 damage; Brakes could repair it, unless
+    // there are too few, or they're worth more kept for later sectors.
+    const brakes = game.brakes.filter((card) => card.faceUp).length;
     return withNote(
       hint,
       i18n.t(
-        total > target
+        brakes < total - target
           ? "games:waypoint.hint.finishOver"
-          : "games:waypoint.hint.finishUnder",
+          : "games:waypoint.hint.finishOverKeep",
       ),
     );
   }
   const hint = makeHint("tapCard", zoneTarget(MOVE_ZONES[move]));
-  if (move === "boosts" || move === "brakes") {
-    return withNote(hint, i18n.t(`games:waypoint.hint.${move}`));
+  if (move === "boosts") {
+    return withNote(hint, i18n.t("games:waypoint.hint.boosts"));
+  }
+  // Braking is only worth it to repair a bust.
+  if (move === "brakes" && total > target) {
+    return withNote(hint, i18n.t("games:waypoint.hint.brakes"));
   }
   return hint;
 }
