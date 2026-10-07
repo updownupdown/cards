@@ -303,6 +303,30 @@ describe("Pocket Poker hints", () => {
       ]),
     ).toBeNull();
   });
+
+  test("keeps four to an Ace-high straight", () => {
+    const run = [
+      card("J", "spades"),
+      card("Q", "hearts"),
+      card("K", "clubs"),
+      card("A", "diamonds"),
+    ];
+    expect(pocketPokerRules.cardsToKeep([...run, card("4", "spades")])).toEqual(
+      { keep: run, reason: "keepStraightDraw" },
+    );
+  });
+
+  test("draws five when nothing is worth keeping", () => {
+    expect(
+      pocketPokerRules.cardsToKeep([
+        card("2", "spades"),
+        card("4", "hearts"),
+        card("6", "clubs"),
+        card("8", "diamonds"),
+        card("10", "spades"),
+      ]),
+    ).toEqual({ keep: [], reason: "keepNothing" });
+  });
 });
 
 describe("Café Queue hints", () => {

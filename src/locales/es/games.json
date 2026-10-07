@@ -425,7 +425,8 @@
     "hint": {
       "retire": "Retira estas cartas bajas, para que tus mejores cartas vuelvan más a menudo",
       "assassinate": "Tu mano no puede detener a este espía: sacrifica un agente doble",
-      "doubleAgent": "El As del palo del espía es un agente doble: convierte tus demás cartas a su palo",
+      "noDoubleAgents": "No quedan agentes dobles: este espía pone fin a la misión",
+      "doubleAgent": "El As del palo del espía es un agente doble: convierte las demás cartas que juegas a su palo",
       "counterKey": "Este espía clave no se puede reclutar: contrarréstalo con las cartas que menos necesitas",
       "counter": "Este espía no se puede reclutar: contrarréstalo con las cartas que menos necesitas"
     }
@@ -484,9 +485,10 @@
     "selectCardsToCapture": "Elige cartas para capturar",
     "hint": {
       "fold": "Retírate: seguir costaría más",
+      "noCapture": "No quedan capturas: retírate",
       "finish": "Vacía la mano del Lobo: la tuya puntúa",
-      "over_one": "Supéralo: vale la pena que el Lobo robe {{count}} carta",
-      "over_other": "Supéralo: vale la pena que el Lobo robe {{count}} cartas"
+      "over_one": "Over: vale la pena que el Lobo robe {{count}} carta",
+      "over_other": "Over: vale la pena que el Lobo robe {{count}} cartas"
     }
   },
   "memory": {
@@ -524,10 +526,8 @@
     "smokeThreat": "Bomba de humo sobre {{card}}",
     "grappleThreats": "Garfio sobre {{first}} y {{second}}",
     "hint": {
-      "smoke": "Usa tu Bomba de humo en esta Amenaza",
-      "grapple": "Une estas dos Amenazas con el Garfio y respóndelas juntas",
       "dump": "Juega esta Respuesta donde no haga daño",
-      "resolve": "Resuelve ya: robar otra vez tiene más riesgo que ventaja"
+      "resolve": "Resuelve ya: robar otra vez probablemente cueste más de lo que gana"
     }
   },
   "ouroboros": {
@@ -543,8 +543,7 @@
     "lostInDungeon": "¡Te has perdido en la mazmorra sin salida!",
     "markPathNumber": "Marcar camino {{number}}",
     "hint": {
-      "lookAround": "Mira alrededor para ver qué hay delante",
-      "explore": "Explora más adelante",
+      "lookAround": "Mirar alrededor: solo puedes avanzar con cartas numéricas boca arriba",
       "jewel": "Explora más adelante para tomar una joya",
       "escape": "¡Escapa por la salida!",
       "markPath": "Marca un camino: una salida de los callejones sin salida",
@@ -607,12 +606,17 @@
     },
     "hint": {
       "play": "Juega: una apuesta de un punto no arriesga más que retirarse",
-      "standPat": "Quédate con tu mano: es fuerte",
+      "setHandStrong": "Fijar mano: una escalera o algo mejor vale la pena guardarla",
+      "setHandBet": "Fijar mano: robar otra vez sube tu apuesta mínima a 2 por muy poco",
       "keepSets": "Guarda tus cartas iguales y roba el resto",
       "keepFlushDraw": "Guarda las cuatro cartas al color",
-      "keepPair": "Guarda la pareja y roba tres",
+      "keepPair": "Guarda la pareja y roba el resto",
       "keepStraightDraw": "Guarda las cuatro cartas a la escalera",
-      "keepHighCards": "Guarda las cartas altas y roba el resto",
+      "keepHighCards_one": "Guarda la carta alta y roba el resto",
+      "keepHighCards_other": "Guarda las cartas altas y roba el resto",
+      "keepJokers_one": "Guarda el comodín y roba el resto",
+      "keepJokers_other": "Guarda los comodines y roba el resto",
+      "keepNothing": "Nada merece la pena guardar: roba las cinco",
       "odds": "Esta mano gana alrededor del {{chance}} % de las veces"
     }
   },

@@ -425,7 +425,8 @@
     "hint": {
       "retire": "Ritira queste carte basse, così le tue carte migliori tornano più spesso",
       "assassinate": "La tua mano non può fermare questa spia: sacrifica un doppiogiochista",
-      "doubleAgent": "L'Asso del seme della spia è un doppiogiochista: porta le tue altre carte al suo seme",
+      "noDoubleAgents": "Non restano doppiogiochisti: questa spia mette fine alla missione",
+      "doubleAgent": "L'Asso del seme della spia è un doppiogiochista: porta al suo seme le altre carte che giochi",
       "counterKey": "Questa spia chiave non si può reclutare: contrastala con le carte che ti servono meno",
       "counter": "Questa spia non si può reclutare: contrastala con le carte che ti servono meno"
     }
@@ -484,9 +485,10 @@
     "selectCardsToCapture": "Scegli le carte da catturare",
     "hint": {
       "fold": "Lascia: continuare costerebbe di più",
+      "noCapture": "Nessuna cattura possibile: lascia",
       "finish": "Svuota la mano del Lupo: la tua fa punti",
-      "over_one": "Supera: conviene anche se il Lupo pesca {{count}} carta",
-      "over_other": "Supera: conviene anche se il Lupo pesca {{count}} carte"
+      "over_one": "Over: conviene anche se il Lupo pesca {{count}} carta",
+      "over_other": "Over: conviene anche se il Lupo pesca {{count}} carte"
     }
   },
   "memory": {
@@ -524,10 +526,8 @@
     "smokeThreat": "Fumogeno su {{card}}",
     "grappleThreats": "Rampino su {{first}} e {{second}}",
     "hint": {
-      "smoke": "Usa il fumogeno su questa minaccia",
-      "grapple": "Collega queste due minacce con il rampino e rispondi a entrambe insieme",
       "dump": "Gioca questa risposta dove non fa danni",
-      "resolve": "Risolvi ora: pescare ancora rischia di fare più male che bene"
+      "resolve": "Risolvi ora: pescare ancora probabilmente costa più di quanto rende"
     }
   },
   "ouroboros": {
@@ -543,8 +543,7 @@
     "lostInDungeon": "Ti sei perso nel dungeon senza via d'uscita!",
     "markPathNumber": "Segna il sentiero {{number}}",
     "hint": {
-      "lookAround": "Guardati intorno per vedere cosa ti aspetta",
-      "explore": "Esplora più avanti",
+      "lookAround": "Guardati intorno: puoi muoverti solo con carte numeriche scoperte",
       "jewel": "Esplora più avanti per prendere un gioiello",
       "escape": "Fuggi dall'uscita!",
       "markPath": "Segna un sentiero: una via d'uscita dai vicoli ciechi",
@@ -607,12 +606,17 @@
     },
     "hint": {
       "play": "Gioca: una puntata di un punto non rischia più di un abbandono",
-      "standPat": "Tieni la mano: è forte",
+      "setHandStrong": "Conferma la mano: una scala o meglio va tenuta",
+      "setHandBet": "Conferma la mano: pescare ancora alza la puntata minima a 2 per troppo poco",
       "keepSets": "Tieni le carte uguali e pesca le altre",
       "keepFlushDraw": "Tieni le quattro carte per il colore",
-      "keepPair": "Tieni la coppia e pescane tre",
+      "keepPair": "Tieni la coppia e pesca le altre",
       "keepStraightDraw": "Tieni le quattro carte per la scala",
-      "keepHighCards": "Tieni le carte alte e pesca le altre",
+      "keepHighCards_one": "Tieni la carta alta e pesca le altre",
+      "keepHighCards_other": "Tieni le carte alte e pesca le altre",
+      "keepJokers_one": "Tieni il jolly e pesca le altre",
+      "keepJokers_other": "Tieni i jolly e pesca le altre",
+      "keepNothing": "Niente vale la pena di tenerlo: pescale tutte e cinque",
       "odds": "Questa mano vince circa il {{chance}}% delle volte"
     }
   },

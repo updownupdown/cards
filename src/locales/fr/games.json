@@ -425,7 +425,8 @@
     "hint": {
       "retire": "Retirez ces petites cartes, pour que vos meilleures cartes reviennent plus souvent",
       "assassinate": "Votre main ne peut pas arrêter cet espion : sacrifiez un agent double",
-      "doubleAgent": "L'As de la couleur de l'espion est un agent double : il fait passer vos autres cartes à sa couleur",
+      "noDoubleAgents": "Plus aucun agent double : cet espion met fin à la mission",
+      "doubleAgent": "L'As de la couleur de l'espion est un agent double : il fait passer les autres cartes jouées à sa couleur",
       "counterKey": "Cet espion clé ne peut pas être recruté : contrez-le avec les cartes dont vous avez le moins besoin",
       "counter": "Cet espion ne peut pas être recruté : contrez-le avec les cartes dont vous avez le moins besoin"
     }
@@ -484,9 +485,10 @@
     "selectCardsToCapture": "Choisissez des cartes à capturer",
     "hint": {
       "fold": "Couchez-vous : continuer coûterait plus cher",
+      "noCapture": "Plus aucune capture possible : couchez-vous",
       "finish": "Videz la main du Loup : la vôtre marque",
-      "over_one": "Surpassez : le Loup pioche {{count}} carte, ça vaut le coup",
-      "over_other": "Surpassez : le Loup pioche {{count}} cartes, ça vaut le coup"
+      "over_one": "Over : le Loup pioche {{count}} carte, ça vaut le coup",
+      "over_other": "Over : le Loup pioche {{count}} cartes, ça vaut le coup"
     }
   },
   "memory": {
@@ -524,10 +526,8 @@
     "smokeThreat": "Bombe fumigène sur {{card}}",
     "grappleThreats": "Grappin sur {{first}} et {{second}}",
     "hint": {
-      "smoke": "Utilisez votre Bombe fumigène sur cette Menace",
-      "grapple": "Reliez ces deux Menaces au Grappin pour y répondre ensemble",
       "dump": "Jouez cette Réponse là où elle ne fait pas de mal",
-      "resolve": "Résolvez maintenant : piocher encore risque de nuire plus que d'aider"
+      "resolve": "Résolvez maintenant : piocher encore risque de coûter plus que ça ne rapporte"
     }
   },
   "ouroboros": {
@@ -543,8 +543,7 @@
     "lostInDungeon": "Vous êtes perdu dans le donjon sans issue !",
     "markPathNumber": "Marquer le chemin {{number}}",
     "hint": {
-      "lookAround": "Regardez autour pour voir ce qui vous attend",
-      "explore": "Explorez plus loin",
+      "lookAround": "Regarder autour : vous ne pouvez avancer qu'avec des cartes numérotées face visible",
       "jewel": "Explorez plus loin pour prendre un joyau",
       "escape": "Fuyez par la sortie !",
       "markPath": "Marquez un chemin : une issue en cas d'impasse",
@@ -607,12 +606,17 @@
     },
     "hint": {
       "play": "Jouez : une mise d'un point ne risque pas plus qu'un abandon",
-      "standPat": "Gardez votre main : elle est forte",
+      "setHandStrong": "Valider la main : une quinte ou mieux mérite d'être gardée",
+      "setHandBet": "Valider la main : piocher encore porte votre mise minimale à 2 pour trop peu",
       "keepSets": "Gardez vos cartes assorties, tirez les autres",
       "keepFlushDraw": "Gardez les quatre cartes à la couleur",
-      "keepPair": "Gardez la paire, tirez-en trois",
+      "keepPair": "Gardez la paire, tirez les autres",
       "keepStraightDraw": "Gardez les quatre cartes à la quinte",
-      "keepHighCards": "Gardez les hautes cartes, tirez les autres",
+      "keepHighCards_one": "Gardez la haute carte, tirez les autres",
+      "keepHighCards_other": "Gardez les hautes cartes, tirez les autres",
+      "keepJokers_one": "Gardez le Joker, tirez les autres",
+      "keepJokers_other": "Gardez les Jokers, tirez les autres",
+      "keepNothing": "Rien ne vaut la peine d'être gardé : tirez les cinq",
       "odds": "Cette main gagne environ {{chance}} % du temps"
     }
   },

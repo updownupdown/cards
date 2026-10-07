@@ -425,7 +425,8 @@
     "hint": {
       "retire": "Retire these low cards, so your stronger cards come round more often",
       "assassinate": "Your hand can't stop this spy: sacrifice a Double Agent",
-      "doubleAgent": "The Ace of the spy's suit is a Double Agent: it turns your other cards to its suit",
+      "noDoubleAgents": "No Double Agents remain: this spy ends the mission",
+      "doubleAgent": "The Ace of the spy's suit is a Double Agent: it turns the other cards you play to its suit",
       "counterKey": "This Key Spy can't be recruited: counter it with the cards you need least",
       "counter": "This spy can't be recruited: counter it with the cards you need least"
     }
@@ -472,7 +473,7 @@
     "roundNumber": "Round {{round}}",
     "hint": {
       "play": "Play your {{hand}}",
-      "discard": "Throw these back: a draw should make a better hand",
+      "discard": "Discard these: a draw should make a better hand",
       "double": "Double your next hand: it's a big one"
     }
   },
@@ -484,9 +485,10 @@
     "selectCardsToCapture": "Select cards to capture",
     "hint": {
       "fold": "Fold now: playing on would cost more",
+      "noCapture": "No capture left: fold",
       "finish": "Clear the Wolf's hand: yours scores",
-      "over_one": "Overpower: worth the Wolf drawing {{count}} card",
-      "over_other": "Overpower: worth the Wolf drawing {{count}} cards"
+      "over_one": "Over: worth the Wolf drawing {{count}} card",
+      "over_other": "Over: worth the Wolf drawing {{count}} cards"
     }
   },
   "memory": {
@@ -524,10 +526,8 @@
     "smokeThreat": "Smoke Bomb on {{card}}",
     "grappleThreats": "Grapple Line on {{first}} and {{second}}",
     "hint": {
-      "smoke": "Use your Smoke Bomb on this Threat",
-      "grapple": "Grapple these two Threats: answer them together",
-      "dump": "Play this response where it does no harm",
-      "resolve": "Resolve now: another draw is more likely to hurt than help"
+      "dump": "Play this Response where it does no harm",
+      "resolve": "Resolve now: another draw is likely to cost more than it gains"
     }
   },
   "ouroboros": {
@@ -543,8 +543,7 @@
     "lostWithLoot": "You got lost in the dungeon with no way out! You die with your loot.",
     "lostInDungeon": "You got lost in the dungeon with no way out!",
     "hint": {
-      "lookAround": "Look around to see what's ahead",
-      "explore": "Explore ahead",
+      "lookAround": "Look Around: you can only move by face-up number cards",
       "jewel": "Explore ahead to grab a jewel",
       "escape": "Escape through the exit!",
       "markPath": "Mark a path: a way out of dead ends",
@@ -607,12 +606,17 @@
     },
     "hint": {
       "play": "Play: a one-point bet risks no more than a fold",
-      "standPat": "Stand pat: this hand is strong",
+      "setHandStrong": "Set Hand: a straight or better is worth keeping",
+      "setHandBet": "Set Hand: another draw raises your minimum bet to 2 for too little",
       "keepSets": "Keep your matched cards, draw the rest",
       "keepFlushDraw": "Keep the four to a flush",
-      "keepPair": "Keep the pair, draw three",
+      "keepPair": "Keep the pair, draw the rest",
       "keepStraightDraw": "Keep the four to a straight",
-      "keepHighCards": "Keep the high cards, draw the rest",
+      "keepHighCards_one": "Keep the high card, draw the rest",
+      "keepHighCards_other": "Keep the high cards, draw the rest",
+      "keepJokers_one": "Keep the Joker, draw the rest",
+      "keepJokers_other": "Keep the Jokers, draw the rest",
+      "keepNothing": "Nothing here is worth keeping: draw all five",
       "odds": "This hand wins about {{chance}}% of the time"
     }
   },

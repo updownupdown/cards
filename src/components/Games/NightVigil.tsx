@@ -762,17 +762,14 @@ function findNightVigilHint(game: NightVigilGameState): Hint | null {
   }
   switch (play.type) {
     case "smoke":
-      return withNote(
-        pressHint(`smoke-${play.index}`, smokeLabel(game.threats[play.index])),
-        i18n.t("games:nightVigil.hint.smoke"),
+      return pressHint(
+        `smoke-${play.index}`,
+        smokeLabel(game.threats[play.index]),
       );
     case "grapple":
-      return withNote(
-        pressHint(
-          `grapple-hook-${play.index}`,
-          grappleLabel(game.threats[play.index], game.threats[play.index + 1]),
-        ),
-        i18n.t("games:nightVigil.hint.grapple"),
+      return pressHint(
+        `grapple-hook-${play.index}`,
+        grappleLabel(game.threats[play.index], game.threats[play.index + 1]),
       );
     case "grappleAdd":
       return makeHint(
@@ -783,7 +780,8 @@ function findNightVigilHint(game: NightVigilGameState): Hint | null {
       const threat = game.threats[play.index];
       const hint = makeHint("tapCard", zoneTarget(`threat-${play.index}`));
       // A Threat already settled (cleared, or over the mark for good) is a
-      // safe place for a response that fits nowhere.
+      // safe place for a response that fits nowhere, unless the response
+      // pushes a cleared Threat over the mark.
       const total = threat.responses.reduce(
         (sum, card) => sum + responseValue(card, game.threats),
         0,
@@ -791,7 +789,15 @@ function findNightVigilHint(game: NightVigilGameState): Hint | null {
       const settled =
         threat.responses.length > 0 &&
         total >= threatValue(threat, game.threats);
-      return settled
+      const response = game.currentResponse;
+      const harmless =
+        !!response &&
+        (!standardThreatCleared(threat, game.threats) ||
+          standardThreatCleared(
+            { ...threat, responses: [...threat.responses, response] },
+            game.threats,
+          ));
+      return settled && harmless
         ? withNote(hint, i18n.t("games:nightVigil.hint.dump"))
         : hint;
     }
