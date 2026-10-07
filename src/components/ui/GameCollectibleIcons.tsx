@@ -43,12 +43,12 @@ function RewardIcon({
     return () => cancelAnimation(pulse);
   }, [glowing, pulse]);
 
+  // Worked out here, not in the worklet: rgba() is a plain JS function, and
+  // calling it on the native UI thread crashes ("Object is not a function").
+  const glowFrom = rgba(theme.accent, 0);
+  const glowTo = rgba(theme.accent, 0.55);
   const glowStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      pulse.value,
-      [0, 1],
-      [rgba(theme.accent, 0), rgba(theme.accent, 0.55)],
-    ),
+    backgroundColor: interpolateColor(pulse.value, [0, 1], [glowFrom, glowTo]),
     transform: [{ scale: 1 + pulse.value * 0.3 }],
   }));
   const size = spacing(30);
@@ -114,8 +114,7 @@ export function GameCollectibleIcons({
             ? collectedTaoIds.has(reward.id)
             : collectedQuoteIds.has(reward.id);
         const glowing =
-          glowingReward?.type === reward.type &&
-          glowingReward.id === reward.id;
+          glowingReward?.type === reward.type && glowingReward.id === reward.id;
         return (
           <RewardIcon
             key={`${reward.type}-${reward.id}`}
