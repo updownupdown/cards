@@ -617,9 +617,25 @@ function findGlazierHint(state: GameState, selection: Selection | null) {
       move.target === "shards" ? "shards" : `frameSlot-${move.target}`,
     ),
   );
-  return move.target === "shards"
-    ? withNote(hint, i18n.t("games:glazier.hint.shards"))
-    : hint;
+  if (move.target !== "shards") return hint;
+  // Shattering is sometimes chosen when a frame could take the group.
+  const framable = planMoves(
+    draftPlan(state),
+    (row, suit) => legalCells(state.window, row, suit).length > 0,
+  ).some(
+    (other) =>
+      other.source === move.source &&
+      other.suit === move.suit &&
+      other.target !== "shards",
+  );
+  return withNote(
+    hint,
+    i18n.t(
+      framable
+        ? "games:glazier.hint.shardsOnPurpose"
+        : "games:glazier.hint.shards",
+    ),
+  );
 }
 
 export const glazierRules = {

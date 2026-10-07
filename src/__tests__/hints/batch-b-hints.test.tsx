@@ -228,7 +228,7 @@ describe("Herbalist hints", () => {
     const state = herbalist(creatures, stacks);
     expect(herbalistRules.bestSource(state)).toBe(0);
     expect(herbalistRules.findHint(state)?.message.note).toBe(
-      "Pick up these herbs: sown well, they heal a creature",
+      "Pick up these herbs: dropped well, they heal a creature",
     );
 
     const sowing = structuredClone(state);

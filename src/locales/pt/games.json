@@ -267,8 +267,9 @@
     "youRanOutOfCards": "Suas cartas acabaram antes de você derrotar as doze figuras.",
     "hint": {
       "kill": "Isto derruba uma figura",
-      "extract": "Use um ás: esta pilha volta para baixo do baralho",
-      "reassign": "Use um curinga: mova esta carta"
+      "extract": "Gaste um Ás: devolva esta pilha ao fundo do monte",
+      "reassign": "Use um curinga: mova esta carta",
+      "reassignKill": "Gaste um Coringa: mover esta carta derruba uma figura"
     }
   },
   "ebbAndFlow": {
@@ -306,7 +307,8 @@
     "hint": {
       "discard": "Troque esta carta por uma nova",
       "letCapture": "Sem captura: deixe o inimigo levar sua carta mais fraca",
-      "sacrifice": "Sem captura: sacrifique duas cartas fracas para mandar este inimigo de volta"
+      "sacrifice": "Sem captura: sacrifique duas cartas fracas para mandar este inimigo de volta",
+      "lost": "Toda opção perde: um Valete, Dama, Rei ou Ás entra na pilha de capturas do inimigo"
     }
   },
   "fifteenPuzzle": {
@@ -330,10 +332,10 @@
     "gridClearWon": "A grade está limpa. Vitória!",
     "allClubsSpent": "As 13 cartas de paus foram gastas.",
     "hint": {
-      "free_diamonds": "Tire cartas de ouros para liberar as ações ♦",
-      "free_spades": "Tire cartas de espadas para liberar as ações ♠",
-      "free_hearts": "Tire cartas de copas para liberar a ação ♥",
-      "any": "Pegue só uma carta com esta de paus: guarde as outras para jogadas maiores"
+      "free_diamonds": "Ficam menos de 3 cartas de ouros: as ações ♦ se desbloqueiam, a menos que o baralho da grade traga mais",
+      "free_spades": "Ficam menos de 3 cartas de espadas: as ações ♠ se desbloqueiam, a menos que o baralho da grade traga mais",
+      "free_hearts": "Ficam menos de 3 cartas de copas: a ação ♥ se desbloqueia, a menos que o baralho da grade traga mais",
+      "any": "Remova só esta carta: as jogadas que removem mais rendem pior"
     }
   },
   "fortunesCall": {
@@ -368,7 +370,8 @@
     "lostShortOfTarget": "{{score}} pontos. Você precisa de {{target}} pontos para vencer.",
     "hint": {
       "cell": "Coloque o vidro aqui: +{{count}}",
-      "shards": "Nenhuma moldura pode usá-los: quebre-os em cacos"
+      "shards": "Nenhuma moldura pode recebê-los: quebre-os",
+      "shardsOnPurpose": "Quebre-os de propósito: colocá-los numa moldura rende pior"
     }
   },
   "gremlin": {
@@ -384,8 +387,8 @@
     "noRoomForHelper": "Não há lugar para a carta do ajudante em {{count}} colunas.",
     "hint": {
       "helper": "Coloque a carta do ajudante onde ela custa menos colunas",
-      "king": "Comece uma coluna com este Rei",
-      "discard": "Descarte esta carta: agora ela custaria uma coluna, e volta mais tarde"
+      "discard": "Descarte esta carta: jogá-la agora custa colunas, e ela volta mais tarde",
+      "discardNoFit": "Descarte esta carta: nenhuma coluna pode recebê-la agora, e ela volta mais tarde"
     }
   },
   "herbalist": {
@@ -397,9 +400,9 @@
     "harvestPerfect": "Colheita perfeita: restam {{count}} ervas.",
     "noHerbsRemain": "Não restam ervas para curar o reino.",
     "hint": {
-      "heal": "Pegue estas ervas: bem semeadas, curam uma criatura",
-      "setUp": "Pegue estas ervas: bem semeadas, preparam uma cura",
-      "noCure": "Não há mais cura para o reino: continue semeando para terminar o jogo"
+      "heal": "Pegue estas ervas: bem deixadas, curam uma criatura",
+      "setUp": "Pegue estas ervas: bem deixadas, aproximam uma cura",
+      "noCure": "As ervas que restam não podem curar todas as criaturas: esta partida não pode ser vencida"
     }
   },
   "infiltrator": {

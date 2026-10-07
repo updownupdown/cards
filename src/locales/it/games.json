@@ -267,8 +267,9 @@
     "youRanOutOfCards": "Hai finito le carte prima di sconfiggere tutte e dodici le figure.",
     "hint": {
       "kill": "Questo abbatte una figura",
-      "extract": "Usa un asso: questa pila torna sotto il mazzo",
-      "reassign": "Usa un jolly: sposta questa carta"
+      "extract": "Spendi un Asso: rimetti questa pila in fondo al mazzo",
+      "reassign": "Usa un jolly: sposta questa carta",
+      "reassignKill": "Spendi un Jolly: spostare questa carta abbatte una figura"
     }
   },
   "ebbAndFlow": {
@@ -306,7 +307,8 @@
     "hint": {
       "discard": "Cambia questa carta con una nuova",
       "letCapture": "Nessuna cattura: lascia che il nemico prenda la tua carta più debole",
-      "sacrifice": "Nessuna cattura: sacrifica due carte deboli per rimandare indietro questo nemico"
+      "sacrifice": "Nessuna cattura: sacrifica due carte deboli per rimandare indietro questo nemico",
+      "lost": "Ogni opzione perde: un Fante, una Donna, un Re o un Asso finisce nella pila delle catture nemiche"
     }
   },
   "fifteenPuzzle": {
@@ -330,10 +332,10 @@
     "gridClearWon": "La griglia è libera. Hai vinto!",
     "allClubsSpent": "Tutti i 13 fiori sono stati usati.",
     "hint": {
-      "free_diamonds": "Togli dei quadri per liberare le azioni ♦",
-      "free_spades": "Togli delle picche per liberare le azioni ♠",
-      "free_hearts": "Togli dei cuori per liberare l'azione ♥",
-      "any": "Prendi solo una carta con questo fiori: tieni gli altri per mosse più grandi"
+      "free_diamonds": "Restano meno di 3 quadri: le azioni ♦ si sbloccano, a meno che il mazzo della griglia ne porti altri",
+      "free_spades": "Restano meno di 3 picche: le azioni ♠ si sbloccano, a meno che il mazzo della griglia ne porti altre",
+      "free_hearts": "Restano meno di 3 cuori: l'azione ♥ si sblocca, a meno che il mazzo della griglia ne porti altri",
+      "any": "Togli solo questa carta: le mosse che tolgono di più vanno peggio"
     }
   },
   "fortunesCall": {
@@ -368,7 +370,8 @@
     "lostShortOfTarget": "{{score}} punti. Te ne servono {{target}} per vincere.",
     "hint": {
       "cell": "Posa il vetro qui: +{{count}}",
-      "shards": "Nessun telaio può usarli: rompili in schegge"
+      "shards": "Nessun telaio può prenderli: rompili",
+      "shardsOnPurpose": "Rompili di proposito: metterli in un telaio va peggio"
     }
   },
   "gremlin": {
@@ -384,8 +387,8 @@
     "noRoomForHelper": "Nessun posto per la carta dell'aiutante nelle {{count}} colonne.",
     "hint": {
       "helper": "Metti la carta dell'aiutante dove costa meno colonne",
-      "king": "Inizia una colonna con questo Re",
-      "discard": "Scarta questa carta: ora costerebbe una colonna, e tornerà più tardi"
+      "discard": "Scarta questa carta: giocarla ora costa colonne, e tornerà più tardi",
+      "discardNoFit": "Scarta questa carta: nessuna colonna può prenderla ora, e tornerà più tardi"
     }
   },
   "herbalist": {
@@ -397,9 +400,9 @@
     "harvestPerfect": "Raccolto perfetto: restano {{count}} erbe.",
     "noHerbsRemain": "Non restano erbe per curare il regno.",
     "hint": {
-      "heal": "Raccogli queste erbe: seminate bene, curano una creatura",
-      "setUp": "Raccogli queste erbe: seminate bene, preparano una guarigione",
-      "noCure": "Non c'è più cura per il regno: continua a seminare per finire la partita"
+      "heal": "Prendi queste erbe: lasciate bene, curano una creatura",
+      "setUp": "Prendi queste erbe: lasciate bene, avvicinano una guarigione",
+      "noCure": "Le erbe rimaste non possono curare tutte le creature: questa partita non si può vincere"
     }
   },
   "infiltrator": {

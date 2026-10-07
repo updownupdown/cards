@@ -491,9 +491,14 @@ function findDynastyHint(state: GameState) {
     }
     if (!state.mode.startsWith("reassign")) steps.push([cardTarget(joker!)]);
     if (picked !== move.from) steps.push([cellTarget(move.from)]);
-    hint = withNote(
+    // An extract never fires; a reassign that brings down a royal says both.
+    return withNote(
       makeHint("moveCard", ...steps, zoneTarget(`grid-${move.to}`)),
-      i18n.t("games:dynasty.hint.reassign"),
+      i18n.t(
+        kills
+          ? "games:dynasty.hint.reassignKill"
+          : "games:dynasty.hint.reassign",
+      ),
     );
   }
   return kills ? withNote(hint, i18n.t("games:dynasty.hint.kill")) : hint;

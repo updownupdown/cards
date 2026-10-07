@@ -267,8 +267,9 @@
     "youRanOutOfCards": "You ran out of cards before defeating all twelve royals.",
     "hint": {
       "kill": "This brings down a royal",
-      "extract": "Spend an ace: send this pile back under the deck",
-      "reassign": "Spend a joker: move this card"
+      "extract": "Spend an Ace: send this stack to the bottom of the stock",
+      "reassign": "Spend a joker: move this card",
+      "reassignKill": "Spend a Joker: moving this card brings down a royal"
     }
   },
   "ebbAndFlow": {
@@ -306,7 +307,8 @@
     "hint": {
       "discard": "Swap this card for a fresh draw",
       "letCapture": "No capture: let the enemy take your cheapest card",
-      "sacrifice": "No capture: sacrifice two cheap cards to send this enemy back"
+      "sacrifice": "No capture: sacrifice two cheap cards to send this enemy back",
+      "lost": "Every option loses: a Jack, Queen, King or Ace enters the Enemy Capture Pile"
     }
   },
   "fifteenPuzzle": {
@@ -330,10 +332,10 @@
     "gridClearWon": "The grid is clear. Fight Clubs won!",
     "allClubsSpent": "All 13 Clubs are spent.",
     "hint": {
-      "free_diamonds": "Clear diamonds to free the ♦ actions",
-      "free_spades": "Clear spades to free the ♠ actions",
-      "free_hearts": "Clear hearts to free the ♥ action",
-      "any": "Take just one card with this club: keep the others for bigger plays"
+      "free_diamonds": "This leaves fewer than 3 diamonds: the ♦ actions unblock unless the grid deck brings more",
+      "free_spades": "This leaves fewer than 3 spades: the ♠ actions unblock unless the grid deck brings more",
+      "free_hearts": "This leaves fewer than 3 hearts: the ♥ action unblocks unless the grid deck brings more",
+      "any": "Clear just this one card: the bigger clears on offer play out worse"
     }
   },
   "fortunesCall": {
@@ -368,7 +370,8 @@
     "lostShortOfTarget": "{{score}} points. You need {{target}} points to win.",
     "hint": {
       "cell": "Set the pane here: +{{count}}",
-      "shards": "No frame can use these: break them as shards"
+      "shards": "No frame can take these: shatter them",
+      "shardsOnPurpose": "Shatter these on purpose: framing them plays out worse"
     }
   },
   "gremlin": {
@@ -384,8 +387,8 @@
     "noRoomForHelper": "No room for the helper's card in {{count}} columns.",
     "hint": {
       "helper": "Place the helper's card where it costs the fewest columns",
-      "king": "Start a column with this King",
-      "discard": "Discard this card: it would cost a column now, and comes back later"
+      "discard": "Discard this card: playing it now costs columns, and it comes back later",
+      "discardNoFit": "Discard this card: no column can take it now, and it comes back later"
     }
   },
   "herbalist": {
@@ -397,9 +400,9 @@
     "harvestPerfect": "Perfect harvest: {{count}} herbs remain.",
     "noHerbsRemain": "No herbs remain to heal the realm.",
     "hint": {
-      "heal": "Pick up these herbs: sown well, they heal a creature",
-      "setUp": "Pick up these herbs: sown well, they set up a healing",
-      "noCure": "No cure is left for the realm: sow on to end the game"
+      "heal": "Pick up these herbs: dropped well, they heal a creature",
+      "setUp": "Pick up these herbs: dropped well, they bring a healing closer",
+      "noCure": "The herbs left can't heal every creature: this game can't be won"
     }
   },
   "infiltrator": {
