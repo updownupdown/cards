@@ -262,11 +262,11 @@ function HintDock({
     >
       <Button
         headerButton
-        onPress={onHint}
+        onPress={out ? () => {} : onHint}
         iconName="ufo"
         accessibilityLabel={label}
         iconColor={iconColor}
-        disabled={disabled || out}
+        disabled={disabled}
         style={{ width: "100%", paddingHorizontal: 0 }}
       />
     </View>

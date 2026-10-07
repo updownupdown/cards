@@ -112,6 +112,7 @@ export const UfoEffectColors = {
   green: "#00c46a",
   pink: "#c03ff0",
   blue: "#14a8e6",
+  rose: "#f03fb4",
   greenGlow: "#00944f",
   pinkGlow: "#8e1fc4",
   blueGlow: "#0a7cb3",

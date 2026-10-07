@@ -6,13 +6,13 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Icon } from "@/icons/Icon";
+import { usePalette } from "@/styles/palette";
 import {
   Colors,
   layoutDims,
   FontWeight,
   LayerZIndexes,
   rgba,
-  theme,
   UfoColors,
   UfoEffectColors,
 } from "@/styles/styles";
@@ -68,8 +68,6 @@ import {
 /** What to pick up, tap or press: the UFO's own green. */
 const GREEN = UfoEffectColors.green;
 const BEACON_INK = UfoEffectColors.greenGlow;
-/** Where a card goes: pink, so "from" and "to" never look alike. */
-const PINK = UfoEffectColors.pink;
 const PINK_INK = UfoEffectColors.pinkGlow;
 /** The tractor beam that carries a card across. */
 const BEAM = UfoEffectColors.blue;
@@ -79,17 +77,25 @@ const DARK = Colors.K950;
 const useNativeDriver = Platform.OS !== "web";
 
 // Beacons
-const STEP_DELAY_MS = 650;
+const STEP_DELAY_MS = 1000;
 const APPEAR_MS = 200;
 const PING_MS = 1250;
-const PINGS = 3;
+const PINGS = 4;
+/** The two colours a beacon alternates between, from the UFO's palette. */
+const GREEN_TINTS = [UfoEffectColors.green, UfoEffectColors.blue] as const;
+const PINK_TINTS = [UfoEffectColors.pink, UfoEffectColors.rose] as const;
+/** One round of a beacon's colour shift, there and back. */
+const TINT_MS = 1400;
+/** The cue ring that opens a beacon: one big sweep, so it catches the eye. */
+/** How long the burst has the beacon to itself. */
+/** The laser's reach from the header's UFO to a beacon, and its fade after. */
+const LASER_MS = 100;
+const LASER_FADE_MS = 200;
+const LASER_THICKNESS = 1;
+const BURST_LEAD_MS = 100;
+const BURST_MS = 1100;
+const BURST_SCALE = 3;
 const FADE_MS = 300;
-/**
- * The white lines that frame where a card goes ("to"), above, below and to
- * either side.
- */
-const TICK_THICKNESS = 2.5;
-const TICK_GAP = 4;
 
 // The flying UFO
 const UFO_FONT_SIZE = 34;
@@ -128,7 +134,9 @@ function beaconPings(says: boolean) {
 }
 
 function beaconsDuration(lastDelay: number, says: boolean) {
-  return lastDelay + APPEAR_MS + beaconPings(says) * PING_MS + FADE_MS;
+  return (
+    lastDelay + LASER_MS + APPEAR_MS + beaconPings(says) * PING_MS + FADE_MS
+  );
 }
 
 /** How high over its target the UFO hovers: the length of its beam. */
@@ -161,45 +169,112 @@ function beaconKind(hint: Hint, stepIndex: number): BeaconKind {
 
 /**
  * A beacon on a hint target. "from" (what to pick up, tap or press): green
- * rings ping out of a bright core. "to" (where it goes): pink rings close in
- * on a landing ring, framed by four short white lines, above, below and to
- * either side, that close in on it with each ping.
+ * rings ping out of a bright core. "to" (where it goes): the same, in purple,
+ * but the rings close in on the core.
  */
 function Beacon({
   spot,
   kind,
   delay = 0,
   pings = PINGS,
+  showBurst = true,
+  laserFrom,
 }: {
   spot: HintSpot;
   kind: BeaconKind;
   delay?: number;
   pings?: number;
+  showBurst?: boolean;
+  /** Where a laser comes from (the header's UFO), in the same space as the spot. */
+  laserFrom?: { x: number; y: number } | null;
 }) {
   const to = kind === "to";
-  const ink = to ? PINK : GREEN;
   const glow = to ? PINK_INK : BEACON_INK;
+  const size = Math.max(64, spot.size * 1.5);
+  const core = Math.max(16, Math.round(spot.size * 0.22));
   const presence = useRef(new Animated.Value(0)).current;
   const ping = useRef(new Animated.Value(0)).current;
+  const burst = useRef(new Animated.Value(0)).current;
+  // 0 to 1 the laser reaches out to the target, 1 to 2 it fades.
+  const laser = useRef(new Animated.Value(0)).current;
+  const hasLaser = !!laserFrom;
+  // One clock for every colour in the beacon, so its rings and dot match.
+  const tint = useRef(new Animated.Value(0)).current;
+  const tints = to ? PINK_TINTS : GREEN_TINTS;
+
+  useEffect(() => {
+    const shift = Animated.loop(
+      Animated.timing(tint, {
+        toValue: 1,
+        duration: TINT_MS,
+        easing: Easing.linear,
+        useNativeDriver,
+      }),
+    );
+    shift.start();
+    return () => shift.stop();
+  }, [tint]);
+
+  // One layer per colour, fading in and out in turn: the native driver
+  // can't animate a colour itself.
+  const tinted = (layer: (color: string) => object) =>
+    tints.map((color, index) => (
+      <Animated.View
+        key={color}
+        style={[
+          { position: "absolute", width: size, height: size },
+          layer(color),
+          {
+            opacity: tint.interpolate({
+              inputRange: [0, 0.5, 1],
+              outputRange: index === 0 ? [1, 0, 1] : [0, 1, 0],
+            }),
+          },
+        ]}
+      />
+    ));
 
   useEffect(() => {
     const animation = Animated.sequence([
       Animated.delay(delay),
-      Animated.timing(presence, {
+      Animated.timing(laser, {
         toValue: 1,
-        duration: APPEAR_MS,
-        easing: Easing.out(Easing.back(2)),
+        duration: hasLaser ? LASER_MS : 0,
+        easing: Easing.out(Easing.quad),
         useNativeDriver,
       }),
-      Animated.loop(
-        Animated.timing(ping, {
-          toValue: 1,
-          duration: PING_MS,
-          easing: Easing.linear,
+      Animated.parallel([
+        Animated.timing(laser, {
+          toValue: 2,
+          duration: hasLaser ? LASER_FADE_MS : 0,
           useNativeDriver,
         }),
-        { iterations: pings },
-      ),
+        // The burst announces the beacon: it goes first, and the rest follows.
+        Animated.timing(burst, {
+          toValue: 1,
+          duration: showBurst ? BURST_MS : 0,
+          easing: Easing.out(Easing.quad),
+          useNativeDriver,
+        }),
+        Animated.sequence([
+          Animated.delay(showBurst ? BURST_LEAD_MS : 0),
+          Animated.timing(presence, {
+            toValue: 1,
+            duration: APPEAR_MS,
+            easing: Easing.out(Easing.back(2)),
+            useNativeDriver,
+          }),
+          Animated.loop(
+            Animated.timing(ping, {
+              toValue: 1,
+              duration: PING_MS,
+              easing: Easing.linear,
+              useNativeDriver,
+            }),
+            { iterations: pings },
+          ),
+        ]),
+      ]),
       Animated.timing(presence, {
         toValue: 0,
         duration: FADE_MS,
@@ -208,10 +283,7 @@ function Beacon({
     ]);
     animation.start();
     return () => animation.stop();
-  }, [delay, ping, pings, presence]);
-
-  const size = Math.max(64, spot.size * 1.5);
-  const core = Math.max(16, Math.round(spot.size * 0.22));
+  }, [burst, delay, hasLaser, laser, ping, pings, presence, showBurst]);
 
   // Two rings, half a ping apart, each growing out of the core and fading
   // (or, for "to", closing in on it).
@@ -229,17 +301,15 @@ function Beacon({
           position: "absolute",
           width: size,
           height: size,
-          borderRadius: size / 2,
-          borderWidth: 3,
-          borderColor: ink,
-          // A dark edge keeps the ring clear on pale cards.
-          boxShadow: `0 0 0 1.5px ${rgba(DARK, 0.45)}, 0 0 12px ${rgba(glow, 0.7)}`,
           opacity: Animated.multiply(
             presence,
             phase.interpolate(
               to
                 ? { inputRange: [0, 0.2, 0.85, 1], outputRange: [0, 1, 0.8, 0] }
-                : { inputRange: [0, 0.15, 1], outputRange: [0, 1, 0] },
+                : {
+                    inputRange: [0, 0.1, 0.7, 1],
+                    outputRange: [0, 1, 0.85, 0],
+                  },
             ),
           ),
           transform: [
@@ -251,61 +321,89 @@ function Beacon({
             },
           ],
         }}
-      />
+      >
+        {tinted((color) => ({
+          borderRadius: size / 2,
+          borderWidth: 3,
+          borderColor: color,
+          // A dark edge keeps the ring clear on pale cards.
+          boxShadow: `0 0 0 1.5px ${rgba(DARK, 0.45)}`,
+        }))}
+      </Animated.View>
     );
   };
 
-  // The frame's lines ("to" only): each points at the target's middle from
-  // just outside it, half the target's smaller side off, and closes in on
-  // it with each ping, with the rings.
-  const tickLength = Math.max(8, Math.round(spot.size * 0.15));
-  const tickReach = spot.size / 2 + TICK_GAP;
-  const inward = Math.max(8, Math.round(spot.size * 0.16));
-  const nudge = ping.interpolate({
-    // In with the rings, a beat there, then back out (eased by hand: the
-    // native driver can't take an easing here).
-    inputRange: [0, 0.15, 0.3, 0.45, 0.7, 0.85, 1],
-    outputRange: [0, -0.2, -0.75, -1, -1, -0.3, 0].map((at) => at * inward),
-  });
-  const tick = (side: "top" | "bottom" | "left" | "right") => {
-    const vertical = side === "top" || side === "bottom";
-    const sign = side === "top" || side === "left" ? -1 : 1;
-    const offset = sign * (tickReach + tickLength / 2);
-    return (
-      <Animated.View
-        key={side}
-        style={{
-          position: "absolute",
-          width: vertical ? TICK_THICKNESS : tickLength,
-          height: vertical ? tickLength : TICK_THICKNESS,
-          left: size / 2 - (vertical ? TICK_THICKNESS : tickLength) / 2,
-          top: size / 2 - (vertical ? tickLength : TICK_THICKNESS) / 2,
-          borderRadius: TICK_THICKNESS / 2,
-          backgroundColor: Colors.white,
-          // A dark edge keeps the line clear on pale cards.
-          boxShadow: `0 0 0 1.5px ${rgba(DARK, 0.5)}, 0 0 8px ${rgba(glow, 0.8)}`,
-          opacity: presence,
-          transform: vertical
-            ? [
+  // Once, as the beacon appears: a ring far bigger than the rest, growing
+  // out ("from") or closing in ("to"), to draw the eye from across the screen.
+  const burstRing = (
+    <Animated.View
+      style={{
+        position: "absolute",
+        width: size,
+        height: size,
+        opacity: burst.interpolate({
+          inputRange: [0, 0.1, 0.75, 1],
+          outputRange: [0, 1, 0.9, 0],
+        }),
+        transform: [
+          {
+            scale: burst.interpolate({
+              inputRange: [0, 1],
+              outputRange: to ? [BURST_SCALE, 0.3] : [0.2, BURST_SCALE],
+            }),
+          },
+        ],
+      }}
+    >
+      {tinted((color) => ({
+        borderRadius: size / 2,
+        borderWidth: 1,
+        borderColor: color,
+      }))}
+    </Animated.View>
+  );
+
+  // A thin line from the UFO to the target, drawn out from the UFO's end.
+  const beam = laserFrom
+    ? (() => {
+        const dx = spot.x - laserFrom.x;
+        const dy = spot.y - laserFrom.y;
+        const length = Math.hypot(dx, dy);
+        return (
+          <Animated.View
+            style={{
+              position: "absolute",
+              left: size / 2 - dx,
+              top: size / 2 - dy - LASER_THICKNESS / 2,
+              width: length,
+              height: LASER_THICKNESS,
+              transformOrigin: "left center",
+              opacity: laser.interpolate({
+                inputRange: [0, 0.05, 1, 2],
+                outputRange: [0, 1, 1, 0],
+              }),
+              transform: [
+                { rotate: `${Math.atan2(dy, dx)}rad` },
                 {
-                  translateY: Animated.add(
-                    offset,
-                    Animated.multiply(nudge, sign),
-                  ),
-                },
-              ]
-            : [
-                {
-                  translateX: Animated.add(
-                    offset,
-                    Animated.multiply(nudge, sign),
-                  ),
+                  scaleX: laser.interpolate({
+                    inputRange: [0, 1, 2],
+                    outputRange: [0, 1, 1],
+                  }),
                 },
               ],
-        }}
-      />
-    );
-  };
+            }}
+          >
+            {tinted((color) => ({
+              backgroundColor: color,
+              width: "100%",
+              height: "100%",
+              borderRadius: LASER_THICKNESS / 2,
+              boxShadow: `0 0 6px ${color}`,
+            }))}
+          </Animated.View>
+        );
+      })()
+    : null;
 
   return (
     <View
@@ -320,25 +418,18 @@ function Beacon({
         pointerEvents: "none",
       }}
     >
+      {beam}
+      {showBurst && burstRing}
       {ring(0)}
       {ring(0.5)}
-      {to && (
-        <>
-          {tick("top")}
-          {tick("bottom")}
-          {tick("left")}
-          {tick("right")}
-        </>
-      )}
       <Animated.View
         style={{
-          // "to" lands on a ring (a landing pad), "from" glows as a dot.
-          width: to ? core * 1.7 : core,
-          height: to ? core * 1.7 : core,
+          width: core,
+          height: core,
           borderRadius: core,
-          backgroundColor: to ? rgba(PINK, 0.25) : GREEN,
-          borderWidth: to ? 3.5 : 2.5,
-          borderColor: to ? PINK : Colors.white,
+          overflow: "hidden",
+          borderWidth: 2.5,
+          borderColor: Colors.white,
           boxShadow: `0 0 0 1.5px ${rgba(DARK, 0.5)}, 0 0 ${core}px ${glow}`,
           opacity: presence,
           transform: [
@@ -353,7 +444,13 @@ function Beacon({
             },
           ],
         }}
-      />
+      >
+        {tinted((color) => ({
+          backgroundColor: color,
+          width: "100%",
+          height: "100%",
+        }))}
+      </Animated.View>
     </View>
   );
 }
@@ -546,6 +643,7 @@ function UfoGlyph({
   /** 1 for the flying saucer, 0 for the header's icon. */
   saucer?: AnimatedNumber;
 }) {
+  const palette = usePalette();
   const glow = size * 1.6;
   const icon =
     typeof saucer === "number"
@@ -579,7 +677,7 @@ function UfoGlyph({
         </Svg>
       </Animated.View>
       <Animated.View style={{ position: "absolute", opacity: icon }}>
-        <Icon name="ufo" size={size} color={theme.accent} />
+        <Icon name="ufo" size={size} color={palette.accent} />
       </Animated.View>
       <Animated.View style={{ position: "absolute", opacity: saucer }}>
         <FlyingSaucer width={size} height={size} />
@@ -1238,6 +1336,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
           delay={delay}
           kind={kind}
           pings={beaconPings(beacons.says)}
+          laserFrom={beacons.dock}
         />
       ))}
       {beacons?.dock && beacons.says && (
@@ -1276,6 +1375,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
           spot={stop.spot}
           kind={stop.kind}
           pings={bubble ? beaconPings(true) : 2}
+          showBurst={false}
         />
       )}
 
