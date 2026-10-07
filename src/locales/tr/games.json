@@ -181,10 +181,8 @@
     "hint": {
       "stop": "Burada dur: %{{risk}} taşma riski bir kart daha eklemeye değmez",
       "stopDiamond": "Burada dur: son karon yalnızca şimdi durursan iki kez sayılır",
-      "stopDiamond": "Burada dur: son karon yalnızca şimdi durursan iki kez sayılır",
       "keepCoins": "Altınları al: daha iyi kartlar kalan turlarda kazandırır",
       "keepPoints": "Puanları al: altınların kazandırması için çok az tur kaldı",
-      "buyPair": "Bu kartı al: başka renkten ikinci bir alımla, altınlarının yettiği en iyisi bu",
       "buyPair": "Bu kartı al: başka renkten ikinci bir alımla, altınlarının yettiği en iyisi bu",
       "buy": "Altınlarının yettiği en iyi kartı al"
     }

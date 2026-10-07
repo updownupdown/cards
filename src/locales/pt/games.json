@@ -181,10 +181,8 @@
     "hint": {
       "stop": "Pare aqui: {{risk}}% de risco de explosão não compensa outra carta",
       "stopDiamond": "Pare aqui: seu último ouros só conta em dobro se você parar agora",
-      "stopDiamond": "Pare aqui: seu último ouros só conta em dobro se você parar agora",
       "keepCoins": "Fique com as moedas: cartas melhores vão render nas rodadas que restam",
       "keepPoints": "Fique com os pontos: restam poucas rodadas para as moedas renderem",
-      "buyPair": "Compre esta carta: com uma segunda compra de outro naipe, é o melhor que suas moedas permitem",
       "buyPair": "Compre esta carta: com uma segunda compra de outro naipe, é o melhor que suas moedas permitem",
       "buy": "Compre a melhor carta que suas moedas permitem"
     }

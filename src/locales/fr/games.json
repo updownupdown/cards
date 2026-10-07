@@ -181,10 +181,8 @@
     "hint": {
       "stop": "Arrêtez-vous : {{risk}} % de risque d'explosion, une carte de plus n'en vaut pas la peine",
       "stopDiamond": "Arrêtez-vous : votre dernier carreau ne compte double que si vous vous arrêtez maintenant",
-      "stopDiamond": "Arrêtez-vous : votre dernier carreau ne compte double que si vous vous arrêtez maintenant",
       "keepCoins": "Gardez les pièces : de meilleures cartes rapporteront sur les manches restantes",
       "keepPoints": "Gardez les points : il reste trop peu de manches pour que les pièces rapportent",
-      "buyPair": "Achetez cette carte : avec un second achat d'une autre couleur, c'est le mieux que vos pièces permettent",
       "buyPair": "Achetez cette carte : avec un second achat d'une autre couleur, c'est le mieux que vos pièces permettent",
       "buy": "Achetez la meilleure carte que vos pièces permettent"
     }

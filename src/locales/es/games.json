@@ -181,10 +181,8 @@
     "hint": {
       "stop": "Para aquí: un {{risk}} % de riesgo de explosión no compensa otra carta",
       "stopDiamond": "Para aquí: tu último diamante solo cuenta doble si paras ahora",
-      "stopDiamond": "Para aquí: tu último diamante solo cuenta doble si paras ahora",
       "keepCoins": "Quédate con las monedas: las mejores cartas darán fruto en las rondas que quedan",
       "keepPoints": "Quédate con los puntos: quedan muy pocas rondas para que las monedas den fruto",
-      "buyPair": "Compra esta carta: con una segunda compra de otro palo, es lo mejor que permiten tus monedas",
       "buyPair": "Compra esta carta: con una segunda compra de otro palo, es lo mejor que permiten tus monedas",
       "buy": "Compra la mejor carta que te permitan tus monedas"
     }

@@ -181,10 +181,8 @@
     "hint": {
       "stop": "Stop here: a {{risk}}% chance to boil over isn't worth another card",
       "stopDiamond": "Stop here: your last diamond counts twice only if you stop now",
-      "stopDiamond": "Stop here: your last diamond counts twice only if you stop now",
       "keepCoins": "Keep the coins: better cards will pay off over the rounds left",
       "keepPoints": "Keep the points: too few rounds are left for coins to pay off",
-      "buyPair": "Buy this card: with a second buy of another suit, it's the best your coins allow",
       "buyPair": "Buy this card: with a second buy of another suit, it's the best your coins allow",
       "buy": "Buy the best card your coins allow"
     }

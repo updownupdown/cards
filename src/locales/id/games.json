@@ -181,10 +181,8 @@
     "hint": {
       "stop": "Berhenti di sini: risiko meledak {{risk}}% tidak sebanding dengan satu kartu lagi",
       "stopDiamond": "Berhenti di sini: wajik terakhirmu dihitung dua kali hanya jika kamu berhenti sekarang",
-      "stopDiamond": "Berhenti di sini: wajik terakhirmu dihitung dua kali hanya jika kamu berhenti sekarang",
       "keepCoins": "Ambil koinnya: kartu yang lebih baik akan menguntungkan di sisa ronde",
       "keepPoints": "Ambil poinnya: sisa ronde terlalu sedikit untuk membuat koin menguntungkan",
-      "buyPair": "Beli kartu ini: dengan pembelian kedua dari jenis lain, ini yang terbaik yang bisa dibeli koinmu",
       "buyPair": "Beli kartu ini: dengan pembelian kedua dari jenis lain, ini yang terbaik yang bisa dibeli koinmu",
       "buy": "Beli kartu terbaik yang bisa dibeli koinmu"
     }

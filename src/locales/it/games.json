@@ -181,10 +181,8 @@
     "hint": {
       "stop": "Fermati qui: un rischio di esplosione del {{risk}}% non vale un'altra carta",
       "stopDiamond": "Fermati qui: l'ultimo quadri conta doppio solo se ti fermi ora",
-      "stopDiamond": "Fermati qui: l'ultimo quadri conta doppio solo se ti fermi ora",
       "keepCoins": "Tieni le monete: carte migliori renderanno nei round che restano",
       "keepPoints": "Tieni i punti: restano troppo pochi round perché le monete rendano",
-      "buyPair": "Compra questa carta: con un secondo acquisto di un altro seme, è il meglio che le tue monete permettono",
       "buyPair": "Compra questa carta: con un secondo acquisto di un altro seme, è il meglio che le tue monete permettono",
       "buy": "Compra la carta migliore che le tue monete permettono"
     }
