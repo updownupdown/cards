@@ -309,7 +309,11 @@ type Keep = {
     | "keepFlushDraw"
     | "keepPair"
     | "keepStraightDraw"
-    | "keepHighCards";
+    | "keepHighCards"
+    | "keepJokers"
+    | "keepNothing";
+  /** How many cards the note names (high cards, or jokers). */
+  count?: number;
 };
 
 /**
@@ -347,7 +351,7 @@ function cardsToKeep(hand: PlayingCard[]): Keep | null {
   // Four in a row (Ace high or low), a joker filling a gap.
   const values = (card: PlayingCard) =>
     card.rank === "A" ? [14, 1] : [cardValue(card)];
-  for (let low = 14 - 4; low >= 1; low -= 1) {
+  for (let low = 14 - 3; low >= 1; low -= 1) {
     const run = cards.filter((card) =>
       values(card).some((v) => v >= low && v < low + 4),
     );
@@ -363,7 +367,16 @@ function cardsToKeep(hand: PlayingCard[]): Keep | null {
     .sort((a, b) => cardValue(b) - cardValue(a))
     .filter((card) => cardValue(card) >= 11)
     .slice(0, 2);
-  return { keep: [...jokers, ...high], reason: "keepHighCards" };
+  if (high.length > 0) {
+    return {
+      keep: [...jokers, ...high],
+      reason: "keepHighCards",
+      count: high.length,
+    };
+  }
+  return jokers.length > 0
+    ? { keep: jokers, reason: "keepJokers", count: jokers.length }
+    : { keep: [], reason: "keepNothing" };
 }
 
 function hintRandom(state: GameState) {
@@ -422,10 +435,15 @@ function findPocketPokerHint(state: GameState, selected: string[]) {
   if (state.phase === "discard") {
     const draw = bestDraw(state);
     if (!draw) {
-      return withNote(
-        press(i18n.t("games:pocketPoker.setHand")),
-        i18n.t("games:pocketPoker.hint.standPat"),
-      );
+      const hint = press(i18n.t("games:pocketPoker.setHand"));
+      // No draw kept: the hand is a straight or better, or a second draw
+      // (raising the smallest bet to 2) isn't worth it.
+      if (!cardsToKeep(state.hand)) {
+        return withNote(hint, i18n.t("games:pocketPoker.hint.setHandStrong"));
+      }
+      return state.discardCount < rules.maxDraws
+        ? withNote(hint, i18n.t("games:pocketPoker.hint.setHandBet"))
+        : hint;
     }
     const keep = new Set(draw.keep.map((card) => card.id));
     const discards = state.hand.filter((card) => !keep.has(card.id));
@@ -446,7 +464,7 @@ function findPocketPokerHint(state: GameState, selected: string[]) {
         ...taps.map((id) => cardTarget(id)),
         zoneTarget("controls"),
       ),
-      i18n.t(`games:pocketPoker.hint.${draw.reason}`),
+      i18n.t(`games:pocketPoker.hint.${draw.reason}`, { count: draw.count }),
     );
   }
   const odds = handOdds(state.hand, state.deck, rules, hintRandom(state));

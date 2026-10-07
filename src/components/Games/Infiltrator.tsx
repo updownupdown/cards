@@ -467,9 +467,14 @@ function findInfiltratorHint(state: InfiltratorGameState) {
       );
   const cards = recruit ?? counter;
   if (!cards) {
+    // With no Ace left anywhere, Assassinate ends the mission.
     return withNote(
       pressHint("actions", i18n.t("games:infiltrator.assassinate")),
-      i18n.t("games:infiltrator.hint.assassinate"),
+      i18n.t(
+        assassinationSource(state)
+          ? "games:infiltrator.hint.assassinate"
+          : "games:infiltrator.hint.noDoubleAgents",
+      ),
     );
   }
 

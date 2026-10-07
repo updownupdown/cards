@@ -424,7 +424,8 @@
     "hint": {
       "retire": "Bu düşük kartları emekli et, böylece güçlü kartların daha sık gelir",
       "assassinate": "Elin bu casusu durduramaz: bir çift ajanı feda et",
-      "doubleAgent": "Casusun rengindeki As bir çift ajandır: diğer kartlarını kendi rengine çevirir",
+      "noDoubleAgents": "Çift ajan kalmadı: bu casus görevi bitirir",
+      "doubleAgent": "Casusun rengindeki As bir çift ajandır: oynadığın diğer kartları kendi rengine çevirir",
       "counterKey": "Bu kilit casus devşirilemez: en az ihtiyacın olan kartlarla ona karşı koy",
       "counter": "Bu casus devşirilemez: en az ihtiyacın olan kartlarla ona karşı koy"
     }
@@ -483,9 +484,10 @@
     "selectCardsToCapture": "Alınacak kartları seç",
     "hint": {
       "fold": "Çekil: devam etmek daha pahalıya patlar",
+      "noCapture": "Yapılacak yakalama kalmadı: çekil",
       "finish": "Kurdun elini boşalt: senin elin puan kazansın",
-      "over_one": "Üstün gel: Kurdun {{count}} kart çekmesine değer",
-      "over_other": "Üstün gel: Kurdun {{count}} kart çekmesine değer"
+      "over_one": "Over: Kurdun {{count}} kart çekmesine değer",
+      "over_other": "Over: Kurdun {{count}} kart çekmesine değer"
     }
   },
   "memory": {
@@ -523,10 +525,8 @@
     "smokeThreat": "{{card}} üzerine sis bombası",
     "grappleThreats": "{{first}} ve {{second}} üzerine kanca",
     "hint": {
-      "smoke": "Sis bombanı bu tehdide kullan",
-      "grapple": "Bu iki tehdidi kancayla bağla ve birlikte karşıla",
       "dump": "Bu karşılığı zarar vermeyeceği yere oyna",
-      "resolve": "Şimdi çöz: bir kart daha çekmek yarardan çok zarar getirebilir"
+      "resolve": "Şimdi çöz: bir kart daha çekmek muhtemelen kazandırdığından fazlasına mal olur"
     }
   },
   "ouroboros": {
@@ -542,8 +542,7 @@
     "lostInDungeon": "Zindanda çıkışsız kayboldun!",
     "markPathNumber": "{{number}}. yolu işaretle",
     "hint": {
-      "lookAround": "Önünde ne olduğunu görmek için etrafa bak",
-      "explore": "İleriyi keşfet",
+      "lookAround": "Etrafa bak: yalnızca açık sayı kartlarıyla ilerleyebilirsin",
       "jewel": "Bir mücevher almak için ileriyi keşfet",
       "escape": "Çıkıştan kaç!",
       "markPath": "Bir yol işaretle: çıkmazlardan bir çıkış",
@@ -606,12 +605,17 @@
     },
     "hint": {
       "play": "Oyna: bir puanlık bahis, pas geçmekten fazlasını riske atmaz",
-      "standPat": "Elini koru: bu el güçlü",
+      "setHandStrong": "Eli onayla: kenta veya daha iyisi tutulmaya değer",
+      "setHandBet": "Eli onayla: bir çekiş daha en düşük bahsini 2'ye çıkarır, değmez",
       "keepSets": "Eşleşen kartlarını tut, gerisini çek",
       "keepFlushDraw": "Floşa giden dört kartı tut",
-      "keepPair": "Çifti tut, üç kart çek",
+      "keepPair": "Çifti tut, gerisini çek",
       "keepStraightDraw": "Kentiye giden dört kartı tut",
-      "keepHighCards": "Yüksek kartları tut, gerisini çek",
+      "keepHighCards_one": "Yüksek kartı tut, gerisini çek",
+      "keepHighCards_other": "Yüksek kartları tut, gerisini çek",
+      "keepJokers_one": "Jokeri tut, gerisini çek",
+      "keepJokers_other": "Jokerleri tut, gerisini çek",
+      "keepNothing": "Tutmaya değer bir şey yok: beşini de çek",
       "odds": "Bu el yaklaşık %{{chance}} oranında kazanır"
     }
   },

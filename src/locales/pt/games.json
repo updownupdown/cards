@@ -424,7 +424,8 @@
     "hint": {
       "retire": "Aposente estas cartas baixas, para que suas melhores cartas voltem mais vezes",
       "assassinate": "Sua mão não consegue deter este espião: sacrifique um agente duplo",
-      "doubleAgent": "O Ás do naipe do espião é um agente duplo: ele passa suas outras cartas para o naipe dele",
+      "noDoubleAgents": "Não restam agentes duplos: este espião encerra a missão",
+      "doubleAgent": "O Ás do naipe do espião é um agente duplo: ele passa as outras cartas que você joga para o naipe dele",
       "counterKey": "Este espião-chave não pode ser recrutado: neutralize-o com as cartas de que você menos precisa",
       "counter": "Este espião não pode ser recrutado: neutralize-o com as cartas de que você menos precisa"
     }
@@ -483,9 +484,10 @@
     "selectCardsToCapture": "Escolha cartas para capturar",
     "hint": {
       "fold": "Desista: continuar custaria mais",
+      "noCapture": "Nenhuma captura possível: desista",
       "finish": "Esvazie a mão do Lobo: a sua pontua",
-      "over_one": "Supere: vale a pena o Lobo comprar {{count}} carta",
-      "over_other": "Supere: vale a pena o Lobo comprar {{count}} cartas"
+      "over_one": "Over: vale a pena o Lobo comprar {{count}} carta",
+      "over_other": "Over: vale a pena o Lobo comprar {{count}} cartas"
     }
   },
   "memory": {
@@ -523,10 +525,8 @@
     "smokeThreat": "Bomba de fumaça em {{card}}",
     "grappleThreats": "Gancho em {{first}} e {{second}}",
     "hint": {
-      "smoke": "Use sua bomba de fumaça nesta ameaça",
-      "grapple": "Ligue estas duas ameaças com o gancho e responda às duas juntas",
       "dump": "Jogue esta resposta onde ela não faz mal",
-      "resolve": "Resolva agora: comprar outra arrisca mais do que ajuda"
+      "resolve": "Resolva agora: comprar outra provavelmente custa mais do que rende"
     }
   },
   "ouroboros": {
@@ -542,8 +542,7 @@
     "lostInDungeon": "Você se perdeu na masmorra sem saída!",
     "markPathNumber": "Marcar caminho {{number}}",
     "hint": {
-      "lookAround": "Olhe em volta para ver o que vem pela frente",
-      "explore": "Explore adiante",
+      "lookAround": "Olhar em volta: você só pode avançar com cartas numéricas viradas para cima",
       "jewel": "Explore adiante para pegar uma joia",
       "escape": "Fuja pela saída!",
       "markPath": "Marque um caminho: uma saída para becos sem saída",
@@ -606,12 +605,17 @@
     },
     "hint": {
       "play": "Jogue: uma aposta de um ponto não arrisca mais do que desistir",
-      "standPat": "Fique com a mão: ela é forte",
+      "setHandStrong": "Confirmar mão: uma sequência ou melhor vale a pena manter",
+      "setHandBet": "Confirmar mão: comprar outra vez sobe sua aposta mínima para 2 por muito pouco",
       "keepSets": "Fique com as cartas iguais e compre o resto",
       "keepFlushDraw": "Fique com as quatro cartas para o flush",
-      "keepPair": "Fique com o par e compre três",
+      "keepPair": "Fique com o par e compre o resto",
       "keepStraightDraw": "Fique com as quatro cartas para a sequência",
-      "keepHighCards": "Fique com as cartas altas e compre o resto",
+      "keepHighCards_one": "Fique com a carta alta e compre o resto",
+      "keepHighCards_other": "Fique com as cartas altas e compre o resto",
+      "keepJokers_one": "Fique com o curinga e compre o resto",
+      "keepJokers_other": "Fique com os curingas e compre o resto",
+      "keepNothing": "Nada vale a pena manter: compre as cinco",
       "odds": "Esta mão vence cerca de {{chance}}% das vezes"
     }
   },

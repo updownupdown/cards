@@ -242,10 +242,13 @@ function bestLoopLine(
         ? loopValue(
             applyLoopAction(next, { type: "explore", index: next.deckPos }),
           )
-        : // Looking turns up unknown cards: the line stops there.
-          action.type === "look" || next.ended
-          ? loopValue(next) + (action.type === "look" ? 1 : 0)
-          : bestLoopLine(next, depth - 1, false).value;
+        : // Looking turns up cards the player hasn't seen: the line stops
+          // there, valued with them still face down (unknown).
+          action.type === "look"
+          ? loopValue(state) + 1
+          : next.ended
+            ? loopValue(next)
+            : bestLoopLine(next, depth - 1, false).value;
     if (value > best.value) best = { value, first: action };
   }
   return best;
@@ -280,10 +283,12 @@ function findOuroborosHint(
   }
   if (!first) return null;
   if (first.type === "look") {
-    return withNote(
-      pressHint("buttons", i18n.t("games:ouroboros.lookAround")),
-      i18n.t("games:ouroboros.hint.lookAround"),
-    );
+    const hint = pressHint("buttons", i18n.t("games:ouroboros.lookAround"));
+    // Worth saying only when neither card on view could be explored by.
+    const second = game.deck[(game.deckPos + 1) % game.deck.length];
+    return second.faceUp && isNumberRank(second.rank)
+      ? hint
+      : withNote(hint, i18n.t("games:ouroboros.hint.lookAround"));
   }
   if (first.type === "return") {
     const hint = makeHint(
@@ -312,19 +317,15 @@ function findOuroborosHint(
     );
   }
   const after = applyLoopAction(game, first);
-  const note = after.won
-    ? "escape"
-    : after.acesPile.length > game.acesPile.length
-      ? "jewel"
-      : "explore";
-  return withNote(
-    makeHint(
-      { key: "press", values: { label: i18n.t("games:ouroboros.explore") } },
-      pick,
-      zoneTarget("buttons"),
-    ),
-    i18n.t(`games:ouroboros.hint.${note}`),
+  const hint = makeHint(
+    { key: "press", values: { label: i18n.t("games:ouroboros.explore") } },
+    pick,
+    zoneTarget("buttons"),
   );
+  if (after.won) return withNote(hint, i18n.t("games:ouroboros.hint.escape"));
+  return after.acesPile.length > game.acesPile.length
+    ? withNote(hint, i18n.t("games:ouroboros.hint.jewel"))
+    : hint;
 }
 
 /** Each Mark Path button's own name, so a hint can press the right one. */

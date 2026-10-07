@@ -424,7 +424,8 @@
     "hint": {
       "retire": "Pensiunkan kartu rendah ini, supaya kartu Anda yang lebih kuat lebih sering datang",
       "assassinate": "Tangan Anda tidak bisa menghentikan mata-mata ini: korbankan agen ganda",
-      "doubleAgent": "As berjenis sama dengan mata-mata adalah agen ganda: kartu Anda yang lain ikut menjadi jenisnya",
+      "noDoubleAgents": "Tidak ada agen ganda tersisa: mata-mata ini mengakhiri misi",
+      "doubleAgent": "As berjenis sama dengan mata-mata adalah agen ganda: kartu lain yang Anda mainkan ikut menjadi jenisnya",
       "counterKey": "Mata-mata kunci ini tidak bisa direkrut: tangkal dengan kartu yang paling tidak Anda perlukan",
       "counter": "Mata-mata ini tidak bisa direkrut: tangkal dengan kartu yang paling tidak Anda perlukan"
     }
@@ -483,9 +484,10 @@
     "selectCardsToCapture": "Pilih kartu untuk ditangkap",
     "hint": {
       "fold": "Menyerahlah: lanjut bermain akan lebih merugikan",
+      "noCapture": "Tidak ada tangkapan lagi: menyerahlah",
       "finish": "Habiskan kartu Serigala: kartumu mendapat poin",
-      "over_one": "Lampaui: layak walau Serigala menarik {{count}} kartu",
-      "over_other": "Lampaui: layak walau Serigala menarik {{count}} kartu"
+      "over_one": "Over: layak walau Serigala menarik {{count}} kartu",
+      "over_other": "Over: layak walau Serigala menarik {{count}} kartu"
     }
   },
   "memory": {
@@ -523,10 +525,8 @@
     "smokeThreat": "Bom Asap pada {{card}}",
     "grappleThreats": "Tali Kait pada {{first}} dan {{second}}",
     "hint": {
-      "smoke": "Pakai Bom Asap pada ancaman ini",
-      "grapple": "Kaitkan dua ancaman ini dan tandingi keduanya sekaligus",
       "dump": "Mainkan respons ini di tempat yang tidak merugikan",
-      "resolve": "Selesaikan sekarang: mengambil lagi lebih berisiko daripada membantu"
+      "resolve": "Selesaikan sekarang: mengambil lagi kemungkinan lebih merugikan daripada menguntungkan"
     }
   },
   "ouroboros": {
@@ -542,8 +542,7 @@
     "lostInDungeon": "Kamu tersesat di dungeon tanpa jalan keluar!",
     "markPathNumber": "Tandai jalan {{number}}",
     "hint": {
-      "lookAround": "Lihat sekitar untuk tahu apa yang ada di depan",
-      "explore": "Jelajahi ke depan",
+      "lookAround": "Lihat sekitar: kamu hanya bisa maju dengan kartu angka yang terbuka",
       "jewel": "Jelajahi ke depan untuk mengambil permata",
       "escape": "Kabur lewat pintu keluar!",
       "markPath": "Tandai jalan: jalan keluar dari jalan buntu",
@@ -606,12 +605,17 @@
     },
     "hint": {
       "play": "Main: taruhan satu poin tidak lebih berisiko daripada menyerah",
-      "standPat": "Pertahankan kartumu: tangan ini kuat",
+      "setHandStrong": "Kunci kartu: straight atau lebih baik layak dipertahankan",
+      "setHandBet": "Kunci kartu: mengambil lagi menaikkan taruhan minimum ke 2 demi hasil terlalu kecil",
       "keepSets": "Simpan kartu yang sama, ambil sisanya",
       "keepFlushDraw": "Simpan empat kartu menuju flush",
-      "keepPair": "Simpan pasangan, ambil tiga",
+      "keepPair": "Simpan pasangan, ambil sisanya",
       "keepStraightDraw": "Simpan empat kartu menuju straight",
-      "keepHighCards": "Simpan kartu tinggi, ambil sisanya",
+      "keepHighCards_one": "Simpan kartu tinggi, ambil sisanya",
+      "keepHighCards_other": "Simpan kartu tinggi, ambil sisanya",
+      "keepJokers_one": "Simpan joker, ambil sisanya",
+      "keepJokers_other": "Simpan kedua joker, ambil sisanya",
+      "keepNothing": "Tidak ada yang layak disimpan: ambil kelimanya",
       "odds": "Tangan ini menang sekitar {{chance}}% dari waktu"
     }
   },
