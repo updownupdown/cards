@@ -1,0 +1,526 @@
+{
+  "1": {
+    "hash": "04b0f223",
+    "value": "Las cartas llegaron a Europa en la década de 1370, probablemente desde el Sultanato mameluco de Egipto."
+  },
+  "2": {
+    "hash": "8f6dd409",
+    "value": "Los cuatro palos franceses (picas, corazones, diamantes y tréboles) aparecieron en Francia hacia 1480 y acabaron conquistando casi todo el mundo."
+  },
+  "3": {
+    "hash": "04ab5f53",
+    "value": "Las barajas italianas y españolas aún usan los palos latinos, más antiguos: copas, oros, espadas y bastos."
+  },
+  "4": {
+    "hash": "3e7d8d4a",
+    "value": "Las barajas alemanas usan corazones, cascabeles, hojas y bellotas en lugar de los palos franceses."
+  },
+  "5": {
+    "hash": "ef161b9b",
+    "value": "Las cartas suizo-alemanas tienen sus propios palos: rosas, cascabeles, bellotas y escudos."
+  },
+  "6": {
+    "hash": "43a0d144",
+    "value": "Una baraja estándar tiene 52 cartas, y 52 son también las semanas de un año."
+  },
+  "7": {
+    "hash": "6061dff0",
+    "value": "Suma todas las cartas del As (1) al Rey (13) de los cuatro palos y obtendrás 364. Cuenta un Comodín como 1 y obtendrás 365."
+  },
+  "8": {
+    "hash": "229d7961",
+    "value": "Hay más formas de ordenar una baraja mezclada (unas 8 × 10⁶⁷) que átomos en la Tierra."
+  },
+  "9": {
+    "hash": "9bd16bb8",
+    "value": "Casi con toda seguridad, una baraja bien mezclada está en un orden en el que ninguna baraja ha estado nunca."
+  },
+  "10": {
+    "hash": "90da4f4c",
+    "value": "Los matemáticos Bayer y Diaconis demostraron que unas siete mezclas americanas bastan para mezclar bien una baraja de 52 cartas."
+  },
+  "11": {
+    "hash": "20334c2e",
+    "value": "Una mezcla americana perfecta «out», hecha ocho veces seguidas, devuelve una baraja de 52 cartas a su orden original."
+  },
+  "12": {
+    "hash": "b0f2b986",
+    "value": "El Comodín se añadió a las barajas estadounidenses en la década de 1860 como el triunfo más alto del juego Euchre."
+  },
+  "13": {
+    "hash": "66c32b3c",
+    "value": "En la mayoría de las barajas estándar, el Rey de corazones es el único Rey sin bigote."
+  },
+  "14": {
+    "hash": "a06d5b45",
+    "value": "Al Rey de corazones se le suele llamar «rey suicida» porque su espada parece atravesarle la cabeza."
+  },
+  "15": {
+    "hash": "0681311f",
+    "value": "La Jota de picas, la Jota de corazones y el Rey de diamantes aparecen de perfil, por eso se les apoda cartas «tuertas»."
+  },
+  "16": {
+    "hash": "67b1ae48",
+    "value": "En las barajas francesas, los Reyes se llamaban tradicionalmente David, Alejandro, César y Carlomagno."
+  },
+  "17": {
+    "hash": "4252dcba",
+    "value": "Las Reinas del patrón tradicional de París se llamaban Palas, Judit, Raquel y Argine."
+  },
+  "18": {
+    "hash": "47207d20",
+    "value": "Las Jotas del patrón de París llevaban nombres de héroes: Ogier, La Hire, Héctor y Lancelot."
+  },
+  "19": {
+    "hash": "8e224b3a",
+    "value": "La Jota se llamaba antes «Knave» en inglés. Los impresores pasaron a la «J» para que su índice no se confundiera con la «K» del Rey."
+  },
+  "20": {
+    "hash": "8e577785",
+    "value": "Los índices de las esquinas, el pequeño valor y palo en cada esquina, no se generalizaron hasta finales del siglo XIX. Antes había que abrir mucho el abanico para leer las cartas."
+  },
+  "21": {
+    "hash": "746b83ae",
+    "value": "Las figuras de doble cabeza, legibles en ambos sentidos, se popularizaron en el siglo XIX para que los jugadores no tuvieran que girar las cartas y delatar su mano."
+  },
+  "22": {
+    "hash": "3dc0937a",
+    "value": "El adornado As de picas viene de un impuesto británico: desde 1765 lo imprimía el gobierno para probar que se había pagado el tributo."
+  },
+  "23": {
+    "hash": "6f62e03d",
+    "value": "El tarot nació en la Italia del siglo XV como juego de cartas, los tarocchi. Su uso adivinatorio llegó siglos después."
+  },
+  "24": {
+    "hash": "50ed7cfd",
+    "value": "Los juegos de cartas del tarot aún se juegan hoy, sobre todo el tarot francés, muy popular en Francia."
+  },
+  "25": {
+    "hash": "15ebfe8a",
+    "value": "En Gran Bretaña y gran parte de Europa, al solitario se le llama «Patience» (paciencia)."
+  },
+  "26": {
+    "hash": "4252a461",
+    "value": "Las primeras colecciones conocidas de solitarios se publicaron en la década de 1870."
+  },
+  "27": {
+    "hash": "ed3ad506",
+    "value": "Klondike debe su nombre a la fiebre del oro de Klondike, en el Yukón canadiense, de 1896 a 1899."
+  },
+  "28": {
+    "hash": "e782e2e9",
+    "value": "Windows 3.0 incluyó el Solitario en 1990, en parte para enseñar a usar el ratón arrastrando y soltando."
+  },
+  "29": {
+    "hash": "d3bef576",
+    "value": "FreeCell se hizo famoso gracias a Windows, que numeraba sus partidas del 1 al 32.000."
+  },
+  "30": {
+    "hash": "c79c21ec",
+    "value": "De las 32.000 partidas originales de FreeCell en Windows, solo una, la n.º 11982, no tiene solución."
+  },
+  "31": {
+    "hash": "578ddaaa",
+    "value": "Acordeón es uno de los solitarios más difíciles de ganar: incluso jugando bien, la mayoría de las partidas se pierden."
+  },
+  "32": {
+    "hash": "ba54037a",
+    "value": "El matemático Persi Diaconis llamó a las probabilidades de ganar en Klondike «una de las vergüenzas de la probabilidad aplicada»: aún solo se conocen por estimación."
+  },
+  "33": {
+    "hash": "c2a7738c",
+    "value": "Los juegos de cartas eran tan populares en la Europa medieval que muchas ciudades aprobaron leyes para prohibirlos, desde la década de 1370."
+  },
+  "34": {
+    "hash": "89ebee6e",
+    "value": "Se cree que las primeras cartas proceden de China, durante la dinastía Tang, hacia el siglo IX."
+  },
+  "35": {
+    "hash": "8301c638",
+    "value": "Las cartas mamelucas tenían palos de copas, monedas, espadas y palos de polo."
+  },
+  "36": {
+    "hash": "65133d6b",
+    "value": "En las primeras barajas europeas, las figuras solían ser tres hombres: un Rey, un Caballo y una Sota. La Reina llegó después."
+  },
+  "37": {
+    "hash": "577b8963",
+    "value": "Las barajas españolas tradicionalmente no tienen dieces, y a menudo tampoco ochos ni nueves."
+  },
+  "38": {
+    "hash": "ede2d0e4",
+    "value": "Las cartas fueron de lo primero que se imprimió con xilografía en Europa, antes de la imprenta de Gutenberg."
+  },
+  "39": {
+    "hash": "2cc3fb94",
+    "value": "Los casinos taladran o recortan las esquinas de las cartas retiradas para que no puedan volver a colarse en una partida."
+  },
+  "40": {
+    "hash": "00858266",
+    "value": "El récord mundial del castillo de naipes más alto, construido sin pegamento, supera los 7 metros."
+  },
+  "41": {
+    "hash": "12106617",
+    "value": "«Poker face», «above board» y «ace up your sleeve» (as en la manga) vienen todas del juego de cartas."
+  },
+  "42": {
+    "hash": "07d89597",
+    "value": "«Following suit» (seguir el palo) viene de los juegos de bazas, donde hay que jugar una carta del palo que se ha salido."
+  },
+  "43": {
+    "hash": "d3f8717f",
+    "value": "El tablero de cribbage del submarino USS Wahoo, de la Segunda Guerra Mundial, aún pasa al submarino en servicio más antiguo de la Armada de EE. UU."
+  },
+  "44": {
+    "hash": "282598d8",
+    "value": "El tamaño estándar de los casinos es de 2,5 × 3,5 pulgadas, llamado «tamaño póker». Las cartas «tamaño bridge», más estrechas, miden 2,25 pulgadas de ancho."
+  },
+  "45": {
+    "hash": "7eb4119f",
+    "value": "El mahjong surgió de juegos de cartas chinos en el siglo XIX, y sus fichas aún llevan los antiguos palos de monedas, sartas y miríadas."
+  },
+  "46": {
+    "hash": "1067e61d",
+    "value": "En Gran Bretaña, a una baraja se le suele llamar «pack» en lugar de «deck»."
+  },
+  "47": {
+    "hash": "9fd4709e",
+    "value": "Los Reyes, Reinas y Jotas se llamaban antes «coat cards» en inglés, por sus ricos ropajes. El nombre derivó en «court cards» (cartas de la corte)."
+  },
+  "48": {
+    "hash": "050e3ec1",
+    "value": "Hay 2.598.960 manos de póker de cinco cartas distintas."
+  },
+  "49": {
+    "hash": "c28b7a66",
+    "value": "La probabilidad de recibir una escalera real en cinco cartas es de 1 entre 649.740."
+  },
+  "50": {
+    "hash": "c7b5cdf8",
+    "value": "Hay unas 5,36 × 10²⁸ formas distintas de repartir las cuatro manos de una partida de bridge."
+  },
+  "51": {
+    "hash": "cc787bdb",
+    "value": "Los fabricantes de cartas suelen decorar el As de picas con su propio nombre o logotipo."
+  },
+  "52": {
+    "hash": "eb6fb738",
+    "value": "Al Nueve de diamantes se le conoce como la «maldición de Escocia», aunque nadie sabe muy bien por qué."
+  },
+  "53": {
+    "hash": "0d037921",
+    "value": "Al Cuatro de tréboles lo apodan «los postes de la cama del diablo», y algunos jugadores dicen que trae mala suerte."
+  },
+  "54": {
+    "hash": "da136070",
+    "value": "Una baraja de tarot tiene 78 cartas: 56 en cuatro palos, más 22 triunfos."
+  },
+  "55": {
+    "hash": "2681e6cd",
+    "value": "En el tarot francés, el Loco funciona un poco como un Comodín: puede jugarse en lugar de seguir el palo."
+  },
+  "56": {
+    "hash": "f3084ac4",
+    "value": "Las cartas japonesas hanafuda tienen 12 palos, uno por cada mes del año, con flores en lugar de números."
+  },
+  "57": {
+    "hash": "5ed313ff",
+    "value": "Nintendo se fundó en 1889 para fabricar cartas hanafuda."
+  },
+  "58": {
+    "hash": "8496c32f",
+    "value": "En la Segunda Guerra Mundial, un fabricante estadounidense hizo barajas que se despegaban al mojarlas y revelaban mapas de fuga para prisioneros de guerra."
+  },
+  "59": {
+    "hash": "adfb928c",
+    "value": "Las esquinas redondeadas se generalizaron a finales del siglo XIX. Se desgastan menos que las rectas y facilitan mezclar la baraja."
+  },
+  "60": {
+    "hash": "a0d331f7",
+    "value": "Los reversos con dibujos se generalizaron en el siglo XIX. Antes solían dejarse lisos."
+  },
+  "61": {
+    "hash": "992d387a",
+    "value": "Microsoft Solitaire entró en el Salón de la Fama de los Videojuegos en 2019."
+  },
+  "62": {
+    "hash": "d753c856",
+    "value": "Los diseños de las cartas del Solitario de Windows los dibujó Susan Kare, que también diseñó los iconos originales del Macintosh."
+  },
+  "63": {
+    "hash": "da0998b3",
+    "value": "Se dice que Napoleón jugaba al solitario durante su exilio en Santa Elena, y varios juegos llevan su nombre."
+  },
+  "64": {
+    "hash": "e5961dd8",
+    "value": "Las cartas en braille tienen el valor y el palo en relieve en una esquina para poder leerlas al tacto."
+  },
+  "65": {
+    "hash": "66cb320e",
+    "value": "«Wild card» (comodín), «hold all the cards» (tener todas las cartas) y «lay your cards on the table» (poner las cartas sobre la mesa) son expresiones tomadas de los juegos de cartas."
+  },
+  "66": {
+    "hash": "de419a96",
+    "value": "Italia aún tiene muchos patrones regionales de cartas, como el napolitano, el piacentino y el siciliano, cada uno con su estilo."
+  },
+  "67": {
+    "hash": "872a826f",
+    "value": "La baraja común completa más antigua que se conoce es la Baraja de caza flamenca, pintada hacia 1475–1480. Sus palos son útiles de caza: cuernos, collares, correas de perro y lazos."
+  },
+  "68": {
+    "hash": "60d5850c",
+    "value": "Las cartas de Stuttgart, pintadas hacia 1430, tienen palos de patos, halcones, ciervos y perros."
+  },
+  "69": {
+    "hash": "81677685",
+    "value": "La Worshipful Company of Makers of Playing Cards se fundó en Londres por cédula real en 1628, y todavía existe."
+  },
+  "70": {
+    "hash": "e89d03f2",
+    "value": "En 1805, un inglés llamado Richard Harding fue ahorcado por falsificar el As de picas para eludir el impuesto sobre los naipes."
+  },
+  "71": {
+    "hash": "366f668f",
+    "value": "El impuesto británico sobre los naipes duró hasta 1960. Estados Unidos también tuvo uno, derogado en 1965."
+  },
+  "72": {
+    "hash": "ee1667ee",
+    "value": "En 1685, la colonia de Nueva Francia se quedó sin monedas y pagó a sus soldados con naipes firmados por el gobernador."
+  },
+  "73": {
+    "hash": "4da841d4",
+    "value": "Durante la Revolución francesa, los fabricantes sustituyeron Reyes, Reinas y Jotas por Genios, Libertades e Igualdades."
+  },
+  "74": {
+    "hash": "5c125d57",
+    "value": "El As fue antes la carta más baja. Su ascenso por encima del Rey suele vincularse a la Revolución francesa, aunque algunos juegos ya lo valoraban alto mucho antes."
+  },
+  "75": {
+    "hash": "48f19d10",
+    "value": "La palabra inglesa «ace» viene del latín «as», una pequeña moneda romana, a través de la palabra del francés antiguo para el uno del dado."
+  },
+  "76": {
+    "hash": "77a7c647",
+    "value": "En francés, los palos son pique (pica), cœur (corazón), carreau (baldosa) y trèfle (trébol)."
+  },
+  "77": {
+    "hash": "c7012176",
+    "value": "Los nombres ingleses de los palos vienen de los palos latinos: «spade», del italiano para espadas, y «club», de los bastos, aunque las formas son francesas."
+  },
+  "78": {
+    "hash": "bdb9484a",
+    "value": "Las figuras francesas llevan R, D y V, por Roi, Dame y Valet. Las alemanas, K, D y B, por König, Dame y Bube."
+  },
+  "79": {
+    "hash": "60868eb9",
+    "value": "En las barajas de palos alemanes, el Dos se llama Daus y suele superar al Rey, como lo haría un As."
+  },
+  "80": {
+    "hash": "3a25c34f",
+    "value": "Las cartas españolas indican su palo con los cortes de la línea del borde: ninguno en oros, uno en copas, dos en espadas y tres en bastos."
+  },
+  "81": {
+    "hash": "49e9f478",
+    "value": "Las cartas indias Ganjifa son redondas y se pintan tradicionalmente a mano. La versión mogol tiene 96 cartas en ocho palos."
+  },
+  "82": {
+    "hash": "c14e9675",
+    "value": "Las cartas llegaron a Japón con marineros portugueses en el siglo XVI. La palabra japonesa para las cartas, «karuta», viene del portugués «carta»."
+  },
+  "83": {
+    "hash": "63db150e",
+    "value": "Los triunfos del tarot se llamaron primero «trionfi», es decir, triunfos. De ahí viene la palabra inglesa «trump»."
+  },
+  "84": {
+    "hash": "3244dfa8",
+    "value": "Las barajas Visconti-Sforza, pintadas a mano para los señores de Milán a mediados del siglo XV, están entre las cartas de tarot más antiguas conservadas."
+  },
+  "85": {
+    "hash": "c3673baa",
+    "value": "La cartomancia se extendió en la Francia del siglo XVIII. Un parisino conocido como Etteilla publicó la primera guía sobre ella en 1770."
+  },
+  "86": {
+    "hash": "e466710c",
+    "value": "Se cree que la palabra «Joker» viene de «Jucker», un nombre alemán del juego Euchre."
+  },
+  "87": {
+    "hash": "ee2534d4",
+    "value": "En el Euchre, los triunfos más altos son las Jotas, llamadas «bowers» por «Bauer», la palabra alemana para granjero y un nombre de la Jota."
+  },
+  "88": {
+    "hash": "17ea7f3a",
+    "value": "El Rey de diamantes es el único Rey que lleva un hacha en lugar de una espada."
+  },
+  "89": {
+    "hash": "52417c17",
+    "value": "La Reina de picas es la única Reina que sostiene un cetro."
+  },
+  "90": {
+    "hash": "855a77bd",
+    "value": "A las primeras cartas con índices en las esquinas las apodaron «squeezers» (apretujadas), porque la mano podía cerrarse en un abanico estrecho y aun así leerse."
+  },
+  "91": {
+    "hash": "d77761c5",
+    "value": "Los naipes Bicycle se imprimen desde 1885, y su nombre viene de la fiebre por el ciclismo de la época."
+  },
+  "92": {
+    "hash": "08639ed9",
+    "value": "Los naipes Bee, favoritos de los casinos, llevan la marca «No. 92» por el año en que se fabricaron por primera vez: 1892."
+  },
+  "93": {
+    "hash": "4df82cd3",
+    "value": "La mayoría de los naipes son dos hojas de papel pegadas con una pasta oscura que impide que se transparenten."
+  },
+  "94": {
+    "hash": "5647c618",
+    "value": "El acabado de muchas barajas es un patrón de diminutos hoyuelos. Retienen un poco de aire, lo que ayuda a que las cartas se deslicen unas sobre otras."
+  },
+  "95": {
+    "hash": "6d440b89",
+    "value": "Las barajas suelen imprimirse en pliegos de 56 cartas: las 52, dos Comodines y dos extra; por eso tantas barajas traen cartas de repuesto."
+  },
+  "96": {
+    "hash": "0abc60e2",
+    "value": "Las cartas de «transformación», populares en el siglo XIX, integran los símbolos en un dibujo: los corazones se vuelven caras y las picas, sombreros."
+  },
+  "97": {
+    "hash": "937bc0f6",
+    "value": "Escribe en inglés los trece valores, de «ace» a «king», y cuenta las letras: son exactamente 52."
+  },
+  "98": {
+    "hash": "b34575a3",
+    "value": "Hay quien ve un calendario en la baraja: cuatro palos por las estaciones, 13 cartas por palo por las semanas de cada una, 12 figuras por los meses. Casi seguro que es una coincidencia."
+  },
+  "99": {
+    "hash": "e29dfddf",
+    "value": "Si una baraja se hubiera mezclado una vez por segundo desde el Big Bang, habrían salido menos de 10¹⁸ de sus 8 × 10⁶⁷ órdenes posibles."
+  },
+  "100": {
+    "hash": "d43a019c",
+    "value": "La mezcla «faro» entrelaza a la perfección las dos mitades de una baraja, carta a carta."
+  },
+  "101": {
+    "hash": "d1aba0f7",
+    "value": "Ve sacando cartas de dos barajas mezcladas a la vez, y hay un 63 % de probabilidad de que salga la misma carta en ambas al mismo tiempo."
+  },
+  "102": {
+    "hash": "d300564a",
+    "value": "En el bridge, los palos se ordenan alfabéticamente en inglés: tréboles, diamantes, corazones, picas."
+  },
+  "103": {
+    "hash": "4ad82d1f",
+    "value": "Cada pocos años se informa de un reparto de bridge en el que cada jugador tiene un palo entero. Las probabilidades en contra son tan enormes que una mala mezcla, o una broma, es la causa más probable."
+  },
+  "104": {
+    "hash": "a20fe884",
+    "value": "El nombre «bridge» viene probablemente de «biritch», un juego parecido al whist descrito en un folleto inglés de 1886."
+  },
+  "105": {
+    "hash": "23b1dbae",
+    "value": "El póker surgió a orillas del Misisipi a principios del siglo XIX, y al principio se jugaba con solo 20 cartas."
+  },
+  "106": {
+    "hash": "e1af907a",
+    "value": "Se dice que la «mano del muerto», dos Ases negros y dos Ochos negros, es lo que tenía Wild Bill Hickok cuando lo mataron de un disparo en 1876."
+  },
+  "107": {
+    "hash": "908c6559",
+    "value": "El Congreso de Texas reconoce oficialmente a la ciudad de Robstown como cuna del Texas Hold'em."
+  },
+  "108": {
+    "hash": "1f7b2b2a",
+    "value": "«Passing the buck» (pasar la responsabilidad) viene del póker, donde una marca llamada «buck», a menudo un cuchillo con mango de asta, indicaba a quién le tocaba repartir."
+  },
+  "109": {
+    "hash": "6be2f59c",
+    "value": "La mención más antigua conocida del juego del veintiuno está en una novela de Cervantes, el autor del Quijote, escrita hacia 1601."
+  },
+  "110": {
+    "hash": "075944af",
+    "value": "En el blackjack, un 21 con dos cartas sale aproximadamente una vez cada 21 manos."
+  },
+  "111": {
+    "hash": "d282edde",
+    "value": "Se dice que Crazy Eights debe su nombre a la «Sección 8», la baja militar de EE. UU. para soldados considerados mentalmente no aptos."
+  },
+  "112": {
+    "hash": "d3f73ce9",
+    "value": "Scopa, el juego de cartas italiano, significa «escoba»: la mejor jugada es barrer todas las cartas de la mesa."
+  },
+  "113": {
+    "hash": "1d2feccd",
+    "value": "En Grandes esperanzas, de Dickens, Pip y Estella juegan a Beggar-my-neighbour. Si una partida podía durar para siempre fue una incógnita hasta 2024, cuando se halló un reparto sin fin."
+  },
+  "114": {
+    "hash": "bfcda86a",
+    "value": "Se informó de que el cuadro Los jugadores de cartas, de Paul Cézanne, se vendió por más de 250 millones de dólares en 2011, el precio más alto pagado entonces por un cuadro."
+  },
+  "115": {
+    "hash": "5353f435",
+    "value": "«Perros jugando al póker» es en realidad una serie: Cassius Coolidge pintó 16 cuadros de perros para una empresa que anunciaba puros, desde 1903."
+  },
+  "116": {
+    "hash": "0cf3675d",
+    "value": "En la guerra de Vietnam, soldados estadounidenses pidieron a los fabricantes cajas llenas solo de Ases de picas, creyendo, sin razón, que el enemigo temía esa carta."
+  },
+  "117": {
+    "hash": "68547f4c",
+    "value": "Varios estados de EE. UU. dan a los presos barajas impresas con casos sin resolver, y las pistas de los jugadores han resuelto crímenes."
+  },
+  "118": {
+    "hash": "179feec7",
+    "value": "El récord de lanzamiento de una carta es de 65,96 metros, logrado por el mago Rick Smith Jr. en 2002."
+  },
+  "119": {
+    "hash": "508d6792",
+    "value": "El récord de memorizar el orden de una baraja mezclada está por debajo de 13 segundos."
+  },
+  "120": {
+    "hash": "b4a096af",
+    "value": "Bryan Berg, plusmarquista de castillos de naipes, se formó como arquitecto. No usa pegamento, cinta ni pliegues."
+  },
+  "121": {
+    "hash": "8821ef7f",
+    "value": "La descripción más antigua conocida de un solitario está en un libro alemán de juegos de 1783."
+  },
+  "122": {
+    "hash": "6df644c9",
+    "value": "En Gran Bretaña, «solitaire» suele designar el juego de tablero con clavijas. Los juegos de cartas son «patience»."
+  },
+  "123": {
+    "hash": "d80ad203",
+    "value": "El mazo, las cartas que sobran tras el reparto, también se llama «talón», del francés «talon»."
+  },
+  "124": {
+    "hash": "72874e18",
+    "value": "Canfield debe su nombre a Richard Canfield, dueño de un casino que, según se dice, vendía una baraja por 50 $ y pagaba 5 $ por cada carta llevada a las fundaciones."
+  },
+  "125": {
+    "hash": "f4c001ea",
+    "value": "Araña debe su nombre a las ocho patas de la araña: hay ocho fundaciones que llenar."
+  },
+  "126": {
+    "hash": "67fd30ae",
+    "value": "Cuarenta ladrones debe su nombre a las 40 cartas que se reparten en las columnas al empezar. También se conoce como Napoleón en Santa Elena."
+  },
+  "127": {
+    "hash": "3c7b4e92",
+    "value": "Cálculo es un solitario de habilidad casi pura: un jugador cuidadoso gana la mayoría de las partidas, y uno descuidado casi ninguna."
+  },
+  "128": {
+    "hash": "2bfcf297",
+    "value": "El Solitario de Windows llegó a tener una «tecla del jefe» que ocultaba el juego tras una falsa hoja de cálculo. Microsoft la quitó antes del lanzamiento."
+  },
+  "129": {
+    "hash": "73cf52a1",
+    "value": "El FreeCell de Windows ocultaba dos partidas numeradas −1 y −2, creadas para ser imposibles."
+  },
+  "130": {
+    "hash": "51984825",
+    "value": "Corazones llegó a Windows en 1992 para lucir sus nuevas funciones de red: se podía jugar contra personas en otros ordenadores."
+  },
+  "131": {
+    "hash": "84ea7867",
+    "value": "En 2020, en el 30.º aniversario del Solitario, Microsoft dijo que el juego aún tenía 35 millones de jugadores al mes."
+  }
+}

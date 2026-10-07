@@ -6,6 +6,7 @@ import {
   TAO_CHAPTER_COUNT,
 } from "@/data/collectibles";
 import { getGameSpecificSettingDefinitions } from "@/data/game-settings";
+import { CARD_FACTS } from "@/data/card-facts";
 import { GAMES_DATA } from "@/data/games-registry";
 import { i18n } from "@/i18n";
 import { toTurkishUpperCase } from "@/components/common/Text";
@@ -23,26 +24,32 @@ import {
 } from "@/i18n/languages";
 import { pseudoLocalize } from "@/i18n/pseudo";
 import { NAMESPACES, RESOURCES } from "@/i18n/resources";
+import esFacts from "@/locales/es/content/facts.json";
 import esGames from "@/locales/es/content/games.json";
 import esQuotes from "@/locales/es/content/quotes.json";
 import esSettings from "@/locales/es/content/settings.json";
 import esTao from "@/locales/es/content/tao.json";
+import frFacts from "@/locales/fr/content/facts.json";
 import frGames from "@/locales/fr/content/games.json";
 import frQuotes from "@/locales/fr/content/quotes.json";
 import frSettings from "@/locales/fr/content/settings.json";
 import frTao from "@/locales/fr/content/tao.json";
+import idFacts from "@/locales/id/content/facts.json";
 import idGames from "@/locales/id/content/games.json";
 import idQuotes from "@/locales/id/content/quotes.json";
 import idSettings from "@/locales/id/content/settings.json";
 import idTao from "@/locales/id/content/tao.json";
+import itFacts from "@/locales/it/content/facts.json";
 import itGames from "@/locales/it/content/games.json";
 import itQuotes from "@/locales/it/content/quotes.json";
 import itSettings from "@/locales/it/content/settings.json";
 import itTao from "@/locales/it/content/tao.json";
+import ptFacts from "@/locales/pt/content/facts.json";
 import ptGames from "@/locales/pt/content/games.json";
 import ptQuotes from "@/locales/pt/content/quotes.json";
 import ptSettings from "@/locales/pt/content/settings.json";
 import ptTao from "@/locales/pt/content/tao.json";
+import trFacts from "@/locales/tr/content/facts.json";
 import trGames from "@/locales/tr/content/games.json";
 import trQuotes from "@/locales/tr/content/quotes.json";
 import trSettings from "@/locales/tr/content/settings.json";
@@ -51,12 +58,48 @@ import trTao from "@/locales/tr/content/tao.json";
 type Translation = { hash: string; value: unknown };
 
 const CONTENT = {
-  fr: { games: frGames, settings: frSettings, quotes: frQuotes, tao: frTao },
-  es: { games: esGames, settings: esSettings, quotes: esQuotes, tao: esTao },
-  id: { games: idGames, settings: idSettings, quotes: idQuotes, tao: idTao },
-  it: { games: itGames, settings: itSettings, quotes: itQuotes, tao: itTao },
-  pt: { games: ptGames, settings: ptSettings, quotes: ptQuotes, tao: ptTao },
-  tr: { games: trGames, settings: trSettings, quotes: trQuotes, tao: trTao },
+  fr: {
+    games: frGames,
+    settings: frSettings,
+    quotes: frQuotes,
+    tao: frTao,
+    facts: frFacts,
+  },
+  es: {
+    games: esGames,
+    settings: esSettings,
+    quotes: esQuotes,
+    tao: esTao,
+    facts: esFacts,
+  },
+  id: {
+    games: idGames,
+    settings: idSettings,
+    quotes: idQuotes,
+    tao: idTao,
+    facts: idFacts,
+  },
+  it: {
+    games: itGames,
+    settings: itSettings,
+    quotes: itQuotes,
+    tao: itTao,
+    facts: itFacts,
+  },
+  pt: {
+    games: ptGames,
+    settings: ptSettings,
+    quotes: ptQuotes,
+    tao: ptTao,
+    facts: ptFacts,
+  },
+  tr: {
+    games: trGames,
+    settings: trSettings,
+    quotes: trQuotes,
+    tao: trTao,
+    facts: trFacts,
+  },
 } as Record<string, Record<string, Record<string, unknown>>>;
 
 function flatten(value: unknown, prefix = ""): Record<string, string> {
@@ -150,7 +193,7 @@ describe("Content translations", () => {
   test.each(Object.keys(CONTENT))(
     "%s translations match the current English and keep its structure",
     (language) => {
-      const { games, settings, quotes, tao } = CONTENT[language];
+      const { games, settings, quotes, tao, facts } = CONTENT[language];
       const stale: string[] = [];
       const check = (label: string, translation: unknown, english: unknown) => {
         if ((translation as Translation).hash !== sourceHash(english)) {
@@ -207,9 +250,26 @@ describe("Content translations", () => {
         );
       }
 
+      for (const [id, translation] of Object.entries(facts)) {
+        expect(Number(id)).toBeLessThanOrEqual(CARD_FACTS.length);
+        check(`fact ${id}`, translation, CARD_FACTS[Number(id) - 1]);
+      }
+
       expect(stale).toEqual([]);
     },
   );
+
+  test("every card fact is translated, as the watch app copies them", () => {
+    for (const language of Object.keys(CONTENT)) {
+      expect({
+        language,
+        count: Object.keys(CONTENT[language].facts).length,
+      }).toEqual({
+        language,
+        count: CARD_FACTS.length,
+      });
+    }
+  });
 
   test("translated game text is shown, and English when it has changed", () => {
     const klondike = GAMES_DATA["/klondike"];
