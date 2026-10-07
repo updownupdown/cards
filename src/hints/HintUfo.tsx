@@ -2,13 +2,16 @@ import { isBoardInputLocked } from "@/components/Cards/input-lock";
 import { defaultAnimDuration } from "@/constants/animation";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
+import { Icon } from "@/icons/Icon";
 import {
   Colors,
+  layoutDims,
   FontWeight,
   LayerZIndexes,
   rgba,
-  textShadow,
+  theme,
   UfoColors,
   UfoEffectColors,
 } from "@/styles/styles";
@@ -34,6 +37,7 @@ import type { Hint, HintTarget } from "./hint";
 import {
   getHintBoard,
   measureHintDock,
+  setHintUfoHovering,
   setHintUfoOut,
   useActiveHint,
   useLastHintCall,
@@ -47,7 +51,8 @@ import {
  * - Beacons: each place in the hint lights up with a beacon (a bright core
  *   and rings pinging out from it), one step after another. A hint with a
  *   note (a move worth explaining) says it in a bubble under the header's
- *   UFO, and the beacons keep pinging until it has been up READ_MS.
+ *   UFO, and the beacons keep pinging until it has been up READ_MS. The
+ *   UFO stays home but hovers over its button while they're lit.
  * - Autopilot: the UFO flies out of the header to the hint and plays it. To
  *   move a card, it hovers over it, switches on its tractor beam and carries
  *   it across; to press a button or tap a card, it zaps it. Then it flies
@@ -78,6 +83,9 @@ const APPEAR_MS = 200;
 const PING_MS = 1250;
 const PINGS = 3;
 const FADE_MS = 300;
+/** The white lines that frame a target, above, below and to either side. */
+const TICK_THICKNESS = 3;
+const TICK_GAP = 4;
 
 // The flying UFO
 const UFO_FONT_SIZE = 30;
@@ -145,7 +153,8 @@ function beaconKind(hint: Hint, stepIndex: number): BeaconKind {
 /**
  * A beacon on a hint target. "from" (what to pick up, tap or press): green
  * rings ping out of a bright core. "to" (where it goes): pink rings close in
- * on a landing ring.
+ * on a landing ring. Either way, four white lines frame the target, above,
+ * below and to either side, and nudge in on it with each ping.
  */
 function Beacon({
   spot,
@@ -237,6 +246,54 @@ function Beacon({
     );
   };
 
+  // The frame's lines: each points at the target's middle from just
+  // outside it, half the target's smaller side off.
+  const tickLength = Math.max(12, Math.round(spot.size * 0.24));
+  const tickReach = spot.size / 2 + TICK_GAP;
+  const nudge = ping.interpolate({
+    inputRange: [0, 0.15, 0.4, 1],
+    outputRange: [0, -4, 0, 0],
+  });
+  const tick = (side: "top" | "bottom" | "left" | "right") => {
+    const vertical = side === "top" || side === "bottom";
+    const sign = side === "top" || side === "left" ? -1 : 1;
+    const offset = sign * (tickReach + tickLength / 2);
+    return (
+      <Animated.View
+        key={side}
+        style={{
+          position: "absolute",
+          width: vertical ? TICK_THICKNESS : tickLength,
+          height: vertical ? tickLength : TICK_THICKNESS,
+          left: size / 2 - (vertical ? TICK_THICKNESS : tickLength) / 2,
+          top: size / 2 - (vertical ? tickLength : TICK_THICKNESS) / 2,
+          borderRadius: TICK_THICKNESS / 2,
+          backgroundColor: Colors.white,
+          // A dark edge keeps the line clear on pale cards.
+          boxShadow: `0 0 0 1.5px ${rgba(DARK, 0.5)}, 0 0 8px ${rgba(glow, 0.8)}`,
+          opacity: presence,
+          transform: vertical
+            ? [
+                {
+                  translateY: Animated.add(
+                    offset,
+                    Animated.multiply(nudge, sign),
+                  ),
+                },
+              ]
+            : [
+                {
+                  translateX: Animated.add(
+                    offset,
+                    Animated.multiply(nudge, sign),
+                  ),
+                },
+              ],
+        }}
+      />
+    );
+  };
+
   return (
     <View
       style={{
@@ -252,6 +309,10 @@ function Beacon({
     >
       {ring(0)}
       {ring(0.5)}
+      {tick("top")}
+      {tick("bottom")}
+      {tick("left")}
+      {tick("right")}
       <Animated.View
         style={{
           // "to" lands on a ring (a landing pad), "from" glows as a dot.
@@ -444,6 +505,159 @@ function Zap({ lift, value }: { lift: number; value: Animated.Value }) {
   );
 }
 
+// —— The UFO ————————————————————————————————————————————————————————————
+
+/**
+ * The UFO itself: the header button's own icon (level, as it sits in the
+ * header, where the emoji would fly tilted), in a soft green glow.
+ */
+function UfoGlyph({
+  size,
+  glowing = 1,
+}: {
+  size: number;
+  /** How much of its glow shows (it fades in as it lifts off its button). */
+  glowing?: number | Animated.AnimatedInterpolation<number> | Animated.Value;
+}) {
+  const glow = size * 1.6;
+  return (
+    <View style={{ width: size, height: size }}>
+      <Animated.View
+        style={{
+          position: "absolute",
+          left: (size - glow) / 2,
+          top: (size - glow) / 2,
+          opacity: glowing,
+        }}
+      >
+        <Svg width={glow} height={glow}>
+          <Defs>
+            <RadialGradient id="ufoGlow">
+              <Stop offset="0" stopColor={GREEN} stopOpacity={0.55} />
+              <Stop offset="0.6" stopColor={GREEN} stopOpacity={0.18} />
+              <Stop offset="1" stopColor={GREEN} stopOpacity={0} />
+            </RadialGradient>
+          </Defs>
+          <Ellipse
+            cx={glow / 2}
+            cy={glow / 2}
+            rx={glow / 2}
+            ry={glow / 2}
+            fill="url(#ufoGlow)"
+          />
+        </Svg>
+      </Animated.View>
+      <Icon name="ufo" size={size} color={theme.accent} />
+    </View>
+  );
+}
+
+/** One hover: a bob up and down, twice, and a swing from side to side. */
+const HOVER_MS = 2600;
+const HOVER_IN_MS = 300;
+const HOVER_OUT_MS = 250;
+const HOVER_LIFT = 3;
+const HOVER_DRIFT = 2.5;
+const HOVER_SWING_DEG = 7;
+
+/** sin(2π·turns·t) at a few points, for an interpolation over a loop. */
+function wave(turns: number) {
+  const inputRange = Array.from({ length: 17 }, (_, index) => index / 16);
+  return {
+    inputRange,
+    outputRange: inputRange.map((t) => Math.sin(2 * Math.PI * turns * t)),
+  };
+}
+
+/**
+ * Beacons mode: the header's UFO doesn't fly off, but it comes alive while
+ * the beacons are lit, hovering over its button: bobbing, drifting and
+ * swinging a little, as it does when it flies (Autopilot). It eases into the
+ * hover and back to rest, so it leaves and lands on the button's icon.
+ */
+function HoverUfo({
+  dock,
+  size,
+  hovering,
+  onRest,
+}: {
+  dock: HintSpot;
+  size: number;
+  hovering: boolean;
+  onRest: () => void;
+}) {
+  const time = useRef(new Animated.Value(0)).current;
+  const amount = useRef(new Animated.Value(0)).current;
+  const latestOnRest = useRef(onRest);
+  latestOnRest.current = onRest;
+
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.timing(time, {
+        toValue: 1,
+        duration: HOVER_MS,
+        easing: Easing.linear,
+        useNativeDriver,
+      }),
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [time]);
+
+  useEffect(() => {
+    const animation = Animated.timing(amount, {
+      toValue: hovering ? 1 : 0,
+      duration: hovering ? HOVER_IN_MS : HOVER_OUT_MS,
+      easing: Easing.inOut(Easing.quad),
+      useNativeDriver,
+    });
+    animation.start(({ finished }) => {
+      if (finished && !hovering) latestOnRest.current();
+    });
+    return () => animation.stop();
+  }, [amount, hovering]);
+
+  const swing = Animated.multiply(amount, time.interpolate(wave(1)));
+  const bob = Animated.multiply(amount, time.interpolate(wave(2)));
+  return (
+    <Animated.View
+      testID="hint-ufo-hover"
+      style={{
+        position: "absolute",
+        left: dock.x - size / 2,
+        top: dock.y - size / 2,
+        pointerEvents: "none",
+        transform: [
+          {
+            translateX: swing.interpolate({
+              inputRange: [-1, 1],
+              outputRange: [-HOVER_DRIFT, HOVER_DRIFT],
+            }),
+          },
+          {
+            // Up off the button, then bobbing about there.
+            translateY: Animated.add(
+              Animated.multiply(amount, -HOVER_LIFT),
+              bob.interpolate({
+                inputRange: [-1, 1],
+                outputRange: [-HOVER_LIFT / 2, HOVER_LIFT / 2],
+              }),
+            ),
+          },
+          {
+            rotate: swing.interpolate({
+              inputRange: [-1, 1],
+              outputRange: [`-${HOVER_SWING_DEG}deg`, `${HOVER_SWING_DEG}deg`],
+            }),
+          },
+        ],
+      }}
+    >
+      <UfoGlyph size={size} glowing={amount} />
+    </Animated.View>
+  );
+}
+
 // —— The flight ———————————————————————————————————————————————————————
 
 /** One flight's controls: everything it waits on stops when it's called off. */
@@ -520,6 +734,9 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
   const { t: translate } = useTranslation("game");
   const t = translate as unknown as Translate;
   const { width: screenWidth } = useViewportDimensions();
+  const { spacing } = useResponsiveMetrics();
+  /** The header button's icon, which the UFO leaves as and lands back as. */
+  const dockIconSize = spacing(layoutDims.menuIconSize);
   const call = useLastHintCall();
   const active = useActiveHint();
   const root = useRef<View>(null);
@@ -553,6 +770,12 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
     dock: HintSpot | null;
   } | null>(null);
 
+  /** Beacons mode: the header's UFO hovers over its button while they're lit. */
+  const [hover, setHover] = useState<{
+    dock: HintSpot;
+    hovering: boolean;
+  } | null>(null);
+
   // —— Autopilot ——
   const flightRef = useRef<Flight | null>(null);
   const [flying, setFlying] = useState(false);
@@ -571,8 +794,8 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
   const zap = useRef(new Animated.Value(0)).current;
   const bob = useRef(new Animated.Value(0)).current;
 
-  const latest = useRef({ t, screenWidth, onAutopilotMove });
-  latest.current = { t, screenWidth, onAutopilotMove };
+  const latest = useRef({ t, screenWidth, onAutopilotMove, dockIconSize });
+  latest.current = { t, screenWidth, onAutopilotMove, dockIconSize };
 
   // The UFO bobs gently while it's out.
   useEffect(() => {
@@ -609,6 +832,12 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
     void showBeacons(call.id, call.hint);
   }, [call]);
 
+  // The hover settles back onto the button once the beacons are out.
+  useEffect(() => {
+    if (!beacons)
+      setHover((current) => current && { ...current, hovering: false });
+  }, [beacons]);
+
   // Beacons go as soon as their hint does (a move, an undo, a new deal).
   useEffect(() => {
     if (beacons?.hasHint && active?.id !== beacons.id) setBeacons(null);
@@ -634,6 +863,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
     () => () => {
       flightRef.current?.abort();
       setHintUfoOut(false);
+      setHintUfoHovering(false);
     },
     [],
   );
@@ -670,12 +900,20 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
       text,
       dock: dock && toLocal(dock),
     });
+    // Autopilot may have taken off while this was measuring.
+    if (dock && !flightRef.current) {
+      setHover({ dock: toLocal(dock), hovering: true });
+      setHintUfoHovering(true);
+    }
   }
 
   async function flyHint(hint: Hint | null) {
     const flight = new Flight();
     flightRef.current = flight;
     setBeacons(null);
+    // Out of a hover (Beacons mode), it flies from where it is.
+    setHover(null);
+    setHintUfoHovering(false);
     const board = getHintBoard();
     await Promise.all([board?.measure(), measureRoot()]);
     const measuredDock = await measureHintDock();
@@ -729,8 +967,9 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
     };
 
     // Out of the header.
+    const docked = latest.current.dockIconSize / UFO_FONT_SIZE;
     position.setValue(here);
-    scale.setValue(0.6);
+    scale.setValue(docked);
     opacity.setValue(1);
     beam.setValue(0);
     zap.setValue(0);
@@ -756,6 +995,8 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
     } else {
       const isMove = hint.steps.length >= 2;
       let grabbed: HintTarget | null = null;
+      /** Where the grabbed card was picked up. */
+      let grabbedAt: HintSpot | null = null;
       // Set once the card has gone where it's going.
       let carried = false;
       steps: for (const [stepIndex, step] of hint.steps.entries()) {
@@ -775,9 +1016,19 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
             // flies there in the card's own time and easing (AnimatedCard's
             // timed move), so the beam keeps hold of it all the way.
             await nextFrames();
+            // The card, where it's going; if it hasn't left (the game
+            // didn't take the move), where it should have gone.
+            const moved =
+              grabbed && "card" in grabbed ? board.locate(grabbed) : null;
             const landed =
-              (grabbed && "card" in grabbed && board.locate(grabbed)) ||
-              destination;
+              moved &&
+              !(
+                grabbedAt &&
+                Math.hypot(moved.x - grabbedAt.x, moved.y - grabbedAt.y) <=
+                  grabbedAt.size / 2
+              )
+                ? moved
+                : destination;
             if (landed) {
               setStop({ key, spot: toLocal(landed), kind: "to" });
               await flyOver(
@@ -818,6 +1069,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
             setInterruptible(false);
             if (!(await tapWhenFree(board, target, hint))) break steps;
             grabbed = target;
+            grabbedAt = spot;
             // In a game that moves a card on one tap, it is already on its
             // way: the UFO goes with it, in the card's own time and easing,
             // and where it goes isn't tapped as well (that tap would be a
@@ -891,7 +1143,7 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
           useNativeDriver,
         }),
         Animated.timing(scale, {
-          toValue: 0.6,
+          toValue: docked,
           duration: 600,
           easing: Easing.in(Easing.quad),
           useNativeDriver,
@@ -952,6 +1204,18 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
         </View>
       )}
 
+      {hover && (
+        <HoverUfo
+          dock={hover.dock}
+          size={dockIconSize}
+          hovering={hover.hovering}
+          onRest={() => {
+            setHover((current) => (current?.hovering ? current : null));
+            setHintUfoHovering(false);
+          }}
+        />
+      )}
+
       {flying && stop && (
         // Long enough to last the UFO's wait while its note is read.
         <Beacon
@@ -993,16 +1257,11 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
         >
           {effect === "beam" && <TractorBeam lift={lift} value={beam} />}
           {effect === "zap" && <Zap lift={lift} value={zap} />}
-          <Animated.Text
+          <Animated.View
             style={{
               position: "absolute",
-              left: -UFO_FONT_SIZE * 0.7,
-              top: -UFO_FONT_SIZE * 0.7,
-              width: UFO_FONT_SIZE * 1.4,
-              textAlign: "center",
-              fontSize: UFO_FONT_SIZE,
-              lineHeight: UFO_FONT_SIZE * 1.4,
-              ...textShadow(rgba(GREEN, 0.7), 10),
+              left: -UFO_FONT_SIZE / 2,
+              top: -UFO_FONT_SIZE / 2,
               transform: [
                 { scale },
                 {
@@ -1014,8 +1273,8 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
               ],
             }}
           >
-            🛸
-          </Animated.Text>
+            <UfoGlyph size={UFO_FONT_SIZE} />
+          </Animated.View>
           {bubble && (
             <View
               style={{

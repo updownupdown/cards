@@ -513,13 +513,23 @@ export function useDragDrop<TSource, TTarget>({
   );
 
   // Each handle's tap, by the card it lifts, so Autopilot can tap a card the
-  // way a finger would. Taps read the game fresh, as the gestures' do.
-  const hintTapsRef = useRef(new Map<string, () => void>());
+  // way a finger would. Taps read the game fresh, as the gestures' do. A card
+  // that has moved on keeps its old entry (a foundation card's handle from
+  // when it was in a pile), so a tap counts only while the handle still lifts
+  // that card: a stale one would play the old pile's tap instead.
+  const hintTapsRef = useRef(
+    new Map<string, { source: TSource; onTap: () => void }>(),
+  );
   useEffect(
     () =>
       setDragTapLookup((cardId) => {
-        const onTap = hintTapsRef.current.get(cardId);
-        return onTap && (() => void (!isBoardInputLocked() && onTap()));
+        const entry = hintTapsRef.current.get(cardId);
+        if (!entry) return undefined;
+        if (getDroppedCardIdsRef.current(entry.source)[0] !== cardId) {
+          hintTapsRef.current.delete(cardId);
+          return undefined;
+        }
+        return () => void (!isBoardInputLocked() && entry.onTap());
       }),
     [],
   );
@@ -555,7 +565,9 @@ export function useDragDrop<TSource, TTarget>({
     entry.callbacks.onDragStart = onDragStart;
     entry.callbacks.onTap = onTap;
     const cardId = onTap && getDroppedCardIdsRef.current(source)[0];
-    if (onTap && cardId !== undefined) hintTapsRef.current.set(cardId, onTap);
+    if (onTap && cardId !== undefined) {
+      hintTapsRef.current.set(cardId, { source, onTap });
+    }
     return entry.gesture;
   }
 
