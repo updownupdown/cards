@@ -4,7 +4,11 @@ import { flexStyles } from "@/styles/flexStyles";
 import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
 import { memo, useEffect, useRef } from "react";
 import { Animated, View } from "react-native";
-import { setHintDock, useHintUfoOut } from "@/hints/hint-store";
+import {
+  setHintDock,
+  useHintUfoHovering,
+  useHintUfoOut,
+} from "@/hints/hint-store";
 import { SURFACE_OPACITY } from "@/components/ui/FloatingBar";
 import { Button } from "../Button/Button";
 import { ResetButton } from "./ResetButton";
@@ -217,6 +221,7 @@ function HintDock({
 }) {
   const dock = useRef<View>(null);
   const out = useHintUfoOut();
+  const hovering = useHintUfoHovering();
 
   useEffect(
     () =>
@@ -252,7 +257,7 @@ function HintDock({
         height: "100%",
         alignItems: "center",
         justifyContent: "center",
-        opacity: out ? 0 : 1,
+        opacity: out || hovering ? 0 : 1,
       }}
     >
       <Button

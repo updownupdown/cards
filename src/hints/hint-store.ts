@@ -161,6 +161,7 @@ export function useHint(
 
 let dockMeasurer: (() => Promise<HintSpot | null>) | null = null;
 let ufoOut = false;
+let ufoHovering = false;
 
 /**
  * The header's UFO button registers how to find it on screen, so the flying
@@ -190,6 +191,28 @@ function getHintUfoOut() {
 
 export function useHintUfoOut() {
   return useSyncExternalStore(subscribe, getHintUfoOut, getHintUfoOut);
+}
+
+/**
+ * While beacons are lit, the UFO hovers over its button (Beacons mode): the
+ * header hides the button's icon, but the button still takes presses.
+ */
+export function setHintUfoHovering(hovering: boolean) {
+  if (ufoHovering === hovering) return;
+  ufoHovering = hovering;
+  notify();
+}
+
+function getHintUfoHovering() {
+  return ufoHovering;
+}
+
+export function useHintUfoHovering() {
+  return useSyncExternalStore(
+    subscribe,
+    getHintUfoHovering,
+    getHintUfoHovering,
+  );
 }
 
 // —— Autopilot wins ———————————————————————————————————————————————
