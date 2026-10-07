@@ -654,7 +654,7 @@
     },
     "hint": {
       "run": "Kaç: bu oda seni öldürür",
-      "fightWeapon": "Bu canavarla silahınla dövüş",
+      "runWeak": "Kaç: bu oda seni devam edemeyecek kadar zayıf bırakır",
       "fightBare": "Bununla çıplak elle dövüş: silahını daha büyük canavarlara sakla"
     }
   },
@@ -713,11 +713,11 @@
     "nightmaresOverwhelmed": "Kâbuslar Alice'i alt etti.",
     "hint": {
       "eliminate": "Bu kâbusu yok et",
-      "defend": "Bu kâbusun saldırısını zayıflat: bu tur yok edilemez",
+      "defend": "Bu kâbusun saldırısını zayıflat: Alice yalnızca farkı kaybeder",
       "mold": "Bu koruyucuyu şekillendirip destene kat",
-      "exile": "Bu kâbusu sürgün et: Alice'e 5 candan fazlasına mal olur",
-      "deepBreath": "Atamaya değer bir şey yok: en zayıf kartını yenisiyle değiştir",
-      "remSleep": "Alice bu masadan sağ çıkamaz: baştan başlamak için REM uykusunu kullan"
+      "exile": "Bu kâbusu sürgün et: oyunda kalırsa Alice'e sürgünden daha pahalıya mal olur",
+      "deepBreath": "Atamaya değer bir şey yok: en zayıf kartını atıp turu bitirmek için Derin nefes al",
+      "remSleep": "Alice bu masadan sağ çıkamaz: masayı ve elini yeniden dağıtmak için REM uykusunu kullan"
     }
   },
   "spiderSolitaire": {
@@ -765,10 +765,11 @@
     "doNothing": "Hiçbir şey yapma",
     "noKingSelected": "Papaz seçilmedi",
     "hint": {
-      "reserve": "Canavarları sonra bitirmek için bu ikisini yedekte tut",
+      "reserve": "Yedeğini ayır: elinin kalanı onsuz daha iyi oynanır",
       "discard": "Bu kartın iyi bir yeri yok: at",
       "bury": "Bu kartı atmak yerine destenin altına koy",
-      "double": "Maça Papazıyla bir saldırıyı ikiye katla"
+      "buryWithKing": "Bir kartı atmak yerine destenin altına koymak için Kupa Papazını kullan",
+      "double": "Maça Papazını kullan: sıradaki saldırganın iki kat sayılır"
     }
   },
   "waypoint": {
@@ -790,9 +791,10 @@
     "speed": "Hız",
     "hint": {
       "boosts": "Hedef hıza ulaşmak için gaza bas",
-      "brakes": "Fren yap: yavaş kalmak hedef hızı aşmaktan iyidir",
-      "finishUnder": "Şimdi bitir: bir kart daha büyük ihtimalle hedefi aşar",
-      "finishOver": "Çok hızlı ve fren kalmadı: bitir ve cezayı al"
+      "brakes": "Hedef hıza kadar fren yap: onarılan bir aşım hiçbir şeye mal olmaz",
+      "finishUnder": "Şimdi bitir: hedefin altında kalmak devam etmekten daha ucuz",
+      "finishOver": "Çok hızlı ve yeterli fren yok: bitir, 1 ceza ve 1 hasar al",
+      "finishOverKeep": "Yine de bitir: frenlerini sonraki sektörlere sakla, 1 ceza ve 1 hasar al"
     }
   },
   "windmill": {

@@ -638,9 +638,9 @@
     "thereAreNotEnoughDiamond": "There are not enough Diamond cards to replenish the pile.",
     "noMovesLeft": "No black card fits a pile, and no diamonds are left.",
     "hint": {
-      "fillPile": "Fill this pile to bring in new diamonds",
-      "clearPile": "Clear this pile for new diamonds",
-      "replaceDiamond": "Swap this diamond for a new one"
+      "fillPile": "Fill this pile to bring in new Diamonds",
+      "clearPile": "Clear this pile for new Diamonds",
+      "replaceDiamond": "Swap this Diamond for a new one"
     }
   },
   "rogueRun": {
@@ -654,7 +654,7 @@
     },
     "hint": {
       "run": "Run: this room would kill you",
-      "fightWeapon": "Fight this monster with your weapon",
+      "runWeak": "Run: this room would leave you too weak to go on",
       "fightBare": "Fight this one bare-handed: save your weapon for bigger monsters"
     }
   },
@@ -713,11 +713,11 @@
     "nightmaresOverwhelmed": "The Nightmares overwhelmed Alice.",
     "hint": {
       "eliminate": "Eliminate this Nightmare",
-      "defend": "Weaken this Nightmare's attack: it can't be eliminated this turn",
+      "defend": "Weaken this Nightmare's attack: Alice loses only the difference",
       "mold": "Mold this Guardian into your deck",
-      "exile": "Exile this Nightmare: it would cost Alice more than 5 life",
-      "deepBreath": "Nothing worth assigning: swap your weakest card for a new one",
-      "remSleep": "Alice won't survive this board: use REM Sleep to start afresh"
+      "exile": "Exile this Nightmare: left in play, it would cost Alice more than exiling it",
+      "deepBreath": "Nothing worth assigning: take a Deep Breath to discard your weakest card and end the turn",
+      "remSleep": "Alice won't survive this board: use REM Sleep to redeal the board and your hand"
     }
   },
   "spiderSolitaire": {
@@ -765,10 +765,11 @@
     "doNothing": "Do nothing",
     "noKingSelected": "No King selected",
     "hint": {
-      "reserve": "Keep these two in reserve to finish monsters later",
+      "reserve": "Set aside your reserve: the rest of your hand plays best without it",
       "discard": "No good place for this card: discard it",
       "bury": "Bury this card instead of discarding it",
-      "double": "Double an attack with the King of Spades"
+      "buryWithKing": "Use the King of Hearts to bury a card instead of discarding it",
+      "double": "Use the King of Spades: your next attacker counts double"
     }
   },
   "waypoint": {
@@ -790,9 +791,10 @@
     "speed": "Speed",
     "hint": {
       "boosts": "Use Gas to reach the target speed",
-      "brakes": "Brake: slower beats going over the target speed",
-      "finishUnder": "Finish now: another card would likely overshoot",
-      "finishOver": "Too fast and no brake left: finish and take the penalty"
+      "brakes": "Brake back to the target speed: a repaired bust costs nothing",
+      "finishUnder": "Finish now: falling short costs less than playing on",
+      "finishOver": "Too fast and not enough Brakes: finish and take 1 penalty and 1 damage",
+      "finishOverKeep": "Finish anyway: save your Brakes for later sectors and take 1 penalty and 1 damage"
     }
   },
   "windmill": {

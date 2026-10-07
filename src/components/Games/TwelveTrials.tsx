@@ -620,7 +620,10 @@ function findTwelveTrialsHint(
           makeHint("tapCard", cardTarget(action.card)),
           i18n.t("games:twelveTrials.hint.bury"),
         )
-      : withNote(kingPower("hearts"), i18n.t("games:twelveTrials.hint.bury"));
+      : withNote(
+          kingPower("hearts"),
+          i18n.t("games:twelveTrials.hint.buryWithKing"),
+        );
   }
   if (action.type === "discard") {
     return withNote(

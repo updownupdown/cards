@@ -654,7 +654,7 @@
     },
     "hint": {
       "run": "Fuja: esta sala mataria você",
-      "fightWeapon": "Lute contra este monstro com sua arma",
+      "runWeak": "Fuja: esta sala deixaria você fraco demais para seguir",
       "fightBare": "Lute contra este de mãos vazias: guarde sua arma para monstros maiores"
     }
   },
@@ -713,11 +713,11 @@
     "nightmaresOverwhelmed": "Os pesadelos dominaram Alice.",
     "hint": {
       "eliminate": "Elimine este pesadelo",
-      "defend": "Enfraqueça o ataque deste pesadelo: ele não pode ser eliminado neste turno",
+      "defend": "Enfraqueça o ataque deste pesadelo: Alice perde só a diferença",
       "mold": "Molde este guardião para que ele entre no seu baralho",
-      "exile": "Exile este pesadelo: ele custaria a Alice mais de 5 de vida",
-      "deepBreath": "Não vale a pena atribuir nada: troque sua carta mais fraca por uma nova",
-      "remSleep": "Alice não vai sobreviver a esta mesa: use o sono REM para recomeçar"
+      "exile": "Exile este pesadelo: se ficar em jogo, ele custaria a Alice mais do que exilá-lo",
+      "deepBreath": "Não vale a pena atribuir nada: use Respiração profunda para descartar sua carta mais fraca e encerrar o turno",
+      "remSleep": "Alice não vai sobreviver a esta mesa: use o sono REM para redistribuir a mesa e a sua mão"
     }
   },
   "spiderSolitaire": {
@@ -765,10 +765,11 @@
     "doNothing": "Não fazer nada",
     "noKingSelected": "Nenhum Rei selecionado",
     "hint": {
-      "reserve": "Guarde estas duas na reserva para acabar com monstros depois",
+      "reserve": "Separe sua reserva: o resto da sua mão rende mais sem ela",
       "discard": "Esta carta não tem um bom lugar: descarte-a",
       "bury": "Coloque esta carta no fundo do monte em vez de descartá-la",
-      "double": "Dobre um ataque com o Rei de espadas"
+      "buryWithKing": "Use o Rei de copas para pôr uma carta no fundo do monte em vez de descartá-la",
+      "double": "Use o Rei de espadas: seu próximo atacante conta em dobro"
     }
   },
   "waypoint": {
@@ -790,9 +791,10 @@
     "speed": "Velocidade",
     "hint": {
       "boosts": "Use o gás para chegar à velocidade-alvo",
-      "brakes": "Freie: melhor devagar do que passar da velocidade-alvo",
-      "finishUnder": "Feche agora: outra carta provavelmente passaria do alvo",
-      "finishOver": "Rápido demais e sem freio: feche e aceite a penalidade"
+      "brakes": "Freie até a velocidade-alvo: um estouro reparado não custa nada",
+      "finishUnder": "Feche agora: ficar abaixo custa menos do que continuar",
+      "finishOver": "Rápido demais e sem freios suficientes: feche e aceite 1 penalidade e 1 dano",
+      "finishOverKeep": "Feche mesmo assim: guarde seus freios para os próximos setores e aceite 1 penalidade e 1 dano"
     }
   },
   "windmill": {

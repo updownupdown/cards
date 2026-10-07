@@ -654,7 +654,7 @@
     },
     "hint": {
       "run": "Fuggi: questa stanza ti ucciderebbe",
-      "fightWeapon": "Combatti questo mostro con la tua arma",
+      "runWeak": "Fuggi: questa stanza ti lascerebbe troppo debole per proseguire",
       "fightBare": "Combatti questo a mani nude: tieni l'arma per mostri più grossi"
     }
   },
@@ -713,11 +713,11 @@
     "nightmaresOverwhelmed": "Gli incubi hanno sopraffatto Alice.",
     "hint": {
       "eliminate": "Elimina questo incubo",
-      "defend": "Indebolisci l'attacco di questo incubo: in questo turno non si può eliminare",
+      "defend": "Indebolisci l'attacco di questo incubo: Alice perde solo la differenza",
       "mold": "Plasma questo guardiano per aggiungerlo al tuo mazzo",
-      "exile": "Esilia questo incubo: costerebbe ad Alice più di 5 vite",
-      "deepBreath": "Niente vale la pena di essere assegnato: cambia la tua carta più debole con una nuova",
-      "remSleep": "Alice non sopravviverà a questo tavolo: usa il sonno REM per ricominciare da capo"
+      "exile": "Esilia questo incubo: se resta in gioco, costerebbe ad Alice più che esiliarlo",
+      "deepBreath": "Niente vale la pena di essere assegnato: usa Respiro profondo per scartare la tua carta più debole e chiudere il turno",
+      "remSleep": "Alice non sopravviverà a questo tavolo: usa il sonno REM per ridistribuire il tavolo e la tua mano"
     }
   },
   "spiderSolitaire": {
@@ -765,10 +765,11 @@
     "doNothing": "Non fare nulla",
     "noKingSelected": "Nessun Re selezionato",
     "hint": {
-      "reserve": "Tieni queste due in riserva per finire i mostri più avanti",
+      "reserve": "Metti da parte la tua riserva: il resto della mano si gioca meglio senza",
       "discard": "Questa carta non ha un buon posto: scartala",
       "bury": "Metti questa carta in fondo al mazzo invece di scartarla",
-      "double": "Raddoppia un attacco con il Re di picche"
+      "buryWithKing": "Usa il Re di cuori per mettere una carta in fondo al mazzo invece di scartarla",
+      "double": "Usa il Re di picche: il tuo prossimo attaccante conta doppio"
     }
   },
   "waypoint": {
@@ -790,9 +791,10 @@
     "speed": "Velocità",
     "hint": {
       "boosts": "Usa il gas per raggiungere la velocità obiettivo",
-      "brakes": "Frena: meglio lenti che oltre la velocità obiettivo",
-      "finishUnder": "Chiudi ora: un'altra carta probabilmente andrebbe oltre",
-      "finishOver": "Troppo veloce e niente freni: chiudi e accetta la penalità"
+      "brakes": "Frena fino alla velocità obiettivo: uno sforamento riparato non costa nulla",
+      "finishUnder": "Chiudi ora: restare sotto costa meno che continuare",
+      "finishOver": "Troppo veloce e freni insufficienti: chiudi e accetta 1 penalità e 1 danno",
+      "finishOverKeep": "Chiudi comunque: tieni i freni per i prossimi settori e accetta 1 penalità e 1 danno"
     }
   },
   "windmill": {

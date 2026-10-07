@@ -654,7 +654,7 @@
     },
     "hint": {
       "run": "Huye: esta sala te mataría",
-      "fightWeapon": "Lucha contra este monstruo con tu arma",
+      "runWeak": "Huye: esta sala te dejaría demasiado débil para seguir",
       "fightBare": "Lucha contra este a mano limpia: guarda tu arma para monstruos más grandes"
     }
   },
@@ -713,11 +713,11 @@
     "nightmaresOverwhelmed": "Las pesadillas han vencido a Alice.",
     "hint": {
       "eliminate": "Elimina esta pesadilla",
-      "defend": "Debilita el ataque de esta pesadilla: este turno no se puede eliminar",
+      "defend": "Debilita el ataque de esta pesadilla: Alice solo pierde la diferencia",
       "mold": "Moldea este guardián para añadirlo a tu mazo",
-      "exile": "Exilia esta pesadilla: le costaría a Alice más de 5 de vida",
-      "deepBreath": "No merece la pena asignar nada: cambia tu carta más débil por una nueva",
-      "remSleep": "Alice no sobrevivirá a este tablero: usa el sueño REM para empezar de nuevo"
+      "exile": "Exilia esta pesadilla: si sigue en juego, le costaría a Alice más que exiliarla",
+      "deepBreath": "No merece la pena asignar nada: usa Respiración profunda para descartar tu carta más débil y terminar el turno",
+      "remSleep": "Alice no sobrevivirá a este tablero: usa el sueño REM para repartir de nuevo el tablero y tu mano"
     }
   },
   "spiderSolitaire": {
@@ -765,10 +765,11 @@
     "doNothing": "No hacer nada",
     "noKingSelected": "Ningún Rey seleccionado",
     "hint": {
-      "reserve": "Guarda estas dos en la reserva para rematar monstruos más adelante",
+      "reserve": "Aparta tu reserva: el resto de tu mano se juega mejor sin ella",
       "discard": "Esta carta no tiene buen sitio: descártala",
       "bury": "Pon esta carta en el fondo del mazo en vez de descartarla",
-      "double": "Duplica un ataque con el Rey de picas"
+      "buryWithKing": "Usa el Rey de corazones para poner una carta en el fondo del mazo en vez de descartarla",
+      "double": "Usa el Rey de picas: tu próximo atacante cuenta doble"
     }
   },
   "waypoint": {
@@ -790,9 +791,10 @@
     "speed": "Velocidad",
     "hint": {
       "boosts": "Usa el gas para alcanzar la velocidad objetivo",
-      "brakes": "Frena: mejor lento que pasarte de la velocidad objetivo",
-      "finishUnder": "Cierra ya: otra carta probablemente te pasaría",
-      "finishOver": "Demasiado rápido y sin freno: cierra y acepta la penalización"
+      "brakes": "Frena hasta la velocidad objetivo: un exceso reparado no cuesta nada",
+      "finishUnder": "Cierra ya: quedarte corto cuesta menos que seguir jugando",
+      "finishOver": "Demasiado rápido y sin frenos suficientes: cierra y acepta 1 penalización y 1 daño",
+      "finishOverKeep": "Cierra de todos modos: guarda tus frenos para los próximos sectores y acepta 1 penalización y 1 daño"
     }
   },
   "windmill": {

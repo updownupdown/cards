@@ -654,7 +654,7 @@
     },
     "hint": {
       "run": "Fuyez : cette salle vous tuerait",
-      "fightWeapon": "Combattez ce monstre avec votre arme",
+      "runWeak": "Fuyez : cette salle vous laisserait trop faible pour continuer",
       "fightBare": "Combattez celui-ci à mains nues : gardez votre arme pour de plus gros monstres"
     }
   },
@@ -713,11 +713,11 @@
     "nightmaresOverwhelmed": "Les cauchemars ont submergé Alice.",
     "hint": {
       "eliminate": "Éliminez ce cauchemar",
-      "defend": "Affaiblissez l'attaque de ce cauchemar : il ne peut pas être éliminé ce tour-ci",
+      "defend": "Affaiblissez l'attaque de ce cauchemar : Alice ne perd que la différence",
       "mold": "Façonnez ce gardien pour l'ajouter à votre paquet",
-      "exile": "Exilez ce cauchemar : il coûterait plus de 5 vies à Alice",
-      "deepBreath": "Rien ne vaut la peine d'être affecté : échangez votre carte la plus faible contre une nouvelle",
-      "remSleep": "Alice ne survivra pas à ce plateau : utilisez le sommeil REM pour repartir de zéro"
+      "exile": "Exilez ce cauchemar : laissé en jeu, il coûterait plus cher à Alice que l'exil",
+      "deepBreath": "Rien ne vaut la peine d'être affecté : prenez une Grande inspiration pour défausser votre carte la plus faible et finir le tour",
+      "remSleep": "Alice ne survivra pas à ce plateau : utilisez le sommeil REM pour redistribuer le plateau et votre main"
     }
   },
   "spiderSolitaire": {
@@ -765,10 +765,11 @@
     "doNothing": "Ne rien faire",
     "noKingSelected": "Aucun Roi sélectionné",
     "hint": {
-      "reserve": "Gardez ces deux cartes en réserve pour achever des monstres plus tard",
+      "reserve": "Mettez votre réserve de côté : le reste de votre main se joue mieux sans elle",
       "discard": "Cette carte n'a pas de bonne place : défaussez-la",
       "bury": "Placez cette carte sous la pioche plutôt que de la défausser",
-      "double": "Doublez une attaque avec le Roi de pique"
+      "buryWithKing": "Utilisez le Roi de cœur pour placer une carte sous la pioche plutôt que de la défausser",
+      "double": "Utilisez le Roi de pique : votre prochain attaquant compte double"
     }
   },
   "waypoint": {
@@ -790,9 +791,10 @@
     "speed": "Vitesse",
     "hint": {
       "boosts": "Mettez les gaz pour atteindre la vitesse visée",
-      "brakes": "Freinez : mieux vaut trop lent qu'au-delà de la vitesse visée",
-      "finishUnder": "Finissez maintenant : une autre carte dépasserait sans doute",
-      "finishOver": "Trop vite et plus de frein : finissez et prenez la pénalité"
+      "brakes": "Freinez jusqu'à la vitesse visée : un dépassement réparé ne coûte rien",
+      "finishUnder": "Finissez maintenant : rester en dessous coûte moins que continuer",
+      "finishOver": "Trop vite et pas assez de freins : finissez et prenez 1 pénalité et 1 dégât",
+      "finishOverKeep": "Finissez quand même : gardez vos freins pour les secteurs suivants et prenez 1 pénalité et 1 dégât"
     }
   },
   "windmill": {
