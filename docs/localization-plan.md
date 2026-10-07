@@ -2,9 +2,11 @@
 
 Solitarius is translated into French, Spanish, Italian, Portuguese, Turkish and Indonesian. English is the source language, more languages can follow, and translations are made by AI with automatic checks.
 
-Status: French, Spanish, Italian, Portuguese, Turkish and Indonesian are complete. The UI, the in-game text, every game's title, description, quick start and rules, the game settings, all 170 quotes and all 81 Tao Te Ching chapters are translated, and the checks pass. Turkish was checked on a phone on 2026-09-16 (all 114 games opened, overflowing labels shortened, remaining hard-coded English strings translated). Italian, Portuguese and Indonesian have not yet been checked on a phone.
+Status: French, Spanish, Italian, Portuguese, Turkish and Indonesian are complete. The UI, the in-game text, every game's title, description, quick start and rules, the game settings, all 170 quotes, all 81 Tao Te Ching chapters and all 131 card facts are translated, and the checks pass. Turkish was checked on a phone on 2026-09-16 (all 114 games opened, overflowing labels shortened, remaining hard-coded English strings translated). Italian, Portuguese and Indonesian have not yet been checked on a phone.
 
 ## Decisions
+
+- **The Wear OS app** (`updownupdown/cards-watch`, a separate Play listing) has the same languages, and new languages are added to both apps together. It uses this app's game titles and glossaries, and its card facts are the same 131 in the same order, translated here and copied over (a new fact goes at the end of both lists). Its rules are its own shorter text, translated there.
 
 - **Game titles are translated** (changed from "stay in English" on 2026-09-16). A language uses its established name for a classic solitaire when there is one (Araignée, Taquin, Quarante Voleurs), translates descriptive titles, and keeps proper names (Klondike, FreeCell, Yukon). Search matches the translated title, the English title and the aliases, ignoring accents. Rules that mention another game use its translated title.
 - **Quotes and Tao Te Ching chapters are translated.** Under each translated one, a "Show original" switch shows the English.
@@ -49,15 +51,16 @@ Longer text keeps its English in the code, where it is edited as before:
 
 - game titles, descriptions, quick starts and rules (`src/data/games/*.ts`);
 - game settings (`src/data/game-settings.ts`);
-- quotes and Tao Te Ching chapters.
+- quotes and Tao Te Ching chapters;
+- card facts (`src/data/card-facts.ts`), shown one per launch on the Home tab.
 
-Translations live in `src/locales/<language>/content/{games,settings,quotes,tao}.json`, and `src/i18n/content.ts` lays them over the English:
+Translations live in `src/locales/<language>/content/{games,settings,quotes,tao,facts}.json`, and `src/i18n/content.ts` lays them over the English:
 
 - Each translation is stored as `{ "hash": ..., "value": ... }`. The hash is `sourceHash()` of the English it was translated from.
 - When the English changes, the hash no longer matches. The app then shows English for that field, so outdated rules are never shown, and the i18n tests fail and list the stale field.
-- `localizeGame`, `localizeSettingDefinitions`, `localizeQuote` and `localizeTaoChapter` return translated copies, cached per object and language. `localizeGameTitle` is the shortcut for screens that only show a name; every place that shows or sorts game names uses it.
+- `localizeGame`, `localizeSettingDefinitions`, `localizeQuote`, `localizeTaoChapter` and `localizeCardFact` return translated copies, cached per object and language. `localizeGameTitle` is the shortcut for screens that only show a name; every place that shows or sorts game names uses it.
 - `isQuoteTranslated` and `isTaoChapterTranslated` decide whether the "Show original" switch appears.
-- All 456 game fields (114 titles plus descriptions, quick starts and rules), 28 settings, 170 quotes and 81 chapters are translated in every language.
+- All 456 game fields (114 titles plus descriptions, quick starts and rules), 28 settings, 170 quotes, 81 chapters and 131 card facts are translated in every language.
 
 ### Glossaries
 
@@ -89,7 +92,8 @@ An import that fails a check is rejected field by field, so a bad batch can neve
 - `src/__tests__/i18n.test.ts` checks that:
   - every language has every English UI key, with the same placeholders, tags and line breaks;
   - plurals follow each language's rules;
-  - content translations aren't stale, point at existing games, settings, quotes and chapters, and keep the rules' markdown structure;
+  - content translations aren't stale, point at existing games, settings, quotes, chapters and card facts, and keep the rules' markdown structure;
+  - every card fact is translated in every language, as the Wear OS app copies them;
   - stale content falls back to English.
 - ESLint's `i18next/no-literal-string` rule warns about hardcoded text in the converted folders (`src/app`, and `Button`, `Home`, `Modals`, `Nodes` and `common` under `src/components`).
 - Jest runs in English, because expo-localization's mock reports `en-US`.
@@ -97,7 +101,7 @@ An import that fails a check is rejected field by field, so a bad batch can neve
 ## Editing text
 
 - **Changing or adding UI text:** edit the English JSON, then add the same key to every other language. The i18n tests fail until you do.
-- **Changing game rules, settings, quotes or chapters:** edit the English where it lives. Existing translations of that field become stale and show English until they are translated again. The tests list them, with the new hash.
+- **Changing game rules, settings, quotes, chapters or card facts:** edit the English where it lives. Existing translations of that field become stale and show English until they are translated again. The tests list them, with the new hash.
 - **Adding a language:**
   1. Add its code to `SUPPORTED_LANGUAGES` and `LANGUAGE_NAMES` (`src/i18n/languages.ts`), and check that `LANGUAGE_NAMES` in `scripts/i18n.mjs` has it.
   2. Add its UI files and register them in `resources.ts`.
@@ -105,7 +109,8 @@ An import that fails a check is rejected field by field, so a bad batch can neve
   4. Add a glossary, and a tagline in `scripts/generate-store-graphics.mjs`.
   5. Add the code to `supportedLocales` in `app.config.js`, to `resourceConfigurations` in `android/app/build.gradle`, and to `android/app/src/main/res/xml/locales_config.xml`. Android names a few languages by old codes in `resourceConfigurations` (Indonesian is `in`, Hebrew `iw`), and the phone reports them the same way; `normalizeLanguageCode` in `languages.ts` maps them back.
   6. Check the script: on Android, `textTransform: "uppercase"` follows the phone's locale, not the app's, so on native `Text` uppercases in JavaScript for the display language (`toDisplayUpperCase`, with the Turkish dotted İ rule). A language with other casing rules needs a case there. Components that animate text styles (`NodeDetailsPanel`, `GameUserStats`) call it directly.
-  7. Translate: titles first, since rules mention other games by title, then rules, settings, quotes and chapters. Then rebuild the native app.
+  7. Translate: titles first, since rules mention other games by title, then rules, settings, quotes, chapters and card facts. Then rebuild the native app.
+  8. Add the language to the Wear OS app (`updownupdown/cards-watch`) at the same time: see "Text" in its `AGENTS.md`. Its game titles are this app's, and its card facts are copied from `content/facts.json`.
 
 ## Next steps
 

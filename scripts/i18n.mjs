@@ -1,6 +1,6 @@
 // Translation workflow for the content kept in code: game titles,
-// descriptions, quick starts and rules, game settings, quotes and Tao Te Ching
-// chapters.
+// descriptions, quick starts and rules, game settings, quotes, Tao Te Ching
+// chapters and card facts.
 // English is read straight from the TypeScript sources; translations live in
 // src/locales/<language>/content/*.json, each with the hash of the English it
 // was made from (see src/i18n/content.ts). See docs/localization-plan.md.
@@ -25,7 +25,7 @@ import path from "node:path";
 import ts from "typescript";
 
 const root = process.cwd();
-const TYPES = ["games", "settings", "quotes", "tao"];
+const TYPES = ["games", "settings", "quotes", "tao", "facts"];
 const LANGUAGE_NAMES = {
   fr: "French",
   es: "Spanish",
@@ -127,11 +127,7 @@ function readEnglish() {
     );
     const game = literal(declaration.initializer);
     const slug = game.path.replace(/^\//, "");
-    for (const field of [
-      "title",
-      "quickStart",
-      "howToPlay",
-    ]) {
+    for (const field of ["title", "quickStart", "howToPlay"]) {
       if (game[field] !== undefined)
         english.set(`games/${slug}/${field}`, game[field]);
     }
@@ -178,6 +174,14 @@ function readEnglish() {
   );
   for (const chapter of tao)
     english.set(`tao/${chapter.chapter}`, chapter.text);
+
+  const facts = literal(
+    findVariable(
+      parse("src/data/card-facts.ts"),
+      (node) => node.name.getText() === "CARD_FACTS",
+    ).initializer,
+  );
+  facts.forEach((fact, index) => english.set(`facts/${index + 1}`, fact));
 
   for (const [id, value] of english) {
     if (
@@ -251,15 +255,18 @@ function writeContent(language, content) {
   }
 }
 
+/** Types keyed by number alone, rather than by game and field. */
+const FLAT_TYPES = ["quotes", "tao", "facts"];
+
 function getEntry(content, id) {
   const [type, ...rest] = id.split("/");
-  if (type === "quotes" || type === "tao") return content[type][rest[0]];
+  if (FLAT_TYPES.includes(type)) return content[type][rest[0]];
   return content[type][rest[0]]?.[rest[1]];
 }
 
 function setEntry(content, id, entry) {
   const [type, ...rest] = id.split("/");
-  if (type === "quotes" || type === "tao") {
+  if (FLAT_TYPES.includes(type)) {
     content[type][rest[0]] = entry;
   } else {
     content[type][rest[0]] ??= {};
@@ -377,7 +384,7 @@ function checkTranslation(id, english, translation) {
         problems,
       );
     }
-  } else if (type === "tao") {
+  } else if (type === "tao" || type === "facts") {
     checkString(id, english, translation, problems);
   }
   return problems;
@@ -509,7 +516,7 @@ async function translate(language, english) {
     `You translate Solitarius, a mobile app of solo playing-card games, from English into ${LANGUAGE_NAMES[language] ?? language}.`,
     "Translate each item's English faithfully and naturally for players. Game rules must stay exactly as precise as the English.",
     "Keep {{placeholders}}, <tags>, line breaks, markdown (## headings, - list markers, **bold**) and the JSON structure exactly. Arrays must keep their length.",
-    "Translate game titles: use the language's established name for a classic solitaire when there is one, translate descriptive titles, and keep proper names that don't translate. When rules mention another game, use that game's translated title. Quote authors are not included; translate quote sources, but keep book and work titles recognizable.",
+    "Translate game titles: use the language's established name for a classic solitaire when there is one, translate descriptive titles, and keep proper names that don't translate. When rules mention another game, use that game's translated title. Quote authors are not included; translate quote sources, but keep book and work titles recognizable. Card facts are trivia for players: keep names, dates and numbers exact, and name suits and ranks as the glossary does.",
     `Follow this style guide and glossary:\n${glossary}`,
     'Reply with JSON only, in the form {"items":[{"id":"...","translation":...}]}.',
   ].join("\n\n");

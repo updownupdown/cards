@@ -1,6 +1,8 @@
 /**
- * Playing card trivia, one of which sits at the foot of the Home tab.
- * English only for now; to be moved into the locales once settled.
+ * Playing card trivia, one of which sits at the foot of the Home tab,
+ * translated in src/locales/<language>/content/facts.json (by number, from 1).
+ * The Wear OS app shows the same facts in the same order: keep the two lists
+ * alike, adding new facts at the end.
  */
 export const CARD_FACTS: string[] = [
   "Playing cards reached Europe in the 1370s, most likely brought over from the Mamluk Sultanate of Egypt.",
@@ -139,9 +141,10 @@ export const CARD_FACTS: string[] = [
 /** One fact per app launch, chosen the first time it is asked for. */
 let launchFactIndex: number | null = null;
 
-export function getLaunchCardFact() {
+/** The launch's fact, by its place in CARD_FACTS. */
+export function getLaunchCardFactIndex() {
   if (launchFactIndex === null) {
     launchFactIndex = Math.floor(Math.random() * CARD_FACTS.length);
   }
-  return CARD_FACTS[launchFactIndex];
+  return launchFactIndex;
 }

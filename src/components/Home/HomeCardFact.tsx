@@ -1,7 +1,8 @@
 import { Text } from "@/components/common/Text";
-import { getLaunchCardFact } from "@/data/card-facts";
+import { CARD_FACTS, getLaunchCardFactIndex } from "@/data/card-facts";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { useTranslation } from "@/i18n";
+import { useDisplayLanguage, useTranslation } from "@/i18n";
+import { localizeCardFact } from "@/i18n/content";
 import { Icon } from "@/icons";
 import { theme } from "@/styles/styles";
 import { View } from "react-native";
@@ -18,6 +19,8 @@ export function HomeCardFact({
 }: HomeCardFactProps) {
   const { spacing } = useResponsiveMetrics();
   const { t } = useTranslation("home");
+  const language = useDisplayLanguage();
+  const factIndex = getLaunchCardFactIndex();
 
   return (
     <View
@@ -50,7 +53,7 @@ export function HomeCardFact({
           lineHeight={1.45}
           style={{ textAlign: "center" }}
         >
-          {getLaunchCardFact()}
+          {localizeCardFact(factIndex, CARD_FACTS[factIndex], language)}
         </Text>
       </View>
     </View>

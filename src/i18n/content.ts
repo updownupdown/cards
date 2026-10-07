@@ -1,25 +1,31 @@
 import type { GameMenuInfo } from "@/data/games-data";
 import type { GameSpecificSettingDefinition } from "@/data/game-settings";
+import esFacts from "@/locales/es/content/facts.json";
 import esGames from "@/locales/es/content/games.json";
 import esQuotes from "@/locales/es/content/quotes.json";
 import esSettings from "@/locales/es/content/settings.json";
 import esTao from "@/locales/es/content/tao.json";
+import frFacts from "@/locales/fr/content/facts.json";
 import frGames from "@/locales/fr/content/games.json";
 import frQuotes from "@/locales/fr/content/quotes.json";
 import frSettings from "@/locales/fr/content/settings.json";
 import frTao from "@/locales/fr/content/tao.json";
+import idFacts from "@/locales/id/content/facts.json";
 import idGames from "@/locales/id/content/games.json";
 import idQuotes from "@/locales/id/content/quotes.json";
 import idSettings from "@/locales/id/content/settings.json";
 import idTao from "@/locales/id/content/tao.json";
+import itFacts from "@/locales/it/content/facts.json";
 import itGames from "@/locales/it/content/games.json";
 import itQuotes from "@/locales/it/content/quotes.json";
 import itSettings from "@/locales/it/content/settings.json";
 import itTao from "@/locales/it/content/tao.json";
+import ptFacts from "@/locales/pt/content/facts.json";
 import ptGames from "@/locales/pt/content/games.json";
 import ptQuotes from "@/locales/pt/content/quotes.json";
 import ptSettings from "@/locales/pt/content/settings.json";
 import ptTao from "@/locales/pt/content/tao.json";
+import trFacts from "@/locales/tr/content/facts.json";
 import trGames from "@/locales/tr/content/games.json";
 import trQuotes from "@/locales/tr/content/quotes.json";
 import trSettings from "@/locales/tr/content/settings.json";
@@ -33,7 +39,7 @@ import {
 import { pseudoLocalizeDeep } from "./pseudo";
 
 // Text written in English in the code (game titles, rules and descriptions,
-// game settings, quotes and Tao Te Ching chapters) is translated in
+// game settings, quotes, Tao Te Ching chapters and card facts) is translated in
 // src/locales/<language>/content/*.json. Each translation stores a hash of the
 // English it was made from: when the English changes, the translation is
 // stale and English is shown until it is translated again, so players never
@@ -60,15 +66,52 @@ type LanguageContent = {
   settings: Record<string, Record<string, Translation<SettingText>>>;
   quotes: Record<string, Translation<QuoteTextFields>>;
   tao: Record<string, Translation<string>>;
+  facts: Record<string, Translation<string>>;
 };
 
 const CONTENT: Record<Exclude<AppLanguage, "en">, LanguageContent> = {
-  fr: { games: frGames, settings: frSettings, quotes: frQuotes, tao: frTao },
-  es: { games: esGames, settings: esSettings, quotes: esQuotes, tao: esTao },
-  id: { games: idGames, settings: idSettings, quotes: idQuotes, tao: idTao },
-  it: { games: itGames, settings: itSettings, quotes: itQuotes, tao: itTao },
-  pt: { games: ptGames, settings: ptSettings, quotes: ptQuotes, tao: ptTao },
-  tr: { games: trGames, settings: trSettings, quotes: trQuotes, tao: trTao },
+  fr: {
+    games: frGames,
+    settings: frSettings,
+    quotes: frQuotes,
+    tao: frTao,
+    facts: frFacts,
+  },
+  es: {
+    games: esGames,
+    settings: esSettings,
+    quotes: esQuotes,
+    tao: esTao,
+    facts: esFacts,
+  },
+  id: {
+    games: idGames,
+    settings: idSettings,
+    quotes: idQuotes,
+    tao: idTao,
+    facts: idFacts,
+  },
+  it: {
+    games: itGames,
+    settings: itSettings,
+    quotes: itQuotes,
+    tao: itTao,
+    facts: itFacts,
+  },
+  pt: {
+    games: ptGames,
+    settings: ptSettings,
+    quotes: ptQuotes,
+    tao: ptTao,
+    facts: ptFacts,
+  },
+  tr: {
+    games: trGames,
+    settings: trSettings,
+    quotes: trQuotes,
+    tao: trTao,
+    facts: trFacts,
+  },
 };
 
 const GAME_TEXT_FIELDS: GameTextField[] = ["title", "quickStart", "howToPlay"];
@@ -284,4 +327,20 @@ export function localizeTaoChapter<T extends { text: string }>(
       chapter.text,
     ),
   }));
+}
+
+/**
+ * A card fact in the display language, by its place in CARD_FACTS (from 0);
+ * the English when it has no current translation.
+ */
+export function localizeCardFact(
+  index: number,
+  english: string,
+  language: DisplayLanguage,
+) {
+  return translate(
+    language,
+    contentFor(language)?.facts[String(index + 1)],
+    english,
+  );
 }
