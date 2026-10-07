@@ -263,11 +263,8 @@ function findChapterAndVerseHint(
   return withNote(
     hint,
     trade.guild > 0
-      ? i18n.t("games:chapterAndVerse.hint.tradeGuild", {
-          value: trade.offer,
-          count: trade.guild,
-        })
-      : i18n.t("games:chapterAndVerse.hint.trade", { value: trade.offer }),
+      ? i18n.t("games:chapterAndVerse.hint.tradeGuild", { count: trade.guild })
+      : i18n.t("games:chapterAndVerse.hint.trade"),
   );
 }
 

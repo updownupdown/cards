@@ -43,8 +43,9 @@
     "hint": {
       "route_one": "Juega esta ruta: te hace robar {{count}} carta",
       "route_other": "Juega esta ruta: te hace robar {{count}} cartas",
-      "camp": "Juega tus últimas cartas para montar el campamento",
-      "rest": "Descansa: toma la pila de fatiga en la mano y empieza de nuevo",
+      "camp": "Juega tus últimas cartas: esta ruta llega al siguiente campamento",
+      "campMissed": "Juega tus últimas cartas: no llegas al campamento, pero recibes una mano nueva",
+      "rest": "Descansa: añade la pila de fatiga a tu mano y empieza tus rutas de nuevo",
       "discard": "Descarta la carta que menos le sirve a tu mano"
     }
   },
@@ -84,9 +85,9 @@
     "killAZombie": "Mata un zombi",
     "noKillableZombies": "¡No hay zombis que matar!",
     "hint": {
-      "kill": "Mata a este zombi",
+      "kill": "Mata al zombi más alto: Reyes y Reinas cuestan más de volver a alinear",
       "playToKill": "Juega aquí para matar a un zombi",
-      "prepareKill": "Prepara la muerte de un zombi"
+      "prepareKill": "Juega aquí: alinea cartas de apoyo para matar a un zombi"
     }
   },
   "cafeQueue": {
@@ -98,7 +99,7 @@
     "hint": {
       "slot": "El próximo cliente cabe aquí el {{chance}} % de las veces",
       "letThemStay": "Deja que se quede: perder esta fila es el descarte más seguro",
-      "kickThemOut": "Échalos: es más seguro que perder esta fila"
+      "kickThemOut": "Échalo: perderlo a él y al siguiente cliente es más seguro que perder esta fila"
     }
   },
   "calculation": {
@@ -137,8 +138,8 @@
     "trade": "Intercambiar",
     "offer": "Oferta",
     "hint": {
-      "trade": "Vende estos libros por ${{value}}",
-      "tradeGuild": "Vende estos libros por ${{value}}: +{{count}} pts gremio",
+      "trade": "Intercambia estos libros: cubren la oferta, pero no dan pts gremio",
+      "tradeGuild": "Intercambia estos libros: +{{count}} pts gremio",
       "pass": "Ningún grupo de libros suma esta oferta: pasa"
     }
   },
@@ -178,10 +179,14 @@
     "wonWithTier": "{{score}} puntos: ¡{{tier}}!",
     "lostShortOfTarget": "{{score}} puntos. Necesitas {{target}} puntos para ganar.",
     "hint": {
-      "stop": "Para aquí: un {{risk}} % de riesgo de explosión es demasiado para lo que aporta otra carta",
+      "stop": "Para aquí: un {{risk}} % de riesgo de explosión no compensa otra carta",
+      "stopDiamond": "Para aquí: tu último diamante solo cuenta doble si paras ahora",
+      "stopDiamond": "Para aquí: tu último diamante solo cuenta doble si paras ahora",
       "keepCoins": "Quédate con las monedas: las mejores cartas darán fruto en las rondas que quedan",
       "keepPoints": "Quédate con los puntos: quedan muy pocas rondas para que las monedas den fruto",
-      "buy": "Compra las mejores cartas que te permitan tus monedas: dos, de palos distintos"
+      "buyPair": "Compra esta carta: con una segunda compra de otro palo, es lo mejor que permiten tus monedas",
+      "buyPair": "Compra esta carta: con una segunda compra de otro palo, es lo mejor que permiten tus monedas",
+      "buy": "Compra la mejor carta que te permitan tus monedas"
     }
   },
   "cityGrid": {
@@ -206,7 +211,7 @@
     "youScoredPoints": "¡Has conseguido {{score}} puntos!",
     "youScoredReachToWin": "Has conseguido {{score}}. Llega a {{TARGET_SCORE}} para ganar.",
     "hint": {
-      "fifteens": "Haz quinces aquí",
+      "fifteens": "Alinea quinces aquí",
       "pairs": "Forma una pareja aquí",
       "runs": "Arma una escalera aquí",
       "flush": "Busca un color aquí"
@@ -232,7 +237,7 @@
       "kill": "Derrota a este enemigo",
       "exactKill": "Golpe exacto: el enemigo se une a tu taberna",
       "shield": "Las picas debilitan su ataque antes de que golpee",
-      "draw": "Los diamantes rellenan tu mano",
+      "draw": "Los diamantes te hacen robar tantas cartas como el valor de esta jugada",
       "heal": "Los corazones devuelven los descartes a la taberna",
       "defend": "Bloquea con las cartas que menos necesitas",
       "jester": "Llama a un bufón para tener una mano nueva"

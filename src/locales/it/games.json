@@ -43,8 +43,9 @@
     "hint": {
       "route_one": "Gioca questa via: ti fa pescare {{count}} carta",
       "route_other": "Gioca questa via: ti fa pescare {{count}} carte",
-      "camp": "Gioca le ultime carte per montare il campo",
-      "rest": "Riposa: prendi in mano la pila della fatica e riparti",
+      "camp": "Gioca le ultime carte: questa via raggiunge il campo successivo",
+      "campMissed": "Gioca le ultime carte: manchi il campo, ma ricevi una mano nuova",
+      "rest": "Riposa: aggiungi la pila della fatica alla mano e ricomincia le tue vie",
       "discard": "Scarta la carta di cui la tua mano fa meglio a meno"
     }
   },
@@ -84,9 +85,9 @@
     "killAZombie": "Uccidi uno zombie",
     "noKillableZombies": "Nessuno zombie da uccidere!",
     "hint": {
-      "kill": "Uccidi questo zombie",
+      "kill": "Uccidi lo zombie più alto: Re e Regine sono più difficili da riallineare",
       "playToKill": "Gioca qui per uccidere uno zombie",
-      "prepareKill": "Prepara l'uccisione di uno zombie"
+      "prepareKill": "Gioca qui: allinea carte di supporto per uccidere uno zombie"
     }
   },
   "cafeQueue": {
@@ -98,7 +99,7 @@
     "hint": {
       "slot": "Il prossimo cliente ci sta qui il {{chance}}% delle volte",
       "letThemStay": "Fallo restare: perdere questa fila è lo scarto più sicuro",
-      "kickThemOut": "Mandali via: è più sicuro che perdere questa fila"
+      "kickThemOut": "Mandalo via: perdere lui e il cliente successivo è più sicuro che perdere questa fila"
     }
   },
   "calculation": {
@@ -137,8 +138,8 @@
     "trade": "Scambia",
     "offer": "Offerta",
     "hint": {
-      "trade": "Vendi questi libri per ${{value}}",
-      "tradeGuild": "Vendi questi libri per ${{value}}: +{{count}} pt gilda",
+      "trade": "Scambia questi libri: coprono l'offerta, ma non danno pt gilda",
+      "tradeGuild": "Scambia questi libri: +{{count}} pt gilda",
       "pass": "Nessun gruppo di libri fa questa offerta: passa"
     }
   },
@@ -178,10 +179,14 @@
     "wonWithTier": "{{score}} punti: {{tier}}!",
     "lostShortOfTarget": "{{score}} punti. Te ne servono {{target}} per vincere.",
     "hint": {
-      "stop": "Fermati qui: un rischio di esplosione del {{risk}}% è troppo per quello che aggiunge un'altra carta",
+      "stop": "Fermati qui: un rischio di esplosione del {{risk}}% non vale un'altra carta",
+      "stopDiamond": "Fermati qui: l'ultimo quadri conta doppio solo se ti fermi ora",
+      "stopDiamond": "Fermati qui: l'ultimo quadri conta doppio solo se ti fermi ora",
       "keepCoins": "Tieni le monete: carte migliori renderanno nei round che restano",
       "keepPoints": "Tieni i punti: restano troppo pochi round perché le monete rendano",
-      "buy": "Compra le carte migliori che le tue monete permettono: due, di semi diversi"
+      "buyPair": "Compra questa carta: con un secondo acquisto di un altro seme, è il meglio che le tue monete permettono",
+      "buyPair": "Compra questa carta: con un secondo acquisto di un altro seme, è il meglio che le tue monete permettono",
+      "buy": "Compra la carta migliore che le tue monete permettono"
     }
   },
   "cityGrid": {
@@ -206,7 +211,7 @@
     "youScoredPoints": "Hai fatto {{score}} punti!",
     "youScoredReachToWin": "Hai fatto {{score}} punti. Raggiungi {{TARGET_SCORE}} per vincere.",
     "hint": {
-      "fifteens": "Fai dei quindici qui",
+      "fifteens": "Allinea dei quindici qui",
       "pairs": "Forma una coppia qui",
       "runs": "Costruisci una scala qui",
       "flush": "Punta a un colore qui"
@@ -232,7 +237,7 @@
       "kill": "Sconfiggi questo nemico",
       "exactKill": "Colpo esatto: il nemico si unisce alla tua taverna",
       "shield": "Le picche indeboliscono il suo attacco prima che colpisca",
-      "draw": "I quadri ti riempiono la mano",
+      "draw": "I quadri ti fanno pescare tante carte quanto il valore di questa giocata",
       "heal": "I cuori rimandano gli scarti nella taverna",
       "defend": "Blocca con le carte che ti servono meno",
       "jester": "Chiama un buffone per una mano nuova"

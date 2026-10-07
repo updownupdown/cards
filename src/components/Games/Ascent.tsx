@@ -665,7 +665,22 @@ function findAscentHint(
     ...route.cards.slice(selected.length).map((card) => cardTarget(card)),
     zoneTarget("buttons"),
   );
-  if (camps) return withNote(hint, i18n.t("games:ascent.hint.camp"));
+  if (camps) {
+    // The camp counts only if this last route qualifies as a milestone.
+    const qualifies = milestoneQualifies(
+      route,
+      state.trail,
+      settings.difficulty,
+      settings.challenge,
+      [...state.playedRoutes, route],
+    );
+    return withNote(
+      hint,
+      i18n.t(
+        qualifies ? "games:ascent.hint.camp" : "games:ascent.hint.campMissed",
+      ),
+    );
+  }
   const rest = state.hand.filter(
     (card) => !route.cards.some((other) => other.id === card.id),
   );

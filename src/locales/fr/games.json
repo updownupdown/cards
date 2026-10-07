@@ -43,8 +43,9 @@
     "hint": {
       "route_one": "Jouez cette voie : elle fait piocher {{count}} carte",
       "route_other": "Jouez cette voie : elle fait piocher {{count}} cartes",
-      "camp": "Jouez vos dernières cartes pour installer le camp",
-      "rest": "Reposez-vous : prenez la pile de fatigue en main et repartez",
+      "camp": "Jouez vos dernières cartes : cette voie atteint le camp suivant",
+      "campMissed": "Jouez vos dernières cartes : le camp est manqué, mais une nouvelle main est distribuée",
+      "rest": "Reposez-vous : ajoutez la pile de fatigue à votre main et recommencez vos voies",
       "discard": "Défaussez la carte dont votre main se passe le mieux"
     }
   },
@@ -84,9 +85,9 @@
     "killAZombie": "Tuez un zombie",
     "noKillableZombies": "Aucun zombie à tuer !",
     "hint": {
-      "kill": "Tuez ce zombie",
+      "kill": "Tuez le zombie le plus fort : Rois et Dames sont plus durs à réaligner",
       "playToKill": "Jouez ici pour tuer un zombie",
-      "prepareKill": "Préparez la mise à mort d'un zombie"
+      "prepareKill": "Jouez ici : cela aligne des cartes de soutien pour tuer un zombie"
     }
   },
   "cafeQueue": {
@@ -98,7 +99,7 @@
     "hint": {
       "slot": "Le prochain client tient ici {{chance}} % du temps",
       "letThemStay": "Laissez-le rester : perdre cette file est le moindre mal",
-      "kickThemOut": "Renvoyez-les : plus sûr que de perdre cette file"
+      "kickThemOut": "Mettez-le dehors : perdre ce client et le suivant est plus sûr que perdre cette file"
     }
   },
   "calculation": {
@@ -137,8 +138,8 @@
     "trade": "Échanger",
     "offer": "Offre",
     "hint": {
-      "trade": "Vendez ces livres pour ${{value}}",
-      "tradeGuild": "Vendez ces livres pour ${{value}} : +{{count}} pts guilde",
+      "trade": "Échangez ces livres : ils couvrent l'offre mais ne rapportent aucun pt de guilde",
+      "tradeGuild": "Échangez ces livres : +{{count}} pts guilde",
       "pass": "Aucun choix de livres ne fait cette offre : passez"
     }
   },
@@ -178,10 +179,14 @@
     "wonWithTier": "{{score}} points : {{tier}} !",
     "lostShortOfTarget": "{{score}} points. Il vous faut {{target}} points pour gagner.",
     "hint": {
-      "stop": "Arrêtez-vous : {{risk}} % de risque d'explosion, c'est trop pour ce qu'une carte de plus apporterait",
+      "stop": "Arrêtez-vous : {{risk}} % de risque d'explosion, une carte de plus n'en vaut pas la peine",
+      "stopDiamond": "Arrêtez-vous : votre dernier carreau ne compte double que si vous vous arrêtez maintenant",
+      "stopDiamond": "Arrêtez-vous : votre dernier carreau ne compte double que si vous vous arrêtez maintenant",
       "keepCoins": "Gardez les pièces : de meilleures cartes rapporteront sur les manches restantes",
       "keepPoints": "Gardez les points : il reste trop peu de manches pour que les pièces rapportent",
-      "buy": "Achetez les meilleures cartes que vos pièces permettent : deux, de couleurs différentes"
+      "buyPair": "Achetez cette carte : avec un second achat d'une autre couleur, c'est le mieux que vos pièces permettent",
+      "buyPair": "Achetez cette carte : avec un second achat d'une autre couleur, c'est le mieux que vos pièces permettent",
+      "buy": "Achetez la meilleure carte que vos pièces permettent"
     }
   },
   "cityGrid": {
@@ -206,7 +211,7 @@
     "youScoredPoints": "Vous avez marqué {{score}} points !",
     "youScoredReachToWin": "Vous avez marqué {{score}}. Atteignez {{TARGET_SCORE}} pour gagner.",
     "hint": {
-      "fifteens": "Faites des quinze ici",
+      "fifteens": "Alignez des quinze ici",
       "pairs": "Formez une paire ici",
       "runs": "Construisez une suite ici",
       "flush": "Visez une couleur ici"
@@ -232,7 +237,7 @@
       "kill": "Battez cet ennemi",
       "exactKill": "Coup exact : l'ennemi rejoint votre taverne",
       "shield": "Les piques affaiblissent son attaque avant qu'il frappe",
-      "draw": "Les carreaux remplissent votre main",
+      "draw": "Les carreaux vous font piocher autant de cartes que la valeur de ce jeu",
       "heal": "Les cœurs renvoient la défausse dans la taverne",
       "defend": "Bloquez avec les cartes dont vous avez le moins besoin",
       "jester": "Appelez un bouffon pour une nouvelle main"
