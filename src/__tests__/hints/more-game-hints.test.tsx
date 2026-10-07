@@ -245,7 +245,7 @@ describe("Invaders hints", () => {
 // —— The second batch ——
 
 describe("Cabin Siege hints", () => {
-  test("kills a zombie it can, and says so", () => {
+  test("kills a zombie it can (no note when it is the only one)", () => {
     const piles = Array.from({ length: 9 }, () => [card("2", "clubs")]);
     piles[4] = [card("5", "hearts")];
     piles[7] = [card("6", "hearts")];
@@ -264,7 +264,7 @@ describe("Cabin Siege hints", () => {
       won: false,
     });
     expect(hint?.steps).toEqual([[{ card: zombie.id }]]);
-    expect(hint?.message.note).toBe("Kill this zombie");
+    expect(hint?.message.note).toBeUndefined();
   });
 });
 
@@ -303,6 +303,30 @@ describe("Pocket Poker hints", () => {
       ]),
     ).toBeNull();
   });
+
+  test("keeps four to an Ace-high straight", () => {
+    const run = [
+      card("J", "spades"),
+      card("Q", "hearts"),
+      card("K", "clubs"),
+      card("A", "diamonds"),
+    ];
+    expect(pocketPokerRules.cardsToKeep([...run, card("4", "spades")])).toEqual(
+      { keep: run, reason: "keepStraightDraw" },
+    );
+  });
+
+  test("draws five when nothing is worth keeping", () => {
+    expect(
+      pocketPokerRules.cardsToKeep([
+        card("2", "spades"),
+        card("4", "hearts"),
+        card("6", "clubs"),
+        card("8", "diamonds"),
+        card("10", "spades"),
+      ]),
+    ).toEqual({ keep: [], reason: "keepNothing" });
+  });
 });
 
 describe("Café Queue hints", () => {
@@ -339,7 +363,7 @@ describe("Gremlin hints", () => {
       won: false,
     });
     expect(hint?.steps[0]).toEqual([{ card: king.id }]);
-    expect(hint?.message.note).toBe("Start a column with this King");
+    expect(hint?.message.note).toBeUndefined();
   });
 });
 
@@ -361,6 +385,37 @@ describe("Poker Squares hints", () => {
       Math.floor(placement!.cell / 5) === 2 || placement!.cell % 5 === 2,
     ).toBe(true);
     expect(placement?.aim).toBe("sets");
+  });
+
+  test("names no aim for a lone card in an empty grid", () => {
+    const placement = pokerSquaresRules.bestPlacement({
+      deck: [card("7", "hearts")],
+      grid: Array<PlayingCard | null>(25).fill(null),
+      score: 0,
+      scoresReady: false,
+      isTransitioning: false,
+      ended: false,
+      won: false,
+    });
+    expect(placement?.aim).toBeNull();
+  });
+
+  test("a card completing a flush aims at the flush", () => {
+    const grid = Array<PlayingCard | null>(25).fill(null);
+    ["2", "5", "9", "J"].forEach((rank, col) => {
+      grid[col] = card(rank as PlayingCard["rank"], "clubs");
+    });
+    const placement = pokerSquaresRules.bestPlacement({
+      deck: [card("K", "clubs")],
+      grid,
+      score: 0,
+      scoresReady: false,
+      isTransitioning: false,
+      ended: false,
+      won: false,
+    });
+    expect(placement?.cell).toBe(4);
+    expect(placement?.aim).toBe("flush");
   });
 });
 

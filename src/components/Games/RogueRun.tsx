@@ -641,11 +641,14 @@ function findRogueRunHint(game: GameState): Hint | null {
     validRoomCards(game.roomCards).length === RoomSize &&
     game.lastRoomNumRanFrom !== game.roomNum;
   // Running only puts the room off (its cards come back at the end, when
-  // there's no running from them): run only to escape a room that kills.
+  // there's no running from them): run only to escape a room that kills,
+  // or one that leaves Alice too weak for the monster it leaves behind.
   if (canRun && plan.value < 0 && runValue(game) > plan.value) {
+    // standing() scores a death at -1000: every way through dies.
+    const kills = plan.value <= -1000;
     return withNote(
       pressHint("room-info", i18n.t("games:rogueRun.run")),
-      i18n.t("games:rogueRun.hint.run"),
+      i18n.t(kills ? "games:rogueRun.hint.run" : "games:rogueRun.hint.runWeak"),
     );
   }
   const action = plan.first;
@@ -655,9 +658,6 @@ function findRogueRunHint(game: GameState): Hint | null {
     `roomCardActions-${action.roomIndex}`,
     actionLabel(action, card),
   );
-  if (action.type === "fight-weapon") {
-    return withNote(hint, i18n.t("games:rogueRun.hint.fightWeapon"));
-  }
   if (action.type === "fight-bare" && canFightWithWeapon(game, card)) {
     return withNote(hint, i18n.t("games:rogueRun.hint.fightBare"));
   }

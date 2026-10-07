@@ -256,14 +256,11 @@ function findGremlinHint(state: GameState) {
     .filter(({ fit }) => fit && fit.cost <= 0)
     .sort((a, b) => a.fit!.cost - b.fit!.cost)[0];
   if (play?.fit) {
-    const hint = makeHint(
+    return makeHint(
       "moveCard",
       select(play.card),
       zoneTarget(`column-${play.fit.column}`),
     );
-    return play.card.rank === "K" && !state.columns[play.fit.column]?.length
-      ? withNote(hint, i18n.t("games:gremlin.hint.king"))
-      : hint;
   }
 
   const discard = fits.sort(
@@ -276,7 +273,11 @@ function findGremlinHint(state: GameState) {
         select(discard.card),
         zoneTarget("actions"),
       ),
-      i18n.t("games:gremlin.hint.discard"),
+      i18n.t(
+        discard.fit
+          ? "games:gremlin.hint.discard"
+          : "games:gremlin.hint.discardNoFit",
+      ),
     );
   }
   return pressHint("actions", i18n.t("games:gremlin.endTurn"));

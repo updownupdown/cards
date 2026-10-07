@@ -493,6 +493,11 @@ function isHopeless(state: Readonly<HerbalistGameState>) {
  * be healed, the herbs are sown to be eaten, to end the game.
  */
 function bestSource(state: Readonly<HerbalistGameState>) {
+  return bestSourcePlan(state).source;
+}
+
+/** bestSource, with what its look-ahead found against the position now. */
+function bestSourcePlan(state: Readonly<HerbalistGameState>) {
   const hopeless = isHopeless(state);
   const search: Search = { budget: SEARCH_BUDGET, seen: new Map() };
   const pick = (turns: number) => {
@@ -519,7 +524,12 @@ function bestSource(state: Readonly<HerbalistGameState>) {
     if (search.budget <= 0) break;
     best = further ?? best;
   }
-  return best?.source ?? null;
+  return {
+    source: best?.source ?? null,
+    hopeless,
+    // The look-ahead found a better position than this one.
+    improves: !!best && best.value > here,
+  };
 }
 
 /**
@@ -537,21 +547,18 @@ function findHerbalistHint(state: Readonly<HerbalistGameState>) {
       zoneTarget(`herbs-${state.nextLocation}`),
     );
   }
-  const source = bestSource(state);
+  const { source, hopeless, improves } = bestSourcePlan(state);
   if (source === null) return null;
   const healed = (position: Readonly<HerbalistGameState> | null) =>
     position?.creatures.filter((creature) => creature?.healthy).length ?? 0;
   const heals = healed(playTurn(state, source)) > healed(state);
-  return withNote(
-    makeHint("tapCard", cardTarget(state.herbStacks[source].at(-1)!)),
-    i18n.t(
-      isHopeless(state)
-        ? "games:herbalist.hint.noCure"
-        : heals
-          ? "games:herbalist.hint.heal"
-          : "games:herbalist.hint.setUp",
-    ),
+  const hint = makeHint(
+    "tapCard",
+    cardTarget(state.herbStacks[source].at(-1)!),
   );
+  if (hopeless) return withNote(hint, i18n.t("games:herbalist.hint.noCure"));
+  if (heals) return withNote(hint, i18n.t("games:herbalist.hint.heal"));
+  return improves ? withNote(hint, i18n.t("games:herbalist.hint.setUp")) : hint;
 }
 
 export const herbalistRules = {

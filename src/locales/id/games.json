@@ -43,8 +43,9 @@
     "hint": {
       "route_one": "Mainkan rute ini: kamu mengambil {{count}} kartu",
       "route_other": "Mainkan rute ini: kamu mengambil {{count}} kartu",
-      "camp": "Mainkan kartu terakhirmu untuk mendirikan kemah",
-      "rest": "Istirahat: ambil tumpukan lelah ke tanganmu dan mulai lagi",
+      "camp": "Mainkan kartu terakhirmu: rute ini mencapai kemah berikutnya",
+      "campMissed": "Mainkan kartu terakhirmu: kemah terlewat, tapi kamu dapat tangan baru",
+      "rest": "Istirahat: tambahkan tumpukan lelah ke tanganmu dan mulai rutemu dari awal",
       "discard": "Buang kartu yang paling tidak dibutuhkan tanganmu"
     }
   },
@@ -72,12 +73,7 @@
     "pins": "Pin",
     "ball": "Bola",
     "throw": "Lempar",
-    "finalScore": "Skor: {{score}} (butuh {{target}} untuk menang)",
-    "hint": {
-      "throw_one": "Bola ini bisa merobohkan sekitar {{count}} pin",
-      "throw_other": "Bola ini bisa merobohkan sekitar {{count}} pin",
-      "endBall": "Tidak ada lemparan lagi: akhiri bola ini"
-    }
+    "finalScore": "Skor: {{score}} (butuh {{target}} untuk menang)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Kamu membunuh semua zombi!",
@@ -89,9 +85,9 @@
     "killAZombie": "Bunuh satu zombi",
     "noKillableZombies": "Tidak ada zombi yang bisa dibunuh!",
     "hint": {
-      "kill": "Bunuh zombi ini",
+      "kill": "Bunuh zombi tertinggi: Raja dan Ratu lebih sulit dijajarkan lagi",
       "playToKill": "Mainkan di sini untuk membunuh zombi",
-      "prepareKill": "Siapkan pembunuhan zombi"
+      "prepareKill": "Mainkan di sini: ini menjajarkan kartu pendukung untuk membunuh zombi"
     }
   },
   "cafeQueue": {
@@ -103,7 +99,7 @@
     "hint": {
       "slot": "Pelanggan berikutnya muat di sini {{chance}}% dari waktu",
       "letThemStay": "Biarkan tinggal: kehilangan antrean ini adalah buangan yang lebih aman",
-      "kickThemOut": "Usir mereka: lebih aman daripada kehilangan antrean ini"
+      "kickThemOut": "Usir: kehilangan pelanggan ini dan berikutnya lebih aman daripada kehilangan antrean ini"
     }
   },
   "calculation": {
@@ -142,8 +138,8 @@
     "trade": "Jual",
     "offer": "Tawaran",
     "hint": {
-      "trade": "Jual buku-buku ini seharga ${{value}}",
-      "tradeGuild": "Jual buku-buku ini seharga ${{value}}: +{{count}} Poin Serikat",
+      "trade": "Jual buku-buku ini: pas dengan tawaran, tapi tidak memberi Poin Serikat",
+      "tradeGuild": "Jual buku-buku ini: +{{count}} Poin Serikat",
       "pass": "Tak ada buku yang pas dengan tawaran ini: lewati"
     }
   },
@@ -183,10 +179,12 @@
     "wonWithTier": "{{score}} poin: {{tier}}!",
     "lostShortOfTarget": "{{score}} poin. Anda butuh {{target}} poin untuk menang.",
     "hint": {
-      "stop": "Berhenti di sini: risiko meledak {{risk}}% terlalu besar untuk tambahan satu kartu",
+      "stop": "Berhenti di sini: risiko meledak {{risk}}% tidak sebanding dengan satu kartu lagi",
+      "stopDiamond": "Berhenti di sini: wajik terakhirmu dihitung dua kali hanya jika kamu berhenti sekarang",
       "keepCoins": "Ambil koinnya: kartu yang lebih baik akan menguntungkan di sisa ronde",
       "keepPoints": "Ambil poinnya: sisa ronde terlalu sedikit untuk membuat koin menguntungkan",
-      "buy": "Beli kartu terkuat yang bisa dibeli koin Anda: dua, dari jenis berbeda"
+      "buyPair": "Beli kartu ini: dengan pembelian kedua dari jenis lain, ini yang terbaik yang bisa dibeli koinmu",
+      "buy": "Beli kartu terbaik yang bisa dibeli koinmu"
     }
   },
   "cityGrid": {
@@ -211,7 +209,7 @@
     "youScoredPoints": "Kamu mencetak {{score}} poin!",
     "youScoredReachToWin": "Skormu {{score}}. Capai {{TARGET_SCORE}} untuk menang.",
     "hint": {
-      "fifteens": "Buat lima belas di sini",
+      "fifteens": "Jajarkan lima belas di sini",
       "pairs": "Buat pasangan di sini",
       "runs": "Bangun urutan di sini",
       "flush": "Bangun menuju flush di sini"
@@ -237,7 +235,7 @@
       "kill": "Kalahkan musuh ini",
       "exactKill": "Serangan pas: musuh bergabung ke kedaimu",
       "shield": "Sekop melemahkan serangannya sebelum ia menyerang",
-      "draw": "Wajik mengisi ulang tanganmu",
+      "draw": "Wajik membuatmu mengambil kartu sebanyak nilai permainan ini",
       "heal": "Hati mengembalikan buangan ke kedai",
       "defend": "Tahan dengan kartu yang paling tidak kamu perlukan",
       "jester": "Panggil badut untuk tangan baru"
@@ -267,8 +265,9 @@
     "youRanOutOfCards": "Kartumu habis sebelum semua bangsawan dikalahkan.",
     "hint": {
       "kill": "Ini menumbangkan seorang bangsawan",
-      "extract": "Pakai as: tumpukan ini kembali ke bawah dek",
-      "reassign": "Pakai joker: pindahkan kartu ini"
+      "extract": "Pakai satu As: kembalikan tumpukan ini ke bawah dek",
+      "reassign": "Pakai joker: pindahkan kartu ini",
+      "reassignKill": "Pakai satu Joker: memindahkan kartu ini menumbangkan seorang bangsawan"
     }
   },
   "ebbAndFlow": {
@@ -306,7 +305,8 @@
     "hint": {
       "discard": "Tukar kartu ini dengan kartu baru",
       "letCapture": "Tidak ada tangkapan: biarkan musuh mengambil kartumu yang paling lemah",
-      "sacrifice": "Tidak ada tangkapan: korbankan dua kartu lemah untuk mengirim musuh ini kembali"
+      "sacrifice": "Tidak ada tangkapan: korbankan dua kartu lemah untuk mengirim musuh ini kembali",
+      "lost": "Semua pilihan kalah: sebuah Jack, Queen, King, atau As masuk ke tumpukan tangkapan musuh"
     }
   },
   "fifteenPuzzle": {
@@ -330,10 +330,10 @@
     "gridClearWon": "Kisi sudah bersih. Kamu menang!",
     "allClubsSpent": "Ke-13 kartu keriting sudah terpakai.",
     "hint": {
-      "free_diamonds": "Singkirkan wajik untuk membuka aksi ♦",
-      "free_spades": "Singkirkan sekop untuk membuka aksi ♠",
-      "free_hearts": "Singkirkan hati untuk membuka aksi ♥",
-      "any": "Ambil satu kartu saja dengan keriting ini: simpan yang lain untuk langkah lebih besar"
+      "free_diamonds": "Tersisa kurang dari 3 wajik: aksi ♦ terbuka, kecuali dek kisi membawa lagi",
+      "free_spades": "Tersisa kurang dari 3 sekop: aksi ♠ terbuka, kecuali dek kisi membawa lagi",
+      "free_hearts": "Tersisa kurang dari 3 hati: aksi ♥ terbuka, kecuali dek kisi membawa lagi",
+      "any": "Bersihkan kartu ini saja: langkah yang membersihkan lebih banyak berakhir lebih buruk"
     }
   },
   "fortunesCall": {
@@ -368,7 +368,8 @@
     "lostShortOfTarget": "{{score}} poin. Anda butuh {{target}} poin untuk menang.",
     "hint": {
       "cell": "Pasang kaca di sini: +{{count}}",
-      "shards": "Tak ada bingkai yang bisa memakainya: jadikan pecahan"
+      "shards": "Tak ada bingkai yang bisa menerimanya: pecahkan",
+      "shardsOnPurpose": "Sengaja pecahkan ini: memasangnya di bingkai berakhir lebih buruk"
     }
   },
   "gremlin": {
@@ -384,8 +385,8 @@
     "noRoomForHelper": "Tidak ada tempat untuk kartu pembantu di {{count}} kolom.",
     "hint": {
       "helper": "Taruh kartu pembantu di tempat yang paling sedikit memakan kolom",
-      "king": "Mulai kolom dengan King ini",
-      "discard": "Buang kartu ini: sekarang akan memakan satu kolom, dan nanti kembali lagi"
+      "discard": "Buang kartu ini: memainkannya sekarang memakan kolom, dan nanti kembali lagi",
+      "discardNoFit": "Buang kartu ini: belum ada kolom yang bisa menerimanya, dan nanti kembali lagi"
     }
   },
   "herbalist": {
@@ -397,9 +398,9 @@
     "harvestPerfect": "Panen sempurna: tersisa {{count}} tanaman obat.",
     "noHerbsRemain": "Tidak ada tanaman obat tersisa untuk menyembuhkan negeri.",
     "hint": {
-      "heal": "Ambil tanaman obat ini: jika disebar dengan tepat, satu makhluk sembuh",
-      "setUp": "Ambil tanaman obat ini: jika disebar dengan tepat, ini menyiapkan penyembuhan",
-      "noCure": "Tidak ada lagi obat untuk negeri: terus sebar untuk mengakhiri permainan"
+      "heal": "Ambil tanaman obat ini: jika ditaruh dengan tepat, satu makhluk sembuh",
+      "setUp": "Ambil tanaman obat ini: jika ditaruh dengan tepat, penyembuhan makin dekat",
+      "noCure": "Tanaman obat yang tersisa tak bisa menyembuhkan semua makhluk: permainan ini tak bisa dimenangkan"
     }
   },
   "infiltrator": {
@@ -424,7 +425,8 @@
     "hint": {
       "retire": "Pensiunkan kartu rendah ini, supaya kartu Anda yang lebih kuat lebih sering datang",
       "assassinate": "Tangan Anda tidak bisa menghentikan mata-mata ini: korbankan agen ganda",
-      "doubleAgent": "As berjenis sama dengan mata-mata adalah agen ganda: kartu Anda yang lain ikut menjadi jenisnya",
+      "noDoubleAgents": "Tidak ada agen ganda tersisa: mata-mata ini mengakhiri misi",
+      "doubleAgent": "As berjenis sama dengan mata-mata adalah agen ganda: kartu lain yang Anda mainkan ikut menjadi jenisnya",
       "counterKey": "Mata-mata kunci ini tidak bisa direkrut: tangkal dengan kartu yang paling tidak Anda perlukan",
       "counter": "Mata-mata ini tidak bisa direkrut: tangkal dengan kartu yang paling tidak Anda perlukan"
     }
@@ -483,9 +485,10 @@
     "selectCardsToCapture": "Pilih kartu untuk ditangkap",
     "hint": {
       "fold": "Menyerahlah: lanjut bermain akan lebih merugikan",
+      "noCapture": "Tidak ada tangkapan lagi: menyerahlah",
       "finish": "Habiskan kartu Serigala: kartumu mendapat poin",
-      "over_one": "Lampaui: layak walau Serigala menarik {{count}} kartu",
-      "over_other": "Lampaui: layak walau Serigala menarik {{count}} kartu"
+      "over_one": "Over: layak walau Serigala menarik {{count}} kartu",
+      "over_other": "Over: layak walau Serigala menarik {{count}} kartu"
     }
   },
   "memory": {
@@ -523,10 +526,8 @@
     "smokeThreat": "Bom Asap pada {{card}}",
     "grappleThreats": "Tali Kait pada {{first}} dan {{second}}",
     "hint": {
-      "smoke": "Pakai Bom Asap pada ancaman ini",
-      "grapple": "Kaitkan dua ancaman ini dan tandingi keduanya sekaligus",
       "dump": "Mainkan respons ini di tempat yang tidak merugikan",
-      "resolve": "Selesaikan sekarang: mengambil lagi lebih berisiko daripada membantu"
+      "resolve": "Selesaikan sekarang: mengambil lagi kemungkinan lebih merugikan daripada menguntungkan"
     }
   },
   "ouroboros": {
@@ -542,8 +543,7 @@
     "lostInDungeon": "Kamu tersesat di dungeon tanpa jalan keluar!",
     "markPathNumber": "Tandai jalan {{number}}",
     "hint": {
-      "lookAround": "Lihat sekitar untuk tahu apa yang ada di depan",
-      "explore": "Jelajahi ke depan",
+      "lookAround": "Lihat sekitar: kamu hanya bisa maju dengan kartu angka yang terbuka",
       "jewel": "Jelajahi ke depan untuk mengambil permata",
       "escape": "Kabur lewat pintu keluar!",
       "markPath": "Tandai jalan: jalan keluar dari jalan buntu",
@@ -606,12 +606,17 @@
     },
     "hint": {
       "play": "Main: taruhan satu poin tidak lebih berisiko daripada menyerah",
-      "standPat": "Pertahankan kartumu: tangan ini kuat",
+      "setHandStrong": "Kunci kartu: straight atau lebih baik layak dipertahankan",
+      "setHandBet": "Kunci kartu: mengambil lagi menaikkan taruhan minimum ke 2 demi hasil terlalu kecil",
       "keepSets": "Simpan kartu yang sama, ambil sisanya",
       "keepFlushDraw": "Simpan empat kartu menuju flush",
-      "keepPair": "Simpan pasangan, ambil tiga",
+      "keepPair": "Simpan pasangan, ambil sisanya",
       "keepStraightDraw": "Simpan empat kartu menuju straight",
-      "keepHighCards": "Simpan kartu tinggi, ambil sisanya",
+      "keepHighCards_one": "Simpan kartu tinggi, ambil sisanya",
+      "keepHighCards_other": "Simpan kartu tinggi, ambil sisanya",
+      "keepJokers_one": "Simpan joker, ambil sisanya",
+      "keepJokers_other": "Simpan kedua joker, ambil sisanya",
+      "keepNothing": "Tidak ada yang layak disimpan: ambil kelimanya",
       "odds": "Tangan ini menang sekitar {{chance}}% dari waktu"
     }
   },
@@ -654,7 +659,7 @@
     },
     "hint": {
       "run": "Kabur: ruangan ini akan membunuhmu",
-      "fightWeapon": "Lawan monster ini dengan senjatamu",
+      "runWeak": "Kabur: ruangan ini akan membuatmu terlalu lemah untuk lanjut",
       "fightBare": "Lawan yang ini dengan tangan kosong: simpan senjatamu untuk monster yang lebih besar"
     }
   },
@@ -713,11 +718,11 @@
     "nightmaresOverwhelmed": "Para Mimpi Buruk menguasai Alice.",
     "hint": {
       "eliminate": "Hapus Mimpi buruk ini",
-      "defend": "Lemahkan serangan Mimpi buruk ini: ia tidak bisa dihapus giliran ini",
+      "defend": "Lemahkan serangan Mimpi buruk ini: Alice hanya kehilangan selisihnya",
       "mold": "Bentuk Penjaga ini agar masuk ke dek Anda",
-      "exile": "Asingkan Mimpi buruk ini: ia akan merenggut lebih dari 5 nyawa Alice",
-      "deepBreath": "Tidak ada yang layak ditugaskan: tukar kartu terlemah Anda dengan yang baru",
-      "remSleep": "Alice tidak akan selamat dari papan ini: gunakan Tidur REM untuk mulai lagi"
+      "exile": "Asingkan Mimpi buruk ini: jika dibiarkan, ia akan merugikan Alice lebih dari pengasingan",
+      "deepBreath": "Tidak ada yang layak ditugaskan: gunakan Tarik napas untuk membuang kartu terlemah Anda dan mengakhiri giliran",
+      "remSleep": "Alice tidak akan selamat dari papan ini: gunakan Tidur REM untuk membagikan ulang papan dan tangan Anda"
     }
   },
   "spiderSolitaire": {
@@ -765,10 +770,11 @@
     "doNothing": "Jangan lakukan apa-apa",
     "noKingSelected": "Belum ada King dipilih",
     "hint": {
-      "reserve": "Simpan dua kartu ini di cadangan untuk menghabisi monster nanti",
+      "reserve": "Sisihkan cadanganmu: sisa kartu di tangan lebih baik dimainkan tanpanya",
       "discard": "Kartu ini tidak punya tempat yang bagus: buang saja",
       "bury": "Taruh kartu ini di bawah dek, jangan dibuang",
-      "double": "Gandakan serangan dengan King sekop"
+      "buryWithKing": "Pakai King hati untuk menaruh satu kartu di bawah dek, jangan dibuang",
+      "double": "Pakai King sekop: penyerangmu berikutnya dihitung dua kali"
     }
   },
   "waypoint": {
@@ -790,9 +796,10 @@
     "speed": "Kecepatan",
     "hint": {
       "boosts": "Injak gas untuk mencapai kecepatan target",
-      "brakes": "Rem: lebih baik lambat daripada melewati kecepatan target",
-      "finishUnder": "Selesaikan sekarang: kartu lain kemungkinan akan melewati target",
-      "finishOver": "Terlalu cepat dan rem habis: selesaikan dan terima penaltinya"
+      "brakes": "Rem kembali ke kecepatan target: kelebihan yang diperbaiki tidak memakan biaya",
+      "finishUnder": "Selesaikan sekarang: kurang dari target lebih murah daripada lanjut",
+      "finishOver": "Terlalu cepat dan rem tidak cukup: selesaikan dan terima 1 penalti dan 1 kerusakan",
+      "finishOverKeep": "Tetap selesaikan: simpan rem untuk sektor berikutnya dan terima 1 penalti dan 1 kerusakan"
     }
   },
   "windmill": {

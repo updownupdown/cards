@@ -43,8 +43,9 @@
     "hint": {
       "route_one": "Jouez cette voie : elle fait piocher {{count}} carte",
       "route_other": "Jouez cette voie : elle fait piocher {{count}} cartes",
-      "camp": "Jouez vos dernières cartes pour installer le camp",
-      "rest": "Reposez-vous : prenez la pile de fatigue en main et repartez",
+      "camp": "Jouez vos dernières cartes : cette voie atteint le camp suivant",
+      "campMissed": "Jouez vos dernières cartes : le camp est manqué, mais une nouvelle main est distribuée",
+      "rest": "Reposez-vous : ajoutez la pile de fatigue à votre main et recommencez vos voies",
       "discard": "Défaussez la carte dont votre main se passe le mieux"
     }
   },
@@ -72,12 +73,7 @@
     "pins": "Quilles",
     "ball": "Boule",
     "throw": "Lancer",
-    "finalScore": "Score : {{score}} ({{target}} nécessaires pour gagner)",
-    "hint": {
-      "throw_one": "Cette boule peut faire tomber environ {{count}} quille",
-      "throw_other": "Cette boule peut faire tomber environ {{count}} quilles",
-      "endBall": "Plus aucun lancer : terminez cette boule"
-    }
+    "finalScore": "Score : {{score}} ({{target}} nécessaires pour gagner)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Vous avez tué tous les zombies !",
@@ -89,9 +85,9 @@
     "killAZombie": "Tuez un zombie",
     "noKillableZombies": "Aucun zombie à tuer !",
     "hint": {
-      "kill": "Tuez ce zombie",
+      "kill": "Tuez le zombie le plus fort : Rois et Dames sont plus durs à réaligner",
       "playToKill": "Jouez ici pour tuer un zombie",
-      "prepareKill": "Préparez la mise à mort d'un zombie"
+      "prepareKill": "Jouez ici : cela aligne des cartes de soutien pour tuer un zombie"
     }
   },
   "cafeQueue": {
@@ -103,7 +99,7 @@
     "hint": {
       "slot": "Le prochain client tient ici {{chance}} % du temps",
       "letThemStay": "Laissez-le rester : perdre cette file est le moindre mal",
-      "kickThemOut": "Renvoyez-les : plus sûr que de perdre cette file"
+      "kickThemOut": "Mettez-le dehors : perdre ce client et le suivant est plus sûr que perdre cette file"
     }
   },
   "calculation": {
@@ -142,8 +138,8 @@
     "trade": "Échanger",
     "offer": "Offre",
     "hint": {
-      "trade": "Vendez ces livres pour ${{value}}",
-      "tradeGuild": "Vendez ces livres pour ${{value}} : +{{count}} pts guilde",
+      "trade": "Échangez ces livres : ils couvrent l'offre mais ne rapportent aucun pt de guilde",
+      "tradeGuild": "Échangez ces livres : +{{count}} pts guilde",
       "pass": "Aucun choix de livres ne fait cette offre : passez"
     }
   },
@@ -183,10 +179,12 @@
     "wonWithTier": "{{score}} points : {{tier}} !",
     "lostShortOfTarget": "{{score}} points. Il vous faut {{target}} points pour gagner.",
     "hint": {
-      "stop": "Arrêtez-vous : {{risk}} % de risque d'explosion, c'est trop pour ce qu'une carte de plus apporterait",
+      "stop": "Arrêtez-vous : {{risk}} % de risque d'explosion, une carte de plus n'en vaut pas la peine",
+      "stopDiamond": "Arrêtez-vous : votre dernier carreau ne compte double que si vous vous arrêtez maintenant",
       "keepCoins": "Gardez les pièces : de meilleures cartes rapporteront sur les manches restantes",
       "keepPoints": "Gardez les points : il reste trop peu de manches pour que les pièces rapportent",
-      "buy": "Achetez les meilleures cartes que vos pièces permettent : deux, de couleurs différentes"
+      "buyPair": "Achetez cette carte : avec un second achat d'une autre couleur, c'est le mieux que vos pièces permettent",
+      "buy": "Achetez la meilleure carte que vos pièces permettent"
     }
   },
   "cityGrid": {
@@ -211,7 +209,7 @@
     "youScoredPoints": "Vous avez marqué {{score}} points !",
     "youScoredReachToWin": "Vous avez marqué {{score}}. Atteignez {{TARGET_SCORE}} pour gagner.",
     "hint": {
-      "fifteens": "Faites des quinze ici",
+      "fifteens": "Alignez des quinze ici",
       "pairs": "Formez une paire ici",
       "runs": "Construisez une suite ici",
       "flush": "Visez une couleur ici"
@@ -237,7 +235,7 @@
       "kill": "Battez cet ennemi",
       "exactKill": "Coup exact : l'ennemi rejoint votre taverne",
       "shield": "Les piques affaiblissent son attaque avant qu'il frappe",
-      "draw": "Les carreaux remplissent votre main",
+      "draw": "Les carreaux vous font piocher autant de cartes que la valeur de ce jeu",
       "heal": "Les cœurs renvoient la défausse dans la taverne",
       "defend": "Bloquez avec les cartes dont vous avez le moins besoin",
       "jester": "Appelez un bouffon pour une nouvelle main"
@@ -267,8 +265,9 @@
     "youRanOutOfCards": "Vous n'avez plus de cartes avant d'avoir vaincu les douze figures.",
     "hint": {
       "kill": "Ceci fait tomber une figure",
-      "extract": "Utilisez un as : cette pile repart sous le paquet",
-      "reassign": "Utilisez un joker : déplacez cette carte"
+      "extract": "Dépensez un As : renvoyez cette pile sous la pioche",
+      "reassign": "Utilisez un joker : déplacez cette carte",
+      "reassignKill": "Dépensez un Joker : déplacer cette carte fait tomber une figure"
     }
   },
   "ebbAndFlow": {
@@ -306,7 +305,8 @@
     "hint": {
       "discard": "Échangez cette carte contre une nouvelle",
       "letCapture": "Aucune capture possible : laissez l'ennemi prendre votre carte la plus faible",
-      "sacrifice": "Aucune capture possible : sacrifiez deux cartes faibles pour renvoyer cet ennemi"
+      "sacrifice": "Aucune capture possible : sacrifiez deux cartes faibles pour renvoyer cet ennemi",
+      "lost": "Toutes les options perdent : un Valet, une Dame, un Roi ou un As entre dans la pile de capture ennemie"
     }
   },
   "fifteenPuzzle": {
@@ -330,10 +330,10 @@
     "gridClearWon": "La grille est vide. Victoire !",
     "allClubsSpent": "Les 13 trèfles sont épuisés.",
     "hint": {
-      "free_diamonds": "Retirez des carreaux pour libérer les actions ♦",
-      "free_spades": "Retirez des piques pour libérer les actions ♠",
-      "free_hearts": "Retirez des cœurs pour libérer l'action ♥",
-      "any": "Ne prenez qu'une carte avec ce trèfle : gardez les autres pour de plus gros coups"
+      "free_diamonds": "Il restera moins de 3 carreaux : les actions ♦ se débloquent, sauf si le paquet de la grille en ramène",
+      "free_spades": "Il restera moins de 3 piques : les actions ♠ se débloquent, sauf si le paquet de la grille en ramène",
+      "free_hearts": "Il restera moins de 3 cœurs : l'action ♥ se débloque, sauf si le paquet de la grille en ramène",
+      "any": "Retirez seulement cette carte : les coups qui en retirent plus finissent moins bien"
     }
   },
   "fortunesCall": {
@@ -368,7 +368,8 @@
     "lostShortOfTarget": "{{score}} points. Il vous faut {{target}} points pour gagner.",
     "hint": {
       "cell": "Posez la vitre ici : +{{count}}",
-      "shards": "Aucun cadre ne peut les prendre : brisez-les en éclats"
+      "shards": "Aucun cadre ne peut les prendre : brisez-les",
+      "shardsOnPurpose": "Brisez-les exprès : les mettre dans un cadre finit moins bien"
     }
   },
   "gremlin": {
@@ -384,8 +385,8 @@
     "noRoomForHelper": "Plus de place pour la carte de l'assistant dans les {{count}} colonnes.",
     "hint": {
       "helper": "Placez la carte de l'assistant là où elle coûte le moins de colonnes",
-      "king": "Commencez une colonne avec ce Roi",
-      "discard": "Défaussez cette carte : elle coûterait une colonne maintenant, et elle reviendra"
+      "discard": "Défaussez cette carte : la jouer maintenant coûte des colonnes, et elle reviendra",
+      "discardNoFit": "Défaussez cette carte : aucune colonne ne peut la prendre maintenant, et elle reviendra"
     }
   },
   "herbalist": {
@@ -397,9 +398,9 @@
     "harvestPerfect": "Récolte parfaite : il reste {{count}} herbes.",
     "noHerbsRemain": "Il ne reste plus d'herbes pour soigner le royaume.",
     "hint": {
-      "heal": "Ramassez ces herbes : bien semées, elles soignent une créature",
-      "setUp": "Ramassez ces herbes : bien semées, elles préparent une guérison",
-      "noCure": "Plus aucun remède pour le royaume : semez pour finir la partie"
+      "heal": "Ramassez ces herbes : bien déposées, elles soignent une créature",
+      "setUp": "Ramassez ces herbes : bien déposées, elles rapprochent une guérison",
+      "noCure": "Les herbes restantes ne peuvent pas soigner toutes les créatures : cette partie ne peut pas être gagnée"
     }
   },
   "infiltrator": {
@@ -424,7 +425,8 @@
     "hint": {
       "retire": "Retirez ces petites cartes, pour que vos meilleures cartes reviennent plus souvent",
       "assassinate": "Votre main ne peut pas arrêter cet espion : sacrifiez un agent double",
-      "doubleAgent": "L'As de la couleur de l'espion est un agent double : il fait passer vos autres cartes à sa couleur",
+      "noDoubleAgents": "Plus aucun agent double : cet espion met fin à la mission",
+      "doubleAgent": "L'As de la couleur de l'espion est un agent double : il fait passer les autres cartes jouées à sa couleur",
       "counterKey": "Cet espion clé ne peut pas être recruté : contrez-le avec les cartes dont vous avez le moins besoin",
       "counter": "Cet espion ne peut pas être recruté : contrez-le avec les cartes dont vous avez le moins besoin"
     }
@@ -483,9 +485,10 @@
     "selectCardsToCapture": "Choisissez des cartes à capturer",
     "hint": {
       "fold": "Couchez-vous : continuer coûterait plus cher",
+      "noCapture": "Plus aucune capture possible : couchez-vous",
       "finish": "Videz la main du Loup : la vôtre marque",
-      "over_one": "Surpassez : le Loup pioche {{count}} carte, ça vaut le coup",
-      "over_other": "Surpassez : le Loup pioche {{count}} cartes, ça vaut le coup"
+      "over_one": "Over : le Loup pioche {{count}} carte, ça vaut le coup",
+      "over_other": "Over : le Loup pioche {{count}} cartes, ça vaut le coup"
     }
   },
   "memory": {
@@ -523,10 +526,8 @@
     "smokeThreat": "Bombe fumigène sur {{card}}",
     "grappleThreats": "Grappin sur {{first}} et {{second}}",
     "hint": {
-      "smoke": "Utilisez votre Bombe fumigène sur cette Menace",
-      "grapple": "Reliez ces deux Menaces au Grappin pour y répondre ensemble",
       "dump": "Jouez cette Réponse là où elle ne fait pas de mal",
-      "resolve": "Résolvez maintenant : piocher encore risque de nuire plus que d'aider"
+      "resolve": "Résolvez maintenant : piocher encore risque de coûter plus que ça ne rapporte"
     }
   },
   "ouroboros": {
@@ -542,8 +543,7 @@
     "lostInDungeon": "Vous êtes perdu dans le donjon sans issue !",
     "markPathNumber": "Marquer le chemin {{number}}",
     "hint": {
-      "lookAround": "Regardez autour pour voir ce qui vous attend",
-      "explore": "Explorez plus loin",
+      "lookAround": "Regarder autour : vous ne pouvez avancer qu'avec des cartes numérotées face visible",
       "jewel": "Explorez plus loin pour prendre un joyau",
       "escape": "Fuyez par la sortie !",
       "markPath": "Marquez un chemin : une issue en cas d'impasse",
@@ -606,12 +606,17 @@
     },
     "hint": {
       "play": "Jouez : une mise d'un point ne risque pas plus qu'un abandon",
-      "standPat": "Gardez votre main : elle est forte",
+      "setHandStrong": "Valider la main : une quinte ou mieux mérite d'être gardée",
+      "setHandBet": "Valider la main : piocher encore porte votre mise minimale à 2 pour trop peu",
       "keepSets": "Gardez vos cartes assorties, tirez les autres",
       "keepFlushDraw": "Gardez les quatre cartes à la couleur",
-      "keepPair": "Gardez la paire, tirez-en trois",
+      "keepPair": "Gardez la paire, tirez les autres",
       "keepStraightDraw": "Gardez les quatre cartes à la quinte",
-      "keepHighCards": "Gardez les hautes cartes, tirez les autres",
+      "keepHighCards_one": "Gardez la haute carte, tirez les autres",
+      "keepHighCards_other": "Gardez les hautes cartes, tirez les autres",
+      "keepJokers_one": "Gardez le Joker, tirez les autres",
+      "keepJokers_other": "Gardez les Jokers, tirez les autres",
+      "keepNothing": "Rien ne vaut la peine d'être gardé : tirez les cinq",
       "odds": "Cette main gagne environ {{chance}} % du temps"
     }
   },
@@ -654,7 +659,7 @@
     },
     "hint": {
       "run": "Fuyez : cette salle vous tuerait",
-      "fightWeapon": "Combattez ce monstre avec votre arme",
+      "runWeak": "Fuyez : cette salle vous laisserait trop faible pour continuer",
       "fightBare": "Combattez celui-ci à mains nues : gardez votre arme pour de plus gros monstres"
     }
   },
@@ -713,11 +718,11 @@
     "nightmaresOverwhelmed": "Les cauchemars ont submergé Alice.",
     "hint": {
       "eliminate": "Éliminez ce cauchemar",
-      "defend": "Affaiblissez l'attaque de ce cauchemar : il ne peut pas être éliminé ce tour-ci",
+      "defend": "Affaiblissez l'attaque de ce cauchemar : Alice ne perd que la différence",
       "mold": "Façonnez ce gardien pour l'ajouter à votre paquet",
-      "exile": "Exilez ce cauchemar : il coûterait plus de 5 vies à Alice",
-      "deepBreath": "Rien ne vaut la peine d'être affecté : échangez votre carte la plus faible contre une nouvelle",
-      "remSleep": "Alice ne survivra pas à ce plateau : utilisez le sommeil REM pour repartir de zéro"
+      "exile": "Exilez ce cauchemar : laissé en jeu, il coûterait plus cher à Alice que l'exil",
+      "deepBreath": "Rien ne vaut la peine d'être affecté : prenez une Grande inspiration pour défausser votre carte la plus faible et finir le tour",
+      "remSleep": "Alice ne survivra pas à ce plateau : utilisez le sommeil REM pour redistribuer le plateau et votre main"
     }
   },
   "spiderSolitaire": {
@@ -765,10 +770,11 @@
     "doNothing": "Ne rien faire",
     "noKingSelected": "Aucun Roi sélectionné",
     "hint": {
-      "reserve": "Gardez ces deux cartes en réserve pour achever des monstres plus tard",
+      "reserve": "Mettez votre réserve de côté : le reste de votre main se joue mieux sans elle",
       "discard": "Cette carte n'a pas de bonne place : défaussez-la",
       "bury": "Placez cette carte sous la pioche plutôt que de la défausser",
-      "double": "Doublez une attaque avec le Roi de pique"
+      "buryWithKing": "Utilisez le Roi de cœur pour placer une carte sous la pioche plutôt que de la défausser",
+      "double": "Utilisez le Roi de pique : votre prochain attaquant compte double"
     }
   },
   "waypoint": {
@@ -790,9 +796,10 @@
     "speed": "Vitesse",
     "hint": {
       "boosts": "Mettez les gaz pour atteindre la vitesse visée",
-      "brakes": "Freinez : mieux vaut trop lent qu'au-delà de la vitesse visée",
-      "finishUnder": "Finissez maintenant : une autre carte dépasserait sans doute",
-      "finishOver": "Trop vite et plus de frein : finissez et prenez la pénalité"
+      "brakes": "Freinez jusqu'à la vitesse visée : un dépassement réparé ne coûte rien",
+      "finishUnder": "Finissez maintenant : rester en dessous coûte moins que continuer",
+      "finishOver": "Trop vite et pas assez de freins : finissez et prenez 1 pénalité et 1 dégât",
+      "finishOverKeep": "Finissez quand même : gardez vos freins pour les secteurs suivants et prenez 1 pénalité et 1 dégât"
     }
   },
   "windmill": {

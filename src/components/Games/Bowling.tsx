@@ -30,7 +30,6 @@ import {
   cardTarget,
   makeHint,
   pressHint,
-  withNote,
   zoneTarget,
 } from "@/hints/hint";
 const BACK_ROW = new Set([6, 7, 8, 9]);
@@ -595,23 +594,17 @@ function findBowlingHint(state: GameState) {
   }
   const plan = planBall(state);
   if (!plan) {
-    return withNote(
-      pressHint("actions", i18n.t("games:bowling.endBall")),
-      i18n.t("games:bowling.hint.endBall"),
-    );
+    return pressHint("actions", i18n.t("games:bowling.endBall"));
   }
   const { pile, pins } = plan.throw;
   const taps = pinTaps(state, pins);
   if (!taps) return null;
   const ball = state.ballPiles[pile].at(-1)!;
-  return withNote(
-    makeHint(
-      { key: "press", values: { label: i18n.t("games:bowling.throw") } },
-      state.selectedBallPile === pile ? [] : cardTarget(ball),
-      ...taps.map((pin) => cardTarget(state.pins[pin]!)),
-      zoneTarget("actions"),
-    ),
-    i18n.t("games:bowling.hint.throw", { count: Math.round(plan.pins) }),
+  return makeHint(
+    { key: "press", values: { label: i18n.t("games:bowling.throw") } },
+    state.selectedBallPile === pile ? [] : cardTarget(ball),
+    ...taps.map((pin) => cardTarget(state.pins[pin]!)),
+    zoneTarget("actions"),
   );
 }
 

@@ -43,8 +43,9 @@
     "hint": {
       "route_one": "Juega esta ruta: te hace robar {{count}} carta",
       "route_other": "Juega esta ruta: te hace robar {{count}} cartas",
-      "camp": "Juega tus últimas cartas para montar el campamento",
-      "rest": "Descansa: toma la pila de fatiga en la mano y empieza de nuevo",
+      "camp": "Juega tus últimas cartas: esta ruta llega al siguiente campamento",
+      "campMissed": "Juega tus últimas cartas: no llegas al campamento, pero recibes una mano nueva",
+      "rest": "Descansa: añade la pila de fatiga a tu mano y empieza tus rutas de nuevo",
       "discard": "Descarta la carta que menos le sirve a tu mano"
     }
   },
@@ -72,12 +73,7 @@
     "pins": "Bolos",
     "ball": "Bola",
     "throw": "Lanzar",
-    "finalScore": "Puntuación: {{score}} (se necesitan {{target}} para ganar)",
-    "hint": {
-      "throw_one": "Esta bola puede derribar unos {{count}} bolo",
-      "throw_other": "Esta bola puede derribar unos {{count}} bolos",
-      "endBall": "No quedan tiros: termina esta bola"
-    }
+    "finalScore": "Puntuación: {{score}} (se necesitan {{target}} para ganar)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "¡Has matado a todos los zombis!",
@@ -89,9 +85,9 @@
     "killAZombie": "Mata un zombi",
     "noKillableZombies": "¡No hay zombis que matar!",
     "hint": {
-      "kill": "Mata a este zombi",
+      "kill": "Mata al zombi más alto: Reyes y Reinas cuestan más de volver a alinear",
       "playToKill": "Juega aquí para matar a un zombi",
-      "prepareKill": "Prepara la muerte de un zombi"
+      "prepareKill": "Juega aquí: alinea cartas de apoyo para matar a un zombi"
     }
   },
   "cafeQueue": {
@@ -103,7 +99,7 @@
     "hint": {
       "slot": "El próximo cliente cabe aquí el {{chance}} % de las veces",
       "letThemStay": "Deja que se quede: perder esta fila es el descarte más seguro",
-      "kickThemOut": "Échalos: es más seguro que perder esta fila"
+      "kickThemOut": "Échalo: perderlo a él y al siguiente cliente es más seguro que perder esta fila"
     }
   },
   "calculation": {
@@ -142,8 +138,8 @@
     "trade": "Intercambiar",
     "offer": "Oferta",
     "hint": {
-      "trade": "Vende estos libros por ${{value}}",
-      "tradeGuild": "Vende estos libros por ${{value}}: +{{count}} pts gremio",
+      "trade": "Intercambia estos libros: cubren la oferta, pero no dan pts gremio",
+      "tradeGuild": "Intercambia estos libros: +{{count}} pts gremio",
       "pass": "Ningún grupo de libros suma esta oferta: pasa"
     }
   },
@@ -183,10 +179,12 @@
     "wonWithTier": "{{score}} puntos: ¡{{tier}}!",
     "lostShortOfTarget": "{{score}} puntos. Necesitas {{target}} puntos para ganar.",
     "hint": {
-      "stop": "Para aquí: un {{risk}} % de riesgo de explosión es demasiado para lo que aporta otra carta",
+      "stop": "Para aquí: un {{risk}} % de riesgo de explosión no compensa otra carta",
+      "stopDiamond": "Para aquí: tu último diamante solo cuenta doble si paras ahora",
       "keepCoins": "Quédate con las monedas: las mejores cartas darán fruto en las rondas que quedan",
       "keepPoints": "Quédate con los puntos: quedan muy pocas rondas para que las monedas den fruto",
-      "buy": "Compra las mejores cartas que te permitan tus monedas: dos, de palos distintos"
+      "buyPair": "Compra esta carta: con una segunda compra de otro palo, es lo mejor que permiten tus monedas",
+      "buy": "Compra la mejor carta que te permitan tus monedas"
     }
   },
   "cityGrid": {
@@ -211,7 +209,7 @@
     "youScoredPoints": "¡Has conseguido {{score}} puntos!",
     "youScoredReachToWin": "Has conseguido {{score}}. Llega a {{TARGET_SCORE}} para ganar.",
     "hint": {
-      "fifteens": "Haz quinces aquí",
+      "fifteens": "Alinea quinces aquí",
       "pairs": "Forma una pareja aquí",
       "runs": "Arma una escalera aquí",
       "flush": "Busca un color aquí"
@@ -237,7 +235,7 @@
       "kill": "Derrota a este enemigo",
       "exactKill": "Golpe exacto: el enemigo se une a tu taberna",
       "shield": "Las picas debilitan su ataque antes de que golpee",
-      "draw": "Los diamantes rellenan tu mano",
+      "draw": "Los diamantes te hacen robar tantas cartas como el valor de esta jugada",
       "heal": "Los corazones devuelven los descartes a la taberna",
       "defend": "Bloquea con las cartas que menos necesitas",
       "jester": "Llama a un bufón para tener una mano nueva"
@@ -267,8 +265,9 @@
     "youRanOutOfCards": "Te quedaste sin cartas antes de derrotar a las doce figuras.",
     "hint": {
       "kill": "Esto derriba una figura",
-      "extract": "Usa un as: este montón vuelve bajo el mazo",
-      "reassign": "Usa un comodín: mueve esta carta"
+      "extract": "Gasta un As: devuelve esta pila al fondo del mazo",
+      "reassign": "Usa un comodín: mueve esta carta",
+      "reassignKill": "Gasta un Comodín: mover esta carta derriba una figura"
     }
   },
   "ebbAndFlow": {
@@ -306,7 +305,8 @@
     "hint": {
       "discard": "Cambia esta carta por una nueva",
       "letCapture": "Sin captura: deja que el enemigo se lleve tu carta más baja",
-      "sacrifice": "Sin captura: sacrifica dos cartas bajas para devolver este enemigo al mazo"
+      "sacrifice": "Sin captura: sacrifica dos cartas bajas para devolver este enemigo al mazo",
+      "lost": "Todas las opciones pierden: una Jota, Reina, Rey o As entra en la pila de capturas enemiga"
     }
   },
   "fifteenPuzzle": {
@@ -330,10 +330,10 @@
     "gridClearWon": "La cuadrícula está despejada. ¡Victoria!",
     "allClubsSpent": "Se han gastado los 13 tréboles.",
     "hint": {
-      "free_diamonds": "Quita diamantes para liberar las acciones ♦",
-      "free_spades": "Quita picas para liberar las acciones ♠",
-      "free_hearts": "Quita corazones para liberar la acción ♥",
-      "any": "Llévate solo una carta con este trébol: guarda los demás para jugadas mayores"
+      "free_diamonds": "Quedan menos de 3 diamantes: las acciones ♦ se desbloquean, salvo que el mazo de la cuadrícula traiga más",
+      "free_spades": "Quedan menos de 3 picas: las acciones ♠ se desbloquean, salvo que el mazo de la cuadrícula traiga más",
+      "free_hearts": "Quedan menos de 3 corazones: la acción ♥ se desbloquea, salvo que el mazo de la cuadrícula traiga más",
+      "any": "Retira solo esta carta: las jugadas que retiran más salen peor"
     }
   },
   "fortunesCall": {
@@ -368,7 +368,8 @@
     "lostShortOfTarget": "{{score}} puntos. Necesitas {{target}} puntos para ganar.",
     "hint": {
       "cell": "Coloca el cristal aquí: +{{count}}",
-      "shards": "Ningún marco puede usarlos: rómpelos en esquirlas"
+      "shards": "Ningún marco puede tomarlos: rómpelos",
+      "shardsOnPurpose": "Rómpelos a propósito: enmarcarlos sale peor"
     }
   },
   "gremlin": {
@@ -384,8 +385,8 @@
     "noRoomForHelper": "No hay sitio para la carta del ayudante en {{count}} columnas.",
     "hint": {
       "helper": "Coloca la carta del ayudante donde cueste menos columnas",
-      "king": "Empieza una columna con este Rey",
-      "discard": "Descarta esta carta: ahora costaría una columna, y volverá más tarde"
+      "discard": "Descarta esta carta: jugarla ahora cuesta columnas, y volverá más tarde",
+      "discardNoFit": "Descarta esta carta: ninguna columna puede tomarla ahora, y volverá más tarde"
     }
   },
   "herbalist": {
@@ -397,9 +398,9 @@
     "harvestPerfect": "Cosecha perfecta: quedan {{count}} hierbas.",
     "noHerbsRemain": "No quedan hierbas para sanar el reino.",
     "hint": {
-      "heal": "Recoge estas hierbas: bien sembradas, curan a una criatura",
-      "setUp": "Recoge estas hierbas: bien sembradas, preparan una curación",
-      "noCure": "Ya no hay cura para el reino: sigue sembrando para acabar la partida"
+      "heal": "Recoge estas hierbas: bien soltadas, curan a una criatura",
+      "setUp": "Recoge estas hierbas: bien soltadas, acercan una curación",
+      "noCure": "Las hierbas que quedan no pueden curar a todas las criaturas: esta partida no se puede ganar"
     }
   },
   "infiltrator": {
@@ -424,7 +425,8 @@
     "hint": {
       "retire": "Retira estas cartas bajas, para que tus mejores cartas vuelvan más a menudo",
       "assassinate": "Tu mano no puede detener a este espía: sacrifica un agente doble",
-      "doubleAgent": "El As del palo del espía es un agente doble: convierte tus demás cartas a su palo",
+      "noDoubleAgents": "No quedan agentes dobles: este espía pone fin a la misión",
+      "doubleAgent": "El As del palo del espía es un agente doble: convierte las demás cartas que juegas a su palo",
       "counterKey": "Este espía clave no se puede reclutar: contrarréstalo con las cartas que menos necesitas",
       "counter": "Este espía no se puede reclutar: contrarréstalo con las cartas que menos necesitas"
     }
@@ -483,9 +485,10 @@
     "selectCardsToCapture": "Elige cartas para capturar",
     "hint": {
       "fold": "Retírate: seguir costaría más",
+      "noCapture": "No quedan capturas: retírate",
       "finish": "Vacía la mano del Lobo: la tuya puntúa",
-      "over_one": "Supéralo: vale la pena que el Lobo robe {{count}} carta",
-      "over_other": "Supéralo: vale la pena que el Lobo robe {{count}} cartas"
+      "over_one": "Over: vale la pena que el Lobo robe {{count}} carta",
+      "over_other": "Over: vale la pena que el Lobo robe {{count}} cartas"
     }
   },
   "memory": {
@@ -523,10 +526,8 @@
     "smokeThreat": "Bomba de humo sobre {{card}}",
     "grappleThreats": "Garfio sobre {{first}} y {{second}}",
     "hint": {
-      "smoke": "Usa tu Bomba de humo en esta Amenaza",
-      "grapple": "Une estas dos Amenazas con el Garfio y respóndelas juntas",
       "dump": "Juega esta Respuesta donde no haga daño",
-      "resolve": "Resuelve ya: robar otra vez tiene más riesgo que ventaja"
+      "resolve": "Resuelve ya: robar otra vez probablemente cueste más de lo que gana"
     }
   },
   "ouroboros": {
@@ -542,8 +543,7 @@
     "lostInDungeon": "¡Te has perdido en la mazmorra sin salida!",
     "markPathNumber": "Marcar camino {{number}}",
     "hint": {
-      "lookAround": "Mira alrededor para ver qué hay delante",
-      "explore": "Explora más adelante",
+      "lookAround": "Mirar alrededor: solo puedes avanzar con cartas numéricas boca arriba",
       "jewel": "Explora más adelante para tomar una joya",
       "escape": "¡Escapa por la salida!",
       "markPath": "Marca un camino: una salida de los callejones sin salida",
@@ -606,12 +606,17 @@
     },
     "hint": {
       "play": "Juega: una apuesta de un punto no arriesga más que retirarse",
-      "standPat": "Quédate con tu mano: es fuerte",
+      "setHandStrong": "Fijar mano: una escalera o algo mejor vale la pena guardarla",
+      "setHandBet": "Fijar mano: robar otra vez sube tu apuesta mínima a 2 por muy poco",
       "keepSets": "Guarda tus cartas iguales y roba el resto",
       "keepFlushDraw": "Guarda las cuatro cartas al color",
-      "keepPair": "Guarda la pareja y roba tres",
+      "keepPair": "Guarda la pareja y roba el resto",
       "keepStraightDraw": "Guarda las cuatro cartas a la escalera",
-      "keepHighCards": "Guarda las cartas altas y roba el resto",
+      "keepHighCards_one": "Guarda la carta alta y roba el resto",
+      "keepHighCards_other": "Guarda las cartas altas y roba el resto",
+      "keepJokers_one": "Guarda el comodín y roba el resto",
+      "keepJokers_other": "Guarda los comodines y roba el resto",
+      "keepNothing": "Nada merece la pena guardar: roba las cinco",
       "odds": "Esta mano gana alrededor del {{chance}} % de las veces"
     }
   },
@@ -654,7 +659,7 @@
     },
     "hint": {
       "run": "Huye: esta sala te mataría",
-      "fightWeapon": "Lucha contra este monstruo con tu arma",
+      "runWeak": "Huye: esta sala te dejaría demasiado débil para seguir",
       "fightBare": "Lucha contra este a mano limpia: guarda tu arma para monstruos más grandes"
     }
   },
@@ -713,11 +718,11 @@
     "nightmaresOverwhelmed": "Las pesadillas han vencido a Alice.",
     "hint": {
       "eliminate": "Elimina esta pesadilla",
-      "defend": "Debilita el ataque de esta pesadilla: este turno no se puede eliminar",
+      "defend": "Debilita el ataque de esta pesadilla: Alice solo pierde la diferencia",
       "mold": "Moldea este guardián para añadirlo a tu mazo",
-      "exile": "Exilia esta pesadilla: le costaría a Alice más de 5 de vida",
-      "deepBreath": "No merece la pena asignar nada: cambia tu carta más débil por una nueva",
-      "remSleep": "Alice no sobrevivirá a este tablero: usa el sueño REM para empezar de nuevo"
+      "exile": "Exilia esta pesadilla: si sigue en juego, le costaría a Alice más que exiliarla",
+      "deepBreath": "No merece la pena asignar nada: usa Respiración profunda para descartar tu carta más débil y terminar el turno",
+      "remSleep": "Alice no sobrevivirá a este tablero: usa el sueño REM para repartir de nuevo el tablero y tu mano"
     }
   },
   "spiderSolitaire": {
@@ -765,10 +770,11 @@
     "doNothing": "No hacer nada",
     "noKingSelected": "Ningún Rey seleccionado",
     "hint": {
-      "reserve": "Guarda estas dos en la reserva para rematar monstruos más adelante",
+      "reserve": "Aparta tu reserva: el resto de tu mano se juega mejor sin ella",
       "discard": "Esta carta no tiene buen sitio: descártala",
       "bury": "Pon esta carta en el fondo del mazo en vez de descartarla",
-      "double": "Duplica un ataque con el Rey de picas"
+      "buryWithKing": "Usa el Rey de corazones para poner una carta en el fondo del mazo en vez de descartarla",
+      "double": "Usa el Rey de picas: tu próximo atacante cuenta doble"
     }
   },
   "waypoint": {
@@ -790,9 +796,10 @@
     "speed": "Velocidad",
     "hint": {
       "boosts": "Usa el gas para alcanzar la velocidad objetivo",
-      "brakes": "Frena: mejor lento que pasarte de la velocidad objetivo",
-      "finishUnder": "Cierra ya: otra carta probablemente te pasaría",
-      "finishOver": "Demasiado rápido y sin freno: cierra y acepta la penalización"
+      "brakes": "Frena hasta la velocidad objetivo: un exceso reparado no cuesta nada",
+      "finishUnder": "Cierra ya: quedarte corto cuesta menos que seguir jugando",
+      "finishOver": "Demasiado rápido y sin frenos suficientes: cierra y acepta 1 penalización y 1 daño",
+      "finishOverKeep": "Cierra de todos modos: guarda tus frenos para los próximos sectores y acepta 1 penalización y 1 daño"
     }
   },
   "windmill": {

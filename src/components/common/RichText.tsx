@@ -1,4 +1,9 @@
-import { Text, TextSize, TextWeight } from "@/components/common/Text";
+import {
+  Text,
+  TextSize,
+  TextWeight,
+  Typography,
+} from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Colors, rgba } from "@/styles/styles";
 import { ReactNode, useMemo } from "react";
@@ -217,11 +222,13 @@ function renderInline(text: string, keyPrefix: string): ReactNode[] {
   return nodes;
 }
 
-const HEADING_SIZE: Record<number, TextSize> = {
-  1: "xxl",
-  2: "xl",
-  3: "lg",
-};
+const SIZES = Object.keys(Typography.size) as TextSize[];
+
+/** A heading's size: up from the body text's, more for higher levels. */
+function headingSize(body: TextSize, level: number): TextSize {
+  const steps = Math.max(0, 4 - level);
+  return SIZES[Math.min(SIZES.length - 1, SIZES.indexOf(body) + steps)];
+}
 
 export type RichTextProps = {
   content: string | string[];
@@ -234,6 +241,7 @@ export type RichTextProps = {
 
 export function RichText({
   content,
+  size = "md",
   color = rgba(Colors.white, 0.9),
   headingColor = Colors.K200,
   gap = 20,
@@ -253,7 +261,7 @@ export function RichText({
           return (
             <Text
               key={`h-${index}`}
-              size={HEADING_SIZE[block.level] ?? "md"}
+              size={headingSize(size, block.level)}
               weight={300}
               color={headingColor}
               style={{
@@ -286,11 +294,11 @@ export function RichText({
                     paddingLeft: item.depth === 1 ? spacing(20) : 0,
                   }}
                 >
-                  <Text size="md" weight={400} color={color}>
+                  <Text size={size} weight={400} color={color}>
                     {item.depth === 1 ? "\u25E6" : "\u2022"}
                   </Text>
                   <Text
-                    size="md"
+                    size={size}
                     weight={300}
                     color={color}
                     style={{ flex: 1 }}
@@ -324,7 +332,7 @@ export function RichText({
         return (
           <Text
             key={`p-${index}`}
-            size="md"
+            size={size}
             weight={400}
             color={color}
             style={{

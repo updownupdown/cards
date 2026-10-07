@@ -43,8 +43,9 @@
     "hint": {
       "route_one": "Bu rotayı oyna: {{count}} kart çektirir",
       "route_other": "Bu rotayı oyna: {{count}} kart çektirir",
-      "camp": "Kamp kurmak için son kartlarını oyna",
-      "rest": "Dinlen: yorgunluk destesini eline al ve yeniden başla",
+      "camp": "Son kartlarını oyna: bu rota bir sonraki kampa ulaşır",
+      "campMissed": "Son kartlarını oyna: kampa ulaşamazsın ama yeni bir el dağıtılır",
+      "rest": "Dinlen: yorgunluk destesini eline ekle ve rotalarına baştan başla",
       "discard": "Elinin en az ihtiyaç duyduğu kartı at"
     }
   },
@@ -72,12 +73,7 @@
     "pins": "Lobut",
     "ball": "Top",
     "throw": "At",
-    "finalScore": "Puan: {{score}} (kazanmak için {{target}} gerekli)",
-    "hint": {
-      "throw_one": "Bu top yaklaşık {{count}} lobut devirebilir",
-      "throw_other": "Bu top yaklaşık {{count}} lobut devirebilir",
-      "endBall": "Atış kalmadı: bu topu bitir"
-    }
+    "finalScore": "Puan: {{score}} (kazanmak için {{target}} gerekli)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "Bütün zombileri öldürdün!",
@@ -89,9 +85,9 @@
     "killAZombie": "Bir zombi öldür",
     "noKillableZombies": "Öldürülebilecek zombi yok!",
     "hint": {
-      "kill": "Bu zombiyi öldür",
+      "kill": "En yüksek zombiyi öldür: Papazları ve Kızları yeniden hizalamak daha zor",
       "playToKill": "Bir zombiyi öldürmek için buraya oyna",
-      "prepareKill": "Bir zombi öldürmeye hazırlan"
+      "prepareKill": "Buraya oyna: bir zombiyi öldürmek için destek kartlarını hizalar"
     }
   },
   "cafeQueue": {
@@ -103,7 +99,7 @@
     "hint": {
       "slot": "Sıradaki müşteri buraya %{{chance}} oranında sığar",
       "letThemStay": "Kalsın: bu sırayı kaybetmek daha güvenli atış",
-      "kickThemOut": "Gönder: bu sırayı kaybetmekten daha güvenli"
+      "kickThemOut": "Gönder: onu ve sıradaki müşteriyi kaybetmek bu sırayı kaybetmekten daha güvenli"
     }
   },
   "calculation": {
@@ -142,8 +138,8 @@
     "trade": "Takas",
     "offer": "Teklif",
     "hint": {
-      "trade": "Bu kitapları ${{value}} karşılığında sat",
-      "tradeGuild": "Bu kitapları ${{value}} karşılığında sat: +{{count}} lonca p.",
+      "trade": "Bu kitapları takas et: teklifi karşılar ama lonca puanı kazandırmaz",
+      "tradeGuild": "Bu kitapları takas et: +{{count}} lonca p.",
       "pass": "Hiçbir kitap bu teklifi tutmuyor: pas geç"
     }
   },
@@ -183,10 +179,12 @@
     "wonWithTier": "{{score}} puan: {{tier}}!",
     "lostShortOfTarget": "{{score}} puan. Kazanmak için {{target}} puan gerekiyor.",
     "hint": {
-      "stop": "Burada dur: %{{risk}} taşma riski, bir kart daha eklemeye değmez",
+      "stop": "Burada dur: %{{risk}} taşma riski bir kart daha eklemeye değmez",
+      "stopDiamond": "Burada dur: son karon yalnızca şimdi durursan iki kez sayılır",
       "keepCoins": "Altınları al: daha iyi kartlar kalan turlarda kazandırır",
       "keepPoints": "Puanları al: altınların kazandırması için çok az tur kaldı",
-      "buy": "Altınlarının yettiği en güçlü kartları al: farklı renklerden iki tane"
+      "buyPair": "Bu kartı al: başka renkten ikinci bir alımla, altınlarının yettiği en iyisi bu",
+      "buy": "Altınlarının yettiği en iyi kartı al"
     }
   },
   "cityGrid": {
@@ -211,7 +209,7 @@
     "youScoredPoints": "{{score}} puan aldın!",
     "youScoredReachToWin": "Puanın: {{score}}. Kazanmak için hedef: {{TARGET_SCORE}}.",
     "hint": {
-      "fifteens": "Burada on beşler yap",
+      "fifteens": "Burada on beşleri hizala",
       "pairs": "Burada çift yap",
       "runs": "Burada bir seri kur",
       "flush": "Burada floşa git"
@@ -237,7 +235,7 @@
       "kill": "Bu düşmanı yen",
       "exactKill": "Tam isabet: düşman meyhanene katılır",
       "shield": "Maçalar, o vurmadan önce saldırısını zayıflatır",
-      "draw": "Karolar elini doldurur",
+      "draw": "Karolar bu hamlenin değeri kadar kart çektirir",
       "heal": "Kupalar ıskartayı meyhaneye geri gönderir",
       "defend": "En az ihtiyacın olan kartlarla engelle",
       "jester": "Yeni bir el için soytarı çağır"
@@ -267,8 +265,9 @@
     "youRanOutOfCards": "On iki soylunun hepsini yenemeden kartların bitti.",
     "hint": {
       "kill": "Bu bir soyluyu düşürür",
-      "extract": "Bir as kullan: bu deste destenin altına döner",
-      "reassign": "Bir joker kullan: bu kartı taşı"
+      "extract": "Bir As harca: bu yığını destenin altına gönder",
+      "reassign": "Bir joker kullan: bu kartı taşı",
+      "reassignKill": "Bir Joker harca: bu kartı taşımak bir soyluyu düşürür"
     }
   },
   "ebbAndFlow": {
@@ -306,7 +305,8 @@
     "hint": {
       "discard": "Bu kartı yeni bir kartla değiştir",
       "letCapture": "Ele geçirme yok: düşmanın en zayıf kartını almasına izin ver",
-      "sacrifice": "Ele geçirme yok: bu düşmanı geri göndermek için iki zayıf kartı feda et"
+      "sacrifice": "Ele geçirme yok: bu düşmanı geri göndermek için iki zayıf kartı feda et",
+      "lost": "Her seçenek kaybettirir: bir Vale, Kız, Papaz ya da As düşmanın ele geçirme yığınına girer"
     }
   },
   "fifteenPuzzle": {
@@ -330,10 +330,10 @@
     "gridClearWon": "Izgara temizlendi. Kazandın!",
     "allClubsSpent": "13 sineğin hepsi harcandı.",
     "hint": {
-      "free_diamonds": "♦ hamlelerini açmak için karoları temizle",
-      "free_spades": "♠ hamlelerini açmak için maçaları temizle",
-      "free_hearts": "♥ hamlesini açmak için kupaları temizle",
-      "any": "Bu sinekle yalnızca bir kart al: diğerlerini daha büyük hamlelere sakla"
+      "free_diamonds": "3'ten az karo kalır: ızgara destesi yenisini getirmezse ♦ hamleleri açılır",
+      "free_spades": "3'ten az maça kalır: ızgara destesi yenisini getirmezse ♠ hamleleri açılır",
+      "free_hearts": "3'ten az kupa kalır: ızgara destesi yenisini getirmezse ♥ hamlesi açılır",
+      "any": "Yalnızca bu kartı temizle: daha çok kart temizleyen hamleler daha kötü sonuçlanır"
     }
   },
   "fortunesCall": {
@@ -368,7 +368,8 @@
     "lostShortOfTarget": "{{score}} puan. Kazanmak için {{target}} puan gerekiyor.",
     "hint": {
       "cell": "Camı buraya yerleştir: +{{count}}",
-      "shards": "Hiçbir çerçeve bunları alamıyor: kırıklara at"
+      "shards": "Hiçbir çerçeve bunları alamaz: bunları kır",
+      "shardsOnPurpose": "Bunları bilerek kır: çerçeveye koymak daha kötü sonuçlanır"
     }
   },
   "gremlin": {
@@ -384,8 +385,8 @@
     "noRoomForHelper": "Yardımcının kartına {{count}} sütunda yer yok.",
     "hint": {
       "helper": "Yardımcının kartını en az sütun harcayacağı yere koy",
-      "king": "Bu Papazla bir sütun başlat",
-      "discard": "Bu kartı at: şimdi bir sütuna mal olur, sonra geri gelir"
+      "discard": "Bu kartı at: şimdi oynamak sütun harcar, sonra geri gelir",
+      "discardNoFit": "Bu kartı at: şu an hiçbir sütun onu alamaz, sonra geri gelir"
     }
   },
   "herbalist": {
@@ -397,9 +398,9 @@
     "harvestPerfect": "Kusursuz mahsul: {{count}} ot kaldı.",
     "noHerbsRemain": "Diyarı iyileştirecek ot kalmadı.",
     "hint": {
-      "heal": "Bu otları topla: iyi ekilirse bir yaratığı iyileştirir",
-      "setUp": "Bu otları topla: iyi ekilirse bir iyileştirmeye zemin hazırlar",
-      "noCure": "Diyar için çare kalmadı: oyunu bitirmek için ekmeye devam et"
+      "heal": "Bu otları al: iyi bırakılırsa bir hayvanı iyileştirir",
+      "setUp": "Bu otları al: iyi bırakılırsa bir iyileşmeyi yaklaştırır",
+      "noCure": "Kalan otlar bütün hayvanları iyileştiremez: bu oyun kazanılamaz"
     }
   },
   "infiltrator": {
@@ -424,7 +425,8 @@
     "hint": {
       "retire": "Bu düşük kartları emekli et, böylece güçlü kartların daha sık gelir",
       "assassinate": "Elin bu casusu durduramaz: bir çift ajanı feda et",
-      "doubleAgent": "Casusun rengindeki As bir çift ajandır: diğer kartlarını kendi rengine çevirir",
+      "noDoubleAgents": "Çift ajan kalmadı: bu casus görevi bitirir",
+      "doubleAgent": "Casusun rengindeki As bir çift ajandır: oynadığın diğer kartları kendi rengine çevirir",
       "counterKey": "Bu kilit casus devşirilemez: en az ihtiyacın olan kartlarla ona karşı koy",
       "counter": "Bu casus devşirilemez: en az ihtiyacın olan kartlarla ona karşı koy"
     }
@@ -483,9 +485,10 @@
     "selectCardsToCapture": "Alınacak kartları seç",
     "hint": {
       "fold": "Çekil: devam etmek daha pahalıya patlar",
+      "noCapture": "Yapılacak yakalama kalmadı: çekil",
       "finish": "Kurdun elini boşalt: senin elin puan kazansın",
-      "over_one": "Üstün gel: Kurdun {{count}} kart çekmesine değer",
-      "over_other": "Üstün gel: Kurdun {{count}} kart çekmesine değer"
+      "over_one": "Over: Kurdun {{count}} kart çekmesine değer",
+      "over_other": "Over: Kurdun {{count}} kart çekmesine değer"
     }
   },
   "memory": {
@@ -523,10 +526,8 @@
     "smokeThreat": "{{card}} üzerine sis bombası",
     "grappleThreats": "{{first}} ve {{second}} üzerine kanca",
     "hint": {
-      "smoke": "Sis bombanı bu tehdide kullan",
-      "grapple": "Bu iki tehdidi kancayla bağla ve birlikte karşıla",
       "dump": "Bu karşılığı zarar vermeyeceği yere oyna",
-      "resolve": "Şimdi çöz: bir kart daha çekmek yarardan çok zarar getirebilir"
+      "resolve": "Şimdi çöz: bir kart daha çekmek muhtemelen kazandırdığından fazlasına mal olur"
     }
   },
   "ouroboros": {
@@ -542,8 +543,7 @@
     "lostInDungeon": "Zindanda çıkışsız kayboldun!",
     "markPathNumber": "{{number}}. yolu işaretle",
     "hint": {
-      "lookAround": "Önünde ne olduğunu görmek için etrafa bak",
-      "explore": "İleriyi keşfet",
+      "lookAround": "Etrafa bak: yalnızca açık sayı kartlarıyla ilerleyebilirsin",
       "jewel": "Bir mücevher almak için ileriyi keşfet",
       "escape": "Çıkıştan kaç!",
       "markPath": "Bir yol işaretle: çıkmazlardan bir çıkış",
@@ -606,12 +606,17 @@
     },
     "hint": {
       "play": "Oyna: bir puanlık bahis, pas geçmekten fazlasını riske atmaz",
-      "standPat": "Elini koru: bu el güçlü",
+      "setHandStrong": "Eli onayla: kenta veya daha iyisi tutulmaya değer",
+      "setHandBet": "Eli onayla: bir çekiş daha en düşük bahsini 2'ye çıkarır, değmez",
       "keepSets": "Eşleşen kartlarını tut, gerisini çek",
       "keepFlushDraw": "Floşa giden dört kartı tut",
-      "keepPair": "Çifti tut, üç kart çek",
+      "keepPair": "Çifti tut, gerisini çek",
       "keepStraightDraw": "Kentiye giden dört kartı tut",
-      "keepHighCards": "Yüksek kartları tut, gerisini çek",
+      "keepHighCards_one": "Yüksek kartı tut, gerisini çek",
+      "keepHighCards_other": "Yüksek kartları tut, gerisini çek",
+      "keepJokers_one": "Jokeri tut, gerisini çek",
+      "keepJokers_other": "Jokerleri tut, gerisini çek",
+      "keepNothing": "Tutmaya değer bir şey yok: beşini de çek",
       "odds": "Bu el yaklaşık %{{chance}} oranında kazanır"
     }
   },
@@ -654,7 +659,7 @@
     },
     "hint": {
       "run": "Kaç: bu oda seni öldürür",
-      "fightWeapon": "Bu canavarla silahınla dövüş",
+      "runWeak": "Kaç: bu oda seni devam edemeyecek kadar zayıf bırakır",
       "fightBare": "Bununla çıplak elle dövüş: silahını daha büyük canavarlara sakla"
     }
   },
@@ -713,11 +718,11 @@
     "nightmaresOverwhelmed": "Kâbuslar Alice'i alt etti.",
     "hint": {
       "eliminate": "Bu kâbusu yok et",
-      "defend": "Bu kâbusun saldırısını zayıflat: bu tur yok edilemez",
+      "defend": "Bu kâbusun saldırısını zayıflat: Alice yalnızca farkı kaybeder",
       "mold": "Bu koruyucuyu şekillendirip destene kat",
-      "exile": "Bu kâbusu sürgün et: Alice'e 5 candan fazlasına mal olur",
-      "deepBreath": "Atamaya değer bir şey yok: en zayıf kartını yenisiyle değiştir",
-      "remSleep": "Alice bu masadan sağ çıkamaz: baştan başlamak için REM uykusunu kullan"
+      "exile": "Bu kâbusu sürgün et: oyunda kalırsa Alice'e sürgünden daha pahalıya mal olur",
+      "deepBreath": "Atamaya değer bir şey yok: en zayıf kartını atıp turu bitirmek için Derin nefes al",
+      "remSleep": "Alice bu masadan sağ çıkamaz: masayı ve elini yeniden dağıtmak için REM uykusunu kullan"
     }
   },
   "spiderSolitaire": {
@@ -765,10 +770,11 @@
     "doNothing": "Hiçbir şey yapma",
     "noKingSelected": "Papaz seçilmedi",
     "hint": {
-      "reserve": "Canavarları sonra bitirmek için bu ikisini yedekte tut",
+      "reserve": "Yedeğini ayır: elinin kalanı onsuz daha iyi oynanır",
       "discard": "Bu kartın iyi bir yeri yok: at",
       "bury": "Bu kartı atmak yerine destenin altına koy",
-      "double": "Maça Papazıyla bir saldırıyı ikiye katla"
+      "buryWithKing": "Bir kartı atmak yerine destenin altına koymak için Kupa Papazını kullan",
+      "double": "Maça Papazını kullan: sıradaki saldırganın iki kat sayılır"
     }
   },
   "waypoint": {
@@ -790,9 +796,10 @@
     "speed": "Hız",
     "hint": {
       "boosts": "Hedef hıza ulaşmak için gaza bas",
-      "brakes": "Fren yap: yavaş kalmak hedef hızı aşmaktan iyidir",
-      "finishUnder": "Şimdi bitir: bir kart daha büyük ihtimalle hedefi aşar",
-      "finishOver": "Çok hızlı ve fren kalmadı: bitir ve cezayı al"
+      "brakes": "Hedef hıza kadar fren yap: onarılan bir aşım hiçbir şeye mal olmaz",
+      "finishUnder": "Şimdi bitir: hedefin altında kalmak devam etmekten daha ucuz",
+      "finishOver": "Çok hızlı ve yeterli fren yok: bitir, 1 ceza ve 1 hasar al",
+      "finishOverKeep": "Yine de bitir: frenlerini sonraki sektörlere sakla, 1 ceza ve 1 hasar al"
     }
   },
   "windmill": {

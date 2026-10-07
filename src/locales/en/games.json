@@ -43,8 +43,9 @@
     "hint": {
       "route_one": "Play this route: it draws {{count}} card",
       "route_other": "Play this route: it draws {{count}} cards",
-      "camp": "Play your last cards to make camp",
-      "rest": "Rest: take the fatigue pile into your hand and start a new climb",
+      "camp": "Play your last cards: this route reaches the next camp",
+      "campMissed": "Play your last cards: this misses the camp, but deals a fresh hand",
+      "rest": "Rest: add the fatigue pile to your hand and start your routes over",
       "discard": "Discard the card your hand climbs best without"
     }
   },
@@ -72,12 +73,7 @@
     "pins": "Pins",
     "ball": "Ball",
     "throw": "Throw",
-    "finalScore": "Score: {{score}} ({{target}} needed to win)",
-    "hint": {
-      "throw_one": "This ball can knock down about {{count}} pin",
-      "throw_other": "This ball can knock down about {{count}} pins",
-      "endBall": "No throw left: end this ball"
-    }
+    "finalScore": "Score: {{score}} ({{target}} needed to win)"
   },
   "cabinSiege": {
     "youKilledAllTheZombies": "You killed all the zombies!",
@@ -89,9 +85,9 @@
     "killAZombie": "Kill a zombie",
     "noKillableZombies": "No killable zombies!",
     "hint": {
-      "kill": "Kill this zombie",
+      "kill": "Kill the highest zombie: Kings and Queens are harder to line up again",
       "playToKill": "Play here to kill a zombie",
-      "prepareKill": "Prepare a zombie kill"
+      "prepareKill": "Play here: it lines up support cards for a zombie kill"
     }
   },
   "cafeQueue": {
@@ -103,7 +99,7 @@
     "hint": {
       "slot": "The next customer fits here {{chance}}% of the time",
       "letThemStay": "Let them stay: losing this queue is the safer discard",
-      "kickThemOut": "Turn them away: safer than losing this queue"
+      "kickThemOut": "Kick them out: losing them and the next customer is safer than losing this queue"
     }
   },
   "calculation": {
@@ -142,8 +138,8 @@
     "trade": "Trade",
     "offer": "Offer",
     "hint": {
-      "trade": "Sell these books for ${{value}}",
-      "tradeGuild": "Sell these books for ${{value}}: +{{count}} Guild Pts.",
+      "trade": "Trade these books: they make the offer but earn no Guild Pts.",
+      "tradeGuild": "Trade these books: +{{count}} Guild Pts.",
       "pass": "No books add up to this offer: pass"
     }
   },
@@ -183,10 +179,12 @@
     "wonWithTier": "{{score}} points: {{tier}}!",
     "lostShortOfTarget": "{{score}} points. You need {{target}} points to win.",
     "hint": {
-      "stop": "Stop here: a {{risk}}% chance to boil over is too much for what another card adds",
+      "stop": "Stop here: a {{risk}}% chance to boil over isn't worth another card",
+      "stopDiamond": "Stop here: your last diamond counts twice only if you stop now",
       "keepCoins": "Keep the coins: better cards will pay off over the rounds left",
       "keepPoints": "Keep the points: too few rounds are left for coins to pay off",
-      "buy": "Buy the strongest cards your coins allow: two, of different suits"
+      "buyPair": "Buy this card: with a second buy of another suit, it's the best your coins allow",
+      "buy": "Buy the best card your coins allow"
     }
   },
   "cityGrid": {
@@ -211,7 +209,7 @@
     "youScoredPoints": "You scored {{score}} points!",
     "youScoredReachToWin": "You scored {{score}}. Reach {{TARGET_SCORE}} to win.",
     "hint": {
-      "fifteens": "Make fifteens here",
+      "fifteens": "Line up fifteens here",
       "pairs": "Pair it up here",
       "runs": "Build a run here",
       "flush": "Build toward a flush here"
@@ -237,7 +235,7 @@
       "kill": "Defeat this enemy",
       "exactKill": "Exact kill: the enemy joins your tavern",
       "shield": "Spades weaken its attack before it strikes",
-      "draw": "Diamonds refill your hand",
+      "draw": "Diamonds draw you as many cards as this play's value",
       "heal": "Hearts send discards back to the tavern",
       "defend": "Block with the cards you need least",
       "jester": "Call a jester for a fresh hand"
@@ -267,8 +265,9 @@
     "youRanOutOfCards": "You ran out of cards before defeating all twelve royals.",
     "hint": {
       "kill": "This brings down a royal",
-      "extract": "Spend an ace: send this pile back under the deck",
-      "reassign": "Spend a joker: move this card"
+      "extract": "Spend an Ace: send this stack to the bottom of the stock",
+      "reassign": "Spend a joker: move this card",
+      "reassignKill": "Spend a Joker: moving this card brings down a royal"
     }
   },
   "ebbAndFlow": {
@@ -306,7 +305,8 @@
     "hint": {
       "discard": "Swap this card for a fresh draw",
       "letCapture": "No capture: let the enemy take your cheapest card",
-      "sacrifice": "No capture: sacrifice two cheap cards to send this enemy back"
+      "sacrifice": "No capture: sacrifice two cheap cards to send this enemy back",
+      "lost": "Every option loses: a Jack, Queen, King or Ace enters the Enemy Capture Pile"
     }
   },
   "fifteenPuzzle": {
@@ -330,10 +330,10 @@
     "gridClearWon": "The grid is clear. Fight Clubs won!",
     "allClubsSpent": "All 13 Clubs are spent.",
     "hint": {
-      "free_diamonds": "Clear diamonds to free the ♦ actions",
-      "free_spades": "Clear spades to free the ♠ actions",
-      "free_hearts": "Clear hearts to free the ♥ action",
-      "any": "Take just one card with this club: keep the others for bigger plays"
+      "free_diamonds": "This leaves fewer than 3 diamonds: the ♦ actions unblock unless the grid deck brings more",
+      "free_spades": "This leaves fewer than 3 spades: the ♠ actions unblock unless the grid deck brings more",
+      "free_hearts": "This leaves fewer than 3 hearts: the ♥ action unblocks unless the grid deck brings more",
+      "any": "Clear just this one card: the bigger clears on offer play out worse"
     }
   },
   "fortunesCall": {
@@ -368,7 +368,8 @@
     "lostShortOfTarget": "{{score}} points. You need {{target}} points to win.",
     "hint": {
       "cell": "Set the pane here: +{{count}}",
-      "shards": "No frame can use these: break them as shards"
+      "shards": "No frame can take these: shatter them",
+      "shardsOnPurpose": "Shatter these on purpose: framing them plays out worse"
     }
   },
   "gremlin": {
@@ -384,8 +385,8 @@
     "noRoomForHelper": "No room for the helper's card in {{count}} columns.",
     "hint": {
       "helper": "Place the helper's card where it costs the fewest columns",
-      "king": "Start a column with this King",
-      "discard": "Discard this card: it would cost a column now, and comes back later"
+      "discard": "Discard this card: playing it now costs columns, and it comes back later",
+      "discardNoFit": "Discard this card: no column can take it now, and it comes back later"
     }
   },
   "herbalist": {
@@ -397,9 +398,9 @@
     "harvestPerfect": "Perfect harvest: {{count}} herbs remain.",
     "noHerbsRemain": "No herbs remain to heal the realm.",
     "hint": {
-      "heal": "Pick up these herbs: sown well, they heal a creature",
-      "setUp": "Pick up these herbs: sown well, they set up a healing",
-      "noCure": "No cure is left for the realm: sow on to end the game"
+      "heal": "Pick up these herbs: dropped well, they heal a creature",
+      "setUp": "Pick up these herbs: dropped well, they bring a healing closer",
+      "noCure": "The herbs left can't heal every creature: this game can't be won"
     }
   },
   "infiltrator": {
@@ -424,7 +425,8 @@
     "hint": {
       "retire": "Retire these low cards, so your stronger cards come round more often",
       "assassinate": "Your hand can't stop this spy: sacrifice a Double Agent",
-      "doubleAgent": "The Ace of the spy's suit is a Double Agent: it turns your other cards to its suit",
+      "noDoubleAgents": "No Double Agents remain: this spy ends the mission",
+      "doubleAgent": "The Ace of the spy's suit is a Double Agent: it turns the other cards you play to its suit",
       "counterKey": "This Key Spy can't be recruited: counter it with the cards you need least",
       "counter": "This spy can't be recruited: counter it with the cards you need least"
     }
@@ -471,7 +473,7 @@
     "roundNumber": "Round {{round}}",
     "hint": {
       "play": "Play your {{hand}}",
-      "discard": "Throw these back: a draw should make a better hand",
+      "discard": "Discard these: a draw should make a better hand",
       "double": "Double your next hand: it's a big one"
     }
   },
@@ -483,9 +485,10 @@
     "selectCardsToCapture": "Select cards to capture",
     "hint": {
       "fold": "Fold now: playing on would cost more",
+      "noCapture": "No capture left: fold",
       "finish": "Clear the Wolf's hand: yours scores",
-      "over_one": "Overpower: worth the Wolf drawing {{count}} card",
-      "over_other": "Overpower: worth the Wolf drawing {{count}} cards"
+      "over_one": "Over: worth the Wolf drawing {{count}} card",
+      "over_other": "Over: worth the Wolf drawing {{count}} cards"
     }
   },
   "memory": {
@@ -523,10 +526,8 @@
     "smokeThreat": "Smoke Bomb on {{card}}",
     "grappleThreats": "Grapple Line on {{first}} and {{second}}",
     "hint": {
-      "smoke": "Use your Smoke Bomb on this Threat",
-      "grapple": "Grapple these two Threats: answer them together",
-      "dump": "Play this response where it does no harm",
-      "resolve": "Resolve now: another draw is more likely to hurt than help"
+      "dump": "Play this Response where it does no harm",
+      "resolve": "Resolve now: another draw is likely to cost more than it gains"
     }
   },
   "ouroboros": {
@@ -542,8 +543,7 @@
     "lostWithLoot": "You got lost in the dungeon with no way out! You die with your loot.",
     "lostInDungeon": "You got lost in the dungeon with no way out!",
     "hint": {
-      "lookAround": "Look around to see what's ahead",
-      "explore": "Explore ahead",
+      "lookAround": "Look Around: you can only move by face-up number cards",
       "jewel": "Explore ahead to grab a jewel",
       "escape": "Escape through the exit!",
       "markPath": "Mark a path: a way out of dead ends",
@@ -606,12 +606,17 @@
     },
     "hint": {
       "play": "Play: a one-point bet risks no more than a fold",
-      "standPat": "Stand pat: this hand is strong",
+      "setHandStrong": "Set Hand: a straight or better is worth keeping",
+      "setHandBet": "Set Hand: another draw raises your minimum bet to 2 for too little",
       "keepSets": "Keep your matched cards, draw the rest",
       "keepFlushDraw": "Keep the four to a flush",
-      "keepPair": "Keep the pair, draw three",
+      "keepPair": "Keep the pair, draw the rest",
       "keepStraightDraw": "Keep the four to a straight",
-      "keepHighCards": "Keep the high cards, draw the rest",
+      "keepHighCards_one": "Keep the high card, draw the rest",
+      "keepHighCards_other": "Keep the high cards, draw the rest",
+      "keepJokers_one": "Keep the Joker, draw the rest",
+      "keepJokers_other": "Keep the Jokers, draw the rest",
+      "keepNothing": "Nothing here is worth keeping: draw all five",
       "odds": "This hand wins about {{chance}}% of the time"
     }
   },
@@ -638,9 +643,9 @@
     "thereAreNotEnoughDiamond": "There are not enough Diamond cards to replenish the pile.",
     "noMovesLeft": "No black card fits a pile, and no diamonds are left.",
     "hint": {
-      "fillPile": "Fill this pile to bring in new diamonds",
-      "clearPile": "Clear this pile for new diamonds",
-      "replaceDiamond": "Swap this diamond for a new one"
+      "fillPile": "Fill this pile to bring in new Diamonds",
+      "clearPile": "Clear this pile for new Diamonds",
+      "replaceDiamond": "Swap this Diamond for a new one"
     }
   },
   "rogueRun": {
@@ -654,7 +659,7 @@
     },
     "hint": {
       "run": "Run: this room would kill you",
-      "fightWeapon": "Fight this monster with your weapon",
+      "runWeak": "Run: this room would leave you too weak to go on",
       "fightBare": "Fight this one bare-handed: save your weapon for bigger monsters"
     }
   },
@@ -713,11 +718,11 @@
     "nightmaresOverwhelmed": "The Nightmares overwhelmed Alice.",
     "hint": {
       "eliminate": "Eliminate this Nightmare",
-      "defend": "Weaken this Nightmare's attack: it can't be eliminated this turn",
+      "defend": "Weaken this Nightmare's attack: Alice loses only the difference",
       "mold": "Mold this Guardian into your deck",
-      "exile": "Exile this Nightmare: it would cost Alice more than 5 life",
-      "deepBreath": "Nothing worth assigning: swap your weakest card for a new one",
-      "remSleep": "Alice won't survive this board: use REM Sleep to start afresh"
+      "exile": "Exile this Nightmare: left in play, it would cost Alice more than exiling it",
+      "deepBreath": "Nothing worth assigning: take a Deep Breath to discard your weakest card and end the turn",
+      "remSleep": "Alice won't survive this board: use REM Sleep to redeal the board and your hand"
     }
   },
   "spiderSolitaire": {
@@ -765,10 +770,11 @@
     "doNothing": "Do nothing",
     "noKingSelected": "No King selected",
     "hint": {
-      "reserve": "Keep these two in reserve to finish monsters later",
+      "reserve": "Set aside your reserve: the rest of your hand plays best without it",
       "discard": "No good place for this card: discard it",
       "bury": "Bury this card instead of discarding it",
-      "double": "Double an attack with the King of Spades"
+      "buryWithKing": "Use the King of Hearts to bury a card instead of discarding it",
+      "double": "Use the King of Spades: your next attacker counts double"
     }
   },
   "waypoint": {
@@ -790,9 +796,10 @@
     "speed": "Speed",
     "hint": {
       "boosts": "Use Gas to reach the target speed",
-      "brakes": "Brake: slower beats going over the target speed",
-      "finishUnder": "Finish now: another card would likely overshoot",
-      "finishOver": "Too fast and no brake left: finish and take the penalty"
+      "brakes": "Brake back to the target speed: a repaired bust costs nothing",
+      "finishUnder": "Finish now: falling short costs less than playing on",
+      "finishOver": "Too fast and not enough Brakes: finish and take 1 penalty and 1 damage",
+      "finishOverKeep": "Finish anyway: save your Brakes for later sectors and take 1 penalty and 1 damage"
     }
   },
   "windmill": {

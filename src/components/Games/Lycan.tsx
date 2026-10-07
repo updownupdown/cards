@@ -618,7 +618,7 @@ function bestLycanMove(state: Readonly<LycanGameState>) {
   moves.forEach((move, index) => {
     if (values[index] > best.value) best = { move, value: values[index] };
   });
-  return best.move;
+  return { move: best.move, anyCapture: moves.length > 0 };
 }
 
 function findLycanHint(
@@ -627,11 +627,13 @@ function findLycanHint(
   selectedWolf: readonly string[] = [],
 ) {
   if (state.ended || state.roundOver || state.wolf.length === 0) return null;
-  const move = bestLycanMove(state);
+  const { move, anyCapture } = bestLycanMove(state);
   if (!move) {
     return withNote(
       pressHint("buttons", i18n.t("cards:fold")),
-      i18n.t("games:lycan.hint.fold"),
+      i18n.t(
+        anyCapture ? "games:lycan.hint.fold" : "games:lycan.hint.noCapture",
+      ),
     );
   }
   const playerIds = move.player.map((index) => state.player[index].id);
@@ -653,7 +655,7 @@ function findLycanHint(
       .map((id) => cardTarget(id)),
     zoneTarget("buttons"),
   );
-  if (wolfIds.length === state.wolf.length) {
+  if (plan.roundWillEnd) {
     return withNote(hint, i18n.t("games:lycan.hint.finish"));
   }
   if (plan.effect.action === "over") {

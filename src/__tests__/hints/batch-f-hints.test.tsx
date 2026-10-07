@@ -84,6 +84,7 @@ describe("Lycan hints", () => {
     expect(hint?.message).toMatchObject({
       key: "press",
       values: { label: "Fold" },
+      note: "No capture left: fold",
     });
     expect(hint?.steps).toEqual([[{ zone: "buttons" }]]);
   });

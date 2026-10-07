@@ -206,11 +206,23 @@ function lineCells(index: number) {
  * one the hand its ranks make, or what its flush or straight draw may come
  * to. Returns the value and what the line is best aiming for.
  */
-function lineValue(cards: PlayingCard[]): { value: number; aim: LineAim } {
+function lineValue(cards: PlayingCard[]): {
+  value: number;
+  aim: LineAim | null;
+} {
   if (cards.length === GRID_SIZE) {
-    return { value: AMERICAN_POINTS[handCategory(cards)], aim: "sets" };
+    const category = handCategory(cards);
+    return {
+      value: AMERICAN_POINTS[category],
+      aim:
+        category === 5 || category >= 8
+          ? "flush"
+          : category === 4
+            ? "straight"
+            : "sets",
+    };
   }
-  if (cards.length === 0) return { value: 0, aim: "sets" };
+  if (cards.length === 0) return { value: 0, aim: null };
   const counts = Object.values(
     cards.reduce<Record<string, number>>((result, card) => {
       result[card.rank] = (result[card.rank] ?? 0) + 1;
@@ -252,12 +264,15 @@ function lineValue(cards: PlayingCard[]): { value: number; aim: LineAim } {
   const best = Math.max(sets, flush, straight);
   return {
     value: best,
+    // A lone card draws to anything: too soon to name an aim.
     aim:
-      best === flush && flush > 0
-        ? "flush"
-        : best === straight && straight > 0
-          ? "straight"
-          : "sets",
+      cards.length === 1
+        ? null
+        : best === flush && flush > 0
+          ? "flush"
+          : best === straight && straight > 0
+            ? "straight"
+            : "sets",
   };
 }
 
@@ -313,10 +328,10 @@ function findPokerSquaresHint(state: GameState) {
   if (state.scoresReady) return pressHint("end-game", i18n.t("cards:endGame"));
   const placement = bestPlacement(state);
   if (!placement) return null;
-  return withNote(
-    makeHint("moveCard", zoneTarget(`grid-${placement.cell}`)),
-    i18n.t(`games:pokerSquares.hint.${placement.aim}`),
-  );
+  const hint = makeHint("moveCard", zoneTarget(`grid-${placement.cell}`));
+  return placement.aim
+    ? withNote(hint, i18n.t(`games:pokerSquares.hint.${placement.aim}`))
+    : hint;
 }
 
 export const pokerSquaresRules = {
