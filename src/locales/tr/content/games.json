@@ -671,6 +671,41 @@
       "value": "Canfield"
     }
   },
+  "carousel": {
+    "howToPlay": {
+      "hash": "972bbaa1",
+      "value": [
+        "## Amaç",
+        "Bütün kartlarını per yaparak masaya açıp elini boşalt. Elinde bir an bile **12 kart** olursa kaybedersin.",
+        "Puanın, elini bitirdiğinde destede ve atlıkarıncada kalan kart sayısıdır.",
+        "## Perler",
+        "- **Grup:** aynı değerde, hepsi farklı takımdan üç ya da dört kart: {7S} {7H} {7D}",
+        "- **Dizi:** aynı takımdan, sırayla giden üç ya da daha fazla kart: {9C} {10C} {JC} {QC}",
+        "- As küçük ya da büyük olur, ama ikisi birden olmaz: {AH} {2H} {3H} ve {QH} {KH} {AH} dizidir, {KH} {AH} {2H} dizi değildir.",
+        "## Kart taşıma",
+        "- Kartları seçmek için onlara dokun; elinden ve tek bir perden seçebilirsin.",
+        "- Seçimi oraya taşımak için başka bir perin kartına, yeni bir per başlatmak için boş bir yere dokun.",
+        "- Perler istediğin gibi bölünebilir, birleştirilebilir ve yeniden kurulabilir. Masadaki kartlar eline asla geri dönmez.",
+        "- Tamam olmayan bir per kırmızıya boyanır. Geri al, son kartından beri yaptığın her hamleyi geri alır.",
+        "## Atlıkarınca",
+        "- Takıldığında, eline almak için atlıkarıncadaki üç karttan birine dokun. Yerine desteden kart gelir.",
+        "- Kart ancak masadaki bütün perler tamamken alınabilir. Alınan bir kart geri alınamaz.",
+        "- Oyun masada üç perle başlar. Atlıkarınca bittiğinde elin bitene kadar oynamaya devam et ya da **Oyunu bitir** düğmesine dokun."
+      ]
+    },
+    "quickStart": {
+      "hash": "75854330",
+      "value": [
+        "Elindeki bütün kartları per yaparak masaya aç.",
+        "Elinden ya da bir perden kart seç, sonra onları taşımak için başka bir pere ya da boş bir yere dokun.",
+        "Masayı istediğin gibi düzenle, ama atlıkarıncadan kart almadan önce her per tamam olmalı."
+      ]
+    },
+    "title": {
+      "hash": "c9a9fc03",
+      "value": "Atlıkarınca"
+    }
+  },
   "carpet": {
     "howToPlay": {
       "hash": "0af4a81e",
@@ -761,6 +796,33 @@
     "title": {
       "hash": "047bda25",
       "value": "Bölüm ve ayet"
+    }
+  },
+  "cipher": {
+    "howToPlay": {
+      "hash": "929c106b",
+      "value": [
+        "## Amaç",
+        "Gizli bir sırada dizilmiş farklı değerde üç sinekten oluşan şifreyi en fazla sekiz tahminde çözün.",
+        "## Tahmin",
+        "- Her değer için bir yığın olan havuzdan kartlara dokunarak, sırayla farklı değerde üç karttan oluşan bir tahmin dizin. Geri koymak için tahmindeki bir karta dokunun.",
+        "- **Kontrol Et**'e dokunun. Tahmindeki her kart işaretlenir: değeri şifrenin o yerinde duruyorsa **yeşil**, değeri şifrede ama başka yerdeyse **kehribar**, değeri şifrede hiç yoksa renksiz kalır.",
+        "- Kontrol edilen tahminler masada kalır ve havuzdaki yığınlar onların rengini alır; böylece öğrendikleriniz hep gözünüzün önündedir. Bir değerin yığını bittiğinde, o değerde bir kart önceki bir tahminden geri alınabilir.",
+        "## Son",
+        "Üç yeşil şifreyi çözer ve puanınız, gereken tahmin sayısıdır. Sekiz tahminden sonra şifre açılır ve oyun kaybedilir."
+      ]
+    },
+    "quickStart": {
+      "hash": "b5917645",
+      "value": [
+        "Üç sinek, gizli bir sırayla kapalı duruyor. Değerlerini ve yerlerini sekiz tahminde bulun.",
+        "Farklı değerde üç kart dizin ve Kontrol Et'e dokunun. Yeşil: doğru değer, doğru yer. Kehribar: değer şifrede var, ama başka yerde.",
+        "Renksiz kalan kartlar şifrede hiç yok."
+      ]
+    },
+    "title": {
+      "hash": "8c36ebf8",
+      "value": "Şifre"
     }
   },
   "city-grid": {
@@ -1645,6 +1707,39 @@
       "value": "Kurbağa"
     }
   },
+  "gambit": {
+    "howToPlay": {
+      "hash": "71ea66dd",
+      "value": [
+        "## Amaç",
+        "Üç dağıtımın üçünde de kontratı tuttur: kişi başı **6**, **8** ve sonra **10** kart. Kontrat, o dağıtımda alınabilecek en fazla el sayısıdır, yani her dağıtım tutturulabilir.",
+        "## Eller",
+        "- İlk eli sen açarsın. Bir eli kim alırsa sonrakini o açar.",
+        "- Yapabiliyorsan açılan takıma uy. Uyamıyorsan istediğin kartı oyna.",
+        "- Eli en büyük koz alır. Koz yoksa açılan takımın en büyük kartı alır. Aslar büyüktür.",
+        "- Destenin yanında açılan kart koz takımını belirler.",
+        "## Rakibin",
+        "Rakibin kartları açıktır ve hep aynı şekilde oynar:",
+        "- **Açarken:** koz olmayan en büyük kartını oynar. Başka kartı yoksa kozla açar.",
+        "- **Cevap verirken:** eli alan en küçük kartını oynar. Hiçbiri alamıyorsa en küçük kartını.",
+        "- Aynı değerdeki kartlardan en küçüğü ♣, sonra ♦, ♥ ve ♠ gelir.",
+        "## Kaybetmek",
+        "Bir kontrat artık tutturulamaz olduğu anda oyun kaybedilir. Geri al ile başka bir oyun yolu deneyebilirsin."
+      ]
+    },
+    "quickStart": {
+      "hash": "ccfaccab",
+      "value": [
+        "İki el de açık. Her dağıtımda, kontratın istediği kadar el al.",
+        "Yapabiliyorsan açılan takıma uy. Eli en büyük koz alır; koz yoksa açılan takımın en büyük kartı alır.",
+        "Rakibin koz olmayan en büyük kartıyla açar; eli alan en küçük kartıyla, yoksa en küçük kartıyla cevap verir."
+      ]
+    },
+    "title": {
+      "hash": "778ad573",
+      "value": "Gambit"
+    }
+  },
   "gaps": {
     "howToPlay": {
       "hash": "bdf0ca39",
@@ -1745,6 +1840,35 @@
     "title": {
       "hash": "2b72c1f3",
       "value": "Camcı"
+    }
+  },
+  "go-fish": {
+    "howToPlay": {
+      "hash": "f813d631",
+      "value": [
+        "## Amaç",
+        "Rakipten daha çok dörtlü yapmak: on üçün yedisi.",
+        "## İstemek",
+        "- Sen ve rakip yedişer kart tutarsınız. Sıran gelince bir karta dokunarak değerini iste. Rakip o değerdeki bütün kartlarını verir ve yine istersin.",
+        "- Onda yoksa balığa gidersin: göletten bir kart çekersin. İstediğin değerse yine istersin; değilse sıra karşıya geçer.",
+        "- Aynı değerde dört kart bir dörtlüdür ve tamamlanır tamamlanmaz yere konur. Boş el, istemeden önce göletten bir kart çeker.",
+        "## Rakibin",
+        "Rakibin kartları kapalıdır ama hep aynı şekilde oynar: elinde olan ve senin istediğin bir değeri ister, çünkü o hâlâ sende olmalıdır. Yoksa en çok tuttuğu değeri ister, eşitlikte en düşüğü.",
+        "## Strateji",
+        "Rakibin ne istediğini aklında tut: sen alana kadar o değerler ondadır. Ve istediğin her değer rakibe sende ne olduğunu söyler."
+      ]
+    },
+    "quickStart": {
+      "hash": "44b2756e",
+      "value": [
+        "Rakipten bir değer istemek için bir karta dokun. Onda varsa senindir ve yine istersin.",
+        "Yoksa balığa git: göletten çek. Aynı değerde dört kart bir dörtlüdür.",
+        "Rakip ne istediğini hatırlar. Kazanmak için yedi dörtlü yap."
+      ]
+    },
+    "title": {
+      "hash": "56094d6f",
+      "value": "Balığa Git"
     }
   },
   "golf": {
@@ -2392,6 +2516,32 @@
       "value": "Monte Carlo"
     }
   },
+  "mosaic": {
+    "howToPlay": {
+      "hash": "e1d505a6",
+      "value": [
+        "## Amaç",
+        "Karedeki bütün kırmızı kartları üçten az hatayla açın.",
+        "## İpuçları",
+        "- Her satırın yanında ve her sütunun üstünde, ipuçları o hattaki kırmızı kart dizilerinin uzunluklarını sırayla verir. **2 1**, yan yana iki kırmızı, sonra en az bir siyah, sonra bir kırmızı demektir. **0**, hiç kırmızı yok demektir.",
+        "- Açılan kart açık kalır; böylece bulunan her kırmızı, ve her hata, başlı başına bir ipucudur.",
+        "## Hatalar",
+        "Siyah bir kartı açmak hatadır. Üç hata oyunu bitirir. Her dağıtım tam olarak tek bir çözümü olacak şekilde seçilir; bu yüzden dikkatle, tek bir hata bile yapmadan her zaman çözülebilir. Puanınız, elinizde kalan hata hakkıdır."
+      ]
+    },
+    "quickStart": {
+      "hash": "5e92e498",
+      "value": [
+        "Yirmi beş kart kapalı duruyor. İpuçları her satır ve sütundaki kırmızı kart dizilerini sırayla verir.",
+        "Açmak için bir karta dokunun. Bütün kırmızı kartları bulun; açılan siyah bir kart hatadır ve üç hata oyunu kaybettirir.",
+        "Her dağıtımın tam olarak tek bir çözümü vardır, bu yüzden her zaman akıl yürütülerek bulunabilir."
+      ]
+    },
+    "title": {
+      "hash": "e8f2ee21",
+      "value": "Mozaik"
+    }
+  },
   "nestor": {
     "howToPlay": {
       "hash": "5a96cea6",
@@ -2451,6 +2601,34 @@
     "title": {
       "hash": "01d23c78",
       "value": "Gece nöbeti"
+    }
+  },
+  "osmosis": {
+    "howToPlay": {
+      "hash": "d9f9e7ad",
+      "value": [
+        "## Amaç",
+        "52 kartın hepsini dört temel sırasına taşıyın.",
+        "## Sıralar",
+        "- Dağıtılan ilk kart ilk sırayı başlatır. Her sıra tek bir tür alır ve kartlarını herhangi bir düzende kabul eder; ancak bir kart bir sıraya yalnızca aynı değer üstteki sırada zaten varsa katılabilir, sanki oradan sızmış gibi.",
+        "- Diğerlerinin altındaki yeni bir sıra yalnızca ilk sıranın ilk kartıyla aynı değerle başlar.",
+        "## Oyun",
+        "- Dört yedek açıktır; en üst kartlarını oynayın. Açık desteye bir kart çevirmek için desteye dokunun ve açık destenin en üst kartını oynayın.",
+        "- Deste bitince, açık desteyi çevirip yeniden geçmek için desteye dokunun, istediğiniz kadar.",
+        "- Desteden tam bir geçiş oynanacak hiçbir şey çıkarmazsa oyun kaybedilir."
+      ]
+    },
+    "quickStart": {
+      "hash": "52283072",
+      "value": [
+        "Her temel sırası kendi türünü herhangi bir düzende alır, ama bir kart bir sıraya ancak değeri üstteki sırada varsa katılabilir.",
+        "Dağıtılan ilk kart, diğer her sıranın başlaması gereken değeri belirler.",
+        "Dört yedekten ve açık desteden oynayın. Desteyi birer kart çevirin, istediğiniz kadar."
+      ]
+    },
+    "title": {
+      "hash": "32e235be",
+      "value": "Ozmoz"
     }
   },
   "ouroboros": {
@@ -3066,6 +3244,35 @@
       "value": "Seahaven kuleleri"
     }
   },
+  "sevens": {
+    "howToPlay": {
+      "hash": "9bc5afcb",
+      "value": [
+        "## Amaç",
+        "Elindeki bütün kartları ilk oynayan olmak.",
+        "## Oynamak",
+        "- Sen ve rakip yedişer kart tutarsınız ve başlamak için desteden bir 7 masaya konur. Bir 7, türünün sırasını açar; sonra bir kart, sırasının iki ucundan birine oynanabilir: 7'den sonra 8, öncesine 6 ve böyle devam eder.",
+        "- Oynayabileceğin bir kart varsa oynamak zorundasın. Yoksa bir kart çekmek için desteye dokun; sıra karşıya geçer. Deste boşken tıkanan el pas geçer.",
+        "- Oynayamadığın kartlar gri görünür.",
+        "## Rakibin",
+        "Rakibin kartları açıktır ve hep aynı şekilde oynar: varsa bir 7; yoksa o yönde arkasından en çok kendi kartı gelen kartı, eşitlikte ise en düşük kartını, önce ♣.",
+        "## Strateji",
+        "Rakibin beklediği bir kartı elinde tutmak, oynayacak başka bir şeyin olduğu sürece onun elini tıkar. Puanın, rakibin elinde kalan kart sayısıdır."
+      ]
+    },
+    "quickStart": {
+      "hash": "a70f5f8d",
+      "value": [
+        "Her türün sırası 7'sinden başlayıp birer birer uzar: yukarı Papaz'a, aşağı As'a doğru.",
+        "Uyan bir kart oyna; hiçbiri uymuyorsa desteden çek.",
+        "Elini rakipten önce boşalt."
+      ]
+    },
+    "title": {
+      "hash": "2e23608f",
+      "value": "Yediler"
+    }
+  },
   "shifting-sands": {
     "howToPlay": {
       "hash": "91681187",
@@ -3383,6 +3590,37 @@
     "title": {
       "hash": "5ac8c364",
       "value": "Sultan"
+    }
+  },
+  "sweep": {
+    "howToPlay": {
+      "hash": "ba222213",
+      "value": [
+        "## Amaç",
+        "Deste bittiğinde rakibinden daha çok puan toplamak.",
+        "## Kart almak",
+        "- Sen ve rakip üçer kart tutarsınız, masada da dört kart vardır. Oynanan her kart masadan kart alır: aynı değerde bir kart ya da, yoksa, toplamı o değeri tutan kartlar. As 1, Vale 11, Kız 12, Papaz 13 sayılır.",
+        "- Bir şey alabilen kart almak zorundadır. Alamayan kart masaya bırakılır.",
+        "- Elindeki bir karta dokun. Birden fazla şekilde kart alabiliyorsa istediğin masa kartlarına dokun: toplam tutunca alma gerçekleşir.",
+        "- İki el de boşalınca herkese üçer kart daha dağıtılır. Sonunda masada kalanı en son kart alan alır.",
+        "## Puanlama",
+        "- Masadaki her kartı almak, yani **süpürme**, bir puandır.",
+        "- Sonunda: en çok kart için bir puan, en çok karo için bir puan ve 7♦ için bir puan.",
+        "## Rakibin",
+        "Rakibin kartları açıktır ve hep aynı şekilde oynar: alabildiği en çok kartı alır (önce süpürme). Eşit alımlar arasında 7♦'yi, sonra en çok karoyu, sonra en düşük kartını yeğler. Alacak bir şey yoksa en düşük kartını bırakır."
+      ]
+    },
+    "quickStart": {
+      "hash": "60a8b88e",
+      "value": [
+        "Masadan aynı değerde bir kartı ya da toplamı o değeri tutan kartları almak için bir kart oyna.",
+        "Masadaki her kartı almak bir süpürmedir ve bir puan eder.",
+        "Sonunda en çok kart, en çok karo ve 7♦ için birer puan. Rakibini geç."
+      ]
+    },
+    "title": {
+      "hash": "76bb3813",
+      "value": "Süpürme"
     }
   },
   "ten-twenty-thirty": {

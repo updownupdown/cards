@@ -671,6 +671,41 @@
       "value": "Canfield"
     }
   },
+  "carousel": {
+    "howToPlay": {
+      "hash": "972bbaa1",
+      "value": [
+        "## Tujuan",
+        "Kosongkan tanganmu dengan menurunkan semua kartu ke meja sebagai kombinasi. Kamu kalah jika tanganmu pernah berisi **12 kartu**.",
+        "Skormu adalah jumlah kartu yang masih ada di dek dan komidi putar saat tanganmu kosong.",
+        "## Kombinasi",
+        "- **Set:** tiga atau empat kartu dengan nilai yang sama, semuanya dari jenis berbeda: {7S} {7H} {7D}",
+        "- **Urutan:** tiga kartu atau lebih dari satu jenis yang nilainya berurutan: {9C} {10C} {JC} {QC}",
+        "- As bisa rendah atau tinggi, tetapi tidak keduanya: {AH} {2H} {3H} dan {QH} {KH} {AH} adalah urutan, {KH} {AH} {2H} bukan.",
+        "## Memindahkan kartu",
+        "- Ketuk kartu untuk memilihnya, dari tanganmu dan dari satu kombinasi saja.",
+        "- Ketuk kartu dari kombinasi lain untuk memindahkan pilihan ke sana, atau tempat kosong untuk memulai kombinasi baru.",
+        "- Kombinasi bisa dipecah, digabung, dan disusun ulang sesukamu. Kartu di meja tidak pernah kembali ke tanganmu.",
+        "- Kombinasi yang belum utuh diberi warna merah. Urungkan membatalkan setiap langkah sejak kartu terakhirmu.",
+        "## Komidi putar",
+        "- Saat buntu, ketuk salah satu dari tiga kartu komidi putar untuk mengambilnya. Dek mengisi tempatnya.",
+        "- Kamu hanya bisa mengambil kartu saat semua kombinasi di meja utuh. Kartu yang sudah diambil tidak bisa diurungkan.",
+        "- Permainan dimulai dengan tiga kombinasi di meja. Saat komidi putar habis, terus main sampai tanganmu kosong, atau ketuk **Akhiri permainan**."
+      ]
+    },
+    "quickStart": {
+      "hash": "75854330",
+      "value": [
+        "Turunkan semua kartu di tanganmu ke meja sebagai kombinasi.",
+        "Pilih kartu dari tanganmu atau dari satu kombinasi, lalu ketuk kombinasi lain atau tempat kosong untuk memindahkannya ke sana.",
+        "Atur ulang meja sesukamu, tetapi setiap kombinasi harus utuh sebelum kamu mengambil kartu dari komidi putar."
+      ]
+    },
+    "title": {
+      "hash": "c9a9fc03",
+      "value": "Komidi Putar"
+    }
+  },
   "carpet": {
     "howToPlay": {
       "hash": "0af4a81e",
@@ -761,6 +796,33 @@
     "title": {
       "hash": "047bda25",
       "value": "Bab dan ayat"
+    }
+  },
+  "cipher": {
+    "howToPlay": {
+      "hash": "929c106b",
+      "value": [
+        "## Tujuan",
+        "Pecahkan sandi, tiga kartu keriting dengan nilai berbeda dalam urutan rahasia, dalam paling banyak delapan tebakan.",
+        "## Menebak",
+        "- Ketuk kartu dari kumpulan, satu tumpukan untuk setiap nilai, untuk meletakkan tebakan tiga nilai berbeda secara berurutan. Ketuk kartu dalam tebakan untuk mengembalikannya.",
+        "- Ketuk **Periksa**. Setiap kartu tebakan ditandai: **hijau** jika nilainya menempati tempat itu dalam sandi, **kuning** jika nilainya ada dalam sandi tetapi di tempat lain, dan tanpa warna jika nilainya sama sekali tidak ada dalam sandi.",
+        "- Tebakan yang sudah diperiksa tetap di meja, dan tumpukan kumpulan mengambil warnanya, sehingga yang sudah Anda pelajari selalu terlihat. Jika tumpukan suatu nilai habis, kartu bernilai itu dapat diambil kembali dari tebakan sebelumnya.",
+        "## Akhir",
+        "Tiga hijau memecahkan sandi, dan skor Anda adalah jumlah tebakan yang diperlukan. Setelah delapan tebakan, sandi dibuka dan permainan kalah."
+      ]
+    },
+    "quickStart": {
+      "hash": "b5917645",
+      "value": [
+        "Tiga kartu keriting tertutup dalam urutan rahasia. Temukan nilai dan tempatnya dalam delapan tebakan.",
+        "Letakkan tiga kartu dengan nilai berbeda dan ketuk Periksa. Hijau: nilai benar, tempat benar. Kuning: nilainya ada dalam sandi, di tempat lain.",
+        "Kartu yang tetap tanpa warna sama sekali tidak ada dalam sandi."
+      ]
+    },
+    "title": {
+      "hash": "8c36ebf8",
+      "value": "Sandi"
     }
   },
   "city-grid": {
@@ -1645,6 +1707,39 @@
       "value": "Katak"
     }
   },
+  "gambit": {
+    "howToPlay": {
+      "hash": "71ea66dd",
+      "value": [
+        "## Tujuan",
+        "Penuhi kontrak di ketiga bagian: **6**, **8**, lalu **10** kartu per pemain. Kontrak adalah jumlah trik terbanyak yang bisa didapat di bagian itu, jadi setiap bagian bisa dipenuhi.",
+        "## Trik",
+        "- Kamu membuka trik pertama. Siapa pun yang memenangkan trik membuka trik berikutnya.",
+        "- Ikuti jenis yang dibuka jika bisa. Jika tidak bisa, mainkan kartu apa saja.",
+        "- Truf tertinggi memenangkan trik. Tanpa truf, kartu tertinggi dari jenis yang dibuka yang menang. As bernilai tinggi.",
+        "- Kartu yang dibuka di samping dek menentukan jenis truf.",
+        "## Lawanmu",
+        "Kartu lawan terbuka, dan ia selalu bermain dengan cara yang sama:",
+        "- **Saat membuka:** kartu tertingginya yang bukan truf. Ia membuka dengan truf hanya jika tidak punya kartu lain.",
+        "- **Saat membalas:** kartu terendahnya yang memenangkan trik. Jika tidak ada, kartu terendahnya.",
+        "- Di antara kartu bernilai sama, ♣ paling rendah, lalu ♦, ♥, dan ♠.",
+        "## Kalah",
+        "Permainan kalah begitu sebuah kontrak tidak bisa dipenuhi lagi. Urungkan memungkinkanmu mencoba cara bermain lain."
+      ]
+    },
+    "quickStart": {
+      "hash": "ccfaccab",
+      "value": [
+        "Kedua tangan terbuka. Di setiap bagian, menangkan trik sebanyak yang diminta kontraknya.",
+        "Ikuti jenis yang dibuka jika bisa. Truf tertinggi memenangkan trik; jika tidak ada, kartu tertinggi dari jenis yang dibuka.",
+        "Lawanmu membuka dengan kartu tertingginya yang bukan truf, dan membalas dengan kartu terendahnya yang menang, atau kartu terendahnya."
+      ]
+    },
+    "title": {
+      "hash": "778ad573",
+      "value": "Gambit"
+    }
+  },
   "gaps": {
     "howToPlay": {
       "hash": "bdf0ca39",
@@ -1745,6 +1840,35 @@
     "title": {
       "hash": "2b72c1f3",
       "value": "Tukang Kaca"
+    }
+  },
+  "go-fish": {
+    "howToPlay": {
+      "hash": "f813d631",
+      "value": [
+        "## Tujuan",
+        "Membuat lebih banyak buku daripada lawan: tujuh dari tiga belas.",
+        "## Meminta",
+        "- Kamu dan lawan memegang tujuh kartu masing-masing. Pada giliranmu, ketuk kartu untuk meminta nilainya. Lawan menyerahkan semua kartu bernilai itu yang ia pegang, dan kamu meminta lagi.",
+        "- Jika ia tidak punya, kamu memancing: ambil satu kartu dari kolam. Jika itu nilai yang kamu minta, kamu meminta lagi; jika tidak, giliran berpindah.",
+        "- Empat kartu bernilai sama adalah satu buku, yang diletakkan begitu kamu memilikinya. Tangan yang kosong mengambil satu kartu dari kolam sebelum meminta.",
+        "## Lawanmu",
+        "Kartu lawan tertutup, tetapi ia selalu bermain dengan cara yang sama: ia meminta nilai yang ia pegang dan pernah kamu minta, karena kamu pasti masih memegangnya. Jika tidak, ia meminta nilai yang paling banyak ia pegang, yang terendah jika seri.",
+        "## Strategi",
+        "Ingat apa yang diminta lawan: ia memegang nilai-nilai itu, sampai kamu mengambilnya. Dan setiap nilai yang kamu minta memberi tahu lawan apa yang kamu pegang."
+      ]
+    },
+    "quickStart": {
+      "hash": "44b2756e",
+      "value": [
+        "Ketuk kartu untuk meminta nilainya dari lawan. Jika ia punya, kartu itu jadi milikmu, dan kamu meminta lagi.",
+        "Jika ia tidak punya, memancinglah: ambil dari kolam. Empat kartu bernilai sama adalah satu buku.",
+        "Lawan mengingat apa yang kamu minta. Buat tujuh buku untuk menang."
+      ]
+    },
+    "title": {
+      "hash": "56094d6f",
+      "value": "Memancing"
     }
   },
   "golf": {
@@ -2392,6 +2516,32 @@
       "value": "Monte Carlo"
     }
   },
+  "mosaic": {
+    "howToPlay": {
+      "hash": "e1d505a6",
+      "value": [
+        "## Tujuan",
+        "Buka semua kartu merah dalam persegi dengan kurang dari tiga kesalahan.",
+        "## Petunjuk",
+        "- Di samping setiap baris dan di atas setiap kolom, petunjuk memberikan panjang deretan kartu merah di dalamnya, secara berurutan. **2 1** berarti dua merah berdampingan, lalu setidaknya satu hitam, lalu satu merah. **0** berarti tidak ada merah sama sekali.",
+        "- Kartu yang terbuka tetap terbuka, sehingga setiap merah yang ditemukan menjadi petunjuk tersendiri, begitu pula setiap kesalahan.",
+        "## Kesalahan",
+        "Membuka kartu hitam adalah kesalahan. Tiga kesalahan mengakhiri permainan. Setiap pembagian dipilih agar memiliki tepat satu jawaban, sehingga dengan cermat selalu dapat dipecahkan tanpa satu pun kesalahan; skor Anda adalah sisa kesalahan yang masih Anda punya."
+      ]
+    },
+    "quickStart": {
+      "hash": "5e92e498",
+      "value": [
+        "Dua puluh lima kartu tertutup. Petunjuk memberikan deretan kartu merah di setiap baris dan kolom, secara berurutan.",
+        "Ketuk kartu untuk membukanya. Temukan semua kartu merah; kartu hitam yang terbuka adalah kesalahan, dan tiga kesalahan berarti kalah.",
+        "Setiap pembagian memiliki tepat satu jawaban, sehingga selalu dapat dipecahkan dengan penalaran."
+      ]
+    },
+    "title": {
+      "hash": "e8f2ee21",
+      "value": "Mosaik"
+    }
+  },
   "nestor": {
     "howToPlay": {
       "hash": "5a96cea6",
@@ -2451,6 +2601,34 @@
     "title": {
       "hash": "01d23c78",
       "value": "Jaga malam"
+    }
+  },
+  "osmosis": {
+    "howToPlay": {
+      "hash": "d9f9e7ad",
+      "value": [
+        "## Tujuan",
+        "Pindahkan semua 52 kartu ke empat baris fondasi.",
+        "## Baris",
+        "- Kartu pertama yang dibagikan memulai baris pertama. Setiap baris menampung satu jenis dan menerima kartunya dalam urutan apa pun, kecuali bahwa kartu hanya dapat bergabung ke suatu baris jika nilai yang sama sudah ada di baris di atasnya, seolah-olah meresap ke bawah.",
+        "- Baris baru di bawah yang lain hanya dimulai dengan nilai yang sama dengan kartu pertama di baris pertama.",
+        "## Bermain",
+        "- Empat cadangan terbuka; mainkan kartu teratasnya. Ketuk dek untuk membalik satu kartu ke tumpukan terbuka, dan mainkan kartu teratas tumpukan itu.",
+        "- Jika dek habis, ketuk untuk membalik tumpukan terbuka dan melewatinya lagi, sesering yang Anda mau.",
+        "- Permainan kalah jika satu putaran penuh dek tidak menghasilkan apa pun untuk dimainkan."
+      ]
+    },
+    "quickStart": {
+      "hash": "52283072",
+      "value": [
+        "Setiap baris fondasi menerima jenisnya dalam urutan apa pun, tetapi kartu hanya dapat bergabung ke suatu baris jika nilainya sudah ada di baris di atasnya.",
+        "Kartu pertama yang dibagikan menentukan nilai awal setiap baris lainnya.",
+        "Mainkan dari empat cadangan dan tumpukan terbuka. Balik dek satu kartu sekali, sesering yang Anda mau."
+      ]
+    },
+    "title": {
+      "hash": "32e235be",
+      "value": "Osmosis"
     }
   },
   "ouroboros": {
@@ -3066,6 +3244,35 @@
       "value": "Menara Seahaven"
     }
   },
+  "sevens": {
+    "howToPlay": {
+      "hash": "9bc5afcb",
+      "value": [
+        "## Tujuan",
+        "Menjadi yang pertama memainkan semua kartu di tangan.",
+        "## Bermain",
+        "- Kamu dan lawan memegang tujuh kartu masing-masing, dan satu angka 7 dari tumpukan diletakkan di meja untuk memulai. Angka 7 membuka deretan jenisnya; setelah itu, kartu bisa dimainkan di salah satu ujung deretannya: 8 setelah 7, 6 sebelumnya, dan seterusnya.",
+        "- Jika kamu bisa memainkan kartu, kamu harus memainkannya. Jika tidak bisa, ketuk tumpukan untuk mengambil satu, dan giliran berpindah. Saat tumpukan kosong, tangan yang buntu melewati giliran.",
+        "- Kartu yang tidak bisa kamu mainkan tampak abu-abu.",
+        "## Lawanmu",
+        "Kartu lawan terbuka, dan ia selalu bermain dengan cara yang sama: angka 7 jika ia memilikinya; jika tidak, kartu yang diikuti kartu miliknya terbanyak ke arah itu, dan jika seri, kartunya yang terendah, ♣ lebih dulu.",
+        "## Strategi",
+        "Menahan kartu yang ditunggu lawan membuat tangannya buntu, selama kamu punya hal lain untuk dimainkan. Skormu adalah jumlah kartu yang tersisa di tangan lawan."
+      ]
+    },
+    "quickStart": {
+      "hash": "a70f5f8d",
+      "value": [
+        "Deretan setiap jenis tumbuh dari angka 7-nya, satu nilai setiap kali, naik sampai King dan turun sampai As.",
+        "Mainkan kartu yang cocok, atau ambil dari tumpukan jika tidak ada yang cocok.",
+        "Kosongkan tanganmu sebelum lawan."
+      ]
+    },
+    "title": {
+      "hash": "2e23608f",
+      "value": "Tujuh"
+    }
+  },
   "shifting-sands": {
     "howToPlay": {
       "hash": "91681187",
@@ -3383,6 +3590,37 @@
     "title": {
       "hash": "5ac8c364",
       "value": "Sultan"
+    }
+  },
+  "sweep": {
+    "howToPlay": {
+      "hash": "ba222213",
+      "value": [
+        "## Tujuan",
+        "Mencetak lebih banyak poin daripada lawan saat tumpukan habis.",
+        "## Mengambil kartu",
+        "- Kamu dan lawan memegang tiga kartu masing-masing, dengan empat kartu di meja. Setiap kartu yang dimainkan mengambil kartu meja: satu yang bernilai sama atau, jika tidak ada, kartu-kartu yang jumlahnya sama dengan nilainya. As bernilai 1, Jack 11, Queen 12, dan King 13.",
+        "- Kartu yang bisa mengambil sesuatu harus mengambil. Yang tidak bisa diletakkan di meja.",
+        "- Ketuk kartu di tanganmu. Jika ia bisa mengambil kartu dengan lebih dari satu cara, ketuk kartu meja yang kamu mau: pengambilan terjadi begitu jumlahnya pas.",
+        "- Saat kedua tangan kosong, tiga kartu lagi dibagikan ke masing-masing. Siapa yang terakhir mengambil kartu mendapat sisa kartu di meja pada akhir permainan.",
+        "## Penilaian",
+        "- **Sapuan**, mengambil semua kartu di meja, bernilai satu poin.",
+        "- Di akhir: satu poin untuk kartu terbanyak, satu poin untuk wajik terbanyak, dan satu poin untuk 7♦.",
+        "## Lawanmu",
+        "Kartu lawan terbuka, dan ia selalu bermain dengan cara yang sama: mengambil kartu sebanyak mungkin (sapuan lebih dulu). Di antara pengambilan yang setara, ia memilih 7♦, lalu wajik terbanyak, lalu kartunya yang terendah. Jika tidak ada yang bisa diambil, ia meletakkan kartunya yang terendah."
+      ]
+    },
+    "quickStart": {
+      "hash": "60a8b88e",
+      "value": [
+        "Mainkan kartu untuk mengambil kartu meja bernilai sama, atau kartu-kartu meja yang jumlahnya sama dengan nilainya.",
+        "Mengambil semua kartu di meja adalah sapuan, bernilai satu poin.",
+        "Di akhir, satu poin untuk kartu terbanyak, wajik terbanyak, dan 7♦. Ungguli lawanmu."
+      ]
+    },
+    "title": {
+      "hash": "76bb3813",
+      "value": "Sapu Bersih"
     }
   },
   "ten-twenty-thirty": {

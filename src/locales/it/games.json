@@ -947,5 +947,82 @@
   },
   "elevens": {
     "noMorePairsOrFaceTriplets": "Non si possono più formare coppie né tris di figure."
+  },
+  "gambit": {
+    "rival": "Rivale",
+    "you": "Tu",
+    "trump": "Briscola",
+    "tricks": "Prese",
+    "dealOf": "Mano {{deal}} di {{total}}",
+    "contract_one": "Contratto: {{count}} presa",
+    "contract_other": "Contratto: {{count}} prese",
+    "contractLost": "Il contratto non si può più rispettare.",
+    "allContractsMade": "Tutti e tre i contratti rispettati!"
+  },
+  "carousel": {
+    "hand": "Mano",
+    "tableWhole": "Tutte le combinazioni sono complete.",
+    "tableBroken": "Completa ogni combinazione per prendere una carta.",
+    "allMelded_one": "Tutte le carte calate, con {{count}} carta d'avanzo!",
+    "allMelded_other": "Tutte le carte calate, con {{count}} carte d'avanzo!",
+    "handFull": "La tua mano è arrivata a {{count}} carte.",
+    "outOfCards": "La giostra si è svuotata prima della tua mano."
+  },
+  "sweep": {
+    "rival": "Rivale",
+    "you": "Tu",
+    "points": "{{label}}: {{count}}",
+    "taken": "Carte: {{cards}} · Scope: {{sweeps}}",
+    "pickCards": "Tocca carte del tavolo che sommino {{value}}.",
+    "dealOf": "Mano {{deal}} di {{total}}",
+    "won": "Vinci {{you}} a {{rival}}!",
+    "lost": "Il rivale segna {{rival}} contro i tuoi {{you}}."
+  },
+  "sevens": {
+    "rival": "Rivale",
+    "drawToPass": "Nessuna carta si può giocare: tocca il mazzo per pescare.",
+    "pass": "Nessuna carta si può giocare e il mazzo è vuoto: passi.",
+    "inHand_one": "{{count}} carta in mano",
+    "inHand_other": "{{count}} carte in mano",
+    "won_one": "La tua mano è vuota, e al rivale resta {{count}} carta!",
+    "won_other": "La tua mano è vuota, e al rivale restano {{count}} carte!",
+    "lost_one": "Il rivale ha svuotato la mano; ti restava {{count}} carta.",
+    "lost_other": "Il rivale ha svuotato la mano; ti restavano {{count}} carte."
+  },
+  "gofish": {
+    "rival": "Rivale",
+    "you": "Tu",
+    "pond": "Stagno",
+    "books": "Libri",
+    "rivalBooks_one": "Rivale: {{count}} libro",
+    "rivalBooks_other": "Rivale: {{count}} libri",
+    "yourTurn": "Tocca una carta per chiedere il suo valore.",
+    "youGot_one": "Hai chiesto {{rank}}: il rivale ha consegnato {{count}} carta. Chiedi ancora.",
+    "youGot_other": "Hai chiesto {{rank}}: il rivale ha consegnato {{count}} carte. Chiedi ancora.",
+    "rivalGot_one": "Il rivale ha chiesto {{rank}} e ha preso {{count}} carta. Chiede ancora.",
+    "rivalGot_other": "Il rivale ha chiesto {{rank}} e ha preso {{count}} carte. Chiede ancora.",
+    "youFishedIt": "Nessun {{rank}}, ma ne hai pescato uno! Chiedi ancora.",
+    "rivalFishedIt": "Il rivale ha chiesto {{rank}}, è andato a pescare e ne ha trovato uno. Chiede ancora.",
+    "youFished": "Nessun {{rank}}: vai a pescare. Tocca al rivale.",
+    "rivalFished": "Il rivale ha chiesto {{rank}} ed è andato a pescare. Tocca a te.",
+    "youPassed": "Lo stagno è vuoto: passi.",
+    "rivalPassed": "Lo stagno è vuoto: il rivale passa.",
+    "won": "{{you}} libri a {{rival}}: hai vinto!",
+    "lost": "{{rival}} libri a {{you}}: vince il rivale."
+  },
+  "cipher": {
+    "check": "Verifica",
+    "guessesLeft_one": "{{count}} tentativo rimasto",
+    "guessesLeft_other": "{{count}} tentativi rimasti",
+    "cipherShown": "Il cifrario è svelato.",
+    "solved_one": "Decifrato in {{count}} tentativo!",
+    "solved_other": "Decifrato in {{count}} tentativi!",
+    "unsolved": "Otto tentativi, e il cifrario ha resistito."
+  },
+  "mosaic": {
+    "slips": "Errori: {{slips}} su {{total}}",
+    "won_one": "Tutte le carte rosse trovate, con {{count}} errore!",
+    "won_other": "Tutte le carte rosse trovate, con {{count}} errori!",
+    "lost": "Tre errori: il mosaico resta nascosto."
   }
 }
