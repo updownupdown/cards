@@ -795,6 +795,33 @@
       "value": "Capítulo e versículo"
     }
   },
+  "cipher": {
+    "howToPlay": {
+      "hash": "929c106b",
+      "value": [
+        "## Objetivo",
+        "Decifre a cifra, três paus de valores diferentes numa ordem secreta, em até oito tentativas.",
+        "## As tentativas",
+        "- Toque em cartas da reserva, uma pilha para cada valor, para colocar uma tentativa de três valores diferentes em ordem. Toque numa carta da tentativa para devolvê-la.",
+        "- Toque em **Verificar**. Cada carta da tentativa é marcada: **verde** quando seu valor ocupa aquele lugar da cifra, **âmbar** quando seu valor está na cifra mas em outro lugar, e sem cor quando seu valor não está na cifra.",
+        "- As tentativas verificadas ficam na mesa, e as pilhas da reserva tomam a cor delas, para que o que você aprendeu esteja sempre à vista. Quando a pilha de um valor acaba, uma carta desse valor pode ser recolhida de uma tentativa anterior.",
+        "## O fim",
+        "Três verdes decifram a cifra, e sua pontuação é o número de tentativas que foram precisas. Após oito tentativas, a cifra é virada para cima e a partida está perdida."
+      ]
+    },
+    "quickStart": {
+      "hash": "b5917645",
+      "value": [
+        "Três paus estão virados para baixo numa ordem secreta. Descubra seus valores e seus lugares em oito tentativas.",
+        "Coloque três cartas de valores diferentes e toque em Verificar. Verde: valor certo, lugar certo. Âmbar: o valor está na cifra, em outro lugar.",
+        "As cartas que ficam sem cor não estão na cifra."
+      ]
+    },
+    "title": {
+      "hash": "8c36ebf8",
+      "value": "Cifra"
+    }
+  },
   "city-grid": {
     "howToPlay": {
       "hash": "316682c7",
@@ -2486,6 +2513,32 @@
       "value": "Monte Carlo"
     }
   },
+  "mosaic": {
+    "howToPlay": {
+      "hash": "e1d505a6",
+      "value": [
+        "## Objetivo",
+        "Vire todas as cartas vermelhas do quadrado com menos de três erros.",
+        "## As pistas",
+        "- Ao lado de cada linha e acima de cada coluna, as pistas dão o comprimento das sequências de cartas vermelhas que ela contém, em ordem. **2 1** significa duas vermelhas juntas, depois pelo menos uma preta, depois uma vermelha. **0** significa nenhuma vermelha.",
+        "- Uma carta virada fica à vista, então cada vermelha encontrada é mais uma pista, e cada erro também.",
+        "## Os erros",
+        "Virar uma carta preta é um erro. Três erros encerram a partida. Cada distribuição é escolhida para ter exatamente uma solução, então com cuidado sempre dá para deduzir sem um único erro; sua pontuação são os erros que ainda lhe sobravam."
+      ]
+    },
+    "quickStart": {
+      "hash": "5e92e498",
+      "value": [
+        "Vinte e cinco cartas estão viradas para baixo. As pistas dão as sequências de cartas vermelhas de cada linha e de cada coluna, em ordem.",
+        "Toque numa carta para virá-la. Encontre todas as cartas vermelhas; virar uma carta preta é um erro, e três erros perdem.",
+        "Cada distribuição tem exatamente uma solução, então sempre dá para deduzir."
+      ]
+    },
+    "title": {
+      "hash": "e8f2ee21",
+      "value": "Mosaico"
+    }
+  },
   "nestor": {
     "howToPlay": {
       "hash": "5a96cea6",
@@ -2545,6 +2598,34 @@
     "title": {
       "hash": "01d23c78",
       "value": "Vigília noturna"
+    }
+  },
+  "osmosis": {
+    "howToPlay": {
+      "hash": "d9f9e7ad",
+      "value": [
+        "## Objetivo",
+        "Mova as 52 cartas para as quatro fileiras de fundação.",
+        "## As fileiras",
+        "- A primeira carta distribuída começa a primeira fileira. Cada fileira recebe um só naipe, em qualquer ordem, exceto que uma carta só pode entrar numa fileira quando o mesmo valor já está na fileira de cima, como se tivesse se infiltrado.",
+        "- Uma nova fileira abaixo das outras só começa com o mesmo valor da primeira carta da primeira fileira.",
+        "## O jogo",
+        "- As quatro reservas estão viradas para cima; jogue suas cartas de cima. Toque no monte para virar uma carta no descarte, e jogue a carta de cima do descarte.",
+        "- Quando o monte acaba, toque nele para virar o descarte e percorrê-lo de novo, quantas vezes quiser.",
+        "- A partida está perdida quando uma passada inteira pelo monte não traz nada para jogar."
+      ]
+    },
+    "quickStart": {
+      "hash": "52283072",
+      "value": [
+        "Cada fileira de fundação recebe seu naipe em qualquer ordem, mas uma carta só pode entrar numa fileira quando seu valor está na fileira de cima.",
+        "A primeira carta distribuída define o valor com que toda outra fileira deve começar.",
+        "Jogue a partir das quatro reservas e do descarte. Vire o monte uma carta por vez, quantas vezes quiser."
+      ]
+    },
+    "title": {
+      "hash": "32e235be",
+      "value": "Osmose"
     }
   },
   "ouroboros": {

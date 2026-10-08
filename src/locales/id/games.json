@@ -1006,5 +1006,20 @@
     "rivalPassed": "Kolam kosong: lawan lewat.",
     "won": "{{you}} buku lawan {{rival}}: kamu menang!",
     "lost": "{{rival}} buku lawan {{you}}: lawan menang."
+  },
+  "cipher": {
+    "check": "Periksa",
+    "guessesLeft_one": "{{count}} tebakan tersisa",
+    "guessesLeft_other": "{{count}} tebakan tersisa",
+    "cipherShown": "Sandinya terbuka.",
+    "solved_one": "Terpecahkan dalam {{count}} tebakan!",
+    "solved_other": "Terpecahkan dalam {{count}} tebakan!",
+    "unsolved": "Delapan tebakan habis, dan sandinya bertahan."
+  },
+  "mosaic": {
+    "slips": "Salah: {{slips}} dari {{total}}",
+    "won_one": "Semua kartu merah ditemukan, dengan {{count}} kesalahan!",
+    "won_other": "Semua kartu merah ditemukan, dengan {{count}} kesalahan!",
+    "lost": "Tiga kesalahan: mosaiknya tetap tersembunyi."
   }
 }

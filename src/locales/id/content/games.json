@@ -795,6 +795,33 @@
       "value": "Bab dan ayat"
     }
   },
+  "cipher": {
+    "howToPlay": {
+      "hash": "929c106b",
+      "value": [
+        "## Tujuan",
+        "Pecahkan sandi, tiga kartu keriting dengan nilai berbeda dalam urutan rahasia, dalam paling banyak delapan tebakan.",
+        "## Menebak",
+        "- Ketuk kartu dari kumpulan, satu tumpukan untuk setiap nilai, untuk meletakkan tebakan tiga nilai berbeda secara berurutan. Ketuk kartu dalam tebakan untuk mengembalikannya.",
+        "- Ketuk **Periksa**. Setiap kartu tebakan ditandai: **hijau** jika nilainya menempati tempat itu dalam sandi, **kuning** jika nilainya ada dalam sandi tetapi di tempat lain, dan tanpa warna jika nilainya sama sekali tidak ada dalam sandi.",
+        "- Tebakan yang sudah diperiksa tetap di meja, dan tumpukan kumpulan mengambil warnanya, sehingga yang sudah Anda pelajari selalu terlihat. Jika tumpukan suatu nilai habis, kartu bernilai itu dapat diambil kembali dari tebakan sebelumnya.",
+        "## Akhir",
+        "Tiga hijau memecahkan sandi, dan skor Anda adalah jumlah tebakan yang diperlukan. Setelah delapan tebakan, sandi dibuka dan permainan kalah."
+      ]
+    },
+    "quickStart": {
+      "hash": "b5917645",
+      "value": [
+        "Tiga kartu keriting tertutup dalam urutan rahasia. Temukan nilai dan tempatnya dalam delapan tebakan.",
+        "Letakkan tiga kartu dengan nilai berbeda dan ketuk Periksa. Hijau: nilai benar, tempat benar. Kuning: nilainya ada dalam sandi, di tempat lain.",
+        "Kartu yang tetap tanpa warna sama sekali tidak ada dalam sandi."
+      ]
+    },
+    "title": {
+      "hash": "8c36ebf8",
+      "value": "Sandi"
+    }
+  },
   "city-grid": {
     "howToPlay": {
       "hash": "316682c7",
@@ -2486,6 +2513,32 @@
       "value": "Monte Carlo"
     }
   },
+  "mosaic": {
+    "howToPlay": {
+      "hash": "e1d505a6",
+      "value": [
+        "## Tujuan",
+        "Buka semua kartu merah dalam persegi dengan kurang dari tiga kesalahan.",
+        "## Petunjuk",
+        "- Di samping setiap baris dan di atas setiap kolom, petunjuk memberikan panjang deretan kartu merah di dalamnya, secara berurutan. **2 1** berarti dua merah berdampingan, lalu setidaknya satu hitam, lalu satu merah. **0** berarti tidak ada merah sama sekali.",
+        "- Kartu yang terbuka tetap terbuka, sehingga setiap merah yang ditemukan menjadi petunjuk tersendiri, begitu pula setiap kesalahan.",
+        "## Kesalahan",
+        "Membuka kartu hitam adalah kesalahan. Tiga kesalahan mengakhiri permainan. Setiap pembagian dipilih agar memiliki tepat satu jawaban, sehingga dengan cermat selalu dapat dipecahkan tanpa satu pun kesalahan; skor Anda adalah sisa kesalahan yang masih Anda punya."
+      ]
+    },
+    "quickStart": {
+      "hash": "5e92e498",
+      "value": [
+        "Dua puluh lima kartu tertutup. Petunjuk memberikan deretan kartu merah di setiap baris dan kolom, secara berurutan.",
+        "Ketuk kartu untuk membukanya. Temukan semua kartu merah; kartu hitam yang terbuka adalah kesalahan, dan tiga kesalahan berarti kalah.",
+        "Setiap pembagian memiliki tepat satu jawaban, sehingga selalu dapat dipecahkan dengan penalaran."
+      ]
+    },
+    "title": {
+      "hash": "e8f2ee21",
+      "value": "Mosaik"
+    }
+  },
   "nestor": {
     "howToPlay": {
       "hash": "5a96cea6",
@@ -2545,6 +2598,34 @@
     "title": {
       "hash": "01d23c78",
       "value": "Jaga malam"
+    }
+  },
+  "osmosis": {
+    "howToPlay": {
+      "hash": "d9f9e7ad",
+      "value": [
+        "## Tujuan",
+        "Pindahkan semua 52 kartu ke empat baris fondasi.",
+        "## Baris",
+        "- Kartu pertama yang dibagikan memulai baris pertama. Setiap baris menampung satu jenis dan menerima kartunya dalam urutan apa pun, kecuali bahwa kartu hanya dapat bergabung ke suatu baris jika nilai yang sama sudah ada di baris di atasnya, seolah-olah meresap ke bawah.",
+        "- Baris baru di bawah yang lain hanya dimulai dengan nilai yang sama dengan kartu pertama di baris pertama.",
+        "## Bermain",
+        "- Empat cadangan terbuka; mainkan kartu teratasnya. Ketuk dek untuk membalik satu kartu ke tumpukan terbuka, dan mainkan kartu teratas tumpukan itu.",
+        "- Jika dek habis, ketuk untuk membalik tumpukan terbuka dan melewatinya lagi, sesering yang Anda mau.",
+        "- Permainan kalah jika satu putaran penuh dek tidak menghasilkan apa pun untuk dimainkan."
+      ]
+    },
+    "quickStart": {
+      "hash": "52283072",
+      "value": [
+        "Setiap baris fondasi menerima jenisnya dalam urutan apa pun, tetapi kartu hanya dapat bergabung ke suatu baris jika nilainya sudah ada di baris di atasnya.",
+        "Kartu pertama yang dibagikan menentukan nilai awal setiap baris lainnya.",
+        "Mainkan dari empat cadangan dan tumpukan terbuka. Balik dek satu kartu sekali, sesering yang Anda mau."
+      ]
+    },
+    "title": {
+      "hash": "32e235be",
+      "value": "Osmosis"
     }
   },
   "ouroboros": {

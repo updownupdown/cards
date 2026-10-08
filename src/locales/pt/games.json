@@ -1006,5 +1006,20 @@
     "rivalPassed": "O lago está vazio: o rival passa.",
     "won": "{{you}} livros a {{rival}}: você venceu!",
     "lost": "{{rival}} livros a {{you}}: o rival venceu."
+  },
+  "cipher": {
+    "check": "Verificar",
+    "guessesLeft_one": "{{count}} tentativa restante",
+    "guessesLeft_other": "{{count}} tentativas restantes",
+    "cipherShown": "A cifra está revelada.",
+    "solved_one": "Decifrada em {{count}} tentativa!",
+    "solved_other": "Decifrada em {{count}} tentativas!",
+    "unsolved": "Oito tentativas, e a cifra resistiu."
+  },
+  "mosaic": {
+    "slips": "Erros: {{slips}} de {{total}}",
+    "won_one": "Todas as cartas vermelhas encontradas, com {{count}} erro!",
+    "won_other": "Todas as cartas vermelhas encontradas, com {{count}} erros!",
+    "lost": "Três erros: o mosaico continua escondido."
   }
 }

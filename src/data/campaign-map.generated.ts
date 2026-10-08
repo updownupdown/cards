@@ -1393,6 +1393,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": null,
     "connections": [
       "/blackberry-pie",
+      "/osmosis",
       "/penguin",
       "/yukon"
     ],
@@ -1610,6 +1611,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": 2,
     "connections": [
       "/little-windmill",
+      "/osmosis",
       "/stalactites",
       "/terrace"
     ],
@@ -2084,6 +2086,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": null,
     "connections": [
       "/australian-patience",
+      "/cipher",
       "/clock",
       "/triple-stack"
     ],
@@ -2193,6 +2196,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": 1,
     "connections": [
       "/cabin-siege",
+      "/cipher",
       "/clock",
       "/gremlin",
       "/triple-stack"
@@ -2613,6 +2617,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "connections": [
       "/aces-up",
       "/gambit",
+      "/mosaic",
       "/somnus"
     ],
     "rewards": [
@@ -2678,6 +2683,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "y": 0.5438,
     "arm": 1,
     "connections": [
+      "/mosaic",
       "/royal-envoy",
       "/somnus"
     ],
@@ -2752,6 +2758,69 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       {
         "type": "quote",
         "id": 194
+      }
+    ],
+    "appended": true
+  },
+  {
+    "path": "/cipher",
+    "x": -0.7862,
+    "y": 0.256,
+    "arm": 1,
+    "connections": [
+      "/australian-patience",
+      "/cabin-siege"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 195
+      },
+      {
+        "type": "quote",
+        "id": 196
+      }
+    ],
+    "appended": true
+  },
+  {
+    "path": "/mosaic",
+    "x": -0.7834,
+    "y": 0.6167,
+    "arm": 1,
+    "connections": [
+      "/gambit",
+      "/royal-envoy"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 197
+      },
+      {
+        "type": "quote",
+        "id": 198
+      }
+    ],
+    "appended": true
+  },
+  {
+    "path": "/osmosis",
+    "x": 0.2363,
+    "y": -0.6567,
+    "arm": null,
+    "connections": [
+      "/blackberry-pie",
+      "/stalactites"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 199
+      },
+      {
+        "type": "quote",
+        "id": 200
       }
     ],
     "appended": true

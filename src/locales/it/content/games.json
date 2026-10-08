@@ -795,6 +795,33 @@
       "value": "Capitolo e versetto"
     }
   },
+  "cipher": {
+    "howToPlay": {
+      "hash": "929c106b",
+      "value": [
+        "## Obiettivo",
+        "Decifra il cifrario, tre fiori di valori diversi in un ordine segreto, entro otto tentativi.",
+        "## I tentativi",
+        "- Tocca le carte della riserva, una pila per ogni valore, per posare un tentativo di tre valori diversi in ordine. Tocca una carta del tentativo per rimetterla a posto.",
+        "- Tocca **Verifica**. Ogni carta del tentativo viene segnata: **verde** quando il suo valore occupa quel posto del cifrario, **ambra** quando il suo valore è nel cifrario ma altrove, e senza colore quando il suo valore non è affatto nel cifrario.",
+        "- I tentativi verificati restano sul tavolo, e le pile della riserva prendono il loro colore, così ciò che hai scoperto è sempre in vista. Quando la pila di un valore si esaurisce, una carta di quel valore può essere ripresa da un tentativo precedente.",
+        "## La fine",
+        "Tre verdi decifrano il cifrario, e il tuo punteggio è il numero di tentativi che sono serviti. Dopo otto tentativi, il cifrario viene scoperto e la partita è persa."
+      ]
+    },
+    "quickStart": {
+      "hash": "b5917645",
+      "value": [
+        "Tre fiori sono coperti in un ordine segreto. Trova i loro valori e i loro posti in otto tentativi.",
+        "Posa tre carte di valori diversi e tocca Verifica. Verde: valore giusto, posto giusto. Ambra: il valore è nel cifrario, ma altrove.",
+        "Le carte che restano senza colore non sono affatto nel cifrario."
+      ]
+    },
+    "title": {
+      "hash": "8c36ebf8",
+      "value": "Cifrario"
+    }
+  },
   "city-grid": {
     "howToPlay": {
       "hash": "316682c7",
@@ -2486,6 +2513,32 @@
       "value": "Montecarlo"
     }
   },
+  "mosaic": {
+    "howToPlay": {
+      "hash": "e1d505a6",
+      "value": [
+        "## Obiettivo",
+        "Scopri tutte le carte rosse del quadrato con meno di tre errori.",
+        "## Gli indizi",
+        "- Accanto a ogni riga e sopra ogni colonna, gli indizi danno la lunghezza delle serie di carte rosse che contiene, in ordine. **2 1** significa due rosse vicine, poi almeno una nera, poi una rossa. **0** significa nessuna rossa.",
+        "- Una carta scoperta resta in vista, così ogni rossa trovata è un indizio in più, e lo è anche ogni errore.",
+        "## Gli errori",
+        "Scoprire una carta nera è un errore. Tre errori chiudono la partita. Ogni smazzata è scelta in modo da avere una sola soluzione, quindi con attenzione si può sempre dedurre senza un solo errore; il tuo punteggio sono gli errori che ti restavano."
+      ]
+    },
+    "quickStart": {
+      "hash": "5e92e498",
+      "value": [
+        "Venticinque carte sono coperte. Gli indizi danno le serie di carte rosse di ogni riga e di ogni colonna, in ordine.",
+        "Tocca una carta per scoprirla. Trova tutte le carte rosse; scoprire una carta nera è un errore, e tre errori fanno perdere.",
+        "Ogni smazzata ha esattamente una soluzione, quindi si può sempre dedurre."
+      ]
+    },
+    "title": {
+      "hash": "e8f2ee21",
+      "value": "Mosaico"
+    }
+  },
   "nestor": {
     "howToPlay": {
       "hash": "5a96cea6",
@@ -2545,6 +2598,34 @@
     "title": {
       "hash": "01d23c78",
       "value": "Veglia notturna"
+    }
+  },
+  "osmosis": {
+    "howToPlay": {
+      "hash": "d9f9e7ad",
+      "value": [
+        "## Obiettivo",
+        "Sposta tutte le 52 carte sulle quattro file di fondazione.",
+        "## Le file",
+        "- La prima carta distribuita comincia la prima fila. Ogni fila riceve un solo seme, in qualsiasi ordine, salvo che una carta può unirsi a una fila solo quando lo stesso valore è già nella fila sopra, come se vi fosse filtrata.",
+        "- Una nuova fila sotto le altre comincia solo con lo stesso valore della prima carta della prima fila.",
+        "## Il gioco",
+        "- Le quattro riserve sono scoperte; gioca le loro carte in cima. Tocca il mazzo per girare una carta nel pozzo, e gioca la carta in cima al pozzo.",
+        "- Quando il mazzo si esaurisce, toccalo per rigirare il pozzo e ripercorrerlo, quante volte vuoi.",
+        "- La partita è persa quando un intero giro del mazzo non dà nulla da giocare."
+      ]
+    },
+    "quickStart": {
+      "hash": "52283072",
+      "value": [
+        "Ogni fila di fondazione riceve il suo seme in qualsiasi ordine, ma una carta può unirsi a una fila solo quando il suo valore è nella fila sopra.",
+        "La prima carta distribuita fissa il valore con cui ogni altra fila deve cominciare.",
+        "Gioca dalle quattro riserve e dal pozzo. Gira il mazzo una carta alla volta, quante volte vuoi."
+      ]
+    },
+    "title": {
+      "hash": "32e235be",
+      "value": "Osmosi"
     }
   },
   "ouroboros": {

@@ -1006,5 +1006,20 @@
     "rivalPassed": "The pond is empty: the rival passes.",
     "won": "{{you}} books to {{rival}}: you win!",
     "lost": "{{rival}} books to {{you}}: the rival wins."
+  },
+  "cipher": {
+    "check": "Check",
+    "guessesLeft_one": "{{count}} guess left",
+    "guessesLeft_other": "{{count}} guesses left",
+    "cipherShown": "The cipher is shown.",
+    "solved_one": "Cracked in {{count}} guess!",
+    "solved_other": "Cracked in {{count}} guesses!",
+    "unsolved": "Eight guesses, and the cipher held."
+  },
+  "mosaic": {
+    "slips": "Slips: {{slips}} of {{total}}",
+    "won_one": "Every red card found, with {{count}} slip!",
+    "won_other": "Every red card found, with {{count}} slips!",
+    "lost": "Three slips: the mosaic stays hidden."
   }
 }

@@ -795,6 +795,33 @@
       "value": "Bölüm ve ayet"
     }
   },
+  "cipher": {
+    "howToPlay": {
+      "hash": "929c106b",
+      "value": [
+        "## Amaç",
+        "Gizli bir sırada dizilmiş farklı değerde üç sinekten oluşan şifreyi en fazla sekiz tahminde çözün.",
+        "## Tahmin",
+        "- Her değer için bir yığın olan havuzdan kartlara dokunarak, sırayla farklı değerde üç karttan oluşan bir tahmin dizin. Geri koymak için tahmindeki bir karta dokunun.",
+        "- **Kontrol Et**'e dokunun. Tahmindeki her kart işaretlenir: değeri şifrenin o yerinde duruyorsa **yeşil**, değeri şifrede ama başka yerdeyse **kehribar**, değeri şifrede hiç yoksa renksiz kalır.",
+        "- Kontrol edilen tahminler masada kalır ve havuzdaki yığınlar onların rengini alır; böylece öğrendikleriniz hep gözünüzün önündedir. Bir değerin yığını bittiğinde, o değerde bir kart önceki bir tahminden geri alınabilir.",
+        "## Son",
+        "Üç yeşil şifreyi çözer ve puanınız, gereken tahmin sayısıdır. Sekiz tahminden sonra şifre açılır ve oyun kaybedilir."
+      ]
+    },
+    "quickStart": {
+      "hash": "b5917645",
+      "value": [
+        "Üç sinek, gizli bir sırayla kapalı duruyor. Değerlerini ve yerlerini sekiz tahminde bulun.",
+        "Farklı değerde üç kart dizin ve Kontrol Et'e dokunun. Yeşil: doğru değer, doğru yer. Kehribar: değer şifrede var, ama başka yerde.",
+        "Renksiz kalan kartlar şifrede hiç yok."
+      ]
+    },
+    "title": {
+      "hash": "8c36ebf8",
+      "value": "Şifre"
+    }
+  },
   "city-grid": {
     "howToPlay": {
       "hash": "316682c7",
@@ -2486,6 +2513,32 @@
       "value": "Monte Carlo"
     }
   },
+  "mosaic": {
+    "howToPlay": {
+      "hash": "e1d505a6",
+      "value": [
+        "## Amaç",
+        "Karedeki bütün kırmızı kartları üçten az hatayla açın.",
+        "## İpuçları",
+        "- Her satırın yanında ve her sütunun üstünde, ipuçları o hattaki kırmızı kart dizilerinin uzunluklarını sırayla verir. **2 1**, yan yana iki kırmızı, sonra en az bir siyah, sonra bir kırmızı demektir. **0**, hiç kırmızı yok demektir.",
+        "- Açılan kart açık kalır; böylece bulunan her kırmızı, ve her hata, başlı başına bir ipucudur.",
+        "## Hatalar",
+        "Siyah bir kartı açmak hatadır. Üç hata oyunu bitirir. Her dağıtım tam olarak tek bir çözümü olacak şekilde seçilir; bu yüzden dikkatle, tek bir hata bile yapmadan her zaman çözülebilir. Puanınız, elinizde kalan hata hakkıdır."
+      ]
+    },
+    "quickStart": {
+      "hash": "5e92e498",
+      "value": [
+        "Yirmi beş kart kapalı duruyor. İpuçları her satır ve sütundaki kırmızı kart dizilerini sırayla verir.",
+        "Açmak için bir karta dokunun. Bütün kırmızı kartları bulun; açılan siyah bir kart hatadır ve üç hata oyunu kaybettirir.",
+        "Her dağıtımın tam olarak tek bir çözümü vardır, bu yüzden her zaman akıl yürütülerek bulunabilir."
+      ]
+    },
+    "title": {
+      "hash": "e8f2ee21",
+      "value": "Mozaik"
+    }
+  },
   "nestor": {
     "howToPlay": {
       "hash": "5a96cea6",
@@ -2545,6 +2598,34 @@
     "title": {
       "hash": "01d23c78",
       "value": "Gece nöbeti"
+    }
+  },
+  "osmosis": {
+    "howToPlay": {
+      "hash": "d9f9e7ad",
+      "value": [
+        "## Amaç",
+        "52 kartın hepsini dört temel sırasına taşıyın.",
+        "## Sıralar",
+        "- Dağıtılan ilk kart ilk sırayı başlatır. Her sıra tek bir tür alır ve kartlarını herhangi bir düzende kabul eder; ancak bir kart bir sıraya yalnızca aynı değer üstteki sırada zaten varsa katılabilir, sanki oradan sızmış gibi.",
+        "- Diğerlerinin altındaki yeni bir sıra yalnızca ilk sıranın ilk kartıyla aynı değerle başlar.",
+        "## Oyun",
+        "- Dört yedek açıktır; en üst kartlarını oynayın. Açık desteye bir kart çevirmek için desteye dokunun ve açık destenin en üst kartını oynayın.",
+        "- Deste bitince, açık desteyi çevirip yeniden geçmek için desteye dokunun, istediğiniz kadar.",
+        "- Desteden tam bir geçiş oynanacak hiçbir şey çıkarmazsa oyun kaybedilir."
+      ]
+    },
+    "quickStart": {
+      "hash": "52283072",
+      "value": [
+        "Her temel sırası kendi türünü herhangi bir düzende alır, ama bir kart bir sıraya ancak değeri üstteki sırada varsa katılabilir.",
+        "Dağıtılan ilk kart, diğer her sıranın başlaması gereken değeri belirler.",
+        "Dört yedekten ve açık desteden oynayın. Desteyi birer kart çevirin, istediğiniz kadar."
+      ]
+    },
+    "title": {
+      "hash": "32e235be",
+      "value": "Ozmoz"
     }
   },
   "ouroboros": {

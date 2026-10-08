@@ -1259,6 +1259,7 @@
       "y": -0.5559,
       "connections": [
         "/blackberry-pie",
+        "/osmosis",
         "/penguin",
         "/yukon"
       ],
@@ -1456,6 +1457,7 @@
       "y": -0.6605,
       "connections": [
         "/little-windmill",
+        "/osmosis",
         "/stalactites",
         "/terrace"
       ],
@@ -1888,6 +1890,7 @@
       "y": 0.3379,
       "connections": [
         "/australian-patience",
+        "/cipher",
         "/clock",
         "/triple-stack"
       ],
@@ -1987,6 +1990,7 @@
       "y": 0.1997,
       "connections": [
         "/cabin-siege",
+        "/cipher",
         "/clock",
         "/gremlin",
         "/triple-stack"
@@ -2367,6 +2371,7 @@
       "connections": [
         "/aces-up",
         "/gambit",
+        "/mosaic",
         "/somnus"
       ],
       "rewards": [
@@ -2425,6 +2430,7 @@
       "x": -0.7817,
       "y": 0.5438,
       "connections": [
+        "/mosaic",
         "/royal-envoy",
         "/somnus"
       ],
@@ -2490,6 +2496,60 @@
         {
           "type": "quote",
           "id": 194
+        }
+      ]
+    },
+    "/cipher": {
+      "x": -0.7862,
+      "y": 0.256,
+      "connections": [
+        "/australian-patience",
+        "/cabin-siege"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 195
+        },
+        {
+          "type": "quote",
+          "id": 196
+        }
+      ]
+    },
+    "/mosaic": {
+      "x": -0.7834,
+      "y": 0.6167,
+      "connections": [
+        "/gambit",
+        "/royal-envoy"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 197
+        },
+        {
+          "type": "quote",
+          "id": 198
+        }
+      ]
+    },
+    "/osmosis": {
+      "x": 0.2363,
+      "y": -0.6567,
+      "connections": [
+        "/blackberry-pie",
+        "/stalactites"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 199
+        },
+        {
+          "type": "quote",
+          "id": 200
         }
       ]
     }

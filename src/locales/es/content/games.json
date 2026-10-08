@@ -795,6 +795,33 @@
       "value": "Capítulo y versículo"
     }
   },
+  "cipher": {
+    "howToPlay": {
+      "hash": "929c106b",
+      "value": [
+        "## Objetivo",
+        "Descifra la clave, tres tréboles de valores distintos en un orden secreto, en ocho intentos como máximo.",
+        "## Los intentos",
+        "- Toca cartas de la reserva, un montón por cada valor, para colocar un intento de tres valores distintos en orden. Toca una carta del intento para devolverla.",
+        "- Toca **Comprobar**. Cada carta del intento se marca: **verde** cuando su valor ocupa ese lugar de la clave, **ámbar** cuando su valor está en la clave pero en otro lugar, y sin color cuando su valor no está en la clave.",
+        "- Los intentos comprobados se quedan en la mesa, y los montones de la reserva toman su color, para tener siempre a la vista lo que has aprendido. Cuando el montón de un valor se agota, una carta de ese valor puede recogerse de un intento anterior.",
+        "## El final",
+        "Tres verdes descifran la clave, y tu puntuación es el número de intentos que hicieron falta. Tras ocho intentos, la clave se destapa y la partida se pierde."
+      ]
+    },
+    "quickStart": {
+      "hash": "b5917645",
+      "value": [
+        "Tres tréboles están boca abajo en un orden secreto. Descubre sus valores y sus lugares en ocho intentos.",
+        "Coloca tres cartas de valores distintos y toca Comprobar. Verde: valor correcto, lugar correcto. Ámbar: el valor está en la clave, en otro lugar.",
+        "Las cartas que quedan sin color no están en la clave."
+      ]
+    },
+    "title": {
+      "hash": "8c36ebf8",
+      "value": "Cifra"
+    }
+  },
   "city-grid": {
     "howToPlay": {
       "hash": "316682c7",
@@ -2486,6 +2513,32 @@
       "value": "Montecarlo"
     }
   },
+  "mosaic": {
+    "howToPlay": {
+      "hash": "e1d505a6",
+      "value": [
+        "## Objetivo",
+        "Destapa todas las cartas rojas del cuadrado con menos de tres fallos.",
+        "## Las pistas",
+        "- Junto a cada fila y sobre cada columna, las pistas dan la longitud de las series de cartas rojas que contiene, en orden. **2 1** significa dos rojas juntas, luego al menos una negra, luego una roja. **0** significa que no hay ninguna roja.",
+        "- Una carta destapada se queda a la vista, así que cada roja encontrada es una pista más, y cada fallo también.",
+        "## Los fallos",
+        "Destapar una carta negra es un fallo. Tres fallos terminan la partida. Cada reparto se elige para que tenga exactamente una solución, así que con cuidado siempre se puede deducir sin un solo fallo; tu puntuación son los fallos que te quedaban."
+      ]
+    },
+    "quickStart": {
+      "hash": "5e92e498",
+      "value": [
+        "Veinticinco cartas están boca abajo. Las pistas dan las series de cartas rojas de cada fila y cada columna, en orden.",
+        "Toca una carta para destaparla. Encuentra todas las cartas rojas; destapar una carta negra es un fallo, y tres fallos pierden.",
+        "Cada reparto tiene exactamente una solución, así que siempre se puede deducir."
+      ]
+    },
+    "title": {
+      "hash": "e8f2ee21",
+      "value": "Mosaico"
+    }
+  },
   "nestor": {
     "howToPlay": {
       "hash": "5a96cea6",
@@ -2545,6 +2598,34 @@
     "title": {
       "hash": "01d23c78",
       "value": "Vigilia nocturna"
+    }
+  },
+  "osmosis": {
+    "howToPlay": {
+      "hash": "d9f9e7ad",
+      "value": [
+        "## Objetivo",
+        "Mueve las 52 cartas a las cuatro filas de fundación.",
+        "## Las filas",
+        "- La primera carta repartida empieza la primera fila. Cada fila recibe un solo palo, en cualquier orden, salvo que una carta solo puede unirse a una fila cuando el mismo valor ya está en la fila de arriba, como si se hubiera filtrado.",
+        "- Una fila nueva bajo las demás solo empieza con el mismo valor que la primera carta de la primera fila.",
+        "## El juego",
+        "- Las cuatro reservas están boca arriba; juega sus cartas superiores. Toca el mazo para voltear una carta al montón, y juega la carta superior del montón.",
+        "- Cuando el mazo se agota, tócalo para dar la vuelta al montón y recorrerlo de nuevo, tantas veces como quieras.",
+        "- La partida se pierde cuando una pasada completa por el mazo no da nada que jugar."
+      ]
+    },
+    "quickStart": {
+      "hash": "52283072",
+      "value": [
+        "Cada fila de fundación recibe su palo en cualquier orden, pero una carta solo puede unirse a una fila cuando su valor está en la fila de arriba.",
+        "La primera carta repartida fija el valor con el que debe empezar cada una de las demás filas.",
+        "Juega desde las cuatro reservas y el montón. Voltea el mazo carta a carta, tantas veces como quieras."
+      ]
+    },
+    "title": {
+      "hash": "32e235be",
+      "value": "Ósmosis"
     }
   },
   "ouroboros": {

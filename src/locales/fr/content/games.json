@@ -795,6 +795,33 @@
       "value": "Chapitre et verset"
     }
   },
+  "cipher": {
+    "howToPlay": {
+      "hash": "929c106b",
+      "value": [
+        "## Objectif",
+        "Déchiffrez le code, trois trèfles de valeurs différentes dans un ordre secret, en huit essais au plus.",
+        "## Les essais",
+        "- Touchez des cartes de la réserve, une pile par valeur, pour poser un essai de trois valeurs différentes dans l'ordre. Touchez une carte de l'essai pour la remettre.",
+        "- Touchez **Vérifier**. Chaque carte de l'essai est marquée : **vert** quand sa valeur occupe cette place du code, **ambre** quand sa valeur est dans le code mais ailleurs, et sans couleur quand sa valeur n'est pas du tout dans le code.",
+        "- Les essais vérifiés restent sur la table, et les piles de la réserve prennent leur couleur, pour garder sous les yeux ce que vous avez appris. Quand la pile d'une valeur est épuisée, une carte de cette valeur peut être reprise dans un essai précédent.",
+        "## La fin",
+        "Trois verts déchiffrent le code, et votre score est le nombre d'essais qu'il a fallu. Après huit essais, le code est retourné et la partie est perdue."
+      ]
+    },
+    "quickStart": {
+      "hash": "b5917645",
+      "value": [
+        "Trois trèfles sont posés face cachée dans un ordre secret. Trouvez leurs valeurs et leurs places en huit essais.",
+        "Posez trois cartes de valeurs différentes et touchez Vérifier. Vert : bonne valeur, bonne place. Ambre : la valeur est dans le code, ailleurs.",
+        "Les cartes qui restent sans couleur ne sont pas du tout dans le code."
+      ]
+    },
+    "title": {
+      "hash": "8c36ebf8",
+      "value": "Cipher"
+    }
+  },
   "city-grid": {
     "howToPlay": {
       "hash": "316682c7",
@@ -2486,6 +2513,32 @@
       "value": "Monte-Carlo"
     }
   },
+  "mosaic": {
+    "howToPlay": {
+      "hash": "e1d505a6",
+      "value": [
+        "## Objectif",
+        "Retournez toutes les cartes rouges du carré avec moins de trois erreurs.",
+        "## Les indices",
+        "- À côté de chaque ligne et au-dessus de chaque colonne, les indices donnent la longueur des suites de cartes rouges qu'elle contient, dans l'ordre. **2 1** signifie deux rouges côte à côte, puis au moins une noire, puis une rouge. **0** signifie aucune rouge.",
+        "- Une carte retournée reste visible : chaque rouge trouvée est un indice de plus, et chaque erreur aussi.",
+        "## Les erreurs",
+        "Retourner une carte noire est une erreur. Trois erreurs mettent fin à la partie. Chaque donne est choisie pour n'avoir qu'une seule solution : avec soin, elle se déduit donc toujours sans la moindre erreur ; votre score est le nombre d'erreurs qu'il vous restait."
+      ]
+    },
+    "quickStart": {
+      "hash": "5e92e498",
+      "value": [
+        "Vingt-cinq cartes sont posées face cachée. Les indices donnent les suites de cartes rouges de chaque ligne et de chaque colonne, dans l'ordre.",
+        "Touchez une carte pour la retourner. Trouvez toutes les cartes rouges ; une carte noire retournée est une erreur, et trois erreurs font perdre.",
+        "Chaque donne a exactement une solution, elle peut donc toujours se déduire."
+      ]
+    },
+    "title": {
+      "hash": "e8f2ee21",
+      "value": "Mosaïque"
+    }
+  },
   "nestor": {
     "howToPlay": {
       "hash": "5a96cea6",
@@ -2545,6 +2598,34 @@
     "title": {
       "hash": "01d23c78",
       "value": "Veille nocturne"
+    }
+  },
+  "osmosis": {
+    "howToPlay": {
+      "hash": "d9f9e7ad",
+      "value": [
+        "## Objectif",
+        "Déplacez les 52 cartes sur les quatre rangées de fondation.",
+        "## Les rangées",
+        "- La première carte distribuée commence la première rangée. Chaque rangée reçoit une seule couleur, dans n'importe quel ordre, sauf qu'une carte ne peut rejoindre une rangée que si la même valeur figure déjà dans la rangée au-dessus, comme si elle s'y était infiltrée.",
+        "- Une nouvelle rangée sous les autres ne commence qu'avec la même valeur que la première carte de la première rangée.",
+        "## Le jeu",
+        "- Les quatre réserves sont face visible ; jouez leur carte du dessus. Touchez la pioche pour retourner une carte sur le talon, et jouez la carte du dessus du talon.",
+        "- Quand la pioche est épuisée, touchez-la pour retourner le talon et le reparcourir, aussi souvent que vous voulez.",
+        "- La partie est perdue quand un tour complet de la pioche ne donne rien à jouer."
+      ]
+    },
+    "quickStart": {
+      "hash": "52283072",
+      "value": [
+        "Chaque rangée de fondation reçoit sa couleur dans n'importe quel ordre, mais une carte ne peut rejoindre une rangée que si sa valeur figure dans la rangée au-dessus.",
+        "La première carte distribuée fixe la valeur par laquelle toute autre rangée doit commencer.",
+        "Jouez depuis les quatre réserves et le talon. Retournez la pioche une carte à la fois, aussi souvent que vous voulez."
+      ]
+    },
+    "title": {
+      "hash": "32e235be",
+      "value": "Osmose"
     }
   },
   "ouroboros": {
