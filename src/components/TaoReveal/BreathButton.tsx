@@ -4,7 +4,6 @@ import { Pressable, StyleSheet } from "react-native";
 import Animated, {
   cancelAnimation,
   Easing,
-  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -19,8 +18,10 @@ import Svg, { Defs, Ellipse, RadialGradient, Stop } from "react-native-svg";
  * The Tao reveal's button. While the chapter is being written it is a guide
  * for breathing: a soft, slowly turning glow that swells as you breathe in
  * and settles as you breathe out, with no words on it. Pressed, "Breathe"
- * shows on it for a moment. Once the chapter can be closed it calms into a
- * plain, quiet button that says Continue.
+ * shows on it for a moment. Once the chapter can be closed, the same glow
+ * calms: it widens a little, its breathing all but stills, and Continue
+ * stays written on it. It never turns into a box or a pill, so nothing
+ * breaks the sky; the word on the light is what says it can be pressed.
  */
 export type BreathStage = "hidden" | "breathing" | "continue" | "closing";
 
@@ -28,10 +29,12 @@ const TEXT_COLOR = "#e8f1ff";
 const GLOW_COLOR = "#9cc9ff";
 const FONT_FAMILY = "Outfit_300Light";
 
-/** The breathing glow's size at rest, and the button it becomes. */
+/** The breathing glow's size at rest. */
 const ORB = 84;
-const PILL_WIDTH = 184;
-const PILL_HEIGHT = 50;
+/** As Continue, the glow widens by this much, to hold the word. */
+const CONTINUE_STRETCH = 1.5;
+/** Room for the word, in any language. */
+const LABEL_WIDTH = 184;
 /** The faint light round the glow, as a share of its size. */
 const HALO = 2;
 
@@ -41,12 +44,12 @@ const BREATHE_OUT_MS = 5500;
 /** How far the glow swells and settles with each breath. */
 const ORB_SMALL = 0.8;
 const ORB_LARGE = 1.12;
-/** As Continue, it still breathes, but barely. */
-const PILL_SWELL = 0.012;
+/** As Continue, it still breathes, but gently. */
+const CONTINUE_SWELL = 0.035;
 /** One slow turn of the glow's shapes. */
 const TURN_MS = 26000;
 const SHOW_MS = 1600;
-const SETTLE_MS = 1400;
+const SETTLE_MS = 2200;
 const HIDE_MS = 700;
 /** "Breathe" shows for this long in all when the glow is pressed. */
 const WORD_IN_MS = 450;
@@ -142,7 +145,8 @@ function GlowLayer({
   const style = useAnimatedStyle(() => {
     const angle = (turn.value * layer.turns + layer.offset) * Math.PI * 2;
     return {
-      opacity: 1 - settle.value,
+      // Softer under the word, still alive.
+      opacity: 1 - 0.35 * settle.value,
       transform: [
         { rotate: `${angle}rad` },
         { scaleX: 1 + layer.wobble * Math.sin(angle * 2 + layer.offset * 5) },
@@ -234,36 +238,31 @@ export function BreathButton({
     );
   };
 
-  const boxStyle = useAnimatedStyle(() => ({
-    opacity: shown.value,
-    width: interpolate(settle.value, [0, 1], [ORB, PILL_WIDTH]),
-    height: interpolate(settle.value, [0, 1], [ORB, PILL_HEIGHT]),
-  }));
+  const boxStyle = useAnimatedStyle(() => ({ opacity: shown.value }));
 
-  // The whole glow swells and settles with the breath; as Continue, barely.
+  // The whole glow swells and settles with the breath. As Continue it
+  // widens into a soft oval round the word and breathes only gently.
   const breathingStyle = useAnimatedStyle(() => {
     const orb = ORB_SMALL + (ORB_LARGE - ORB_SMALL) * breath.value;
-    const pill = 1 + PILL_SWELL * (breath.value * 2 - 1);
+    const calm = 1 + CONTINUE_SWELL * (breath.value * 2 - 1);
+    const scale = orb + (calm - orb) * settle.value;
+    const stretch = 1 + (CONTINUE_STRETCH - 1) * settle.value;
     return {
-      transform: [{ scale: orb + (pill - orb) * settle.value }],
+      transform: [{ scaleX: scale * stretch }, { scaleY: scale }],
     };
   });
 
-  // A wide, faint light round it, brighter as you breathe in; the button
-  // keeps only a little of it.
+  // A wide, faint light round it, brighter as you breathe in; as Continue
+  // it holds steady.
   const haloStyle = useAnimatedStyle(() => {
     const orb = 0.35 + 0.65 * breath.value;
-    const pill = 0.25 + 0.1 * breath.value;
-    return { opacity: orb + (pill - orb) * settle.value };
+    const calm = 0.55 + 0.1 * breath.value;
+    return { opacity: orb + (calm - orb) * settle.value };
   });
 
+  // The bright middle gives way to the word.
   const coreStyle = useAnimatedStyle(() => ({
-    opacity: (0.35 + 0.65 * breath.value) * (1 - settle.value),
-  }));
-
-  const pillStyle = useAnimatedStyle(() => ({
-    opacity: settle.value,
-    borderRadius: interpolate(settle.value, [0, 1], [ORB, PILL_HEIGHT]) / 2,
+    opacity: (0.35 + 0.65 * breath.value) * (1 - 0.7 * settle.value),
   }));
 
   const breatheStyle = useAnimatedStyle(() => ({
@@ -311,19 +310,18 @@ export function BreathButton({
               center={1}
             />
           </Animated.View>
-          <Animated.View style={[styles.pill, pillStyle]} />
         </Animated.View>
         <Animated.Text
           allowFontScaling={false}
           numberOfLines={1}
-          style={[styles.label, styles.breathe, breatheStyle]}
+          style={[styles.label, styles.onGlow, breatheStyle]}
         >
           {t("tao.breathe")}
         </Animated.Text>
         <Animated.Text
           allowFontScaling={false}
           numberOfLines={1}
-          style={[styles.label, continueStyle]}
+          style={[styles.label, styles.onGlow, continueStyle]}
         >
           {t("tao.continue")}
         </Animated.Text>
@@ -334,6 +332,8 @@ export function BreathButton({
 
 const styles = StyleSheet.create({
   box: {
+    width: ORB,
+    height: ORB,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -352,12 +352,6 @@ const styles = StyleSheet.create({
     width: ORB * 0.5,
     height: ORB * 0.5,
   },
-  pill: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(200, 225, 255, 0.1)",
-    borderWidth: 1,
-    borderColor: "rgba(214, 232, 255, 0.36)",
-  },
   label: {
     position: "absolute",
     color: TEXT_COLOR,
@@ -365,9 +359,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     letterSpacing: 1.6,
     textAlign: "center",
-    width: PILL_WIDTH,
+    width: LABEL_WIDTH,
   },
-  breathe: {
+  onGlow: {
     // A soft shadow of night round it, so it reads on the glow without a box.
     color: "#ffffff",
     textShadowColor: "rgba(8, 14, 30, 0.85)",
