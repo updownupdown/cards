@@ -1010,15 +1010,6 @@
     "won": "{{you}} libros a {{rival}}: ¡ganas!",
     "lost": "{{rival}} libros a {{you}}: gana el rival."
   },
-  "cipher": {
-    "check": "Comprobar",
-    "guessesLeft_one": "Queda {{count}} intento",
-    "guessesLeft_other": "Quedan {{count}} intentos",
-    "cipherShown": "La clave está a la vista.",
-    "solved_one": "¡Descifrada en {{count}} intento!",
-    "solved_other": "¡Descifrada en {{count}} intentos!",
-    "unsolved": "Ocho intentos, y la clave resistió."
-  },
   "mosaic": {
     "slips": "Fallos: {{slips}} de {{total}}",
     "won_one": "¡Todas las cartas rojas encontradas, con {{count}} fallo!",

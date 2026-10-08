@@ -1259,7 +1259,6 @@
       "y": -0.5559,
       "connections": [
         "/blackberry-pie",
-        "/osmosis",
         "/penguin",
         "/yukon"
       ],
@@ -1341,7 +1340,6 @@
       "y": 0.1797,
       "connections": [
         "/cribbage-squares",
-        "/sevens",
         "/shifting-sands",
         "/waypoint"
       ],
@@ -1457,7 +1455,6 @@
       "y": -0.6605,
       "connections": [
         "/little-windmill",
-        "/osmosis",
         "/stalactites",
         "/terrace"
       ],
@@ -1477,8 +1474,7 @@
       "y": -0.1762,
       "connections": [
         "/bisley",
-        "/field-command",
-        "/go-fish"
+        "/field-command"
       ],
       "rewards": [
         {
@@ -1523,9 +1519,7 @@
       "connections": [
         "/crossword",
         "/nestor",
-        "/sevens",
-        "/shifting-sands",
-        "/sweep"
+        "/shifting-sands"
       ],
       "rewards": [
         {
@@ -1570,7 +1564,6 @@
       "y": -0.7007,
       "connections": [
         "/blackberry-pie",
-        "/carousel",
         "/dominion",
         "/little-windmill"
       ],
@@ -1632,7 +1625,6 @@
       "y": -0.0138,
       "connections": [
         "/fortress",
-        "/sweep",
         "/waypoint"
       ],
       "rewards": [
@@ -1694,7 +1686,6 @@
       "y": -0.0143,
       "connections": [
         "/bisley",
-        "/go-fish",
         "/gremlin"
       ],
       "rewards": [
@@ -1771,7 +1762,6 @@
       "x": -0.1142,
       "y": -0.7736,
       "connections": [
-        "/carousel",
         "/little-windmill",
         "/miss-milligan",
         "/scorpion",
@@ -1890,7 +1880,6 @@
       "y": 0.3379,
       "connections": [
         "/australian-patience",
-        "/cipher",
         "/clock",
         "/triple-stack"
       ],
@@ -1990,7 +1979,6 @@
       "y": 0.1997,
       "connections": [
         "/cabin-siege",
-        "/cipher",
         "/clock",
         "/gremlin",
         "/triple-stack"
@@ -2221,7 +2209,6 @@
       "connections": [
         "/clock",
         "/devils-grip",
-        "/gambit",
         "/royal-envoy"
       ],
       "rewards": [
@@ -2370,8 +2357,6 @@
       "y": 0.7103,
       "connections": [
         "/aces-up",
-        "/gambit",
-        "/mosaic",
         "/somnus"
       ],
       "rewards": [
@@ -2405,151 +2390,6 @@
         {
           "type": "quote",
           "id": 179
-        }
-      ]
-    },
-    "/carousel": {
-      "x": -0.1302,
-      "y": -0.6405,
-      "connections": [
-        "/dominion",
-        "/terrace"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 185
-        },
-        {
-          "type": "quote",
-          "id": 186
-        }
-      ]
-    },
-    "/gambit": {
-      "x": -0.7817,
-      "y": 0.5438,
-      "connections": [
-        "/mosaic",
-        "/royal-envoy",
-        "/somnus"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 187
-        },
-        {
-          "type": "quote",
-          "id": 188
-        }
-      ]
-    },
-    "/go-fish": {
-      "x": -0.8504,
-      "y": -0.2118,
-      "connections": [
-        "/labyrinth",
-        "/pyramid"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 189
-        },
-        {
-          "type": "quote",
-          "id": 190
-        }
-      ]
-    },
-    "/sevens": {
-      "x": 0.5714,
-      "y": 0.1016,
-      "connections": [
-        "/crossword",
-        "/waypoint"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 191
-        },
-        {
-          "type": "quote",
-          "id": 192
-        }
-      ]
-    },
-    "/sweep": {
-      "x": 0.7772,
-      "y": 0.0676,
-      "connections": [
-        "/nestor",
-        "/waypoint"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 193
-        },
-        {
-          "type": "quote",
-          "id": 194
-        }
-      ]
-    },
-    "/cipher": {
-      "x": -0.7862,
-      "y": 0.256,
-      "connections": [
-        "/australian-patience",
-        "/cabin-siege"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 195
-        },
-        {
-          "type": "quote",
-          "id": 196
-        }
-      ]
-    },
-    "/mosaic": {
-      "x": -0.7834,
-      "y": 0.6167,
-      "connections": [
-        "/gambit",
-        "/royal-envoy"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 197
-        },
-        {
-          "type": "quote",
-          "id": 198
-        }
-      ]
-    },
-    "/osmosis": {
-      "x": 0.2363,
-      "y": -0.6567,
-      "connections": [
-        "/blackberry-pie",
-        "/stalactites"
-      ],
-      "rewards": [
-        {
-          "type": "quote",
-          "id": 199
-        },
-        {
-          "type": "quote",
-          "id": 200
         }
       ]
     }

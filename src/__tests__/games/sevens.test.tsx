@@ -181,7 +181,9 @@ describe("Sevens screen", () => {
     if (best) {
       await pressCardId(best.id);
       expect(game().hand).toHaveLength(HAND_SIZE - 1);
-      expect(game().table).toHaveLength(2);
+      // The rival may already have answered.
+      expect(game().table.some((card) => card.id === best.id)).toBe(true);
+      expect(game().table.length).toBeGreaterThanOrEqual(2);
     } else {
       const stock = harness.mapConfig!.zones.find((z) => z.id === "stock")!;
       await act(async () => harness.mapConfig!.zoneMapper!(stock)!.onPress!());

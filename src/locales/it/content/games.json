@@ -798,33 +798,6 @@
       "value": "Capitolo e versetto"
     }
   },
-  "cipher": {
-    "howToPlay": {
-      "hash": "929c106b",
-      "value": [
-        "## Obiettivo",
-        "Decifra il cifrario, tre fiori di valori diversi in un ordine segreto, entro otto tentativi.",
-        "## I tentativi",
-        "- Tocca le carte della riserva, una pila per ogni valore, per posare un tentativo di tre valori diversi in ordine. Tocca una carta del tentativo per rimetterla a posto.",
-        "- Tocca **Verifica**. Ogni carta del tentativo viene segnata: **verde** quando il suo valore occupa quel posto del cifrario, **ambra** quando il suo valore è nel cifrario ma altrove, e senza colore quando il suo valore non è affatto nel cifrario.",
-        "- I tentativi verificati restano sul tavolo, e le pile della riserva prendono il loro colore, così ciò che hai scoperto è sempre in vista. Quando la pila di un valore si esaurisce, una carta di quel valore può essere ripresa da un tentativo precedente.",
-        "## La fine",
-        "Tre verdi decifrano il cifrario, e il tuo punteggio è il numero di tentativi che sono serviti. Dopo otto tentativi, il cifrario viene scoperto e la partita è persa."
-      ]
-    },
-    "quickStart": {
-      "hash": "b5917645",
-      "value": [
-        "Tre fiori sono coperti in un ordine segreto. Trova i loro valori e i loro posti in otto tentativi.",
-        "Posa tre carte di valori diversi e tocca Verifica. Verde: valore giusto, posto giusto. Ambra: il valore è nel cifrario, ma altrove.",
-        "Le carte che restano senza colore non sono affatto nel cifrario."
-      ]
-    },
-    "title": {
-      "hash": "8c36ebf8",
-      "value": "Cifrario"
-    }
-  },
   "city-grid": {
     "howToPlay": {
       "hash": "316682c7",

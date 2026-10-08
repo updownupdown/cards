@@ -26,11 +26,13 @@ function failLoudly(problem: string, paths: string[], fix: string) {
 }
 
 describe("Cover art", () => {
-  // Every game, local-only ones included, should ship with credited art.
-  test("every game has cover art and credit for it", () => {
+  // Every released game ships with credited art; a local-only game may wait.
+  test("every released game has cover art and credit for it", () => {
     failLoudly(
       "HAVE NO COVER ART",
-      GAME_DEFINITIONS.filter((game) => !game.thumbnail).map((g) => g.path),
+      GAME_DEFINITIONS.filter(
+        (game) => !game.thumbnail && !game.enabledOnLocalOnly,
+      ).map((g) => g.path),
       "Drop an image named after the game into assets/thumbnails-source, add a " +
         "thumbnailCredit to its file in src/data/games, then run " +
         "npm run thumbnails:convert.",

@@ -1393,7 +1393,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": null,
     "connections": [
       "/blackberry-pie",
-      "/osmosis",
       "/penguin",
       "/yukon"
     ],
@@ -1483,7 +1482,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": 3,
     "connections": [
       "/cribbage-squares",
-      "/sevens",
       "/shifting-sands",
       "/waypoint"
     ],
@@ -1611,7 +1609,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": 2,
     "connections": [
       "/little-windmill",
-      "/osmosis",
       "/stalactites",
       "/terrace"
     ],
@@ -1633,8 +1630,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": 1,
     "connections": [
       "/bisley",
-      "/field-command",
-      "/go-fish"
+      "/field-command"
     ],
     "rewards": [
       {
@@ -1683,9 +1679,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "connections": [
       "/crossword",
       "/nestor",
-      "/sevens",
-      "/shifting-sands",
-      "/sweep"
+      "/shifting-sands"
     ],
     "rewards": [
       {
@@ -1734,7 +1728,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": null,
     "connections": [
       "/blackberry-pie",
-      "/carousel",
       "/dominion",
       "/little-windmill"
     ],
@@ -1802,7 +1795,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": 3,
     "connections": [
       "/fortress",
-      "/sweep",
       "/waypoint"
     ],
     "rewards": [
@@ -1870,7 +1862,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": 1,
     "connections": [
       "/bisley",
-      "/go-fish",
       "/gremlin"
     ],
     "rewards": [
@@ -1955,7 +1946,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "y": -0.7736,
     "arm": 2,
     "connections": [
-      "/carousel",
       "/little-windmill",
       "/miss-milligan",
       "/scorpion",
@@ -2086,7 +2076,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": null,
     "connections": [
       "/australian-patience",
-      "/cipher",
       "/clock",
       "/triple-stack"
     ],
@@ -2196,7 +2185,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": 1,
     "connections": [
       "/cabin-siege",
-      "/cipher",
       "/clock",
       "/gremlin",
       "/triple-stack"
@@ -2451,7 +2439,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "connections": [
       "/clock",
       "/devils-grip",
-      "/gambit",
       "/royal-envoy"
     ],
     "rewards": [
@@ -2616,8 +2603,6 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": null,
     "connections": [
       "/aces-up",
-      "/gambit",
-      "/mosaic",
       "/somnus"
     ],
     "rewards": [
@@ -2655,174 +2640,5 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
         "id": 179
       }
     ]
-  },
-  {
-    "path": "/carousel",
-    "x": -0.1302,
-    "y": -0.6405,
-    "arm": null,
-    "connections": [
-      "/dominion",
-      "/terrace"
-    ],
-    "rewards": [
-      {
-        "type": "quote",
-        "id": 185
-      },
-      {
-        "type": "quote",
-        "id": 186
-      }
-    ],
-    "appended": true
-  },
-  {
-    "path": "/gambit",
-    "x": -0.7817,
-    "y": 0.5438,
-    "arm": 1,
-    "connections": [
-      "/mosaic",
-      "/royal-envoy",
-      "/somnus"
-    ],
-    "rewards": [
-      {
-        "type": "quote",
-        "id": 187
-      },
-      {
-        "type": "quote",
-        "id": 188
-      }
-    ],
-    "appended": true
-  },
-  {
-    "path": "/go-fish",
-    "x": -0.8504,
-    "y": -0.2118,
-    "arm": null,
-    "connections": [
-      "/labyrinth",
-      "/pyramid"
-    ],
-    "rewards": [
-      {
-        "type": "quote",
-        "id": 189
-      },
-      {
-        "type": "quote",
-        "id": 190
-      }
-    ],
-    "appended": true
-  },
-  {
-    "path": "/sevens",
-    "x": 0.5714,
-    "y": 0.1016,
-    "arm": null,
-    "connections": [
-      "/crossword",
-      "/waypoint"
-    ],
-    "rewards": [
-      {
-        "type": "quote",
-        "id": 191
-      },
-      {
-        "type": "quote",
-        "id": 192
-      }
-    ],
-    "appended": true
-  },
-  {
-    "path": "/sweep",
-    "x": 0.7772,
-    "y": 0.0676,
-    "arm": null,
-    "connections": [
-      "/nestor",
-      "/waypoint"
-    ],
-    "rewards": [
-      {
-        "type": "quote",
-        "id": 193
-      },
-      {
-        "type": "quote",
-        "id": 194
-      }
-    ],
-    "appended": true
-  },
-  {
-    "path": "/cipher",
-    "x": -0.7862,
-    "y": 0.256,
-    "arm": 1,
-    "connections": [
-      "/australian-patience",
-      "/cabin-siege"
-    ],
-    "rewards": [
-      {
-        "type": "quote",
-        "id": 195
-      },
-      {
-        "type": "quote",
-        "id": 196
-      }
-    ],
-    "appended": true
-  },
-  {
-    "path": "/mosaic",
-    "x": -0.7834,
-    "y": 0.6167,
-    "arm": 1,
-    "connections": [
-      "/gambit",
-      "/royal-envoy"
-    ],
-    "rewards": [
-      {
-        "type": "quote",
-        "id": 197
-      },
-      {
-        "type": "quote",
-        "id": 198
-      }
-    ],
-    "appended": true
-  },
-  {
-    "path": "/osmosis",
-    "x": 0.2363,
-    "y": -0.6567,
-    "arm": null,
-    "connections": [
-      "/blackberry-pie",
-      "/stalactites"
-    ],
-    "rewards": [
-      {
-        "type": "quote",
-        "id": 199
-      },
-      {
-        "type": "quote",
-        "id": 200
-      }
-    ],
-    "appended": true
   }
 ];

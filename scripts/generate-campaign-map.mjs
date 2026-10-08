@@ -11,15 +11,18 @@
 //       its node under its new path;
 //     - a removed game (RETIRED_GAME_PATHS there, or one folded into another
 //       game) leaves the map, the gap it left is bridged, and its rewards
-//       are handed to other games so they can still be collected.
+//       are handed to other games so they can still be collected;
+//     - a local-only game (enabledOnLocalOnly) is not on the map at all: one
+//       that was leaves it the same way, its Tao chapter handed on and its
+//       quotes set free, so it can come and go without touching the map.
 //     A game with a node but no definition, and no entry in either list, is
 //     an error: say which it is.
 //
 //   npm run campaign:generate -- --rebuild
 //     Lays out a fresh spiral galaxy and fits the games to it: Klondike at
 //     the centre, the rest outwards by progression score, no game the only
-//     way to an easier one, categories varied near the centre, and
-//     local-only games on the rim as dead ends. Deals every reward again.
+//     way to an easier one, and categories varied near the centre. Deals
+//     every reward again.
 //
 //   npm run campaign:generate -- --rebalance-rewards
 //     Keeps the layout and deals every reward again.
@@ -148,8 +151,6 @@ const REWARDS = {
 const PLACEMENT = {
   difficultyWeight: 0.75,
   complexityWeight: 0.25,
-  /** How far out local-only games sit: among this outer share of the map. */
-  localOnlyRim: 0.3,
   /** Cost of a game sitting further from its ideal ring, per point squared. */
   radialWeight: 1,
   /** Cost per difficulty point by which a game is harder than a game it
@@ -737,65 +738,12 @@ function depths(adjacency) {
 }
 
 /**
- * Slots for local-only games: out on the rim, and dead ends, so that when a
- * build leaves them out every other game can still be reached exactly as
- * before. Prefers slots not beside one another.
- */
-function pickLocalOnlySlots(slots, adjacency, count) {
-  if (count === 0) return [];
-  const withoutSlots = (removed) =>
-    adjacency.map((links, slot) =>
-      removed.has(slot) ? [] : links.filter((next) => !removed.has(next)),
-    );
-  const reachesAll = (removed) => {
-    const trimmed = withoutSlots(removed);
-    const reached = new Set();
-    const queue = [0];
-    while (queue.length > 0) {
-      const current = queue.pop();
-      if (reached.has(current)) continue;
-      reached.add(current);
-      for (const next of trimmed[current]) queue.push(next);
-    }
-    return reached.size === slots.length - removed.size;
-  };
-
-  const rimFrom = Math.floor(slots.length * (1 - PLACEMENT.localOnlyRim));
-  const outermost = slots
-    .map((slot, index) => ({ index, radius: radius(slot) }))
-    .filter(({ index }) => index !== 0)
-    .sort((left, right) => right.radius - left.radius)
-    .slice(0, slots.length - rimFrom)
-    .map(({ index }) => index);
-
-  const chosen = new Set();
-  for (const apart of [true, false]) {
-    for (const slot of outermost) {
-      if (chosen.size >= count) break;
-      if (chosen.has(slot)) continue;
-      if (apart && adjacency[slot].some((next) => chosen.has(next))) continue;
-      const trial = new Set([...chosen, slot]);
-      if (reachesAll(trial)) chosen.add(slot);
-    }
-  }
-  if (chosen.size < count) {
-    throw new Error(
-      `Only found ${chosen.size} of ${count} rim slots that local-only games ` +
-        `could leave without cutting the map; widen PLACEMENT.localOnlyRim.`,
-    );
-  }
-  return [...chosen];
-}
-
-/**
  * Every node from scratch, as a spiral galaxy. The positions and links come
  * from the galaxy's shape alone; games are then fitted to them:
  *
  * - Klondike at the centre, and progression scores rising outwards;
- * - no game the only way through to an easier one (checked on the map as
- *   release builds show it, without local-only games);
- * - categories varied between neighbours, most of all near the centre;
- * - local-only games on the rim, as dead ends.
+ * - no game the only way through to an easier one;
+ * - categories varied between neighbours, most of all near the centre.
  */
 function layoutAll(games) {
   const positions = scatterPositions(games.length);
@@ -818,25 +766,18 @@ function layoutAll(games) {
   );
 
   const hub = games.find((game) => game.path === CAMPAIGN_START);
-  const local = games.filter((game) => game.localOnly);
-  const placed = games.filter((game) => game !== hub && !game.localOnly);
-
-  const localSlots = pickLocalOnlySlots(slots, adjacency, local.length);
-  const localSet = new Set(localSlots);
-  const released = adjacency.map((links, slot) =>
-    localSet.has(slot) ? [] : links.filter((next) => !localSet.has(next)),
-  );
+  const placed = games.filter((game) => game !== hub);
   const freeSlots = slots
     .map((_, index) => index)
-    .filter((index) => index !== 0 && !localSet.has(index));
+    .filter((index) => index !== 0);
 
   // Gates, on the map as release builds show it.
   const gates = [];
   for (const gate of freeSlots) {
-    const blocked = gatedBy(freeSlots, released, gate);
+    const blocked = gatedBy(freeSlots, adjacency, gate);
     if (blocked.length > 0) gates.push([gate, blocked]);
   }
-  const depth = depths(released);
+  const depth = depths(adjacency);
 
   // Each free slot's ideal score: the score of the game at its rank by radius.
   const sortedScores = placed.map(progressionScore).sort((a, b) => a - b);
@@ -845,7 +786,7 @@ function layoutAll(games) {
   );
   const edges = [];
   for (const slot of [0, ...freeSlots]) {
-    for (const next of released[slot])
+    for (const next of adjacency[slot])
       if (slot < next) edges.push([slot, next]);
   }
   const opening = [0, ...freeSlots].filter(
@@ -916,14 +857,6 @@ function layoutAll(games) {
     }
   }
 
-  // Local-only games take the rim slots, gentlest nearest the centre.
-  const localByScore = [...local].sort(
-    (left, right) => progressionScore(left) - progressionScore(right),
-  );
-  [...localSlots]
-    .sort((left, right) => radius(slots[left]) - radius(slots[right]))
-    .forEach((slot, rank) => bestAt.set(slot, localByScore[rank]));
-
   const records = slots.map((slot, index) => ({
     ...slot,
     path: bestAt.get(index).path,
@@ -938,7 +871,6 @@ function layoutAll(games) {
     (left, right) => distance(hubSlot, left) - distance(hubSlot, right),
   )) {
     if (hubExtraLinks.length >= HUB.extraLinks) break;
-    if (localSet.has(indexOf.get(slot.path))) continue;
     if (link(slots, connections, hubSlot, slot, CONNECTIONS.maxBridgeEdge)) {
       hubExtraLinks.push(pathOf.get(slot.path));
     }
@@ -960,16 +892,7 @@ function layoutAll(games) {
 function rimPoint(game, records) {
   const random = makeRandom(`rim:${game.path}`);
   let fallback = null;
-  // Local-only games go out among the outermost games, where nothing else
-  // depends on them (see PLACEMENT.localOnlyRim).
-  const radii = records.map(radius).sort((left, right) => left - right);
-  const innerRadius = game.localOnly
-    ? Math.max(
-        0.55,
-        radii[Math.ceil(radii.length * (1 - PLACEMENT.localOnlyRim * 0.8))] ??
-          0.55,
-      )
-    : 0.55;
+  const innerRadius = 0.55;
 
   for (let attempt = 0; attempt < 40000; attempt += 1) {
     const nodeRadius = Math.sqrt(
@@ -995,20 +918,25 @@ function rimPoint(game, records) {
 /**
  * The existing map as-is, brought in line with the games: renamed games keep
  * their node under the new path, removed games leave (their rewards are
- * returned as `orphaned`, to be handed on), and new games are added.
+ * returned as `orphaned`, to be handed on), games that have gone local-only
+ * leave too (a Tao chapter handed on, their quotes set free), and new games
+ * are added.
  */
-function extendMap(existing, games) {
+function extendMap(existing, games, localOnlyPaths) {
   const gamePaths = new Set(games.map((game) => game.path));
   const existingPaths = new Set(existing.map((record) => record.path));
 
   // Where each node that no longer has a game went.
   const renamed = new Map();
   const removed = [];
+  const withdrawn = [];
   const unexplained = [];
   for (const record of existing) {
     if (gamePaths.has(record.path)) continue;
     const target = MOVED[record.path];
-    if (target && gamePaths.has(target) && !existingPaths.has(target)) {
+    if (localOnlyPaths.has(record.path)) {
+      withdrawn.push(record);
+    } else if (target && gamePaths.has(target) && !existingPaths.has(target)) {
       renamed.set(record.path, target);
     } else if (target || RETIRED.has(record.path)) {
       // Retired, or folded into a game that has its own node.
@@ -1082,7 +1010,15 @@ function extendMap(existing, games) {
     added,
     renamed,
     removed: removed.map((record) => record.path),
-    orphaned: removed.flatMap((record) => record.rewards),
+    withdrawn: withdrawn.map((record) => record.path),
+    orphaned: [
+      ...removed.flatMap((record) => record.rewards),
+      // A withdrawn game's quotes go back to the unused ones; only a Tao
+      // chapter, which must stay collectable, is handed on.
+      ...withdrawn.flatMap((record) =>
+        record.rewards.filter((reward) => reward.type === "tao"),
+      ),
+    ],
   };
 }
 
@@ -1091,25 +1027,20 @@ function extendMap(existing, games) {
 /**
  * Deals every reward from scratch:
  *
- * - one Tao chapter each for the easiest games (never two, and never on a
- *   local-only game), numbered outwards from Klondike so the chapters are met
- *   roughly in order;
+ * - one Tao chapter each for the easiest games (never two), numbered
+ *   outwards from Klondike so the chapters are met roughly in order;
  * - quotes shuffled and dealt so every game has two rewards, then the rest to
- *   games at random, up to three each (never extra ones to local-only games,
- *   whose quotes would be lost if they were left out of a release).
+ *   games at random, up to three each.
  *
  * Rewards are awarded one per win, in the order listed: a Tao chapter first.
  */
 function dealRewards(records, gamesByPath) {
-  const released = records.filter(
-    (record) => !gamesByPath.get(record.path).localOnly,
-  );
-  if (released.length < TAO_COUNT) {
+  if (records.length < TAO_COUNT) {
     throw new Error(
-      `${TAO_COUNT} Tao chapters need as many released games; there are ${released.length}.`,
+      `${TAO_COUNT} Tao chapters need as many games; there are ${records.length}.`,
     );
   }
-  const easiest = [...released]
+  const easiest = [...records]
     .sort(
       (left, right) =>
         (left.path === CAMPAIGN_START ? -1 : 0) -
@@ -1153,7 +1084,7 @@ function dealRewards(records, gamesByPath) {
     }
   }
   const roomy = shuffle(
-    released.filter((record) => record.rewards.length < REWARDS.max),
+    records.filter((record) => record.rewards.length < REWARDS.max),
   );
   for (const record of roomy) {
     if (quotes.length === 0) break;
@@ -1185,7 +1116,6 @@ function redistributeRewards(records, added, orphaned, gamesByPath) {
   const addedPaths = new Set(added.map((game) => game.path));
   const hasTao = (record) =>
     record.rewards.some((reward) => reward.type === "tao");
-  const released = (record) => !gamesByPath.get(record.path).localOnly;
   const byPreference = (left, right) =>
     Number(addedPaths.has(right.path)) - Number(addedPaths.has(left.path)) ||
     left.rewards.length - right.rewards.length ||
@@ -1196,15 +1126,12 @@ function redistributeRewards(records, added, orphaned, gamesByPath) {
   for (const reward of orphaned.filter((reward) => reward.type === "tao")) {
     const [home] = records
       .filter(
-        (record) =>
-          released(record) &&
-          !hasTao(record) &&
-          record.rewards.length < REWARDS.max,
+        (record) => !hasTao(record) && record.rewards.length < REWARDS.max,
       )
       .sort(byPreference);
     if (!home) {
       throw new Error(
-        `No released game has room for Tao chapter ${reward.id}, which a ` +
+        `No game has room for Tao chapter ${reward.id}, which a ` +
           `removed game gave. Every chapter must stay collectable.`,
       );
     }
@@ -1213,11 +1140,7 @@ function redistributeRewards(records, added, orphaned, gamesByPath) {
 
   for (const reward of orphaned.filter((reward) => reward.type === "quote")) {
     const [home] = records
-      .filter(
-        (record) =>
-          record.rewards.length < REWARDS.max &&
-          (released(record) || record.rewards.length < REWARDS.min),
-      )
+      .filter((record) => record.rewards.length < REWARDS.max)
       .sort(byPreference);
     // With every game full, the quote goes back to the unused ones.
     if (home) home.rewards.push(reward);
@@ -1317,16 +1240,13 @@ function validate(records, gamesByPath, { layoutRules }) {
     if (!chapters.has(id)) errors.push(`Tao chapter ${id} is not awarded`);
   }
 
-  // One Tao chapter at most per game, and none on local-only games.
+  // One Tao chapter at most per game.
   for (const record of records) {
     const chapterCount = record.rewards.filter(
       (reward) => reward.type === "tao",
     ).length;
     if (chapterCount > 1)
       errors.push(`${record.path} has ${chapterCount} Tao chapters`);
-    if (chapterCount > 0 && gamesByPath.get(record.path)?.localOnly) {
-      errors.push(`${record.path} is local-only but has a Tao chapter`);
-    }
     for (const reward of record.rewards) {
       const max = reward.type === "tao" ? TAO_COUNT : QUOTE_COUNT;
       if (!(reward.id >= 1 && reward.id <= max)) {
@@ -1337,29 +1257,14 @@ function validate(records, gamesByPath, { layoutRules }) {
     }
   }
 
-  // Release builds leave local-only games out: the rest must stay whole.
-  const released = records.filter(
-    (record) => !gamesByPath.get(record.path)?.localOnly,
-  );
-  const releasedPaths = new Set(released.map((record) => record.path));
-  const releasedLinks = new Map(
-    released.map((record) => [
-      record.path,
-      new Set(record.connections.filter((next) => releasedPaths.has(next))),
-    ]),
-  );
-  if (components(released, releasedLinks).length > 1) {
-    errors.push("the map comes apart without its local-only games");
-  }
-
   // No game is the only way through to an easier one. This is a rule of the
   // layout: once games are added at the rim, removed or re-rated, the locked
   // map can no longer be held to it.
   if (layoutRules) {
-    const order = released.map((record) => record.path);
+    const order = records.map((record) => record.path);
     const indexOf = new Map(order.map((gamePath, index) => [gamePath, index]));
     const adjacency = order.map((gamePath) =>
-      [...releasedLinks.get(gamePath)].map((next) => indexOf.get(next)),
+      [...connections.get(gamePath)].map((next) => indexOf.get(next)),
     );
     const start = indexOf.get(CAMPAIGN_START);
     const swap = (index) => (index === 0 ? start : index === start ? 0 : index);
@@ -1403,9 +1308,11 @@ function validate(records, gamesByPath, { layoutRules }) {
  * renamed game is checked under its new path; a removed one, and links to
  * it, are let go.
  */
-function checkLock(lock, records) {
+function checkLock(lock, records, localOnlyPaths) {
   const byPath = new Map(records.map((record) => [record.path, record]));
-  const gone = (gamePath) => !byPath.has(gamePath) && RETIRED.has(gamePath);
+  const gone = (gamePath) =>
+    !byPath.has(gamePath) &&
+    (RETIRED.has(gamePath) || localOnlyPaths.has(gamePath));
   const nowAt = (gamePath) =>
     !byPath.has(gamePath) && MOVED[gamePath] ? MOVED[gamePath] : gamePath;
   const errors = [];
@@ -1463,13 +1370,17 @@ function lockFileFor(records) {
   )}\n`;
 }
 
-// Every game is on the map, local-only ones included: they sit on the rim as
-// dead ends, and release builds simply leave them out (see campaign-map.ts).
-const games = fs
+// Local-only games (enabledOnLocalOnly) are not on the map: they come and go
+// without touching it, and hold no rewards.
+const allGames = fs
   .readdirSync(gamesDirectory)
   .filter((filename) => filename.endsWith(".ts"))
   .map(parseGame)
   .sort((left, right) => left.path.localeCompare(right.path));
+const localOnlyPaths = new Set(
+  allGames.filter((game) => game.localOnly).map((game) => game.path),
+);
+const games = allGames.filter((game) => !game.localOnly);
 if (!games.some((game) => game.path === CAMPAIGN_START)) {
   throw new Error(`${CAMPAIGN_START} must exist as the first node.`);
 }
@@ -1491,13 +1402,7 @@ const fingerprintNow = String(
   hash(
     games
       .map((game) =>
-        [
-          game.path,
-          game.difficulty,
-          game.complexity,
-          game.category,
-          game.localOnly,
-        ].join(":"),
+        [game.path, game.difficulty, game.complexity, game.category].join(":"),
       )
       .join("|"),
   ),
@@ -1545,7 +1450,7 @@ if (lockOnly) {
   unassigned = dealRewards(records, gamesByPath);
   summary = `Kept ${records.length} nodes and dealt every reward again`;
 } else {
-  const result = extendMap(existing, games);
+  const result = extendMap(existing, games, localOnlyPaths);
   records = result.records;
   unassigned = redistributeRewards(
     records,
@@ -1562,8 +1467,9 @@ if (lockOnly) {
     result.renamed.size > 0 &&
       `renamed ${[...result.renamed].map(([from, to]) => `${from} to ${to}`).join(", ")}`,
     result.removed.length > 0 &&
-      `removed ${result.removed.join(", ")} and handed on ` +
-        `${result.orphaned.length} rewards`,
+      `removed ${result.removed.join(", ")} and handed on their rewards`,
+    result.withdrawn.length > 0 &&
+      `let ${result.withdrawn.join(", ")} go local-only, off the map`,
   ].filter(Boolean);
   summary =
     changes.length > 0
@@ -1576,8 +1482,10 @@ if (lockOnly) {
 validate(records, gamesByPath, { layoutRules: laidOutNow });
 // A rebuild or a fresh deal replaces the locked map outright, with the
 // owner's say-so; the lock is then written again from the result.
-if (locked && !lockOnly && !rebuild && !rebalance) checkLock(locked, records);
-if (lockOnly && locked && !resetConfirmed) checkLock(locked, records);
+if (locked && !lockOnly && !rebuild && !rebalance)
+  checkLock(locked, records, localOnlyPaths);
+if (lockOnly && locked && !resetConfirmed)
+  checkLock(locked, records, localOnlyPaths);
 if (unassigned.length > 0) {
   summary += `; ${unassigned.length} quotes left unassigned (${unassigned.join(", ")})`;
 }

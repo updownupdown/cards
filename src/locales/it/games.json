@@ -1010,15 +1010,6 @@
     "won": "{{you}} libri a {{rival}}: hai vinto!",
     "lost": "{{rival}} libri a {{you}}: vince il rivale."
   },
-  "cipher": {
-    "check": "Verifica",
-    "guessesLeft_one": "{{count}} tentativo rimasto",
-    "guessesLeft_other": "{{count}} tentativi rimasti",
-    "cipherShown": "Il cifrario è svelato.",
-    "solved_one": "Decifrato in {{count}} tentativo!",
-    "solved_other": "Decifrato in {{count}} tentativi!",
-    "unsolved": "Otto tentativi, e il cifrario ha resistito."
-  },
   "mosaic": {
     "slips": "Errori: {{slips}} su {{total}}",
     "won_one": "Tutte le carte rosse trovate, con {{count}} errore!",

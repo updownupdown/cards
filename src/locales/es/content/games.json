@@ -798,33 +798,6 @@
       "value": "Capítulo y versículo"
     }
   },
-  "cipher": {
-    "howToPlay": {
-      "hash": "929c106b",
-      "value": [
-        "## Objetivo",
-        "Descifra la clave, tres tréboles de valores distintos en un orden secreto, en ocho intentos como máximo.",
-        "## Los intentos",
-        "- Toca cartas de la reserva, un montón por cada valor, para colocar un intento de tres valores distintos en orden. Toca una carta del intento para devolverla.",
-        "- Toca **Comprobar**. Cada carta del intento se marca: **verde** cuando su valor ocupa ese lugar de la clave, **ámbar** cuando su valor está en la clave pero en otro lugar, y sin color cuando su valor no está en la clave.",
-        "- Los intentos comprobados se quedan en la mesa, y los montones de la reserva toman su color, para tener siempre a la vista lo que has aprendido. Cuando el montón de un valor se agota, una carta de ese valor puede recogerse de un intento anterior.",
-        "## El final",
-        "Tres verdes descifran la clave, y tu puntuación es el número de intentos que hicieron falta. Tras ocho intentos, la clave se destapa y la partida se pierde."
-      ]
-    },
-    "quickStart": {
-      "hash": "b5917645",
-      "value": [
-        "Tres tréboles están boca abajo en un orden secreto. Descubre sus valores y sus lugares en ocho intentos.",
-        "Coloca tres cartas de valores distintos y toca Comprobar. Verde: valor correcto, lugar correcto. Ámbar: el valor está en la clave, en otro lugar.",
-        "Las cartas que quedan sin color no están en la clave."
-      ]
-    },
-    "title": {
-      "hash": "8c36ebf8",
-      "value": "Cifra"
-    }
-  },
   "city-grid": {
     "howToPlay": {
       "hash": "316682c7",

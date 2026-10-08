@@ -798,33 +798,6 @@
       "value": "Bölüm ve ayet"
     }
   },
-  "cipher": {
-    "howToPlay": {
-      "hash": "929c106b",
-      "value": [
-        "## Amaç",
-        "Gizli bir sırada dizilmiş farklı değerde üç sinekten oluşan şifreyi en fazla sekiz tahminde çözün.",
-        "## Tahmin",
-        "- Her değer için bir yığın olan havuzdan kartlara dokunarak, sırayla farklı değerde üç karttan oluşan bir tahmin dizin. Geri koymak için tahmindeki bir karta dokunun.",
-        "- **Kontrol Et**'e dokunun. Tahmindeki her kart işaretlenir: değeri şifrenin o yerinde duruyorsa **yeşil**, değeri şifrede ama başka yerdeyse **kehribar**, değeri şifrede hiç yoksa renksiz kalır.",
-        "- Kontrol edilen tahminler masada kalır ve havuzdaki yığınlar onların rengini alır; böylece öğrendikleriniz hep gözünüzün önündedir. Bir değerin yığını bittiğinde, o değerde bir kart önceki bir tahminden geri alınabilir.",
-        "## Son",
-        "Üç yeşil şifreyi çözer ve puanınız, gereken tahmin sayısıdır. Sekiz tahminden sonra şifre açılır ve oyun kaybedilir."
-      ]
-    },
-    "quickStart": {
-      "hash": "b5917645",
-      "value": [
-        "Üç sinek, gizli bir sırayla kapalı duruyor. Değerlerini ve yerlerini sekiz tahminde bulun.",
-        "Farklı değerde üç kart dizin ve Kontrol Et'e dokunun. Yeşil: doğru değer, doğru yer. Kehribar: değer şifrede var, ama başka yerde.",
-        "Renksiz kalan kartlar şifrede hiç yok."
-      ]
-    },
-    "title": {
-      "hash": "8c36ebf8",
-      "value": "Şifre"
-    }
-  },
   "city-grid": {
     "howToPlay": {
       "hash": "316682c7",
@@ -1455,9 +1428,7 @@
     },
     "quickStart": {
       "hash": "a14a111d",
-      "value": [
-        "Düşman hattı sağa kayar, sonra düşman destesinden dolar."
-      ]
+      "value": ["Düşman hattı sağa kayar, sonra düşman destesinden dolar."]
     },
     "title": {
       "hash": "946d7b10",

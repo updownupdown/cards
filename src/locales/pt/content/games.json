@@ -798,33 +798,6 @@
       "value": "Capítulo e versículo"
     }
   },
-  "cipher": {
-    "howToPlay": {
-      "hash": "929c106b",
-      "value": [
-        "## Objetivo",
-        "Decifre a cifra, três paus de valores diferentes numa ordem secreta, em até oito tentativas.",
-        "## As tentativas",
-        "- Toque em cartas da reserva, uma pilha para cada valor, para colocar uma tentativa de três valores diferentes em ordem. Toque numa carta da tentativa para devolvê-la.",
-        "- Toque em **Verificar**. Cada carta da tentativa é marcada: **verde** quando seu valor ocupa aquele lugar da cifra, **âmbar** quando seu valor está na cifra mas em outro lugar, e sem cor quando seu valor não está na cifra.",
-        "- As tentativas verificadas ficam na mesa, e as pilhas da reserva tomam a cor delas, para que o que você aprendeu esteja sempre à vista. Quando a pilha de um valor acaba, uma carta desse valor pode ser recolhida de uma tentativa anterior.",
-        "## O fim",
-        "Três verdes decifram a cifra, e sua pontuação é o número de tentativas que foram precisas. Após oito tentativas, a cifra é virada para cima e a partida está perdida."
-      ]
-    },
-    "quickStart": {
-      "hash": "b5917645",
-      "value": [
-        "Três paus estão virados para baixo numa ordem secreta. Descubra seus valores e seus lugares em oito tentativas.",
-        "Coloque três cartas de valores diferentes e toque em Verificar. Verde: valor certo, lugar certo. Âmbar: o valor está na cifra, em outro lugar.",
-        "As cartas que ficam sem cor não estão na cifra."
-      ]
-    },
-    "title": {
-      "hash": "8c36ebf8",
-      "value": "Cifra"
-    }
-  },
   "city-grid": {
     "howToPlay": {
       "hash": "316682c7",
