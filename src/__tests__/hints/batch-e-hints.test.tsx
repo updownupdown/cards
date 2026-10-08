@@ -72,28 +72,44 @@ describe("Boiling Over hints", () => {
     );
   });
 
-  test("buys the best card the coins allow, then moves on", () => {
+  test("buys diamonds early, for their coins, and hearts late", () => {
     const state: BoilingOverGameState = {
       ...brewing([]),
       phase: "market",
       coins: 9,
     };
-    // Nine coins buy no two cards: the best one, a 9♥.
+    // Nine coins buy no two cards. Early on, an 8♦ brings coins for the
+    // markets ahead.
+    expect(boilingOverRules.bestBuy(state)).toMatchObject({
+      rank: "8",
+      suit: "diamonds",
+    });
+    expect(boilingOverRules.findHint(state)?.message.note).toBe(
+      i18n.t("games:boilingOver.hint.buyDiamonds"),
+    );
+
+    // At the last market, the most strength: a 9♥.
+    state.round = boilingOverRules.ROUNDS - 1;
     expect(boilingOverRules.bestBuy(state)).toMatchObject({
       rank: "9",
       suit: "hearts",
     });
+  });
 
-    state.coins = 20;
+  test("buys a second card of another suit, then moves on", () => {
+    const state: BoilingOverGameState = {
+      ...brewing([]),
+      phase: "market",
+      coins: 20,
+    };
     const buy = boilingOverRules.bestBuy(state)!;
     const row = boilingOverRules.MARKET_SUITS.indexOf(buy.suit);
     boilingOverRules.buyCard(state, row, state.market[row].indexOf(buy));
-    // The second card, of another suit, spends what's left.
     const second = boilingOverRules.bestBuy(state)!;
     expect(second.suit).not.toBe(buy.suit);
-    expect(boilingOverRules.costOf(buy) + boilingOverRules.costOf(second)).toBe(
-      20,
-    );
+    expect(
+      boilingOverRules.costOf(buy) + boilingOverRules.costOf(second),
+    ).toBeLessThanOrEqual(20);
     const row2 = boilingOverRules.MARKET_SUITS.indexOf(second.suit);
     boilingOverRules.buyCard(state, row2, state.market[row2].indexOf(second));
     expect(boilingOverRules.findHint(state)?.message.values?.label).toBe(

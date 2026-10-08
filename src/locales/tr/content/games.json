@@ -432,10 +432,10 @@
   },
   "boiling-over": {
     "howToPlay": {
-      "hash": "ea9ac512",
+      "hash": "735880e5",
       "value": [
         "## Amaç",
-        "**9 tur** boyunca iksir kaynatarak **150 puan** ya da daha fazla topla.",
+        "**9 tur** boyunca iksir kaynatarak **250 puan** ya da daha fazla topla.",
         "## Desten",
         "- 11 kartla başlarsın: altı **çürük** (siyah A, 2 ve 3) ve beş malzeme (2♥ 3♥ 4♥ 2♦ 3♦).",
         "- Her turun başında bütün kartların karıştırılıp destene konur.",
@@ -444,30 +444,33 @@
         "- Her malzeme değerini iksirin **gücüne** ekler (As 1, Vale 11, Kız 12, Papaz 13).",
         "- Kazandaki çürükler **toplamda 7'yi geçerse** iksir taşar.",
         "- Taşma riski, sıradaki kartın iksiri taşırma olasılığını gösterir.",
-        "## Etkiler",
-        "- **♥ Kupa:** etkisi yok.",
-        "- **♦ Karo:** son kart olarak bir karoyla durursan iki kez sayılır.",
-        "- **♣ Sinek:** önceki kart bir çürükse, o çürük destene geri döner.",
-        "- **♠ Maça:** destendeki bir sonraki kart açılır.",
+        "## Takımlar",
+        "- **♥ Kupa:** etkisi yok ve en ucuzu.",
+        "- **♦ Karo:** para için iki kez sayılır.",
+        "- **♣ Sinek:** kazandaki her sinek, kazanın 1 çürük daha kaldırmasını sağlar.",
+        "- **♠ Maça:** destendeki bir sonraki kart açılır. Bu bir çürükse destenin en altına gider.",
         "## Durmak",
-        "- İstediğin an durup iksirin gücü kadar puan, bunun yarısı kadar da (yukarı yuvarlanır) para alırsın.",
+        "- İstediğin an durup iksirin gücü kadar puan al. Bunun yarısı kadar da (yukarı yuvarlanır) para alırsın; karolar iki kez sayılır.",
         "- İksir taşarsa ya puanı ya da parayı seç.",
         "## Pazar",
         "- Paranla en fazla **farklı takımlardan 2 kart** al. Kartlar destene katılır.",
-        "- Kupa, değeri kadar tutar. Karo, sinek ve maça 1 fazlasına mal olur.",
+        "- Bir kart değeri kadar tutar: kupa +0, karo +1, maça +2 ve sinek +3.",
         "- Harcamadığın para kaybolur.",
         "## Unvanlar",
-        "- 150+: Köy Şifacısı",
-        "- 200+: Saray Simyacısı",
-        "- 250+: Mucize Yaratıcı"
+        "- 250+: Köy Şifacısı",
+        "- 350+: Saray Simyacısı",
+        "- 450+: Mucize Yaratıcı",
+        "## İpuçları",
+        "- Karolar oyunun başında kazandırır, paralarını harcayacak pazarlar varken. Sona doğru, paran karşılığında en çok puanı kupalar verir.",
+        "- Sinekler ve maçalar iksir taşmadan daha uzun kaynatmanı sağlar: iksirlerin sık sık taşıyorsa onları al."
       ]
     },
     "quickStart": {
-      "hash": "8bdb8a52",
+      "hash": "0cad2b55",
       "value": [
         "Üstteki kartı kazana eklemek için desteye dokun.",
         "Siyah A, 2 ve 3 çürükleri toplamda 7'yi geçmeden dur.",
-        "Paralarınla desten için daha iyi kartlar al, sonra yeniden kaynat."
+        "Paralarınla desten için daha iyi kartlar al: her takım farklı bir iş yapar."
       ]
     },
     "title": {
@@ -2613,10 +2616,10 @@
   },
   "picket-fence": {
     "howToPlay": {
-      "hash": "ec23d938",
+      "hash": "fe06b8f8",
       "value": [
         "## Amaç",
-        "Sokaklarını çitlerle sitelere ayırıp onları ev, park ve havuzlarla doldurarak **60 puan** ya da daha fazlasını topla. Oyun deste bitene kadar sürer, bu yüzden puanını artırmaya devam et.",
+        "Sokaklarını çitlerle sitelere ayırıp park ve havuz ekleyerek **70 puan** ya da daha fazlasını topla. Oyun deste bitene kadar sürer, bu yüzden puanını artırmaya devam et.",
         "## Sıran",
         "Elinde üç kart tutarsın ve her turda ikisini oynarsın: birini sayısı için, sonra birini takımı için. Sonra yeniden üç karta tamamlayacak kadar çek.",
         "## İnşa",
@@ -2628,27 +2631,27 @@
         "- **♦ Havuz:** karo, o ev bir havuz arsasındaysa evin altına havuz olarak yerleştirilir.",
         "- **♠ Çit:** herhangi bir sokakta iki arsanın arasına bir çit çek.",
         "- **♣ İkinci ev:** sineği de ev olarak inşa et ya da onunla bir evi yenile.",
-        "- Bir evde bir park ya da bir havuz olabilir. Kullanılamayan kart ıskartaya gider.",
+        "- Bir evde bir park ya da bir havuz olabilir; bir sokakta da park ya da havuz olur, ikisi birden asla: ilk konan karar verir. Kullanılamayan kart ıskartaya gider.",
         "## Puanlama",
-        "- Çitler ve sokak uçları her sokağı **sitelere** böler. Yalnızca **tamamlanmış** bir site puan getirir: her arsası inşa edilmiş olan.",
-        "- Evleri 1, 2, 3 ya da 4 evlik bir sitede 1, 3, 6 ya da 10 puan getirir. **Beş ya da daha fazla evlik siteler puan getirmez**, bu yüzden her sokağa çit gerekir.",
-        "- Tamamlanmış bir sitedeki her park 2, her havuz 4 puan ekler.",
+        "- Çitler ve sokak uçları her sokağı **sitelere** böler. Her arsası inşa edilmiş, **tamamlanmış** bir site ev başına 1 puan, artı 2 puan getirir.",
+        "- Sitesi tamamlansın ya da tamamlanmasın, her park 3 puan, her havuz 4 puan getirir.",
         "## Dereceler",
-        "- 60+: İyi Komşular",
-        "- 70+: Örnek Mahalle",
-        "- 80+: Kartpostal Gibi",
+        "- 70+: İyi Komşular",
+        "- 78+: Örnek Mahalle",
+        "- 85+: Kartpostal Gibi",
         "## İpuçları",
-        "- Büyük siteler daha değerlidir, ama inşa edilmemiş tek bir arsa bütün siteyi, parkları ve havuzlarıyla birlikte puansız bırakır. Bir çit kaybını sınırlayabilir.",
+        "- Her çit bir site daha yaratır; iki yanı da tamamlanınca 2 puan daha getirir. Bir çit, inşa edilemeyecek bir arsayı ayırmaya da yarar.",
+        "- Her sokağın türünü seç: havuzlar daha değerlidir ama yalnızca havuz arsalarına sığar; park sokağında ise her evin altında bir park olabilir.",
         "- Numaralar arasında boşluk bırak: bir 5 ile bir 6 arasındaki arsaya, onlardan biri yenilenene kadar inşa yapılamaz.",
-        "- Her sitenin üstündeki etiket, tamamlandığında kaç puan getireceğini, ya da bu haliyle tamamlanamıyorsa ✕ gösterir."
+        "- Her sitenin üstündeki etiket, tamamlandığında kaç puan getireceğini ya da bu haliyle tamamlanamıyorsa ✕ gösterir. Puan çubuğu, bütün siteler tamamlanırsa alacağın puanı gösterir."
       ]
     },
     "quickStart": {
-      "hash": "616845be",
+      "hash": "e8f64a5e",
       "value": [
         "Her turda bir kartı ev olarak inşa et ve başka bir kartın takımını etkisi olarak kullan.",
         "Ev numaraları her sokakta soldan sağa artmalıdır.",
-        "Yalnızca çitle ayrılmış, en fazla dört evlik siteler, içlerindeki her arsa inşa edildiğinde puan getirir."
+        "Çitler sokakları sitelere böler: tamamlanan her site evleri kadar, artı 2 puan getirir."
       ]
     },
     "title": {

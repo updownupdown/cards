@@ -30,11 +30,11 @@ export const boilingOver: GameDefinition = {
   quickStart: [
     "Tap your deck to add its top card to the cauldron.",
     "Stop before the black A, 2 and 3 duds add up to more than 7.",
-    "Spend your coins on better cards for your deck, then brew again.",
+    "Spend your coins on better cards for your deck: each suit does something different.",
   ],
   howToPlay: [
     "## Objective",
-    "Score **150 points** or more over **9 rounds** of brewing.",
+    "Score **250 points** or more over **9 rounds** of brewing.",
 
     "## Your deck",
     "- You start with 11 cards: six **duds** (the black A, 2 and 3) and five ingredients (2♥ 3♥ 4♥ 2♦ 3♦).",
@@ -46,24 +46,28 @@ export const boilingOver: GameDefinition = {
     "- If the duds in the cauldron add up to **more than 7**, the potion boils over.",
     "- The bust risk shows the chance that the next card boils the potion over.",
 
-    "## Effects",
-    "- **♥ Hearts:** no effect.",
-    "- **♦ Diamonds:** if you stop with a diamond as the last card, it counts twice.",
-    "- **♣ Clubs:** if the card before it is a dud, the dud goes back into your deck.",
-    "- **♠ Spades:** the next card of your deck is turned face up.",
+    "## Suits",
+    "- **♥ Hearts:** no effect, and the cheapest.",
+    "- **♦ Diamonds:** count double towards coins.",
+    "- **♣ Clubs:** each one in the cauldron lets it hold 1 more dud.",
+    "- **♠ Spades:** the next card of your deck is turned face up. If it's a dud, it goes to the bottom of your deck.",
 
     "## Stopping",
-    "- Stop at any time to score the potion's strength in points, and get half of it (rounded up) in coins.",
+    "- Stop at any time to score the potion's strength in points. You also get half of it (rounded up) in coins, with diamonds counting double.",
     "- If the potion boils over, choose either the points or the coins.",
 
     "## Market",
     "- Spend your coins on up to **2 cards of different suits**. They join your deck.",
-    "- A heart costs its value. Diamonds, clubs and spades cost 1 more.",
+    "- A card costs its value: hearts +0, diamonds +1, spades +2 and clubs +3.",
     "- Coins you don't spend are lost.",
 
     "## Ratings",
-    "- 150+: Village Healer",
-    "- 200+: Court Alchemist",
-    "- 250+: Miracle Worker",
+    "- 250+: Village Healer",
+    "- 350+: Court Alchemist",
+    "- 450+: Miracle Worker",
+
+    "## Tips",
+    "- Diamonds pay off early, while there are markets left to spend their coins in. Near the end, hearts are the most points for your coins.",
+    "- Clubs and spades let you brew longer before boiling over: buy them if your potions keep spilling.",
   ],
 };

@@ -93,47 +93,78 @@ describe("Boiling Over rules", () => {
   });
 
   test("a spade shows the next card, and the risk follows it", () => {
-    const next = card("2", "clubs", false);
+    const next = card("9", "hearts", false);
     const state = brewing({
       cauldron: [card("3", "spades"), card("3", "clubs")],
       deckTopFirst: [card("7", "spades", false), next, card("A", "spades")],
     });
 
-    boilingOverRules.drawCard(state);
+    expect(boilingOverRules.drawCard(state)).toBe("ingredient");
     expect(state.deck[state.deck.length - 1]).toMatchObject({
       id: next.id,
       faceUp: true,
     });
-    expect(boilingOverRules.bustChance(state)).toBe(1);
+    expect(boilingOverRules.bustChance(state)).toBe(0);
   });
 
-  test("a club sends the dud before it back into the deck", () => {
-    const dud = card("3", "clubs");
+  test("a dud a spade turns up goes to the bottom of the deck", () => {
+    const dud = card("2", "clubs", false);
+    const after = card("5", "hearts", false);
     const state = brewing({
-      cauldron: [card("4", "hearts"), dud],
-      deckTopFirst: [card("6", "clubs", false)],
+      cauldron: [card("3", "spades")],
+      deckTopFirst: [card("7", "spades", false), dud, after],
     });
 
-    expect(boilingOverRules.drawCard(state)).toBe("dudReturned");
-    expect(state.cauldron.map((c) => c.id)).not.toContain(dud.id);
-    expect(state.deck).toHaveLength(1);
-    expect(state.deck[0]).toMatchObject({ id: dud.id, faceUp: false });
-    expect(boilingOverRules.dudTotal(state.cauldron)).toBe(0);
+    expect(boilingOverRules.drawCard(state)).toBe("dudSkipped");
+    expect(state.deck.map((c) => c.id)).toEqual([dud.id, after.id]);
+    expect(state.deck[0].faceUp).toBe(false);
+    expect(state.deck[1].faceUp).toBe(false);
   });
 
-  test("stopping on a diamond counts it twice", () => {
+  test("the board can show the dud before it is skipped", () => {
+    const dud = card("2", "clubs", false);
+    const state = brewing({
+      deckTopFirst: [card("7", "spades", false), dud, card("5", "hearts")],
+    });
+
+    expect(boilingOverRules.drawCard(state, false)).toBe("dudSkipped");
+    expect(state.deck[state.deck.length - 1]).toMatchObject({
+      id: dud.id,
+      faceUp: true,
+    });
+    expect(boilingOverRules.skipShownDud(state)).toBe(true);
+    expect(state.deck[0]).toMatchObject({ id: dud.id, faceUp: false });
+  });
+
+  test("each club lets the cauldron hold one more dud", () => {
+    const state = brewing({
+      cauldron: [card("3", "spades"), card("3", "clubs"), card("6", "clubs")],
+      deckTopFirst: [card("2", "spades", false), card("A", "spades", false)],
+    });
+
+    expect(boilingOverRules.dudLimit(state.cauldron)).toBe(DUD_LIMIT + 1);
+    expect(boilingOverRules.drawCard(state)).toBe("dud");
+    expect(boilingOverRules.dudTotal(state.cauldron)).toBe(8);
+    expect(boilingOverRules.drawCard(state)).toBe("boiledOver");
+  });
+
+  test("diamonds count double towards coins, and the potion is poured back", () => {
     const state = brewing({
       cauldron: [
         card("5", "hearts"),
         card("A", "spades"),
         card("6", "diamonds"),
       ],
+      deckTopFirst: [card("2", "clubs", false)],
     });
 
     expect(boilingOverRules.stopBrewing(state)).toBe(true);
-    expect(state.score).toBe(17);
+    expect(state.score).toBe(11);
     expect(state.coins).toBe(9);
     expect(state.phase).toBe("market");
+    expect(state.cauldron).toHaveLength(0);
+    expect(state.deck).toHaveLength(4);
+    expect(state.deck.every((c) => !c.faceUp)).toBe(true);
   });
 
   test("after boiling over, only the points or the coins are kept", () => {
@@ -162,11 +193,13 @@ describe("Boiling Over rules", () => {
 
     expect(boilingOverRules.costOf(state.market[0][0])).toBe(5);
     expect(boilingOverRules.costOf(state.market[1][0])).toBe(5);
+    expect(boilingOverRules.costOf(state.market[3][0])).toBe(11);
+    expect(boilingOverRules.costOf(card("9", "clubs"))).toBe(12);
     expect(boilingOverRules.buyCard(state, 0, 0)).toBe(true);
     expect(boilingOverRules.buyCard(state, 0, 0)).toBe(false);
     expect(boilingOverRules.buyCard(state, 3, 0)).toBe(true);
     expect(boilingOverRules.buyCard(state, 1, 0)).toBe(false);
-    expect(state.coins).toBe(15);
+    expect(state.coins).toBe(14);
     expect(state.deck).toHaveLength(2);
   });
 
