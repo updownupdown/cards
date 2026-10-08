@@ -8,7 +8,6 @@ import {
   populateTestCampaignProgress,
   resetCampaignProgress,
 } from "@/data/campaign-progress";
-import { resetWildCardsProgress } from "@/data/wild-cards";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { getTestGameDotPaths, getTestWonPaths } from "@/data/test-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -433,7 +432,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                         updateSettings(DEFAULT_GLOBAL_SETTINGS);
                         await resetAllSettings();
                         await resetCampaignProgress();
-                        await resetWildCardsProgress();
                         onHomeDataInvalidated();
                         setIsResetConfirmationVisible(false);
                         onClose();

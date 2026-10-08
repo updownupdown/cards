@@ -59,14 +59,6 @@ jest.mock("@/components/Home/HomeCardFact", () => ({
   HomeCardFact: () => null,
 }));
 
-// Reads the campaign's progress, which needs every game; tested on its own.
-jest.mock("@/components/Home/WildCardsSection", () => ({
-  WildCardsSection: () => null,
-}));
-jest.mock("@/hooks/useWildCards", () => ({
-  useWildCardsVisible: () => false,
-}));
-
 jest.mock("@/hooks/useViewportDimensions", () => ({
   useViewportDimensions: () => ({ width: 420, height: 800 }),
 }));
