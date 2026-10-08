@@ -1010,15 +1010,6 @@
     "won": "{{you}} dörtlüye {{rival}}: kazandın!",
     "lost": "{{rival}} dörtlüye {{you}}: rakip kazandı."
   },
-  "cipher": {
-    "check": "Kontrol Et",
-    "guessesLeft_one": "{{count}} tahmin kaldı",
-    "guessesLeft_other": "{{count}} tahmin kaldı",
-    "cipherShown": "Şifre açıldı.",
-    "solved_one": "{{count}} tahminde çözüldü!",
-    "solved_other": "{{count}} tahminde çözüldü!",
-    "unsolved": "Sekiz tahmin bitti ve şifre çözülemedi."
-  },
   "mosaic": {
     "slips": "Hata: {{slips}}/{{total}}",
     "won_one": "Bütün kırmızı kartlar {{count}} hatayla bulundu!",

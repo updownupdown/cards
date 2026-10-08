@@ -37,7 +37,8 @@ migrations) over changing the pins. Never:
   `--reset-player-progress`.
 
 Adding things is safe: new games (then `npm run campaign:generate` and
-`npm run campaign:lock`), quotes appended at the end, new settings, themes or
+`npm run campaign:lock`; a game marked `enabledOnLocalOnly` gets no node and
+no rewards, so it can come and go freely), quotes appended at the end, new settings, themes or
 storage keys (then `npm run saved-data:pin`, which only ever adds).
 
 Renaming or removing a game is done without losing anything else, but only

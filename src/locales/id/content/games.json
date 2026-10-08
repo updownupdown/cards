@@ -798,33 +798,6 @@
       "value": "Bab dan ayat"
     }
   },
-  "cipher": {
-    "howToPlay": {
-      "hash": "929c106b",
-      "value": [
-        "## Tujuan",
-        "Pecahkan sandi, tiga kartu keriting dengan nilai berbeda dalam urutan rahasia, dalam paling banyak delapan tebakan.",
-        "## Menebak",
-        "- Ketuk kartu dari kumpulan, satu tumpukan untuk setiap nilai, untuk meletakkan tebakan tiga nilai berbeda secara berurutan. Ketuk kartu dalam tebakan untuk mengembalikannya.",
-        "- Ketuk **Periksa**. Setiap kartu tebakan ditandai: **hijau** jika nilainya menempati tempat itu dalam sandi, **kuning** jika nilainya ada dalam sandi tetapi di tempat lain, dan tanpa warna jika nilainya sama sekali tidak ada dalam sandi.",
-        "- Tebakan yang sudah diperiksa tetap di meja, dan tumpukan kumpulan mengambil warnanya, sehingga yang sudah Anda pelajari selalu terlihat. Jika tumpukan suatu nilai habis, kartu bernilai itu dapat diambil kembali dari tebakan sebelumnya.",
-        "## Akhir",
-        "Tiga hijau memecahkan sandi, dan skor Anda adalah jumlah tebakan yang diperlukan. Setelah delapan tebakan, sandi dibuka dan permainan kalah."
-      ]
-    },
-    "quickStart": {
-      "hash": "b5917645",
-      "value": [
-        "Tiga kartu keriting tertutup dalam urutan rahasia. Temukan nilai dan tempatnya dalam delapan tebakan.",
-        "Letakkan tiga kartu dengan nilai berbeda dan ketuk Periksa. Hijau: nilai benar, tempat benar. Kuning: nilainya ada dalam sandi, di tempat lain.",
-        "Kartu yang tetap tanpa warna sama sekali tidak ada dalam sandi."
-      ]
-    },
-    "title": {
-      "hash": "8c36ebf8",
-      "value": "Sandi"
-    }
-  },
   "city-grid": {
     "howToPlay": {
       "hash": "316682c7",

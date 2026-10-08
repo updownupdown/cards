@@ -1010,15 +1010,6 @@
     "won": "{{you}} livres à {{rival}} : vous gagnez !",
     "lost": "{{rival}} livres à {{you}} : le rival gagne."
   },
-  "cipher": {
-    "check": "Vérifier",
-    "guessesLeft_one": "{{count}} essai restant",
-    "guessesLeft_other": "{{count}} essais restants",
-    "cipherShown": "Le code est révélé.",
-    "solved_one": "Déchiffré en {{count}} essai !",
-    "solved_other": "Déchiffré en {{count}} essais !",
-    "unsolved": "Huit essais, et le code a tenu."
-  },
   "mosaic": {
     "slips": "Erreurs : {{slips}} sur {{total}}",
     "won_one": "Toutes les cartes rouges trouvées, avec {{count}} erreur !",
