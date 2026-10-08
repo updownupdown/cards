@@ -14,7 +14,8 @@
 // its settings in RETIRED_GAME_SETTINGS) in src/data/game-variants.ts: what
 // saves hold for it is dropped, and its pins here are let go. Its place on the
 // map and its rewards are handled by `npm run campaign:generate`, which hands
-// the rewards to other games.
+// the rewards to other games. One replaced by a different game is listed in
+// REPLACED_GAME_PATHS: the same, but the new game takes its node.
 //
 // saved-data/contract.json pins what saves refer to. Additions pass; to pin
 // them too, run `npm run saved-data:pin`, which only ever adds. Removing a pin
@@ -36,6 +37,7 @@ import {
 } from "@/data/game-menu";
 import {
   MOVED_GAME_PATHS,
+  REPLACED_GAME_PATHS,
   RETIRED_GAME_PATHS,
   RETIRED_GAME_SETTINGS,
   currentGamePath,
@@ -158,7 +160,8 @@ const now = currentContract();
 
 /** Pinned games still in the app, under whatever path they have now. */
 const livingGamePaths = contract.gamePaths.filter(
-  (gamePath) => !RETIRED_GAME_PATHS.includes(gamePath),
+  (gamePath) =>
+    !RETIRED_GAME_PATHS.includes(gamePath) && !REPLACED_GAME_PATHS[gamePath],
 );
 
 // ========== The pins ========== //
@@ -183,7 +186,7 @@ describe("Saved data: what saves refer to still exists", () => {
         return MOVED_GAME_PATHS[gamePath]
           ? [`${gamePath} moved to ${target}, which doesn't exist`]
           : [
-              `${gamePath} is gone: its stats, favourite and campaign wins would be lost (add it to MOVED_GAME_PATHS if it was renamed or merged; only with the owner's OK to remove it, to RETIRED_GAME_PATHS)`,
+              `${gamePath} is gone: its stats, favourite and campaign wins would be lost (add it to MOVED_GAME_PATHS if it was renamed or merged; only with the owner's OK, to REPLACED_GAME_PATHS if a different game takes its place, or RETIRED_GAME_PATHS to remove it)`,
             ];
       }),
     );
@@ -197,6 +200,21 @@ describe("Saved data: what saves refer to still exists", () => {
     ).toEqual([]);
     expect(
       RETIRED_GAME_SETTINGS.filter((field) => field in DEFAULT_GAME_SETTINGS),
+    ).toEqual([]);
+  });
+
+  test("a replaced game is really gone, and the game in its place is new", () => {
+    expect(
+      Object.entries(REPLACED_GAME_PATHS).flatMap(([gamePath, successor]) => [
+        ...(GAMES_DATA[gamePath] ||
+        MOVED_GAME_PATHS[gamePath] ||
+        RETIRED_GAME_PATHS.includes(gamePath)
+          ? [`${gamePath} is replaced but still a game, moved or retired`]
+          : []),
+        ...(!GAMES_DATA[successor]
+          ? [`${gamePath} is replaced by ${successor}, which isn't a game`]
+          : []),
+      ]),
     ).toEqual([]);
   });
 
@@ -645,6 +663,39 @@ describe("Saved data: the campaign map stays locked", () => {
       );
     };
 
+    /** A copy of Golf under another path, as a new game. */
+    const addGolfCopy = (dataDirectory: string) =>
+      fs.writeFileSync(
+        path.join(dataDirectory, "games/test-golf.ts"),
+        fs
+          .readFileSync(path.join(dataDirectory, "games/golf.ts"), "utf8")
+          .replace('path: "/golf"', 'path: "/test-golf"'),
+      );
+    /** Whether `paths` can all reach each other by links among themselves. */
+    const linkedAmongThemselves = (
+      map: GeneratedGameDot[],
+      paths: string[],
+    ) => {
+      const members = new Set(paths);
+      const seen = new Set([paths[0]]);
+      const queue = [paths[0]];
+      while (queue.length > 0) {
+        const currentPath = queue.pop();
+        const current = map.find((gameDot) => gameDot.path === currentPath)!;
+        for (const next of current.connections) {
+          if (members.has(next) && !seen.has(next)) {
+            seen.add(next);
+            queue.push(next);
+          }
+        }
+      }
+      return seen.size === members.size;
+    };
+    const progressionScore = (gamePath: string) => {
+      const { difficulty, complexity } = GAMES_DATA[gamePath].rating;
+      return 0.75 * difficulty + 0.25 * complexity;
+    };
+
     test("a game that disappears without a word is refused", () => {
       const { before, after, error } = runGenerator([], {
         prepare: removeGame,
@@ -674,6 +725,9 @@ describe("Saved data: the campaign map stays locked", () => {
       expect(now.some((gameDot) => gameDot.connections.includes("/golf"))).toBe(
         false,
       );
+      // Its neighbours can still reach each other, so a player who had Golf
+      // open, by winning one of them, isn't cut off from the rest.
+      expect(linkedAmongThemselves(now, golf.connections)).toBe(true);
       // Golf's rewards can still be collected, each from one other game.
       for (const reward of golf.rewards) {
         expect(
@@ -721,6 +775,62 @@ describe("Saved data: the campaign map stays locked", () => {
           connections: gameDot.connections.map(rename).sort(),
         })),
       );
+    }, 30000);
+
+    test("a game that replaces another takes its place, links and rewards", () => {
+      const { before, after, error } = runGenerator([], {
+        prepare: (dataDirectory) => {
+          addGolfCopy(dataDirectory);
+          removeGame(dataDirectory);
+          editVariants((source) =>
+            source.replace(
+              /(export const REPLACED_GAME_PATHS[^=]*= \{)/,
+              '$1 "/golf": "/test-golf",',
+            ),
+          )(dataDirectory);
+        },
+      });
+      expect(error).toBe("");
+      const replace = (gamePath: string) =>
+        gamePath === "/golf" ? "/test-golf" : gamePath;
+      expect(parseMap(after)).toEqual(
+        parseMap(before).map((gameDot) => ({
+          ...gameDot,
+          path: replace(gameDot.path),
+          connections: gameDot.connections.map(replace).sort(),
+        })),
+      );
+    }, 30000);
+
+    test("a new game goes among games about as hard, linked to one no harder", () => {
+      const { before, after, error } = runGenerator([], {
+        prepare: addGolfCopy,
+      });
+      expect(error).toBe("");
+      const was = parseMap(before);
+      const now = parseMap(after);
+      const golf = was.find((gameDot) => gameDot.path === "/golf")!;
+      const added = now.find((gameDot) => gameDot.path === "/test-golf")!;
+      const radius = ({ x, y }: { x: number; y: number }) => Math.hypot(x, y);
+
+      // Not out on the rim, where an easy game would sit behind hard ones.
+      expect(Math.abs(radius(added) - radius(golf))).toBeLessThan(0.2);
+      expect(
+        added.connections.some(
+          (next) =>
+            next === "/klondike" ||
+            progressionScore(next) <= progressionScore("/golf"),
+        ),
+      ).toBe(true);
+      // Nothing that was there moved, lost a link or lost a reward.
+      for (const gameDot of was) {
+        const kept = now.find((entry) => entry.path === gameDot.path)!;
+        expect([kept.x, kept.y]).toEqual([gameDot.x, gameDot.y]);
+        expect(kept.connections).toEqual(
+          expect.arrayContaining(gameDot.connections),
+        );
+        expect(kept.rewards).toEqual(gameDot.rewards);
+      }
     }, 30000);
 
     test("a plain run leaves the map as it is", () => {

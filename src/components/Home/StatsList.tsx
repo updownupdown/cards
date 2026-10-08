@@ -3,7 +3,16 @@ import { Button } from "@/components/Button/Button";
 import { getScaledTextSize, Text } from "@/components/common/Text";
 import { GameTile } from "@/components/Home/HomeArt";
 import { Caps, hairline, Meter, SectionTitle } from "@/components/ui/Nocturne";
-import { getAchievements, type Achievement } from "@/data/achievements";
+import {
+  getAchievements,
+  type Achievement,
+  type AchievementKey,
+} from "@/data/achievements";
+import {
+  loadEarnedAchievements,
+  recordEarnedAchievements,
+  subscribeToEarnedAchievements,
+} from "@/data/earned-achievements";
 import {
   formatPlayTime,
   getGameSettings,
@@ -25,7 +34,7 @@ import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, rgba, layoutDims, theme } from "@/styles/styles";
 import { type Href } from "expo-router";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Pressable,
   ScrollView,
@@ -875,6 +884,7 @@ function ProgressSections({
   const language = useDisplayLanguage();
   const dailyWins = useDailyWins();
   const { collectedQuoteIds, collectedTaoIds } = useCampaignProgress();
+  const earned = useEarnedAchievements();
 
   const achievements = useMemo(() => {
     const title = (achievement: Achievement) =>
@@ -883,12 +893,23 @@ function ProgressSections({
       stats: rows.map((row) => row.stats),
       collectedQuotes: collectedQuoteIds.size,
       collectedTaoChapters: collectedTaoIds.size,
+      earned,
     }).sort(
       (a, b) =>
         Number(b.achieved) - Number(a.achieved) ||
         title(a).localeCompare(title(b), language, { numeric: true }),
     );
-  }, [collectedQuoteIds, collectedTaoIds, language, rows, t]);
+  }, [collectedQuoteIds, collectedTaoIds, earned, language, rows, t]);
+
+  // Keep what is achieved now, so a game added later can't take it away.
+  useEffect(() => {
+    const newlyEarned = achievements
+      .filter((entry) => entry.achieved && !earned.has(entry.key))
+      .map((entry) => entry.key);
+    if (newlyEarned.length > 0) {
+      recordEarnedAchievements(newlyEarned).catch(() => {});
+    }
+  }, [achievements, earned]);
   const achievedCount = achievements.filter((entry) => entry.achieved).length;
 
   const days = (count: number) => t("statsTab.streaks.days", { count });
@@ -963,6 +984,25 @@ function StreakStat({ label, value }: { label: string; value: string }) {
       <Caps>{label}</Caps>
     </View>
   );
+}
+
+/** The achievements saved as earned, kept up to date. */
+function useEarnedAchievements() {
+  const [earned, setEarned] = useState<ReadonlySet<AchievementKey>>(
+    () => new Set(),
+  );
+  useEffect(() => {
+    let active = true;
+    const unsubscribe = subscribeToEarnedAchievements(setEarned);
+    loadEarnedAchievements().then((loaded) => {
+      if (active) setEarned(loaded);
+    });
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, []);
+  return earned;
 }
 
 /** One achievement: done, or how far along it is. */

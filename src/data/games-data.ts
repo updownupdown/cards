@@ -82,6 +82,12 @@ export type GameMenuInfo = {
    * towards it, since giving up early would otherwise look like a record.
    */
   lowerScoreIsBetter?: boolean;
+  /**
+   * Bump (from 1) when a change to the game means an unfinished deal saved by
+   * an older build can't be played on. Only that game's unfinished deal is
+   * then dropped; nothing else a player keeps is touched.
+   */
+  sessionVersion?: number;
 
   // Images
   thumbnail?: GameThumbnailName;

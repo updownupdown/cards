@@ -87,10 +87,33 @@ export const MOVED_GAME_PATHS: Record<
  */
 export const RETIRED_GAME_PATHS: readonly string[] = ["/pickpocket", "/seer"];
 
+/**
+ * Games replaced by a different game, which took over their place on the
+ * campaign map: its position, links and rewards (`"/old": "/new"`). Unlike a
+ * rename, nothing of the old game's own carries over (stats, favourite,
+ * recent games, Campaign wins), since the new game is a different game. A
+ * save that had the old game open on the map has the new one open instead,
+ * and its collectibles stay, as they are saved by number; the old game's
+ * rewards not yet collected are won from the new one.
+ *
+ * Replacing a released game needs the owner's OK: see "Locked: players' saved
+ * data" in AGENTS.md.
+ */
+export const REPLACED_GAME_PATHS: Record<string, string> = {};
+
 /** Game settings that only retired games used; saved values are ignored. */
 export const RETIRED_GAME_SETTINGS: readonly string[] = ["seerDifficulty"];
 
 /** The current path for a game path that may have moved. */
 export function currentGamePath(path: string): string {
   return MOVED_GAME_PATHS[path]?.path ?? path;
+}
+
+/**
+ * The campaign map node a saved game path stands for now: a renamed game's
+ * new path, or the game that replaced it.
+ */
+export function currentGameDotPath(path: string): string {
+  const moved = currentGamePath(path);
+  return currentGamePath(REPLACED_GAME_PATHS[moved] ?? moved);
 }

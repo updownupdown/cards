@@ -181,8 +181,15 @@ export type SavedGameSession<T = unknown> = {
   playTimeMs?: number | null;
   /** The classic variant it was dealt as, for games in GAME_VARIANTS. */
   variant?: string;
+  /** The game's `sessionVersion` when saved; missing means 1. */
+  gameVersion?: number;
   state: T;
 };
+
+/** The version of a game's saved deals (see GameMenuInfo.sessionVersion). */
+function getGameSessionVersion(path: string) {
+  return getGameInfo(path)?.sessionVersion ?? 1;
+}
 
 export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
   language: "system",
@@ -477,6 +484,14 @@ export async function loadLastGameSession<T = unknown>() {
       return null;
     }
 
+    // Saved before a change to the game that the deal can't survive.
+    if (
+      (parsed.gameVersion ?? 1) !==
+      getGameSessionVersion(normalizeGamePath(parsed.path))
+    ) {
+      return null;
+    }
+
     return {
       version: GAME_SESSION_VERSION,
       sessionId: parsed.sessionId,
@@ -492,6 +507,7 @@ export async function loadLastGameSession<T = unknown>() {
           ? parsed.playTimeMs
           : null,
       variant: typeof parsed.variant === "string" ? parsed.variant : undefined,
+      gameVersion: getGameSessionVersion(normalizeGamePath(parsed.path)),
       state: parsed.state as T,
     };
   } catch {
@@ -518,6 +534,7 @@ export async function saveLastGameSession<T = unknown>(
     savedAt: Date.now(),
     playTimeMs,
     ...(variant ? { variant } : {}),
+    gameVersion: getGameSessionVersion(path),
     state,
   };
 

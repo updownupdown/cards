@@ -16,6 +16,7 @@ import {
 } from "@/data/campaign-progress";
 import { getGameDotDefinition } from "@/data/campaign-map";
 import { useCampaignProgress } from "@/hooks/useCampaignProgress";
+import { syncEarnedAchievements } from "@/data/achievement-sync";
 import { recordDailyWin } from "@/data/game-of-the-day";
 import { DEFAULT_GAME_BACKGROUND } from "@/data/games-data";
 import { useFade } from "@/hooks/useFade";
@@ -442,7 +443,9 @@ export const GameWrapper = ({
     const winTimeMs = outcome === "won" ? playTimeMs : null;
     recordResult(pathname, outcome === "won", score, sessionId, winTimeMs)
       .then(() => {
-        if (outcome === "won") void maybeRequestStoreReview();
+        if (outcome !== "won") return;
+        void maybeRequestStoreReview();
+        syncEarnedAchievements().catch(() => {});
       })
       .catch(() => {});
     if (outcome === "won") {
@@ -451,6 +454,7 @@ export const GameWrapper = ({
     if (isCampaignMode && outcome === "won") {
       recordCampaignWin(pathname, sessionId)
         .then((result) => {
+          if (result.awardedReward) syncEarnedAchievements().catch(() => {});
           if (
             active &&
             !result.duplicate &&
