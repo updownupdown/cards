@@ -1340,6 +1340,7 @@
       "y": 0.1797,
       "connections": [
         "/cribbage-squares",
+        "/sevens",
         "/shifting-sands",
         "/waypoint"
       ],
@@ -1474,7 +1475,8 @@
       "y": -0.1762,
       "connections": [
         "/bisley",
-        "/field-command"
+        "/field-command",
+        "/go-fish"
       ],
       "rewards": [
         {
@@ -1519,7 +1521,9 @@
       "connections": [
         "/crossword",
         "/nestor",
-        "/shifting-sands"
+        "/sevens",
+        "/shifting-sands",
+        "/sweep"
       ],
       "rewards": [
         {
@@ -1626,6 +1630,7 @@
       "y": -0.0138,
       "connections": [
         "/fortress",
+        "/sweep",
         "/waypoint"
       ],
       "rewards": [
@@ -1687,6 +1692,7 @@
       "y": -0.0143,
       "connections": [
         "/bisley",
+        "/go-fish",
         "/gremlin"
       ],
       "rewards": [
@@ -2430,6 +2436,60 @@
         {
           "type": "quote",
           "id": 188
+        }
+      ]
+    },
+    "/go-fish": {
+      "x": -0.8504,
+      "y": -0.2118,
+      "connections": [
+        "/labyrinth",
+        "/pyramid"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 189
+        },
+        {
+          "type": "quote",
+          "id": 190
+        }
+      ]
+    },
+    "/sevens": {
+      "x": 0.5714,
+      "y": 0.1016,
+      "connections": [
+        "/crossword",
+        "/waypoint"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 191
+        },
+        {
+          "type": "quote",
+          "id": 192
+        }
+      ]
+    },
+    "/sweep": {
+      "x": 0.7772,
+      "y": 0.0676,
+      "connections": [
+        "/nestor",
+        "/waypoint"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 193
+        },
+        {
+          "type": "quote",
+          "id": 194
         }
       ]
     }

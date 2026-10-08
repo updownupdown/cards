@@ -1812,6 +1812,35 @@
       "value": "Vidriero"
     }
   },
+  "go-fish": {
+    "howToPlay": {
+      "hash": "f813d631",
+      "value": [
+        "## Objetivo",
+        "Hacer más libros que el rival: siete de los trece.",
+        "## Pedir",
+        "- Tú y el rival tenéis siete cartas cada uno. En tu turno, toca una carta para pedir su valor. El rival te entrega todas las cartas de ese valor que tenga, y vuelves a pedir.",
+        "- Si no tiene ninguna, vas a pescar: robas una carta del estanque. Si es el valor que pediste, vuelves a pedir; si no, el turno pasa.",
+        "- Cuatro cartas de un valor forman un libro, que se baja en cuanto lo tienes. Una mano vacía roba una carta del estanque antes de pedir.",
+        "## Tu rival",
+        "Las cartas del rival están boca abajo, pero siempre juega igual: pide un valor que tiene y que tú has pedido, porque aún debes tenerlo. Si no, pide el valor del que más cartas tiene, el más bajo en caso de empate.",
+        "## Estrategia",
+        "Recuerda lo que pide el rival: tiene esos valores, hasta que se los quites. Y cada valor que pides le dice al rival lo que tienes."
+      ]
+    },
+    "quickStart": {
+      "hash": "44b2756e",
+      "value": [
+        "Toca una carta para pedir su valor al rival. Si tiene alguna, son tuyas, y vuelves a pedir.",
+        "Si no tiene ninguna, ve a pescar: roba del estanque. Cuatro cartas de un valor forman un libro.",
+        "El rival recuerda lo que pides. Haz siete libros para ganar."
+      ]
+    },
+    "title": {
+      "hash": "56094d6f",
+      "value": "Ir a Pescar"
+    }
+  },
   "golf": {
     "howToPlay": {
       "hash": "24a82fa3",
@@ -3131,6 +3160,35 @@
       "value": "Torres de Seahaven"
     }
   },
+  "sevens": {
+    "howToPlay": {
+      "hash": "9bc5afcb",
+      "value": [
+        "## Objetivo",
+        "Ser el primero en jugar todas las cartas de tu mano.",
+        "## Jugar",
+        "- Tú y el rival tenéis siete cartas cada uno, y un 7 del mazo se pone en la mesa para empezar. Un 7 abre la fila de su palo; después, una carta puede jugarse junto a cualquiera de los extremos de su fila: el 8 tras el 7, el 6 delante, y así sucesivamente.",
+        "- Si puedes jugar una carta, debes hacerlo. Si no puedes, toca el mazo para robar una, y el turno pasa. Con el mazo vacío, una mano bloqueada pasa.",
+        "- Las cartas que no puedes jugar aparecen en gris.",
+        "## Tu rival",
+        "Las cartas del rival están boca arriba, y siempre juega igual: un 7 si lo tiene; si no, la carta seguida de más cartas suyas en esa dirección y, en caso de empate, su carta más baja, ♣ primero.",
+        "## Estrategia",
+        "Guardar una carta que el rival espera mantiene su mano bloqueada, mientras tengas otra cosa que jugar. Tu puntuación es el número de cartas que le quedan al rival."
+      ]
+    },
+    "quickStart": {
+      "hash": "a70f5f8d",
+      "value": [
+        "La fila de cada palo crece desde su 7, un rango cada vez, hacia arriba hasta el Rey y hacia abajo hasta el As.",
+        "Juega una carta que encaje, o roba del mazo si ninguna encaja.",
+        "Vacía tu mano antes que el rival."
+      ]
+    },
+    "title": {
+      "hash": "2e23608f",
+      "value": "Sietes"
+    }
+  },
   "shifting-sands": {
     "howToPlay": {
       "hash": "91681187",
@@ -3448,6 +3506,37 @@
     "title": {
       "hash": "5ac8c364",
       "value": "Sultán"
+    }
+  },
+  "sweep": {
+    "howToPlay": {
+      "hash": "ba222213",
+      "value": [
+        "## Objetivo",
+        "Conseguir más puntos que tu rival cuando se agote el mazo.",
+        "## Llevarse cartas",
+        "- Tú y el rival tenéis tres cartas cada uno, con cuatro en la mesa. Cada carta jugada se lleva cartas de la mesa: una del mismo valor o, si no la hay, varias cartas que sumen su valor. El As vale 1, la Jota 11, la Reina 12 y el Rey 13.",
+        "- Una carta que puede llevarse algo debe hacerlo. Una que no puede se deja en la mesa.",
+        "- Toca una carta de tu mano. Si puede llevarse cartas de más de una forma, toca las cartas de la mesa que quieras: la captura se hace en cuanto suman.",
+        "- Cuando ambas manos están vacías, se reparten tres cartas más a cada uno. Quien se llevó cartas por última vez se queda con lo que quede en la mesa al final.",
+        "## Puntuación",
+        "- Una **escoba**, llevarse todas las cartas de la mesa, vale un punto.",
+        "- Al final: un punto por más cartas, un punto por más diamantes y un punto por el 7♦.",
+        "## Tu rival",
+        "Las cartas del rival están boca arriba, y siempre juega igual: se lleva cuantas más cartas pueda (una escoba primero). Entre capturas iguales, prefiere el 7♦, luego más diamantes y luego su carta más baja. Si no puede llevarse nada, deja su carta más baja."
+      ]
+    },
+    "quickStart": {
+      "hash": "60a8b88e",
+      "value": [
+        "Juega una carta para llevarte una carta de la mesa del mismo valor, o varias cartas de la mesa que sumen su valor.",
+        "Llevarse todas las cartas de la mesa es una escoba, que vale un punto.",
+        "Al final, un punto por más cartas, otro por más diamantes y otro por el 7♦. Supera a tu rival."
+      ]
+    },
+    "title": {
+      "hash": "76bb3813",
+      "value": "Escoba"
     }
   },
   "ten-twenty-thirty": {

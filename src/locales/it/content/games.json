@@ -1812,6 +1812,35 @@
       "value": "Il Vetraio"
     }
   },
+  "go-fish": {
+    "howToPlay": {
+      "hash": "f813d631",
+      "value": [
+        "## Obiettivo",
+        "Fare più libri del rivale: sette su tredici.",
+        "## Chiedere",
+        "- Tu e il rivale avete sette carte ciascuno. Nel tuo turno, tocca una carta per chiedere il suo valore. Il rivale consegna tutte le carte di quel valore che ha, e chiedi ancora.",
+        "- Se non ne ha, vai a pescare: peschi una carta dallo stagno. Se è il valore che hai chiesto, chiedi ancora; altrimenti il turno passa.",
+        "- Quattro carte di un valore fanno un libro, calato appena lo hai. Una mano vuota pesca una carta dallo stagno prima di chiedere.",
+        "## Il tuo rivale",
+        "Le carte del rivale sono coperte, ma gioca sempre allo stesso modo: chiede un valore che ha e che tu hai chiesto, perché devi averlo ancora. Altrimenti chiede il valore di cui ha più carte, il più basso a parità.",
+        "## Strategia",
+        "Ricorda ciò che chiede il rivale: ha quei valori, finché non glieli prendi. E ogni valore che chiedi dice al rivale ciò che hai."
+      ]
+    },
+    "quickStart": {
+      "hash": "44b2756e",
+      "value": [
+        "Tocca una carta per chiedere al rivale il suo valore. Se ne ha, sono tue, e chiedi ancora.",
+        "Se non ne ha, vai a pescare: pesca dallo stagno. Quattro carte di un valore fanno un libro.",
+        "Il rivale ricorda ciò che chiedi. Fai sette libri per vincere."
+      ]
+    },
+    "title": {
+      "hash": "56094d6f",
+      "value": "Pesca"
+    }
+  },
   "golf": {
     "howToPlay": {
       "hash": "24a82fa3",
@@ -3131,6 +3160,35 @@
       "value": "Torri di Seahaven"
     }
   },
+  "sevens": {
+    "howToPlay": {
+      "hash": "9bc5afcb",
+      "value": [
+        "## Obiettivo",
+        "Essere il primo a giocare tutte le carte della propria mano.",
+        "## Giocare",
+        "- Tu e il rivale avete sette carte ciascuno, e un 7 del mazzo viene messo in tavola per iniziare. Un 7 apre la fila del suo seme; poi una carta si può giocare accanto a uno dei due capi della sua fila: l'8 dopo il 7, il 6 prima, e così via.",
+        "- Se puoi giocare una carta, devi farlo. Se non puoi, tocca il mazzo per pescarne una, e il turno passa. Con il mazzo vuoto, una mano bloccata passa.",
+        "- Le carte che non puoi giocare sono in grigio.",
+        "## Il tuo rivale",
+        "Le carte del rivale sono scoperte, e gioca sempre allo stesso modo: un 7 se ne ha uno; altrimenti la carta seguita dal maggior numero di sue carte in quella direzione e, a parità, la sua carta più bassa, ♣ per prima.",
+        "## Strategia",
+        "Tenere una carta che il rivale aspetta blocca la sua mano, finché hai altro da giocare. Il tuo punteggio è il numero di carte rimaste al rivale."
+      ]
+    },
+    "quickStart": {
+      "hash": "a70f5f8d",
+      "value": [
+        "La fila di ogni seme cresce dal suo 7, un valore alla volta, su fino al Re e giù fino all'Asso.",
+        "Gioca una carta che si può giocare, o pesca dal mazzo se nessuna si può.",
+        "Svuota la tua mano prima del rivale."
+      ]
+    },
+    "title": {
+      "hash": "2e23608f",
+      "value": "Sette"
+    }
+  },
   "shifting-sands": {
     "howToPlay": {
       "hash": "91681187",
@@ -3448,6 +3506,37 @@
     "title": {
       "hash": "5ac8c364",
       "value": "Sultano"
+    }
+  },
+  "sweep": {
+    "howToPlay": {
+      "hash": "ba222213",
+      "value": [
+        "## Obiettivo",
+        "Fare più punti del rivale quando il mazzo è esaurito.",
+        "## Prendere le carte",
+        "- Tu e il rivale avete tre carte ciascuno, con quattro sul tavolo. Ogni carta giocata prende carte dal tavolo: una dello stesso valore o, se non c'è, più carte che sommino il suo valore. L'Asso vale 1, il Fante 11, la Regina 12 e il Re 13.",
+        "- Una carta che può prendere qualcosa deve farlo. Una che non può viene posata sul tavolo.",
+        "- Tocca una carta della tua mano. Se può prendere carte in più modi, tocca le carte del tavolo che vuoi: la presa avviene appena la somma torna.",
+        "- Quando entrambe le mani sono vuote, si danno tre carte in più a ciascuno. Chi ha preso carte per ultimo si tiene ciò che resta sul tavolo alla fine.",
+        "## Punteggio",
+        "- Una **scopa**, prendere tutte le carte del tavolo, vale un punto.",
+        "- Alla fine: un punto per più carte, un punto per più quadri e un punto per il 7♦.",
+        "## Il tuo rivale",
+        "Le carte del rivale sono scoperte, e gioca sempre allo stesso modo: prende più carte che può (prima una scopa). Tra prese uguali, preferisce il 7♦, poi più quadri, poi la sua carta più bassa. Se non può prendere nulla, posa la sua carta più bassa."
+      ]
+    },
+    "quickStart": {
+      "hash": "60a8b88e",
+      "value": [
+        "Gioca una carta per prendere una carta del tavolo dello stesso valore, o più carte del tavolo che sommino il suo valore.",
+        "Prendere tutte le carte del tavolo è una scopa, che vale un punto.",
+        "Alla fine, un punto per più carte, uno per più quadri e uno per il 7♦. Supera il rivale."
+      ]
+    },
+    "title": {
+      "hash": "76bb3813",
+      "value": "Scopa"
     }
   },
   "ten-twenty-thirty": {

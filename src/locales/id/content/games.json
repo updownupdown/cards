@@ -1812,6 +1812,35 @@
       "value": "Tukang Kaca"
     }
   },
+  "go-fish": {
+    "howToPlay": {
+      "hash": "f813d631",
+      "value": [
+        "## Tujuan",
+        "Membuat lebih banyak buku daripada lawan: tujuh dari tiga belas.",
+        "## Meminta",
+        "- Kamu dan lawan memegang tujuh kartu masing-masing. Pada giliranmu, ketuk kartu untuk meminta nilainya. Lawan menyerahkan semua kartu bernilai itu yang ia pegang, dan kamu meminta lagi.",
+        "- Jika ia tidak punya, kamu memancing: ambil satu kartu dari kolam. Jika itu nilai yang kamu minta, kamu meminta lagi; jika tidak, giliran berpindah.",
+        "- Empat kartu bernilai sama adalah satu buku, yang diletakkan begitu kamu memilikinya. Tangan yang kosong mengambil satu kartu dari kolam sebelum meminta.",
+        "## Lawanmu",
+        "Kartu lawan tertutup, tetapi ia selalu bermain dengan cara yang sama: ia meminta nilai yang ia pegang dan pernah kamu minta, karena kamu pasti masih memegangnya. Jika tidak, ia meminta nilai yang paling banyak ia pegang, yang terendah jika seri.",
+        "## Strategi",
+        "Ingat apa yang diminta lawan: ia memegang nilai-nilai itu, sampai kamu mengambilnya. Dan setiap nilai yang kamu minta memberi tahu lawan apa yang kamu pegang."
+      ]
+    },
+    "quickStart": {
+      "hash": "44b2756e",
+      "value": [
+        "Ketuk kartu untuk meminta nilainya dari lawan. Jika ia punya, kartu itu jadi milikmu, dan kamu meminta lagi.",
+        "Jika ia tidak punya, memancinglah: ambil dari kolam. Empat kartu bernilai sama adalah satu buku.",
+        "Lawan mengingat apa yang kamu minta. Buat tujuh buku untuk menang."
+      ]
+    },
+    "title": {
+      "hash": "56094d6f",
+      "value": "Memancing"
+    }
+  },
   "golf": {
     "howToPlay": {
       "hash": "24a82fa3",
@@ -3131,6 +3160,35 @@
       "value": "Menara Seahaven"
     }
   },
+  "sevens": {
+    "howToPlay": {
+      "hash": "9bc5afcb",
+      "value": [
+        "## Tujuan",
+        "Menjadi yang pertama memainkan semua kartu di tangan.",
+        "## Bermain",
+        "- Kamu dan lawan memegang tujuh kartu masing-masing, dan satu angka 7 dari tumpukan diletakkan di meja untuk memulai. Angka 7 membuka deretan jenisnya; setelah itu, kartu bisa dimainkan di salah satu ujung deretannya: 8 setelah 7, 6 sebelumnya, dan seterusnya.",
+        "- Jika kamu bisa memainkan kartu, kamu harus memainkannya. Jika tidak bisa, ketuk tumpukan untuk mengambil satu, dan giliran berpindah. Saat tumpukan kosong, tangan yang buntu melewati giliran.",
+        "- Kartu yang tidak bisa kamu mainkan tampak abu-abu.",
+        "## Lawanmu",
+        "Kartu lawan terbuka, dan ia selalu bermain dengan cara yang sama: angka 7 jika ia memilikinya; jika tidak, kartu yang diikuti kartu miliknya terbanyak ke arah itu, dan jika seri, kartunya yang terendah, ♣ lebih dulu.",
+        "## Strategi",
+        "Menahan kartu yang ditunggu lawan membuat tangannya buntu, selama kamu punya hal lain untuk dimainkan. Skormu adalah jumlah kartu yang tersisa di tangan lawan."
+      ]
+    },
+    "quickStart": {
+      "hash": "a70f5f8d",
+      "value": [
+        "Deretan setiap jenis tumbuh dari angka 7-nya, satu nilai setiap kali, naik sampai King dan turun sampai As.",
+        "Mainkan kartu yang cocok, atau ambil dari tumpukan jika tidak ada yang cocok.",
+        "Kosongkan tanganmu sebelum lawan."
+      ]
+    },
+    "title": {
+      "hash": "2e23608f",
+      "value": "Tujuh"
+    }
+  },
   "shifting-sands": {
     "howToPlay": {
       "hash": "91681187",
@@ -3448,6 +3506,37 @@
     "title": {
       "hash": "5ac8c364",
       "value": "Sultan"
+    }
+  },
+  "sweep": {
+    "howToPlay": {
+      "hash": "ba222213",
+      "value": [
+        "## Tujuan",
+        "Mencetak lebih banyak poin daripada lawan saat tumpukan habis.",
+        "## Mengambil kartu",
+        "- Kamu dan lawan memegang tiga kartu masing-masing, dengan empat kartu di meja. Setiap kartu yang dimainkan mengambil kartu meja: satu yang bernilai sama atau, jika tidak ada, kartu-kartu yang jumlahnya sama dengan nilainya. As bernilai 1, Jack 11, Queen 12, dan King 13.",
+        "- Kartu yang bisa mengambil sesuatu harus mengambil. Yang tidak bisa diletakkan di meja.",
+        "- Ketuk kartu di tanganmu. Jika ia bisa mengambil kartu dengan lebih dari satu cara, ketuk kartu meja yang kamu mau: pengambilan terjadi begitu jumlahnya pas.",
+        "- Saat kedua tangan kosong, tiga kartu lagi dibagikan ke masing-masing. Siapa yang terakhir mengambil kartu mendapat sisa kartu di meja pada akhir permainan.",
+        "## Penilaian",
+        "- **Sapuan**, mengambil semua kartu di meja, bernilai satu poin.",
+        "- Di akhir: satu poin untuk kartu terbanyak, satu poin untuk wajik terbanyak, dan satu poin untuk 7♦.",
+        "## Lawanmu",
+        "Kartu lawan terbuka, dan ia selalu bermain dengan cara yang sama: mengambil kartu sebanyak mungkin (sapuan lebih dulu). Di antara pengambilan yang setara, ia memilih 7♦, lalu wajik terbanyak, lalu kartunya yang terendah. Jika tidak ada yang bisa diambil, ia meletakkan kartunya yang terendah."
+      ]
+    },
+    "quickStart": {
+      "hash": "60a8b88e",
+      "value": [
+        "Mainkan kartu untuk mengambil kartu meja bernilai sama, atau kartu-kartu meja yang jumlahnya sama dengan nilainya.",
+        "Mengambil semua kartu di meja adalah sapuan, bernilai satu poin.",
+        "Di akhir, satu poin untuk kartu terbanyak, wajik terbanyak, dan 7♦. Ungguli lawanmu."
+      ]
+    },
+    "title": {
+      "hash": "76bb3813",
+      "value": "Sapu Bersih"
     }
   },
   "ten-twenty-thirty": {

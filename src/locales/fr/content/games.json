@@ -1812,6 +1812,35 @@
       "value": "Le Vitrier"
     }
   },
+  "go-fish": {
+    "howToPlay": {
+      "hash": "f813d631",
+      "value": [
+        "## Objectif",
+        "Faire plus de livres que le rival : sept sur treize.",
+        "## Demander",
+        "- Vous et le rival avez sept cartes chacun. À votre tour, touchez une carte pour demander sa valeur. Le rival vous donne toutes les cartes de cette valeur qu'il a, et vous redemandez.",
+        "- S'il n'en a pas, vous allez pêcher : vous piochez une carte dans la mare. Si c'est la valeur demandée, vous redemandez ; sinon, le tour passe.",
+        "- Quatre cartes de même valeur forment un livre, posé dès que vous l'avez. Une main vide pioche une carte dans la mare avant de demander.",
+        "## Votre rival",
+        "Les cartes du rival sont face cachée, mais il joue toujours de la même façon : il demande une valeur qu'il a et que vous avez demandée, puisque vous l'avez forcément encore. Sinon, il demande la valeur dont il a le plus de cartes, la plus basse à égalité.",
+        "## Stratégie",
+        "Retenez ce que le rival demande : il a ces valeurs, jusqu'à ce que vous les lui preniez. Et chaque valeur que vous demandez dit au rival ce que vous avez."
+      ]
+    },
+    "quickStart": {
+      "hash": "44b2756e",
+      "value": [
+        "Touchez une carte pour demander sa valeur au rival. S'il en a, elles sont à vous, et vous redemandez.",
+        "S'il n'en a pas, allez pêcher : piochez dans la mare. Quatre cartes de même valeur forment un livre.",
+        "Le rival se souvient de ce que vous demandez. Faites sept livres pour gagner."
+      ]
+    },
+    "title": {
+      "hash": "56094d6f",
+      "value": "Pêche"
+    }
+  },
   "golf": {
     "howToPlay": {
       "hash": "24a82fa3",
@@ -3131,6 +3160,35 @@
       "value": "Tours de Seahaven"
     }
   },
+  "sevens": {
+    "howToPlay": {
+      "hash": "9bc5afcb",
+      "value": [
+        "## Objectif",
+        "Être le premier à jouer toutes les cartes de sa main.",
+        "## Jouer",
+        "- Vous et le rival avez sept cartes chacun, et un 7 de la pioche est posé pour commencer. Un 7 ouvre la rangée de sa couleur ; ensuite, une carte peut être jouée à l'un ou l'autre bout de sa rangée : le 8 après le 7, le 6 avant, et ainsi de suite.",
+        "- Si vous pouvez jouer une carte, vous le devez. Sinon, touchez la pioche pour piocher une carte, et le tour passe. Quand la pioche est vide, une main bloquée passe.",
+        "- Les cartes que vous ne pouvez pas jouer sont grisées.",
+        "## Votre rival",
+        "Les cartes du rival sont face visible, et il joue toujours de la même façon : un 7 s'il en a un ; sinon, la carte suivie du plus grand nombre de ses propres cartes dans cette direction et, à égalité, sa carte la plus basse, ♣ d'abord.",
+        "## Stratégie",
+        "Garder une carte que le rival attend bloque sa main, tant que vous avez autre chose à jouer. Votre score est le nombre de cartes qu'il reste au rival."
+      ]
+    },
+    "quickStart": {
+      "hash": "a70f5f8d",
+      "value": [
+        "La rangée de chaque couleur part de son 7, un rang à la fois, jusqu'au Roi vers le haut et jusqu'à l'As vers le bas.",
+        "Jouez une carte qui convient, ou piochez si aucune ne convient.",
+        "Videz votre main avant le rival."
+      ]
+    },
+    "title": {
+      "hash": "2e23608f",
+      "value": "Les Sept"
+    }
+  },
   "shifting-sands": {
     "howToPlay": {
       "hash": "91681187",
@@ -3448,6 +3506,37 @@
     "title": {
       "hash": "5ac8c364",
       "value": "Sultan"
+    }
+  },
+  "sweep": {
+    "howToPlay": {
+      "hash": "ba222213",
+      "value": [
+        "## Objectif",
+        "Marquer plus de points que votre rival une fois le paquet épuisé.",
+        "## Prendre des cartes",
+        "- Vous et le rival avez trois cartes chacun, et quatre sont sur la table. Chaque carte jouée prend des cartes de la table : une de même valeur ou, s'il n'y en a pas, des cartes dont la somme est égale à sa valeur. L'As vaut 1, le Valet 11, la Dame 12 et le Roi 13.",
+        "- Une carte qui peut prendre quelque chose le doit. Une carte qui ne le peut pas est posée sur la table.",
+        "- Touchez une carte de votre main. Si elle peut prendre des cartes de plusieurs façons, touchez les cartes de la table que vous voulez : la prise se fait dès que la somme est atteinte.",
+        "- Quand les deux mains sont vides, trois nouvelles cartes sont distribuées à chacun. Celui qui a pris des cartes en dernier ramasse ce qui reste sur la table à la fin.",
+        "## Décompte",
+        "- Un **balayage**, prendre toutes les cartes de la table, vaut un point.",
+        "- À la fin : un point pour le plus de cartes, un point pour le plus de carreaux et un point pour le 7♦.",
+        "## Votre rival",
+        "Les cartes du rival sont face visible, et il joue toujours de la même façon : il prend le plus de cartes possible (un balayage d'abord). Entre des prises égales, il préfère le 7♦, puis le plus de carreaux, puis sa carte la plus basse. S'il ne peut rien prendre, il pose sa carte la plus basse."
+      ]
+    },
+    "quickStart": {
+      "hash": "60a8b88e",
+      "value": [
+        "Jouez une carte pour prendre une carte de la table de même valeur, ou des cartes de la table dont la somme lui est égale.",
+        "Prendre toutes les cartes de la table est un balayage, qui vaut un point.",
+        "À la fin, un point pour le plus de cartes, un pour le plus de carreaux et un pour le 7♦. Devancez votre rival."
+      ]
+    },
+    "title": {
+      "hash": "76bb3813",
+      "value": "Balayage"
     }
   },
   "ten-twenty-thirty": {

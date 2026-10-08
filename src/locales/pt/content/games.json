@@ -1812,6 +1812,35 @@
       "value": "Vidraceiro"
     }
   },
+  "go-fish": {
+    "howToPlay": {
+      "hash": "f813d631",
+      "value": [
+        "## Objetivo",
+        "Fazer mais livros que o rival: sete dos treze.",
+        "## Pedindo",
+        "- Você e o rival têm sete cartas cada. Na sua vez, toque em uma carta para pedir seu valor. O rival entrega todas as cartas daquele valor que tiver, e você pede de novo.",
+        "- Se ele não tiver nenhuma, você vai pescar: compra uma carta do lago. Se for o valor que pediu, você pede de novo; se não, a vez passa.",
+        "- Quatro cartas de um valor formam um livro, baixado assim que você o tem. Uma mão vazia compra uma carta do lago antes de pedir.",
+        "## Seu rival",
+        "As cartas do rival ficam viradas para baixo, mas ele sempre joga do mesmo jeito: pede um valor que tem e que você pediu, já que você ainda deve tê-lo. Senão, pede o valor do qual tem mais cartas, o mais baixo em caso de empate.",
+        "## Estratégia",
+        "Lembre o que o rival pede: ele tem esses valores, até você tomá-los. E cada valor que você pede conta ao rival o que você tem."
+      ]
+    },
+    "quickStart": {
+      "hash": "44b2756e",
+      "value": [
+        "Toque em uma carta para pedir seu valor ao rival. Se ele tiver alguma, são suas, e você pede de novo.",
+        "Se não tiver nenhuma, vá pescar: compre do lago. Quatro cartas de um valor formam um livro.",
+        "O rival lembra o que você pede. Faça sete livros para vencer."
+      ]
+    },
+    "title": {
+      "hash": "56094d6f",
+      "value": "Vai Pescar"
+    }
+  },
   "golf": {
     "howToPlay": {
       "hash": "24a82fa3",
@@ -3131,6 +3160,35 @@
       "value": "Torres de Seahaven"
     }
   },
+  "sevens": {
+    "howToPlay": {
+      "hash": "9bc5afcb",
+      "value": [
+        "## Objetivo",
+        "Ser o primeiro a jogar todas as cartas da mão.",
+        "## Jogando",
+        "- Você e o rival têm sete cartas cada, e um 7 do monte é posto na mesa para começar. Um 7 abre a fileira do seu naipe; depois, uma carta pode ser jogada ao lado de qualquer ponta da sua fileira: o 8 depois do 7, o 6 antes, e assim por diante.",
+        "- Se você pode jogar uma carta, deve jogar. Se não pode, toque no monte para comprar uma, e a vez passa. Com o monte vazio, uma mão travada passa.",
+        "- As cartas que você não pode jogar ficam acinzentadas.",
+        "## Seu rival",
+        "As cartas do rival ficam viradas para cima, e ele sempre joga do mesmo jeito: um 7 se tiver; senão, a carta seguida pelo maior número de cartas dele naquela direção e, em caso de empate, sua carta mais baixa, ♣ primeiro.",
+        "## Estratégia",
+        "Segurar uma carta que o rival espera mantém a mão dele travada, enquanto você tiver outra coisa para jogar. Sua pontuação é o número de cartas que sobram na mão do rival."
+      ]
+    },
+    "quickStart": {
+      "hash": "a70f5f8d",
+      "value": [
+        "A fileira de cada naipe cresce a partir do seu 7, um valor por vez, para cima até o Rei e para baixo até o Ás.",
+        "Jogue uma carta que encaixe, ou compre do monte se nenhuma encaixar.",
+        "Esvazie sua mão antes do rival."
+      ]
+    },
+    "title": {
+      "hash": "2e23608f",
+      "value": "Setes"
+    }
+  },
   "shifting-sands": {
     "howToPlay": {
       "hash": "91681187",
@@ -3448,6 +3506,37 @@
     "title": {
       "hash": "5ac8c364",
       "value": "Sultão"
+    }
+  },
+  "sweep": {
+    "howToPlay": {
+      "hash": "ba222213",
+      "value": [
+        "## Objetivo",
+        "Marcar mais pontos que o rival quando o baralho acabar.",
+        "## Levando cartas",
+        "- Você e o rival têm três cartas cada, com quatro na mesa. Cada carta jogada leva cartas da mesa: uma do mesmo valor ou, se não houver, cartas que somem o seu valor. O Ás vale 1, o Valete 11, a Dama 12 e o Rei 13.",
+        "- Uma carta que pode levar algo deve levar. Uma que não pode fica na mesa.",
+        "- Toque em uma carta da sua mão. Se ela puder levar cartas de mais de um jeito, toque nas cartas da mesa que quiser: a captura acontece assim que a soma fechar.",
+        "- Quando as duas mãos estão vazias, mais três cartas são dadas a cada um. Quem levou cartas por último fica com o que sobrar na mesa no fim.",
+        "## Pontuação",
+        "- Uma **varrida**, levar todas as cartas da mesa, vale um ponto.",
+        "- No fim: um ponto por mais cartas, um ponto por mais ouros e um ponto pelo 7♦.",
+        "## Seu rival",
+        "As cartas do rival ficam viradas para cima, e ele sempre joga do mesmo jeito: leva o máximo de cartas que puder (uma varrida primeiro). Entre capturas iguais, prefere o 7♦, depois mais ouros, depois sua carta mais baixa. Sem nada para levar, ele baixa sua carta mais baixa."
+      ]
+    },
+    "quickStart": {
+      "hash": "60a8b88e",
+      "value": [
+        "Jogue uma carta para levar uma carta da mesa do mesmo valor, ou cartas da mesa que somem o seu valor.",
+        "Levar todas as cartas da mesa é uma varrida, que vale um ponto.",
+        "No fim, um ponto por mais cartas, um por mais ouros e um pelo 7♦. Supere seu rival."
+      ]
+    },
+    "title": {
+      "hash": "76bb3813",
+      "value": "Varrida"
     }
   },
   "ten-twenty-thirty": {

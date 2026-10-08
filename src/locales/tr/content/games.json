@@ -1812,6 +1812,35 @@
       "value": "Camcı"
     }
   },
+  "go-fish": {
+    "howToPlay": {
+      "hash": "f813d631",
+      "value": [
+        "## Amaç",
+        "Rakipten daha çok dörtlü yapmak: on üçün yedisi.",
+        "## İstemek",
+        "- Sen ve rakip yedişer kart tutarsınız. Sıran gelince bir karta dokunarak değerini iste. Rakip o değerdeki bütün kartlarını verir ve yine istersin.",
+        "- Onda yoksa balığa gidersin: göletten bir kart çekersin. İstediğin değerse yine istersin; değilse sıra karşıya geçer.",
+        "- Aynı değerde dört kart bir dörtlüdür ve tamamlanır tamamlanmaz yere konur. Boş el, istemeden önce göletten bir kart çeker.",
+        "## Rakibin",
+        "Rakibin kartları kapalıdır ama hep aynı şekilde oynar: elinde olan ve senin istediğin bir değeri ister, çünkü o hâlâ sende olmalıdır. Yoksa en çok tuttuğu değeri ister, eşitlikte en düşüğü.",
+        "## Strateji",
+        "Rakibin ne istediğini aklında tut: sen alana kadar o değerler ondadır. Ve istediğin her değer rakibe sende ne olduğunu söyler."
+      ]
+    },
+    "quickStart": {
+      "hash": "44b2756e",
+      "value": [
+        "Rakipten bir değer istemek için bir karta dokun. Onda varsa senindir ve yine istersin.",
+        "Yoksa balığa git: göletten çek. Aynı değerde dört kart bir dörtlüdür.",
+        "Rakip ne istediğini hatırlar. Kazanmak için yedi dörtlü yap."
+      ]
+    },
+    "title": {
+      "hash": "56094d6f",
+      "value": "Balığa Git"
+    }
+  },
   "golf": {
     "howToPlay": {
       "hash": "24a82fa3",
@@ -3131,6 +3160,35 @@
       "value": "Seahaven kuleleri"
     }
   },
+  "sevens": {
+    "howToPlay": {
+      "hash": "9bc5afcb",
+      "value": [
+        "## Amaç",
+        "Elindeki bütün kartları ilk oynayan olmak.",
+        "## Oynamak",
+        "- Sen ve rakip yedişer kart tutarsınız ve başlamak için desteden bir 7 masaya konur. Bir 7, türünün sırasını açar; sonra bir kart, sırasının iki ucundan birine oynanabilir: 7'den sonra 8, öncesine 6 ve böyle devam eder.",
+        "- Oynayabileceğin bir kart varsa oynamak zorundasın. Yoksa bir kart çekmek için desteye dokun; sıra karşıya geçer. Deste boşken tıkanan el pas geçer.",
+        "- Oynayamadığın kartlar gri görünür.",
+        "## Rakibin",
+        "Rakibin kartları açıktır ve hep aynı şekilde oynar: varsa bir 7; yoksa o yönde arkasından en çok kendi kartı gelen kartı, eşitlikte ise en düşük kartını, önce ♣.",
+        "## Strateji",
+        "Rakibin beklediği bir kartı elinde tutmak, oynayacak başka bir şeyin olduğu sürece onun elini tıkar. Puanın, rakibin elinde kalan kart sayısıdır."
+      ]
+    },
+    "quickStart": {
+      "hash": "a70f5f8d",
+      "value": [
+        "Her türün sırası 7'sinden başlayıp birer birer uzar: yukarı Papaz'a, aşağı As'a doğru.",
+        "Uyan bir kart oyna; hiçbiri uymuyorsa desteden çek.",
+        "Elini rakipten önce boşalt."
+      ]
+    },
+    "title": {
+      "hash": "2e23608f",
+      "value": "Yediler"
+    }
+  },
   "shifting-sands": {
     "howToPlay": {
       "hash": "91681187",
@@ -3448,6 +3506,37 @@
     "title": {
       "hash": "5ac8c364",
       "value": "Sultan"
+    }
+  },
+  "sweep": {
+    "howToPlay": {
+      "hash": "ba222213",
+      "value": [
+        "## Amaç",
+        "Deste bittiğinde rakibinden daha çok puan toplamak.",
+        "## Kart almak",
+        "- Sen ve rakip üçer kart tutarsınız, masada da dört kart vardır. Oynanan her kart masadan kart alır: aynı değerde bir kart ya da, yoksa, toplamı o değeri tutan kartlar. As 1, Vale 11, Kız 12, Papaz 13 sayılır.",
+        "- Bir şey alabilen kart almak zorundadır. Alamayan kart masaya bırakılır.",
+        "- Elindeki bir karta dokun. Birden fazla şekilde kart alabiliyorsa istediğin masa kartlarına dokun: toplam tutunca alma gerçekleşir.",
+        "- İki el de boşalınca herkese üçer kart daha dağıtılır. Sonunda masada kalanı en son kart alan alır.",
+        "## Puanlama",
+        "- Masadaki her kartı almak, yani **süpürme**, bir puandır.",
+        "- Sonunda: en çok kart için bir puan, en çok karo için bir puan ve 7♦ için bir puan.",
+        "## Rakibin",
+        "Rakibin kartları açıktır ve hep aynı şekilde oynar: alabildiği en çok kartı alır (önce süpürme). Eşit alımlar arasında 7♦'yi, sonra en çok karoyu, sonra en düşük kartını yeğler. Alacak bir şey yoksa en düşük kartını bırakır."
+      ]
+    },
+    "quickStart": {
+      "hash": "60a8b88e",
+      "value": [
+        "Masadan aynı değerde bir kartı ya da toplamı o değeri tutan kartları almak için bir kart oyna.",
+        "Masadaki her kartı almak bir süpürmedir ve bir puan eder.",
+        "Sonunda en çok kart, en çok karo ve 7♦ için birer puan. Rakibini geç."
+      ]
+    },
+    "title": {
+      "hash": "76bb3813",
+      "value": "Süpürme"
     }
   },
   "ten-twenty-thirty": {

@@ -1482,6 +1482,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": 3,
     "connections": [
       "/cribbage-squares",
+      "/sevens",
       "/shifting-sands",
       "/waypoint"
     ],
@@ -1630,7 +1631,8 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": 1,
     "connections": [
       "/bisley",
-      "/field-command"
+      "/field-command",
+      "/go-fish"
     ],
     "rewards": [
       {
@@ -1679,7 +1681,9 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "connections": [
       "/crossword",
       "/nestor",
-      "/shifting-sands"
+      "/sevens",
+      "/shifting-sands",
+      "/sweep"
     ],
     "rewards": [
       {
@@ -1796,6 +1800,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": 3,
     "connections": [
       "/fortress",
+      "/sweep",
       "/waypoint"
     ],
     "rewards": [
@@ -1863,6 +1868,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": 1,
     "connections": [
       "/bisley",
+      "/go-fish",
       "/gremlin"
     ],
     "rewards": [
@@ -2683,6 +2689,69 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       {
         "type": "quote",
         "id": 188
+      }
+    ],
+    "appended": true
+  },
+  {
+    "path": "/go-fish",
+    "x": -0.8504,
+    "y": -0.2118,
+    "arm": null,
+    "connections": [
+      "/labyrinth",
+      "/pyramid"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 189
+      },
+      {
+        "type": "quote",
+        "id": 190
+      }
+    ],
+    "appended": true
+  },
+  {
+    "path": "/sevens",
+    "x": 0.5714,
+    "y": 0.1016,
+    "arm": null,
+    "connections": [
+      "/crossword",
+      "/waypoint"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 191
+      },
+      {
+        "type": "quote",
+        "id": 192
+      }
+    ],
+    "appended": true
+  },
+  {
+    "path": "/sweep",
+    "x": 0.7772,
+    "y": 0.0676,
+    "arm": null,
+    "connections": [
+      "/nestor",
+      "/waypoint"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 193
+      },
+      {
+        "type": "quote",
+        "id": 194
       }
     ],
     "appended": true

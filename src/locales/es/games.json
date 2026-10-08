@@ -964,5 +964,47 @@
     "allMelded_other": "¡Todas las cartas bajadas, con {{count}} cartas de sobra!",
     "handFull": "Tu mano llegó a {{count}} cartas.",
     "outOfCards": "El carrusel se vació antes que tu mano."
+  },
+  "sweep": {
+    "rival": "Rival",
+    "you": "Tú",
+    "points": "{{label}}: {{count}}",
+    "taken": "Cartas: {{cards}} · Escobas: {{sweeps}}",
+    "pickCards": "Toca cartas de la mesa que sumen {{value}}.",
+    "dealOf": "Reparto {{deal}} de {{total}}",
+    "won": "¡Ganas {{you}} a {{rival}}!",
+    "lost": "El rival marca {{rival}} frente a tus {{you}}."
+  },
+  "sevens": {
+    "rival": "Rival",
+    "drawToPass": "Ninguna carta encaja: toca el mazo para robar.",
+    "pass": "Ninguna carta encaja y el mazo está vacío: pasas.",
+    "inHand_one": "{{count}} carta en mano",
+    "inHand_other": "{{count}} cartas en mano",
+    "won_one": "Tu mano está vacía, y al rival le queda {{count}} carta.",
+    "won_other": "Tu mano está vacía, y al rival le quedan {{count}} cartas.",
+    "lost_one": "El rival vació su mano; te quedaba {{count}} carta.",
+    "lost_other": "El rival vació su mano; te quedaban {{count}} cartas."
+  },
+  "gofish": {
+    "rival": "Rival",
+    "you": "Tú",
+    "pond": "Estanque",
+    "books": "Libros",
+    "rivalBooks_one": "Rival: {{count}} libro",
+    "rivalBooks_other": "Rival: {{count}} libros",
+    "yourTurn": "Toca una carta para pedir su valor.",
+    "youGot_one": "Pediste {{rank}}: el rival entregó {{count}} carta. Pide otra vez.",
+    "youGot_other": "Pediste {{rank}}: el rival entregó {{count}} cartas. Pide otra vez.",
+    "rivalGot_one": "El rival pidió {{rank}} y se llevó {{count}} carta. Pide otra vez.",
+    "rivalGot_other": "El rival pidió {{rank}} y se llevó {{count}} cartas. Pide otra vez.",
+    "youFishedIt": "No hay {{rank}}, ¡pero pescaste uno! Pide otra vez.",
+    "rivalFishedIt": "El rival pidió {{rank}}, fue a pescar y encontró uno. Pide otra vez.",
+    "youFished": "No hay {{rank}}: a pescar. Turno del rival.",
+    "rivalFished": "El rival pidió {{rank}} y fue a pescar. Tu turno.",
+    "youPassed": "El estanque está vacío: pasas.",
+    "rivalPassed": "El estanque está vacío: el rival pasa.",
+    "won": "{{you}} libros a {{rival}}: ¡ganas!",
+    "lost": "{{rival}} libros a {{you}}: gana el rival."
   }
 }

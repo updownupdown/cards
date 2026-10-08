@@ -964,5 +964,47 @@
     "allMelded_other": "Semua kartu turun, dengan sisa {{count}} kartu!",
     "handFull": "Tanganmu mencapai {{count}} kartu.",
     "outOfCards": "Komidi putar habis sebelum tanganmu kosong."
+  },
+  "sweep": {
+    "rival": "Lawan",
+    "you": "Kamu",
+    "points": "{{label}}: {{count}}",
+    "taken": "Kartu: {{cards}} · Sapuan: {{sweeps}}",
+    "pickCards": "Ketuk kartu meja yang berjumlah {{value}}.",
+    "dealOf": "Bagian {{deal}} dari {{total}}",
+    "won": "Kamu menang {{you}}-{{rival}}!",
+    "lost": "Lawan mencetak {{rival}} lawan {{you}} milikmu."
+  },
+  "sevens": {
+    "rival": "Lawan",
+    "drawToPass": "Tidak ada kartu yang cocok: ketuk tumpukan untuk mengambil.",
+    "pass": "Tidak ada kartu yang cocok dan tumpukan kosong: kamu lewat.",
+    "inHand_one": "{{count}} kartu di tangan",
+    "inHand_other": "{{count}} kartu di tangan",
+    "won_one": "Tanganmu kosong, dan lawan masih punya {{count}} kartu!",
+    "won_other": "Tanganmu kosong, dan lawan masih punya {{count}} kartu!",
+    "lost_one": "Lawan mengosongkan tangannya; kamu masih punya {{count}} kartu.",
+    "lost_other": "Lawan mengosongkan tangannya; kamu masih punya {{count}} kartu."
+  },
+  "gofish": {
+    "rival": "Lawan",
+    "you": "Kamu",
+    "pond": "Kolam",
+    "books": "Buku",
+    "rivalBooks_one": "Lawan: {{count}} buku",
+    "rivalBooks_other": "Lawan: {{count}} buku",
+    "yourTurn": "Ketuk kartu untuk meminta nilainya.",
+    "youGot_one": "Kamu meminta {{rank}}: lawan menyerahkan {{count}} kartu. Minta lagi.",
+    "youGot_other": "Kamu meminta {{rank}}: lawan menyerahkan {{count}} kartu. Minta lagi.",
+    "rivalGot_one": "Lawan meminta {{rank}} dan mengambil {{count}} kartu. Ia meminta lagi.",
+    "rivalGot_other": "Lawan meminta {{rank}} dan mengambil {{count}} kartu. Ia meminta lagi.",
+    "youFishedIt": "Tidak ada {{rank}}, tapi kamu memancing satu! Minta lagi.",
+    "rivalFishedIt": "Lawan meminta {{rank}}, memancing, dan mendapatkannya. Ia meminta lagi.",
+    "youFished": "Tidak ada {{rank}}: memancinglah. Giliran lawan.",
+    "rivalFished": "Lawan meminta {{rank}} dan memancing. Giliranmu.",
+    "youPassed": "Kolam kosong: kamu lewat.",
+    "rivalPassed": "Kolam kosong: lawan lewat.",
+    "won": "{{you}} buku lawan {{rival}}: kamu menang!",
+    "lost": "{{rival}} buku lawan {{you}}: lawan menang."
   }
 }

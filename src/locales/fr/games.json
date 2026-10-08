@@ -964,5 +964,47 @@
     "allMelded_other": "Toutes les cartes sont posées, avec {{count}} cartes d'avance !",
     "handFull": "Votre main a atteint {{count}} cartes.",
     "outOfCards": "Le carrousel s'est vidé avant votre main."
+  },
+  "sweep": {
+    "rival": "Rival",
+    "you": "Vous",
+    "points": "{{label}} : {{count}}",
+    "taken": "Cartes : {{cards}} · Balayages : {{sweeps}}",
+    "pickCards": "Touchez des cartes de la table totalisant {{value}}.",
+    "dealOf": "Donne {{deal}} sur {{total}}",
+    "won": "Vous gagnez {{you}} à {{rival}} !",
+    "lost": "Le rival marque {{rival}} contre vos {{you}}."
+  },
+  "sevens": {
+    "rival": "Rival",
+    "drawToPass": "Aucune carte ne convient : touchez la pioche pour piocher.",
+    "pass": "Aucune carte ne convient et la pioche est vide : vous passez.",
+    "inHand_one": "{{count}} carte en main",
+    "inHand_other": "{{count}} cartes en main",
+    "won_one": "Votre main est vide, et il reste {{count}} carte au rival !",
+    "won_other": "Votre main est vide, et il reste {{count}} cartes au rival !",
+    "lost_one": "Le rival a vidé sa main ; il vous restait {{count}} carte.",
+    "lost_other": "Le rival a vidé sa main ; il vous restait {{count}} cartes."
+  },
+  "gofish": {
+    "rival": "Rival",
+    "you": "Vous",
+    "pond": "Mare",
+    "books": "Livres",
+    "rivalBooks_one": "Rival : {{count}} livre",
+    "rivalBooks_other": "Rival : {{count}} livres",
+    "yourTurn": "Touchez une carte pour demander sa valeur.",
+    "youGot_one": "Vous avez demandé {{rank}} : le rival a donné {{count}} carte. Redemandez.",
+    "youGot_other": "Vous avez demandé {{rank}} : le rival a donné {{count}} cartes. Redemandez.",
+    "rivalGot_one": "Le rival a demandé {{rank}} et pris {{count}} carte. Il redemande.",
+    "rivalGot_other": "Le rival a demandé {{rank}} et pris {{count}} cartes. Il redemande.",
+    "youFishedIt": "Pas de {{rank}}, mais vous en avez pêché un ! Redemandez.",
+    "rivalFishedIt": "Le rival a demandé {{rank}}, a pêché et en a trouvé un. Il redemande.",
+    "youFished": "Pas de {{rank}} : allez pêcher. Au rival de jouer.",
+    "rivalFished": "Le rival a demandé {{rank}} et est allé pêcher. À vous.",
+    "youPassed": "La mare est vide : vous passez.",
+    "rivalPassed": "La mare est vide : le rival passe.",
+    "won": "{{you}} livres à {{rival}} : vous gagnez !",
+    "lost": "{{rival}} livres à {{you}} : le rival gagne."
   }
 }
