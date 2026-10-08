@@ -8,7 +8,6 @@ import {
   subscribeToWildCardsProgress,
   type WildCardsProgress,
 } from "@/data/wild-cards";
-import { useDevMode } from "@/data/dev-mode";
 import { useEffect, useState } from "react";
 
 /** The Wild Cards unlocked, and what the player's campaign wins still buy. */
@@ -49,9 +48,9 @@ export function useWildCards() {
 
 /**
  * Whether Wild Cards show at all: the Home tab's section and their screens.
- * Only in dev mode, until they're refined after launch. Players' Wild Cards
+ * Never, at present: the games are being removed. Players' Wild Cards
  * progress is kept either way.
  */
 export function useWildCardsVisible() {
-  return useDevMode();
+  return false;
 }

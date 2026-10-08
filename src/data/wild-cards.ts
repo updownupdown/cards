@@ -33,7 +33,7 @@ export const WILD_GAMES: readonly WildGameDefinition[] = [
 
 /**
  * Off while the games are being finished: every game is open to anyone who
- * can see Wild Cards (dev mode, see useWildCardsVisible).
+ * can see Wild Cards (no one, see useWildCardsVisible).
  * Before release: turn this on, so games stay locked until won with credits
  * (the 12-tap "just this once" still lets a locked one be played daily), and
  * finish the translations and tests.
