@@ -8,7 +8,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle, localizeSettingDefinitions } from "@/i18n/content";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors, rgba, UfoColors } from "@/styles/styles";
+import { Colors, rgba } from "@/styles/styles";
 import { ActionButton, Caps, RatingMeters } from "@/components/ui/Nocturne";
 import {
   GAME_FULL_THUMBNAIL_ASSETS,
@@ -26,6 +26,7 @@ import {
   type GameSettings,
 } from "../../data/game-menu";
 import { SettingControl } from "../common/SettingControl";
+import { UfoButton } from "../common/UfoButton";
 import { FavButton } from "../Home/FavButton";
 import { shouldReloadGameAfterSettingChange } from "./game-modal-policy";
 import ModalFull, { ModalHeading } from "./ModalFull";
@@ -209,11 +210,8 @@ export default function GameModal({
               Only one can be held at a time for now, so no count is shown;
               the count is still tracked in case that ever changes. */}
           {onMercySkip && mercySkipsAvailable > 0 && (
-            <ActionButton
+            <UfoButton
               label={t("mercySkip.title")}
-              iconName="ufo"
-              color={UfoColors.green}
-              ink={UfoColors.black}
               onPress={() => {
                 handleClose();
                 onMercySkip();

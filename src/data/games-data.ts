@@ -19,6 +19,7 @@ export enum GameTag {
   Puzzles = "Puzzles",
   Sports = "Sports",
   PokerAndCribbage = "PokerAndCribbage",
+  TricksAndMelds = "TricksAndMelds",
   CardCombat = "CardCombat",
   DungeonCrawler = "DungeonCrawler",
   ModernMechanics = "ModernMechanics",

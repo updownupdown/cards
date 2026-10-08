@@ -424,6 +424,18 @@ export async function grantMercySkip() {
   });
 }
 
+/** Dev mode: opens every game on the Campaign map, winning none. */
+export async function unlockAllCampaignGames() {
+  await mutateCampaignProgress((progress) => {
+    progress.unlockedPaths = [
+      ...new Set([
+        ...progress.unlockedPaths,
+        ...GAME_DOT_DEFINITIONS.map((gameDot) => gameDot.path),
+      ]),
+    ].sort();
+  });
+}
+
 export async function resetCampaignProgress() {
   await mutateCampaignProgress((progress) => {
     Object.assign(progress, createDefaultCampaignProgress());

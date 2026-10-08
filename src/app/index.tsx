@@ -8,6 +8,7 @@ import {
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { i18n } from "@/i18n";
 import { reportMessage } from "@/utils/crash-reporting";
+import { isDevMode } from "@/data/dev-mode";
 import { isLocalDevEnvironment } from "@/utils/utils";
 import { router, type Href } from "expo-router";
 import { useEffect, useRef } from "react";
@@ -16,7 +17,7 @@ export default function HomeScreen() {
   const { settings, isLoading } = useGlobalSettings();
   const showToast = useToast();
   const hasCheckedResumeRef = useRef(false);
-  const isDev = isLocalDevEnvironment();
+  const isDev = isLocalDevEnvironment() || isDevMode();
 
   useEffect(() => {
     if (isLoading || hasCheckedResumeRef.current) return;

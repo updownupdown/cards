@@ -6,7 +6,7 @@ The Campaign home tab is a progression mode layered over the existing game catal
 
 `src/data/campaign-map.generated.ts` holds every game's node: its position, its links and its rewards. Coordinates are normalized around `(0, 0)`, where Klondike must remain. Connections are undirected and must appear in both nodes' `connections` arrays.
 
-Every game has a node, local-only games included. They sit on the rim as dead ends, and `src/data/campaign-map.ts` leaves them (and the links to them) out of builds where they are off, so the map works either way. Their quotes can only be collected where they are on.
+Every released game has a node. Local-only games (`enabledOnLocalOnly`) have none and hold no reward, so they can be added, tried out and removed without touching the map or players' progress; a win in one of them records no campaign progress. When one is released (its flag dropped), a plain run adds its node at the rim like any new game.
 
 ## Layout
 
@@ -15,15 +15,14 @@ Every game has a node, local-only games included. They sit on the rim as dead en
 1. Positions come from the galaxy's shape alone (the `GALAXY` parameters): a round bulge, then four spiral arms, with field stars between them. Links follow: each arm chained outwards, then short bridges between arms, then whatever repairs keep every game reachable.
 2. Games are then fitted to those positions by simulated annealing (the `PLACEMENT` parameters), seeded so every rebuild is identical:
    - Klondike at the centre, and the rest outwards by progression score: 75% difficulty and 25% complexity, so the first games are easy both to win and to learn. Luck is not counted separately, since difficulty already rates how rarely a game is won.
-   - No game is the only way through to an easier one (by difficulty): a hard game may only gate games at least as hard. This is checked on the map as release builds show it, without local-only games.
+   - No game is the only way through to an easier one (by difficulty): a hard game may only gate games at least as hard.
    - Linked games of the same category cost more the nearer they are to the centre, and among the games within two steps of Klondike each category appears once, so the first games a player meets are all different.
-   - Local-only games take rim slots in the outer 30% that nothing else depends on.
 
 ## Reward policy
 
 - Every game has two or three rewards: a Tao chapter and one or two quotes, or two or three quotes.
-- The 81 Tao chapters go one each to the 81 easiest released games, by progression score, so the hardest games and local-only games have none. They are numbered outwards from Klondike (chapter 1), so the chapters are met roughly in order.
-- The quotes are shuffled and dealt: first so every game has two rewards, then the rest to released games at random, up to three each. Quotes 1-184 are assigned; the rest wait for new games.
+- The 81 Tao chapters go one each to the 81 easiest games, by progression score, so the hardest games have none. They are numbered outwards from Klondike (chapter 1), so the chapters are met roughly in order.
+- The quotes are shuffled and dealt: first so every game has two rewards, then the rest to games at random, up to three each. Quotes 1-184 are assigned; the rest wait for new games.
 - Rewards are awarded one per win, in the order the node lists them: a Tao chapter first.
 - `npm run campaign:generate -- --rebalance-rewards` deals them again without moving any node.
 
@@ -33,7 +32,8 @@ A plain `npm run campaign:generate` brings the map in line with the games withou
 
 **Ground rules**
 
-- A game is *released* once it has been in a store build or the web build on main. A local-only game nobody has played in a release can be changed freely; a released one only as below.
+- A game is *released* once it has been in a store build or the web build on main.
+- A local-only game (`enabledOnLocalOnly: true`) is kept apart from all of this: it has no node, no Tao chapter and no quotes (and needs no artwork), and a win in it records no campaign progress. It can be added, changed and deleted freely, with no entry in any list below. It joins the map only when it is released (its flag dropped), as a new game.
 - A game's path (`/klondike`) is its identity in every save: stats, favourites, recent games, Campaign wins and the games a save has open. Once released, a path is never used again for a different game, even after it is retired or replaced.
 - One change to the catalog per PR (an addition, a rename, a replacement or a removal), so each map diff can be reviewed on its own.
 - After any of them: `npm run campaign:generate`, `npm run campaign:lock`, then `npx tsc --noEmit`, `npm run lint` and `npm test`. The saved-data guard must pass without touching its pins, its golden save or the lock by hand.
@@ -41,8 +41,8 @@ A plain `npm run campaign:generate` brings the map in line with the games withou
 
 **Adding a game** (safe; no OK needed)
 
-1. Add the normal game definition and component, with its ratings settled first: its difficulty and complexity decide where it goes.
-2. Run `npm run campaign:generate`. The new game is placed among the games about as hard as it (it aims for the median distance from the centre of the nine games nearest it in progression score), where it links to two nearby games, at least one of them no harder than itself, so reaching it never takes beating a harder game. Only if there is no such free spot does it go out on the rim. Local-only games always go to the rim. It is marked `appended` and given two unused quotes. Nothing already on the map moves.
+1. Add the normal game definition and component, with its ratings settled first: its difficulty and complexity decide where it goes. A local-only game stops here: it gets no node until it is released.
+2. Run `npm run campaign:generate`. The new game is placed among the games about as hard as it (it aims for the median distance from the centre of the nine games nearest it in progression score), where it links to two nearby games, at least one of them no harder than itself, so reaching it never takes beating a harder game. Only if there is no such free spot does it go out on the rim. It is marked `appended` and given two unused quotes. Nothing already on the map moves.
 3. A run warns when fewer than ten quotes are left unassigned. Append new quotes to `QuotesText.ts` then (see `docs/quotes.md`), in the same PR or the one before, so existing IDs keep their quotes.
 4. Run `npm run campaign:lock` to lock it where it is.
 
@@ -58,7 +58,7 @@ A plain `npm run campaign:generate` brings the map in line with the games withou
 
 What a save keeps: the new game is open wherever the old one was, every game the old one's wins had opened stays open, and every collectible stays. The old game's rewards not yet collected are won from the new game. What it loses, since the new game is a different game: the old game's stats, favourite, recent-games entry and Campaign wins. Use this only for a game that fits the old one's spot (about as hard); otherwise remove the old game and add the new one.
 
-**Removing a game** (owner's OK if released; rare)
+**Removing a game** (owner's OK if released; rare. A local-only game has no node, so it is simply deleted.)
 
 1. Delete the game, and add its path to `RETIRED_GAME_PATHS` in `src/data/game-variants.ts` (and any setting only it used to `RETIRED_GAME_SETTINGS`). The generator refuses a node whose game has gone without an entry in one of these lists.
 2. Run `npm run campaign:generate`. The node leaves the map, and its former neighbours are linked to each other until they can all reach one another without it: a player who had the removed game open got there by winning one of them, so the rest stay within reach, as its win would have opened them. (The run warns if a neighbour already has six links and can't be joined.) Any split in the map is bridged too. Its rewards are handed to other games, so they can still be collected: a Tao chapter to a released game without one, quotes to games with room. Collectibles are saved by number, not by game, so players who had them keep them.
@@ -72,13 +72,17 @@ What a save keeps when a game is removed: every other win, every collectible, an
 - If a change to its rules means an unfinished deal saved by an older build can't be played on (its saved state changed shape), bump the game's `sessionVersion` (from 1). Only that game's unfinished deal is dropped.
 - Its settings are only ever added to; one no game uses any more goes in `RETIRED_GAME_SETTINGS`.
 
+**Making a released game local-only** (only with the owner's OK: players lose sight of its stats and campaign wins, which `saved-data-guard` flags)
+
+1. Mark it `enabledOnLocalOnly: true`, then run `npm run campaign:generate`: its node leaves the map, its neighbours are linked to each other as for a removal, its Tao chapter (if any) is handed to another game, and its quotes go back to the unused ones. Then `npm run campaign:lock`, which lets go of the node.
+
 **Elsewhere in a save**
 
 - Achievements are worked out from stats and collectibles, and the ones earned are saved (`cards.achievements.v1`), so "Won every game" or "Every quote" stays earned when a game or quote is added.
 - The Game of the Day is picked from the released games by date, so the pick for future days changes when the list does. Wins are saved by date, so streaks are kept.
 - The Wear OS app keeps its own saves by its own game ids, so a change here doesn't touch them; but its titles must match these, so a title change here is made there too.
 
-The layout rules above (easier games nearer the centre and never gated by harder ones, Tao chapters on the easiest games, local-only games as dead ends) are what a rebuild fits the map to. A locked map can't be held to them once games are added, removed or re-rated, so the generator only enforces them when it lays the map out, and the tests only while the games still match `LAYOUT_FINGERPRINT` in the generated file (a hash of the games, ratings and categories the layout was fitted to). Games added since place themselves by the same score, as above, so the map keeps roughly to them.
+The layout rules above (easier games nearer the centre and never gated by harder ones, Tao chapters on the easiest games) are what a rebuild fits the map to. A locked map can't be held to them once games are added, removed or re-rated, so the generator only enforces them when it lays the map out, and the tests only while the games still match `LAYOUT_FINGERPRINT` in the generated file (a hash of the games, ratings and categories the layout was fitted to). Games added since place themselves by the same score, as above, so the map keeps roughly to them.
 
 ## Locking the map
 
@@ -98,16 +102,18 @@ On 2026-10-05 Seer and Pickpocket were retired and Four Seasons became Little Wi
 
 Also on 2026-10-05 Charlatan became Boiling Over, with a plain run: its node kept its place, links and rewards under `/boiling-over`.
 
+On 2026-10-08 local-only games left the map for good: the eight added that day (Gambit, Carousel, Sweep, Sevens, Go Fish, Osmosis, Cipher and Mosaic, none ever released) had been appended at the rim with quotes 185–200; a plain run let them go, and those quotes are unassigned again. Cipher was then deleted.
+
 ## Validation
 
 Development validation in `src/data/campaign-map.ts` enforces:
 
-- Every game has exactly one node, local-only games included.
-- The graph is connected, with and without local-only games.
+- Every released game has exactly one node, and no local-only game has one.
+- The graph is connected.
 - Every node has one to six connections, and connections are symmetric and contain no unknown paths.
-- No single game holds back more than a fifth of the map, with and without local-only games.
+- No single game holds back more than a fifth of the map.
 - Nodes do not overlap.
-- Every node has two or three rewards, with at most one Tao chapter, and none on local-only games.
+- Every node has two or three rewards, with at most one Tao chapter.
 - Tao and quote reward IDs are unique and exist in their catalogs, and every Tao chapter is awarded.
 
 `src/__tests__/campaign-map.test.ts` also checks the placement rules above, and `src/__tests__/saved-data-guard.test.ts` the lock.

@@ -10,7 +10,12 @@ export const GALLERY_LAST_QUOTE_STORAGE_KEY = "cards.gallery.lastQuote.v1";
  * (saved-data-guard.test.ts).
  */
 export const RETIRED_WILD_CARDS_STORAGE_KEY = "cards.wildCards.v1";
-/** Beta (local-only) games turned on outside dev, from the settings. */
+/** Dev mode (instant wins, the beta games, test shortcuts), "1" when on. */
+export const DEV_MODE_STORAGE_KEY = "cards.devMode.v1";
+/**
+ * Retired: beta games turned on by the ten taps before there was a dev mode.
+ * Nothing reads it; the key stays for saved-data-guard.test.ts.
+ */
 export const BETA_GAMES_STORAGE_KEY = "cards.betaGames.v1";
 /**
  * "Help from Above" (the header's UFO): "off", "beacons" or "autopilot".

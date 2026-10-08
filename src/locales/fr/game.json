@@ -7,7 +7,8 @@
     "undo": "Annuler",
     "reset": "Recommencer",
     "menu": "Menu",
-    "infoAndSettings": "Infos et réglages"
+    "infoAndSettings": "Infos et réglages",
+    "devWin": "Gagner maintenant (mode dev)"
   },
   "result": {
     "won": "Vous avez gagné !",

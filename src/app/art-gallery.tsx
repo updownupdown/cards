@@ -5,6 +5,7 @@ import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
 import { GameTag, type GameDefinition } from "@/data/games-data";
 import { GAME_DEFINITIONS } from "@/data/games-registry";
 import { useTranslation } from "@/i18n";
+import { isDevMode } from "@/data/dev-mode";
 import { isLocalDevEnvironment } from "@/utils/utils";
 import { Image } from "expo-image";
 import { Redirect } from "expo-router";
@@ -47,7 +48,7 @@ export default function ArtGalleryScreen() {
   const { width } = useWindowDimensions();
   const { t } = useTranslation("home");
 
-  if (!isLocalDevEnvironment()) return <Redirect href="/" />;
+  if (!isLocalDevEnvironment() && !isDevMode()) return <Redirect href="/" />;
 
   const columns = Math.max(
     1,

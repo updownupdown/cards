@@ -947,5 +947,73 @@
   },
   "elevens": {
     "noMorePairsOrFaceTriplets": "No more pairs or face-card triplets can be made."
+  },
+  "gambit": {
+    "rival": "Rival",
+    "you": "You",
+    "trump": "Trump",
+    "tricks": "Tricks",
+    "dealOf": "Deal {{deal}} of {{total}}",
+    "contract_one": "Contract: {{count}} trick",
+    "contract_other": "Contract: {{count}} tricks",
+    "contractLost": "The contract can no longer be made.",
+    "allContractsMade": "All three contracts made!"
+  },
+  "carousel": {
+    "hand": "Hand",
+    "tableWhole": "Every meld is whole.",
+    "tableBroken": "Make every meld whole to take a card.",
+    "allMelded_one": "Every card melded, with {{count}} card to spare!",
+    "allMelded_other": "Every card melded, with {{count}} cards to spare!",
+    "handFull": "Your hand reached {{count}} cards.",
+    "outOfCards": "The carousel ran out before your hand did."
+  },
+  "sweep": {
+    "rival": "Rival",
+    "you": "You",
+    "points": "{{label}}: {{count}}",
+    "taken": "Cards: {{cards}} · Sweeps: {{sweeps}}",
+    "pickCards": "Tap table cards adding up to {{value}}.",
+    "dealOf": "Deal {{deal}} of {{total}}",
+    "won": "You win, {{you}} to {{rival}}!",
+    "lost": "The rival scores {{rival}} to your {{you}}."
+  },
+  "sevens": {
+    "rival": "Rival",
+    "drawToPass": "No card fits: tap the stock to draw.",
+    "pass": "No card fits and the stock is empty: you pass.",
+    "inHand_one": "{{count}} card in hand",
+    "inHand_other": "{{count}} cards in hand",
+    "won_one": "Your hand is empty, with {{count}} card left in the rival's!",
+    "won_other": "Your hand is empty, with {{count}} cards left in the rival's!",
+    "lost_one": "The rival emptied its hand; you had {{count}} card left.",
+    "lost_other": "The rival emptied its hand; you had {{count}} cards left."
+  },
+  "gofish": {
+    "rival": "Rival",
+    "you": "You",
+    "pond": "Pond",
+    "books": "Books",
+    "rivalBooks_one": "Rival: {{count}} book",
+    "rivalBooks_other": "Rival: {{count}} books",
+    "yourTurn": "Tap a card to ask for its rank.",
+    "youGot_one": "You asked for {{rank}}: the rival handed over {{count}} card. Ask again.",
+    "youGot_other": "You asked for {{rank}}: the rival handed over {{count}} cards. Ask again.",
+    "rivalGot_one": "The rival asked for {{rank}} and took {{count}} card. It asks again.",
+    "rivalGot_other": "The rival asked for {{rank}} and took {{count}} cards. It asks again.",
+    "youFishedIt": "No {{rank}}, but you fished one up! Ask again.",
+    "rivalFishedIt": "The rival asked for {{rank}}, went fishing and found one. It asks again.",
+    "youFished": "No {{rank}}: go fish. The rival's turn.",
+    "rivalFished": "The rival asked for {{rank}} and went fishing. Your turn.",
+    "youPassed": "The pond is empty: you pass.",
+    "rivalPassed": "The pond is empty: the rival passes.",
+    "won": "{{you}} books to {{rival}}: you win!",
+    "lost": "{{rival}} books to {{you}}: the rival wins."
+  },
+  "mosaic": {
+    "slips": "Slips: {{slips}} of {{total}}",
+    "won_one": "Every red card found, with {{count}} slip!",
+    "won_other": "Every red card found, with {{count}} slips!",
+    "lost": "Three slips: the mosaic stays hidden."
   }
 }

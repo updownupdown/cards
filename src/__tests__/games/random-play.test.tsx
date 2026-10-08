@@ -54,7 +54,8 @@ async function tapRandomCard(random: () => number) {
   const config = harness.mapConfig!;
   const pressable = mappedCards().filter((card) => {
     const mapping = config.cardMapper(card) as
-      { onPress?: () => void; isDisabled?: boolean } | undefined;
+      | { onPress?: () => void; isDisabled?: boolean }
+      | undefined;
     return mapping?.onPress && !mapping.isDisabled;
   });
   if (pressable.length === 0) return "no card to tap";
@@ -65,7 +66,8 @@ async function tapRandomCard(random: () => number) {
     const card = mappedCards().find((candidate) => candidate.card.id === id);
     const mapping = card
       ? (harness.mapConfig!.cardMapper(card) as
-          { onPress?: () => void; isDisabled?: boolean } | undefined)
+          | { onPress?: () => void; isDisabled?: boolean }
+          | undefined)
       : undefined;
     const onPress = mapping?.isDisabled ? undefined : mapping?.onPress;
     if (!onPress) break;
@@ -80,7 +82,8 @@ async function pressRandomZone(random: () => number) {
   const config = harness.mapConfig!;
   const zones = config.zones.filter((zone) => {
     const mapping = config.zoneMapper?.(zone) as
-      { onPress?: () => void; isDisabled?: boolean } | undefined;
+      | { onPress?: () => void; isDisabled?: boolean }
+      | undefined;
     return mapping?.onPress && !mapping.isDisabled;
   });
   if (zones.length === 0) return "no zone to press";

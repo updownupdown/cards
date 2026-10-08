@@ -947,5 +947,73 @@
   },
   "elevens": {
     "noMorePairsOrFaceTriplets": "Yapılabilecek çift ya da resimli kart üçlüsü kalmadı."
+  },
+  "gambit": {
+    "rival": "Rakip",
+    "you": "Sen",
+    "trump": "Koz",
+    "tricks": "Eller",
+    "dealOf": "Dağıtım {{deal}}/{{total}}",
+    "contract_one": "Kontrat: {{count}} el",
+    "contract_other": "Kontrat: {{count}} el",
+    "contractLost": "Kontrat artık tutturulamaz.",
+    "allContractsMade": "Üç kontratın üçü de tuttu!"
+  },
+  "carousel": {
+    "hand": "El",
+    "tableWhole": "Bütün perler tamam.",
+    "tableBroken": "Kart almak için bütün perleri tamamla.",
+    "allMelded_one": "Bütün kartlar açıldı, {{count}} kart artırarak!",
+    "allMelded_other": "Bütün kartlar açıldı, {{count}} kart artırarak!",
+    "handFull": "Elin {{count}} karta ulaştı.",
+    "outOfCards": "Atlıkarınca elinden önce bitti."
+  },
+  "sweep": {
+    "rival": "Rakip",
+    "you": "Sen",
+    "points": "{{label}}: {{count}}",
+    "taken": "Kart: {{cards}} · Süpürme: {{sweeps}}",
+    "pickCards": "Toplamı {{value}} eden masa kartlarına dokun.",
+    "dealOf": "Dağıtım {{deal}}/{{total}}",
+    "won": "{{you}}-{{rival}} kazandın!",
+    "lost": "Rakip {{rival}}, sen {{you}}: rakip kazandı."
+  },
+  "sevens": {
+    "rival": "Rakip",
+    "drawToPass": "Uyan kart yok: çekmek için desteye dokun.",
+    "pass": "Uyan kart yok ve deste boş: pas geçiyorsun.",
+    "inHand_one": "Elde {{count}} kart",
+    "inHand_other": "Elde {{count}} kart",
+    "won_one": "Elin boşaldı; rakibin elinde {{count}} kart kaldı!",
+    "won_other": "Elin boşaldı; rakibin elinde {{count}} kart kaldı!",
+    "lost_one": "Rakip elini boşalttı; sende {{count}} kart kalmıştı.",
+    "lost_other": "Rakip elini boşalttı; sende {{count}} kart kalmıştı."
+  },
+  "gofish": {
+    "rival": "Rakip",
+    "you": "Sen",
+    "pond": "Gölet",
+    "books": "Dörtlüler",
+    "rivalBooks_one": "Rakip: {{count}} dörtlü",
+    "rivalBooks_other": "Rakip: {{count}} dörtlü",
+    "yourTurn": "Değerini istemek için bir karta dokun.",
+    "youGot_one": "{{rank}} istedin: rakip {{count}} kart verdi. Yine iste.",
+    "youGot_other": "{{rank}} istedin: rakip {{count}} kart verdi. Yine iste.",
+    "rivalGot_one": "Rakip {{rank}} istedi ve {{count}} kart aldı. Yine istiyor.",
+    "rivalGot_other": "Rakip {{rank}} istedi ve {{count}} kart aldı. Yine istiyor.",
+    "youFishedIt": "{{rank}} yok ama bir tane çektin! Yine iste.",
+    "rivalFishedIt": "Rakip {{rank}} istedi, çekti ve buldu. Yine istiyor.",
+    "youFished": "{{rank}} yok: balığa git. Sıra rakipte.",
+    "rivalFished": "Rakip {{rank}} istedi ve balığa gitti. Sıra sende.",
+    "youPassed": "Gölet boş: pas geçiyorsun.",
+    "rivalPassed": "Gölet boş: rakip pas geçiyor.",
+    "won": "{{you}} dörtlüye {{rival}}: kazandın!",
+    "lost": "{{rival}} dörtlüye {{you}}: rakip kazandı."
+  },
+  "mosaic": {
+    "slips": "Hata: {{slips}}/{{total}}",
+    "won_one": "Bütün kırmızı kartlar {{count}} hatayla bulundu!",
+    "won_other": "Bütün kırmızı kartlar {{count}} hatayla bulundu!",
+    "lost": "Üç hata: mozaik gizli kaldı."
   }
 }

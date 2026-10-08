@@ -7,7 +7,8 @@
     "undo": "Urungkan",
     "reset": "Ulangi",
     "menu": "Menu",
-    "infoAndSettings": "Info & Pengaturan"
+    "infoAndSettings": "Info & Pengaturan",
+    "devWin": "Menang sekarang (mode dev)"
   },
   "result": {
     "won": "Kamu menang!",

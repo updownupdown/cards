@@ -39,16 +39,8 @@ function progression(gamePath: string) {
   return 0.75 * rating.difficulty + 0.25 * rating.complexity;
 }
 
-const isLocalOnly = (gamePath: string) =>
-  !!GAMES_DATA[gamePath]?.enabledOnLocalOnly;
-
-/** The map as release builds show it, without local-only games. */
-const RELEASED = GAME_DOT_DEFINITIONS.filter(
-  (gameDot) => !isLocalOnly(gameDot.path),
-).map((gameDot) => ({
-  ...gameDot,
-  connections: gameDot.connections.filter((path) => !isLocalOnly(path)),
-}));
+/** Local-only games have no node, so the map is the released games'. */
+const RELEASED = GAME_DOT_DEFINITIONS;
 
 /** The games that can only be reached through `gate`. */
 function gatedBy(gameDots: typeof RELEASED, gate: string) {
@@ -196,27 +188,14 @@ describe("Campaign map", () => {
     expect(new Set(categories).size).toBe(categories.length);
   });
 
-  layoutTest(
-    "local-only games sit on the rim as dead ends, without Tao chapters",
-    () => {
-      const byRadius = [...GAME_DOT_DEFINITIONS].sort(
-        (left, right) =>
-          Math.hypot(left.x, left.y) - Math.hypot(right.x, right.y),
-      );
-      const local = GAME_DOT_DEFINITIONS.filter((gameDot) =>
-        isLocalOnly(gameDot.path),
-      );
-      expect(local.length).toBeGreaterThan(0);
-      for (const gameDot of local) {
-        expect(byRadius.indexOf(gameDot)).toBeGreaterThanOrEqual(
-          Math.floor(byRadius.length * 0.7),
-        );
-        expect(hasTao(gameDot)).toBe(false);
-        // Nothing else is reached only through it.
-        expect(gatedBy(GAME_DOT_DEFINITIONS, gameDot.path)).toEqual([]);
-      }
-    },
-  );
+  test("local-only games have no node, so they hold no reward", () => {
+    const local = Object.entries(GAMES_DATA)
+      .filter(([, game]) => game.enabledOnLocalOnly)
+      .map(([path]) => path);
+    for (const path of local) {
+      expect(GAME_DOT_DEFINITIONS.some((dot) => dot.path === path)).toBe(false);
+    }
+  });
 
   test("every Tao chapter is awarded exactly once", () => {
     const chapters = GAME_DOT_DEFINITIONS.flatMap((gameDot) =>

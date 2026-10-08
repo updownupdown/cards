@@ -4,7 +4,6 @@ import {
   validateCollectibleCatalogs,
   type CollectibleReward,
 } from "./collectibles";
-import { isGameEnabled } from "./games-data";
 import { GAME_DEFINITIONS } from "./games-registry";
 import {
   GAME_DOT_DEFINITIONS as ALL_GAME_DOT_DEFINITIONS,
@@ -61,40 +60,13 @@ export const MIN_GAME_DOT_SPACING =
 
 export type GameDotState = "locked" | "connected" | "won" | "complete";
 
-const LOCAL_ONLY_PATHS = new Set(
-  GAME_DEFINITIONS.filter((game) => game.enabledOnLocalOnly).map(
-    (game) => game.path,
-  ),
-);
-
 /**
- * The map without some of its games, and without links to them. Local-only
- * games sit on the rim as dead ends, so leaving them out never cuts the map.
+ * The game dots: one for every released game. Local-only games
+ * (`enabledOnLocalOnly`) have none, so they can come and go without touching
+ * the map or holding any reward.
  */
-function withoutGameDots(
-  gameDots: GameDotDefinition[],
-  left: ReadonlySet<string>,
-) {
-  return gameDots
-    .filter((gameDot) => !left.has(gameDot.path))
-    .map((gameDot) => ({
-      ...gameDot,
-      connections: gameDot.connections.filter((path) => !left.has(path)),
-    }));
-}
-
-/**
- * The game dots this build shows. Every game has one, local-only games
- * included; builds where those games are off leave them out.
- */
-export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = withoutGameDots(
-  ALL_GAME_DOT_DEFINITIONS,
-  new Set(
-    GAME_DEFINITIONS.filter((game) => !isGameEnabled(game)).map(
-      (game) => game.path,
-    ),
-  ),
-);
+export const GAME_DOT_DEFINITIONS: GameDotDefinition[] =
+  ALL_GAME_DOT_DEFINITIONS;
 
 export const GAME_DOTS_BY_PATH = new Map(
   GAME_DOT_DEFINITIONS.map((gameDot) => [gameDot.path, gameDot]),
@@ -268,9 +240,6 @@ export function validateCampaignMap() {
     if (chapters.length > 1) {
       errors.push(`${gameDot.path} has more than one Tao chapter.`);
     }
-    if (chapters.length > 0 && LOCAL_ONLY_PATHS.has(gameDot.path)) {
-      errors.push(`${gameDot.path} is local-only but has a Tao chapter.`);
-    }
 
     for (const reward of gameDot.rewards) {
       const ids = reward.type === "tao" ? taoIds : quoteIds;
@@ -300,11 +269,14 @@ export function validateCampaignMap() {
     }
   }
 
-  // Every game has a dot, local-only games included, so the map is final
-  // whichever of them a release ends up with.
-  for (const gamePath of gamePaths) {
-    if (!gameDotPaths.has(gamePath))
-      errors.push(`Missing game dot for ${gamePath}.`);
+  // Every released game has a dot; local-only games have none.
+  for (const game of GAME_DEFINITIONS) {
+    if (game.enabledOnLocalOnly) {
+      if (gameDotPaths.has(game.path))
+        errors.push(`${game.path} is local-only but has a game dot.`);
+    } else if (!gameDotPaths.has(game.path)) {
+      errors.push(`Missing game dot for ${game.path}.`);
+    }
   }
   const closestPair = Math.min(
     ...ALL_GAME_DOT_DEFINITIONS.map((gameDot) =>
@@ -329,13 +301,7 @@ export function validateCampaignMap() {
     if (!taoIds.has(id)) errors.push(`Tao chapter ${id} is not awarded.`);
   }
 
-  errors.push(
-    ...checkReach(ALL_GAME_DOT_DEFINITIONS, "Game dot graph"),
-    ...checkReach(
-      withoutGameDots(ALL_GAME_DOT_DEFINITIONS, LOCAL_ONLY_PATHS),
-      "Game dot graph without local-only games",
-    ),
-  );
+  errors.push(...checkReach(ALL_GAME_DOT_DEFINITIONS, "Game dot graph"));
   return errors;
 }
 

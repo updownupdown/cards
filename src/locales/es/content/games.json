@@ -671,6 +671,41 @@
       "value": "Canfield"
     }
   },
+  "carousel": {
+    "howToPlay": {
+      "hash": "972bbaa1",
+      "value": [
+        "## Objetivo",
+        "Vacía tu mano bajando todas tus cartas a la mesa en combinaciones. Pierdes si tu mano llega a tener **12 cartas**.",
+        "Tu puntuación es el número de cartas que quedan en el mazo y en el carrusel cuando vacías la mano.",
+        "## Combinaciones",
+        "- **Grupo:** tres o cuatro cartas del mismo rango, todas de palos distintos: {7S} {7H} {7D}",
+        "- **Secuencia:** tres o más cartas seguidas del mismo palo: {9C} {10C} {JC} {QC}",
+        "- El As puede ser bajo o alto, pero no las dos cosas: {AH} {2H} {3H} y {QH} {KH} {AH} son secuencias, {KH} {AH} {2H} no lo es.",
+        "## Mover cartas",
+        "- Toca cartas para seleccionarlas, de tu mano y de una sola combinación.",
+        "- Toca una carta de otra combinación para mover allí la selección, o un lugar vacío para empezar una combinación nueva.",
+        "- Las combinaciones se pueden dividir, unir y rehacer como quieras. Las cartas de la mesa nunca vuelven a tu mano.",
+        "- Una combinación incompleta se tiñe de rojo. Deshacer revierte cualquier movimiento hecho desde tu última carta.",
+        "## El carrusel",
+        "- Cuando no puedas seguir, toca una de las tres cartas del carrusel para tomarla en la mano. El mazo ocupa su lugar.",
+        "- Solo puedes tomar una carta mientras todas las combinaciones de la mesa estén completas. Una carta tomada no se puede deshacer.",
+        "- La partida empieza con tres combinaciones en la mesa. Cuando el carrusel se vacíe, sigue jugando hasta vaciar la mano, o toca **Terminar partida**."
+      ]
+    },
+    "quickStart": {
+      "hash": "75854330",
+      "value": [
+        "Baja a la mesa todas las cartas de tu mano, en combinaciones.",
+        "Selecciona cartas de tu mano o de una combinación y luego toca otra combinación o un lugar vacío para moverlas allí.",
+        "Reorganiza la mesa como quieras, pero cada combinación debe estar completa antes de tomar una carta del carrusel."
+      ]
+    },
+    "title": {
+      "hash": "c9a9fc03",
+      "value": "Carrusel"
+    }
+  },
   "carpet": {
     "howToPlay": {
       "hash": "0af4a81e",
@@ -1645,6 +1680,39 @@
       "value": "Rana"
     }
   },
+  "gambit": {
+    "howToPlay": {
+      "hash": "71ea66dd",
+      "value": [
+        "## Objetivo",
+        "Cumple el contrato en los tres repartos: **6**, **8** y luego **10** cartas por jugador. Un contrato es el máximo de bazas que permite su reparto, así que todos se pueden cumplir.",
+        "## Bazas",
+        "- Tú sales en la primera baza. Quien gana una baza sale en la siguiente.",
+        "- Sigue el palo de salida si puedes. Si no puedes, juega cualquier carta.",
+        "- El triunfo más alto gana la baza. Sin triunfos, la gana la carta más alta del palo de salida. Los ases son altos.",
+        "- La carta descubierta junto al mazo marca el palo de triunfo.",
+        "## Tu rival",
+        "Las cartas del rival están boca arriba, y siempre juega igual:",
+        "- **Al salir:** su carta más alta que no sea triunfo. Solo sale con triunfo cuando no tiene otra cosa.",
+        "- **Al responder:** su carta más baja que gane la baza. Si ninguna puede, su carta más baja.",
+        "- Entre cartas del mismo rango, ♣ es la más baja, luego ♦, ♥ y ♠.",
+        "## Derrota",
+        "La partida se pierde en cuanto un contrato ya no se puede cumplir. Deshacer te deja probar otra línea de juego."
+      ]
+    },
+    "quickStart": {
+      "hash": "ccfaccab",
+      "value": [
+        "Las dos manos están boca arriba. En cada reparto, gana tantas bazas como pide su contrato.",
+        "Sigue el palo de salida si puedes. El triunfo más alto gana la baza; si no hay, la carta más alta del palo de salida.",
+        "Tu rival sale con su carta más alta que no sea triunfo, y responde con su carta más baja que gane, o si no, con su carta más baja."
+      ]
+    },
+    "title": {
+      "hash": "778ad573",
+      "value": "Gambito"
+    }
+  },
   "gaps": {
     "howToPlay": {
       "hash": "bdf0ca39",
@@ -1745,6 +1813,35 @@
     "title": {
       "hash": "2b72c1f3",
       "value": "Vidriero"
+    }
+  },
+  "go-fish": {
+    "howToPlay": {
+      "hash": "f813d631",
+      "value": [
+        "## Objetivo",
+        "Hacer más libros que el rival: siete de los trece.",
+        "## Pedir",
+        "- Tú y el rival tenéis siete cartas cada uno. En tu turno, toca una carta para pedir su valor. El rival te entrega todas las cartas de ese valor que tenga, y vuelves a pedir.",
+        "- Si no tiene ninguna, vas a pescar: robas una carta del estanque. Si es el valor que pediste, vuelves a pedir; si no, el turno pasa.",
+        "- Cuatro cartas de un valor forman un libro, que se baja en cuanto lo tienes. Una mano vacía roba una carta del estanque antes de pedir.",
+        "## Tu rival",
+        "Las cartas del rival están boca abajo, pero siempre juega igual: pide un valor que tiene y que tú has pedido, porque aún debes tenerlo. Si no, pide el valor del que más cartas tiene, el más bajo en caso de empate.",
+        "## Estrategia",
+        "Recuerda lo que pide el rival: tiene esos valores, hasta que se los quites. Y cada valor que pides le dice al rival lo que tienes."
+      ]
+    },
+    "quickStart": {
+      "hash": "44b2756e",
+      "value": [
+        "Toca una carta para pedir su valor al rival. Si tiene alguna, son tuyas, y vuelves a pedir.",
+        "Si no tiene ninguna, ve a pescar: roba del estanque. Cuatro cartas de un valor forman un libro.",
+        "El rival recuerda lo que pides. Haz siete libros para ganar."
+      ]
+    },
+    "title": {
+      "hash": "56094d6f",
+      "value": "Ir a Pescar"
     }
   },
   "golf": {
@@ -2392,6 +2489,32 @@
       "value": "Montecarlo"
     }
   },
+  "mosaic": {
+    "howToPlay": {
+      "hash": "e1d505a6",
+      "value": [
+        "## Objetivo",
+        "Destapa todas las cartas rojas del cuadrado con menos de tres fallos.",
+        "## Las pistas",
+        "- Junto a cada fila y sobre cada columna, las pistas dan la longitud de las series de cartas rojas que contiene, en orden. **2 1** significa dos rojas juntas, luego al menos una negra, luego una roja. **0** significa que no hay ninguna roja.",
+        "- Una carta destapada se queda a la vista, así que cada roja encontrada es una pista más, y cada fallo también.",
+        "## Los fallos",
+        "Destapar una carta negra es un fallo. Tres fallos terminan la partida. Cada reparto se elige para que tenga exactamente una solución, así que con cuidado siempre se puede deducir sin un solo fallo; tu puntuación son los fallos que te quedaban."
+      ]
+    },
+    "quickStart": {
+      "hash": "5e92e498",
+      "value": [
+        "Veinticinco cartas están boca abajo. Las pistas dan las series de cartas rojas de cada fila y cada columna, en orden.",
+        "Toca una carta para destaparla. Encuentra todas las cartas rojas; destapar una carta negra es un fallo, y tres fallos pierden.",
+        "Cada reparto tiene exactamente una solución, así que siempre se puede deducir."
+      ]
+    },
+    "title": {
+      "hash": "e8f2ee21",
+      "value": "Mosaico"
+    }
+  },
   "nestor": {
     "howToPlay": {
       "hash": "5a96cea6",
@@ -2451,6 +2574,34 @@
     "title": {
       "hash": "01d23c78",
       "value": "Vigilia nocturna"
+    }
+  },
+  "osmosis": {
+    "howToPlay": {
+      "hash": "d9f9e7ad",
+      "value": [
+        "## Objetivo",
+        "Mueve las 52 cartas a las cuatro filas de fundación.",
+        "## Las filas",
+        "- La primera carta repartida empieza la primera fila. Cada fila recibe un solo palo, en cualquier orden, salvo que una carta solo puede unirse a una fila cuando el mismo valor ya está en la fila de arriba, como si se hubiera filtrado.",
+        "- Una fila nueva bajo las demás solo empieza con el mismo valor que la primera carta de la primera fila.",
+        "## El juego",
+        "- Las cuatro reservas están boca arriba; juega sus cartas superiores. Toca el mazo para voltear una carta al montón, y juega la carta superior del montón.",
+        "- Cuando el mazo se agota, tócalo para dar la vuelta al montón y recorrerlo de nuevo, tantas veces como quieras.",
+        "- La partida se pierde cuando una pasada completa por el mazo no da nada que jugar."
+      ]
+    },
+    "quickStart": {
+      "hash": "52283072",
+      "value": [
+        "Cada fila de fundación recibe su palo en cualquier orden, pero una carta solo puede unirse a una fila cuando su valor está en la fila de arriba.",
+        "La primera carta repartida fija el valor con el que debe empezar cada una de las demás filas.",
+        "Juega desde las cuatro reservas y el montón. Voltea el mazo carta a carta, tantas veces como quieras."
+      ]
+    },
+    "title": {
+      "hash": "32e235be",
+      "value": "Ósmosis"
     }
   },
   "ouroboros": {
@@ -3066,6 +3217,35 @@
       "value": "Torres de Seahaven"
     }
   },
+  "sevens": {
+    "howToPlay": {
+      "hash": "9bc5afcb",
+      "value": [
+        "## Objetivo",
+        "Ser el primero en jugar todas las cartas de tu mano.",
+        "## Jugar",
+        "- Tú y el rival tenéis siete cartas cada uno, y un 7 del mazo se pone en la mesa para empezar. Un 7 abre la fila de su palo; después, una carta puede jugarse junto a cualquiera de los extremos de su fila: el 8 tras el 7, el 6 delante, y así sucesivamente.",
+        "- Si puedes jugar una carta, debes hacerlo. Si no puedes, toca el mazo para robar una, y el turno pasa. Con el mazo vacío, una mano bloqueada pasa.",
+        "- Las cartas que no puedes jugar aparecen en gris.",
+        "## Tu rival",
+        "Las cartas del rival están boca arriba, y siempre juega igual: un 7 si lo tiene; si no, la carta seguida de más cartas suyas en esa dirección y, en caso de empate, su carta más baja, ♣ primero.",
+        "## Estrategia",
+        "Guardar una carta que el rival espera mantiene su mano bloqueada, mientras tengas otra cosa que jugar. Tu puntuación es el número de cartas que le quedan al rival."
+      ]
+    },
+    "quickStart": {
+      "hash": "a70f5f8d",
+      "value": [
+        "La fila de cada palo crece desde su 7, un rango cada vez, hacia arriba hasta el Rey y hacia abajo hasta el As.",
+        "Juega una carta que encaje, o roba del mazo si ninguna encaja.",
+        "Vacía tu mano antes que el rival."
+      ]
+    },
+    "title": {
+      "hash": "2e23608f",
+      "value": "Sietes"
+    }
+  },
   "shifting-sands": {
     "howToPlay": {
       "hash": "91681187",
@@ -3383,6 +3563,37 @@
     "title": {
       "hash": "5ac8c364",
       "value": "Sultán"
+    }
+  },
+  "sweep": {
+    "howToPlay": {
+      "hash": "ba222213",
+      "value": [
+        "## Objetivo",
+        "Conseguir más puntos que tu rival cuando se agote el mazo.",
+        "## Llevarse cartas",
+        "- Tú y el rival tenéis tres cartas cada uno, con cuatro en la mesa. Cada carta jugada se lleva cartas de la mesa: una del mismo valor o, si no la hay, varias cartas que sumen su valor. El As vale 1, la Jota 11, la Reina 12 y el Rey 13.",
+        "- Una carta que puede llevarse algo debe hacerlo. Una que no puede se deja en la mesa.",
+        "- Toca una carta de tu mano. Si puede llevarse cartas de más de una forma, toca las cartas de la mesa que quieras: la captura se hace en cuanto suman.",
+        "- Cuando ambas manos están vacías, se reparten tres cartas más a cada uno. Quien se llevó cartas por última vez se queda con lo que quede en la mesa al final.",
+        "## Puntuación",
+        "- Una **escoba**, llevarse todas las cartas de la mesa, vale un punto.",
+        "- Al final: un punto por más cartas, un punto por más diamantes y un punto por el 7♦.",
+        "## Tu rival",
+        "Las cartas del rival están boca arriba, y siempre juega igual: se lleva cuantas más cartas pueda (una escoba primero). Entre capturas iguales, prefiere el 7♦, luego más diamantes y luego su carta más baja. Si no puede llevarse nada, deja su carta más baja."
+      ]
+    },
+    "quickStart": {
+      "hash": "60a8b88e",
+      "value": [
+        "Juega una carta para llevarte una carta de la mesa del mismo valor, o varias cartas de la mesa que sumen su valor.",
+        "Llevarse todas las cartas de la mesa es una escoba, que vale un punto.",
+        "Al final, un punto por más cartas, otro por más diamantes y otro por el 7♦. Supera a tu rival."
+      ]
+    },
+    "title": {
+      "hash": "76bb3813",
+      "value": "Escoba"
     }
   },
   "ten-twenty-thirty": {

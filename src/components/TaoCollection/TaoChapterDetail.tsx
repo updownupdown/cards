@@ -216,6 +216,8 @@ export function TaoChapterDetail({
             constellation={constellation}
             size={figureSize}
             dustCount={dustCount}
+            // As the words start, the figure dims: its stars are writing.
+            dimAt={collected ? TEXT_AT - 400 : undefined}
           />
         </View>
       )}
