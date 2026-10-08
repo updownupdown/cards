@@ -1401,7 +1401,7 @@
   },
   "fifteen-puzzle": {
     "howToPlay": {
-      "hash": "dc55b9d9",
+      "hash": "e5a608db",
       "value": [
         "## Tujuan",
         "Atur baris sehingga setiap baris berisi As, 2, 3, 4, per jenis:",
@@ -1410,16 +1410,16 @@
         "- **Wajik**",
         "- **Sekop** (tanpa kartu 4)",
         "## Cara bermain",
-        "- Ketuk kartu di atas, bawah, kiri, atau kanan ruang kosong untuk menggesernya ke ruang itu.",
+        "- Geser kartu di atas, bawah, kiri, atau kanan ruang kosong ke arah ruang itu untuk memasukkannya.",
         "- Kartu berubah hijau saat berada di posisi yang benar.",
         "- Setiap teka-teki yang diacak dibuat dengan langkah sah dan pasti bisa diselesaikan."
       ]
     },
     "quickStart": {
-      "hash": "2e731eeb",
+      "hash": "2ea287e0",
       "value": [
         "Urutkan kartu dari As sampai 4 di setiap baris: hati, keriting, wajik, lalu sekop.",
-        "Ketuk kartu di sebelah ruang kosong untuk menggesernya."
+        "Geser kartu ke arah ruang kosong di sebelahnya untuk memindahkannya."
       ]
     },
     "title": {

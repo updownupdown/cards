@@ -178,7 +178,8 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
           {
             flexGrow: 1,
             gap: spacing(40),
-            paddingVertical: spacing(30),
+            paddingTop: spacing(30),
+            paddingBottom: spacing(30),
           },
         ]}
         showsVerticalScrollIndicator={false}

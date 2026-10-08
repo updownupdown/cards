@@ -2,7 +2,7 @@
   "menu": {
     "home": "Inicio",
     "campaign": "Odisea",
-    "rules": "Reglas",
+    "rules": "Cómo jugar",
     "hint": "Ayuda de las alturas",
     "undo": "Deshacer",
     "reset": "Reiniciar",
@@ -28,10 +28,11 @@
     "hold": "Mantén pulsado para reiniciar"
   },
   "tips": {
-    "quickStart": "Inicio rápido"
+    "title": "Cómo jugar: {{game}}",
+    "dismiss": "Descartar"
   },
   "rules": {
-    "title": "Reglas",
+    "title": "Cómo jugar",
     "unavailable": "Las instrucciones no están disponibles para este juego.",
     "helpIntro": {
       "done": "Entendido"

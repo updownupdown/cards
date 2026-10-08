@@ -2,7 +2,7 @@
   "menu": {
     "home": "Accueil",
     "campaign": "Odyssée",
-    "rules": "Règles",
+    "rules": "Comment jouer",
     "hint": "Un coup de main d'en haut",
     "undo": "Annuler",
     "reset": "Recommencer",
@@ -28,10 +28,11 @@
     "hold": "Maintenez pour recommencer"
   },
   "tips": {
-    "quickStart": "Démarrage rapide"
+    "title": "Comment jouer : {{game}}",
+    "dismiss": "Ignorer"
   },
   "rules": {
-    "title": "Règles",
+    "title": "Comment jouer",
     "unavailable": "Les instructions ne sont pas disponibles pour ce jeu.",
     "helpIntro": {
       "done": "Compris"

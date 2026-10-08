@@ -2,7 +2,7 @@
   "menu": {
     "home": "Ana sayfa",
     "campaign": "Yolculuk",
-    "rules": "Kurallar",
+    "rules": "Nasıl oynanır",
     "hint": "Yukarıdan Yardım",
     "undo": "Geri al",
     "reset": "Yeniden başlat",
@@ -28,10 +28,11 @@
     "hold": "Oyunu sıfırlamak için basılı tut"
   },
   "tips": {
-    "quickStart": "Hızlı başlangıç"
+    "title": "Nasıl oynanır: {{game}}",
+    "dismiss": "Kapat"
   },
   "rules": {
-    "title": "Kurallar",
+    "title": "Nasıl oynanır",
     "unavailable": "Bu oyun için talimat yok.",
     "helpIntro": {
       "done": "Anladım"

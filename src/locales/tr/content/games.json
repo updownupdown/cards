@@ -1401,7 +1401,7 @@
   },
   "fifteen-puzzle": {
     "howToPlay": {
-      "hash": "dc55b9d9",
+      "hash": "e5a608db",
       "value": [
         "## Amaç",
         "Satırları, her biri takımına göre As, 2, 3, 4 olacak şekilde düzenle:",
@@ -1410,16 +1410,16 @@
         "- **Karo**",
         "- **Maça** (4'lüğü yoktur)",
         "## Oynanış",
-        "- Boş yerin üstündeki, altındaki, solundaki ya da sağındaki bir karta dokunarak onu boş yere kaydır.",
+        "- Boş yerin üstündeki, altındaki, solundaki ya da sağındaki bir kartı boş yere doğru kaydır.",
         "- Kartlar doğru yerdeyken yeşile döner.",
         "- Her karışık bulmaca geçerli hamlelerle üretilir ve çözülebilir."
       ]
     },
     "quickStart": {
-      "hash": "2e731eeb",
+      "hash": "2ea287e0",
       "value": [
         "Kartları her satırda As'tan 4'e sırala: kupa, sinek, karo, sonra maça.",
-        "Kaydırmak için boş yerin yanındaki bir karta dokun."
+        "Bir kartı yanındaki boş yere doğru kaydırarak hareket ettir."
       ]
     },
     "title": {
