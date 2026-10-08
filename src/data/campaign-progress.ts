@@ -16,7 +16,7 @@ import {
 // game's own imports reach this module first.
 import { GAME_DOT_DEFINITIONS as ALL_GAME_DOT_DEFINITIONS } from "./campaign-map.generated";
 import { getV3Neighbours } from "./campaign-map.v3";
-import { currentGamePath } from "./game-variants";
+import { currentGameDotPath, currentGamePath } from "./game-variants";
 
 const CAMPAIGN_PROGRESS_VERSION = 4;
 
@@ -73,7 +73,8 @@ const KNOWN_GAME_DOT_PATHS = new Set(
  * The games a save has open, to be kept open from now on: the ones it lists
  * (or, before version 4, the ones its wins had unlocked on the old map) and
  * the ones its wins unlock on today's map. Games that have since been renamed
- * follow their new path; ones that were removed drop out.
+ * follow their new path, replaced ones (REPLACED_GAME_PATHS) are open as the
+ * game that took their place, and ones that were removed drop out.
  */
 function migrateUnlockedPaths(
   candidate: Partial<CampaignProgress>,
@@ -103,7 +104,7 @@ function migrateUnlockedPaths(
   return [
     ...new Set([
       ...[...opened]
-        .map(currentGamePath)
+        .map(currentGameDotPath)
         .filter((path) => KNOWN_GAME_DOT_PATHS.has(path)),
       ...current,
     ]),
@@ -223,8 +224,8 @@ function normalizeCampaignProgress(value: unknown): CampaignProgress {
     version: CAMPAIGN_PROGRESS_VERSION,
     lastPlayedPath:
       typeof candidate.lastPlayedPath === "string" &&
-      GAME_DOTS_BY_PATH.has(currentGamePath(candidate.lastPlayedPath))
-        ? currentGamePath(candidate.lastPlayedPath)
+      GAME_DOTS_BY_PATH.has(currentGameDotPath(candidate.lastPlayedPath))
+        ? currentGameDotPath(candidate.lastPlayedPath)
         : CAMPAIGN_START_PATH,
     winsByPath,
     unlockedPaths: migrateUnlockedPaths(candidate, winsByPath),

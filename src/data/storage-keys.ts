@@ -28,3 +28,8 @@ export const HINT_INTRO_STORAGE_KEY = "cards.hintIntro.v1";
 export const AUTOPILOT_SESSIONS_STORAGE_KEY = "cards.autopilotSessions.v1";
 /** "1" once the player has swiped a quick start away, in any game. */
 export const SWIPE_DISMISS_STORAGE_KEY = "cards.swipeDismiss.v1";
+/**
+ * Achievements once earned, by key, JSON. Kept so a game or quote added later
+ * (which raises "every game" or "every quote") doesn't take one away.
+ */
+export const EARNED_ACHIEVEMENTS_STORAGE_KEY = "cards.achievements.v1";

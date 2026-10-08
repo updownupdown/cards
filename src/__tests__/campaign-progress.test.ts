@@ -13,6 +13,7 @@ import {
   getUnlockedGameDotPaths,
 } from "@/data/campaign-map";
 import { getV3Neighbours } from "@/data/campaign-map.v3";
+import { REPLACED_GAME_PATHS } from "@/data/game-variants";
 
 describe("Nodes progress", () => {
   beforeEach(async () => {
@@ -162,6 +163,29 @@ describe("Nodes progress", () => {
         expect.arrayContaining(["/little-windmill", ...kept]),
       );
       expect(progress.unlockedPaths).not.toContain("/four-seasons");
+    });
+
+    test("a replaced game is open as the game that took its place, without its wins", async () => {
+      // As if Golf had taken the place of a game once called /old-golf.
+      REPLACED_GAME_PATHS["/old-golf"] = "/golf";
+      try {
+        await save({
+          version: 4,
+          lastPlayedPath: "/old-golf",
+          winsByPath: { "/klondike": 1, "/old-golf": 2 },
+          unlockedPaths: ["/klondike", "/old-golf"],
+        });
+
+        const progress = await loadCampaignProgress();
+
+        expect(progress.unlockedPaths).toContain("/golf");
+        expect(progress.unlockedPaths).not.toContain("/old-golf");
+        expect(progress.lastPlayedPath).toBe("/golf");
+        // A different game: the old one's wins aren't the new one's.
+        expect(progress.winsByPath).toEqual({ "/klondike": 1 });
+      } finally {
+        delete REPLACED_GAME_PATHS["/old-golf"];
+      }
     });
 
     test("games listed as open stay open with no win to explain them", async () => {

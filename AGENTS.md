@@ -41,10 +41,16 @@ Adding things is safe: new games (then `npm run campaign:generate` and
 no rewards, so it can come and go freely), quotes appended at the end, new settings, themes or
 storage keys (then `npm run saved-data:pin`, which only ever adds).
 
-Renaming or removing a game is done without losing anything else, but only
-with the owner's OK for a released game: list a rename in `MOVED_GAME_PATHS`
-and a removal in `RETIRED_GAME_PATHS` (`src/data/game-variants.ts`), then run
-`npm run campaign:generate` and `npm run campaign:lock`. The generator keeps a
-renamed game's node and hands a removed game's rewards to other games; saves
-keep every game they had open (`unlockedPaths`) and every collectible. See
-"Adding, renaming and removing games" in `docs/campaign-map.md`.
+Renaming, replacing or removing a game is done without losing anything else,
+but only with the owner's OK for a released game: list a rename in
+`MOVED_GAME_PATHS`, a different game taking another's place in
+`REPLACED_GAME_PATHS` and a removal in `RETIRED_GAME_PATHS`
+(`src/data/game-variants.ts`), then run `npm run campaign:generate` and
+`npm run campaign:lock`. The generator keeps a renamed game's node, gives a
+replaced game's node to the game in its place, and links a removed game's
+neighbours to each other and hands its rewards to other games; saves keep
+every game they had open (`unlockedPaths`) and every collectible. A released
+path is never used again for a different game. One catalog change per PR. If
+a change to a released game's rules breaks its saved deals, bump its
+`sessionVersion`. The rules, step by step, are in "Adding, renaming,
+replacing and removing games" in `docs/campaign-map.md`.

@@ -5,18 +5,21 @@
 //     Keeps every existing node (position, links and rewards), so players'
 //     progress and collected rewards stay put, and brings the map in line
 //     with the games:
-//     - a new game is placed out towards the rim, linked in and given unused
-//       quotes;
+//     - a new game is placed among games about as hard as it, linked to at
+//       least one no harder (or out on the rim, if there is no room), and
+//       given unused quotes;
 //     - a renamed game (MOVED_GAME_PATHS in src/data/game-variants.ts) keeps
-//       its node under its new path;
+//       its node under its new path, and so does a game that replaced
+//       another (REPLACED_GAME_PATHS there);
 //     - a removed game (RETIRED_GAME_PATHS there, or one folded into another
-//       game) leaves the map, the gap it left is bridged, and its rewards
-//       are handed to other games so they can still be collected;
+//       game) leaves the map, its neighbours are linked to each other so
+//       nobody who had it open is stranded, and its rewards are handed to
+//       other games so they can still be collected;
 //     - a local-only game (enabledOnLocalOnly) is not on the map at all: one
 //       that was leaves it the same way, its Tao chapter handed on and its
 //       quotes set free, so it can come and go without touching the map.
-//     A game with a node but no definition, and no entry in either list, is
-//     an error: say which it is.
+//     A game with a node but no definition, and no entry in any of those
+//     lists, is an error: say which it is.
 //
 //   npm run campaign:generate -- --rebuild
 //     Lays out a fresh spiral galaxy and fits the games to it: Klondike at
@@ -141,6 +144,9 @@ const REWARDS = {
    *  quotes, or quotes only. */
   min: 2,
   max: 3,
+  /** Below this many unassigned quotes, a run warns that new games will soon
+   *  need more (each takes two). */
+  spareQuoteWarning: 10,
 };
 
 /**
@@ -163,6 +169,9 @@ const PLACEMENT = {
    *  appearing more than once costs this much again. */
   openingDepth: 2,
   openingRepeatWeight: 900,
+  /** A game added to a locked map aims for the median distance from the
+   *  centre of this many games nearest it in progression score. */
+  similarGames: 9,
   /** Simulated annealing: moves tried, and the starting temperature. */
   iterations: 400000,
   temperature: 400,
@@ -304,6 +313,10 @@ const MOVED = Object.fromEntries(
 );
 /** Games taken out of the app for good (RETIRED_GAME_PATHS). */
 const RETIRED = new Set(readConstant(variantsPath, "RETIRED_GAME_PATHS", []));
+/** Old path -> the different game that took its node (REPLACED_GAME_PATHS). */
+const REPLACED = readConstant(variantsPath, "REPLACED_GAME_PATHS", {});
+/** The game that has an old path's node now, renamed or replaced. */
+const successorOf = (gamePath) => MOVED[gamePath] ?? REPLACED[gamePath];
 
 const distance = (left, right) =>
   Math.hypot(left.x - right.x, left.y - right.y);
@@ -916,13 +929,145 @@ function rimPoint(game, records) {
 }
 
 /**
+ * A spot for a new game on a map that is already laid out: among the games
+ * about as hard as it (by progression score), where it can link to at least
+ * one game no harder than itself, so reaching it never takes beating a harder
+ * game. Prefers spots where it gets two links. Nothing already on the map
+ * moves. Returns null when no such spot is free, for the rim to take it.
+ */
+function similarGamesPoint(game, records, connections, gamesByPath) {
+  const score = progressionScore(game);
+  const scoreOf = (record) => progressionScore(gamesByPath.get(record.path));
+  const radii = [...records]
+    .sort(
+      (left, right) =>
+        Math.abs(scoreOf(left) - score) - Math.abs(scoreOf(right) - score) ||
+        left.path.localeCompare(right.path),
+    )
+    .slice(0, PLACEMENT.similarGames)
+    .map(radius)
+    .sort((left, right) => left - right);
+  const idealRadius = radii[Math.floor(radii.length / 2)];
+
+  const random = makeRandom(`place:${game.path}`);
+  const candidates = [];
+  for (
+    let attempt = 0;
+    attempt < 40000 && candidates.length < 400;
+    attempt += 1
+  ) {
+    const nodeRadius = Math.sqrt(
+      GALAXY.coreRadius ** 2 +
+        random() * (GALAXY.rimRadius ** 2 - GALAXY.coreRadius ** 2),
+    );
+    const angle = random() * Math.PI * 2;
+    const x = Number((Math.cos(angle) * nodeRadius).toFixed(4));
+    const y = Number((Math.sin(angle) * nodeRadius).toFixed(4));
+    if (random() > starDensity(x, y)) continue;
+    const point = { x, y };
+    const nearest = nearestDistance(point, records);
+    if (nearest < MIN_SPACING || nearest > CONNECTIONS.maxBridgeEdge) continue;
+    candidates.push({ point, cost: (radius(point) - idealRadius) ** 2 });
+  }
+  candidates.sort((left, right) => left.cost - right.cost);
+
+  let fallback = null;
+  for (const { point } of candidates.slice(0, 200)) {
+    const record = { path: game.path, ...point };
+    const trial = new Map(
+      [...connections].map(([gamePath, links]) => [gamePath, new Set(links)]),
+    );
+    trial.set(record.path, new Set());
+    linkToNearest(records.concat(record), trial, record);
+    const links = [...trial.get(record.path)].map((gamePath) =>
+      records.find((other) => other.path === gamePath),
+    );
+    const noHarder = links.some(
+      (other) => other.path === CAMPAIGN_START || scoreOf(other) <= score,
+    );
+    if (!noHarder) continue;
+    if (links.length >= 2) return point;
+    fallback ??= point;
+  }
+  return fallback;
+}
+
+/** Links a new node to its nearest nodes: two if it can, one at least. */
+function linkToNearest(records, connections, record) {
+  const nearest = records
+    .filter((other) => other !== record)
+    .sort((left, right) => distance(record, left) - distance(record, right));
+  for (const candidate of nearest) {
+    if (connections.get(record.path).size >= 2) break;
+    link(records, connections, record, candidate, CONNECTIONS.maxBridgeEdge);
+  }
+  if (connections.get(record.path).size === 0) {
+    link(records, connections, record, nearest[0], Infinity, true);
+  }
+}
+
+/**
+ * Links a removed game's neighbours to each other until they can all reach
+ * one another without it. A player who had the removed game open got there
+ * by winning one of them, so this keeps the rest within reach, as the
+ * removed game's win would have. Returns the neighbours it could not join.
+ */
+function stitchNeighbours(records, connections, neighbourPaths) {
+  const byPath = new Map(records.map((record) => [record.path, record]));
+  const nodes = [...new Set(neighbourPaths)]
+    .filter((gamePath) => byPath.has(gamePath))
+    .sort();
+  const group = new Map(nodes.map((gamePath) => [gamePath, gamePath]));
+  const find = (gamePath) => {
+    while (group.get(gamePath) !== gamePath) gamePath = group.get(gamePath);
+    return gamePath;
+  };
+  const join = (left, right) => group.set(find(left), find(right));
+  for (const left of nodes) {
+    for (const right of nodes) {
+      if (connections.get(left).has(right)) join(left, right);
+    }
+  }
+
+  const pairs = nodes
+    .flatMap((left, index) =>
+      nodes.slice(index + 1).map((right) => [left, right]),
+    )
+    .sort(
+      ([leftA, rightA], [leftB, rightB]) =>
+        distance(byPath.get(leftA), byPath.get(rightA)) -
+        distance(byPath.get(leftB), byPath.get(rightB)),
+    );
+  // Tidy links first, then forced ones (which may cross) for what is left.
+  for (const force of [false, true]) {
+    for (const [left, right] of pairs) {
+      if (find(left) === find(right)) continue;
+      if (
+        link(
+          records,
+          connections,
+          byPath.get(left),
+          byPath.get(right),
+          force ? Infinity : CONNECTIONS.maxBridgeEdge * 2,
+          force,
+        )
+      ) {
+        join(left, right);
+      }
+    }
+  }
+  const main = find(nodes[0]);
+  return nodes.filter((gamePath) => find(gamePath) !== main);
+}
+
+/**
  * The existing map as-is, brought in line with the games: renamed games keep
  * their node under the new path, removed games leave (their rewards are
  * returned as `orphaned`, to be handed on), games that have gone local-only
  * leave too (a Tao chapter handed on, their quotes set free), and new games
  * are added.
  */
-function extendMap(existing, games, localOnlyPaths) {
+function extendMap(existing, games, localOnlyPaths, gamesByPath) {
   const gamePaths = new Set(games.map((game) => game.path));
   const existingPaths = new Set(existing.map((record) => record.path));
 
@@ -933,7 +1078,7 @@ function extendMap(existing, games, localOnlyPaths) {
   const unexplained = [];
   for (const record of existing) {
     if (gamePaths.has(record.path)) continue;
-    const target = MOVED[record.path];
+    const target = successorOf(record.path);
     if (localOnlyPaths.has(record.path)) {
       withdrawn.push(record);
     } else if (target && gamePaths.has(target) && !existingPaths.has(target)) {
@@ -949,9 +1094,10 @@ function extendMap(existing, games, localOnlyPaths) {
     throw new Error(
       `${unexplained.join(", ")} ${unexplained.length > 1 ? "are" : "is"} on ` +
         `the map but no longer a game. If it was renamed or folded into ` +
-        `another game, add it to MOVED_GAME_PATHS; if it was removed, to ` +
-        `RETIRED_GAME_PATHS (both in src/data/game-variants.ts). Removing a ` +
-        `released game needs the owner's OK.`,
+        `another game, add it to MOVED_GAME_PATHS; if a different game takes ` +
+        `its place, to REPLACED_GAME_PATHS; if it was removed, to ` +
+        `RETIRED_GAME_PATHS (all in src/data/game-variants.ts). Replacing or ` +
+        `removing a released game needs the owner's OK.`,
     );
   }
 
@@ -973,11 +1119,17 @@ function extendMap(existing, games, localOnlyPaths) {
   const connections = new Map(
     records.map((record) => [record.path, new Set(record.connections)]),
   );
+  // A removed game's neighbours could only reach each other through it.
+  const unstitched = [...removed, ...withdrawn].flatMap((record) =>
+    stitchNeighbours(records, connections, record.connections.map(nowAt)),
+  );
   // Removing games can cut the map in two: bridge the gaps they left.
   joinComponents(records, connections);
 
   for (const game of added) {
-    const point = rimPoint(game, records);
+    const point =
+      similarGamesPoint(game, records, connections, gamesByPath) ||
+      rimPoint(game, records);
     const record = {
       path: game.path,
       ...point,
@@ -989,17 +1141,7 @@ function extendMap(existing, games, localOnlyPaths) {
     };
     records.push(record);
     connections.set(record.path, new Set());
-
-    const nearest = records
-      .filter((other) => other !== record)
-      .sort((left, right) => distance(record, left) - distance(record, right));
-    for (const candidate of nearest) {
-      if (connections.get(record.path).size >= 2) break;
-      link(records, connections, record, candidate, CONNECTIONS.maxBridgeEdge);
-    }
-    if (connections.get(record.path).size === 0) {
-      link(records, connections, record, nearest[0], Infinity, true);
-    }
+    linkToNearest(records, connections, record);
   }
 
   for (const record of records) {
@@ -1019,6 +1161,7 @@ function extendMap(existing, games, localOnlyPaths) {
         record.rewards.filter((reward) => reward.type === "tao"),
       ),
     ],
+    unstitched,
   };
 }
 
@@ -1314,7 +1457,9 @@ function checkLock(lock, records, localOnlyPaths) {
     !byPath.has(gamePath) &&
     (RETIRED.has(gamePath) || localOnlyPaths.has(gamePath));
   const nowAt = (gamePath) =>
-    !byPath.has(gamePath) && MOVED[gamePath] ? MOVED[gamePath] : gamePath;
+    !byPath.has(gamePath) && successorOf(gamePath)
+      ? successorOf(gamePath)
+      : gamePath;
   const errors = [];
   for (const [lockedPath, before] of Object.entries(lock.gameDots)) {
     if (gone(lockedPath)) continue;
@@ -1450,7 +1595,7 @@ if (lockOnly) {
   unassigned = dealRewards(records, gamesByPath);
   summary = `Kept ${records.length} nodes and dealt every reward again`;
 } else {
-  const result = extendMap(existing, games, localOnlyPaths);
+  const result = extendMap(existing, games, localOnlyPaths, gamesByPath);
   records = result.records;
   unassigned = redistributeRewards(
     records,
@@ -1463,7 +1608,7 @@ if (lockOnly) {
     .filter((gamePath) => gamesByPath.has(gamePath));
   const changes = [
     result.added.length > 0 &&
-      `added ${result.added.map((game) => game.path).join(", ")} at the edge`,
+      `added ${result.added.map((game) => game.path).join(", ")}`,
     result.renamed.size > 0 &&
       `renamed ${[...result.renamed].map(([from, to]) => `${from} to ${to}`).join(", ")}`,
     result.removed.length > 0 &&
@@ -1471,6 +1616,14 @@ if (lockOnly) {
     result.withdrawn.length > 0 &&
       `let ${result.withdrawn.join(", ")} go local-only, off the map`,
   ].filter(Boolean);
+  if (result.unstitched.length > 0) {
+    console.warn(
+      `Warning: ${result.unstitched.join(", ")} could not be linked to the ` +
+        `other neighbours of a removed game (every one of them has ` +
+        `${CONNECTIONS.max} links). Players who had the removed game open ` +
+        `may have to go round. Check the map with the owner.`,
+    );
+  }
   summary =
     changes.length > 0
       ? `${changes.join("; ")} (${records.length} nodes)`.replace(/^./, (c) =>
@@ -1488,6 +1641,13 @@ if (lockOnly && locked && !resetConfirmed)
   checkLock(locked, records, localOnlyPaths);
 if (unassigned.length > 0) {
   summary += `; ${unassigned.length} quotes left unassigned (${unassigned.join(", ")})`;
+}
+if (!lockOnly && unassigned.length < REWARDS.spareQuoteWarning) {
+  console.warn(
+    `Warning: only ${unassigned.length} quotes are left for new games, which ` +
+      `take two each. Append quotes to QuotesText.ts (on the phone, every ` +
+      `language) before adding more games.`,
+  );
 }
 
 const armed = records.filter((record) => record.arm !== null).length;

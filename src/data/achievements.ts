@@ -3,8 +3,9 @@ import type { GameStats } from "./game-menu";
 
 /**
  * Milestones worked out from what players already keep (game stats and
- * collectibles), so nothing new is saved and existing players see what they
- * have already done.
+ * collectibles), so existing players see what they have already done. Once
+ * earned, an achievement is also saved (see earned-achievements.ts), so a game
+ * or quote added later doesn't take it away.
  */
 export const ACHIEVEMENT_KEYS = [
   "wins50",
@@ -34,11 +35,14 @@ export function getAchievements({
   stats,
   collectedQuotes,
   collectedTaoChapters,
+  earned = new Set(),
 }: {
   /** Every game that can be played, played or not. */
   stats: GameStats[];
   collectedQuotes: number;
   collectedTaoChapters: number;
+  /** Achievements earned before, which stay achieved whatever the counts. */
+  earned?: ReadonlySet<AchievementKey>;
 }): Achievement[] {
   const totalWins = stats.reduce((sum, game) => sum + game.wins, 0);
   const played = stats.filter((game) => game.attempts > 0).length;
@@ -62,7 +66,7 @@ export function getAchievements({
       key,
       current: Math.min(current, target),
       target,
-      achieved: target > 0 && current >= target,
+      achieved: (target > 0 && current >= target) || earned.has(key),
     };
   });
 }
