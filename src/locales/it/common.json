@@ -18,6 +18,7 @@
   },
   "undo": "Annulla",
   "winToCollect": "Vinci a **{{game}}** per sbloccare",
+  "lockedOnMap": "Vinci un gioco vicino a **{{game}}** nell'Odissea per sbloccarlo.",
   "errors": {
     "appCrashed": "Qualcosa è andato storto.",
     "tryAgain": "Riprova"
