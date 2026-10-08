@@ -91,7 +91,7 @@ import {
 import { HintUfo } from "@/hints/HintUfo";
 import { useHintMode } from "@/data/hint-mode";
 
-const TIPS_MORPH_DURATION = 350;
+const TIPS_FADE_DURATION = 350;
 const KEEP_AWAKE_TAG = "solitarius-game";
 const KEEP_AWAKE_MS = 10 * 60 * 1000;
 // Scene effects start after the game has loaded and its deal has played.
@@ -320,8 +320,6 @@ export const GameWrapper = ({
   }
   const autoCompleteFade = useFade(!!autoCompleteOffer && !ended, 500);
   const [tipsDismissed, setTipsDismissed] = useState(false);
-  const tipsMorphProgress = useRef(new Animated.Value(0)).current;
-  const instructionsHighlight = useRef(new Animated.Value(0)).current;
 
   // Wait for settings before deciding whether the tips box should appear.
   const hasPlayedGame =
@@ -332,7 +330,7 @@ export const GameWrapper = ({
     !hasPlayedGame &&
     !tipsDismissed;
 
-  const tipsFade = useFade(showTipsBox, TIPS_MORPH_DURATION);
+  const tipsFade = useFade(showTipsBox, TIPS_FADE_DURATION);
 
   // Background effects wait for the game to load, and freeze while a modal
   // or overlay (menu, rules, tips, the win/lose box) covers the board.
@@ -380,7 +378,6 @@ export const GameWrapper = ({
     extendKeepAwake();
     return releaseKeepAwake;
   }, [keepAwakeEnabled]);
-  const headerFade = useFade(!showTipsBox, TIPS_MORPH_DURATION);
 
   // Android's back button closes the quick-start tips first, instead of
   // leaving the game.
@@ -397,32 +394,6 @@ export const GameWrapper = ({
 
     return () => subscription.remove();
   }, [showTipsBox]);
-
-  useEffect(() => {
-    if (showTipsBox) {
-      tipsMorphProgress.setValue(1);
-      return;
-    }
-
-    Animated.timing(tipsMorphProgress, {
-      toValue: 0,
-      duration: TIPS_MORPH_DURATION,
-      // TipsBox interpolates width/height from this value, which the native
-      // driver can't animate.
-      useNativeDriver: false,
-    }).start();
-  }, [showTipsBox, tipsMorphProgress]);
-
-  useEffect(() => {
-    if (!tipsDismissed) return;
-
-    instructionsHighlight.setValue(0);
-    Animated.timing(instructionsHighlight, {
-      toValue: 1,
-      duration: TIPS_MORPH_DURATION,
-      useNativeDriver: Platform.OS !== "web",
-    }).start();
-  }, [instructionsHighlight, tipsDismissed]);
 
   // The time of a win, and the fastest win counting this one.
   const showWinTime = useEffectEvent((timeMs: number) => {
@@ -544,7 +515,6 @@ export const GameWrapper = ({
           <TipsBox
             onClose={() => setTipsDismissed(true)}
             showRulesModal={() => setShowRulesModal(true)}
-            morphProgress={tipsMorphProgress}
           />
         </Animated.View>
       )}
@@ -672,8 +642,6 @@ export const GameWrapper = ({
           contentMaxWidth={ui.contentMaxWidth}
           insetTop={insets.top}
           hidden={showTipsBox}
-          opacity={headerFade.opacity}
-          instructionsHighlight={instructionsHighlight}
           ended={ended}
           canUndo={!!canUndo}
           undoDisabled={

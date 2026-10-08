@@ -5,10 +5,11 @@ import {
   resetAllSettings,
 } from "@/data/game-menu";
 import {
+  grantMercySkip,
   populateTestCampaignProgress,
   resetCampaignProgress,
+  unlockAllCampaignGames,
 } from "@/data/campaign-progress";
-import { resetWildCardsProgress } from "@/data/wild-cards";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { getTestGameDotPaths, getTestWonPaths } from "@/data/test-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -29,7 +30,6 @@ import {
   SUPPORTED_LANGUAGES,
   type LanguagePreference,
 } from "@/i18n/languages";
-import { isLocalDevEnvironment } from "@/utils/utils";
 import Constants from "expo-constants";
 import { router } from "expo-router";
 import React from "react";
@@ -184,7 +184,8 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
           {
             flexGrow: 1,
             gap: spacing(40),
-            paddingVertical: spacing(30),
+            paddingTop: spacing(30),
+            paddingBottom: spacing(30),
           },
         ]}
         showsVerticalScrollIndicator={false}
@@ -349,29 +350,73 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
 
             <AddToHomeScreenNotice />
 
-            {isLocalDevEnvironment() && (
-              <Button
-                size="md"
-                uppercase={false}
-                text={t("populateTestProgress")}
-                iconName="milky-way"
-                theme="blue"
-                disabled={isPopulatingTestData}
-                onPress={async () => {
-                  setIsPopulatingTestData(true);
-                  try {
-                    const gameDotPaths = getTestGameDotPaths();
-                    await Promise.all([
-                      populateTestGameProgress(getTestWonPaths(gameDotPaths)),
-                      populateTestCampaignProgress(gameDotPaths),
-                    ]);
-                    onHomeDataInvalidated();
-                    onClose();
-                  } finally {
-                    setIsPopulatingTestData(false);
-                  }
+            {/* Dev mode's shortcuts, boxed and named so they can't pass for
+                settings. */}
+            {devMode && (
+              <View
+                style={{
+                  width: "100%",
+                  gap: spacing(10),
+                  padding: spacing(14),
+                  borderRadius: spacing(16),
+                  borderWidth: 1,
+                  borderColor: theme.faint,
                 }}
-              />
+              >
+                <Text weight={500} size="md" color={theme.ink}>
+                  {t("devMode.title")}
+                </Text>
+                <Button
+                  size="md"
+                  uppercase={false}
+                  text={t("populateTestProgress")}
+                  iconName="milky-way"
+                  theme="blue"
+                  disabled={isPopulatingTestData}
+                  onPress={async () => {
+                    setIsPopulatingTestData(true);
+                    try {
+                      const gameDotPaths = getTestGameDotPaths();
+                      await Promise.all([
+                        populateTestGameProgress(getTestWonPaths(gameDotPaths)),
+                        populateTestCampaignProgress(gameDotPaths),
+                      ]);
+                      onHomeDataInvalidated();
+                      onClose();
+                    } finally {
+                      setIsPopulatingTestData(false);
+                    }
+                  }}
+                />
+                <Button
+                  size="md"
+                  uppercase={false}
+                  text={t("devMode.unlockAll")}
+                  iconName="unlock"
+                  theme="blue"
+                  onPress={async () => {
+                    await unlockAllCampaignGames();
+                    onHomeDataInvalidated();
+                    showToast(t("devMode.unlockedAll"));
+                  }}
+                />
+                <Button
+                  size="md"
+                  uppercase={false}
+                  text={t("devMode.grantMercySkip")}
+                  iconName="ufo"
+                  theme="blue"
+                  onPress={async () => {
+                    const progress = await grantMercySkip();
+                    onHomeDataInvalidated();
+                    showToast(
+                      t("devMode.mercySkipGranted", {
+                        count: progress.mercySkipCount,
+                      }),
+                    );
+                  }}
+                />
+              </View>
             )}
 
             {/* Footer: credits, links and data reset, kept small at the bottom. */}
@@ -438,7 +483,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                         updateSettings(DEFAULT_GLOBAL_SETTINGS);
                         await resetAllSettings();
                         await resetCampaignProgress();
-                        await resetWildCardsProgress();
                         onHomeDataInvalidated();
                         setIsResetConfirmationVisible(false);
                         onClose();

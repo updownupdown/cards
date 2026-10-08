@@ -7,6 +7,7 @@ import { useLanguageSync } from "@/hooks/useLanguageSync";
 import { getGameInfo, isGamePath } from "@/data/game-menu";
 import { useDisplayLanguage } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
+import { SOURCE_LANGUAGE } from "@/i18n/languages";
 import { applyColorTheme, Colors, theme } from "@/styles/styles";
 import {
   addGameBreadcrumb,
@@ -34,6 +35,7 @@ import {
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { loadDevMode } from "@/data/dev-mode";
 import { loadHintMode } from "@/data/hint-mode";
+import { loadSwipeDismissKnown } from "@/data/swipe-dismiss";
 import { loadAutopilotSessions } from "@/hints/hint-store";
 import { useFonts } from "expo-font";
 import {
@@ -56,6 +58,8 @@ SplashScreen.preventAutoHideAsync();
 void loadDevMode();
 // "Help from Above" (the header UFO), read before a game's header shows.
 void loadHintMode();
+// Whether the quick start's swipe still needs its cue.
+void loadSwipeDismissKnown();
 // Deals Autopilot played in, so a resumed one's win still doesn't count.
 void loadAutopilotSessions();
 
@@ -88,7 +92,8 @@ function Layout() {
         },
   );
   const fontsLoaded = embedsFonts || fontsLoadedAtRuntime;
-  const languageReady = useLanguageSync();
+  const startLanguage = useLanguageSync();
+  const languageReady = startLanguage !== null;
   const displayLanguage = useDisplayLanguage();
   const isSplashVisible = !fontsLoaded || !languageReady;
 
@@ -185,7 +190,12 @@ function Layout() {
         <StatusBar style="light" />
         <ToastProvider>
           <View
-            key={`${settings.colorTheme}:${settings.useEnglishGameTitles}`}
+            // The static web pages are in English. In another language the
+            // app is rebuilt instead of hydrated from them, which would fail
+            // (React error #418) on every screen not hydrated yet.
+            key={`${settings.colorTheme}:${settings.useEnglishGameTitles}:${
+              Platform.OS === "web" ? (startLanguage ?? SOURCE_LANGUAGE) : ""
+            }`}
             style={[
               {
                 flex: 1,
@@ -224,7 +234,7 @@ function Layout() {
 
 /**
  * Catches render errors from every screen without a boundary of its own (games
- * have theirs, in [game] and wild/[game]), and from this layout.
+ * have theirs, in [game]), and from this layout.
  */
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   return <AppErrorScreen error={error} retry={retry} />;

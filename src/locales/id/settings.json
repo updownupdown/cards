@@ -71,7 +71,12 @@
     "on": "Mode dev aktif",
     "off": "Mode dev nonaktif",
     "status": "Mode dev sedang aktif.",
-    "turnOff": "Matikan"
+    "turnOff": "Matikan",
+    "title": "Mode dev",
+    "unlockAll": "Buka semua game kampanye",
+    "unlockedAll": "Semua game kampanye terbuka",
+    "grantMercySkip": "Beri sebuah pengampunan",
+    "mercySkipGranted": "Pengampunan diberikan ({{count}} belum dipakai)"
   },
   "tabs": {
     "display": "Tampilan",

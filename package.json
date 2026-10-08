@@ -47,7 +47,6 @@
     "expo-localization": "~55.0.19",
     "expo-navigation-bar": "~55.0.17",
     "expo-router": "~55.0.18",
-    "expo-sensors": "~55.0.19",
     "expo-splash-screen": "~55.0.25",
     "expo-status-bar": "~55.0.6",
     "expo-store-review": "~55.0.18",
@@ -56,7 +55,6 @@
     "i18next": "^26.4.2",
     "immer": "^11.1.8",
     "intl-pluralrules": "^2.0.1",
-    "matter-js": "^0.20.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-i18next": "^17.0.14",
@@ -72,7 +70,6 @@
   },
   "devDependencies": {
     "@types/jest": "29.5.14",
-    "@types/matter-js": "^0.20.2",
     "@types/node": "^26.1.1",
     "@types/react": "~19.2.2",
     "@typescript-eslint/parser": "^8.63.0",

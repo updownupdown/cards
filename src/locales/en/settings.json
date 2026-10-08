@@ -68,10 +68,15 @@
     "label": "Colour theme"
   },
   "devMode": {
-    "on": "Dev mode on",
-    "off": "Dev mode off",
-    "status": "Dev mode is on.",
-    "turnOff": "Turn off"
+    "on": "Dev mode enabled",
+    "off": "Dev mode disabled",
+    "status": "Dev mode is enabled.",
+    "turnOff": "Turn off",
+    "title": "Dev mode",
+    "unlockAll": "Unlock every campaign game",
+    "unlockedAll": "Every campaign game unlocked",
+    "grantMercySkip": "Grant a Mercy Skip",
+    "mercySkipGranted": "Mercy Skip granted ({{count}} unused)"
   },
   "tabs": {
     "display": "Display",

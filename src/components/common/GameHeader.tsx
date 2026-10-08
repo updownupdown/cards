@@ -1,17 +1,29 @@
 import { useTranslation } from "@/i18n";
 import { usePalette } from "@/styles/palette";
 import { flexStyles } from "@/styles/flexStyles";
-import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
-import { memo, useEffect, useRef } from "react";
-import { Animated, View } from "react-native";
+import {
+  Colors,
+  LayerZIndexes,
+  layoutDims,
+  rgba,
+  UfoColors,
+} from "@/styles/styles";
+import { memo, useEffect, useRef, useState } from "react";
+import { Pressable, View } from "react-native";
 import {
   setHintDock,
   useHintUfoHovering,
   useHintUfoOut,
+  useHasHintFinder,
 } from "@/hints/hint-store";
 import { SURFACE_OPACITY } from "@/components/ui/FloatingBar";
 import { Button } from "../Button/Button";
 import { ResetButton } from "./ResetButton";
+import { HelpFromAbovePanel } from "./HelpFromAbovePanel";
+import { ActionButton } from "@/components/ui/Nocturne";
+import { markHintIntroSeen, useHintIntroSeen } from "@/data/hint-mode";
+import { HoveringUfoIcon } from "@/hints/HintUfo";
+import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 
 type Props = {
   isCampaignMode: boolean;
@@ -21,10 +33,8 @@ type Props = {
   scale: number;
   contentMaxWidth: number;
   insetTop: number;
-  /** Hidden behind the quick-start tips: fades out and ignores touches. */
+  /** Under the quick-start tips: still drawn, but ignores touches. */
   hidden: boolean;
-  opacity: Animated.Value;
-  instructionsHighlight: Animated.Value;
   ended: boolean;
   canUndo: boolean;
   undoDisabled: boolean;
@@ -52,8 +62,6 @@ export const GameHeader = memo(function GameHeader({
   contentMaxWidth,
   insetTop,
   hidden,
-  opacity,
-  instructionsHighlight,
   ended,
   canUndo,
   undoDisabled,
@@ -71,12 +79,17 @@ export const GameHeader = memo(function GameHeader({
   const { t } = useTranslation("game");
   // The game's palette: its dark colour behind, its pale one in the icons.
   const theme = usePalette();
+  const hasHints = useHasHintFinder();
+  const introSeen = useHintIntroSeen();
+  // Until the player has read about "Help from Above", the UFO hovers and
+  // opens its explanation instead of asking for a hint.
+  const intro = showHint && hasHints && !introSeen;
+  const [introOpen, setIntroOpen] = useState(false);
 
   return (
-    <Animated.View
+    <View
       style={{
         pointerEvents: hidden ? "none" : "auto",
-        opacity,
         position: "relative",
         zIndex: LayerZIndexes.header,
         width: "100%",
@@ -135,40 +148,6 @@ export const GameHeader = memo(function GameHeader({
             paddingHorizontal: 0,
           }}
         >
-          <View
-            style={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-              alignItems: "center",
-              justifyContent: "center",
-              pointerEvents: "none",
-            }}
-          >
-            <Animated.View
-              style={{
-                width: spacing(layoutDims.menuButtonSize),
-                height: spacing(layoutDims.menuButtonSize),
-                borderRadius: spacing(layoutDims.menuButtonSize / 2),
-                backgroundColor: theme.accent,
-                opacity: instructionsHighlight.interpolate({
-                  inputRange: [0, 0.2, 0.7, 1],
-                  outputRange: [0, 0.8, 0.7, 0],
-                }),
-                transform: [
-                  {
-                    scale: instructionsHighlight.interpolate({
-                      inputRange: [0, 0.6, 0.7, 1],
-                      outputRange: [1.5, 1.5, 0.8, 0],
-                    }),
-                  },
-                ],
-              }}
-            />
-          </View>
-
           <Button
             headerButton
             onPress={onRules}
@@ -185,6 +164,8 @@ export const GameHeader = memo(function GameHeader({
             label={t("menu.hint")}
             iconColor={hintDisabled ? theme.faint : theme.accent}
             disabled={hintDisabled}
+            intro={intro}
+            onIntro={() => setIntroOpen((open) => !open)}
           />
         )}
 
@@ -214,7 +195,33 @@ export const GameHeader = memo(function GameHeader({
           style={{ flex: 1, paddingHorizontal: 0 }}
         />
       </View>
-    </Animated.View>
+
+      {intro && introOpen && (
+        <View
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: spacing(layoutDims.pagePadding / 2),
+            right: spacing(layoutDims.pagePadding / 2),
+            marginTop: spacing(-layoutDims.pagePadding / 4),
+          }}
+        >
+          <HelpFromAbovePanel>
+            <ActionButton
+              label={t("rules.helpIntro.done")}
+              small
+              color={UfoColors.green}
+              ink={UfoColors.black}
+              style={{ alignSelf: "flex-end" }}
+              onPress={() => {
+                setIntroOpen(false);
+                void markHintIntroSeen();
+              }}
+            />
+          </HelpFromAbovePanel>
+        </View>
+      )}
+    </View>
   );
 });
 
@@ -228,12 +235,18 @@ function HintDock({
   label,
   iconColor,
   disabled,
+  intro,
+  onIntro,
 }: {
   onHint: () => void;
   label: string;
   iconColor: string;
   disabled: boolean;
+  /** The intro hasn't been read: a hovering UFO that opens it. */
+  intro: boolean;
+  onIntro: () => void;
 }) {
+  const { spacing } = useResponsiveMetrics();
   const dock = useRef<View>(null);
   const out = useHintUfoOut();
   const hovering = useHintUfoHovering();
@@ -275,15 +288,31 @@ function HintDock({
         opacity: out || hovering ? 0 : 1,
       }}
     >
-      <Button
-        headerButton
-        onPress={out ? () => {} : onHint}
-        iconName="ufo"
-        accessibilityLabel={label}
-        iconColor={iconColor}
-        disabled={disabled}
-        style={{ width: "100%", paddingHorizontal: 0 }}
-      />
+      {intro ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={label}
+          onPress={onIntro}
+          style={{
+            width: "100%",
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <HoveringUfoIcon size={spacing(layoutDims.menuIconSize)} />
+        </Pressable>
+      ) : (
+        <Button
+          headerButton
+          onPress={out ? () => {} : onHint}
+          iconName="ufo"
+          accessibilityLabel={label}
+          iconColor={iconColor}
+          disabled={disabled}
+          style={{ width: "100%", paddingHorizontal: 0 }}
+        />
+      )}
     </View>
   );
 }

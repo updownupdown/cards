@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { usePalette } from "@/styles/palette";
 import ModalFull from "./ModalFull";
 import { Text } from "@/components/common/Text";
@@ -12,11 +12,9 @@ import { View, ViewStyle } from "react-native";
 import { RichText } from "../common/RichText";
 import { ScrollView } from "react-native-gesture-handler";
 import { useModalStyles } from "@/styles/modalStyles";
-import { markHintIntroSeen, useHintIntroSeen } from "@/data/hint-mode";
 import { useHasHintFinder } from "@/hints/hint-store";
-import { ActionButton } from "@/components/ui/Nocturne";
 import { HelpFromAbovePanel } from "@/components/common/HelpFromAbovePanel";
-import { UfoColors } from "@/styles/styles";
+import { Icon } from "@/icons/Icon";
 
 export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   const pathname = useGamePath();
@@ -32,10 +30,6 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
   // The game's own accent, as the game modal's headings.
   const headingColor = theme.accent2;
   const hasHints = useHasHintFinder();
-  const introSeen = useHintIntroSeen();
-  // Introduced at the top the first time the Rules open on a game with
-  // hints; once put away, it folds into a row at the bottom.
-  const [showIntro, setShowIntro] = useState(() => hasHints && !introSeen);
 
   return (
     <ModalFull
@@ -56,15 +50,9 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
             },
           ]}
         >
-          {showIntro && (
-            <HelpFromAboveIntro onDone={() => setShowIntro(false)} />
-          )}
-
           <QuickStart
             gameInfo={gameInfo}
             style={{
-              // Clear of the intro's border and its drop shadow.
-              marginTop: showIntro ? spacing(24) : 0,
               paddingLeft: spacing(16),
               paddingRight: spacing(20),
               paddingVertical: spacing(16),
@@ -79,13 +67,11 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
             headingColor={headingColor}
           />
 
-          {!showIntro && (
-            <HelpFromAbovePanel
-              collapsible
-              unavailable={!hasHints}
-              style={{ marginTop: spacing(40) }}
-            />
-          )}
+          <HelpFromAbovePanel
+            collapsible
+            unavailable={!hasHints}
+            style={{ marginTop: spacing(40) }}
+          />
         </View>
       </ScrollView>
     </ModalFull>
@@ -109,18 +95,16 @@ export const QuickStart = ({ gameInfo, style }: QuickStartProps) => {
             key={`l-${itemIndex}`}
             style={{
               flexDirection: "row",
-              alignItems: "baseline",
+              alignItems: "flex-start",
               gap: spacing(8),
             }}
           >
-            <Text
-              size="xs"
-              weight={700}
+            <Icon
+              name="fast-forward"
+              size={spacing(16)}
               color={theme.accent2}
-              style={{ minWidth: spacing(14) }}
-            >
-              {itemIndex + 1}.
-            </Text>
+              style={{ flexShrink: 0, marginTop: spacing(3) }}
+            />
             <Text
               size="md"
               weight={300}
@@ -136,27 +120,3 @@ export const QuickStart = ({ gameInfo, style }: QuickStartProps) => {
     )
   );
 };
-
-/**
- * Introduces the header's UFO ("Help from Above") and lets the player pick
- * how it helps. Once put away it doesn't come back at the top; the Rules keep
- * it folded at the bottom.
- */
-function HelpFromAboveIntro({ onDone }: { onDone: () => void }) {
-  const { t } = useTranslation("game");
-  return (
-    <HelpFromAbovePanel>
-      <ActionButton
-        label={t("rules.helpIntro.done")}
-        small
-        color={UfoColors.green}
-        ink={UfoColors.black}
-        style={{ alignSelf: "flex-end" }}
-        onPress={() => {
-          onDone();
-          void markHintIntroSeen();
-        }}
-      />
-    </HelpFromAbovePanel>
-  );
-}

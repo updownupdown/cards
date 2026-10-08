@@ -71,7 +71,12 @@
     "on": "Mode dev activé",
     "off": "Mode dev désactivé",
     "status": "Le mode dev est activé.",
-    "turnOff": "Désactiver"
+    "turnOff": "Désactiver",
+    "title": "Mode dev",
+    "unlockAll": "Débloquer toutes les parties de la campagne",
+    "unlockedAll": "Toutes les parties de la campagne sont débloquées",
+    "grantMercySkip": "Accorder un passe-droit",
+    "mercySkipGranted": "Passe-droit accordé ({{count}} non utilisé(s))"
   },
   "tabs": {
     "display": "Affichage",

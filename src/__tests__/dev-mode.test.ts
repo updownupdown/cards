@@ -15,7 +15,7 @@ const betaGame = GAME_DEFINITIONS.find((game) => game.enabledOnLocalOnly) ?? {
 
 afterEach(async () => {
   await saveDevMode(false);
-  await AsyncStorage.multiRemove(["cards.devMode.v1", "cards.betaGames.v1"]);
+  await AsyncStorage.removeItem("cards.devMode.v1");
   jest.restoreAllMocks();
 });
 
@@ -38,13 +38,5 @@ describe("Dev mode", () => {
     await AsyncStorage.setItem("cards.devMode.v1", "0");
     expect(await loadDevMode()).toBe(false);
     expect(areBetaGamesVisible()).toBe(false);
-  });
-
-  test("beta games turned on before there was a dev mode carry over", async () => {
-    await AsyncStorage.setItem("cards.betaGames.v1", "1");
-    expect(await loadDevMode()).toBe(true);
-    // Only until dev mode has a saved choice of its own.
-    await AsyncStorage.setItem("cards.devMode.v1", "0");
-    expect(await loadDevMode()).toBe(false);
   });
 });

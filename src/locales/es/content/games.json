@@ -432,10 +432,10 @@
   },
   "boiling-over": {
     "howToPlay": {
-      "hash": "ea9ac512",
+      "hash": "735880e5",
       "value": [
         "## Objetivo",
-        "Consigue **150 puntos** o más en **9 rondas** de preparación.",
+        "Consigue **250 puntos** o más en **9 rondas** de preparación.",
         "## Tu mazo",
         "- Empiezas con 11 cartas: seis **fiascos** (los A, 2 y 3 negros) y cinco ingredientes (2♥ 3♥ 4♥ 2♦ 3♦).",
         "- Al empezar cada ronda, todas tus cartas se barajan en tu mazo.",
@@ -444,30 +444,33 @@
         "- Cada ingrediente suma su valor a la **fuerza** de la poción (los Ases valen 1, las Jotas 11, las Reinas 12 y los Reyes 13).",
         "- Si los fiascos del caldero suman **más de 7**, la poción se desborda.",
         "- El riesgo indica la probabilidad de que la siguiente carta desborde la poción.",
-        "## Efectos",
-        "- **♥ Corazones:** sin efecto.",
-        "- **♦ Diamantes:** si paras con un diamante como última carta, cuenta doble.",
-        "- **♣ Tréboles:** si la carta anterior es un fiasco, el fiasco vuelve a tu mazo.",
-        "- **♠ Picas:** la siguiente carta de tu mazo se pone boca arriba.",
+        "## Palos",
+        "- **♥ Corazones:** sin efecto, y los más baratos.",
+        "- **♦ Diamantes:** cuentan doble para las monedas.",
+        "- **♣ Tréboles:** cada uno en el caldero le permite aguantar 1 fiasco más.",
+        "- **♠ Picas:** la siguiente carta de tu mazo se pone boca arriba. Si es un fiasco, va al fondo de tu mazo.",
         "## Parar",
-        "- Para cuando quieras para ganar la fuerza de la poción en puntos y la mitad (redondeada hacia arriba) en monedas.",
+        "- Para cuando quieras para ganar la fuerza de la poción en puntos. También recibes la mitad (redondeada hacia arriba) en monedas, y los diamantes cuentan doble.",
         "- Si la poción se desborda, elige los puntos o las monedas.",
         "## Mercado",
         "- Gasta tus monedas en hasta **2 cartas de palos distintos**. Se unen a tu mazo.",
-        "- Un corazón cuesta su valor. Los diamantes, tréboles y picas cuestan 1 más.",
+        "- Una carta cuesta su valor: corazones +0, diamantes +1, picas +2 y tréboles +3.",
         "- Las monedas que no gastes se pierden.",
         "## Rangos",
-        "- 150+: Curandero de aldea",
-        "- 200+: Alquimista de la corte",
-        "- 250+: Obrador de milagros"
+        "- 250+: Curandero de aldea",
+        "- 350+: Alquimista de la corte",
+        "- 450+: Obrador de milagros",
+        "## Consejos",
+        "- Los diamantes rinden al principio, mientras quedan mercados donde gastar sus monedas. Hacia el final, los corazones dan más puntos por tus monedas.",
+        "- Los tréboles y las picas te dejan preparar más tiempo antes de que se desborde: cómpralos si tus pociones se desbordan a menudo."
       ]
     },
     "quickStart": {
-      "hash": "8bdb8a52",
+      "hash": "0cad2b55",
       "value": [
         "Toca tu mazo para añadir su carta superior al caldero.",
         "Para antes de que los fiascos (A, 2 y 3 negros) sumen más de 7.",
-        "Gasta tus monedas en mejores cartas para tu mazo y vuelve a preparar."
+        "Gasta tus monedas en mejores cartas para tu mazo: cada palo hace algo distinto."
       ]
     },
     "title": {
@@ -1401,7 +1404,7 @@
   },
   "fifteen-puzzle": {
     "howToPlay": {
-      "hash": "dc55b9d9",
+      "hash": "e5a608db",
       "value": [
         "## Objetivo",
         "Ordena las filas para que cada una sea As, 2, 3, 4, por palo:",
@@ -1410,16 +1413,16 @@
         "- **Diamantes**",
         "- **Picas** (no tiene carta 4)",
         "## Cómo se juega",
-        "- Toca una carta situada encima, debajo, a la izquierda o a la derecha del espacio vacío para deslizarla hasta él.",
+        "- Desliza una carta situada encima, debajo, a la izquierda o a la derecha del espacio vacío hacia él para deslizarla hasta allí.",
         "- Las cartas se vuelven verdes cuando están en su posición correcta.",
         "- Cada puzle barajado se genera con movimientos válidos y tiene solución."
       ]
     },
     "quickStart": {
-      "hash": "2e731eeb",
+      "hash": "2ea287e0",
       "value": [
         "Ordena las cartas del As al 4 en cada fila: Corazones, Tréboles, Diamantes y Picas.",
-        "Toca una carta junto al espacio vacío para deslizarla."
+        "Desliza una carta hacia el espacio vacío junto a ella para moverla."
       ]
     },
     "title": {
@@ -2613,10 +2616,10 @@
   },
   "picket-fence": {
     "howToPlay": {
-      "hash": "ec23d938",
+      "hash": "fe06b8f8",
       "value": [
         "## Objetivo",
-        "Consigue **60 puntos** o más dividiendo tus calles en urbanizaciones con vallas y llenándolas de casas, parques y piscinas. La partida sigue hasta que se acaba la baraja, así que sigue sumando puntos.",
+        "Consigue **70 puntos** o más dividiendo tus calles en urbanizaciones con vallas y añadiendo parques y piscinas. La partida sigue hasta que se acaba la baraja, así que sigue sumando puntos.",
         "## Tu turno",
         "Tienes tres cartas y juegas dos en cada turno: una por su número y luego otra por su palo. Después roba hasta volver a tener tres.",
         "## Construir",
@@ -2628,27 +2631,27 @@
         "- **♦ Piscina:** el diamante se coloca bajo esa casa como piscina, si está en un solar con piscina.",
         "- **♠ Valla:** pon una valla entre dos solares, en cualquier calle.",
         "- **♣ Segunda casa:** construye también el trébol como casa, o reforma con él.",
-        "- Una casa admite un parque o una piscina. Una carta sin uso se descarta.",
+        "- Una casa admite un parque o una piscina, y una calle admite parques o piscinas, nunca ambos: decide el primero. Una carta sin uso se descarta.",
         "## Puntuación",
-        "- Las vallas y los extremos de las calles dividen cada calle en **urbanizaciones**. Solo puntúa una urbanización **terminada**: la que tiene todos sus solares construidos.",
-        "- Sus casas dan 1, 3, 6 o 10 puntos en una urbanización de 1, 2, 3 o 4. **Las urbanizaciones de cinco o más no puntúan**, así que todas las calles necesitan vallas.",
-        "- Cada parque de una urbanización terminada suma 2 puntos, y cada piscina 4.",
+        "- Las vallas y los extremos de las calles dividen cada calle en **urbanizaciones**. Una urbanización **terminada**, con todos sus solares construidos, da 1 punto por casa, más 2.",
+        "- Cada parque da 3 puntos, y cada piscina 4, esté terminada su urbanización o no.",
         "## Clasificación",
-        "- 60+: Buenos vecinos",
-        "- 70+: Barrio modelo",
-        "- 80+: De postal",
+        "- 70+: Buenos vecinos",
+        "- 78+: Barrio modelo",
+        "- 85+: De postal",
         "## Consejos",
-        "- Las urbanizaciones más grandes valen más, pero un solo solar sin construir deja toda la urbanización, con sus parques y piscinas, sin puntuar. Una valla puede limitar las pérdidas.",
+        "- Cada valla crea una urbanización más, que vale 2 puntos más cuando ambos lados están terminados. Una valla también puede aislar un solar que no se puede construir.",
+        "- Elige el tipo de cada calle: las piscinas valen más, pero solo caben en solares con piscina, mientras que una calle de parques puede tener un parque bajo cada casa.",
         "- Deja espacio entre los números: un solar entre un 5 y un 6 no se puede construir hasta que se reforme una de esas casas.",
-        "- La etiqueta sobre cada urbanización muestra lo que puntuará una vez terminada, o ✕ si tal como está no se puede terminar."
+        "- La etiqueta sobre cada urbanización muestra lo que puntuará al terminarla, o ✕ si no se puede terminar tal como está. La barra de puntuación muestra tus puntos si terminas todas las urbanizaciones."
       ]
     },
     "quickStart": {
-      "hash": "616845be",
+      "hash": "e8f64a5e",
       "value": [
         "En cada turno, construye una carta como casa y usa el palo de otra carta como su efecto.",
         "Los números de las casas deben subir de izquierda a derecha a lo largo de cada calle.",
-        "Solo puntúan las urbanizaciones valladas de hasta cuatro casas, una vez construidos todos sus solares."
+        "Las vallas dividen las calles en urbanizaciones: cada una terminada puntúa sus casas, más 2."
       ]
     },
     "title": {

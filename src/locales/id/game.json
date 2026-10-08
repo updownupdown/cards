@@ -2,7 +2,7 @@
   "menu": {
     "home": "Beranda",
     "campaign": "Pengembaraan",
-    "rules": "Aturan",
+    "rules": "Cara bermain",
     "hint": "Bantuan dari Atas",
     "undo": "Urungkan",
     "reset": "Ulangi",
@@ -29,10 +29,11 @@
     "hold": "Tahan untuk mengulang permainan"
   },
   "tips": {
-    "quickStart": "Mulai cepat"
+    "title": "Cara bermain: {{game}}",
+    "dismiss": "Tutup"
   },
   "rules": {
-    "title": "Aturan",
+    "title": "Cara bermain",
     "unavailable": "Petunjuk untuk permainan ini belum tersedia.",
     "helpIntro": {
       "done": "Mengerti"

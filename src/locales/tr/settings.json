@@ -71,7 +71,12 @@
     "on": "Geliştirici modu açık",
     "off": "Geliştirici modu kapalı",
     "status": "Geliştirici modu açık.",
-    "turnOff": "Kapat"
+    "turnOff": "Kapat",
+    "title": "Geliştirici modu",
+    "unlockAll": "Kampanyadaki tüm oyunları aç",
+    "unlockedAll": "Kampanyadaki tüm oyunlar açıldı",
+    "grantMercySkip": "Bir af ver",
+    "mercySkipGranted": "Af verildi ({{count}} kullanılmamış)"
   },
   "tabs": {
     "display": "Ekran",

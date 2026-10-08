@@ -26,6 +26,7 @@ import {
   Pressable,
   Text,
   View,
+  type ViewStyle,
 } from "react-native";
 import Svg, {
   Defs,
@@ -865,6 +866,42 @@ function HoverUfo({
   hovering: boolean;
   onRest: () => void;
 }) {
+  return (
+    <HoverBody
+      size={size}
+      hovering={hovering}
+      onRest={onRest}
+      testID="hint-ufo-hover"
+      style={{
+        position: "absolute",
+        left: dock.x - size / 2,
+        top: dock.y - size / 2,
+        pointerEvents: "none",
+      }}
+    />
+  );
+}
+
+/** The hovering UFO, in place: the header's icon while the intro is unread. */
+export function HoveringUfoIcon({ size }: { size: number }) {
+  return <HoverBody size={size} hovering onRest={noop} />;
+}
+
+const noop = () => {};
+
+function HoverBody({
+  size,
+  hovering,
+  onRest,
+  style,
+  testID,
+}: {
+  size: number;
+  hovering: boolean;
+  onRest: () => void;
+  style?: ViewStyle;
+  testID?: string;
+}) {
   const time = useRef(new Animated.Value(0)).current;
   const amount = useRef(new Animated.Value(0)).current;
   const latestOnRest = useRef(onRest);
@@ -900,12 +937,9 @@ function HoverUfo({
   const bob = Animated.multiply(amount, time.interpolate(wave(2)));
   return (
     <Animated.View
-      testID="hint-ufo-hover"
+      testID={testID}
       style={{
-        position: "absolute",
-        left: dock.x - size / 2,
-        top: dock.y - size / 2,
-        pointerEvents: "none",
+        ...style,
         transform: [
           {
             translateX: swing.interpolate({

@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import {
   HINT_BUTTON_STORAGE_KEY,
   HINT_INTRO_STORAGE_KEY,
@@ -30,25 +30,30 @@ export function parseHintMode(saved: string | null): HintMode {
 }
 
 /** A tiny shared store: every screen reads the same value. */
-function createStore<T>(initial: T) {
+export function createStore<T>(initial: T) {
   let value = initial;
-  const listeners = new Set<(value: T) => void>();
+  const listeners = new Set<() => void>();
+  const subscribe = (listener: () => void) => {
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
+  };
   return {
     get: () => value,
     set(next: T) {
       value = next;
-      listeners.forEach((listener) => listener(next));
+      listeners.forEach((listener) => listener());
     },
+    // While a static web page hydrates, the saved value may already be in,
+    // but the page was built with `initial`: read that first, or the header
+    // hydrates to a different shape than the HTML (React error #418).
     use() {
-      const [state, setState] = useState(value);
-      useEffect(() => {
-        setState(value);
-        listeners.add(setState);
-        return () => {
-          listeners.delete(setState);
-        };
-      }, []);
-      return state;
+      return useSyncExternalStore(
+        subscribe,
+        () => value,
+        () => initial,
+      );
     },
   };
 }

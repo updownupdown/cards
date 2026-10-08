@@ -71,7 +71,12 @@
     "on": "Modalità dev attiva",
     "off": "Modalità dev disattivata",
     "status": "La modalità dev è attiva.",
-    "turnOff": "Disattiva"
+    "turnOff": "Disattiva",
+    "title": "Modalità dev",
+    "unlockAll": "Sblocca tutte le partite della campagna",
+    "unlockedAll": "Tutte le partite della campagna sono sbloccate",
+    "grantMercySkip": "Concedi una grazia",
+    "mercySkipGranted": "Grazia concessa ({{count}} da usare)"
   },
   "tabs": {
     "display": "Schermo",

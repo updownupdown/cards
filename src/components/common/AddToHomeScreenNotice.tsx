@@ -101,7 +101,6 @@ export function AddToHomeScreenNotice({
           style={[
             flexStyles.rowCentered,
             {
-              justifyContent: "flex-start",
               gap: spacing(16),
               marginTop: spacing(4),
             },

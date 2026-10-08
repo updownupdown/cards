@@ -71,7 +71,12 @@
     "on": "Modo dev activado",
     "off": "Modo dev desactivado",
     "status": "El modo dev está activado.",
-    "turnOff": "Desactivar"
+    "turnOff": "Desactivar",
+    "title": "Modo dev",
+    "unlockAll": "Desbloquear todas las partidas de la campaña",
+    "unlockedAll": "Todas las partidas de la campaña desbloqueadas",
+    "grantMercySkip": "Conceder un indulto",
+    "mercySkipGranted": "Indulto concedido ({{count}} sin usar)"
   },
   "tabs": {
     "display": "Pantalla",

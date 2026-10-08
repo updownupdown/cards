@@ -16,6 +16,7 @@
     "cards.hintIntro.v1",
     "cards.recentGames.v1",
     "cards.storeReviewPrompted.v1",
+    "cards.swipeDismiss.v1",
     "cards.wildCards.v1"
   ],
   "gamePaths": [
