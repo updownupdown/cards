@@ -39,8 +39,13 @@ jest.mock("@/data/campaign-progress", () => ({
   setLastPlayedGameDot: () => Promise.resolve(),
 }));
 
+// The games open on the map; a test may open more.
+const mockUnlockedPaths = new Set<string>();
 jest.mock("@/hooks/useCampaignProgress", () => ({
-  useCampaignProgress: () => ({ unlockedPaths: new Set<string>() }),
+  useCampaignProgress: () => ({
+    unlockedPaths: mockUnlockedPaths,
+    isLoading: false,
+  }),
 }));
 
 jest.mock("@/components/common/GameLaunchOverlay", () => {
@@ -123,9 +128,9 @@ describe("floating surfaces", () => {
     const filled = renderer.root.findAll(
       (node) =>
         typeof node.type === "string" &&
-        String(StyleSheet.flatten(node.props.style)?.backgroundColor ?? "").endsWith(
-          `, ${SURFACE_OPACITY})`,
-        ),
+        String(
+          StyleSheet.flatten(node.props.style)?.backgroundColor ?? "",
+        ).endsWith(`, ${SURFACE_OPACITY})`),
     );
     expect(filled.length).toBeGreaterThan(0);
   });
@@ -223,5 +228,32 @@ describe("Collect from", () => {
     expect(after).toBe(" to collect");
     act(() => button.props.onPress());
     expect(launchGame).toHaveBeenCalledWith("/klondike");
+  });
+
+  test("for a quote or chapter, a game locked on the map locks the button, and says why", () => {
+    mockUnlockedPaths.clear();
+    const renderer = render(<CollectFrom path="/klondike" campaign />);
+    const button = renderer.root.findAllByType(
+      Button as React.ComponentType,
+    )[0];
+    expect(button.props).toMatchObject({ disabled: true, iconName: "lock" });
+    const note = JSON.stringify(renderer.toJSON());
+    expect(note).toContain("lockedOnMap");
+  });
+
+  test("for a quote or chapter, an unlocked game starts in Campaign mode", () => {
+    mockUnlockedPaths.add("/klondike");
+    const renderer = render(<CollectFrom path="/klondike" campaign />);
+    const button = renderer.root.findAllByType(
+      Button as React.ComponentType,
+    )[0];
+    expect(button.props).toMatchObject({ disabled: false });
+    expect(button.props.iconName).toBeUndefined();
+    act(() => button.props.onPress());
+    expect(launchGame).toHaveBeenCalledWith({
+      pathname: "/klondike",
+      params: { mode: "campaign" },
+    });
+    mockUnlockedPaths.clear();
   });
 });

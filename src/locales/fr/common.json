@@ -18,6 +18,7 @@
   },
   "undo": "Annuler",
   "winToCollect": "Gagnez à **{{game}}** pour débloquer",
+  "lockedOnMap": "Gagnez un jeu voisin de **{{game}}** dans l'Odyssée pour le débloquer.",
   "errors": {
     "appCrashed": "Un problème est survenu.",
     "tryAgain": "Réessayer"
