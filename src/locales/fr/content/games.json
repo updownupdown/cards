@@ -432,10 +432,10 @@
   },
   "boiling-over": {
     "howToPlay": {
-      "hash": "ea9ac512",
+      "hash": "735880e5",
       "value": [
         "## Objectif",
-        "Marquez **150 points** ou plus en **9 manches** de préparation.",
+        "Marquez **250 points** ou plus en **9 manches** de préparation.",
         "## Votre paquet",
         "- Vous commencez avec 11 cartes\u00a0: six **ratés** (les A, 2 et 3 noirs) et cinq ingrédients (2♥ 3♥ 4♥ 2♦ 3♦).",
         "- Au début de chaque manche, toutes vos cartes sont mélangées dans votre paquet.",
@@ -444,30 +444,33 @@
         "- Chaque ingrédient ajoute sa valeur à la **force** de la potion (As 1, Valets 11, Dames 12 et Rois 13).",
         "- Si les ratés du chaudron dépassent **7 au total**, la potion déborde.",
         "- Le risque affiché indique la probabilité que la carte suivante fasse déborder la potion.",
-        "## Effets",
-        "- **♥ Cœur\u00a0:** aucun effet.",
-        "- **♦ Carreau\u00a0:** si vous vous arrêtez sur un carreau, il compte double.",
-        "- **♣ Trèfle\u00a0:** si la carte précédente est un raté, ce raté retourne dans votre paquet.",
-        "- **♠ Pique\u00a0:** la carte suivante de votre paquet est retournée face visible.",
+        "## Couleurs",
+        "- **♥ Cœur :** aucun effet, et le moins cher.",
+        "- **♦ Carreau :** compte double pour les pièces.",
+        "- **♣ Trèfle :** chaque trèfle dans le chaudron lui permet de contenir 1 raté de plus.",
+        "- **♠ Pique :** la carte suivante de votre paquet est retournée face visible. Si c'est un raté, il passe sous votre paquet.",
         "## S'arrêter",
-        "- Arrêtez-vous quand vous voulez pour marquer la force de la potion en points, et en recevoir la moitié (arrondie au supérieur) en pièces.",
+        "- Arrêtez-vous quand vous voulez pour marquer la force de la potion en points. Vous en recevez aussi la moitié (arrondie au supérieur) en pièces, les carreaux comptant double.",
         "- Si la potion déborde, choisissez soit les points, soit les pièces.",
         "## Marché",
         "- Dépensez vos pièces pour acheter jusqu'à **2 cartes de couleurs différentes**. Elles rejoignent votre paquet.",
-        "- Un cœur coûte sa valeur. Les carreaux, trèfles et piques coûtent 1 de plus.",
+        "- Une carte coûte sa valeur : cœurs +0, carreaux +1, piques +2 et trèfles +3.",
         "- Les pièces non dépensées sont perdues.",
         "## Rangs",
-        "- 150+\u00a0: Guérisseur de village",
-        "- 200+\u00a0: Alchimiste de la cour",
-        "- 250+\u00a0: Faiseur de miracles"
+        "- 250+\u00a0: Guérisseur de village",
+        "- 350+\u00a0: Alchimiste de la cour",
+        "- 450+\u00a0: Faiseur de miracles",
+        "## Conseils",
+        "- Les carreaux rapportent surtout au début, tant qu'il reste des marchés où dépenser leurs pièces. Vers la fin, les cœurs donnent le plus de points pour vos pièces.",
+        "- Les trèfles et les piques vous laissent préparer plus longtemps avant de déborder : achetez-en si vos potions débordent souvent."
       ]
     },
     "quickStart": {
-      "hash": "8bdb8a52",
+      "hash": "0cad2b55",
       "value": [
         "Touchez votre paquet pour ajouter sa carte du dessus au chaudron.",
         "Arrêtez-vous avant que les ratés (A, 2 et 3 noirs) dépassent 7 au total.",
-        "Dépensez vos pièces en meilleures cartes pour votre paquet, puis préparez une nouvelle potion."
+        "Dépensez vos pièces en meilleures cartes pour votre paquet : chaque couleur a son propre effet."
       ]
     },
     "title": {
@@ -2791,10 +2794,10 @@
   },
   "picket-fence": {
     "howToPlay": {
-      "hash": "ec23d938",
+      "hash": "fe06b8f8",
       "value": [
         "## Objectif",
-        "Marquez **60 points** ou plus en divisant vos rues en lotissements par des clôtures et en les remplissant de maisons, de parcs et de piscines. La partie continue jusqu'à épuisement du paquet\u00a0: continuez donc d'augmenter votre score.",
+        "Marquez **70 points** ou plus en divisant vos rues en lotissements par des clôtures et en y ajoutant des parcs et des piscines. La partie continue jusqu'à épuisement du paquet : continuez donc d'augmenter votre score.",
         "## Votre tour",
         "Vous avez trois cartes en main et en jouez deux à chaque tour\u00a0: l'une pour son numéro, puis l'autre pour sa couleur. Piochez ensuite pour revenir à trois.",
         "## Construction",
@@ -2806,27 +2809,27 @@
         "- **♦ Piscine\u00a0:** le carreau est glissé sous cette maison comme piscine, si elle se trouve sur un terrain à piscine.",
         "- **♠ Clôture\u00a0:** posez une clôture entre deux terrains, dans n'importe quelle rue.",
         "- **♣ Seconde maison\u00a0:** bâtissez aussi le trèfle en maison, ou rénovez avec lui.",
-        "- Une maison accueille un seul parc ou une seule piscine. Une carte sans usage est défaussée.",
+        "- Une maison accueille un seul parc ou une seule piscine, et une rue accueille des parcs ou des piscines, jamais les deux : le premier posé décide. Une carte sans usage est défaussée.",
         "## Score",
-        "- Les clôtures et les bouts de rue divisent chaque rue en **lotissements**. Seul un lotissement **terminé** rapporte des points\u00a0: un lotissement dont tous les terrains sont bâtis.",
-        "- Ses maisons rapportent 1, 3, 6 ou 10 points pour un lotissement de 1, 2, 3 ou 4. **Les lotissements de cinq terrains ou plus ne rapportent rien**\u00a0: chaque rue a donc besoin de clôtures.",
-        "- Chaque parc d'un lotissement terminé ajoute 2 points, et chaque piscine 4.",
+        "- Les clôtures et les bouts de rue divisent chaque rue en **lotissements**. Un lotissement **terminé**, dont tous les terrains sont bâtis, rapporte 1 point par maison, plus 2.",
+        "- Chaque parc rapporte 3 points, et chaque piscine 4, que leur lotissement soit terminé ou non.",
         "## Classements",
-        "- 60+\u00a0: Bons voisins",
-        "- 70+\u00a0: Banlieue modèle",
-        "- 80+\u00a0: Carte postale",
+        "- 70+\u00a0: Bons voisins",
+        "- 78+\u00a0: Banlieue modèle",
+        "- 85+\u00a0: Carte postale",
         "## Conseils",
-        "- Les grands lotissements rapportent plus, mais un seul terrain non bâti fait que tout le lotissement, avec ses parcs et ses piscines, ne rapporte rien. Une clôture peut limiter les pertes.",
+        "- Chaque clôture crée un lotissement de plus, qui vaut 2 points de plus une fois les deux côtés terminés. Une clôture peut aussi isoler un terrain impossible à bâtir.",
+        "- Choisissez le genre de chaque rue : les piscines valent plus, mais ne vont que sur les terrains à piscine, alors qu'une rue de parcs peut avoir un parc sous chaque maison.",
         "- Laissez de la marge entre les numéros\u00a0: un terrain entre un 5 et un 6 ne peut pas être bâti tant que l'une des deux maisons n'a pas été rénovée.",
-        "- L'étiquette au-dessus de chaque lotissement indique ce qu'il rapportera une fois terminé, ou ✕ s'il ne peut pas être terminé en l'état."
+        "- L'étiquette au-dessus de chaque lotissement indique ce qu'il rapportera une fois terminé, ou ✕ s'il ne peut pas être terminé en l'état. La barre de score montre votre score si tous les lotissements sont terminés."
       ]
     },
     "quickStart": {
-      "hash": "616845be",
+      "hash": "e8f64a5e",
       "value": [
         "À chaque tour, bâtissez une carte en maison et utilisez la couleur d'une autre carte comme effet.",
         "Les numéros des maisons doivent croître de gauche à droite le long de chaque rue.",
-        "Seuls les lotissements clôturés de quatre maisons au plus rapportent des points, une fois tous leurs terrains bâtis."
+        "Les clôtures divisent les rues en lotissements : chaque lotissement terminé rapporte ses maisons, plus 2."
       ]
     },
     "title": {

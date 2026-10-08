@@ -40,6 +40,8 @@ const {
   estates,
   estateStatus,
   estateValue,
+  streetKind,
+  canTuck,
   scoreOf,
   isOver,
   getTier,
@@ -69,12 +71,13 @@ function baseState(
 }
 
 describe("Picket Fence rules", () => {
-  test("every score has a tier, and winning starts at 60", () => {
-    expect(WIN_SCORE).toBe(60);
+  test("every score has a tier, and winning starts at 70", () => {
+    expect(WIN_SCORE).toBe(70);
     expect(getTier(-3).key).toBe("games:picketFence.tierVacantLots");
-    expect(getTier(59).key).toBe("games:picketFence.tierQuietStreet");
-    expect(getTier(60).key).toBe("games:picketFence.tierGoodNeighbours");
-    expect(getTier(80).key).toBe("games:picketFence.tierPicturePerfect");
+    expect(getTier(69).key).toBe("games:picketFence.tierQuietStreet");
+    expect(getTier(70).key).toBe("games:picketFence.tierGoodNeighbours");
+    expect(getTier(78).key).toBe("games:picketFence.tierModelSuburb");
+    expect(getTier(85).key).toBe("games:picketFence.tierPicturePerfect");
   });
 
   test("house numbers rise along a street, skipping empty lots", () => {
@@ -112,10 +115,10 @@ describe("Picket Fence rules", () => {
     ]);
   });
 
-  test("an estate is blocked when too long or when its gap can't be filled", () => {
+  test("an estate is blocked when a gap in it can't be filled", () => {
     const street = emptyStreets()[2];
-    // Eight lots with no fence: too long to score.
-    expect(estateStatus(street, [0, 7])).toBe("blocked");
+    // Any length can be finished.
+    expect(estateStatus(street, [0, 7])).toBe("open");
 
     street.fences[2] = true;
     street.houses[0] = house("7");
@@ -127,37 +130,34 @@ describe("Picket Fence rules", () => {
     expect(estateStatus(street, [0, 2])).toBe("blocked");
   });
 
-  test("only a finished estate scores, for its houses, parks and pools", () => {
+  test("a finished estate scores its houses plus 2; parks and pools score anywhere", () => {
     const streets = emptyStreets();
-    const [first] = streets;
+    const [first, second] = streets;
     first.houses[0] = house("2");
     first.houses[1] = house("5");
     first.tucked[0] = card("3", "hearts");
-    first.tucked[1] = card("9", "diamonds");
-    // Six lots with no fence: too long to score, parks and pools included.
-    expect(scoreOf(streets).total).toBe(0);
+    first.tucked[1] = card("9", "hearts");
+    second.houses[2] = house("8");
+    second.tucked[2] = card("4", "diamonds");
+    // No estate is finished, but the parks and the pool score.
+    expect(scoreOf(streets)).toEqual({
+      parks: 6,
+      pools: 4,
+      estates: 0,
+      total: 10,
+    });
 
     first.fences[1] = true;
-    expect(estateValue(first, [0, 1])).toEqual({
-      houses: 3,
-      parks: 2,
-      pools: 4,
-      total: 9,
-    });
+    expect(estateValue([0, 1])).toBe(4);
     expect(scoreOf(streets)).toEqual({
-      parks: 2,
+      parks: 6,
       pools: 4,
-      estates: 3,
-      total: 9,
+      estates: 4,
+      total: 14,
     });
-
-    // The four lots to its right are fenced off, but not built: nothing more.
-    first.houses[2] = house("8");
-    first.tucked[2] = card("4", "hearts");
-    expect(scoreOf(streets).total).toBe(9);
   });
 
-  test("bigger estates score more, up to four houses", () => {
+  test("every fence adds an estate, worth 2 more once finished", () => {
     const score = (sizes: number[]) => {
       const streets = emptyStreets();
       const street = streets[2];
@@ -167,18 +167,39 @@ describe("Picket Fence rules", () => {
         for (let i = 0; i < size; i++, lot++) {
           street.houses[lot] = house(ranks[lot]);
         }
-        if (lot < street.fences.length) street.fences[lot - 1] = true;
+        if (lot < street.houses.length) street.fences[lot - 1] = true;
       }
       return scoreOf(streets).total;
     };
-    expect(score([1])).toBe(1);
-    expect(score([2])).toBe(3);
-    expect(score([3])).toBe(6);
-    expect(score([4])).toBe(10);
-    expect(score([4, 4])).toBe(20);
-    expect(score([2, 2, 2, 2])).toBe(12);
-    // Five in a row scores nothing until a fence splits it.
-    expect(score([5])).toBe(0);
+    expect(score([8])).toBe(10);
+    expect(score([4, 4])).toBe(12);
+    expect(score([2, 2, 2, 2])).toBe(16);
+    expect(score([1, 1, 1, 1, 1, 1, 1, 1])).toBe(24);
+    // The lots after the last fence are empty: that estate scores nothing.
+    expect(score([1])).toBe(3);
+    expect(score([5])).toBe(7);
+  });
+
+  test("a street takes parks or pools, never both: its first one decides", () => {
+    const streets = emptyStreets();
+    const third = streets[2];
+    third.houses[1] = house("3");
+    third.houses[4] = house("6");
+    third.houses[5] = house("8");
+    expect(streetKind(third)).toBeNull();
+    expect(canTuck(streets, { street: 2, lot: 1 }, "diamonds")).toBe(true);
+    expect(canTuck(streets, { street: 2, lot: 5 }, "diamonds")).toBe(false);
+
+    third.tucked[1] = card("2", "diamonds");
+    expect(streetKind(third)).toBe("diamonds");
+    expect(canTuck(streets, { street: 2, lot: 4 }, "diamonds")).toBe(true);
+    expect(canTuck(streets, { street: 2, lot: 5 }, "hearts")).toBe(false);
+
+    const heart = card("9", "hearts");
+    const state = baseState({ streets, hand: [house("K"), heart] });
+    expect(buildHouse(state, 0, { street: 2, lot: 7 })).toBe(true);
+    expect(applyEffect(state, 0)).toBe("wasted");
+    expect(state.discard.map((c) => c.id)).toEqual([heart.id]);
   });
 
   test("a turn builds a house, then applies the effect card", () => {
@@ -337,7 +358,8 @@ function zones() {
 
 function zoneEnabled(zone: MapZone) {
   const mapping = harness.mapConfig!.zoneMapper?.(zone) as
-    { onPress?: () => void; isDisabled?: boolean } | undefined;
+    | { onPress?: () => void; isDisabled?: boolean }
+    | undefined;
   return !!mapping?.onPress && !mapping.isDisabled;
 }
 
@@ -413,8 +435,8 @@ describe("Picket Fence games", () => {
 
     const tucked = mappedCards().find((mapped) => mapped.card.id === heart.id);
     expect(tucked?.zoneId).toBe("tuck-1-3");
-    // Nothing scores until the estate is fenced and finished.
-    expect(harness.wrapperProps?.score).toBe(0);
+    // The park scores at once; the estate only once it's finished.
+    expect(harness.wrapperProps?.score).toBe(3);
     expect(handCards()).toHaveLength(3);
   });
 
@@ -423,15 +445,13 @@ describe("Picket Fence games", () => {
     streets[0].houses[0] = house("2");
     streets[0].tucked[0] = card("4", "hearts");
     streets[0].houses[1] = house("8");
-    streets[0].tucked[1] = card("5", "diamonds");
+    streets[0].tucked[1] = card("5", "hearts");
     streets[0].fences[1] = true;
     streets[1].tucked[0] = card("2", "hearts");
     streets[1].tucked[1] = card("3", "hearts");
     streets[1].tucked[2] = card("4", "hearts");
     streets[1].tucked[3] = card("5", "hearts");
-    streets[2].tucked[0] = card("6", "hearts");
     streets[2].tucked[1] = card("7", "diamonds");
-    streets[2].tucked[2] = card("8", "hearts");
     streets[2].tucked[4] = card("9", "diamonds");
     const discard = house("9", "clubs");
     const effectHand = [
@@ -452,32 +472,18 @@ describe("Picket Fence games", () => {
       }),
     );
 
-    const progressBars = renderer.root.findAllByType(
+    const [scoreBar] = renderer.root.findAllByType(
       ProgressBar as React.ComponentType,
     );
-    // Three pools and seven parks are down; only the fenced, finished pair
-    // on the first street scores: 3 for its houses, a park and a pool.
-    expect(progressBars.map((bar) => bar.props.progressValue)).toEqual([
-      3, 7, 9,
-    ]);
-    expect(progressBars.map((bar) => bar.props.totalValue)).toEqual([
-      7, 14, 60,
-    ]);
-    expect(progressBars.map((bar) => bar.props.tallyText)).toEqual([
-      "3 / 7",
-      "7",
-      "9 / 60",
-    ]);
-    expect(progressBars.map((bar) => bar.props.color)).toEqual([
-      "#1E88E5",
-      "#2E8B57",
-      "#9E9E9E",
-    ]);
-    expect(progressBars.map((bar) => bar.props.style)).toEqual([
-      { flex: 1 },
-      { flex: 1 },
-      { flex: 1 },
-    ]);
+    // Six parks (18) and two pools (8) score as they stand, and the fenced,
+    // finished pair on the first street 4. Every other estate can still be
+    // finished: 6, 9 and 10 more.
+    expect(scoreBar.props).toMatchObject({
+      progressValue: 30,
+      previewProgressValue: 55,
+      totalValue: 70,
+      tallyText: "30 / 70",
+    });
 
     const tuckedCards = mappedCards().filter(
       (mapped) => mapped.zoneName === "tuck",
@@ -498,8 +504,9 @@ describe("Picket Fence games", () => {
     ).toMatchObject({ selectColor: "#1E88E5", forceOverlayColor: true });
 
     const mappedHand = handCards();
+    // The heart has nowhere to go (this turn's house has a park): grey.
     const suitColors = [
-      ["hearts", "#2E8B57"],
+      ["hearts", "grey"],
       ["spades", "#808080"],
       ["clubs", "#8B5A2B"],
     ] as const;

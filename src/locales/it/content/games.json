@@ -432,10 +432,10 @@
   },
   "boiling-over": {
     "howToPlay": {
-      "hash": "ea9ac512",
+      "hash": "735880e5",
       "value": [
         "## Obiettivo",
-        "Fai **150 punti** o più in **9 round** di preparazione.",
+        "Fai **250 punti** o più in **9 round** di preparazione.",
         "## Il tuo mazzo",
         "- Inizi con 11 carte: sei **flop** (gli A, 2 e 3 neri) e cinque ingredienti (2♥ 3♥ 4♥ 2♦ 3♦).",
         "- All'inizio di ogni round, tutte le tue carte vengono mescolate nel tuo mazzo.",
@@ -444,30 +444,33 @@
         "- Ogni ingrediente aggiunge il suo valore alla **forza** della pozione (gli Assi valgono 1, i Fanti 11, le Donne 12 e i Re 13).",
         "- Se i flop nel calderone superano **7 in tutto**, la pozione trabocca.",
         "- Il rischio indica la probabilità che la carta successiva faccia traboccare la pozione.",
-        "## Effetti",
-        "- **♥ Cuori:** nessun effetto.",
-        "- **♦ Quadri:** se ti fermi con un quadri come ultima carta, conta doppio.",
-        "- **♣ Fiori:** se la carta precedente è un flop, il flop torna nel tuo mazzo.",
-        "- **♠ Picche:** la carta successiva del tuo mazzo viene girata scoperta.",
+        "## Semi",
+        "- **♥ Cuori:** nessun effetto, e costano meno.",
+        "- **♦ Quadri:** contano doppio per le monete.",
+        "- **♣ Fiori:** ognuno nel calderone gli permette di reggere 1 flop in più.",
+        "- **♠ Picche:** la carta successiva del tuo mazzo viene girata scoperta. Se è un flop, finisce in fondo al tuo mazzo.",
         "## Fermarsi",
-        "- Fermati quando vuoi per segnare la forza della pozione in punti e riceverne la metà (arrotondata per eccesso) in monete.",
+        "- Fermati quando vuoi per segnare la forza della pozione in punti. Ne ricevi anche la metà (arrotondata per eccesso) in monete, e i quadri contano doppio.",
         "- Se la pozione trabocca, scegli i punti o le monete.",
         "## Mercato",
         "- Spendi le monete per un massimo di **2 carte di semi diversi**. Entrano nel tuo mazzo.",
-        "- Un cuori costa il suo valore. Quadri, fiori e picche costano 1 in più.",
+        "- Una carta costa il suo valore: cuori +0, quadri +1, picche +2 e fiori +3.",
         "- Le monete che non spendi vanno perse.",
         "## Titoli",
-        "- 150+: Guaritore di villaggio",
-        "- 200+: Alchimista di corte",
-        "- 250+: Taumaturgo"
+        "- 250+: Guaritore di villaggio",
+        "- 350+: Alchimista di corte",
+        "- 450+: Taumaturgo",
+        "## Consigli",
+        "- I quadri rendono all'inizio, finché restano mercati in cui spendere le loro monete. Verso la fine, i cuori danno più punti per le tue monete.",
+        "- Fiori e picche ti lasciano preparare più a lungo prima di traboccare: comprali se le tue pozioni traboccano spesso."
       ]
     },
     "quickStart": {
-      "hash": "8bdb8a52",
+      "hash": "0cad2b55",
       "value": [
         "Tocca il tuo mazzo per aggiungere la carta in cima al calderone.",
         "Fermati prima che i flop (A, 2 e 3 neri) superino 7 in tutto.",
-        "Spendi le monete in carte migliori per il tuo mazzo, poi prepara di nuovo."
+        "Spendi le monete in carte migliori per il tuo mazzo: ogni seme fa qualcosa di diverso."
       ]
     },
     "title": {
@@ -2791,10 +2794,10 @@
   },
   "picket-fence": {
     "howToPlay": {
-      "hash": "ec23d938",
+      "hash": "fe06b8f8",
       "value": [
         "## Obiettivo",
-        "Fai **60 punti** o più dividendo le tue vie in isolati con gli steccati e riempiendoli di case, parchi e piscine. Si gioca finché il mazzo non è finito, quindi continua ad aumentare il punteggio.",
+        "Fai **70 punti** o più dividendo le tue vie in isolati con gli steccati e aggiungendo parchi e piscine. Si gioca finché il mazzo non è finito, quindi continua ad aumentare il punteggio.",
         "## Il tuo turno",
         "Hai in mano tre carte e ne giochi due a ogni turno: una per il suo numero, poi una per il suo seme. Poi peschi fino ad averne di nuovo tre.",
         "## Costruire",
@@ -2806,27 +2809,27 @@
         "- **♦ Piscina:** la carta di quadri va sotto quella casa come piscina, se la casa sorge su un lotto da piscina.",
         "- **♠ Steccato:** metti uno steccato tra due lotti, su una via qualsiasi.",
         "- **♣ Seconda casa:** costruisci anche la carta di fiori come casa, oppure usala per ristrutturare.",
-        "- Una casa può avere un solo parco o una sola piscina. Una carta che non serve a niente viene scartata.",
+        "- Una casa può avere un solo parco o una sola piscina, e una via può avere parchi o piscine, mai entrambi: decide il primo. Una carta che non serve a niente viene scartata.",
         "## Punteggio",
-        "- Gli steccati e le estremità delle vie dividono ogni via in **isolati**. Fa punti solo un isolato **finito**, cioè con tutti i lotti costruiti.",
-        "- Le sue case valgono 1, 3, 6 o 10 punti per un isolato di 1, 2, 3 o 4. **Gli isolati di cinque o più non valgono niente**, quindi ogni via ha bisogno di steccati.",
-        "- Ogni parco in un isolato finito aggiunge 2 punti, e ogni piscina 4.",
+        "- Gli steccati e le estremità delle vie dividono ogni via in **isolati**. Un isolato **finito**, con tutti i lotti costruiti, vale 1 punto per casa, più 2.",
+        "- Ogni parco vale 3 punti e ogni piscina 4, che il loro isolato sia finito o no.",
         "## Classifiche",
-        "- 60+: Buoni vicini",
-        "- 70+: Quartiere modello",
-        "- 80+: Da cartolina",
+        "- 70+: Buoni vicini",
+        "- 78+: Quartiere modello",
+        "- 85+: Da cartolina",
         "## Consigli",
-        "- Gli isolati più grandi valgono di più, ma un solo lotto non costruito lascia tutto l'isolato, con i suoi parchi e le sue piscine, senza punti. Uno steccato può limitare le perdite.",
+        "- Ogni steccato crea un isolato in più, che vale 2 punti in più quando entrambi i lati sono finiti. Uno steccato può anche isolare un lotto che non si può costruire.",
+        "- Scegli il tipo di ogni via: le piscine valgono di più, ma vanno solo sui lotti da piscina, mentre una via di parchi può avere un parco sotto ogni casa.",
         "- Lascia spazio tra i numeri: un lotto tra un 5 e un 6 non si può costruire finché una delle due case non viene ristrutturata.",
-        "- L'etichetta sopra ogni isolato mostra quanto vale una volta finito, oppure ✕ se così com'è non si può finire."
+        "- L'etichetta sopra ogni isolato mostra quanto varrà una volta finito, oppure ✕ se così com'è non si può finire. La barra del punteggio mostra il tuo punteggio se finisci tutti gli isolati."
       ]
     },
     "quickStart": {
-      "hash": "616845be",
+      "hash": "e8f64a5e",
       "value": [
         "A ogni turno costruisci una carta come casa e usa il seme di un'altra carta come effetto.",
         "I numeri delle case devono salire da sinistra a destra lungo ogni via.",
-        "Fanno punti solo gli isolati chiusi da steccati con al massimo quattro case, e solo quando tutti i loro lotti sono costruiti."
+        "Gli steccati dividono le vie in isolati: ogni isolato finito vale le sue case, più 2."
       ]
     },
     "title": {

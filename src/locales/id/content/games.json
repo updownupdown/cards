@@ -432,10 +432,10 @@
   },
   "boiling-over": {
     "howToPlay": {
-      "hash": "ea9ac512",
+      "hash": "735880e5",
       "value": [
         "## Tujuan",
-        "Kumpulkan **150 poin** atau lebih dalam **9 ronde** meracik.",
+        "Kumpulkan **250 poin** atau lebih dalam **9 ronde** meracik.",
         "## Dekmu",
         "- Kamu mulai dengan 11 kartu: enam **kartu gagal** (A, 2, dan 3 hitam) dan lima bahan (2♥ 3♥ 4♥ 2♦ 3♦).",
         "- Di awal setiap ronde, semua kartumu dikocok ke dalam dekmu.",
@@ -444,30 +444,33 @@
         "- Setiap bahan menambahkan nilainya ke **kekuatan** ramuan (As bernilai 1, Jack 11, Queen 12, dan King 13).",
         "- Jika kartu gagal di kuali berjumlah **lebih dari 7**, ramuannya meluap.",
         "- Risiko luapan menunjukkan peluang kartu berikutnya membuat ramuan meluap.",
-        "## Efek",
-        "- **♥ Hati:** tanpa efek.",
-        "- **♦ Wajik:** jika kamu berhenti dengan wajik sebagai kartu terakhir, nilainya dihitung dua kali.",
-        "- **♣ Keriting:** jika kartu sebelumnya adalah kartu gagal, kartu gagal itu kembali ke dekmu.",
-        "- **♠ Sekop:** kartu berikutnya di dekmu dibuka.",
+        "## Jenis kartu",
+        "- **♥ Hati:** tanpa efek, dan paling murah.",
+        "- **♦ Wajik:** dihitung dua kali untuk koin.",
+        "- **♣ Keriting:** setiap keriting di kuali membuatnya bisa menampung 1 kartu gagal lagi.",
+        "- **♠ Sekop:** kartu berikutnya di dekmu dibuka. Jika itu kartu gagal, kartu itu pindah ke bagian bawah dekmu.",
         "## Berhenti",
-        "- Berhentilah kapan saja untuk mendapat kekuatan ramuan sebagai poin, dan separuhnya (dibulatkan ke atas) sebagai koin.",
+        "- Berhentilah kapan saja untuk mendapat kekuatan ramuan sebagai poin. Kamu juga mendapat separuhnya (dibulatkan ke atas) sebagai koin, dengan wajik dihitung dua kali.",
         "- Jika ramuan meluap, pilih poinnya atau koinnya.",
         "## Pasar",
         "- Belanjakan koinmu untuk paling banyak **2 kartu dengan jenis berbeda**. Kartu itu masuk ke dekmu.",
-        "- Kartu hati seharga nilainya. Wajik, keriting, dan sekop 1 lebih mahal.",
+        "- Harga kartu sesuai nilainya: hati +0, wajik +1, sekop +2, dan keriting +3.",
         "- Koin yang tidak dibelanjakan hilang.",
         "## Peringkat",
-        "- 150+: Tabib Desa",
-        "- 200+: Alkemis Istana",
-        "- 250+: Pembuat Mukjizat"
+        "- 250+: Tabib Desa",
+        "- 350+: Alkemis Istana",
+        "- 450+: Pembuat Mukjizat",
+        "## Tips",
+        "- Wajik menguntungkan di awal, selama masih ada pasar untuk membelanjakan koinnya. Menjelang akhir, hati memberi poin terbanyak untuk koinmu.",
+        "- Keriting dan sekop membuatmu bisa meracik lebih lama sebelum meluap: belilah jika ramuanmu sering meluap."
       ]
     },
     "quickStart": {
-      "hash": "8bdb8a52",
+      "hash": "0cad2b55",
       "value": [
         "Ketuk dekmu untuk menambahkan kartu teratasnya ke kuali.",
         "Berhentilah sebelum kartu gagal (A, 2, dan 3 hitam) berjumlah lebih dari 7.",
-        "Belanjakan koinmu untuk kartu yang lebih baik bagi dekmu, lalu racik lagi."
+        "Belanjakan koinmu untuk kartu yang lebih baik bagi dekmu: setiap jenis punya efek berbeda."
       ]
     },
     "title": {
@@ -2791,10 +2794,10 @@
   },
   "picket-fence": {
     "howToPlay": {
-      "hash": "ec23d938",
+      "hash": "fe06b8f8",
       "value": [
         "## Tujuan",
-        "Raih **60 poin** atau lebih dengan memagari jalan-jalanmu menjadi kompleks dan mengisinya dengan rumah, taman, dan kolam. Permainan berlanjut sampai dek habis, jadi terus tingkatkan skormu.",
+        "Raih **70 poin** atau lebih dengan memagari jalan-jalanmu menjadi kompleks dan menambahkan taman serta kolam. Permainan berlanjut sampai dek habis, jadi terus tingkatkan skormu.",
         "## Giliranmu",
         "Kamu memegang tiga kartu, dan memainkan dua di antaranya setiap giliran: satu untuk angkanya, lalu satu untuk jenisnya. Lalu ambil kartu sampai kembali tiga.",
         "## Membangun",
@@ -2806,27 +2809,27 @@
         "- **♦ Kolam:** kartu wajik diselipkan di bawah rumah itu sebagai kolam, jika rumah itu berdiri di kavling kolam.",
         "- **♠ Pagar:** pasang pagar di antara dua kavling, di jalan mana pun.",
         "- **♣ Rumah kedua:** bangun juga kartu keriting sebagai rumah, atau gunakan untuk renovasi.",
-        "- Satu rumah memuat satu taman atau kolam. Kartu yang tidak terpakai dibuang.",
+        "- Satu rumah memuat satu taman atau kolam, dan satu jalan memuat taman atau kolam, tidak pernah keduanya: yang pertama menentukan. Kartu yang tidak terpakai dibuang.",
         "## Skor",
-        "- Pagar dan ujung jalan membagi setiap jalan menjadi **kompleks**. Hanya kompleks yang **selesai** yang mendapat poin: kompleks yang setiap kavlingnya sudah terbangun.",
-        "- Rumah-rumahnya bernilai 1, 3, 6, atau 10 poin untuk kompleks berisi 1, 2, 3, atau 4 rumah. **Kompleks berisi lima rumah atau lebih tidak mendapat poin**, jadi setiap jalan butuh pagar.",
-        "- Setiap taman di kompleks yang selesai menambah 2 poin, dan setiap kolam 4 poin.",
+        "- Pagar dan ujung jalan membagi setiap jalan menjadi **kompleks**. Kompleks yang **selesai**, dengan setiap kavling terbangun, bernilai 1 poin per rumah, ditambah 2.",
+        "- Setiap taman bernilai 3 poin dan setiap kolam 4 poin, entah kompleksnya selesai atau belum.",
         "## Peringkat",
-        "- 60+: Tetangga Baik",
-        "- 70+: Perumahan Teladan",
-        "- 80+: Sempurna bak Lukisan",
+        "- 70+: Tetangga Baik",
+        "- 78+: Perumahan Teladan",
+        "- 85+: Sempurna bak Lukisan",
         "## Tips",
-        "- Kompleks yang lebih besar bernilai lebih tinggi, tetapi satu kavling yang belum terbangun membuat seluruh kompleks, beserta taman dan kolamnya, tidak mendapat poin. Pagar bisa membatasi kerugianmu.",
+        "- Setiap pagar menambah satu kompleks, yang bernilai 2 poin lagi setelah kedua sisinya selesai. Pagar juga bisa memisahkan kavling yang tidak bisa dibangun.",
+        "- Pilih jenis setiap jalan: kolam bernilai lebih tinggi tetapi hanya muat di kavling kolam, sedangkan jalan taman bisa punya taman di bawah setiap rumah.",
         "- Sisakan ruang di antara angka: kavling di antara 5 dan 6 tidak bisa dibangun sampai salah satunya direnovasi.",
-        "- Label di atas setiap kompleks menunjukkan poinnya setelah selesai, atau ✕ jika kompleks itu tidak bisa diselesaikan dalam keadaannya sekarang."
+        "- Label di atas setiap kompleks menunjukkan nilainya setelah selesai, atau ✕ jika kompleks itu tidak bisa diselesaikan dalam keadaannya sekarang. Bilah skor menunjukkan skormu jika semua kompleks selesai."
       ]
     },
     "quickStart": {
-      "hash": "616845be",
+      "hash": "e8f64a5e",
       "value": [
         "Setiap giliran, bangun satu kartu sebagai rumah dan gunakan jenis kartu lain sebagai efeknya.",
         "Nomor rumah harus naik dari kiri ke kanan di sepanjang setiap jalan.",
-        "Hanya kompleks berpagar berisi paling banyak empat rumah yang mendapat poin, setelah setiap kavling di dalamnya terbangun."
+        "Pagar membagi jalan menjadi kompleks: setiap kompleks yang selesai bernilai rumah-rumahnya, ditambah 2."
       ]
     },
     "title": {

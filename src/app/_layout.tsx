@@ -234,7 +234,7 @@ function Layout() {
 
 /**
  * Catches render errors from every screen without a boundary of its own (games
- * have theirs, in [game] and wild/[game]), and from this layout.
+ * have theirs, in [game]), and from this layout.
  */
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   return <AppErrorScreen error={error} retry={retry} />;

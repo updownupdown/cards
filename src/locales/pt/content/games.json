@@ -432,10 +432,10 @@
   },
   "boiling-over": {
     "howToPlay": {
-      "hash": "ea9ac512",
+      "hash": "735880e5",
       "value": [
         "## Objetivo",
-        "Faça **150 pontos** ou mais em **9 rodadas** de preparo.",
+        "Faça **250 pontos** ou mais em **9 rodadas** de preparo.",
         "## Seu monte",
         "- Você começa com 11 cartas: seis **falhas** (os A, 2 e 3 pretos) e cinco ingredientes (2♥ 3♥ 4♥ 2♦ 3♦).",
         "- No início de cada rodada, todas as suas cartas são embaralhadas no seu monte.",
@@ -444,30 +444,33 @@
         "- Cada ingrediente soma seu valor à **força** da poção (Ases valem 1, Valetes 11, Damas 12 e Reis 13).",
         "- Se as falhas no caldeirão somarem **mais de 7**, a poção transborda.",
         "- O risco mostra a chance de a próxima carta fazer a poção transbordar.",
-        "## Efeitos",
-        "- **♥ Copas:** sem efeito.",
-        "- **♦ Ouros:** se você parar com um ouros como última carta, ele conta em dobro.",
-        "- **♣ Paus:** se a carta anterior for uma falha, a falha volta para o seu monte.",
-        "- **♠ Espadas:** a próxima carta do seu monte é virada para cima.",
+        "## Naipes",
+        "- **♥ Copas:** sem efeito, e as mais baratas.",
+        "- **♦ Ouros:** contam em dobro para as moedas.",
+        "- **♣ Paus:** cada uma no caldeirão o deixa aguentar 1 falha a mais.",
+        "- **♠ Espadas:** a próxima carta do seu monte é virada para cima. Se for uma falha, ela vai para o fundo do seu monte.",
         "## Parando",
-        "- Pare quando quiser para marcar a força da poção em pontos e receber metade dela (arredondada para cima) em moedas.",
+        "- Pare quando quiser para marcar a força da poção em pontos. Você também recebe metade dela (arredondada para cima) em moedas, com os ouros contando em dobro.",
         "- Se a poção transbordar, escolha os pontos ou as moedas.",
         "## Mercado",
         "- Gaste suas moedas em até **2 cartas de naipes diferentes**. Elas entram no seu monte.",
-        "- Uma carta de copas custa seu valor. Ouros, paus e espadas custam 1 a mais.",
+        "- Uma carta custa seu valor: copas +0, ouros +1, espadas +2 e paus +3.",
         "- As moedas que você não gastar são perdidas.",
         "## Classificações",
-        "- 150+: Curandeiro da aldeia",
-        "- 200+: Alquimista da corte",
-        "- 250+: Fazedor de milagres"
+        "- 250+: Curandeiro da aldeia",
+        "- 350+: Alquimista da corte",
+        "- 450+: Fazedor de milagres",
+        "## Dicas",
+        "- Os ouros rendem no começo, enquanto ainda há mercados para gastar suas moedas. Perto do fim, as copas dão mais pontos pelas suas moedas.",
+        "- Paus e espadas deixam você preparar por mais tempo antes de transbordar: compre-os se suas poções transbordam com frequência."
       ]
     },
     "quickStart": {
-      "hash": "8bdb8a52",
+      "hash": "0cad2b55",
       "value": [
         "Toque no seu monte para colocar a carta de cima no caldeirão.",
         "Pare antes que as falhas (A, 2 e 3 pretos) somem mais de 7.",
-        "Gaste suas moedas em cartas melhores para o seu monte e prepare de novo."
+        "Gaste suas moedas em cartas melhores para o seu monte: cada naipe faz algo diferente."
       ]
     },
     "title": {
@@ -2791,10 +2794,10 @@
   },
   "picket-fence": {
     "howToPlay": {
-      "hash": "ec23d938",
+      "hash": "fe06b8f8",
       "value": [
         "## Objetivo",
-        "Faça **60 pontos** ou mais cercando suas ruas em loteamentos e enchendo-os de casas, parques e piscinas. O jogo continua até o baralho acabar, então continue aumentando sua pontuação.",
+        "Faça **70 pontos** ou mais cercando suas ruas em loteamentos e acrescentando parques e piscinas. O jogo continua até o baralho acabar, então continue aumentando sua pontuação.",
         "## Seu turno",
         "Você tem três cartas e joga duas delas a cada turno: uma pelo número e depois uma pelo naipe. Depois, compre até voltar a ter três.",
         "## Construção",
@@ -2806,27 +2809,27 @@
         "- **♦ Piscina:** a carta de ouros é colocada sob essa casa como piscina, se ela estiver num lote de piscina.",
         "- **♠ Cerca:** coloque uma cerca entre dois lotes, em qualquer rua.",
         "- **♣ Segunda casa:** construa também a carta de paus como casa, ou reforme com ela.",
-        "- Uma casa comporta um parque ou uma piscina. Uma carta sem uso é descartada.",
+        "- Uma casa comporta um parque ou uma piscina, e uma rua comporta parques ou piscinas, nunca os dois: o primeiro decide. Uma carta sem uso é descartada.",
         "## Pontuação",
-        "- As cercas e as pontas das ruas dividem cada rua em **loteamentos**. Só um loteamento **concluído** pontua: aquele com todos os lotes construídos.",
-        "- Suas casas valem 1, 3, 6 ou 10 pontos para um loteamento de 1, 2, 3 ou 4. **Loteamentos de cinco ou mais não valem nada**, então toda rua precisa de cercas.",
-        "- Cada parque num loteamento concluído acrescenta 2 pontos, e cada piscina, 4.",
+        "- As cercas e as pontas das ruas dividem cada rua em **loteamentos**. Um loteamento **concluído**, com todos os lotes construídos, vale 1 ponto por casa, mais 2.",
+        "- Cada parque vale 3 pontos, e cada piscina, 4, com o loteamento concluído ou não.",
         "## Classificações",
-        "- 60+: Bons vizinhos",
-        "- 70+: Bairro modelo",
-        "- 80+: Cartão-postal",
+        "- 70+: Bons vizinhos",
+        "- 78+: Bairro modelo",
+        "- 85+: Cartão-postal",
         "## Dicas",
-        "- Loteamentos maiores valem mais, mas um único lote sem construção deixa o loteamento inteiro, com seus parques e piscinas, sem pontuar nada. Uma cerca pode limitar o prejuízo.",
+        "- Cada cerca cria mais um loteamento, que vale 2 pontos a mais quando os dois lados estiverem concluídos. Uma cerca também pode isolar um lote que não pode ser construído.",
+        "- Escolha o tipo de cada rua: piscinas valem mais, mas só cabem em lotes de piscina, enquanto uma rua de parques pode ter um parque sob cada casa.",
         "- Deixe espaço entre os números: um lote entre um 5 e um 6 não pode ser construído até que uma das duas casas seja reformada.",
-        "- O rótulo acima de cada loteamento mostra quanto ele vale quando concluído, ou ✕ se ele não puder ser concluído do jeito que está."
+        "- O rótulo acima de cada loteamento mostra quanto ele vale depois de concluído, ou ✕ se não puder ser concluído como está. A barra de pontuação mostra sua pontuação se todos os loteamentos forem concluídos."
       ]
     },
     "quickStart": {
-      "hash": "616845be",
+      "hash": "e8f64a5e",
       "value": [
         "A cada turno, construa uma carta como casa e use o naipe de outra carta como efeito.",
         "Os números das casas devem subir da esquerda para a direita ao longo de cada rua.",
-        "Só pontuam loteamentos cercados de até quatro casas, depois que todos os lotes deles estiverem construídos."
+        "As cercas dividem as ruas em loteamentos: cada um concluído vale suas casas, mais 2."
       ]
     },
     "title": {
