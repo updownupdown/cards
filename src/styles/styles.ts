@@ -219,9 +219,6 @@ export const FontWeight = {
   700: "Outfit_700Bold",
 };
 
-/** The Wild Cards' one face: Outfit, a little heavier than the rest. */
-export const WILD_FONT = "Outfit_600SemiBold";
-
 /**
  * EB Garamond, for everything that belongs to the art, the Tao or the
  * quotes. Outfit (FontWeight) is for the games and the interface.
