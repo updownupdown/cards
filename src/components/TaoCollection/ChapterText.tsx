@@ -22,7 +22,17 @@ const LINE_HEIGHT = 1.5;
 // chapter never stalls a frame of the constellation drawing itself above.
 const MOUNT_CHUNK = 240;
 
-const WORD_IN = { from: { opacity: 0 }, to: { opacity: 1 } };
+/**
+ * Each word is written by starlight: it shows first as a speck of light,
+ * which swells into the word, as in the reveal after a win.
+ */
+const WORD_IN = {
+  from: { opacity: 0, transform: [{ scale: 0.15 }] },
+  "35%": { opacity: 0.9, transform: [{ scale: 0.3 }] },
+  to: { opacity: 1, transform: [{ scale: 1 }] },
+};
+/** Longer than the reveal's plain fade, so the speck is seen to swell. */
+const WORD_IN_MS = REVEAL.wordFadeMs * 2;
 
 const textStyle = (fontSize: number) =>
   ({
@@ -192,7 +202,7 @@ const AnimatedLine = memo(function AnimatedLine({
               style,
               {
                 animationName: WORD_IN,
-                animationDuration: `${REVEAL.wordFadeMs}ms`,
+                animationDuration: `${WORD_IN_MS}ms`,
                 animationDelay: `${Math.max(0, Math.round(tIn[glyphs[0]] - elapsed))}ms`,
                 animationFillMode: "both",
                 animationTimingFunction: "ease-in-out",

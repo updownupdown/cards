@@ -33,6 +33,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { scheduleOnRN } from "react-native-worklets";
+import { BreathButton, type BreathStage } from "./BreathButton";
 import {
   parseChapterText,
   planReveal,
@@ -42,8 +43,12 @@ import {
   SKY_IN_MS,
   STAR_TINTS,
   starGlow,
+  BLOOM_AT,
+  EXIT_TOTAL_MS,
+  EXIT_UNCOVER_MS,
   type EdgePlan,
   type GlyphPlan,
+  type StarPlan,
   type ParsedText,
   type RevealPlan,
   type RevealTimes,
@@ -67,11 +72,9 @@ const MAX_FONT_SIZE = 19;
 const MIN_FONT_SIZE = 10;
 const LINE_HEIGHT = 1.45;
 
-// Before the plan exists the clock runs up to the moment text would start, so
-// the starfield fades in while the letters are being measured and mounted.
-const PRE_TEXT_MS = SKY_IN_AT + SKY_IN_MS;
-// Animated letters are mounted a few at a time, so no single frame stalls
-// while the starfield fades in. Nothing is visible before the text starts.
+// Animated stars and letters are mounted a few at a time, so no single frame
+// stalls while the starfield fades in. The figure starts to form just after
+// its plan is ready, by when they are all in place.
 const MOUNT_CHUNK = 60;
 const PAD_X = 24;
 // Taps can't hurry the reveal; each one sends a slow shooting star instead.
@@ -275,38 +278,64 @@ type GlyphProps = {
   box: Box;
   fontSize: number;
   clock: SharedValue<number>;
+  exitAt: SharedValue<number>;
   plan: GlyphPlan;
   times: RevealTimes;
 };
 
-/** Most letters: read, then shrink into a speck of star dust. One mapper. */
-const DustGlyph = memo(function DustGlyph({
+/** How far through its flight a letter is, 0 at its star and 1 in the text. */
+function written(plan: GlyphPlan, t: number) {
+  "worklet";
+  return easeInOut(clamp01((t - plan.tFly) / plan.flyMs));
+}
+
+/** How much of the words is left as the player closes the chapter. */
+function textOut(exitAt: number, t: number) {
+  "worklet";
+  return 1 - easeInOut(clamp01((t - exitAt) / REVEAL.exitTextMs));
+}
+
+/**
+ * A letter of the chapter. Most start in the sky as a speck of star dust,
+ * the rest hidden in a named star; when their word is read they fly down
+ * into the text, growing into a letter as they come. One mapper each.
+ */
+const Glyph = memo(function Glyph({
   char,
   box,
   fontSize,
   clock,
+  exitAt,
   plan,
   times,
 }: GlyphProps) {
   const style = useAnimatedStyle(() => {
     const t = clock.value;
-    const appear = easeInOut(clamp01((t - plan.tIn) / REVEAL.wordFadeMs));
-    const e = easeInOut(clamp01((t - plan.tFly) / plan.flyMs));
-    const { x, y } = flight(plan, e);
-    const landed = clamp01((t - plan.tFly - plan.flyMs) / 800);
-    const twinkle =
-      1 -
-      plan.twinkle *
-        landed *
-        0.5 *
-        (1 + Math.sin(t * plan.pulseA + plan.phase));
-    const out = 1 - clamp01((t - times.starsOut) / REVEAL.starsOutMs);
+    const e = written(plan, t);
+    const { x, y } = flight(plan, 1 - e);
+    let sky = 0;
+    if (plan.role !== ROLE_STAR) {
+      // Star dust: fades in with the figure, twinkles, dims behind the words.
+      const born = easeInOut(clamp01((t - plan.tBorn) / REVEAL.dustFadeMs));
+      const twinkle =
+        1 - plan.twinkle * 0.5 * (1 + Math.sin(t * plan.pulseA + plan.phase));
+      const dimmed =
+        1 -
+        (1 - REVEAL.dustDim) *
+          easeInOut(clamp01((t - times.dim) / REVEAL.dimMs));
+      sky = plan.starOpacity * born * twinkle * dimmed;
+    }
+    // Brightening as it comes, and read once it lands.
+    const opacity = sky * (1 - e) + smoothstep(0, 0.5, e);
+    // A speck of light for most of the way; the letter takes shape as it
+    // arrives.
+    const grow = smoothstep(0.55, 1, e);
     return {
-      opacity: (appear * (1 - e) + plan.starOpacity * twinkle * e) * out,
+      opacity: opacity * textOut(exitAt.value, t),
       transform: [
         { translateX: x },
         { translateY: y },
-        { scale: 1 + (plan.endScale - 1) * e },
+        { scale: plan.speckScale + (1 - plan.speckScale) * grow },
       ],
     };
   });
@@ -331,87 +360,75 @@ const DustGlyph = memo(function DustGlyph({
   );
 });
 
-/** The few letters that become the constellation's bright stars. */
-const StarGlyph = memo(function StarGlyph({
-  char,
-  box,
-  fontSize,
-  clock,
-  plan,
+/** How bright the figure still is as the player closes the chapter. */
+function starsOut(exitAt: number, t: number) {
+  "worklet";
+  return (
+    1 -
+    easeInOut(clamp01((t - exitAt - REVEAL.exitStarsAtMs) / REVEAL.exitStarsMs))
+  );
+}
+
+/**
+ * One of the constellation's named stars: it lights up in the pen's order,
+ * dims behind the words, and flares as its letter leaves it.
+ */
+const StarDot = memo(function StarDot({
+  star,
   times,
-}: GlyphProps) {
-  const dotSize = plan.dotSize;
-
-  const wrapperStyle = useAnimatedStyle(() => {
+  clock,
+  exitAt,
+}: {
+  star: StarPlan;
+  times: RevealTimes;
+  clock: SharedValue<number>;
+  exitAt: SharedValue<number>;
+}) {
+  const style = useAnimatedStyle(() => {
     const t = clock.value;
-    const appear = easeInOut(clamp01((t - plan.tIn) / REVEAL.wordFadeMs));
-    const e = easeInOut(clamp01((t - plan.tFly) / plan.flyMs));
-    const { x, y } = flight(plan, e);
-    const out = 1 - clamp01((t - times.starsOut) / REVEAL.starsOutMs);
-    return {
-      opacity: (appear * (1 - e) + e) * out,
-      transform: [{ translateX: x }, { translateY: y }],
-    };
-  });
-
-  // The letter shrinks and fades as its star brightens.
-  const letterStyle = useAnimatedStyle(() => {
-    const e = easeInOut(clamp01((clock.value - plan.tFly) / plan.flyMs));
-    return {
-      opacity: 1 - smoothstep(0.35, 0.8, e),
-      transform: [{ scale: 1 + (plan.endScale - 1) * e }],
-    };
-  });
-
-  const dotStyle = useAnimatedStyle(() => {
-    const t = clock.value;
-    const e = easeInOut(clamp01((t - plan.tFly) / plan.flyMs));
-    const landed = clamp01((t - plan.tFly - plan.flyMs) / 600);
+    const pop = clamp01((t - star.tIn) / REVEAL.starPopMs);
+    // Up past its size, then settling.
+    const popScale =
+      pop < 0.6
+        ? 0.2 + (1.3 - 0.2) * (pop / 0.6)
+        : 1.3 - 0.3 * ((pop - 0.6) / 0.4);
+    const landed = clamp01((t - star.tIn - REVEAL.starPopMs) / 600);
     const wave =
-      0.6 * Math.sin(t * plan.pulseA + plan.phase) +
-      0.4 * Math.sin(t * plan.pulseB * 2.3 + plan.phase * 1.7);
-    const pulse = 1 + landed * wave * 0.384;
+      0.6 * Math.sin(t * star.pulseA + star.phase) +
+      0.4 * Math.sin(t * star.pulseB * 2.3 + star.phase * 1.7);
+    const pulse = 1 + landed * wave * 0.3;
+    const dimmed =
+      1 -
+      (1 - REVEAL.starDim) * easeInOut(clamp01((t - times.dim) / REVEAL.dimMs));
+    // A soft flare as its letter sets off.
+    const since = star.tWrite < 0 ? -1 : (t - star.tWrite) / 900;
+    const flare = since > 0 && since < 1 ? Math.sin(Math.PI * since) : 0;
     return {
-      opacity: smoothstep(0.55, 1, e) * (0.8 + 0.2 * pulse),
-      transform: [{ scale: (0.4 + 0.6 * e) * pulse }],
+      opacity:
+        smoothstep(0, 0.4, pop) *
+        (0.8 + 0.2 * pulse) *
+        Math.min(1, dimmed + flare * 0.6) *
+        starsOut(exitAt.value, t),
+      transform: [{ scale: popScale * pulse * (1 + flare * 0.35) }],
     };
   });
-
+  const color = STAR_TINTS[star.tint];
   return (
     <Animated.View
       style={[
         {
           position: "absolute",
-          left: box.x,
-          top: box.y,
-          width: box.w,
-          height: box.h,
-          alignItems: "center",
-          justifyContent: "center",
+          left: star.x - star.dotSize / 2,
+          top: star.y - star.dotSize / 2,
+          width: star.dotSize,
+          height: star.dotSize,
+          borderRadius: star.dotSize / 2,
+          backgroundColor: color,
+          boxShadow: starGlow(color, star.dotSize, !!star.bright),
         },
-        wrapperStyle,
+        style,
       ]}
-    >
-      <Animated.Text
-        allowFontScaling={false}
-        style={[textStyle(fontSize), { color: TEXT_COLOR }, letterStyle]}
-      >
-        {char}
-      </Animated.Text>
-      <Animated.View
-        style={[
-          {
-            position: "absolute",
-            width: dotSize,
-            height: dotSize,
-            borderRadius: dotSize / 2,
-            backgroundColor: STAR_TINTS[plan.tint],
-            boxShadow: starGlow(STAR_TINTS[plan.tint], dotSize, !!plan.bright),
-          },
-          dotStyle,
-        ]}
-      />
-    </Animated.View>
+    />
   );
 });
 
@@ -419,18 +436,22 @@ const Edge = memo(function Edge({
   edge,
   times,
   clock,
+  exitAt,
 }: {
   edge: EdgePlan;
   times: RevealTimes;
   clock: SharedValue<number>;
+  exitAt: SharedValue<number>;
 }) {
   const rotate = `${edge.angle}rad`;
   const style = useAnimatedStyle(() => {
     const t = clock.value;
     const progress = clamp01((t - edge.tDraw) / edge.drawMs);
-    const out = 1 - clamp01((t - times.linesOut) / REVEAL.linesOutMs);
+    const dimmed =
+      1 -
+      (1 - REVEAL.lineDim) * easeInOut(clamp01((t - times.dim) / REVEAL.dimMs));
     return {
-      opacity: progress > 0 ? out : 0,
+      opacity: progress > 0 ? dimmed * starsOut(exitAt.value, t) : 0,
       transform: [{ rotate }, { scaleX: Math.max(progress, 0.0001) }],
     };
   });
@@ -579,11 +600,13 @@ const ShootingStar = memo(function ShootingStar({ shot }: { shot: Shot }) {
 // --- The reveal --------------------------------------------------------------
 
 /**
- * Full-screen reveal of a newly earned Tao chapter: the chapter is read out
- * over a starfield, then its letters fly into the chapter's constellation.
- * Covers its parent and swallows every touch until it finishes, so place it
- * last in the screen's tree. It can't be skipped (it is meant to be calm);
- * taps send shooting stars across the sky instead.
+ * Full-screen reveal of a newly earned Tao chapter: its constellation forms
+ * over a starfield, then dims while its stars write the chapter out. Covers
+ * its parent and swallows every touch until it is closed, so place it last
+ * in the screen's tree. It can't be hurried (it is meant to be calm): taps
+ * send shooting stars across the sky, and the button at the bottom is a
+ * breathing guide until a little after the chapter is written, when it
+ * becomes Continue.
  */
 export function TaoReveal(props: Props) {
   const [size, setSize] = useState<{ width: number; height: number } | null>(
@@ -619,6 +642,13 @@ export function TaoReveal(props: Props) {
   );
 }
 
+/** Kept clear at the bottom for the breathing button. */
+const BUTTON_ROOM = 112;
+/** The clock simply runs; nothing waits on it reaching the end. */
+const CLOCK_RUN_MS = 60 * 60 * 1000;
+/** Before the player closes it, the exit is "never". */
+const NOT_YET = Number.MAX_SAFE_INTEGER;
+
 function RevealScene({
   chapter,
   text,
@@ -636,19 +666,20 @@ function RevealScene({
   const parsed = useMemo(() => parseChapterText(text), [text]);
   const constellation = getTaoConstellation(chapter);
   const clock = useSharedValue(0);
+  const exitAt = useSharedValue(NOT_YET);
   const [layout, setLayout] = useState<{
     plan: RevealPlan;
     boxes: Box[];
   } | null>(null);
   const plan = layout?.plan ?? null;
   const [mountedCount, setMountedCount] = useState(0);
+  const [stage, setStage] = useState<BreathStage>("hidden");
 
   const onDoneRef = useRef(onDone);
   onDoneRef.current = onDone;
   const finish = useCallback(() => onDoneRef.current(), []);
   const onUncoverRef = useRef(onUncover);
   onUncoverRef.current = onUncover;
-  const uncover = useCallback(() => onUncoverRef.current?.(), []);
 
   // Without a figure there is nothing to reveal.
   useEffect(() => {
@@ -656,7 +687,8 @@ function RevealScene({
   }, [constellation, finish]);
 
   // --- Fit the text to the screen, then plan from the measured letters. ---
-  const availableHeight = height - insets.top - insets.bottom - 56;
+  const bottom = insets.bottom + BUTTON_ROOM;
+  const availableHeight = height - insets.top - bottom - 40;
   const [fontSize, setFontSize] = useState(() =>
     estimateFontSize(parsed, width - PAD_X * 2, availableHeight),
   );
@@ -687,15 +719,19 @@ function RevealScene({
         fontSize,
         constellation,
         keyLines: getKeyLineIndices(constellation),
-        screen: { width, height, top: insets.top, bottom: insets.bottom },
+        screen: { width, height, top: insets.top, bottom },
+        // Never in the past: the figure forms from its first speck.
+        start: Math.max(BLOOM_AT, clock.get() + 250),
       });
       setLayout({ plan: next, boxes });
     },
-    [constellation, fontSize, height, insets.bottom, insets.top, parsed, width],
+    [bottom, clock, constellation, fontSize, height, insets.top, parsed, width],
   );
 
-  // Mount the animated letters (then the lines) a chunk per frame.
-  const mountTotal = plan ? plan.glyphs.length + plan.edges.length : 0;
+  // Mount the stars and lines, then the letters, a chunk per frame.
+  const mountTotal = plan
+    ? plan.stars.length + plan.edges.length + plan.glyphs.length
+    : 0;
   useEffect(() => {
     if (!plan || mountedCount >= mountTotal) return;
     const frame = requestAnimationFrame(() =>
@@ -706,24 +742,12 @@ function RevealScene({
 
   // --- Clock --------------------------------------------------------------
   useEffect(() => {
-    clock.value = withTiming(PRE_TEXT_MS, {
-      duration: PRE_TEXT_MS,
+    clock.value = withTiming(CLOCK_RUN_MS, {
+      duration: CLOCK_RUN_MS,
       easing: Easing.linear,
     });
     return () => cancelAnimation(clock);
   }, [clock]);
-
-  useEffect(() => {
-    if (!plan) return;
-    const total = plan.times.total;
-    clock.value = withTiming(
-      total,
-      { duration: Math.max(0, total - clock.value), easing: Easing.linear },
-      (finished) => {
-        if (finished) scheduleOnRN(finish);
-      },
-    );
-  }, [clock, finish, plan]);
 
   // The back button can't skip it, but mustn't leave the game either.
   useEffect(() => {
@@ -735,24 +759,51 @@ function RevealScene({
     return () => subscription.remove();
   }, []);
 
-  // --- Layers -------------------------------------------------------------
+  // --- The button's stages ----------------------------------------------------
   const times = plan?.times ?? null;
-
+  const showBreath = useCallback(
+    () => setStage((current) => (current === "hidden" ? "breathing" : current)),
+    [],
+  );
+  const showContinue = useCallback(
+    () => setStage((current) => (current === "closing" ? current : "continue")),
+    [],
+  );
+  // It comes in as the figure dims and the writing begins...
   useAnimatedReaction(
-    () => (times ? clock.value >= times.uncover : false),
+    () => (times ? clock.value >= times.dim : false),
     (now, previous) => {
-      if (now && !previous) scheduleOnRN(uncover);
+      if (now && !previous) scheduleOnRN(showBreath);
     },
     [times],
   );
+  // ...and can close the chapter a little after it is all written.
+  useAnimatedReaction(
+    () => (times ? clock.value >= times.canClose : false),
+    (now, previous) => {
+      if (now && !previous) scheduleOnRN(showContinue);
+    },
+    [times],
+  );
+
+  const exitTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  useEffect(() => () => exitTimers.current.forEach(clearTimeout), []);
+  const close = useCallback(() => {
+    if (stage !== "continue") return;
+    setStage("closing");
+    exitAt.value = clock.value;
+    exitTimers.current.push(
+      setTimeout(() => onUncoverRef.current?.(), EXIT_UNCOVER_MS),
+      setTimeout(finish, EXIT_TOTAL_MS),
+    );
+  }, [clock, exitAt, finish, stage]);
 
   // --- Shooting stars -------------------------------------------------------
   const [shots, setShots] = useState<Shot[]>([]);
   const shotCount = useRef(0);
   tapRef.current = (x, y) => {
     // Only while the sky is up.
-    const t = clock.get();
-    if (t < SKY_IN_AT + 500 || (times && t > times.skyOut)) return;
+    if (clock.get() < SKY_IN_AT + 500 || stage === "closing") return;
     const id = (shotCount.current += 1);
     const heading = x < width / 2 ? 0 : Math.PI;
     const dip = (0.25 + Math.random() * 0.35) * (heading === 0 ? 1 : -1);
@@ -771,80 +822,114 @@ function RevealScene({
   const skyStyle = useAnimatedStyle(() => {
     const t = clock.value;
     const fadeIn = easeInOut(clamp01((t - SKY_IN_AT) / SKY_IN_MS));
-    const fadeOut = times
-      ? 1 - easeInOut(clamp01((t - times.skyOut) / REVEAL.skyOutMs))
-      : 1;
+    const fadeOut =
+      1 -
+      easeInOut(
+        clamp01((t - exitAt.value - REVEAL.exitSkyAtMs) / REVEAL.exitSkyMs),
+      );
     return { opacity: fadeIn * fadeOut };
   });
 
-  const glyphCount = plan?.glyphs.length ?? 0;
-  const mountedGlyphs = Math.min(mountedCount, glyphCount);
-  const mountedEdges = Math.max(0, mountedCount - glyphCount);
+  const starCount = plan?.stars.length ?? 0;
+  const edgeCount = plan?.edges.length ?? 0;
+  const mountedStars = Math.min(mountedCount, starCount);
+  const mountedEdges = Math.min(
+    Math.max(0, mountedCount - starCount),
+    edgeCount,
+  );
+  const mountedGlyphs = Math.max(0, mountedCount - starCount - edgeCount);
 
   return (
-    // Touches go to TaoReveal's own view, which knows where they landed.
-    <View style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}>
-      <Animated.View
-        style={[
-          StyleSheet.absoluteFill,
-          // Opaque even before the starfield image has loaded.
-          { backgroundColor: "#05080e" },
-          skyStyle,
-        ]}
-      >
-        <ImageBackground
-          source={require("../../../assets/images/starfield.webp")}
-          resizeMode="cover"
-          style={StyleSheet.absoluteFill}
-        />
-        <View
+    <>
+      {/* Touches go to TaoReveal's own view, which knows where they landed. */}
+      <View style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}>
+        <Animated.View
           style={[
             StyleSheet.absoluteFill,
-            { backgroundColor: "rgba(6, 10, 18, 0.72)" },
+            // Opaque even before the starfield image has loaded.
+            { backgroundColor: "#05080e" },
+            skyStyle,
           ]}
-        />
-      </Animated.View>
+        >
+          <ImageBackground
+            source={require("../../../assets/images/starfield.webp")}
+            resizeMode="cover"
+            style={StyleSheet.absoluteFill}
+          />
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              { backgroundColor: "rgba(6, 10, 18, 0.72)" },
+            ]}
+          />
+        </Animated.View>
 
-      {!layout && constellation && (
-        <MeasureText
-          key={fontSize}
-          parsed={parsed}
-          fontSize={fontSize}
-          insets={insets}
-          availableHeight={availableHeight}
-          onTooTall={onTooTall}
-          onMeasured={onMeasured}
-        />
-      )}
+        {!layout && constellation && (
+          <MeasureText
+            key={fontSize}
+            parsed={parsed}
+            fontSize={fontSize}
+            insets={{ top: insets.top, bottom }}
+            availableHeight={availableHeight}
+            onTooTall={onTooTall}
+            onMeasured={onMeasured}
+          />
+        )}
 
-      {layout && times && (
-        <View style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}>
-          {layout.plan.edges.slice(0, mountedEdges).map((edge, index) => (
-            <Edge key={index} edge={edge} times={times} clock={clock} />
-          ))}
-          {layout.plan.glyphs
-            .slice(0, mountedGlyphs)
-            .map((glyphPlan, index) => {
-              const Component =
-                glyphPlan.role === ROLE_STAR ? StarGlyph : DustGlyph;
-              return (
-                <Component
+        {layout && times && (
+          <View style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}>
+            {layout.plan.edges.slice(0, mountedEdges).map((edge, index) => (
+              <Edge
+                key={index}
+                edge={edge}
+                times={times}
+                clock={clock}
+                exitAt={exitAt}
+              />
+            ))}
+            {layout.plan.stars.slice(0, mountedStars).map((star, index) => (
+              <StarDot
+                key={index}
+                star={star}
+                times={times}
+                clock={clock}
+                exitAt={exitAt}
+              />
+            ))}
+            {layout.plan.glyphs
+              .slice(0, mountedGlyphs)
+              .map((glyphPlan, index) => (
+                <Glyph
                   key={index}
                   char={parsed.glyphs[index].char}
                   box={layout.boxes[index]}
                   fontSize={fontSize}
                   clock={clock}
+                  exitAt={exitAt}
                   plan={glyphPlan}
                   times={times}
                 />
-              );
-            })}
-        </View>
-      )}
+              ))}
+          </View>
+        )}
 
-      {shots.map((shot) => (
-        <ShootingStar key={shot.id} shot={shot} />
-      ))}
-    </View>
+        {shots.map((shot) => (
+          <ShootingStar key={shot.id} shot={shot} />
+        ))}
+      </View>
+
+      <View
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: insets.bottom + 32,
+          alignItems: "center",
+          pointerEvents: "box-none",
+        }}
+      >
+        <BreathButton stage={stage} onContinue={close} />
+      </View>
+    </>
   );
 }

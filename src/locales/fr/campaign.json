@@ -19,7 +19,9 @@
     "next": "Chapitre suivant",
     "about": "Le Tao Te Ching est un texte fondateur de la Chine ancienne, traditionnellement attribué au sage Laozi. Il enseigne à vivre en harmonie avec le Tao, le flux et le rythme naturels de l'univers. En pratiquant le wu wei (l'action sans effort) et en cultivant l'humilité, la simplicité et la souplesse, on pourrait trouver une paix et un équilibre durables.",
     "pick": "Choisir un chapitre",
-    "uncollected": "Ce chapitre n'a pas encore été obtenu."
+    "uncollected": "Ce chapitre n'a pas encore été obtenu.",
+    "breathe": "Respirez",
+    "continue": "Continuer"
   },
   "original": {
     "label": "Afficher l'original"

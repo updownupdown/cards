@@ -10,6 +10,7 @@ import {
 } from "@/data/game-menu";
 import { useImmer } from "use-immer";
 import { useGlobalSettings } from "./useGlobalSettings";
+import { isDevMode } from "@/data/dev-mode";
 import { isLocalDevEnvironment } from "@/utils/utils";
 import { appendUndoState, popUndoState } from "./state-history";
 import { AppState } from "react-native";
@@ -165,7 +166,7 @@ export function useStateManager<T>({
   const hasDealtRef = useRef(false);
   const [isResumeHydrated, setIsResumeHydrated] = useState(false);
   const sessionIdRef = useRef<string | null>(null);
-  const isDev = isLocalDevEnvironment();
+  const isDev = isLocalDevEnvironment() || isDevMode();
 
   const startSession = useCallback(
     (

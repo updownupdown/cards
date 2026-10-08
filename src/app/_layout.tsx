@@ -33,7 +33,7 @@ import {
   EBGaramond_600SemiBold,
 } from "@expo-google-fonts/eb-garamond";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
-import { loadBetaGames } from "@/data/beta-games";
+import { loadDevMode } from "@/data/dev-mode";
 import { loadHintMode } from "@/data/hint-mode";
 import { loadSwipeDismissKnown } from "@/data/swipe-dismiss";
 import { loadAutopilotSessions } from "@/hints/hint-store";
@@ -55,7 +55,7 @@ initCrashReporting();
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 // Beta games turned on from the settings, read before Home lists games.
-void loadBetaGames();
+void loadDevMode();
 // "Help from Above" (the header UFO), read before a game's header shows.
 void loadHintMode();
 // Whether the quick start's swipe still needs its cue.

@@ -1,10 +1,10 @@
 import { useTranslation } from "@/i18n";
 import { Icon } from "@/icons/Icon";
 import { UfoFrame } from "@/components/common/UfoFrame";
+import { UfoSaucer } from "@/components/common/UfoSaucer";
 import {
   Colors,
   FontWeight,
-  rgba,
   textShadow,
   UFO_INKS,
   UfoColors,
@@ -601,14 +601,8 @@ export function CampaignUFO({
         hitSlop={26}
       >
         <View style={touchPadStyle} />
-        <Text
-          style={{
-            fontSize: caught || visiting ? 32 : 26,
-            ...textShadow(rgba(UfoColors.green, 0.55), 8),
-          }}
-        >
-          🛸
-        </Text>
+        {/* The same saucer, glow and all, that Help from Above flies. */}
+        <UfoSaucer size={caught || visiting ? SAUCER_BIG : SAUCER_SIZE} />
       </Pressable>
 
       {caught && (
@@ -657,12 +651,16 @@ export function CampaignUFO({
   );
 }
 
+/** The saucer's size flying past, and once it has stopped to talk. */
+const SAUCER_SIZE = 30;
+const SAUCER_BIG = 36;
+
 // An invisible, generously-sized touch target centred on the UFO glyph, so a
 // slightly-off tap still catches it instead of falling through to a game dot.
 const touchPadStyle = {
   position: "absolute" as const,
-  left: -18,
-  top: -18,
+  left: (SAUCER_SIZE - 62) / 2,
+  top: (SAUCER_SIZE - 62) / 2,
   width: 62,
   height: 62,
 };

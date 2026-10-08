@@ -67,9 +67,16 @@
   "colorTheme": {
     "label": "Colour theme"
   },
-  "betaGames": {
-    "enabled": "Beta games enabled",
-    "hide": "Hide beta games"
+  "devMode": {
+    "on": "Dev mode enabled",
+    "off": "Dev mode disabled",
+    "status": "Dev mode is enabled.",
+    "turnOff": "Turn off",
+    "title": "Dev mode",
+    "unlockAll": "Unlock every campaign game",
+    "unlockedAll": "Every campaign game unlocked",
+    "grantMercySkip": "Grant a Mercy Skip",
+    "mercySkipGranted": "Mercy Skip granted ({{count}} unused)"
   },
   "tabs": {
     "display": "Display",

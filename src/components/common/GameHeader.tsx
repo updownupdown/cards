@@ -43,6 +43,8 @@ type Props = {
   /** No hint to ask for: the game has none, has ended, or is busy. */
   hintDisabled: boolean;
   onHome: () => void;
+  /** Dev mode: the trophy, which wins the game at once. */
+  onDevWin?: () => void;
   onRules: () => void;
   onHint: () => void;
   onUndo: () => void;
@@ -66,6 +68,7 @@ export const GameHeader = memo(function GameHeader({
   showHint,
   hintDisabled,
   onHome,
+  onDevWin,
   onRules,
   onHint,
   onUndo,
@@ -122,6 +125,18 @@ export const GameHeader = memo(function GameHeader({
           iconColor={theme.accent}
           style={{ flex: 1, paddingHorizontal: 0 }}
         />
+
+        {onDevWin && (
+          <Button
+            headerButton
+            onPress={onDevWin}
+            iconName="trophy"
+            accessibilityLabel={t("menu.devWin")}
+            iconColor={ended ? theme.faint : theme.accent}
+            disabled={ended}
+            style={{ flex: 1, paddingHorizontal: 0 }}
+          />
+        )}
 
         <View
           style={{

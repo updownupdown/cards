@@ -7,7 +7,8 @@
     "undo": "Desfazer",
     "reset": "Reiniciar",
     "menu": "Menu",
-    "infoAndSettings": "Informações e ajustes"
+    "infoAndSettings": "Informações e ajustes",
+    "devWin": "Vencer agora (modo dev)"
   },
   "result": {
     "won": "Você venceu!",

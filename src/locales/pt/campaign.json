@@ -19,7 +19,9 @@
     "next": "Próximo capítulo",
     "about": "O Tao Te Ching é um texto fundamental da China antiga, tradicionalmente atribuído ao sábio Laozi. Ele ensina a viver em harmonia com o Tao, o fluxo e o ritmo naturais do universo. Diz-se que, praticando o wu wei (a ação sem esforço) e cultivando a humildade, a simplicidade e a flexibilidade, é possível encontrar paz e equilíbrio duradouros.",
     "pick": "Escolher capítulo",
-    "uncollected": "Este capítulo ainda não foi obtido."
+    "uncollected": "Este capítulo ainda não foi obtido.",
+    "breathe": "Respire",
+    "continue": "Continuar"
   },
   "original": {
     "label": "Mostrar original"

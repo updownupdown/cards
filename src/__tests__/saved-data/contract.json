@@ -5,6 +5,7 @@
     "cards.betaGames.v1",
     "cards.campaignProgress.v1",
     "cards.dailyWins.v1",
+    "cards.devMode.v1",
     "cards.gallery.lastChapter.v1",
     "cards.gallery.lastQuote.v1",
     "cards.gameLaunchGuard.v1",
