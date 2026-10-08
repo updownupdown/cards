@@ -1,7 +1,6 @@
 import { useCampaignProgress } from "@/hooks/useCampaignProgress";
 import {
   DEFAULT_WILD_CARDS_PROGRESS,
-  SHOW_WILD_CARDS,
   WILD_CARDS_LOCKED,
   WILD_GAMES,
   getWildCardsStatus,
@@ -9,6 +8,7 @@ import {
   subscribeToWildCardsProgress,
   type WildCardsProgress,
 } from "@/data/wild-cards";
+import { useDevMode } from "@/data/dev-mode";
 import { useEffect, useState } from "react";
 
 /** The Wild Cards unlocked, and what the player's campaign wins still buy. */
@@ -47,7 +47,11 @@ export function useWildCards() {
   };
 }
 
-/** Wild Cards are hidden until SHOW_WILD_CARDS is turned on in the code. */
+/**
+ * Whether Wild Cards show at all: the Home tab's section and their screens.
+ * Only in dev mode, until they're refined after launch. Players' Wild Cards
+ * progress is kept either way.
+ */
 export function useWildCardsVisible() {
-  return SHOW_WILD_CARDS;
+  return useDevMode();
 }

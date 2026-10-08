@@ -21,6 +21,7 @@ import { DEFAULT_GAME_BACKGROUND } from "@/data/games-data";
 import { useFade } from "@/hooks/useFade";
 import { useGameSettings } from "@/hooks/useGameSettings";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
+import { useDevMode } from "@/data/dev-mode";
 import { TaoReveal } from "@/components/TaoReveal/TaoReveal";
 import { QuoteReveal } from "@/components/QuoteReveal/QuoteReveal";
 import { getQuote, getTaoChapter } from "@/data/collectibles";
@@ -133,7 +134,7 @@ interface Props {
 
 export const GameWrapper = ({
   isLoaded,
-  outcome,
+  outcome: gameOutcome,
   score,
   hideScore = false,
   winLoseMessage,
@@ -158,12 +159,27 @@ export const GameWrapper = ({
   const { settings: globalSettings, isLoading: isGlobalSettingsLoading } =
     useGlobalSettings();
   const spacing = (value: number) => value * ui.scale;
+  // Dev mode's trophy wins the deal as it stands: the game's own outcome is
+  // overridden until the next deal, so every win-time path (stats, campaign
+  // progress, the reveals) runs as for a real win.
+  const devMode = useDevMode();
+  const [devWin, setDevWin] = useState(false);
+  const outcome: GameOutcome =
+    devWin && gameOutcome === "playing" ? "won" : gameOutcome;
   const ended = outcome !== "playing";
   const won = outcome === "won";
   const canUndoLoss = outcome === "lost" && canUndo && !!handleUndo;
   const handleReset = () => {
+    setDevWin(false);
     reset();
   };
+  const onHeaderDevWin = useStableCallback(() => setDevWin(true));
+  // A new deal (a different game, or the game dealing again) clears it.
+  const devWinPathRef = useRef(pathname);
+  if (devWinPathRef.current !== pathname) {
+    devWinPathRef.current = pathname;
+    if (devWin) setDevWin(false);
+  }
 
   // Stable header callbacks, so the memoized header skips re-rendering when
   // only the board changes.
@@ -664,6 +680,7 @@ export const GameWrapper = ({
             ended || !canUndo || handleUndo === undefined || autoCompleting
           }
           onHome={onHeaderHome}
+          onDevWin={devMode ? onHeaderDevWin : undefined}
           onRules={onHeaderRules}
           showHint={hintMode !== "off"}
           hintDisabled={!hasHints || ended || autoCompleting}

@@ -7,7 +7,8 @@
     "undo": "Undo",
     "reset": "Reset",
     "menu": "Menu",
-    "infoAndSettings": "Info & Settings"
+    "infoAndSettings": "Info & Settings",
+    "devWin": "Win now (dev mode)"
   },
   "result": {
     "won": "You won!",

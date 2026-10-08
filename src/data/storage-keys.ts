@@ -6,7 +6,10 @@ export const GALLERY_LAST_CHAPTER_STORAGE_KEY = "cards.gallery.lastChapter.v1";
 export const GALLERY_LAST_QUOTE_STORAGE_KEY = "cards.gallery.lastQuote.v1";
 /** Wild Cards: the mini-games unlocked, and today's "just this once" plays. */
 export const WILD_CARDS_STORAGE_KEY = "cards.wildCards.v1";
-/** Beta (local-only) games turned on outside dev, from the settings. */
+/** Dev mode (instant wins, every Wild Cards and beta game), "1" when on. */
+export const DEV_MODE_STORAGE_KEY = "cards.devMode.v1";
+/** Beta games turned on by the ten taps before there was a dev mode; read
+ * once, to carry the choice over. */
 export const BETA_GAMES_STORAGE_KEY = "cards.betaGames.v1";
 /**
  * "Help from Above" (the header's UFO): "off", "beacons" or "autopilot".

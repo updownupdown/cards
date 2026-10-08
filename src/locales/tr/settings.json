@@ -67,9 +67,11 @@
   "colorTheme": {
     "label": "Renk teması"
   },
-  "betaGames": {
-    "enabled": "Beta oyunlar açık",
-    "hide": "Beta oyunları gizle"
+  "devMode": {
+    "on": "Geliştirici modu açık",
+    "off": "Geliştirici modu kapalı",
+    "status": "Geliştirici modu açık.",
+    "turnOff": "Kapat"
   },
   "tabs": {
     "display": "Ekran",

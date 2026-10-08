@@ -43,14 +43,15 @@ import { Text } from "../common/Text";
 import ModalFull from "./ModalFull";
 import { UnderlineTabs } from "../ui/Nocturne";
 import { useToast } from "../common/Toast";
-import { saveBetaGames, useBetaGamesEnabled } from "@/data/beta-games";
+import { saveDevMode, useDevMode } from "@/data/dev-mode";
 import { HelpFromAbovePanel } from "@/components/common/HelpFromAbovePanel";
 
 /** App version and build type; not translated, since it's for bug reports. */
 const BUILD_LABEL = `v${Constants.expoConfig?.version ?? "?"} · ${__DEV__ ? "dev" : "release"}`;
 
 /** Taps on the version number that turn on beta games. */
-const BETA_UNLOCK_TAPS = 10;
+/** Taps on the version number that turn dev mode on. */
+const DEV_MODE_TAPS = 10;
 
 const TABS = ["display", "theme", "other"] as const;
 
@@ -85,16 +86,21 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const scrollRef = React.useRef<ScrollView>(null);
   const scrollRestored = React.useRef(false);
   const versionTaps = React.useRef(0);
-  const betaGamesEnabled = useBetaGamesEnabled();
+  const devMode = useDevMode();
 
   const onVersionPress = () => {
+    if (devMode) return;
     versionTaps.current += 1;
-    if (versionTaps.current < BETA_UNLOCK_TAPS) return;
+    if (versionTaps.current < DEV_MODE_TAPS) return;
     versionTaps.current = 0;
-    void saveBetaGames(true);
+    void saveDevMode(true);
     onHomeDataInvalidated();
-    onClose();
-    showToast(t("betaGames.enabled"));
+    showToast(t("devMode.on"));
+  };
+  const onDevModeOff = () => {
+    void saveDevMode(false);
+    onHomeDataInvalidated();
+    showToast(t("devMode.off"));
   };
   const { t } = useTranslation("settings");
   const { t: tCommon } = useTranslation("common");
@@ -453,20 +459,9 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 />
               )}
 
-              {/* Which build this is, since dev and release installs look alike. */}
-              {betaGamesEnabled && (
-                <Text
-                  {...footerLink}
-                  style={{ textAlign: "center" }}
-                  accessibilityRole="link"
-                  onPress={() => {
-                    void saveBetaGames(false);
-                    onHomeDataInvalidated();
-                  }}
-                >
-                  {t("betaGames.hide")}
-                </Text>
-              )}
+              {/* Which build this is, since dev and release installs look
+                  alike. Ten taps turn dev mode on; the line under it turns
+                  it off. */}
               <Text
                 {...footerText}
                 style={{ textAlign: "center" }}
@@ -475,6 +470,19 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               >
                 {BUILD_LABEL}
               </Text>
+              {devMode && (
+                <Text {...footerText} style={{ textAlign: "center" }}>
+                  {t("devMode.status")}{" "}
+                  <Text
+                    {...footerLink}
+                    accessibilityRole="link"
+                    onPress={onDevModeOff}
+                    suppressHighlighting
+                  >
+                    {t("devMode.turnOff")}
+                  </Text>
+                </Text>
+              )}
             </View>
           </>
         )}

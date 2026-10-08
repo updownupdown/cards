@@ -67,9 +67,11 @@
   "colorTheme": {
     "label": "Colour theme"
   },
-  "betaGames": {
-    "enabled": "Beta games enabled",
-    "hide": "Hide beta games"
+  "devMode": {
+    "on": "Dev mode on",
+    "off": "Dev mode off",
+    "status": "Dev mode is on.",
+    "turnOff": "Turn off"
   },
   "tabs": {
     "display": "Display",

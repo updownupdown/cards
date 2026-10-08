@@ -18,7 +18,8 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
 import { layoutDims } from "@/styles/styles";
-import { areBetaGamesVisible, useBetaGamesEnabled } from "@/data/beta-games";
+import { areBetaGamesVisible } from "@/data/beta-games";
+import { useDevMode } from "@/data/dev-mode";
 import { type ReactNode, useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { HOME_HOME_TAB_INDEX } from "./home-view-state";
@@ -113,8 +114,8 @@ export function HomeTab({
     );
   }
 
-  // Re-renders Home when beta games are turned on or off in the settings.
-  useBetaGamesEnabled();
+  // Re-renders Home when dev mode is turned on or off in the settings.
+  useDevMode();
   const localOnlyGames = Object.entries(GAMES_DATA).filter(
     ([, game]) => game.enabledOnLocalOnly,
   );

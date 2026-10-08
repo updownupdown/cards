@@ -7,7 +7,8 @@
     "undo": "Geri al",
     "reset": "Yeniden başlat",
     "menu": "Menü",
-    "infoAndSettings": "Bilgi ve Ayarlar"
+    "infoAndSettings": "Bilgi ve Ayarlar",
+    "devWin": "Hemen kazan (geliştirici modu)"
   },
   "result": {
     "won": "Kazandın!",
