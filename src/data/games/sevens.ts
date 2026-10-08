@@ -14,6 +14,7 @@ export const sevens: GameDefinition = {
     sourceName: "National Gallery of Art",
     sourceLink: "https://www.nga.gov/artworks/59935-domino-girl",
   },
+  enabledOnLocalOnly: true,
   tags: [GameTag.TricksAndMelds, GameTag.SequenceBuilding],
   rating: {
     complexity: 20,

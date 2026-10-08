@@ -13,6 +13,7 @@ export const goFish: GameDefinition = {
     sourceName: "The Cleveland Museum of Art",
     sourceLink: "https://clevelandart.org/art/1915.683",
   },
+  enabledOnLocalOnly: true,
   tags: [GameTag.TricksAndMelds, GameTag.PairMatching],
   rating: {
     complexity: 15,

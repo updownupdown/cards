@@ -14,6 +14,7 @@ export const cipher: GameDefinition = {
     sourceName: "Rijksmuseum",
     sourceLink: "https://www.rijksmuseum.nl/en/collection/SK-C-251",
   },
+  enabledOnLocalOnly: true,
   tags: [GameTag.Puzzles],
   lowerScoreIsBetter: true,
   rating: {

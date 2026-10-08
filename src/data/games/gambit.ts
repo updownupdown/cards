@@ -13,6 +13,7 @@ export const gambit: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/436884",
   },
+  enabledOnLocalOnly: true,
   tags: [GameTag.TricksAndMelds, GameTag.Puzzles],
   rating: {
     complexity: 35,

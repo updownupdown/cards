@@ -14,6 +14,7 @@ export const osmosis: GameDefinition = {
     sourceName: "SMK – National Gallery of Denmark",
     sourceLink: "https://open.smk.dk/artwork/image/KMSst14",
   },
+  enabledOnLocalOnly: true,
   tags: [GameTag.FoundationBuilders, GameTag.StockAndWaste],
   rating: {
     complexity: 25,

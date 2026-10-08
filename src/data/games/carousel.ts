@@ -14,6 +14,7 @@ export const carousel: GameDefinition = {
     sourceLink:
       "https://commons.wikimedia.org/wiki/File:Chevaux_de_bois_(du_Puigaudeau).jpg",
   },
+  enabledOnLocalOnly: true,
   tags: [GameTag.TricksAndMelds, GameTag.SpatialControl],
   rating: {
     complexity: 40,

@@ -14,6 +14,7 @@ export const mosaic: GameDefinition = {
     sourceName: "The Cleveland Museum of Art",
     sourceLink: "https://clevelandart.org/art/1962.23",
   },
+  enabledOnLocalOnly: true,
   tags: [GameTag.Puzzles, GameTag.GridPlacement],
   rating: {
     complexity: 20,

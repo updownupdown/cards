@@ -14,6 +14,7 @@ export const sweep: GameDefinition = {
     sourceName: "The Metropolitan Museum of Art",
     sourceLink: "https://www.metmuseum.org/art/collection/search/435868",
   },
+  enabledOnLocalOnly: true,
   tags: [GameTag.TricksAndMelds, GameTag.ScoringPuzzles],
   rating: {
     complexity: 35,
