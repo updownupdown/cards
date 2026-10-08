@@ -34,11 +34,11 @@ export const picketFence: GameDefinition = {
   quickStart: [
     "Each turn, build one card as a house and use another card's suit as its effect.",
     "House numbers must rise from left to right along each street.",
-    "Only fenced-off estates of up to four houses score, once every lot in them is built.",
+    "Fences split streets into estates: each one finished scores its houses, plus 2.",
   ],
   howToPlay: [
     "## Objective",
-    "Score **60 points** or more by fencing your streets into estates and filling them with houses, parks and pools. Play goes on until the deck is used up, so keep building your score.",
+    "Score **70 points** or more by fencing your streets into estates and adding parks and pools. Play goes on until the deck is used up, so keep building your score.",
 
     "## Your Turn",
     "You hold three cards, and play two of them each turn: one for its number, then one for its suit. Then draw back up to three.",
@@ -53,21 +53,21 @@ export const picketFence: GameDefinition = {
     "- **♦ Pool:** the diamond is tucked under that house as a pool, if it stands on a pool lot.",
     "- **♠ Fence:** put up a fence between two lots, on any street.",
     "- **♣ Second house:** build the club as a house as well, or renovate with it.",
-    "- A house holds one park or pool. A card with no use is discarded.",
+    "- A house holds one park or pool, and a street holds parks or pools, never both: its first one decides. A card with no use is discarded.",
 
     "## Scoring",
-    "- Fences and street ends divide each street into **estates**. Only a **finished** estate scores: one with every lot built.",
-    "- Its houses score 1, 3, 6 or 10 points for an estate of 1, 2, 3 or 4. **Estates of five or more score nothing**, so every street needs fences.",
-    "- Each park in a finished estate adds 2 points, and each pool 4.",
+    "- Fences and street ends divide each street into **estates**. A **finished** estate, with every lot built, scores 1 point per house, plus 2.",
+    "- Each park scores 3 points, and each pool 4, finished or not.",
 
     "## Ratings",
-    "- 60+: Good Neighbours",
-    "- 70+: Model Suburb",
-    "- 80+: Picture Perfect",
+    "- 70+: Good Neighbours",
+    "- 78+: Model Suburb",
+    "- 85+: Picture Perfect",
 
     "## Tips",
-    "- Bigger estates are worth more, but one unbuilt lot leaves the whole estate, and its parks and pools, scoring nothing. A fence can cut your losses.",
+    "- Every fence makes one more estate, worth 2 more points once both sides are finished. A fence can also cut off a lot that can't be built.",
+    "- Choose each street's kind: pools are worth more, but only fit on pool lots, while a park street can have a park under every house.",
     "- Leave room between numbers: a lot between a 5 and a 6 can't be built until one of them is renovated.",
-    "- The label above each estate shows what it scores once finished, or ✕ if it can't be finished as it stands.",
+    "- The label above each estate shows what it scores once finished, or ✕ if it can't be finished as it stands. The score bar shows your score if every estate is finished.",
   ],
 };

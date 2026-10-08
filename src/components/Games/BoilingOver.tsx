@@ -45,12 +45,23 @@ import {
 // A push-your-luck deck builder in cards (The Quacks of Quedlinburg): each
 // round, cards are flipped from your own deck into the cauldron until you stop
 // or the duds boil over, and the potion's strength buys better cards.
+//
+// Each suit does one clear thing, so every buy is a plan: hearts are the
+// cheapest strength, diamonds bring coins (best early, while there are markets
+// left to spend them in), clubs let the potion hold more duds, and spades
+// skip a dud. Simulated play scores much the same with any of them, so the
+// choice is the player's.
 const ROUNDS = 9;
 const DUD_LIMIT = 7;
 const MAX_BUYS = 2;
-// Diamonds, clubs and spades have an effect, and cost this much more.
-const EFFECT_SURCHARGE = 1;
-const WIN_SCORE = 150;
+/** What a card costs over its value: hearts are plain, effects cost more. */
+const SURCHARGE: Record<CardSuit, number> = {
+  hearts: 0,
+  diamonds: 1,
+  spades: 2,
+  clubs: 3,
+};
+const WIN_SCORE = 250;
 const MARKET_SUITS: CardSuit[] = ["hearts", "diamonds", "clubs", "spades"];
 const STARTING_INGREDIENTS = [
   "2-hearts",
@@ -61,8 +72,8 @@ const STARTING_INGREDIENTS = [
 ];
 
 const TIERS = [
-  { min: 250, key: "games:boilingOver.tierMiracleWorker" },
-  { min: 200, key: "games:boilingOver.tierCourtAlchemist" },
+  { min: 450, key: "games:boilingOver.tierMiracleWorker" },
+  { min: 350, key: "games:boilingOver.tierCourtAlchemist" },
   { min: WIN_SCORE, key: "games:boilingOver.tierVillageHealer" },
 ] as const;
 
@@ -96,6 +107,14 @@ function dudTotal(cauldron: PlayingCard[]) {
   );
 }
 
+/** Each club in the cauldron lets it hold one more dud. */
+function dudLimit(cauldron: PlayingCard[]) {
+  return (
+    DUD_LIMIT +
+    cauldron.filter((card) => card.suit === "clubs" && !isDud(card)).length
+  );
+}
+
 function strengthOf(cauldron: PlayingCard[]) {
   return cauldron.reduce(
     (sum, card) => sum + (isDud(card) ? 0 : rankValue(card)),
@@ -103,18 +122,17 @@ function strengthOf(cauldron: PlayingCard[]) {
   );
 }
 
-/** A diamond that ends the potion counts twice. */
-function diamondBonus(cauldron: PlayingCard[]) {
-  const last = cauldron[cauldron.length - 1];
-  return last?.suit === "diamonds" ? rankValue(last) : 0;
-}
-
-function coinsFor(strength: number) {
-  return Math.ceil(strength / 2);
+/** Half the potion's strength, rounded up, with diamonds counting double. */
+function coinsFor(cauldron: PlayingCard[]) {
+  const diamonds = cauldron.reduce(
+    (sum, card) => sum + (card.suit === "diamonds" ? rankValue(card) : 0),
+    0,
+  );
+  return Math.ceil((strengthOf(cauldron) + diamonds) / 2);
 }
 
 function costOf(card: PlayingCard) {
-  return rankValue(card) + (card.suit === "hearts" ? 0 : EFFECT_SURCHARGE);
+  return rankValue(card) + SURCHARGE[card.suit];
 }
 
 function isFinalRound(state: BoilingOverGameState) {
@@ -125,23 +143,39 @@ function isFinalRound(state: BoilingOverGameState) {
 function bustChance(state: BoilingOverGameState) {
   const { deck } = state;
   if (deck.length === 0) return 0;
-  const room = DUD_LIMIT - dudTotal(state.cauldron);
+  const room = dudLimit(state.cauldron) - dudTotal(state.cauldron);
   const busts = (card: PlayingCard) => isDud(card) && rankValue(card) > room;
   const top = deck[deck.length - 1];
   if (top.faceUp) return busts(top) ? 1 : 0;
   return deck.filter(busts).length / deck.length;
 }
 
-type DrawResult = "ingredient" | "dud" | "dudReturned" | "boiledOver";
+type DrawResult = "ingredient" | "dud" | "dudSkipped" | "boiledOver";
 
-function drawCard(state: BoilingOverGameState): DrawResult | null {
+/** A dud a spade turned up goes face down to the bottom of the deck. */
+function skipShownDud(state: BoilingOverGameState) {
+  const top = state.deck[state.deck.length - 1];
+  if (!top?.faceUp || !isDud(top) || state.deck.length < 2) return false;
+  state.deck.pop();
+  state.deck.unshift(flipToBack(top));
+  return true;
+}
+
+/**
+ * Adds the deck's top card to the cauldron. A spade turns up the next card,
+ * and a dud it turns up is skipped, unless `skipDud` is off (the board shows
+ * the dud before skipping it).
+ */
+function drawCard(
+  state: BoilingOverGameState,
+  skipDud = true,
+): DrawResult | null {
   if (state.phase !== "brewing" || state.deck.length === 0) return null;
   const card = flipToFace(state.deck.pop()!);
-  const previous = state.cauldron[state.cauldron.length - 1];
   state.cauldron.push(card);
 
   if (isDud(card)) {
-    if (dudTotal(state.cauldron) <= DUD_LIMIT) return "dud";
+    if (dudTotal(state.cauldron) <= dudLimit(state.cauldron)) return "dud";
     if (isFinalRound(state)) {
       // No market follows the last round, so the points are the only choice.
       state.score += strengthOf(state.cauldron);
@@ -155,28 +189,31 @@ function drawCard(state: BoilingOverGameState): DrawResult | null {
   if (card.suit === "spades" && state.deck.length > 0) {
     const top = state.deck.length - 1;
     state.deck[top] = flipToFace(state.deck[top]);
-  }
-
-  if (card.suit === "clubs" && previous && isDud(previous)) {
-    state.cauldron.splice(state.cauldron.length - 2, 1);
-    const at = Math.floor(Math.random() * (state.deck.length + 1));
-    state.deck.splice(at, 0, flipToBack(previous));
-    return "dudReturned";
+    if (isDud(state.deck[top]) && state.deck.length > 1) {
+      if (skipDud) skipShownDud(state);
+      return "dudSkipped";
+    }
   }
 
   return "ingredient";
 }
 
+/** The potion is poured back: its cards return to the deck for the market. */
+function pourBack(state: BoilingOverGameState) {
+  state.deck = flipAllToBack([...state.deck, ...state.cauldron]);
+  state.cauldron = [];
+}
+
 function stopBrewing(state: BoilingOverGameState) {
   if (state.phase !== "brewing" || state.cauldron.length === 0) return false;
-  const strength = strengthOf(state.cauldron) + diamondBonus(state.cauldron);
-  state.score += strength;
+  state.score += strengthOf(state.cauldron);
   if (isFinalRound(state)) {
     state.phase = "over";
   } else {
-    state.coins = coinsFor(strength);
+    state.coins = coinsFor(state.cauldron);
     state.bought = [];
     state.phase = "market";
+    pourBack(state);
   }
   return true;
 }
@@ -187,11 +224,11 @@ function keepAfterBoilOver(
   choice: "points" | "coins",
 ) {
   if (state.phase !== "boiledOver") return false;
-  const strength = strengthOf(state.cauldron);
-  if (choice === "points") state.score += strength;
-  state.coins = choice === "coins" ? coinsFor(strength) : 0;
+  if (choice === "points") state.score += strengthOf(state.cauldron);
+  state.coins = choice === "coins" ? coinsFor(state.cauldron) : 0;
   state.bought = [];
   state.phase = "market";
+  pourBack(state);
   return true;
 }
 
@@ -214,7 +251,7 @@ function buyCard(state: BoilingOverGameState, row: number, index: number) {
   return true;
 }
 
-/** Everything goes back into the deck; coins left over are lost. */
+/** Everything is shuffled into the deck; coins left over are lost. */
 function startNextRound(state: BoilingOverGameState) {
   if (state.phase !== "market") return false;
   state.deck = shuffle(flipAllToBack([...state.deck, ...state.cauldron]));
@@ -281,9 +318,9 @@ function usefulCoins(state: BoilingOverGameState, coins: number) {
 
 /** Stopping: the points now, and what the coins will bring. */
 function stopWorth(state: BoilingOverGameState, cauldron: PlayingCard[]) {
-  const strength = strengthOf(cauldron) + diamondBonus(cauldron);
+  const strength = strengthOf(cauldron);
   if (isFinalRound(state)) return strength;
-  return strength + coinWorth(state) * usefulCoins(state, coinsFor(strength));
+  return strength + coinWorth(state) * usefulCoins(state, coinsFor(cauldron));
 }
 
 /** Boiled over: the better of the points and the coins. */
@@ -292,7 +329,7 @@ function boiledOverWorth(state: BoilingOverGameState, cauldron: PlayingCard[]) {
   if (isFinalRound(state)) return strength;
   return Math.max(
     strength,
-    coinWorth(state) * usefulCoins(state, coinsFor(strength)),
+    coinWorth(state) * usefulCoins(state, coinsFor(cauldron)),
   );
 }
 
@@ -355,39 +392,43 @@ function drawWorth(
   const rest = unseen.filter((other) => other !== card);
   const potion = [...cauldron, card];
   if (isDud(card)) {
-    return dudTotal(potion) > DUD_LIMIT
+    return dudTotal(potion) > dudLimit(potion)
       ? boiledOverWorth(state, potion)
       : brewWorth(state, potion, rest, null, depth - 1).worth;
   }
-  const previous = cauldron[cauldron.length - 1];
-  if (card.suit === "clubs" && previous && isDud(previous)) {
-    // The dud goes back into the deck, somewhere.
-    return brewWorth(
-      state,
-      [...cauldron.slice(0, -1), card],
-      [...rest, previous],
-      null,
-      depth - 1,
-    ).worth;
-  }
   if (card.suit === "spades" && rest.length > 0) {
-    // The next card shows before you choose: weigh each one it may be.
-    return averageOver(
-      rest,
-      (shown) => brewWorth(state, potion, rest, shown, depth - 1).worth,
+    // The next card shows: a dud is skipped, anything else is known.
+    return averageOver(rest, (shown) =>
+      isDud(shown) && rest.length > 1
+        ? brewWorth(
+            state,
+            potion,
+            rest.filter((other) => other !== shown),
+            null,
+            depth - 1,
+          ).worth
+        : brewWorth(state, potion, rest, shown, depth - 1).worth,
     );
   }
   return brewWorth(state, potion, rest, null, depth - 1).worth;
 }
 
-/** How well a card brews: its value, and a little for its effect. */
-function cardWorth(card: PlayingCard) {
-  const effect: Partial<Record<CardSuit, number>> = {
-    diamonds: 0.6,
-    clubs: 1,
-    spades: 0.6,
-  };
-  return rankValue(card) + (effect[card.suit] ?? 0);
+/**
+ * How well a card brews: its value, and its effect. A diamond's coins count
+ * while markets are left to spend them in.
+ */
+function cardWorth(state: BoilingOverGameState, card: PlayingCard) {
+  const value = rankValue(card);
+  switch (card.suit) {
+    case "diamonds":
+      return value + (value / 2) * Math.min(1, (ROUNDS - 1 - state.round) / 3);
+    case "clubs":
+      return value + 3;
+    case "spades":
+      return value + 2;
+    default:
+      return value;
+  }
 }
 
 /**
@@ -400,13 +441,13 @@ function bestBuy(state: BoilingOverGameState) {
   );
   let best: { card: PlayingCard; worth: number } | null = null;
   for (const card of options) {
-    let worth = cardWorth(card);
+    let worth = cardWorth(state, card);
     if (state.bought.length + 1 < MAX_BUYS) {
       const left = state.coins - costOf(card);
       const seconds = options.filter(
         (other) => other.suit !== card.suit && costOf(other) <= left,
       );
-      worth += Math.max(0, ...seconds.map(cardWorth));
+      worth += Math.max(0, ...seconds.map((other) => cardWorth(state, other)));
     }
     if (
       !best ||
@@ -418,6 +459,13 @@ function bestBuy(state: BoilingOverGameState) {
   }
   return best?.card ?? null;
 }
+
+const BUY_NOTES = {
+  hearts: "games:boilingOver.hint.buyHearts",
+  diamonds: "games:boilingOver.hint.buyDiamonds",
+  clubs: "games:boilingOver.hint.buyClubs",
+  spades: "games:boilingOver.hint.buySpades",
+} as const satisfies Record<CardSuit, string>;
 
 const LOOK_AHEAD = 3;
 
@@ -435,16 +483,13 @@ function findBoilingOverHint(state: BoilingOverGameState) {
     );
     if (draw) return makeHint("draw", zoneTarget("deck"));
     const risk = Math.round(bustChance(state) * 100);
-    if (risk > 0) {
-      return withNote(stop, i18n.t("games:boilingOver.hint.stop", { risk }));
-    }
-    return diamondBonus(state.cauldron) > 0
-      ? withNote(stop, i18n.t("games:boilingOver.hint.stopDiamond"))
+    return risk > 0
+      ? withNote(stop, i18n.t("games:boilingOver.hint.stop", { risk }))
       : stop;
   }
   if (state.phase === "boiledOver") {
     const strength = strengthOf(state.cauldron);
-    const coins = coinsFor(strength);
+    const coins = coinsFor(state.cauldron);
     const keepCoins = coinWorth(state) * usefulCoins(state, coins) > strength;
     return withNote(
       pressHint(
@@ -463,25 +508,9 @@ function findBoilingOverHint(state: BoilingOverGameState) {
   if (state.phase === "market") {
     const buy = bestBuy(state);
     if (buy) {
-      // Whether a second card, of another suit, fits the coins left.
-      const left = state.coins - costOf(buy);
-      const pair =
-        state.bought.length + 1 < MAX_BUYS &&
-        state.market.some((row) =>
-          row.some(
-            (card) =>
-              card.suit !== buy.suit &&
-              !state.bought.includes(card.suit) &&
-              costOf(card) <= left,
-          ),
-        );
       return withNote(
         makeHint("tapCard", cardTarget(buy)),
-        i18n.t(
-          pair
-            ? "games:boilingOver.hint.buyPair"
-            : "games:boilingOver.hint.buy",
-        ),
+        i18n.t(BUY_NOTES[buy.suit]),
       );
     }
     return pressHint(
@@ -499,14 +528,16 @@ export const boilingOverRules = {
   DUD_LIMIT,
   WIN_SCORE,
   MARKET_SUITS,
+  SURCHARGE,
   isDud,
   dudTotal,
+  dudLimit,
   strengthOf,
-  diamondBonus,
   coinsFor,
   costOf,
   bustChance,
   drawCard,
+  skipShownDud,
   stopBrewing,
   keepAfterBoilOver,
   canBuy,
@@ -516,87 +547,39 @@ export const boilingOverRules = {
 };
 
 // ========== Layout ========== //
+// While brewing, the market is gathered into a pile per suit, leaving the
+// cauldron room; at the market the piles spread into rows, over the cauldron
+// (its cards are back in the deck by then). Both layouts are the same size.
 const GAP = 0.15;
-const LABEL_WIDTH = 2.2;
 const COLS = 7;
 const PAD = 0.1;
 const HUD_ROW = 0;
-const MARKET_AREA_ROW = 0.55;
-const MARKET_ROW = MARKET_AREA_ROW + PAD;
+const TOP_ROW = 0.55;
+// Brewing: the piles and their labels, then the cauldron.
+const PILE_ROW = TOP_ROW + PAD;
+const PILE_SPACING = COLS / MARKET_SUITS.length;
+const PILE_LABEL_ROW = PILE_ROW + 1.02;
+const PILE_LABEL_HEIGHT = 0.42;
+const PILES_AREA_HEIGHT = PILE_LABEL_ROW + PILE_LABEL_HEIGHT + PAD - TOP_ROW;
+const CAULDRON_AREA_ROW = TOP_ROW + PILES_AREA_HEIGHT + 0.1;
+const POTION_ROW = CAULDRON_AREA_ROW + PAD;
+const DUDS_ROW = POTION_ROW + 1.1;
+const DUDS_WIDTH = 3.4;
+const STATS_ROW = DUDS_ROW + 1.05;
+const STATS_HEIGHT = 0.5;
+const CAULDRON_AREA_HEIGHT = STATS_ROW + STATS_HEIGHT + PAD - CAULDRON_AREA_ROW;
+const INNER_COL = PAD * 2;
+const INNER_WIDTH = COLS - INNER_COL * 2;
+// The market: a row per suit, with its label.
+const LABEL_WIDTH = 2.2;
+const MARKET_ROW = TOP_ROW + PAD;
 const MARKET_AREA_HEIGHT = MARKET_SUITS.length + PAD * 2;
-const AREA_ROW = MARKET_AREA_ROW + MARKET_AREA_HEIGHT + 0.1;
-const AREA_HEIGHT = 1.8;
-const CAULDRON_ROW = AREA_ROW + PAD;
-const METERS_WIDTH = 1.6;
-const CAULDRON_COL = PAD * 2;
-const CAULDRON_WIDTH = COLS - CAULDRON_COL - METERS_WIDTH - PAD * 2;
-const METERS_COL = COLS - PAD * 2 - METERS_WIDTH;
-const STATS_ROW = CAULDRON_ROW + 1.05;
-const STATS_HEIGHT = AREA_ROW + AREA_HEIGHT - PAD - STATS_ROW;
-const DECK_ROW = AREA_ROW + AREA_HEIGHT + 0.1;
+const DECK_ROW = CAULDRON_AREA_ROW + CAULDRON_AREA_HEIGHT + 0.1;
+const STATUS_ROW = TOP_ROW + MARKET_AREA_HEIGHT;
 const DECK_COL = 1;
 
-/** A ProgressBar turned on its end, filling from the bottom. */
-function VerticalBar({
-  label,
-  text,
-  textColor,
-  value,
-  total,
-  color,
-  backgroundColor,
-}: {
-  label: string;
-  text: string;
-  textColor: string;
-  value: number;
-  total: number;
-  color: string;
-  backgroundColor: string;
-}) {
-  const [size, setSize] = useState({ width: 0, height: 0 });
-  const barThickness = size.width * 0.35;
-  return (
-    <View style={{ flex: 1 }}>
-      <View
-        style={{ flex: 1 }}
-        onLayout={(event) => {
-          const { width, height } = event.nativeEvent.layout;
-          setSize({ width, height });
-        }}
-      >
-        {size.width > 0 && (
-          <View
-            style={{
-              position: "absolute",
-              width: size.height,
-              height: barThickness,
-              left: (size.width - size.height) / 2,
-              top: (size.height - barThickness) / 2,
-              transform: [{ rotate: "-90deg" }],
-            }}
-          >
-            <ProgressBar
-              progressValue={value}
-              totalValue={total}
-              color={color}
-              backgroundColor={backgroundColor}
-              scaledHeight={barThickness}
-              style={{ width: size.height }}
-            />
-          </View>
-        )}
-      </View>
-      <View style={[flexStyles.colCentered, { marginTop: 2 }]}>
-        <Text size="xs" weight={300} color={rgba(textColor, 0.7)}>
-          {label}
-        </Text>
-        <Text size="sm" weight={700} color={textColor}>
-          {text}
-        </Text>
-      </View>
-    </View>
-  );
+function pileCol(i: number) {
+  return PILE_SPACING * i + (PILE_SPACING - 1) / 2 - 0.15;
 }
 
 function Stat({
@@ -609,12 +592,7 @@ function Stat({
   color: string;
 }) {
   return (
-    <View
-      style={[
-        flexStyles.rowCentered,
-        { justifyContent: "space-between", gap: 10 },
-      ]}
-    >
+    <View style={[flexStyles.rowCentered, { gap: 8 }]}>
       <Text size="sm" weight={300} color={rgba(color, 0.7)} numberOfLines={1}>
         {label}
       </Text>
@@ -630,6 +608,8 @@ export default function BoilingOver() {
   const { colorPale, colorDark } = useGameColors();
   const { spacing } = useResponsiveMetrics();
   const showToast = useToast();
+  // While a spade's dud shows, before it goes under the deck.
+  const [isSkipping, setIsSkipping] = useState(false);
 
   const {
     isLoaded,
@@ -648,33 +628,52 @@ export default function BoilingOver() {
       await delay();
       setGame((draft) => redealWith(createInitialState(), draft.deck));
     },
+    resetNonGameStates: () => setIsSkipping(false),
   });
 
   const ended = game.phase === "over";
   const won = ended && game.score >= WIN_SCORE;
+  const brewingLayout = game.phase !== "market";
   const duds = dudTotal(game.cauldron);
+  const limit = dudLimit(game.cauldron);
   const strength = strengthOf(game.cauldron);
-  const bonus = game.phase === "brewing" ? diamondBonus(game.cauldron) : 0;
+  const coins = coinsFor(game.cauldron);
   const risk = useMemo(() => bustChance(game), [game]);
 
-  useHint(() => findBoilingOverHint(game), { game });
+  useHint(() => findBoilingOverHint(game), {
+    game,
+    enabled: !isSkipping,
+  });
 
   function update(change: (draft: BoilingOverGameState) => void) {
     setGame(produce(game, change));
   }
 
-  function onDraw() {
-    if (game.phase !== "brewing" || game.deck.length === 0) return;
+  async function onDraw() {
+    if (isSkipping || game.phase !== "brewing" || game.deck.length === 0) {
+      return;
+    }
     let result: DrawResult | null = null;
-    update((draft) => {
-      result = drawCard(draft);
+    // A dud a spade turns up shows for a moment before it goes under.
+    const drawn = produce(game, (draft) => {
+      result = drawCard(draft, false);
     });
-    if (result === "dudReturned") {
-      showToast(i18n.t("games:boilingOver.dudReturned"));
+    setGame(drawn);
+    if (result === "dudSkipped") {
+      setIsSkipping(true);
+      showToast(i18n.t("games:boilingOver.dudSkipped"));
+      await delay(700);
+      setGame(
+        produce(drawn, (draft) => {
+          skipShownDud(draft);
+        }),
+      );
+      setIsSkipping(false);
     }
   }
 
   function onStop() {
+    if (isSkipping) return;
     update((draft) => {
       stopBrewing(draft);
     });
@@ -705,39 +704,54 @@ export default function BoilingOver() {
 
   // ========== Card Mapping ========== //
   const zones: MapZone[] = useMemo(() => {
-    const marketZones: MapZone[] = game.market.flatMap((cards, i) => [
-      {
-        id: `marketLabel-${i}`,
-        col: PAD,
-        row: MARKET_ROW + i,
-        width: LABEL_WIDTH,
-        height: 1,
-      },
-      {
-        id: `market-${i}`,
-        name: "market",
-        pileIndex: i,
-        cards,
-        col: LABEL_WIDTH,
-        row: MARKET_ROW + i,
-        baseZIndex: 10,
-        fan: {
-          direction: "right",
-          offset: 0.4,
-          center: false,
-        },
-        placeholder: { showCount: false },
-      },
-    ]);
+    const marketZones: MapZone[] = game.market.flatMap((cards, i) =>
+      brewingLayout
+        ? [
+            {
+              id: `marketLabel-${i}`,
+              col: pileCol(i) - (PILE_SPACING - 1) / 2 + 0.15,
+              row: PILE_LABEL_ROW,
+              width: PILE_SPACING,
+              height: PILE_LABEL_HEIGHT,
+            },
+            {
+              id: `market-${i}`,
+              name: "market",
+              pileIndex: i,
+              cards,
+              col: pileCol(i),
+              row: PILE_ROW,
+              baseZIndex: 10,
+              fan: { direction: "right", offset: 0.03, center: false },
+              placeholder: { showCount: false },
+            },
+          ]
+        : [
+            {
+              id: `marketLabel-${i}`,
+              col: PAD,
+              row: MARKET_ROW + i,
+              width: LABEL_WIDTH,
+              height: 1,
+            },
+            {
+              id: `market-${i}`,
+              name: "market",
+              pileIndex: i,
+              cards,
+              col: LABEL_WIDTH,
+              row: MARKET_ROW + i,
+              baseZIndex: 10,
+              fan: { direction: "right", offset: 0.4, center: false },
+              placeholder: { showCount: false },
+            },
+          ],
+    );
+
+    const potion = game.cauldron.filter((card) => !isDud(card));
+    const dudCards = game.cauldron.filter(isDud);
 
     return [
-      {
-        id: "marketArea",
-        col: 0,
-        row: MARKET_AREA_ROW,
-        width: COLS,
-        height: MARKET_AREA_HEIGHT,
-      },
       {
         id: "hudBars",
         col: 0,
@@ -745,45 +759,76 @@ export default function BoilingOver() {
         width: "full",
         height: 0.45,
       },
+      brewingLayout
+        ? {
+            id: "marketArea",
+            col: 0,
+            row: TOP_ROW,
+            width: COLS,
+            height: PILES_AREA_HEIGHT,
+          }
+        : {
+            id: "marketArea",
+            col: 0,
+            row: TOP_ROW,
+            width: COLS,
+            height: MARKET_AREA_HEIGHT,
+          },
       {
         id: "cauldronArea",
         col: 0,
-        row: AREA_ROW,
+        row: CAULDRON_AREA_ROW,
         width: COLS,
-        height: AREA_HEIGHT,
+        height: CAULDRON_AREA_HEIGHT,
       },
       {
-        id: "cauldron",
+        id: "potion",
         name: "cauldron",
-        cards: game.cauldron,
-        col: CAULDRON_COL,
-        row: CAULDRON_ROW,
-        width: CAULDRON_WIDTH,
+        cards: potion,
+        col: INNER_COL,
+        row: POTION_ROW,
+        width: INNER_WIDTH,
         baseZIndex: 10,
         fan: {
           direction: "right",
-          offset: zoneFanOffset(
-            game.cauldron.length,
-            CAULDRON_WIDTH,
-            0.15,
-            0.7,
-          ),
+          offset: zoneFanOffset(potion.length, INNER_WIDTH, 0.15, 0.7),
           center: false,
         },
       },
       {
-        id: "stats",
-        col: CAULDRON_COL,
-        row: STATS_ROW,
-        width: CAULDRON_WIDTH,
-        height: STATS_HEIGHT,
+        id: "duds",
+        name: "cauldron",
+        cards: dudCards,
+        col: INNER_COL,
+        row: DUDS_ROW,
+        width: DUDS_WIDTH,
+        baseZIndex: 10,
+        fan: {
+          direction: "right",
+          offset: zoneFanOffset(dudCards.length, DUDS_WIDTH, 0.2, 0.7),
+          center: false,
+        },
       },
       {
         id: "meters",
-        col: METERS_COL,
-        row: CAULDRON_ROW,
-        width: METERS_WIDTH,
-        height: AREA_HEIGHT - PAD * 2,
+        col: INNER_COL + DUDS_WIDTH + 0.2,
+        row: DUDS_ROW,
+        width: INNER_WIDTH - DUDS_WIDTH - 0.2,
+        height: 1,
+      },
+      {
+        id: "stats",
+        col: INNER_COL,
+        row: STATS_ROW,
+        width: INNER_WIDTH,
+        height: STATS_HEIGHT,
+      },
+      {
+        id: "status",
+        col: 0,
+        row: STATUS_ROW,
+        width: COLS,
+        height: DECK_ROW - STATUS_ROW - 0.05,
       },
       ...marketZones,
       {
@@ -804,7 +849,7 @@ export default function BoilingOver() {
         height: 1,
       },
     ];
-  }, [game]);
+  }, [game, brewingLayout]);
 
   const cardMapper = (
     mappedCard: MappedCard,
@@ -812,7 +857,7 @@ export default function BoilingOver() {
     const { zoneName, pileIndex, cardIndex, card, topOfZone } = mappedCard;
 
     if (zoneName === "deck") {
-      const canDraw = game.phase === "brewing" && topOfZone;
+      const canDraw = game.phase === "brewing" && topOfZone && !isSkipping;
       return {
         onPress: canDraw ? onDraw : undefined,
         isDisabled: !canDraw,
@@ -821,22 +866,13 @@ export default function BoilingOver() {
     }
 
     if (zoneName === "cauldron") {
-      if (isDud(card)) {
-        return {
-          isDisabled: true,
-          selectColor: "orange",
-          forceOverlayColor: true,
-        };
-      }
-      const multiplier = card.suit === "diamonds";
-      return {
-        isDisabled: true,
-        selectColor: multiplier ? "purple" : "none",
-        forceSelectColor: multiplier,
-      };
+      return isDud(card)
+        ? { isDisabled: true, selectColor: "orange", forceOverlayColor: true }
+        : { isDisabled: true };
     }
 
     if (zoneName === "market" && pileIndex !== undefined) {
+      if (brewingLayout) return { isDisabled: true };
       const affordable = canBuy(game, card);
       return {
         onPress: affordable ? () => onBuy(pileIndex, cardIndex) : undefined,
@@ -858,6 +894,13 @@ export default function BoilingOver() {
   });
 
   const tier = getTier(game.score);
+  const isFinal = game.round >= ROUNDS;
+  const effectText = (suit: CardSuit) =>
+    i18n.t(`games:boilingOver.effect_${suit}`);
+  const costText = (suit: CardSuit) =>
+    SURCHARGE[suit] === 0
+      ? i18n.t("games:boilingOver.costValue")
+      : i18n.t("games:boilingOver.costValuePlus", { extra: SURCHARGE[suit] });
 
   return (
     <GameWrapper
@@ -896,98 +939,133 @@ export default function BoilingOver() {
           style={[
             pointerEventsStyles.none,
             getZoneStylesById(`marketLabel-${i}`),
-            flexStyles.colCentered,
+            brewingLayout
+              ? [flexStyles.rowCentered, { gap: spacing(3) }]
+              : [
+                  flexStyles.colCentered,
+                  {
+                    alignItems: "flex-start",
+                    paddingLeft: spacing(8),
+                    gap: spacing(2),
+                  },
+                ],
             {
               zIndex: 2,
-              alignItems: "flex-start",
-              paddingLeft: spacing(8),
-              gap: spacing(2),
               opacity: game.bought.includes(suit) ? 0.4 : 1,
             },
           ]}
         >
           <Icon
             name={suit}
-            size={cardWidth * 0.34}
+            size={cardWidth * (brewingLayout ? 0.2 : 0.34)}
             color={isRed(suit) ? Colors.suitsRed : colorPale}
           />
-          <Text size="xs" weight={500} color={colorPale}>
-            {i18n.t(`games:boilingOver.effect_${suit}`)}
+          <Text
+            size={brewingLayout ? "xxs" : "xs"}
+            weight={500}
+            color={colorPale}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.7}
+          >
+            {effectText(suit)}
           </Text>
-          <Text size="xs" weight={300} color={rgba(colorPale, 0.7)}>
-            {i18n.t(
-              suit === "hearts"
-                ? "games:boilingOver.costValue"
-                : "games:boilingOver.costValuePlus",
-              { extra: EFFECT_SURCHARGE },
-            )}
-          </Text>
+          {!brewingLayout && (
+            <Text size="xs" weight={300} color={rgba(colorPale, 0.7)}>
+              {costText(suit)}
+            </Text>
+          )}
         </View>
       ))}
 
-      <View
-        style={[
-          pointerEventsStyles.none,
-          getUnderlayStyle(cardWidth, colorDark, colorPale),
-          getZoneStylesById("cauldronArea"),
-        ]}
-      />
+      {brewingLayout && (
+        <View
+          style={[
+            pointerEventsStyles.none,
+            getUnderlayStyle(cardWidth, colorDark, colorPale),
+            getZoneStylesById("cauldronArea"),
+          ]}
+        />
+      )}
 
-      <View
-        style={[
-          pointerEventsStyles.none,
-          getZoneStylesById("stats"),
-          {
-            zIndex: 2,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-around",
-          },
-        ]}
-      >
-        <Stat
-          label={i18n.t("games:boilingOver.strengthLabel")}
-          value={bonus > 0 ? `${strength} (+${bonus})` : `${strength}`}
-          color={colorPale}
-        />
-        <Stat
-          label={i18n.t("games:boilingOver.pointsLabel")}
-          value={`${strength + bonus}`}
-          color={colorPale}
-        />
-        <Stat
-          label={i18n.t("games:boilingOver.coinsLabel")}
-          value={`${coinsFor(strength + bonus)}`}
-          color={colorPale}
-        />
-      </View>
+      {brewingLayout && (
+        <View
+          style={[
+            pointerEventsStyles.none,
+            getZoneStylesById("meters"),
+            flexStyles.colCentered,
+            { zIndex: 2, alignItems: "stretch", gap: spacing(4) },
+          ]}
+        >
+          <ProgressBar
+            progressValue={Math.min(duds, limit)}
+            totalValue={limit}
+            color="orange"
+            backgroundColor={rgba(colorDark, 0.7)}
+            labelText={i18n.t("games:boilingOver.dudsLabel")}
+            tallyText={`${duds} / ${limit}`}
+            scaledHeight={cardHeight * 0.36}
+          />
+          <ProgressBar
+            progressValue={Math.round(risk * 100)}
+            totalValue={100}
+            color="red"
+            backgroundColor={rgba(colorDark, 0.7)}
+            labelText={i18n.t("games:boilingOver.bustLabel")}
+            tallyText={`${Math.round(risk * 100)}%`}
+            scaledHeight={cardHeight * 0.36}
+          />
+        </View>
+      )}
 
-      <View
-        style={[
-          pointerEventsStyles.none,
-          getZoneStylesById("meters"),
-          { zIndex: 2, flexDirection: "row", gap: cardWidth * 0.1 },
-        ]}
-      >
-        <VerticalBar
-          label={i18n.t("games:boilingOver.dudsLabel")}
-          text={`${duds}/${DUD_LIMIT}`}
-          textColor={colorPale}
-          value={Math.min(duds, DUD_LIMIT)}
-          total={DUD_LIMIT}
-          color="orange"
-          backgroundColor={rgba(colorDark, 0.7)}
-        />
-        <VerticalBar
-          label={i18n.t("games:boilingOver.bustLabel")}
-          text={`${Math.round(risk * 100)}%`}
-          textColor={colorPale}
-          value={Math.round(risk * 100)}
-          total={100}
-          color="red"
-          backgroundColor={rgba(colorDark, 0.7)}
-        />
-      </View>
+      {brewingLayout && (
+        <View
+          style={[
+            pointerEventsStyles.none,
+            getZoneStylesById("stats"),
+            flexStyles.rowCentered,
+            { zIndex: 2, justifyContent: "space-around" },
+          ]}
+        >
+          <Stat
+            label={i18n.t("games:boilingOver.pointsLabel")}
+            value={`${strength}`}
+            color={colorPale}
+          />
+          {!isFinal && (
+            <Stat
+              label={i18n.t("games:boilingOver.coinsLabel")}
+              value={`${coins}`}
+              color={colorPale}
+            />
+          )}
+        </View>
+      )}
+
+      {game.phase === "market" && (
+        <View
+          style={[
+            pointerEventsStyles.none,
+            getZoneStylesById("status"),
+            flexStyles.rowCentered,
+          ]}
+        >
+          <Text
+            size="sm"
+            weight={500}
+            color={colorPale}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.6}
+            style={{ flex: 1, textAlign: "center" }}
+          >
+            {i18n.t("games:boilingOver.statusMarket", {
+              coins: game.coins,
+              buys: MAX_BUYS - game.bought.length,
+            })}
+          </Text>
+        </View>
+      )}
 
       {!ended && (
         <View
@@ -1004,15 +1082,15 @@ export default function BoilingOver() {
                 theme="blue"
                 size="sm"
                 onPress={onStop}
-                disabled={game.cauldron.length === 0}
+                disabled={game.cauldron.length === 0 || isSkipping}
                 taller
               />
               <Button
                 text={i18n.t("games:boilingOver.addCard")}
                 theme="green"
                 size="sm"
-                onPress={onDraw}
-                disabled={game.deck.length === 0}
+                onPress={() => void onDraw()}
+                disabled={game.deck.length === 0 || isSkipping}
                 style={{ flex: 1 }}
                 taller
               />
@@ -1031,9 +1109,7 @@ export default function BoilingOver() {
                 taller
               />
               <Button
-                text={i18n.t("games:boilingOver.keepCoins", {
-                  value: coinsFor(strength),
-                })}
+                text={i18n.t("games:boilingOver.keepCoins", { value: coins })}
                 theme="blue"
                 size="sm"
                 onPress={() => onKeep("coins")}
@@ -1086,6 +1162,10 @@ export default function BoilingOver() {
 
         <ProgressBar
           progressValue={game.score}
+          // What stopping now would add.
+          previewProgressValue={
+            game.phase === "brewing" ? game.score + strength : undefined
+          }
           totalValue={WIN_SCORE}
           color="blue"
           backgroundColor={rgba(colorDark, 0.7)}
