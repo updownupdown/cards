@@ -230,15 +230,12 @@ describe("Collect from", () => {
     expect(launchGame).toHaveBeenCalledWith("/klondike");
   });
 
-  test("for a quote or chapter, a game locked on the map locks the button, and says why", () => {
+  test("for a quote or chapter, a game locked on the map has no button", () => {
     mockUnlockedPaths.clear();
     const renderer = render(<CollectFrom path="/klondike" campaign />);
-    const button = renderer.root.findAllByType(
-      Button as React.ComponentType,
-    )[0];
-    expect(button.props).toMatchObject({ disabled: true, iconName: "lock" });
-    const note = JSON.stringify(renderer.toJSON());
-    expect(note).toContain("lockedOnMap");
+    expect(
+      renderer.root.findAllByType(Button as React.ComponentType),
+    ).toHaveLength(0);
   });
 
   test("for a quote or chapter, an unlocked game starts in Campaign mode", () => {
@@ -247,8 +244,6 @@ describe("Collect from", () => {
     const button = renderer.root.findAllByType(
       Button as React.ComponentType,
     )[0];
-    expect(button.props).toMatchObject({ disabled: false });
-    expect(button.props.iconName).toBeUndefined();
     act(() => button.props.onPress());
     expect(launchGame).toHaveBeenCalledWith({
       pathname: "/klondike",

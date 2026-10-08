@@ -11,6 +11,7 @@
     "byEra": "Dönemler",
     "byName": "Alfabetik",
     "uncollected": "Bu alıntı henüz toplanmadı.",
+    "playToCollect": "Bu alıntıyı toplamak için Yolculuk'u oyna.",
     "barLabel": "{{name}}, {{index}}/{{total}}"
   },
   "tao": {
@@ -20,6 +21,7 @@
     "about": "Tao Te Ching, geleneksel olarak bilge Laozi'ye atfedilen, temel bir antik Çin metnidir. Evrenin doğal akışı ve ritmi olan Tao ile uyum içinde yaşamayı öğretir. Wu wei'yi (çabasız eylem) uygulayarak ve alçakgönüllülüğü, sadeliği ve esnekliği benimseyerek kalıcı bir huzur ve denge bulunabileceği söylenir.",
     "pick": "Bölüm seç",
     "uncollected": "Bu bölüm henüz toplanmadı.",
+    "playToCollect": "Bu bölümü toplamak için Yolculuk'u oyna.",
     "breathe": "Nefes al",
     "continue": "Devam et"
   },

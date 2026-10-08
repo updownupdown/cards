@@ -18,7 +18,6 @@
   },
   "undo": "Geri al",
   "winToCollect": "Toplamak için **{{game}}** oyununu kazan",
-  "lockedOnMap": "**{{game}}** oyununun kilidini açmak için Yolculuk'ta yanındaki bir oyunu kazan.",
   "errors": {
     "appCrashed": "Bir şeyler ters gitti.",
     "tryAgain": "Tekrar dene"

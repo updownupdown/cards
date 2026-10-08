@@ -27,8 +27,8 @@ const GLOW_PULSE_MS = 1800;
  * A "Win <game> to collect" button under something not collected yet, the
  * game's name in bold, which starts the game, glowing softly in the button's
  * colour. A Tao chapter or quote only comes from a Campaign win, so for
- * those the game starts in Campaign mode; while the game is still locked on
- * the map the button is locked too, with a line under it saying why.
+ * those the game starts in Campaign mode, and there's no button while the
+ * game is still locked on the map.
  */
 export function CollectFrom({
   path,
@@ -42,14 +42,15 @@ export function CollectFrom({
 }) {
   const { t } = useTranslation("common");
   const theme = usePalette();
-  const { spacing } = useResponsiveMetrics();
   const language = useDisplayLanguage();
   const { unlockedPaths, isLoading } = useCampaignProgress();
   const game = GAMES_DATA[path];
-  // Until the progress is read, the map's locks aren't known.
-  if (!game || (campaign && isLoading)) return null;
+  // A Campaign win is the only way to collect a quote or chapter, so no
+  // button until the game is open on the map (or the map is read).
+  if (!game || (campaign && (isLoading || !unlockedPaths.has(path)))) {
+    return null;
+  }
   const gameTitle = localizeGameTitle(game, path, language);
-  const locked = campaign && !unlockedPaths.has(path);
   const play = () => {
     onLaunch?.();
     if (campaign) {
@@ -62,39 +63,30 @@ export function CollectFrom({
 
   const label = withBoldName(t("winToCollect", { game: gameTitle }), theme.sky);
 
-  const button = (
-    <Button
-      text={label}
-      size="sm"
-      onPress={play}
-      disabled={locked}
-      iconName={locked ? "lock" : undefined}
-      halfTaller
-      style={{ alignSelf: "center" }}
-      textStyle={{
-        fontFamily: FontWeight[400],
-        color: rgba(theme.sky, 0.75),
-      }}
-    />
+  return (
+    <Glow color={theme.accent}>
+      <Button
+        text={label}
+        size="sm"
+        onPress={play}
+        halfTaller
+        style={{ alignSelf: "center" }}
+        textStyle={{
+          fontFamily: FontWeight[400],
+          color: rgba(theme.sky, 0.75),
+        }}
+      />
+    </Glow>
   );
+}
 
-  if (locked) {
-    return (
-      <View style={{ alignItems: "center", gap: spacing(10) }}>
-        {button}
-        <Text
-          size="xs"
-          weight={400}
-          color={theme.dim}
-          style={{ textAlign: "center", maxWidth: spacing(300) }}
-        >
-          {withBoldName(t("lockedOnMap", { game: gameTitle }), theme.ink)}
-        </Text>
-      </View>
-    );
-  }
-
-  return <Glow color={theme.accent}>{button}</Glow>;
+/**
+ * Whether a quote or chapter from this game can't be collected yet: its game
+ * is still locked on the map (or it has none). False until progress is read.
+ */
+export function useLockedOnMap(path: string | undefined) {
+  const { unlockedPaths, isLoading } = useCampaignProgress();
+  return !isLoading && !(path && unlockedPaths.has(path));
 }
 
 /** The game's name, marked **bold** in the translation, in bold. */
