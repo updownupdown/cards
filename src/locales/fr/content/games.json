@@ -1436,7 +1436,7 @@
   },
   "fifteen-puzzle": {
     "howToPlay": {
-      "hash": "dc55b9d9",
+      "hash": "e5a608db",
       "value": [
         "## Objectif",
         "Disposez les rangées pour que chacune soit As, 2, 3, 4, par couleur\u00a0:",
@@ -1445,16 +1445,16 @@
         "- **Carreaux**",
         "- **Piques** (sans carte 4)",
         "## Déroulement",
-        "- Touchez une carte au-dessus, en dessous, à gauche ou à droite de l'espace vide pour l'y faire glisser.",
+        "- Faites glisser une carte située au-dessus, en dessous, à gauche ou à droite de l'espace vide vers celui-ci pour l'y placer.",
         "- Les cartes deviennent vertes quand elles sont à la bonne place.",
         "- Chaque puzzle mélangé est obtenu par des coups valides et peut être résolu."
       ]
     },
     "quickStart": {
-      "hash": "2e731eeb",
+      "hash": "2ea287e0",
       "value": [
         "Rangez les cartes de l'As au 4 sur chaque rangée\u00a0: cœurs, trèfles, carreaux, puis piques.",
-        "Touchez une carte à côté de l'espace vide pour la faire glisser."
+        "Faites glisser une carte vers l'espace vide à côté d'elle pour la déplacer."
       ]
     },
     "title": {

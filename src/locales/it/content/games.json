@@ -1436,7 +1436,7 @@
   },
   "fifteen-puzzle": {
     "howToPlay": {
-      "hash": "dc55b9d9",
+      "hash": "e5a608db",
       "value": [
         "## Obiettivo",
         "Disponi le righe in modo che ognuna sia Asso, 2, 3, 4, per seme:",
@@ -1445,16 +1445,16 @@
         "- **Quadri**",
         "- **Picche** (senza il 4)",
         "## Come si gioca",
-        "- Tocca una carta sopra, sotto, a sinistra o a destra dello spazio vuoto per farla scorrere al suo posto.",
+        "- Scorri una carta sopra, sotto, a sinistra o a destra dello spazio vuoto verso di esso per farla scorrere al suo posto.",
         "- Le carte diventano verdi quando sono nella posizione giusta.",
         "- Ogni rompicapo mescolato è ottenuto con mosse valide ed è risolvibile."
       ]
     },
     "quickStart": {
-      "hash": "2e731eeb",
+      "hash": "2ea287e0",
       "value": [
         "Ordina le carte dall'Asso al 4 in ogni riga: cuori, fiori, quadri, poi picche.",
-        "Tocca una carta accanto allo spazio vuoto per farla scorrere."
+        "Scorri una carta verso lo spazio vuoto accanto per farla scorrere."
       ]
     },
     "title": {

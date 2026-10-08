@@ -1436,7 +1436,7 @@
   },
   "fifteen-puzzle": {
     "howToPlay": {
-      "hash": "dc55b9d9",
+      "hash": "e5a608db",
       "value": [
         "## Objetivo",
         "Ordena las filas para que cada una sea As, 2, 3, 4, por palo:",
@@ -1445,16 +1445,16 @@
         "- **Diamantes**",
         "- **Picas** (no tiene carta 4)",
         "## Cómo se juega",
-        "- Toca una carta situada encima, debajo, a la izquierda o a la derecha del espacio vacío para deslizarla hasta él.",
+        "- Desliza una carta situada encima, debajo, a la izquierda o a la derecha del espacio vacío hacia él para deslizarla hasta allí.",
         "- Las cartas se vuelven verdes cuando están en su posición correcta.",
         "- Cada puzle barajado se genera con movimientos válidos y tiene solución."
       ]
     },
     "quickStart": {
-      "hash": "2e731eeb",
+      "hash": "2ea287e0",
       "value": [
         "Ordena las cartas del As al 4 en cada fila: Corazones, Tréboles, Diamantes y Picas.",
-        "Toca una carta junto al espacio vacío para deslizarla."
+        "Desliza una carta hacia el espacio vacío junto a ella para moverla."
       ]
     },
     "title": {

@@ -4,6 +4,7 @@ import { getLocales } from "expo-localization";
 // `use` is renamed so lint doesn't mistake it for a React hook.
 import i18n, { changeLanguage, use as registerPlugin } from "i18next";
 import { initReactI18next, useTranslation } from "react-i18next";
+import { Platform } from "react-native";
 import {
   PSEUDO_LANGUAGE,
   normalizeLanguageCode,
@@ -29,12 +30,16 @@ export function getDeviceLanguageCodes() {
 // Translations are bundled and loaded synchronously, so the first frame is
 // already in the right language. The saved language setting is applied as
 // soon as it loads (see useLanguageSync); until then the phone's language is
-// used.
+// used. The web starts in English instead, as its static pages are, so they
+// hydrate cleanly; the root layout rebuilds the app once the language is in.
 void registerPlugin(initReactI18next).init({
   resources: __DEV__
     ? { ...RESOURCES, [PSEUDO_LANGUAGE]: pseudoLocalizeDeep(RESOURCES.en) }
     : RESOURCES,
-  lng: resolveLanguage("system", getDeviceLanguageCodes()),
+  lng:
+    Platform.OS === "web"
+      ? SOURCE_LANGUAGE
+      : resolveLanguage("system", getDeviceLanguageCodes()),
   fallbackLng: SOURCE_LANGUAGE,
   ns: NAMESPACES,
   defaultNS: "common",
