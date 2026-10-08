@@ -73,6 +73,7 @@ import SmokeBombIcon from "./SmokeBomb.svg";
 import SpadesIcon from "./Spades.svg";
 import StarIcon from "./Star.svg";
 import StarOutlineIcon from "./StarOutline.svg";
+import SwipeIcon from "./Swipe.svg";
 import SwordIcon from "./Sword.svg";
 import TaoIcon from "./Tao.svg";
 import TrophyIcon from "./Trophy.svg";
@@ -150,6 +151,7 @@ export type IconName =
   | "spades"
   | "star"
   | "star-outline"
+  | "swipe"
   | "sword"
   | "tao"
   | "trophy"
@@ -227,6 +229,7 @@ export const icons: Record<IconName, ComponentType<SvgProps>> = {
   "spades": SpadesIcon,
   "star": StarIcon,
   "star-outline": StarOutlineIcon,
+  "swipe": SwipeIcon,
   "sword": SwordIcon,
   "tao": TaoIcon,
   "trophy": TrophyIcon,

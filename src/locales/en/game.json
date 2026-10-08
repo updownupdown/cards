@@ -2,7 +2,7 @@
   "menu": {
     "home": "Home",
     "campaign": "Odyssey",
-    "rules": "Rules",
+    "rules": "How to Play",
     "hint": "Help from Above",
     "undo": "Undo",
     "reset": "Reset",
@@ -28,10 +28,11 @@
     "hold": "Hold to reset game"
   },
   "tips": {
-    "quickStart": "Quick Start"
+    "title": "How to Play: {{game}}",
+    "dismiss": "Dismiss"
   },
   "rules": {
-    "title": "Rules",
+    "title": "How to Play",
     "unavailable": "Instructions are not available for this game.",
     "helpIntro": {
       "done": "Got it"

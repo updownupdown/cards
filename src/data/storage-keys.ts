@@ -17,3 +17,5 @@ export const HINT_BUTTON_STORAGE_KEY = "cards.hintButton.v1";
 export const HINT_INTRO_STORAGE_KEY = "cards.hintIntro.v1";
 /** Deals Autopilot played in (their wins don't count): session ids, JSON. */
 export const AUTOPILOT_SESSIONS_STORAGE_KEY = "cards.autopilotSessions.v1";
+/** "1" once the player has swiped a quick start away, in any game. */
+export const SWIPE_DISMISS_STORAGE_KEY = "cards.swipeDismiss.v1";

@@ -26,7 +26,7 @@ export const fifteenPuzzle: GameDefinition = {
   cardBack: CardBackColors.Ocean,
   quickStart: [
     "Reorder the cards from Ace to 4 in each row: Hearts, Clubs, Diamonds, then Spades.",
-    "Tap a card beside the empty space to slide it.",
+    "Swipe a card toward the empty space beside it to slide it.",
   ],
   howToPlay: [
     "## Objective",
@@ -37,7 +37,7 @@ export const fifteenPuzzle: GameDefinition = {
     "- **Spades** (does not have a 4 card)",
 
     "## Gameplay",
-    "- Tap a card above, below, left, or right of the empty space to slide it into the empty space.",
+    "- Swipe a card above, below, left, or right of the empty space toward it to slide it in.",
     "- Cards will turn green when they are in their correct position.",
     "- Every shuffled puzzle is produced using legal moves and is solvable.",
   ],

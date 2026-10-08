@@ -1,28 +1,58 @@
 import { usePalette } from "@/styles/palette";
 import { getGameInfo } from "@/data/game-menu";
+import {
+  markSwipeDismissKnown,
+  useSwipeDismissKnown,
+} from "@/data/swipe-dismiss";
 import { useGamePath } from "@/hooks/useGamePath";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGame } from "@/i18n/content";
 import { flexStyles } from "@/styles/flexStyles";
 import { Colors, layoutDims, rgba } from "@/styles/styles";
-import { GameHeading } from "@/components/Modals/ModalFull";
-import { useEffect, useRef, useState } from "react";
-import { Animated, LayoutChangeEvent, View } from "react-native";
+import { useEffect, useMemo } from "react";
+import { View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, {
+  cancelAnimation,
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 import { Button } from "../Button/Button";
-import { SURFACE_OPACITY } from "../ui/FloatingBar";
+import { swipeOpacity } from "../Home/DealMeAGame";
 import { QuickStart } from "../Modals/RulesModal";
+import { Text } from "./Text";
 
-const AUTO_CLOSE_DELAY = 15000; // milliseconds
+/** Share of the card width a drag must pass to count as a swipe. */
+const SWIPE_THRESHOLD = 0.3;
+/** A quick flick counts as a swipe whatever its distance (points/s). */
+const SWIPE_VELOCITY = 800;
+const FLY_OUT_DURATION = 220;
+/** Degrees the card has turned once dragged its own width. */
+const SWIPE_ROTATION = 8;
+/** The cue for a player who hasn't swiped yet: how far it leans each way. */
+const CUE_REACH = 0.12;
+const CUE_DELAY = 900;
+/** Stands in for the game's name while the heading is translated. */
+const GAME_NAME_SLOT = "\u0000";
 
 type Props = {
   onClose: () => void;
   showRulesModal: () => void;
-  morphProgress: Animated.Value;
 };
 
-export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
-  const onCloseRef = useRef(onClose);
+/**
+ * The quick start shown over a game not played yet. It follows a sideways
+ * drag, fading as it goes, and is dismissed once swiped far enough either
+ * way, as the Random Deal's cards are. Until the player has swiped one away,
+ * it leans left then right as it appears, to show that it can be.
+ */
+export function TipsBox({ onClose, showRulesModal }: Props) {
   const pathname = useGamePath();
   const gameInfo = localizeGame(
     getGameInfo(pathname),
@@ -30,120 +60,149 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
     useDisplayLanguage(),
   );
   const { t } = useTranslation("game");
-  const { t: tCommon } = useTranslation("common");
+  // The heading around the game's name, which gets its own colour.
+  const [titleStart, titleEnd = ""] = t("tips.title", {
+    game: GAME_NAME_SLOT,
+  }).split(GAME_NAME_SLOT);
   const { spacing, ui } = useResponsiveMetrics();
   const theme = usePalette();
-  const glassTint = rgba(theme.surface, SURFACE_OPACITY);
-  const [expandedWidth, setExpandedWidth] = useState<number>();
-  const [contentHeight, setContentHeight] = useState<number>();
-  const instructionButtonSize = spacing(layoutDims.menuButtonSize);
   const sidePadding = spacing(layoutDims.pagePadding / 2);
-  const instructionButtonOffset = expandedWidth
-    ? sidePadding +
-      ((expandedWidth - sidePadding * 2) * 3) / 10 -
-      expandedWidth / 2
-    : 0;
-
-  onCloseRef.current = onClose;
+  const translateX = useSharedValue(0);
+  const width = useSharedValue(0);
+  // The cue's lean, as a share of CUE_REACH: -1 left, 1 right.
+  const cue = useSharedValue(0);
+  const swipeKnown = useSwipeDismissKnown();
 
   useEffect(() => {
-    const timer = setTimeout(() => onCloseRef.current(), AUTO_CLOSE_DELAY);
+    if (swipeKnown) return;
+    const ease = Easing.inOut(Easing.quad);
+    cue.value = withDelay(
+      CUE_DELAY,
+      withSequence(
+        withTiming(-1, { duration: 320, easing: ease }),
+        withTiming(1, { duration: 520, easing: ease }),
+        withTiming(0, { duration: 320, easing: ease }),
+      ),
+    );
+    return () => cancelAnimation(cue);
+  }, [swipeKnown, cue]);
 
-    return () => clearTimeout(timer);
-  }, []);
+  const swipeToDismiss = useMemo(
+    () =>
+      Gesture.Pan()
+        .activeOffsetX([-12, 12])
+        .failOffsetY([-14, 14])
+        .onStart(() => {
+          "worklet";
+          cue.value = withTiming(0, { duration: 120 });
+        })
+        .onUpdate((event) => {
+          "worklet";
+          translateX.value = event.translationX;
+        })
+        .onEnd((event) => {
+          "worklet";
+          const passed =
+            Math.abs(event.translationX) > width.value * SWIPE_THRESHOLD ||
+            Math.abs(event.velocityX) > SWIPE_VELOCITY;
+          if (!passed) {
+            translateX.value = withTiming(0, { duration: 180 });
+            return;
+          }
+          scheduleOnRN(markSwipeDismissKnown);
+          const sign = event.translationX > 0 ? 1 : -1;
+          translateX.value = withTiming(
+            sign * width.value * 1.4,
+            { duration: FLY_OUT_DURATION },
+            (finished) => {
+              if (finished) scheduleOnRN(onClose);
+            },
+          );
+        }),
+    [onClose, translateX, width, cue],
+  );
+
+  const cardStyle = useAnimatedStyle(() => {
+    const offset = translateX.value + cue.value * CUE_REACH * width.value;
+    // Flat and solid until it has been measured.
+    const measured = width.value > 0;
+    return {
+      transform: [
+        { translateX: offset },
+        {
+          rotate: `${measured ? (offset / width.value) * SWIPE_ROTATION : 0}deg`,
+        },
+      ],
+      opacity: measured ? swipeOpacity(offset, width.value) : 1,
+    };
+  });
 
   return (
     <View
-      onLayout={(event: LayoutChangeEvent) => {
-        const { width } = event.nativeEvent.layout;
-        const contentWidth = width - sidePadding * 2;
-        setExpandedWidth((currentWidth) =>
-          currentWidth === contentWidth ? currentWidth : contentWidth,
-        );
-      }}
       style={{
         width: "100%",
         maxWidth: ui.contentMaxWidth,
         alignSelf: "center",
-        alignItems: "center",
         paddingHorizontal: sidePadding,
       }}
     >
-      <Animated.View
-        style={{
-          maxWidth: ui.contentMaxWidth,
-          alignSelf: "center",
-          width: expandedWidth
-            ? morphProgress.interpolate({
-                inputRange: [0, 1],
-                outputRange: [instructionButtonSize, expandedWidth],
-              })
-            : instructionButtonSize,
-          height: contentHeight
-            ? morphProgress.interpolate({
-                inputRange: [0, 1],
-                outputRange: [instructionButtonSize, contentHeight],
-              })
-            : instructionButtonSize,
-          overflow: "hidden",
-          borderRadius: morphProgress.interpolate({
-            inputRange: [0, 1],
-            outputRange: [instructionButtonSize / 2, spacing(18)],
-          }),
-          // The header's fill, as it grows out of it.
-          backgroundColor: glassTint,
-          transform: [
-            {
-              translateX: morphProgress.interpolate({
-                inputRange: [0, 1],
-                outputRange: [instructionButtonOffset, 0],
-              }),
-            },
-          ],
-          boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
-            Colors.black,
-            0.3,
-          )}`,
-        }}
-      >
-        <View
-          onLayout={(event: LayoutChangeEvent) => {
-            const { height } = event.nativeEvent.layout;
-            setContentHeight((currentHeight) =>
-              currentHeight === height ? currentHeight : height,
-            );
+      <GestureDetector gesture={swipeToDismiss} touchAction="pan-y">
+        <Animated.View
+          onLayout={(event) => {
+            width.value = event.nativeEvent.layout.width;
           }}
           style={[
             flexStyles.colCentered,
             {
               padding: spacing(12),
-              paddingBottom: spacing(20),
               gap: spacing(16),
               outline: "none",
-              width: expandedWidth ?? "100%",
+              borderRadius: spacing(18),
+              backgroundColor: theme.surface,
+              boxShadow: `${spacing(1)}px ${spacing(2)}px ${spacing(6)}px ${rgba(Colors.black, 0.3)}, ${spacing(2)}px ${spacing(4)}px ${spacing(10)}px ${rgba(
+                Colors.black,
+                0.3,
+              )}`,
             },
+            cardStyle,
           ]}
         >
+          <Text
+            size="xxs"
+            weight={500}
+            textTransform="uppercase"
+            color={rgba(theme.ink, 0.7)}
+            style={{ textAlign: "center", letterSpacing: spacing(1.5) }}
+          >
+            {titleStart}
+            <Text
+              size="xxs"
+              weight={600}
+              textTransform="uppercase"
+              color={theme.accent2}
+              style={{ letterSpacing: spacing(1.5) }}
+            >
+              {gameInfo.title}
+            </Text>
+            {titleEnd}
+          </Text>
+
+          <QuickStart
+            gameInfo={gameInfo}
+            style={{
+              gap: spacing(8),
+              paddingLeft: spacing(4),
+              paddingRight: spacing(8),
+            }}
+          />
+
           <View
             style={[
               flexStyles.rowCentered,
               flexStyles.fullWidth,
-              { gap: spacing(12), paddingLeft: spacing(4) },
+              { justifyContent: "space-between", gap: spacing(12) },
             ]}
           >
-            <View
-              style={[
-                flexStyles.colCentered,
-                flexStyles.flex1,
-                { alignItems: "stretch", minWidth: 0, overflow: "hidden" },
-              ]}
-            >
-              <GameHeading
-                gameName={gameInfo.title}
-                title={t("tips.quickStart")}
-              />
-            </View>
-
             <Button
               size="sm"
               iconName="instructions"
@@ -158,25 +217,16 @@ export function TipsBox({ onClose, showRulesModal, morphProgress }: Props) {
 
             <Button
               size="sm"
-              iconName="close"
-              text={tCommon("close")}
-              autoProgress={AUTO_CLOSE_DELAY}
-              autoProgressColor={rgba(theme.accent, 0.25)}
+              iconName="swipe"
+              iconSize={spacing(24 * 1.15)}
+              text={t("tips.dismiss")}
               onPress={onClose}
-              theme={rgba(theme.ink, 0.1)}
-              style={{ paddingRight: spacing(9), borderWidth: 0 }}
+              theme="none"
+              style={{ borderWidth: 0 }}
             />
           </View>
-
-          <QuickStart
-            gameInfo={gameInfo}
-            style={{
-              gap: spacing(8),
-              paddingRight: spacing(8),
-            }}
-          />
-        </View>
-      </Animated.View>
+        </Animated.View>
+      </GestureDetector>
     </View>
   );
 }

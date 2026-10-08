@@ -2,7 +2,7 @@
   "menu": {
     "home": "Início",
     "campaign": "Odisseia",
-    "rules": "Regras",
+    "rules": "Como jogar",
     "hint": "Ajuda lá de cima",
     "undo": "Desfazer",
     "reset": "Reiniciar",
@@ -28,10 +28,11 @@
     "hold": "Segure para reiniciar a partida"
   },
   "tips": {
-    "quickStart": "Início rápido"
+    "title": "Como jogar: {{game}}",
+    "dismiss": "Dispensar"
   },
   "rules": {
-    "title": "Regras",
+    "title": "Como jogar",
     "unavailable": "As instruções não estão disponíveis para este jogo.",
     "helpIntro": {
       "done": "Entendi"

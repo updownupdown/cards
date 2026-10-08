@@ -1401,7 +1401,7 @@
   },
   "fifteen-puzzle": {
     "howToPlay": {
-      "hash": "dc55b9d9",
+      "hash": "e5a608db",
       "value": [
         "## Objetivo",
         "Organize as linhas de modo que cada uma seja Ás, 2, 3, 4, por naipe:",
@@ -1410,16 +1410,16 @@
         "- **Ouros**",
         "- **Espadas** (sem o 4)",
         "## Como jogar",
-        "- Toque numa carta acima, abaixo, à esquerda ou à direita do espaço vazio para deslizá-la até ele.",
+        "- Deslize uma carta acima, abaixo, à esquerda ou à direita do espaço vazio em direção a ele para encaixá-la.",
         "- As cartas ficam verdes quando estão na posição certa.",
         "- Todo quebra-cabeça embaralhado é gerado com jogadas válidas e tem solução."
       ]
     },
     "quickStart": {
-      "hash": "2e731eeb",
+      "hash": "2ea287e0",
       "value": [
         "Ordene as cartas do Ás ao 4 em cada linha: copas, paus, ouros e depois espadas.",
-        "Toque numa carta ao lado do espaço vazio para deslizá-la."
+        "Deslize uma carta em direção ao espaço vazio ao lado dela para movê-la."
       ]
     },
     "title": {
