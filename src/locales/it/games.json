@@ -944,5 +944,25 @@
   },
   "elevens": {
     "noMorePairsOrFaceTriplets": "Non si possono più formare coppie né tris di figure."
+  },
+  "gambit": {
+    "rival": "Rivale",
+    "you": "Tu",
+    "trump": "Briscola",
+    "tricks": "Prese",
+    "dealOf": "Mano {{deal}} di {{total}}",
+    "contract_one": "Contratto: {{count}} presa",
+    "contract_other": "Contratto: {{count}} prese",
+    "contractLost": "Il contratto non si può più rispettare.",
+    "allContractsMade": "Tutti e tre i contratti rispettati!"
+  },
+  "carousel": {
+    "hand": "Mano",
+    "tableWhole": "Tutte le combinazioni sono complete.",
+    "tableBroken": "Completa ogni combinazione per prendere una carta.",
+    "allMelded_one": "Tutte le carte calate, con {{count}} carta d'avanzo!",
+    "allMelded_other": "Tutte le carte calate, con {{count}} carte d'avanzo!",
+    "handFull": "La tua mano è arrivata a {{count}} carte.",
+    "outOfCards": "La giostra si è svuotata prima della tua mano."
   }
 }

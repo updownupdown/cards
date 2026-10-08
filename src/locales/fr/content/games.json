@@ -668,6 +668,41 @@
       "value": "Canfield"
     }
   },
+  "carousel": {
+    "howToPlay": {
+      "hash": "972bbaa1",
+      "value": [
+        "## Objectif",
+        "Videz votre main en posant toutes vos cartes sur la table, en combinaisons. Vous perdez si votre main contient un jour **12 cartes**.",
+        "Votre score est le nombre de cartes restant dans la pioche et le carrousel quand vous videz votre main.",
+        "## Combinaisons",
+        "- **Groupe\u00a0:** trois ou quatre cartes de même rang, toutes de couleurs différentes\u00a0: {7S} {7H} {7D}",
+        "- **Séquence\u00a0:** trois cartes ou plus d'une même couleur qui se suivent\u00a0: {9C} {10C} {JC} {QC}",
+        "- Un As est bas ou haut, mais pas les deux\u00a0: {AH} {2H} {3H} et {QH} {KH} {AH} sont des séquences, {KH} {AH} {2H} n'en est pas une.",
+        "## Déplacer des cartes",
+        "- Touchez des cartes pour les sélectionner, dans votre main et dans une seule combinaison.",
+        "- Touchez une carte d'une autre combinaison pour y déplacer la sélection, ou une place vide pour commencer une nouvelle combinaison.",
+        "- Les combinaisons peuvent être coupées, réunies et refaites librement. Les cartes posées ne reviennent jamais dans votre main.",
+        "- Une combinaison incomplète est teintée de rouge. Annuler reprend tout coup joué depuis votre dernière carte.",
+        "## Le carrousel",
+        "- Quand vous êtes bloqué, touchez l'une des trois cartes du carrousel pour la prendre en main. La pioche la remplace.",
+        "- Vous ne pouvez prendre une carte que si toutes les combinaisons de la table sont complètes. Une carte prise ne peut pas être annulée.",
+        "- Trois combinaisons sont posées au départ. Quand le carrousel est vide, continuez jusqu'à vider votre main, ou touchez **Terminer la partie**."
+      ]
+    },
+    "quickStart": {
+      "hash": "75854330",
+      "value": [
+        "Posez toutes les cartes de votre main sur la table, en combinaisons.",
+        "Sélectionnez des cartes de votre main ou d'une combinaison, puis touchez une autre combinaison ou une place vide pour les y déplacer.",
+        "Réorganisez la table comme vous le voulez, mais chaque combinaison doit être complète avant de prendre une carte du carrousel."
+      ]
+    },
+    "title": {
+      "hash": "c9a9fc03",
+      "value": "Carrousel"
+    }
+  },
   "carpet": {
     "howToPlay": {
       "hash": "0af4a81e",
@@ -1640,6 +1675,39 @@
     "title": {
       "hash": "d519595f",
       "value": "Grenouille"
+    }
+  },
+  "gambit": {
+    "howToPlay": {
+      "hash": "71ea66dd",
+      "value": [
+        "## Objectif",
+        "Remplissez le contrat des trois donnes\u00a0: **6**, **8** puis **10** cartes par joueur. Un contrat est le plus grand nombre de plis que permet sa donne\u00a0: chaque donne peut donc être réussie.",
+        "## Plis",
+        "- Vous entamez le premier pli. Celui qui remporte un pli entame le suivant.",
+        "- Fournissez à la couleur demandée si vous le pouvez. Sinon, jouez n'importe quelle carte.",
+        "- Le plus haut atout remporte le pli. Sans atout, c'est la plus haute carte de la couleur demandée. L'As est la plus haute carte.",
+        "- La carte retournée à côté de la pioche désigne l'atout.",
+        "## Votre rival",
+        "Les cartes du rival sont visibles, et il joue toujours de la même façon\u00a0:",
+        "- **Pour entamer\u00a0:** sa plus haute carte qui n'est pas un atout. Il n'entame atout que s'il n'a rien d'autre.",
+        "- **Pour répondre\u00a0:** sa plus basse carte qui remporte le pli. S'il n'en a aucune, sa plus basse carte.",
+        "- Entre deux cartes de même rang, ♣ est la plus basse, puis ♦, ♥ et ♠.",
+        "## Défaite",
+        "La partie est perdue dès qu'un contrat ne peut plus être rempli. Annuler vous permet d'essayer un autre plan de jeu."
+      ]
+    },
+    "quickStart": {
+      "hash": "ccfaccab",
+      "value": [
+        "Les deux mains sont visibles. À chaque donne, faites autant de plis que le demande son contrat.",
+        "Fournissez à la couleur demandée si vous le pouvez. Le plus haut atout remporte le pli, sinon la plus haute carte de la couleur demandée.",
+        "Votre rival entame avec sa plus haute carte qui n'est pas un atout, et répond avec sa plus basse carte gagnante, sinon sa plus basse carte."
+      ]
+    },
+    "title": {
+      "hash": "778ad573",
+      "value": "Gambit"
     }
   },
   "gaps": {

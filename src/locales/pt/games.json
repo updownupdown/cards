@@ -944,5 +944,25 @@
   },
   "elevens": {
     "noMorePairsOrFaceTriplets": "Não há mais pares nem trios de figuras possíveis."
+  },
+  "gambit": {
+    "rival": "Rival",
+    "you": "Você",
+    "trump": "Trunfo",
+    "tricks": "Vazas",
+    "dealOf": "Rodada {{deal}} de {{total}}",
+    "contract_one": "Contrato: {{count}} vaza",
+    "contract_other": "Contrato: {{count}} vazas",
+    "contractLost": "O contrato não pode mais ser cumprido.",
+    "allContractsMade": "Os três contratos cumpridos!"
+  },
+  "carousel": {
+    "hand": "Mão",
+    "tableWhole": "Todos os jogos estão completos.",
+    "tableBroken": "Complete cada jogo para pegar uma carta.",
+    "allMelded_one": "Todas as cartas baixadas, com {{count}} carta de sobra!",
+    "allMelded_other": "Todas as cartas baixadas, com {{count}} cartas de sobra!",
+    "handFull": "Sua mão chegou a {{count}} cartas.",
+    "outOfCards": "O carrossel acabou antes da sua mão."
   }
 }

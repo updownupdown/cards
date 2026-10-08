@@ -668,6 +668,41 @@
       "value": "Canfield"
     }
   },
+  "carousel": {
+    "howToPlay": {
+      "hash": "972bbaa1",
+      "value": [
+        "## Objetivo",
+        "Vacía tu mano bajando todas tus cartas a la mesa en combinaciones. Pierdes si tu mano llega a tener **12 cartas**.",
+        "Tu puntuación es el número de cartas que quedan en el mazo y en el carrusel cuando vacías la mano.",
+        "## Combinaciones",
+        "- **Grupo:** tres o cuatro cartas del mismo rango, todas de palos distintos: {7S} {7H} {7D}",
+        "- **Secuencia:** tres o más cartas seguidas del mismo palo: {9C} {10C} {JC} {QC}",
+        "- El As puede ser bajo o alto, pero no las dos cosas: {AH} {2H} {3H} y {QH} {KH} {AH} son secuencias, {KH} {AH} {2H} no lo es.",
+        "## Mover cartas",
+        "- Toca cartas para seleccionarlas, de tu mano y de una sola combinación.",
+        "- Toca una carta de otra combinación para mover allí la selección, o un lugar vacío para empezar una combinación nueva.",
+        "- Las combinaciones se pueden dividir, unir y rehacer como quieras. Las cartas de la mesa nunca vuelven a tu mano.",
+        "- Una combinación incompleta se tiñe de rojo. Deshacer revierte cualquier movimiento hecho desde tu última carta.",
+        "## El carrusel",
+        "- Cuando no puedas seguir, toca una de las tres cartas del carrusel para tomarla en la mano. El mazo ocupa su lugar.",
+        "- Solo puedes tomar una carta mientras todas las combinaciones de la mesa estén completas. Una carta tomada no se puede deshacer.",
+        "- La partida empieza con tres combinaciones en la mesa. Cuando el carrusel se vacíe, sigue jugando hasta vaciar la mano, o toca **Terminar partida**."
+      ]
+    },
+    "quickStart": {
+      "hash": "75854330",
+      "value": [
+        "Baja a la mesa todas las cartas de tu mano, en combinaciones.",
+        "Selecciona cartas de tu mano o de una combinación y luego toca otra combinación o un lugar vacío para moverlas allí.",
+        "Reorganiza la mesa como quieras, pero cada combinación debe estar completa antes de tomar una carta del carrusel."
+      ]
+    },
+    "title": {
+      "hash": "c9a9fc03",
+      "value": "Carrusel"
+    }
+  },
   "carpet": {
     "howToPlay": {
       "hash": "0af4a81e",
@@ -1640,6 +1675,39 @@
     "title": {
       "hash": "d519595f",
       "value": "Rana"
+    }
+  },
+  "gambit": {
+    "howToPlay": {
+      "hash": "71ea66dd",
+      "value": [
+        "## Objetivo",
+        "Cumple el contrato en los tres repartos: **6**, **8** y luego **10** cartas por jugador. Un contrato es el máximo de bazas que permite su reparto, así que todos se pueden cumplir.",
+        "## Bazas",
+        "- Tú sales en la primera baza. Quien gana una baza sale en la siguiente.",
+        "- Sigue el palo de salida si puedes. Si no puedes, juega cualquier carta.",
+        "- El triunfo más alto gana la baza. Sin triunfos, la gana la carta más alta del palo de salida. Los ases son altos.",
+        "- La carta descubierta junto al mazo marca el palo de triunfo.",
+        "## Tu rival",
+        "Las cartas del rival están boca arriba, y siempre juega igual:",
+        "- **Al salir:** su carta más alta que no sea triunfo. Solo sale con triunfo cuando no tiene otra cosa.",
+        "- **Al responder:** su carta más baja que gane la baza. Si ninguna puede, su carta más baja.",
+        "- Entre cartas del mismo rango, ♣ es la más baja, luego ♦, ♥ y ♠.",
+        "## Derrota",
+        "La partida se pierde en cuanto un contrato ya no se puede cumplir. Deshacer te deja probar otra línea de juego."
+      ]
+    },
+    "quickStart": {
+      "hash": "ccfaccab",
+      "value": [
+        "Las dos manos están boca arriba. En cada reparto, gana tantas bazas como pide su contrato.",
+        "Sigue el palo de salida si puedes. El triunfo más alto gana la baza; si no hay, la carta más alta del palo de salida.",
+        "Tu rival sale con su carta más alta que no sea triunfo, y responde con su carta más baja que gane, o si no, con su carta más baja."
+      ]
+    },
+    "title": {
+      "hash": "778ad573",
+      "value": "Gambito"
     }
   },
   "gaps": {

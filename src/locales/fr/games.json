@@ -944,5 +944,25 @@
   },
   "elevens": {
     "noMorePairsOrFaceTriplets": "Plus aucune paire ni aucun trio de figures n'est possible."
+  },
+  "gambit": {
+    "rival": "Rival",
+    "you": "Vous",
+    "trump": "Atout",
+    "tricks": "Plis",
+    "dealOf": "Donne {{deal}} sur {{total}}",
+    "contract_one": "Contrat : {{count}} pli",
+    "contract_other": "Contrat : {{count}} plis",
+    "contractLost": "Le contrat ne peut plus être rempli.",
+    "allContractsMade": "Les trois contrats sont remplis !"
+  },
+  "carousel": {
+    "hand": "Main",
+    "tableWhole": "Toutes les combinaisons sont complètes.",
+    "tableBroken": "Complétez chaque combinaison pour prendre une carte.",
+    "allMelded_one": "Toutes les cartes sont posées, avec {{count}} carte d'avance !",
+    "allMelded_other": "Toutes les cartes sont posées, avec {{count}} cartes d'avance !",
+    "handFull": "Votre main a atteint {{count}} cartes.",
+    "outOfCards": "Le carrousel s'est vidé avant votre main."
   }
 }

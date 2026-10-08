@@ -668,6 +668,41 @@
       "value": "Canfield"
     }
   },
+  "carousel": {
+    "howToPlay": {
+      "hash": "972bbaa1",
+      "value": [
+        "## Obiettivo",
+        "Svuota la mano calando tutte le carte sul tavolo, in combinazioni. Perdi se la tua mano arriva ad avere **12 carte**.",
+        "Il tuo punteggio è il numero di carte rimaste nel mazzo e nella giostra quando svuoti la mano.",
+        "## Combinazioni",
+        "- **Gruppo:** tre o quattro carte dello stesso valore, tutte di semi diversi: {7S} {7H} {7D}",
+        "- **Sequenza:** tre o più carte consecutive dello stesso seme: {9C} {10C} {JC} {QC}",
+        "- L'Asso è basso o alto, ma non tutte e due le cose: {AH} {2H} {3H} e {QH} {KH} {AH} sono sequenze, {KH} {AH} {2H} no.",
+        "## Spostare le carte",
+        "- Tocca le carte per selezionarle, dalla tua mano e da una sola combinazione.",
+        "- Tocca una carta di un'altra combinazione per spostarci la selezione, o un posto vuoto per iniziare una nuova combinazione.",
+        "- Le combinazioni si possono dividere, unire e ricomporre come vuoi. Le carte sul tavolo non tornano mai nella tua mano.",
+        "- Una combinazione incompleta è colorata di rosso. Annulla ritira ogni mossa fatta dopo la tua ultima carta.",
+        "## La giostra",
+        "- Quando sei bloccato, tocca una delle tre carte della giostra per prenderla in mano. Il mazzo ne prende il posto.",
+        "- Puoi prendere una carta solo quando tutte le combinazioni sul tavolo sono complete. Una carta presa non si può annullare.",
+        "- Si parte con tre combinazioni sul tavolo. Quando la giostra è vuota, continua finché non svuoti la mano, o tocca **Termina partita**."
+      ]
+    },
+    "quickStart": {
+      "hash": "75854330",
+      "value": [
+        "Cala sul tavolo tutte le carte della tua mano, in combinazioni.",
+        "Seleziona carte dalla tua mano o da una combinazione, poi tocca un'altra combinazione o un posto vuoto per spostarle lì.",
+        "Riorganizza il tavolo come vuoi, ma ogni combinazione deve essere completa prima di prendere una carta dalla giostra."
+      ]
+    },
+    "title": {
+      "hash": "c9a9fc03",
+      "value": "Giostra"
+    }
+  },
   "carpet": {
     "howToPlay": {
       "hash": "0af4a81e",
@@ -1640,6 +1675,39 @@
     "title": {
       "hash": "d519595f",
       "value": "Rana"
+    }
+  },
+  "gambit": {
+    "howToPlay": {
+      "hash": "71ea66dd",
+      "value": [
+        "## Obiettivo",
+        "Rispetta il contratto in tutte e tre le mani: **6**, **8** e poi **10** carte a testa. Un contratto è il massimo di prese che la sua mano consente, quindi ogni mano si può vincere.",
+        "## Prese",
+        "- Esci tu nella prima presa. Chi vince una presa esce nella successiva.",
+        "- Rispondi al seme di uscita se puoi. Se non puoi, gioca una carta qualsiasi.",
+        "- La briscola più alta vince la presa. Senza briscole, la vince la carta più alta del seme di uscita. Gli Assi sono alti.",
+        "- La carta scoperta accanto al mazzo indica il seme di briscola.",
+        "## Il tuo rivale",
+        "Le carte del rivale sono scoperte, e gioca sempre allo stesso modo:",
+        "- **Quando esce:** la sua carta più alta che non sia briscola. Esce di briscola solo se non ha altro.",
+        "- **Quando risponde:** la sua carta più bassa che vince la presa. Se nessuna può, la sua carta più bassa.",
+        "- Tra carte dello stesso valore, ♣ è la più bassa, poi ♦, ♥ e ♠.",
+        "## Sconfitta",
+        "La partita è persa appena un contratto non si può più rispettare. Annulla ti permette di provare un'altra linea di gioco."
+      ]
+    },
+    "quickStart": {
+      "hash": "ccfaccab",
+      "value": [
+        "Le due mani sono scoperte. In ogni mano, fai tante prese quante ne chiede il suo contratto.",
+        "Rispondi al seme di uscita se puoi. La briscola più alta vince la presa, altrimenti la carta più alta del seme di uscita.",
+        "Il tuo rivale esce con la sua carta più alta che non sia briscola, e risponde con la sua carta più bassa che vince, altrimenti con la sua carta più bassa."
+      ]
+    },
+    "title": {
+      "hash": "778ad573",
+      "value": "Gambetto"
     }
   },
   "gaps": {

@@ -668,6 +668,41 @@
       "value": "Canfield"
     }
   },
+  "carousel": {
+    "howToPlay": {
+      "hash": "972bbaa1",
+      "value": [
+        "## Objetivo",
+        "Esvazie a mão baixando todas as suas cartas na mesa, em jogos. Você perde se a sua mão chegar a **12 cartas**.",
+        "Sua pontuação é o número de cartas que ainda estão no monte e no carrossel quando você esvazia a mão.",
+        "## Jogos",
+        "- **Trinca:** três ou quatro cartas do mesmo valor, todas de naipes diferentes: {7S} {7H} {7D}",
+        "- **Sequência:** três ou mais cartas seguidas do mesmo naipe: {9C} {10C} {JC} {QC}",
+        "- O Ás é baixo ou alto, mas não os dois: {AH} {2H} {3H} e {QH} {KH} {AH} são sequências, {KH} {AH} {2H} não é.",
+        "## Mover cartas",
+        "- Toque nas cartas para selecioná-las, da sua mão e de um único jogo.",
+        "- Toque numa carta de outro jogo para mover a seleção para ele, ou num lugar vazio para começar um jogo novo.",
+        "- Os jogos podem ser divididos, juntados e refeitos como você quiser. As cartas da mesa nunca voltam para a sua mão.",
+        "- Um jogo incompleto fica tingido de vermelho. Desfazer volta qualquer movimento feito desde a sua última carta.",
+        "## O carrossel",
+        "- Quando não tiver jogada, toque numa das três cartas do carrossel para pegá-la. O monte ocupa o lugar dela.",
+        "- Você só pode pegar uma carta quando todos os jogos da mesa estiverem completos. Uma carta pega não pode ser desfeita.",
+        "- A partida começa com três jogos na mesa. Quando o carrossel acabar, continue até esvaziar a mão, ou toque em **Encerrar partida**."
+      ]
+    },
+    "quickStart": {
+      "hash": "75854330",
+      "value": [
+        "Baixe na mesa todas as cartas da sua mão, em jogos.",
+        "Selecione cartas da sua mão ou de um jogo e depois toque em outro jogo ou num lugar vazio para movê-las para lá.",
+        "Reorganize a mesa como quiser, mas cada jogo precisa estar completo antes de você pegar uma carta do carrossel."
+      ]
+    },
+    "title": {
+      "hash": "c9a9fc03",
+      "value": "Carrossel"
+    }
+  },
   "carpet": {
     "howToPlay": {
       "hash": "0af4a81e",
@@ -1640,6 +1675,39 @@
     "title": {
       "hash": "d519595f",
       "value": "Sapo"
+    }
+  },
+  "gambit": {
+    "howToPlay": {
+      "hash": "71ea66dd",
+      "value": [
+        "## Objetivo",
+        "Cumpra o contrato nas três rodadas: **6**, **8** e depois **10** cartas para cada um. Um contrato é o máximo de vazas que a rodada permite, então toda rodada pode ser cumprida.",
+        "## Vazas",
+        "- Você sai na primeira vaza. Quem leva uma vaza sai na seguinte.",
+        "- Siga o naipe de saída se puder. Se não puder, jogue qualquer carta.",
+        "- O trunfo mais alto leva a vaza. Sem trunfo, leva a carta mais alta do naipe de saída. Os Ases são altos.",
+        "- A carta virada ao lado do monte define o naipe de trunfo.",
+        "## Seu rival",
+        "As cartas do rival ficam viradas para cima, e ele sempre joga do mesmo jeito:",
+        "- **Ao sair:** a carta mais alta que não seja trunfo. Só sai de trunfo quando não tem outra coisa.",
+        "- **Ao responder:** a carta mais baixa que leva a vaza. Se nenhuma levar, a carta mais baixa.",
+        "- Entre cartas do mesmo valor, ♣ é a mais baixa, depois ♦, ♥ e ♠.",
+        "## Derrota",
+        "A partida está perdida assim que um contrato não puder mais ser cumprido. Desfazer deixa você tentar outra linha de jogo."
+      ]
+    },
+    "quickStart": {
+      "hash": "ccfaccab",
+      "value": [
+        "As duas mãos ficam viradas para cima. Em cada rodada, faça tantas vazas quanto o contrato pede.",
+        "Siga o naipe de saída se puder. O trunfo mais alto leva a vaza; sem trunfo, a carta mais alta do naipe de saída.",
+        "Seu rival sai com a carta mais alta que não seja trunfo, e responde com a carta mais baixa que vence, ou então com a carta mais baixa."
+      ]
+    },
+    "title": {
+      "hash": "778ad573",
+      "value": "Gambito"
     }
   },
   "gaps": {

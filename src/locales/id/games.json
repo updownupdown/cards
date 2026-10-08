@@ -944,5 +944,25 @@
   },
   "elevens": {
     "noMorePairsOrFaceTriplets": "Tidak ada lagi pasangan atau trio kartu bergambar yang bisa dibuat."
+  },
+  "gambit": {
+    "rival": "Lawan",
+    "you": "Kamu",
+    "trump": "Truf",
+    "tricks": "Trik",
+    "dealOf": "Bagian {{deal}} dari {{total}}",
+    "contract_one": "Kontrak: {{count}} trik",
+    "contract_other": "Kontrak: {{count}} trik",
+    "contractLost": "Kontrak tidak bisa dipenuhi lagi.",
+    "allContractsMade": "Ketiga kontrak terpenuhi!"
+  },
+  "carousel": {
+    "hand": "Tangan",
+    "tableWhole": "Semua kombinasi sudah utuh.",
+    "tableBroken": "Utuhkan setiap kombinasi untuk mengambil kartu.",
+    "allMelded_one": "Semua kartu turun, dengan sisa {{count}} kartu!",
+    "allMelded_other": "Semua kartu turun, dengan sisa {{count}} kartu!",
+    "handFull": "Tanganmu mencapai {{count}} kartu.",
+    "outOfCards": "Komidi putar habis sebelum tanganmu kosong."
   }
 }

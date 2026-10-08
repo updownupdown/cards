@@ -668,6 +668,41 @@
       "value": "Canfield"
     }
   },
+  "carousel": {
+    "howToPlay": {
+      "hash": "972bbaa1",
+      "value": [
+        "## Amaç",
+        "Bütün kartlarını per yaparak masaya açıp elini boşalt. Elinde bir an bile **12 kart** olursa kaybedersin.",
+        "Puanın, elini bitirdiğinde destede ve atlıkarıncada kalan kart sayısıdır.",
+        "## Perler",
+        "- **Grup:** aynı değerde, hepsi farklı takımdan üç ya da dört kart: {7S} {7H} {7D}",
+        "- **Dizi:** aynı takımdan, sırayla giden üç ya da daha fazla kart: {9C} {10C} {JC} {QC}",
+        "- As küçük ya da büyük olur, ama ikisi birden olmaz: {AH} {2H} {3H} ve {QH} {KH} {AH} dizidir, {KH} {AH} {2H} dizi değildir.",
+        "## Kart taşıma",
+        "- Kartları seçmek için onlara dokun; elinden ve tek bir perden seçebilirsin.",
+        "- Seçimi oraya taşımak için başka bir perin kartına, yeni bir per başlatmak için boş bir yere dokun.",
+        "- Perler istediğin gibi bölünebilir, birleştirilebilir ve yeniden kurulabilir. Masadaki kartlar eline asla geri dönmez.",
+        "- Tamam olmayan bir per kırmızıya boyanır. Geri al, son kartından beri yaptığın her hamleyi geri alır.",
+        "## Atlıkarınca",
+        "- Takıldığında, eline almak için atlıkarıncadaki üç karttan birine dokun. Yerine desteden kart gelir.",
+        "- Kart ancak masadaki bütün perler tamamken alınabilir. Alınan bir kart geri alınamaz.",
+        "- Oyun masada üç perle başlar. Atlıkarınca bittiğinde elin bitene kadar oynamaya devam et ya da **Oyunu bitir** düğmesine dokun."
+      ]
+    },
+    "quickStart": {
+      "hash": "75854330",
+      "value": [
+        "Elindeki bütün kartları per yaparak masaya aç.",
+        "Elinden ya da bir perden kart seç, sonra onları taşımak için başka bir pere ya da boş bir yere dokun.",
+        "Masayı istediğin gibi düzenle, ama atlıkarıncadan kart almadan önce her per tamam olmalı."
+      ]
+    },
+    "title": {
+      "hash": "c9a9fc03",
+      "value": "Atlıkarınca"
+    }
+  },
   "carpet": {
     "howToPlay": {
       "hash": "0af4a81e",
@@ -1640,6 +1675,39 @@
     "title": {
       "hash": "d519595f",
       "value": "Kurbağa"
+    }
+  },
+  "gambit": {
+    "howToPlay": {
+      "hash": "71ea66dd",
+      "value": [
+        "## Amaç",
+        "Üç dağıtımın üçünde de kontratı tuttur: kişi başı **6**, **8** ve sonra **10** kart. Kontrat, o dağıtımda alınabilecek en fazla el sayısıdır, yani her dağıtım tutturulabilir.",
+        "## Eller",
+        "- İlk eli sen açarsın. Bir eli kim alırsa sonrakini o açar.",
+        "- Yapabiliyorsan açılan takıma uy. Uyamıyorsan istediğin kartı oyna.",
+        "- Eli en büyük koz alır. Koz yoksa açılan takımın en büyük kartı alır. Aslar büyüktür.",
+        "- Destenin yanında açılan kart koz takımını belirler.",
+        "## Rakibin",
+        "Rakibin kartları açıktır ve hep aynı şekilde oynar:",
+        "- **Açarken:** koz olmayan en büyük kartını oynar. Başka kartı yoksa kozla açar.",
+        "- **Cevap verirken:** eli alan en küçük kartını oynar. Hiçbiri alamıyorsa en küçük kartını.",
+        "- Aynı değerdeki kartlardan en küçüğü ♣, sonra ♦, ♥ ve ♠ gelir.",
+        "## Kaybetmek",
+        "Bir kontrat artık tutturulamaz olduğu anda oyun kaybedilir. Geri al ile başka bir oyun yolu deneyebilirsin."
+      ]
+    },
+    "quickStart": {
+      "hash": "ccfaccab",
+      "value": [
+        "İki el de açık. Her dağıtımda, kontratın istediği kadar el al.",
+        "Yapabiliyorsan açılan takıma uy. Eli en büyük koz alır; koz yoksa açılan takımın en büyük kartı alır.",
+        "Rakibin koz olmayan en büyük kartıyla açar; eli alan en küçük kartıyla, yoksa en küçük kartıyla cevap verir."
+      ]
+    },
+    "title": {
+      "hash": "778ad573",
+      "value": "Gambit"
     }
   },
   "gaps": {

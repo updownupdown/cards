@@ -1564,6 +1564,7 @@
       "y": -0.7007,
       "connections": [
         "/blackberry-pie",
+        "/carousel",
         "/dominion",
         "/little-windmill"
       ],
@@ -1762,6 +1763,7 @@
       "x": -0.1142,
       "y": -0.7736,
       "connections": [
+        "/carousel",
         "/little-windmill",
         "/miss-milligan",
         "/scorpion",
@@ -2209,6 +2211,7 @@
       "connections": [
         "/clock",
         "/devils-grip",
+        "/gambit",
         "/royal-envoy"
       ],
       "rewards": [
@@ -2357,6 +2360,7 @@
       "y": 0.7103,
       "connections": [
         "/aces-up",
+        "/gambit",
         "/somnus"
       ],
       "rewards": [
@@ -2390,6 +2394,42 @@
         {
           "type": "quote",
           "id": 179
+        }
+      ]
+    },
+    "/carousel": {
+      "x": -0.1302,
+      "y": -0.6405,
+      "connections": [
+        "/dominion",
+        "/terrace"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 185
+        },
+        {
+          "type": "quote",
+          "id": 186
+        }
+      ]
+    },
+    "/gambit": {
+      "x": -0.7817,
+      "y": 0.5438,
+      "connections": [
+        "/royal-envoy",
+        "/somnus"
+      ],
+      "rewards": [
+        {
+          "type": "quote",
+          "id": 187
+        },
+        {
+          "type": "quote",
+          "id": 188
         }
       ]
     }

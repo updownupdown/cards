@@ -668,6 +668,41 @@
       "value": "Canfield"
     }
   },
+  "carousel": {
+    "howToPlay": {
+      "hash": "972bbaa1",
+      "value": [
+        "## Tujuan",
+        "Kosongkan tanganmu dengan menurunkan semua kartu ke meja sebagai kombinasi. Kamu kalah jika tanganmu pernah berisi **12 kartu**.",
+        "Skormu adalah jumlah kartu yang masih ada di dek dan komidi putar saat tanganmu kosong.",
+        "## Kombinasi",
+        "- **Set:** tiga atau empat kartu dengan nilai yang sama, semuanya dari jenis berbeda: {7S} {7H} {7D}",
+        "- **Urutan:** tiga kartu atau lebih dari satu jenis yang nilainya berurutan: {9C} {10C} {JC} {QC}",
+        "- As bisa rendah atau tinggi, tetapi tidak keduanya: {AH} {2H} {3H} dan {QH} {KH} {AH} adalah urutan, {KH} {AH} {2H} bukan.",
+        "## Memindahkan kartu",
+        "- Ketuk kartu untuk memilihnya, dari tanganmu dan dari satu kombinasi saja.",
+        "- Ketuk kartu dari kombinasi lain untuk memindahkan pilihan ke sana, atau tempat kosong untuk memulai kombinasi baru.",
+        "- Kombinasi bisa dipecah, digabung, dan disusun ulang sesukamu. Kartu di meja tidak pernah kembali ke tanganmu.",
+        "- Kombinasi yang belum utuh diberi warna merah. Urungkan membatalkan setiap langkah sejak kartu terakhirmu.",
+        "## Komidi putar",
+        "- Saat buntu, ketuk salah satu dari tiga kartu komidi putar untuk mengambilnya. Dek mengisi tempatnya.",
+        "- Kamu hanya bisa mengambil kartu saat semua kombinasi di meja utuh. Kartu yang sudah diambil tidak bisa diurungkan.",
+        "- Permainan dimulai dengan tiga kombinasi di meja. Saat komidi putar habis, terus main sampai tanganmu kosong, atau ketuk **Akhiri permainan**."
+      ]
+    },
+    "quickStart": {
+      "hash": "75854330",
+      "value": [
+        "Turunkan semua kartu di tanganmu ke meja sebagai kombinasi.",
+        "Pilih kartu dari tanganmu atau dari satu kombinasi, lalu ketuk kombinasi lain atau tempat kosong untuk memindahkannya ke sana.",
+        "Atur ulang meja sesukamu, tetapi setiap kombinasi harus utuh sebelum kamu mengambil kartu dari komidi putar."
+      ]
+    },
+    "title": {
+      "hash": "c9a9fc03",
+      "value": "Komidi Putar"
+    }
+  },
   "carpet": {
     "howToPlay": {
       "hash": "0af4a81e",
@@ -1640,6 +1675,39 @@
     "title": {
       "hash": "d519595f",
       "value": "Katak"
+    }
+  },
+  "gambit": {
+    "howToPlay": {
+      "hash": "71ea66dd",
+      "value": [
+        "## Tujuan",
+        "Penuhi kontrak di ketiga bagian: **6**, **8**, lalu **10** kartu per pemain. Kontrak adalah jumlah trik terbanyak yang bisa didapat di bagian itu, jadi setiap bagian bisa dipenuhi.",
+        "## Trik",
+        "- Kamu membuka trik pertama. Siapa pun yang memenangkan trik membuka trik berikutnya.",
+        "- Ikuti jenis yang dibuka jika bisa. Jika tidak bisa, mainkan kartu apa saja.",
+        "- Truf tertinggi memenangkan trik. Tanpa truf, kartu tertinggi dari jenis yang dibuka yang menang. As bernilai tinggi.",
+        "- Kartu yang dibuka di samping dek menentukan jenis truf.",
+        "## Lawanmu",
+        "Kartu lawan terbuka, dan ia selalu bermain dengan cara yang sama:",
+        "- **Saat membuka:** kartu tertingginya yang bukan truf. Ia membuka dengan truf hanya jika tidak punya kartu lain.",
+        "- **Saat membalas:** kartu terendahnya yang memenangkan trik. Jika tidak ada, kartu terendahnya.",
+        "- Di antara kartu bernilai sama, ♣ paling rendah, lalu ♦, ♥, dan ♠.",
+        "## Kalah",
+        "Permainan kalah begitu sebuah kontrak tidak bisa dipenuhi lagi. Urungkan memungkinkanmu mencoba cara bermain lain."
+      ]
+    },
+    "quickStart": {
+      "hash": "ccfaccab",
+      "value": [
+        "Kedua tangan terbuka. Di setiap bagian, menangkan trik sebanyak yang diminta kontraknya.",
+        "Ikuti jenis yang dibuka jika bisa. Truf tertinggi memenangkan trik; jika tidak ada, kartu tertinggi dari jenis yang dibuka.",
+        "Lawanmu membuka dengan kartu tertingginya yang bukan truf, dan membalas dengan kartu terendahnya yang menang, atau kartu terendahnya."
+      ]
+    },
+    "title": {
+      "hash": "778ad573",
+      "value": "Gambit"
     }
   },
   "gaps": {

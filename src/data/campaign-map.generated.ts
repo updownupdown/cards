@@ -1728,6 +1728,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": null,
     "connections": [
       "/blackberry-pie",
+      "/carousel",
       "/dominion",
       "/little-windmill"
     ],
@@ -1946,6 +1947,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "y": -0.7736,
     "arm": 2,
     "connections": [
+      "/carousel",
       "/little-windmill",
       "/miss-milligan",
       "/scorpion",
@@ -2439,6 +2441,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "connections": [
       "/clock",
       "/devils-grip",
+      "/gambit",
       "/royal-envoy"
     ],
     "rewards": [
@@ -2603,6 +2606,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": null,
     "connections": [
       "/aces-up",
+      "/gambit",
       "/somnus"
     ],
     "rewards": [
@@ -2640,5 +2644,47 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
         "id": 179
       }
     ]
+  },
+  {
+    "path": "/carousel",
+    "x": -0.1302,
+    "y": -0.6405,
+    "arm": null,
+    "connections": [
+      "/dominion",
+      "/terrace"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 185
+      },
+      {
+        "type": "quote",
+        "id": 186
+      }
+    ],
+    "appended": true
+  },
+  {
+    "path": "/gambit",
+    "x": -0.7817,
+    "y": 0.5438,
+    "arm": 1,
+    "connections": [
+      "/royal-envoy",
+      "/somnus"
+    ],
+    "rewards": [
+      {
+        "type": "quote",
+        "id": 187
+      },
+      {
+        "type": "quote",
+        "id": 188
+      }
+    ],
+    "appended": true
   }
 ];

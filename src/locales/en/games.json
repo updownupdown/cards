@@ -944,5 +944,25 @@
   },
   "elevens": {
     "noMorePairsOrFaceTriplets": "No more pairs or face-card triplets can be made."
+  },
+  "gambit": {
+    "rival": "Rival",
+    "you": "You",
+    "trump": "Trump",
+    "tricks": "Tricks",
+    "dealOf": "Deal {{deal}} of {{total}}",
+    "contract_one": "Contract: {{count}} trick",
+    "contract_other": "Contract: {{count}} tricks",
+    "contractLost": "The contract can no longer be made.",
+    "allContractsMade": "All three contracts made!"
+  },
+  "carousel": {
+    "hand": "Hand",
+    "tableWhole": "Every meld is whole.",
+    "tableBroken": "Make every meld whole to take a card.",
+    "allMelded_one": "Every card melded, with {{count}} card to spare!",
+    "allMelded_other": "Every card melded, with {{count}} cards to spare!",
+    "handFull": "Your hand reached {{count}} cards.",
+    "outOfCards": "The carousel ran out before your hand did."
   }
 }

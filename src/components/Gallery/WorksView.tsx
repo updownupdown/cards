@@ -43,6 +43,7 @@ const GAME_CATEGORIES: GameTag[] = [
   GameTag.Puzzles,
   GameTag.Sports,
   GameTag.PokerAndCribbage,
+  GameTag.TricksAndMelds,
   GameTag.CardCombat,
   GameTag.DungeonCrawler,
   GameTag.ModernMechanics,
