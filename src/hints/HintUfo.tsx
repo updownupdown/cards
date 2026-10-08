@@ -1,4 +1,5 @@
 import FlyingSaucer from "@/assets/images/flying-saucer.svg";
+import { UfoGlow } from "@/components/common/UfoSaucer";
 import { isBoardInputLocked } from "@/components/Cards/input-lock";
 import { defaultAnimDuration } from "@/constants/animation";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
@@ -787,7 +788,9 @@ function Zap({ lift, value }: { lift: number; value: Animated.Value }) {
 // —— The UFO ————————————————————————————————————————————————————————————
 
 type AnimatedNumber =
-  number | Animated.AnimatedInterpolation<number> | Animated.Value;
+  | number
+  | Animated.AnimatedInterpolation<number>
+  | Animated.Value;
 
 /**
  * The UFO itself, in a soft green glow. Out and about, it's the flying
@@ -807,7 +810,6 @@ function UfoGlyph({
   saucer?: AnimatedNumber;
 }) {
   const palette = usePalette();
-  const glow = size * 1.6;
   const icon =
     typeof saucer === "number"
       ? 1 - saucer
@@ -815,29 +817,9 @@ function UfoGlyph({
   return (
     <View style={{ width: size, height: size }}>
       <Animated.View
-        style={{
-          position: "absolute",
-          left: (size - glow) / 2,
-          top: (size - glow) / 2,
-          opacity: glowing,
-        }}
+        style={{ position: "absolute", inset: 0, opacity: glowing }}
       >
-        <Svg width={glow} height={glow}>
-          <Defs>
-            <RadialGradient id="ufoGlow">
-              <Stop offset="0" stopColor={GREEN} stopOpacity={0.55} />
-              <Stop offset="0.6" stopColor={GREEN} stopOpacity={0.18} />
-              <Stop offset="1" stopColor={GREEN} stopOpacity={0} />
-            </RadialGradient>
-          </Defs>
-          <Ellipse
-            cx={glow / 2}
-            cy={glow / 2}
-            rx={glow / 2}
-            ry={glow / 2}
-            fill="url(#ufoGlow)"
-          />
-        </Svg>
+        <UfoGlow size={size} />
       </Animated.View>
       <Animated.View style={{ position: "absolute", opacity: icon }}>
         <Icon name="ufo" size={size} color={palette.accent} />

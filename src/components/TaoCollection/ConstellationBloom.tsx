@@ -49,16 +49,25 @@ const DRAW = {
 
 const ms = (value: number) => `${Math.round(value)}ms` as const;
 
+const DIM = { from: { opacity: 1 }, to: { opacity: 0.4 } };
+const DIM_MS = 2200;
+
 type Props = {
   constellation: Constellation;
   size: number;
   dustCount: number;
+  /**
+   * When (ms after mount) the figure dims for the words it writes, as the
+   * reveal's does. It stays bright without it.
+   */
+  dimAt?: number;
 };
 
 export const ConstellationBloom = memo(function ConstellationBloom({
   constellation,
   size,
   dustCount,
+  dimAt,
 }: Props) {
   const scale = size / 100;
   const dustGroups = useMemo(() => {
@@ -123,7 +132,18 @@ export const ConstellationBloom = memo(function ConstellationBloom({
   }, [constellation, size]);
 
   return (
-    <View style={{ width: size, height: size }}>
+    <Animated.View
+      style={[
+        { width: size, height: size },
+        dimAt !== undefined && {
+          animationName: DIM,
+          animationDuration: ms(DIM_MS),
+          animationDelay: ms(dimAt),
+          animationFillMode: "both",
+          animationTimingFunction: "ease-in-out",
+        },
+      ]}
+    >
       {dustGroups.map((layers, group) => (
         <Animated.View
           key={`dust-${group}`}
@@ -212,6 +232,6 @@ export const ConstellationBloom = memo(function ConstellationBloom({
           />
         </Animated.View>
       ))}
-    </View>
+    </Animated.View>
   );
 });

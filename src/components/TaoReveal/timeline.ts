@@ -2,28 +2,50 @@ import type { Constellation } from "@/data/tao-constellations";
 import { REVEAL_TIMING } from "@/components/common/reveal-timing";
 
 /**
- * Plans the whole Tao reveal up front: when each letter appears, where it
- * flies, what it becomes, and when each constellation line is drawn.
- * Everything runs off one clock (ms of "story time"), so the UI thread
- * animation and skipping all read from the same numbers.
+ * Plans the whole Tao reveal up front: the chapter's constellation forming in
+ * the sky, then dimming while its stars write the chapter out, letter by
+ * letter. Everything runs off one clock (ms of "story time"), so the UI
+ * thread animation and the button below read from the same numbers. The
+ * reveal then waits for the player to close it; its exit is timed from that
+ * moment (REVEAL.exit*).
  */
 
 export const REVEAL = {
-  // Reading
-  charsPerSecond: 35,
+  // Constellation
+  /** The star dust fades in, each speck at its own moment, over this. */
+  dustInMs: 1800,
+  dustFadeMs: 900,
+  /** The named stars light up in the pen's order, starting this late... */
+  starsStartMs: 500,
+  /** ...and spread over this. */
+  starsSpreadMs: 1600,
+  starPopMs: 600,
+  linesDrawMs: 2600,
+  /** The figure, complete, before it starts to dim. */
+  formedHoldMs: 1800,
+  // Dimming, so the words can be read over it
+  dimMs: 2200,
+  /** How bright the named stars and lines stay behind the words. */
+  starDim: 0.35,
+  lineDim: 0.3,
+  /** Star dust waiting to be written keeps this share of its light. */
+  dustDim: 0.5,
+  // Writing
+  /** The first words land this long after the figure starts to dim. */
+  writeLeadMs: 1400,
+  /** A letter's flight from its star to its place in the text. */
+  flightMs: 1700,
+  charsPerSecond: 30,
   /** Words appear whole, each fading in over this long. */
   wordFadeMs: 400,
-  commaPauseMs: 120,
-  sentencePauseMs: 260,
-  linePauseMs: 400,
+  commaPauseMs: 140,
+  sentencePauseMs: 300,
+  linePauseMs: 450,
   /** Replaces `linePauseMs` when the line ends in punctuation. */
   punctuatedLinePauseMs: 1000,
   paragraphPauseMs: 2000,
-  /** The whole chapter on screen before the letters fly. */
-  restPauseMs: 3000,
-  // Flight
-  flightSpreadMs: 1600,
-  flightMs: 2400,
+  /** The player can close the chapter this long after it is all written. */
+  closeAfterMs: 2000,
   /** Share of star dust that forms a halo around the figure's strokes. */
   haloShare: 0.5,
   /** Of the rest, the share scattered close around the figure. */
@@ -33,20 +55,26 @@ export const REVEAL = {
   nearSpread: 48,
   /** Share of the named stars that shine brighter than the others. */
   brightShare: 0.35,
-  // Constellation
-  linesDrawMs: 3000,
-  holdMs: REVEAL_TIMING.holdMs,
-  // Exit: together as long as REVEAL_TIMING.fadeOutMs.
-  linesOutMs: REVEAL_TIMING.fadeOutMs * 0.25,
-  starsOutMs: REVEAL_TIMING.fadeOutMs * 0.25,
-  skyOutMs: REVEAL_TIMING.fadeOutMs * 0.5,
+  // Exit, from the moment the player closes it: as long as fadeOutMs.
+  exitTextMs: REVEAL_TIMING.fadeOutMs * 0.4,
+  exitStarsAtMs: REVEAL_TIMING.fadeOutMs * 0.15,
+  exitStarsMs: REVEAL_TIMING.fadeOutMs * 0.4,
+  exitSkyAtMs: REVEAL_TIMING.fadeOutMs * 0.45,
+  exitSkyMs: REVEAL_TIMING.fadeOutMs * 0.55,
   /** The win box is finished off this long before the sky starts to clear. */
   uncoverLeadMs: 300,
 } as const;
 
+/** When the screen behind can change unseen, after the player closes it. */
+export const EXIT_UNCOVER_MS = REVEAL.exitSkyAtMs - REVEAL.uncoverLeadMs;
+/** When the reveal is gone, after the player closes it. */
+export const EXIT_TOTAL_MS = REVEAL.exitSkyAtMs + REVEAL.exitSkyMs;
+
 // The pause before the reveal is the win box's (REVEAL_TIMING.delayMs).
 export const SKY_IN_AT = 0;
 export const SKY_IN_MS = REVEAL_TIMING.fadeInMs;
+/** The constellation starts to form this soon, if its plan is ready. */
+export const BLOOM_AT = SKY_IN_AT + SKY_IN_MS * 0.6;
 const LINE_GAP = 5;
 
 // --- Text --------------------------------------------------------------------
@@ -130,27 +158,44 @@ export const ROLE_STAR = 1;
 /** Flat numbers only: this object is copied to the UI thread. */
 export type GlyphPlan = {
   role: number;
-  tIn: number;
+  /** Star dust: when its speck appears in the sky. */
+  tBorn: number;
+  /** When it leaves its star for its place in the text... */
   tFly: number;
+  /** ...and how long it takes; it is read from tFly + flyMs - wordFadeMs. */
   flyMs: number;
+  /** Where it starts, from its place in the text, and its path between. */
   dx: number;
   dy: number;
   c1x: number;
   c1y: number;
   c2x: number;
   c2y: number;
-  endScale: number;
-  /** Resting opacity once it has become a star. */
+  /** Its size as a speck, as a share of the letter's. */
+  speckScale: number;
+  /** Star dust's resting opacity in the sky. */
   starOpacity: number;
+  pulseA: number;
+  phase: number;
+  twinkle: number;
+};
+
+/** One of the constellation's named stars, which stays in the sky. */
+export type StarPlan = {
+  x: number;
+  y: number;
+  /** When it lights up. */
+  tIn: number;
   dotSize: number;
   pulseA: number;
   pulseB: number;
   phase: number;
-  twinkle: number;
   /** 1 for the named stars that shine brighter. */
   bright: number;
   /** Index into STAR_TINTS. */
   tint: number;
+  /** When its letter leaves it, so it can flare. */
+  tWrite: number;
 };
 
 export type EdgePlan = {
@@ -165,22 +210,22 @@ export type EdgePlan = {
 export type RevealTimes = {
   skyIn: number;
   skyInMs: number;
+  /** The constellation starts to form... */
+  bloom: number;
+  linesStart: number;
+  /** ...and is complete. */
+  formed: number;
+  /** It starts to dim, and the letters start to leave their stars. */
+  dim: number;
   textStart: number;
   textEnd: number;
-  morph: number;
-  formed: number;
-  linesStart: number;
-  linesDone: number;
-  linesOut: number;
-  starsOut: number;
-  /** When the win box behind can change unseen (the sky is still opaque). */
-  uncover: number;
-  skyOut: number;
-  total: number;
+  /** From here the player can close it. */
+  canClose: number;
 };
 
 export type RevealPlan = {
   glyphs: GlyphPlan[];
+  stars: StarPlan[];
   edges: EdgePlan[];
   times: RevealTimes;
 };
@@ -192,9 +237,11 @@ export type PlanInput = {
   boxes: GlyphBox[];
   fontSize: number;
   constellation: Constellation;
-  /** Lines whose letters become the named stars (see getKeyLineIndices). */
+  /** Lines whose letters come from the named stars (see getKeyLineIndices). */
   keyLines: number[];
   screen: { width: number; height: number; top: number; bottom: number };
+  /** When the constellation starts to form; BLOOM_AT by default. */
+  start?: number;
   seed?: number;
 };
 
@@ -475,14 +522,11 @@ export function planReveal({
   constellation,
   keyLines,
   screen,
+  start = BLOOM_AT,
   seed = constellation.chapter * 7919,
 }: PlanInput): RevealPlan {
   const random = mulberry32(seed);
   const count = parsed.glyphs.length;
-
-  const textStart = SKY_IN_AT + SKY_IN_MS + 200;
-  const { tIn, textEnd } = scheduleReading(parsed, textStart);
-  const morph = textEnd + REVEAL.restPauseMs;
 
   // Where the figure sits.
   const usableTop = screen.top + 28;
@@ -494,39 +538,27 @@ export function planReveal({
     x: figureX + ((x - 50) / 100) * size,
     y: figureY + ((y - 50) / 100) * size,
   });
-  const stars = constellation.stars.map((star) => ({
+  const starPoints = constellation.stars.map((star) => ({
     ...toScreen(star.x, star.y),
     mag: star.mag,
   }));
 
-  // The key lines' letters are the named stars, in the pen's order.
-  const keySet = new Set(keyLines);
-  const keyGlyphs: number[] = [];
-  const otherGlyphs: number[] = [];
-  parsed.glyphs.forEach((glyph, index) =>
-    (keySet.has(glyph.line) ? keyGlyphs : otherGlyphs).push(index),
-  );
+  // --- The constellation forms: dust, then the named stars, then the lines.
   const starOrder = starsInStrokeOrder(constellation);
-  const fromKey = keyGlyphs.slice(0, starOrder.length);
-  const starGlyphs = [
-    ...fromKey,
-    ...evenlyPick(otherGlyphs, starOrder.length - fromKey.length),
-  ].sort((a, b) => a - b);
-  const starOfGlyph = new Map<number, number>();
-  starGlyphs.forEach((glyphIndex, order) => {
-    if (order < starOrder.length) starOfGlyph.set(glyphIndex, starOrder[order]);
+  const starIn = new Map<number, number>();
+  starOrder.forEach((id, rank) => {
+    starIn.set(
+      id,
+      start +
+        REVEAL.starsStartMs +
+        (rank / Math.max(starOrder.length - 1, 1)) * REVEAL.starsSpreadMs,
+    );
   });
-
-  // The minor stars, one per remaining letter, kept on screen.
-  const dust = planStarDust(constellation, count - starOfGlyph.size);
-  const dustTop = screen.top + 8;
-  const dustBottom = screen.height - screen.bottom - 8;
-  let nextDust = 0;
   const segments: { a: number; b: number; length: number }[] = [];
   for (const stroke of constellation.strokes) {
     for (let i = 1; i < stroke.length; i++) {
-      const a = stars[stroke[i - 1]];
-      const b = stars[stroke[i]];
+      const a = starPoints[stroke[i - 1]];
+      const b = starPoints[stroke[i]];
       segments.push({
         a: stroke[i - 1],
         b: stroke[i],
@@ -538,94 +570,15 @@ export function planReveal({
     (sum, segment) => sum + segment.length,
     0,
   );
-
-  const tints = starTints(constellation);
-  // Some named stars shine brighter.
-  const brightStars = new Set(
-    [...constellation.stars.keys()].filter(() => random() < REVEAL.brightShare),
-  );
-
-  const glyphs: GlyphPlan[] = parsed.glyphs.map((glyph, index) => {
-    const box = boxes[index];
-    const starId = starOfGlyph.get(index);
-    const star = starId === undefined ? null : stars[starId];
-    let target: { x: number; y: number };
-    let endScale: number;
-    let starOpacity: number;
-
-    if (star) {
-      target = star;
-      endScale = 0.12;
-      starOpacity = 1;
-    } else {
-      const speck = dust[nextDust++];
-      const onScreen = toScreen(speck.x, speck.y);
-      target = {
-        x: reflectInto(onScreen.x, 12, screen.width - 12),
-        y: reflectInto(onScreen.y, dustTop, dustBottom),
-      };
-      endScale =
-        ((speck.speck * SPECK_SCALE) / fontSize) *
-        1.05 *
-        (TINY_INK.test(glyph.char) ? 2 : 1);
-      starOpacity = speck.opacity;
-    }
-
-    // A gentle curve, bending to one side or the other.
-    const dx = target.x - box.cx;
-    const dy = target.y - box.cy;
-    const distance = Math.hypot(dx, dy) || 1;
-    const bend = (random() - 0.5) * 0.7 * distance;
-    const px = -dy / distance;
-    const py = dx / distance;
-
-    return {
-      role: star ? ROLE_STAR : ROLE_DUST,
-      tIn: tIn[index],
-      // A wave through the text, in reading order.
-      tFly:
-        morph +
-        (index / Math.max(count - 1, 1)) * REVEAL.flightSpreadMs +
-        random() * 140,
-      flyMs: REVEAL.flightMs * (0.85 + random() * 0.3),
-      dx,
-      dy,
-      c1x: dx * 0.3 + px * bend,
-      c1y: dy * 0.3 + py * bend,
-      c2x: dx * 0.7 + px * bend * 0.6,
-      c2y: dy * 0.7 + py * bend * 0.6,
-      endScale,
-      starOpacity,
-      dotSize: star
-        ? STAR_DOT_SCALE *
-          (2.2 + star.mag * 1.5) *
-          (brightStars.has(starId!) ? 1.3 : 1)
-        : 0,
-      pulseA: 0.0015 + random() * 0.0035,
-      pulseB: 0.0007 + random() * 0.0012,
-      phase: random() * Math.PI * 2,
-      twinkle: !star && random() < 0.3 ? 0.5 : 0,
-      bright: star && brightStars.has(starId!) ? 1 : 0,
-      tint: star ? tints[starId!] : 0,
-    };
-  });
-
-  const formed = Math.max(...glyphs.map((glyph) => glyph.tFly + glyph.flyMs));
-  const linesStart =
-    Math.max(
-      ...glyphs
-        .filter((glyph) => glyph.role === ROLE_STAR)
-        .map((glyph) => glyph.tFly + glyph.flyMs),
-    ) - 300;
-
   // Lines stop short of the stars, like a star chart, and are traced by one
-  // pen moving at a steady speed.
+  // pen moving at a steady speed, setting off as the last stars light up.
+  const linesStart = start + REVEAL.starsStartMs + REVEAL.starsSpreadMs * 0.7;
   const edges: EdgePlan[] = [];
   const penSpeed = totalLength / REVEAL.linesDrawMs;
   let pen = linesStart;
   for (const segment of segments) {
-    const a = stars[segment.a];
-    const b = stars[segment.b];
+    const a = starPoints[segment.a];
+    const b = starPoints[segment.b];
     const drawMs = segment.length / penSpeed;
     if (segment.length > LINE_GAP * 2 + 4) {
       const ux = (b.x - a.x) / segment.length;
@@ -641,29 +594,134 @@ export function planReveal({
     }
     pen += drawMs;
   }
-  const linesDone = Math.max(linesStart, pen);
+  const formed = Math.max(
+    pen,
+    start + REVEAL.starsStartMs + REVEAL.starsSpreadMs + REVEAL.starPopMs,
+  );
+  const dim = formed + REVEAL.formedHoldMs;
 
-  const linesOut = Math.max(formed, linesDone) + REVEAL.holdMs;
-  const starsOut = linesOut + REVEAL.linesOutMs;
-  const skyOut = starsOut + REVEAL.starsOutMs;
+  // --- Then the stars write the chapter out, at a calm reading pace.
+  const textStart = dim + REVEAL.writeLeadMs;
+  const { tIn, textEnd } = scheduleReading(parsed, textStart);
+
+  // The key lines' letters come from the named stars, in the pen's order.
+  const keySet = new Set(keyLines);
+  const keyGlyphs: number[] = [];
+  const otherGlyphs: number[] = [];
+  parsed.glyphs.forEach((glyph, index) =>
+    (keySet.has(glyph.line) ? keyGlyphs : otherGlyphs).push(index),
+  );
+  const fromKey = keyGlyphs.slice(0, starOrder.length);
+  const starGlyphs = [
+    ...fromKey,
+    ...evenlyPick(otherGlyphs, starOrder.length - fromKey.length),
+  ].sort((a, b) => a - b);
+  const starOfGlyph = new Map<number, number>();
+  starGlyphs.forEach((glyphIndex, order) => {
+    if (order < starOrder.length) starOfGlyph.set(glyphIndex, starOrder[order]);
+  });
+
+  // The minor stars, one per remaining letter, kept on screen.
+  const dust = planStarDust(constellation, count - starOfGlyph.size);
+  const dustTop = screen.top + 8;
+  const dustBottom = screen.height - screen.bottom - 8;
+  let nextDust = 0;
+
+  const tints = starTints(constellation);
+  // Some named stars shine brighter.
+  const brightStars = new Set(
+    [...constellation.stars.keys()].filter(() => random() < REVEAL.brightShare),
+  );
+  const starWrite = new Map<number, number>();
+
+  const glyphs: GlyphPlan[] = parsed.glyphs.map((glyph, index) => {
+    const box = boxes[index];
+    const starId = starOfGlyph.get(index);
+    const star = starId === undefined ? null : starPoints[starId];
+    let origin: { x: number; y: number };
+    let speckScale: number;
+    let starOpacity: number;
+
+    if (star) {
+      origin = star;
+      speckScale = 0.12;
+      starOpacity = 0;
+    } else {
+      const speck = dust[nextDust++];
+      const onScreen = toScreen(speck.x, speck.y);
+      origin = {
+        x: reflectInto(onScreen.x, 12, screen.width - 12),
+        y: reflectInto(onScreen.y, dustTop, dustBottom),
+      };
+      speckScale =
+        ((speck.speck * SPECK_SCALE) / fontSize) *
+        1.05 *
+        (TINY_INK.test(glyph.char) ? 2 : 1);
+      starOpacity = speck.opacity;
+    }
+
+    // A gentle curve, bending to one side or the other.
+    const dx = origin.x - box.cx;
+    const dy = origin.y - box.cy;
+    const distance = Math.hypot(dx, dy) || 1;
+    const bend = (random() - 0.5) * 0.7 * distance;
+    const px = -dy / distance;
+    const py = dx / distance;
+    const flyMs = REVEAL.flightMs * (0.85 + random() * 0.3);
+    // It lands as its word is read, never before the figure starts to dim.
+    const tFly = Math.max(dim, tIn[index] + REVEAL.wordFadeMs - flyMs);
+    if (starId !== undefined) starWrite.set(starId, tFly);
+
+    return {
+      role: star ? ROLE_STAR : ROLE_DUST,
+      tBorn: start + random() * REVEAL.dustInMs,
+      tFly,
+      flyMs: tIn[index] + REVEAL.wordFadeMs - tFly,
+      dx,
+      dy,
+      // From its star (the path's far end) back to its place in the text.
+      c1x: dx * 0.3 + px * bend,
+      c1y: dy * 0.3 + py * bend,
+      c2x: dx * 0.7 + px * bend * 0.6,
+      c2y: dy * 0.7 + py * bend * 0.6,
+      speckScale,
+      starOpacity,
+      pulseA: 0.0015 + random() * 0.0035,
+      phase: random() * Math.PI * 2,
+      twinkle: !star && random() < 0.3 ? 0.5 : 0,
+    };
+  });
+
+  const stars: StarPlan[] = starPoints.map((point, id) => ({
+    x: point.x,
+    y: point.y,
+    tIn: starIn.get(id) ?? start,
+    dotSize:
+      STAR_DOT_SCALE *
+      (2.2 + point.mag * 1.5) *
+      (brightStars.has(id) ? 1.3 : 1),
+    pulseA: 0.0015 + random() * 0.0035,
+    pulseB: 0.0007 + random() * 0.0012,
+    phase: random() * Math.PI * 2,
+    bright: brightStars.has(id) ? 1 : 0,
+    tint: tints[id],
+    tWrite: starWrite.get(id) ?? -1,
+  }));
 
   return {
     glyphs,
+    stars,
     edges,
     times: {
       skyIn: SKY_IN_AT,
       skyInMs: SKY_IN_MS,
+      bloom: start,
+      linesStart,
+      formed,
+      dim,
       textStart,
       textEnd,
-      morph,
-      formed,
-      linesStart,
-      linesDone,
-      linesOut,
-      starsOut,
-      uncover: skyOut - REVEAL.uncoverLeadMs,
-      skyOut,
-      total: skyOut + REVEAL.skyOutMs,
+      canClose: textEnd + REVEAL.closeAfterMs,
     },
   };
 }
