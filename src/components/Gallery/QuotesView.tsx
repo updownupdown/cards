@@ -13,7 +13,7 @@ import {
   useStackedBarHeight,
 } from "@/components/ui/FloatingBar";
 import { Segmented } from "@/components/ui/Nocturne";
-import { CollectFrom } from "@/components/common/CollectFrom";
+import { CollectFrom, useLockedOnMap } from "@/components/common/CollectFrom";
 import { getRewardSource } from "@/data/campaign-map";
 import { getQuote, type QuoteId } from "@/data/collectibles";
 import { GALLERY_LAST_QUOTE_STORAGE_KEY } from "@/data/storage-keys";
@@ -235,6 +235,7 @@ function QuoteDetail({
   const { t } = useTranslation("campaign");
   const quote = getQuote(quoteId);
   const source = getRewardSource({ type: "quote", id: quoteId });
+  const lockedOnMap = useLockedOnMap(source);
   return (
     <ScrollView
       style={{ flex: 1 }}
@@ -316,7 +317,9 @@ function QuoteDetail({
                   textAlign: "center",
                 }}
               >
-                {t("quotes.uncollected")}
+                {lockedOnMap
+                  ? t("quotes.playToCollect")
+                  : t("quotes.uncollected")}
               </Text>
               {source && <CollectFrom path={source} campaign />}
             </View>

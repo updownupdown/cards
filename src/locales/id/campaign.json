@@ -11,6 +11,7 @@
     "byEra": "Era",
     "byName": "Abjad",
     "uncollected": "Kutipan ini belum dikumpulkan.",
+    "playToCollect": "Mainkan Pengembaraan untuk mengumpulkan kutipan ini.",
     "barLabel": "{{name}}, {{index}} dari {{total}}"
   },
   "tao": {
@@ -20,6 +21,7 @@
     "about": "Tao Te Ching adalah teks dasar Tiongkok kuno yang secara tradisional dikaitkan dengan sang bijak Laozi. Kitab ini mengajarkan cara hidup selaras dengan Tao, aliran dan irama alami alam semesta. Dengan menjalankan wu wei (tindakan tanpa paksaan) serta merangkul kerendahan hati, kesederhanaan, dan kelenturan, konon seseorang dapat menemukan kedamaian dan keseimbangan yang langgeng.",
     "pick": "Pilih bab",
     "uncollected": "Bab ini belum dikumpulkan.",
+    "playToCollect": "Mainkan Pengembaraan untuk mengumpulkan bab ini.",
     "breathe": "Tarik napas",
     "continue": "Lanjutkan"
   },

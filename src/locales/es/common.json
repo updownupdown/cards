@@ -18,7 +18,6 @@
   },
   "undo": "Deshacer",
   "winToCollect": "Gana en **{{game}}** para desbloquear",
-  "lockedOnMap": "Gana un juego vecino de **{{game}}** en la Odisea para desbloquearlo.",
   "errors": {
     "appCrashed": "Algo salió mal.",
     "tryAgain": "Reintentar"

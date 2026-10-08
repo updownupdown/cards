@@ -18,7 +18,6 @@
   },
   "undo": "Undo",
   "winToCollect": "Win **{{game}}** to collect",
-  "lockedOnMap": "Win a game next to **{{game}}** in the Odyssey to unlock it.",
   "errors": {
     "appCrashed": "Something went wrong.",
     "tryAgain": "Try again"

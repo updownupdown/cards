@@ -11,6 +11,7 @@
     "byEra": "Epoche",
     "byName": "Alfabetico",
     "uncollected": "Questa citazione non è ancora stata ottenuta.",
+    "playToCollect": "Gioca all'Odissea per ottenere questa citazione.",
     "barLabel": "{{name}}, {{index}} di {{total}}"
   },
   "tao": {
@@ -20,6 +21,7 @@
     "about": "Il Tao Te Ching è un testo fondamentale dell'antica Cina, tradizionalmente attribuito al saggio Laozi. Insegna a vivere in armonia con il Tao, il flusso e il ritmo naturali dell'universo. Si dice che praticando il wu wei (l'azione senza sforzo) e coltivando umiltà, semplicità e flessibilità si possano trovare pace ed equilibrio duraturi.",
     "pick": "Scegli un capitolo",
     "uncollected": "Questo capitolo non è ancora stato ottenuto.",
+    "playToCollect": "Gioca all'Odissea per ottenere questo capitolo.",
     "breathe": "Respira",
     "continue": "Continua"
   },

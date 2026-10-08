@@ -18,7 +18,6 @@
   },
   "undo": "Urungkan",
   "winToCollect": "Menangkan **{{game}}** untuk mengoleksi",
-  "lockedOnMap": "Menangkan permainan di sebelah **{{game}}** dalam Pengembaraan untuk membukanya.",
   "errors": {
     "appCrashed": "Terjadi kesalahan.",
     "tryAgain": "Coba lagi"
