@@ -955,10 +955,6 @@
     "noMorePairsOrFaceTriplets": "Yapılabilecek çift ya da resimli kart üçlüsü kalmadı."
   },
   "machination": {
-    "status": {
-      "place": "Place the card",
-      "build": "Building the foundations"
-    },
     "allBuilt": "All four suits built up to the King!",
     "stuck": "{{value}} cards could not come off the piles."
   }

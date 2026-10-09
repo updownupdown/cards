@@ -14,11 +14,11 @@ export const machination: GameDefinition = {
   },
   enabledOnLocalOnly: true,
   thumbnailCredit: {
-    title: "Card Players in a Drawing Room",
-    artistName: "Pierre Louis Dumesnil the Younger",
-    date: "ca. 1756–59",
+    title: "The Elephant Clock, from al-Jazari's Book of the Knowledge of Ingenious Mechanical Devices",
+    artistName: "Farrukh ibn `Abd al-Latif",
+    date: "1315",
     sourceName: "The Metropolitan Museum of Art",
-    sourceLink: "https://www.metmuseum.org/art/collection/search/436230",
+    sourceLink: "https://www.metmuseum.org/art/collection/search/451402",
   },
   tags: [GameTag.FoundationBuilders, GameTag.StockAndWaste],
   rating: {

@@ -689,7 +689,7 @@ export const GAME_THUMBNAIL_ASPECTS: Record<GameThumbnailName, number> = {
   "LittleWindmill.webp": 0.643,
   "LoneJoker.webp": 0.668,
   "Lycan.webp": 1.257,
-  "Machination.webp": 1.248,
+  "Machination.webp": 0.701,
   "Maria.webp": 0.798,
   "Memory.webp": 0.746,
   "MissMilligan.webp": 1.052,
