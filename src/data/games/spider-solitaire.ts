@@ -25,21 +25,23 @@ export const spiderSolitaire: GameDefinition = {
   gameColorPale: "#f6e6ff",
   gameColorAccent: "#e8b46a",
   cardBack: CardBackColors.Plum,
-  quickStart: ["Build down by rank; move same-suit runs; deal when stuck."],
+  quickStart: [
+    "Build down on any suit.",
+    "Only same-suit runs move together.",
+    "Deal when stuck, once every column has a card.",
+  ],
   howToPlay: [
-    "## Objective",
-    "Assemble **8 complete same-suit sequences**, each running from King down to Ace. Finished runs are removed from the table.",
-
+    "## Goal",
+    "Build eight runs from King to Ace, each in one suit.",
     "## Rules",
-    "- Build columns **down in rank, regardless of suit**.",
-    "- You may move a group of cards only when they form a **same-suit, descending run**.",
-    "- Any card or valid run may be placed onto an empty column.",
-    "- When a full **King-to-Ace** same-suit sequence forms, it is cleared automatically.",
-
-    "## Stock",
-    "Tap the stock to deal one card onto every column. You may only deal when no column is empty.",
-
-    "## Suits",
-    "Play with four suits, or make the game easier with two (Spades and Hearts) or one (Spades) in the settings.",
+    "| Foundations (8) | Complete King-to-Ace runs of one suit, cleared automatically |",
+    "| Build | Down, regardless of suit |",
+    "| Move | One card, or a same-suit run |",
+    "| Empty column | Any card or run |",
+    "| Stock | Deals one card to every column, when none is empty |",
+    "| Cards | 104 (two decks) |",
+    "## Variants",
+    "- **2 suits**: Spades and Hearts only.",
+    "- **1 suit**: Spades only.",
   ],
 };

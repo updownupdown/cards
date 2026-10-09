@@ -28,20 +28,20 @@ export const klondike: GameDefinition = {
   gameColorAccent: "#ebc86f",
   cardBack: CardBackColors.Bicycle,
   quickStart: [
-    "Build foundations up by suit.",
-    "Build tableau down by alternating color.",
-    "Only kings can fill empty columns.",
+    "Build columns down in alternating colors.",
+    "Move ordered runs together.",
+    "Only a King fills an empty column.",
   ],
   howToPlay: [
-    "## Objective",
-    "Move all 52 cards to the four foundations, each built up by suit, from Ace to King.",
-
+    "## Goal",
+    "Move every card to the foundations.",
     "## Rules",
-    "- Build tableau columns **down in rank, alternating in color**.",
-    "- Move a single card or a correctly ordered group between columns.",
-    "- Only a **King** (or a King-led sequence) may move onto an empty column.",
-
-    "## Stock",
-    "Turn cards from the stock to the waste pile (one or three at a time, depending on your settings). The top waste card is available to play, and you can redeal the stock when it empties.",
+    "| Foundations (4) | Ace to King, by suit |",
+    "| Build | Down, alternating colors |",
+    "| Move | One card, or an ordered run |",
+    "| Empty column | King only |",
+    "| Stock | Draw 1 or 3, chosen in the settings |",
+    "| Redeals | Unlimited |",
+    "| Cards | 52 |",
   ],
 };

@@ -290,9 +290,9 @@ const words = (value) =>
 const tokens = (text) =>
   (text.match(/\{\{[^}]+\}\}|<\/?[a-zA-Z0-9]+>/g) ?? []).sort().join(" ");
 
-/** Markdown at the start of a rule line, and bold markers. */
+/** Markdown at the start of a rule line, bold markers and table pipes. */
 const markdown = (line) =>
-  `${line.match(/^(##|-+)\s/)?.[1] ?? ""}|${(line.match(/\*\*/g) ?? []).length}`;
+  `${line.match(/^(##|-+|\|)\s/)?.[1] ?? ""}|${(line.match(/\*\*/g) ?? []).length}|${(line.match(/\|/g) ?? []).length}`;
 
 function checkString(label, english, translation, problems) {
   // Blank English lines (paragraph breaks) stay blank.
@@ -515,7 +515,7 @@ async function translate(language, english) {
   const system = [
     `You translate Solitarius, a mobile app of solo playing-card games, from English into ${LANGUAGE_NAMES[language] ?? language}.`,
     "Translate each item's English faithfully and naturally for players. Game rules must stay exactly as precise as the English.",
-    "Keep {{placeholders}}, <tags>, line breaks, markdown (## headings, - list markers, **bold**) and the JSON structure exactly. Arrays must keep their length.",
+    "Keep {{placeholders}}, <tags>, line breaks, markdown (## headings, - list markers, | table cells |, **bold**) and the JSON structure exactly. Arrays must keep their length.",
     "Translate game titles: use the language's established name for a classic solitaire when there is one, translate descriptive titles, and keep proper names that don't translate. When rules mention another game, use that game's translated title. Quote authors are not included; translate quote sources, but keep book and work titles recognizable. Card facts are trivia for players: keep names, dates and numbers exact, and name suits and ranks as the glossary does.",
     `Follow this style guide and glossary:\n${glossary}`,
     'Reply with JSON only, in the form {"items":[{"id":"...","translation":...}]}.',

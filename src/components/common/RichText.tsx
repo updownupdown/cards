@@ -11,6 +11,7 @@ import { View } from "react-native";
  *  - `# Heading`, `## Heading`, `### Heading`
  *  - `- item` or `* item` for bullet lists
  *  - `-- item` for nested bullet lists
+ *  - `| Label | Value |` for a row of a two-column rules table
  *  - `---` for a horizontal rule
  *  - a blank line for vertical space
  *  - `**bold**` inline emphasis
@@ -40,6 +41,7 @@ type Block =
   | { type: "heading"; level: number; text: string }
   | { type: "paragraph"; text: string }
   | { type: "list"; items: ListItem[] }
+  | { type: "table"; rows: TableRow[] }
   | { type: "blank" }
   | { type: "rule" };
 
@@ -47,6 +49,8 @@ type ListItem = {
   depth: 0 | 1;
   text: string;
 };
+
+type TableRow = { label: string; value: string };
 
 type TextBlock =
   | { type: "heading"; level: number; lines: string[] }
@@ -56,6 +60,7 @@ const HEADING_RE = /^(#{1,3})\s+(.*)$/;
 const HORIZONTAL_RULE_RE = /^\s*-{3,}\s*$/;
 const SUB_LIST_RE = /^\s*--\s+(.*)$/;
 const LIST_RE = /^\s*[-*]\s+(.*)$/;
+const TABLE_ROW_RE = /^\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*$/;
 // Returns a fresh regex instance each call so recursive renderInline calls
 // (for bold text) never share lastIndex state, which would cause an infinite loop.
 function makeInlineRe() {
@@ -66,6 +71,7 @@ function parseBlocks(content: string | string[]): Block[] {
   const contentBlocks = Array.isArray(content) ? content : [content];
   const blocks: Block[] = [];
   let listItems: ListItem[] | null = null;
+  let tableRows: TableRow[] | null = null;
   let textBlock: TextBlock | null = null;
 
   const flushTextBlock = () => {
@@ -87,11 +93,29 @@ function parseBlocks(content: string | string[]): Block[] {
     listItems = null;
   };
 
+  const flushTable = () => {
+    if (tableRows && tableRows.length > 0) {
+      blocks.push({ type: "table", rows: tableRows });
+    }
+    tableRows = null;
+  };
+
   for (const contentBlock of contentBlocks) {
     const lines = contentBlock.split("\n");
 
     for (const rawLine of lines) {
       const line = rawLine.trimEnd();
+
+      const tableMatch = line.match(TABLE_ROW_RE);
+      if (tableMatch) {
+        flushTextBlock();
+        flushList();
+        if (!tableRows) tableRows = [];
+        tableRows.push({ label: tableMatch[1], value: tableMatch[2] });
+        continue;
+      }
+      flushTable();
+
       if (line.trim() === "") {
         flushTextBlock();
         flushList();
@@ -147,7 +171,7 @@ function parseBlocks(content: string | string[]): Block[] {
       textBlock = { type: "paragraph", lines: [line.trim()] };
     }
 
-    if (contentBlocks.length > 1) {
+    if (contentBlocks.length > 1 && !tableRows) {
       flushTextBlock();
       flushList();
     }
@@ -155,6 +179,7 @@ function parseBlocks(content: string | string[]): Block[] {
 
   flushTextBlock();
   flushList();
+  flushTable();
   return blocks;
 }
 
@@ -296,6 +321,46 @@ export function RichText({
                     style={{ flex: 1 }}
                   >
                     {renderInline(item.text, `l-${index}-${itemIndex}`)}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          );
+        }
+
+        if (block.type === "table") {
+          return (
+            <View
+              key={`t-${index}`}
+              style={{ width: "100%", marginTop: spacing(gap / 2) }}
+            >
+              {block.rows.map((row, rowIndex) => (
+                <View
+                  key={`t-${index}-${rowIndex}`}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "flex-start",
+                    gap: spacing(12),
+                    paddingVertical: spacing(8),
+                    borderTopWidth: rowIndex === 0 ? 0 : 1,
+                    borderTopColor: rgba(Colors.white, 0.12),
+                  }}
+                >
+                  <Text
+                    size="md"
+                    weight={300}
+                    color={color}
+                    style={{ width: "38%", opacity: 0.6 }}
+                  >
+                    {renderInline(row.label, `t-${index}-${rowIndex}-l`)}
+                  </Text>
+                  <Text
+                    size="md"
+                    weight={400}
+                    color={color}
+                    style={{ flex: 1 }}
+                  >
+                    {renderInline(row.value, `t-${index}-${rowIndex}-v`)}
                   </Text>
                 </View>
               ))}

@@ -37,14 +37,18 @@ export const threePeaks: GameDefinition = {
   gameColorPale: "#e3fcdd",
   gameColorAccent: "#efae84",
   cardBack: CardBackColors.Ocean,
-  quickStart: ["Play exposed +/-1 to waste; A<->K wraps; draw when stuck."],
+  quickStart: [
+    "Play a peak card one rank above or below the waste card.",
+    "Draw when stuck.",
+  ],
   howToPlay: [
-    "## Objective",
-    "Clear the three peaks by removing cards one rank above or below the waste.",
-
+    "## Goal",
+    "Clear the three peaks.",
     "## Rules",
-    "- An exposed peak card may be moved to the waste if it is **one rank higher or lower** than the current waste card.",
-    "- Rank wraps around: Kings can be played on Aces, and vice versa.",
-    "- When no legal move remains, turn a card from the stock to the waste.",
+    "| Playable | Uncovered peak cards |",
+    "| Remove | Onto the waste, one rank above or below it |",
+    "| Values | Ace and King meet |",
+    "| Stock | Draw 1 |",
+    "| Redeals | None |",
   ],
 };

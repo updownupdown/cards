@@ -28,21 +28,17 @@ export const royalMarriage: GameDefinition = {
   gameColorAccent: "#e2b08d",
   cardBack: CardBackColors.Terracotta,
   quickStart: [
-    "Discard cards sitting between two cards of the same rank or suit, until the Queen and King of Hearts are side by side.",
+    "Discard cards between two that match in rank or suit.",
+    "Bring the Queen and King of Hearts together.",
   ],
   howToPlay: [
-    "## Objective",
-    "Discard every card except the **Queen** and **King of Hearts**, which must end up side by side.",
-
-    "## Deal",
-    "- All 52 cards are laid out in one continuous line, wrapping from row to row.",
-    "- The Queen of Hearts starts the line and the King of Hearts ends it.",
-
-    "## Discarding",
-    "- Select the card or cards to remove, then press **Discard**.",
-    "- One card, or two cards side by side, can go if the cards on either side of them match in **rank or suit**.",
-    "- A longer run can go only if every card in it is of the **same suit**, and the cards on either side match in rank or suit.",
-    "- The Queen and King of Hearts never leave the line.",
-    "- The line closes up after every discard.",
+    "## Goal",
+    "Discard every card but the Queen and King of Hearts, ending side by side.",
+    "## Rules",
+    "| Playable | Every card in the line |",
+    "| Remove | One or two cards between two that match in rank or suit; a longer run only if it's all one suit |",
+    "| Stock | None; every card is dealt in a line |",
+    "## Special rules",
+    "- The Queen of Hearts starts the line, the King of Hearts ends it, and neither ever leaves.",
   ],
 };

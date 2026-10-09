@@ -35,22 +35,21 @@ export const blackHole: GameDefinition = {
   gameColorAccent: "#e2cd8d",
   cardBack: CardBackColors.Violet,
   quickStart: [
-    "Cards of adjacent value to the hole card can be cleared. Clear all to win. A<->K wraps.",
+    "Play a card one rank above or below the black hole's card.",
+    "Ace and King meet.",
   ],
   howToPlay: [
-    "## Objective",
-    "- **Win** by pulling every card into the black hole.",
-    "- **Lose** if no exposed card can be played.",
-
+    "## Goal",
+    "Pull every card into the black hole.",
     "## Rules",
+    "| Playable | The top card of each fan |",
+    "| Remove | Into the black hole, one rank above or below its card |",
+    "| Values | Ace and King meet |",
+    "| Stock | None |",
+    "## Special rules",
     "- The Ace of Spades starts in the black hole.",
-    "- Move an exposed card into the black hole if it is **one rank above or below** its current card.",
-    "- Only the **exposed** (top) card of each pile is available.",
-    "- Ranks **wrap around**: after a King you may play an Ace, and vice-versa.",
-
-    "## All in a Row",
-    "In the All in a Row variant, the cards are dealt in thirteen columns of four, and the black hole starts empty: any exposed card may go in first.",
-
+    "## Variants",
+    "- **All in a Row**: thirteen columns of four, and the black hole starts empty, taking any card first.",
     "## Tips",
     "- There is no stock and no reshuffle, so plan your moves in order and as far in advance as possible.",
     "- Avoid dead ends, or getting to the end game with cards that are not adjacent in rank.",
