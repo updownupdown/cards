@@ -5,8 +5,9 @@ import { theme } from "@/styles/styles";
 import { View } from "react-native";
 
 /**
- * The spade mark: interlacing ribbons (assets/images/spade.svg, which also
- * draws the app icons and splash), in the colour theme's accent.
+ * The spade mark: interlacing ribbons (assets/images/spade.svg), in the colour
+ * theme's accent. The app icons and the splash draw it white on black, as
+ * they show before the theme is known.
  */
 export function SpadeMark({
   size = 32,
