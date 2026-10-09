@@ -16,7 +16,7 @@ import { dustLayers, figureDust, figureSegments, STAR_COLOR } from "./figure";
 /**
  * A chapter's constellation coming into being: the minor stars fade in, the
  * named stars light up in the pen's order, then the lines are drawn. It
- * stays as bright once drawn, its named stars slowly twinkling. Every
+ * stays as bright once drawn, its named stars glimmering. Every
  * step is a CSS animation, so nothing runs per frame on the JS thread and
  * the page can scroll freely meanwhile.
  */
@@ -39,9 +39,14 @@ const STAR_IN = {
   "60%": { opacity: 1, transform: [{ scale: 1.3 }] },
   to: { opacity: 1, transform: [{ scale: 1 }] },
 };
+// A glimmer: each star dims and swells back, with a brief overshoot, so the
+// figure keeps moving once drawn.
 const TWINKLE = {
   from: { opacity: 1, transform: [{ scale: 1 }] },
-  to: { opacity: 0.7, transform: [{ scale: 0.86 }] },
+  "35%": { opacity: 0.35, transform: [{ scale: 0.78 }] },
+  "60%": { opacity: 1, transform: [{ scale: 1.12 }] },
+  "80%": { opacity: 0.6, transform: [{ scale: 0.9 }] },
+  to: { opacity: 1, transform: [{ scale: 1 }] },
 };
 const DRAW = {
   from: { transform: [{ scaleX: 0 }] },
@@ -93,9 +98,9 @@ export const ConstellationBloom = memo(function ConstellationBloom({
         color: STAR_TINTS[tints[id]],
         delay:
           STARS_START + (rank / Math.max(order.length - 1, 1)) * STARS_SPREAD,
-        // Each star breathes at its own pace once the figure is drawn.
-        twinkleMs: 1700 + ((id * 577 + constellation.chapter * 131) % 1500),
-        twinkleDelay: BLOOM_MS + ((id * 389) % 1200),
+        // Each star glimmers at its own pace once the figure is drawn.
+        twinkleMs: 1400 + ((id * 577 + constellation.chapter * 131) % 1800),
+        twinkleDelay: BLOOM_MS + ((id * 389) % 1600),
       };
     });
   }, [constellation, scale, size]);
@@ -207,7 +212,6 @@ export const ConstellationBloom = memo(function ConstellationBloom({
               animationDuration: ms(star.twinkleMs),
               animationDelay: ms(star.twinkleDelay),
               animationIterationCount: "infinite",
-              animationDirection: "alternate",
               animationTimingFunction: "ease-in-out",
             }}
           />

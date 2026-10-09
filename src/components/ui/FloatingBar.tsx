@@ -1,3 +1,4 @@
+import { skyIslandProps } from "@/components/common/TapShootingStars";
 import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, type IconName } from "@/icons";
@@ -104,6 +105,8 @@ export function FloatingBar({
       ]}
     >
       <View
+        // The bar keeps its touches: no shooting stars from a sky under it.
+        {...skyIslandProps}
         style={[
           glass,
           {

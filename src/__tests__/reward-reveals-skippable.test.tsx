@@ -205,19 +205,17 @@ describe("Collectible reveals after a win", () => {
     },
   );
 
-  test("the skip box can be put away: by its cross, or by Skip again", async () => {
+  test("the skip box takes the button's place, and its cross gives it back", async () => {
     const [, testID, render] = REVEALS[0];
     const { renderer, onDone } = await openReveal(testID, render);
 
     button(renderer)!.press();
     expect(skipBox(renderer)).not.toBeNull();
+    // The button is under the box: out of sight and out of reach.
+    expect(button(renderer)).toBeNull();
     skipBox(renderer)!.keepWatching();
     expect(skipBox(renderer)).toBeNull();
-
-    button(renderer)!.press();
-    expect(skipBox(renderer)).not.toBeNull();
-    button(renderer)!.press();
-    expect(skipBox(renderer)).toBeNull();
+    expect(button(renderer)!.text).toBe("Skip");
     expect(onDone).not.toHaveBeenCalled();
     act(() => renderer.unmount());
   });

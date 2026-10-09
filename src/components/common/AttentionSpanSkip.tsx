@@ -5,7 +5,7 @@ import { usePalette } from "@/styles/palette";
 import { rgba } from "@/styles/styles";
 import { haptics } from "@/utils/haptics";
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { Pressable, View, type LayoutChangeEvent } from "react-native";
+import { Pressable, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Easing,
@@ -41,11 +41,9 @@ type Props = {
   width: number;
   onSkip: () => void;
   onDismiss: () => void;
-  /** The box's own layout, for whoever has to know where it is. */
-  onLayout?: (event: LayoutChangeEvent) => void;
 };
 
-export function AttentionSpanSkip({ width, onSkip, onDismiss, onLayout }: Props) {
+export function AttentionSpanSkip({ width, onSkip, onDismiss }: Props) {
   const { t } = useTranslation("campaign");
   const palette = usePalette();
   const { spacing } = useResponsiveMetrics();
@@ -80,10 +78,10 @@ export function AttentionSpanSkip({ width, onSkip, onDismiss, onLayout }: Props)
     dropped.current = true;
     haptics.drop();
     const target = bin.value;
-    tx.value = withTiming(
-      target.x + target.width / 2 - squareCenter.value.x,
-      { duration: DROP_MS * 0.7, easing: Easing.in(Easing.quad) },
-    );
+    tx.value = withTiming(target.x + target.width / 2 - squareCenter.value.x, {
+      duration: DROP_MS * 0.7,
+      easing: Easing.in(Easing.quad),
+    });
     ty.value = withTiming(
       target.y + target.height * 0.55 - squareCenter.value.y,
       { duration: DROP_MS * 0.7, easing: Easing.in(Easing.quad) },
@@ -176,7 +174,6 @@ export function AttentionSpanSkip({ width, onSkip, onDismiss, onLayout }: Props)
   return (
     <Animated.View
       testID="attention-span-skip"
-      onLayout={onLayout}
       style={[
         {
           width: boxWidth,

@@ -1,4 +1,5 @@
 import { Button } from "@/components/Button/Button";
+import { useTapShootingStars } from "@/components/common/TapShootingStars";
 import { Text } from "@/components/common/Text";
 import { TaoChapterDetail } from "@/components/TaoCollection/TaoChapterDetail";
 import {
@@ -11,9 +12,9 @@ import { GALLERY_LAST_CHAPTER_STORAGE_KEY } from "@/data/storage-keys";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { rgba, theme } from "@/styles/styles";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
-import { PICKED_PAUSE_MS, PickerPanel, useSavedNumber } from "./shared";
+import { PickerPanel, useSavedNumber } from "./shared";
 
 const COLUMNS = 9;
 
@@ -56,22 +57,22 @@ export function ChaptersView({
     setPicking(false);
     setChapter(wrap(next));
   };
-  // A chapter picked from the grid shows as picked for a moment before the
-  // grid closes.
-  const closing = useRef<ReturnType<typeof setTimeout>>(undefined);
-  useEffect(() => () => clearTimeout(closing.current), []);
-  const pick = (next: number) => {
-    setChapter(next);
-    clearTimeout(closing.current);
-    closing.current = setTimeout(() => setPicking(false), PICKED_PAUSE_MS);
-  };
+  // The hidden game: taps on the sky send shooting stars (the picker and
+  // the bar keep theirs).
+  const sky = useTapShootingStars({
+    enabled: true,
+    width: size?.width ?? 0,
+    height: size?.height ?? 0,
+  });
 
   return (
     <View
       style={StyleSheet.absoluteFill}
+      {...sky.rootProps}
       onLayout={(event) => {
         const { width, height } = event.nativeEvent.layout;
         setSize({ width, height });
+        sky.onLayout();
       }}
     >
       {size && chapter !== undefined && (
@@ -86,6 +87,8 @@ export function ChaptersView({
         />
       )}
 
+      {sky.layer}
+
       {picking && chapter !== undefined && (
         <PickerPanel
           title={aboutOpen ? t("tao.aboutTitle") : t("tao.pick")}
@@ -99,17 +102,14 @@ export function ChaptersView({
             <AboutTheTao onBack={() => setAboutOpen(false)} />
           ) : (
             <>
-              <View style={{ alignItems: "center" }}>
-                <Button
-                  textOnly
-                  text={t("tao.aboutTitle")}
-                  onPress={() => setAboutOpen(true)}
-                />
-              </View>
               <ChapterGrid
                 current={chapter}
                 collectedIds={collectedIds}
-                onPick={pick}
+                onPick={go}
+              />
+              <QuietLink
+                text={t("tao.aboutTitle")}
+                onPress={() => setAboutOpen(true)}
               />
             </>
           )}
@@ -137,6 +137,19 @@ export function ChaptersView({
   );
 }
 
+/**
+ * The quiet way to the picker's other page and back: small capitals, with
+ * room above and below.
+ */
+function QuietLink({ text, onPress }: { text: string; onPress: () => void }) {
+  const { spacing } = useResponsiveMetrics();
+  return (
+    <View style={{ alignItems: "center", paddingVertical: spacing(16) }}>
+      <Button textOnly uppercase size="xs" text={text} onPress={onPress} />
+    </View>
+  );
+}
+
 /** What the Tao Te Ching is, in the picker's place, and the way back. */
 function AboutTheTao({ onBack }: { onBack: () => void }) {
   const { t } = useTranslation("campaign");
@@ -144,16 +157,22 @@ function AboutTheTao({ onBack }: { onBack: () => void }) {
   return (
     <ScrollView
       contentContainerStyle={{
-        paddingHorizontal: spacing(18),
-        paddingBottom: spacing(12),
-        gap: spacing(16),
+        paddingHorizontal: spacing(36),
+        paddingTop: spacing(16),
+        paddingBottom: spacing(8),
         alignItems: "center",
       }}
     >
-      <Text size="md" weight={300} color={theme.ink} lineHeight={1.45}>
+      <Text
+        size="md"
+        weight={300}
+        color={theme.ink}
+        lineHeight={1.45}
+        style={{ textAlign: "center" }}
+      >
         {t("tao.about")}
       </Text>
-      <Button textOnly text={t("tao.pick")} onPress={onBack} />
+      <QuietLink text={t("tao.pick")} onPress={onBack} />
     </ScrollView>
   );
 }
