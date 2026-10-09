@@ -40,7 +40,9 @@ export const elevens: GameDefinition = {
     "| Values | Ace 1 |",
     "| Stock | Refills each gap at once |",
     "| Redeals | None |",
+    "## Special rules",
+    "- You lose when no pair or royal trio can be made.",
     "## Variants",
-    "- **Grid size**: 5 × 3 on Easy, 4 × 3 on Medium and 3 × 3 on Hard.",
+    "- **Grid size**: 5 × 3 on Easy, 4 × 3 on Medium and 3 × 3 on Hard (the default).",
   ],
 };

@@ -47,5 +47,8 @@ export const royalCotillion: GameDefinition = {
     "| Stock | Draw 1 |",
     "| Redeals | None |",
     "| Cards | 104 (two decks) |",
+    "## Special rules",
+    "- Ace foundations: A, 3, 5, 7, 9, J, K, 2, 4, 6, 8, 10, Q.",
+    "- Two foundations: 2, 4, 6, 8, 10, Q, A, 3, 5, 7, 9, J, K.",
   ],
 };

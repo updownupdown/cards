@@ -48,6 +48,7 @@ export const blackHole: GameDefinition = {
     "| Stock | None |",
     "## Special rules",
     "- The Ace of Spades starts in the black hole.",
+    "- You lose when no top card can go into the hole.",
     "## Variants",
     "- **All in a Row**: thirteen columns of four, and the black hole starts empty, taking any card first.",
     "## Tips",

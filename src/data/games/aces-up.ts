@@ -26,8 +26,8 @@ export const acesUp: GameDefinition = {
   gameColorAccent: "#e8b86a",
   cardBack: CardBackColors.Terracotta,
   quickStart: [
+    "Discard every card but the four Aces.",
     "Discard a card when a higher one of its suit is on top.",
-    "Aces are high.",
     "Any top card fills an empty pile.",
   ],
   howToPlay: [

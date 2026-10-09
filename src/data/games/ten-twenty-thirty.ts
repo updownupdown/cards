@@ -42,5 +42,6 @@ export const tenTwentyThirty: GameDefinition = {
     "| Redeals | None |",
     "## Special rules",
     "- Tap the first card of a run, then the last.",
+    "- You lose when the stock is empty and no run adds up.",
   ],
 };

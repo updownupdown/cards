@@ -41,6 +41,6 @@ export const kingAlbert: GameDefinition = {
     "| Stock | None |",
     "| Cards | 52 |",
     "## Variants",
-    "- **Raglan**: the Aces start on the foundations, and the reserve holds six cards.",
+    "- **Raglan**: the Aces start on the foundations, the longest column holds seven cards, and the reserve holds six.",
   ],
 };

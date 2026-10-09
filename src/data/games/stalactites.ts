@@ -44,6 +44,7 @@ export const stalactites: GameDefinition = {
     "| Cards | 52 |",
     "## Special rules",
     "- Choose whether foundations go up by ones or by twos with the buttons, or play a card one or two above a foundation card and it chooses for you.",
+    "- Until the step is chosen, drag a card that could go to a foundation or a cell to the one you want.",
     "## Tips",
     "- Look at the whole deal before choosing ones or twos.",
     "- The cells fill quickly: keep one free for the card that unlocks a column.",

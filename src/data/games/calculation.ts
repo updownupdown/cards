@@ -45,5 +45,10 @@ export const calculation: GameDefinition = {
     "| Stock | Draw 1, onto a foundation or a waste pile |",
     "| Redeals | None |",
     "| Cards | 52 |",
+    "## Special rules",
+    "- Foundation 1: A, 2, 3, 4 … K.",
+    "- Foundation 2: 2, 4, 6, 8, 10, Q, A, 3 … K.",
+    "- Foundation 3: 3, 6, 9, Q, 2, 5 … K.",
+    "- Foundation 4: 4, 8, Q, 3, 7 … K.",
   ],
 };

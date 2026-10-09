@@ -43,6 +43,7 @@ export const slyFox: GameDefinition = {
     "| Cards | 104 (two decks) |",
     "## Special rules",
     "- Until you start dealing, an emptied reserve pile refills from the stock; after that it waits for the next deal.",
-    "- No reserve card can be played until all 20 cards of a deal are placed.",
+    "- No reserve card can be played until all 20 cards of a deal are placed. A card played straight to a foundation doesn't count toward the 20.",
+    "- Deal again whenever you like, until the stock runs out.",
   ],
 };

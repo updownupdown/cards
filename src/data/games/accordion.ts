@@ -28,6 +28,7 @@ export const accordion: GameDefinition = {
   gameColorAccent: "#e2b08d",
   cardBack: CardBackColors.Terracotta,
   quickStart: [
+    "Collapse the deck into one pile.",
     "Move a pile onto the pile 1 or 3 places to its left.",
     "Their top cards must match in suit or rank.",
   ],
