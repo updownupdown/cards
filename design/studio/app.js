@@ -1,5 +1,4 @@
 (function () {
-  const { DESIGNS, face, suitGlyph, rankGlyph, colourOf } = window.CardStudio;
   const { BACKS, render: renderBack } = window.BackStudio;
   const $ = (selector) => document.querySelector(selector);
   const el = (tag, attrs = {}, html = "") => {
@@ -18,11 +17,7 @@
     theme: "nocturne",
     logo: null,
     icons: {},
-    suits: null,
-    ranks: null,
-    courts: null,
     back: null,
-    layout: "regular",
   };
   try {
     const saved = JSON.parse(localStorage.getItem(STORE) || "null");
@@ -220,181 +215,6 @@
     }),
   );
 
-  // ---- Cards --------------------------------------------------------------------
-  const HAND = [
-    [1, "S"],
-    [7, "H"],
-    [10, "D"],
-    [11, "C"],
-    [12, "H"],
-    [13, "S"],
-    ["joker", "S"],
-  ];
-  const LAYOUTS = [
-    ["regular", "Regular"],
-    ["tableau", "Tableau"],
-    ["small", "Small"],
-  ];
-  const byId = (id) => DESIGNS.find((design) => design.id === id) || DESIGNS[0];
-  const mixed = () => {
-    const courts = byId(picks.courts || "C1");
-    const suits = byId(picks.suits || courts.id);
-    const ranks = byId(picks.ranks || courts.id);
-    return {
-      ...courts,
-      suits: suits.suits,
-      fourColour: suits.fourColour,
-      blue: suits.blue || courts.red,
-      green: suits.green || courts.black,
-      font: ranks.font,
-      weight: ranks.weight,
-      italic: ranks.italic,
-      id: "MIX",
-    };
-  };
-  function renderMix() {
-    for (const [key, select] of [
-      ["suits", "#mix-suits"],
-      ["ranks", "#mix-ranks"],
-      ["courts", "#mix-courts"],
-    ]) {
-      const node = $(select);
-      node.innerHTML = DESIGNS.map(
-        (design) =>
-          `<option value="${design.id}" ${(picks[key] || "C1") === design.id ? "selected" : ""}>${design.id} · ${design.name}</option>`,
-      ).join("");
-    }
-    $("#mix-fan").innerHTML = HAND.map(([rank, suit]) =>
-      face(mixed(), rank, suit, picks.layout),
-    ).join("");
-    $("#layouts").innerHTML = "";
-    for (const [id, label] of LAYOUTS) {
-      const button = el(
-        "button",
-        { type: "button", "aria-pressed": String(picks.layout === id) },
-        label,
-      );
-      button.addEventListener("click", () => {
-        picks.layout = id;
-        save();
-        renderMix();
-        renderDesigns();
-      });
-      $("#layouts").append(button);
-    }
-  }
-  ["suits", "ranks", "courts"].forEach((key) =>
-    $(`#mix-${key}`).addEventListener("change", (event) => {
-      picks[key] = event.target.value;
-      save();
-      renderMix();
-      renderDesigns();
-    }),
-  );
-
-  const RANKS = [
-    "A",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "J",
-    "Q",
-    "K",
-  ];
-  function renderDesigns() {
-    const box = $("#designs");
-    box.innerHTML = "";
-    for (const design of DESIGNS) {
-      const block = el("article", { class: "design" });
-      const head = el(
-        "div",
-        { class: "design-head" },
-        `<span class="tag">${design.id}</span><h3>${design.name}</h3>`,
-      );
-      const set = el("div", {
-        class: "pickset",
-        role: "group",
-        "aria-label": `Use ${design.name}`,
-      });
-      for (const [key, label] of [
-        ["suits", "Suits"],
-        ["ranks", "Numerals"],
-        ["courts", "Courts"],
-      ]) {
-        const button = el(
-          "button",
-          { type: "button", "aria-pressed": String(picks[key] === design.id) },
-          label,
-        );
-        button.addEventListener("click", () => {
-          picks[key] = picks[key] === design.id ? null : design.id;
-          save();
-          renderMix();
-          renderDesigns();
-        });
-        set.append(button);
-      }
-      head.append(set);
-      block.append(head, el("p", { class: "dim" }, design.note));
-      block.append(
-        el(
-          "div",
-          { class: "fan" },
-          HAND.map(([rank, suit]) =>
-            face(design, rank, suit, picks.layout),
-          ).join(""),
-        ),
-      );
-      const glyphs = el(
-        "div",
-        { class: "glyphs" },
-        `<span class="caps" style="margin-right:4px">Copy SVG</span>`,
-      );
-      for (const suit of ["S", "H", "D", "C"]) {
-        const svg = suitGlyph(design, suit);
-        const tile = el(
-          "button",
-          {
-            class: "glyph",
-            type: "button",
-            title: "Copy as SVG",
-            "aria-label": `Copy ${suit} as SVG`,
-            style: `background:${design.stock}`,
-          },
-          svg,
-        );
-        tile.addEventListener("click", () => copy(svg, "Suit copied as SVG"));
-        glyphs.append(tile);
-      }
-      for (const rank of RANKS) {
-        const svg = rankGlyph(design, rank, design.black);
-        const tile = el(
-          "button",
-          {
-            class: "glyph",
-            type: "button",
-            title: "Copy as SVG",
-            "aria-label": `Copy ${rank} as SVG`,
-            style: `background:${design.stock}`,
-          },
-          svg,
-        );
-        tile.addEventListener("click", () =>
-          copy(svg, "Numeral copied as SVG"),
-        );
-        glyphs.append(tile);
-      }
-      block.append(glyphs);
-      box.append(block);
-    }
-  }
-
   // ---- Backs --------------------------------------------------------------------
   function renderBacks() {
     const box = $("#back-grid");
@@ -423,15 +243,6 @@
     }
   }
 
-  // ---- Notes ------------------------------------------------------------------------
-  function renderSizes() {
-    const max = Math.max(...SIZE_USE.map((size) => size.games));
-    $("#size-meters").innerHTML = SIZE_USE.map(
-      (size) =>
-        `<div class="meter"><span>${size.name} <span class="dim">· ${size.kb} KB</span></span><span class="track"><i style="width:${(size.games / max) * 100}%"></i></span><b style="font-variant-numeric:tabular-nums">${size.games} ${size.games === 1 ? "game" : "games"}</b></div>`,
-    ).join("");
-  }
-
   // ---- Tray ------------------------------------------------------------------------
   function picksText() {
     const iconPicks = Object.values(ICON_GROUPS)
@@ -456,14 +267,10 @@
       );
     const logo = LOGOS.find((entry) => entry.id === picks.logo);
     const back = BACKS.find((entry) => entry.id === picks.back);
-    const name = (id) => (id ? `${id} ${byId(id).name}` : "not picked");
     return [
       `Theme previewed: ${theme().name}`,
       `Logo: ${logo ? `${logo.id} ${logo.name}` : "not picked"}`,
       `Icons: ${families[common]} for all${exceptions.length ? `, except ${exceptions.join(", ")}` : ""}`,
-      `Card suits: ${name(picks.suits)}`,
-      `Card numerals: ${name(picks.ranks)}`,
-      `Card courts: ${name(picks.courts)}`,
       `Card back: ${back ? `${back.id} ${back.name}` : "not picked"}`,
     ].join("\n");
   }
@@ -471,15 +278,9 @@
     const iconCount = Object.values(picks.icons).filter(
       (value) => value !== undefined,
     ).length;
-    const done = [
-      picks.logo,
-      picks.suits,
-      picks.ranks,
-      picks.courts,
-      picks.back,
-    ].filter(Boolean).length;
+    const done = [picks.logo, picks.back].filter(Boolean).length;
     $("#tray-sum").innerHTML =
-      `<b>${done} of 5</b> picks made · <b>${iconCount}</b> icons chosen`;
+      `<b>${done} of 2</b> picks made · <b>${iconCount}</b> icons chosen`;
     $("#picks-text").value = picksText();
   }
   $("#show-picks").addEventListener("click", () => {
@@ -517,9 +318,6 @@
 
   renderThemes();
   renderIcons();
-  renderMix();
-  renderDesigns();
-  renderSizes();
   applyTheme();
   updateTray();
 })();
