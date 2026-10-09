@@ -23,12 +23,11 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  /* The splash colour, painted before the app mounts: Nocturne's night, until
-     the page's head script swaps in the saved colour theme's. Chrome takes the
-     canvas background - which is what it paints behind the Android button bar
-     - from the root element, so _layout must swap this on <html> as well as on
-     body once the app knows which screen is showing. */
-  background-color: #07080d;
+  /* The splash's black, under the launch intro, which eases it into the
+     screen's colour. Chrome takes the canvas background - which is what it
+     paints behind the Android button bar - from the root element, so this
+     changes on <html> as well as on body (LaunchIntro, then _layout). */
+  background-color: #000000;
   font-family: var(--font-sans-fallback);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
