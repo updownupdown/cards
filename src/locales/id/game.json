@@ -87,5 +87,15 @@
     "swapCards": "Tukar kartu-kartu ini",
     "tapCard": "Ketuk kartu ini",
     "press": "Tekan {{label}}"
+  },
+  "moments": {
+    "breatheIn": "tarik napas…",
+    "breatheHold": "tahan…",
+    "breatheOut": "embuskan…",
+    "skip": "Lewati momen tenang",
+    "continue": "Lanjutkan",
+    "noThanks": "Tidak, terima kasih!",
+    "introLater": "Bisa diubah kapan saja di Pengaturan.",
+    "zoomHint": "Perbesar untuk melihat lebih dekat."
   }
 }

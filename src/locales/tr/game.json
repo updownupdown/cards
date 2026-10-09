@@ -87,5 +87,15 @@
     "swapCards": "Bu kartların yerini değiştirin",
     "tapCard": "Bu karta dokunun",
     "press": "{{label}} düğmesine dokunun"
+  },
+  "moments": {
+    "breatheIn": "nefes al…",
+    "breatheHold": "tut…",
+    "breatheOut": "nefes ver…",
+    "skip": "Sakin anı geç",
+    "continue": "Devam et",
+    "noThanks": "Hayır, teşekkürler!",
+    "introLater": "Bunu istediğin zaman Ayarlar'dan değiştirebilirsin.",
+    "zoomHint": "Daha yakından bakmak için yakınlaştır."
   }
 }

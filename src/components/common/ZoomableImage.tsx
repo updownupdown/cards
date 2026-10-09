@@ -4,10 +4,12 @@ import { Platform, useWindowDimensions, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   cancelAnimation,
+  useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
 const MAX_ZOOM = 5;
 /** A pinch may squeeze the picture a little under whole; it springs back. */
@@ -52,10 +54,13 @@ export function ZoomableImage({
   source,
   width,
   height,
+  onZoomChange,
 }: {
   source: ImageSource | number | null;
   width: number;
   height: number;
+  /** When it is zoomed in, or back to whole. */
+  onZoomChange?: (zoomed: boolean) => void;
 }) {
   const window = useWindowDimensions();
   const boxRef = useRef<View>(null);
@@ -87,6 +92,16 @@ export function ZoomableImage({
   const holding = useSharedValue(0);
   const lastPanX = useSharedValue(0);
   const lastPanY = useSharedValue(0);
+
+  useAnimatedReaction(
+    () => scale.value > 1.02,
+    (zoomed, previous) => {
+      if (onZoomChange && previous !== null && zoomed !== previous) {
+        scheduleOnRN(onZoomChange, zoomed);
+      }
+    },
+    [onZoomChange],
+  );
 
   // A new picture starts whole.
   useEffect(() => {

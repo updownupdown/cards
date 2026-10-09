@@ -95,6 +95,21 @@
     "label": "Use English game titles",
     "description": "Always show game names in English, whatever the language."
   },
+  "moments": {
+    "label": "Quiet moments",
+    "description": "Experience a moment of reflection after a game.",
+    "notInOdyssey": "Not shown during Odyssey games.",
+    "every": "Every ~{{count}} games",
+    "everyGame": "Every game",
+    "previewTitle": "Preview a moment",
+    "preview": {
+      "intro": "First time (the setting)",
+      "breathe": "A breath",
+      "settle": "Cards settling",
+      "quote": "A quote",
+      "artwork": "A game's artwork"
+    }
+  },
   "unlockKey": {
     "label": "Unlock key",
     "description": "Have a key? Enter it to unlock the Full Odyssey.",

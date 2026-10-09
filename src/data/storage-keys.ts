@@ -33,6 +33,11 @@ export const SWIPE_DISMISS_STORAGE_KEY = "cards.swipeDismiss.v1";
  */
 export const EARNED_ACHIEVEMENTS_STORAGE_KEY = "cards.achievements.v1";
 /**
+ * Whether, and how often, a quiet moment follows a win outside the Odyssey:
+ * JSON, `{ enabled, every }`.
+ */
+export const MOMENTS_STORAGE_KEY = "cards.moments.v1";
+/**
  * The full Odyssey (src/data/odyssey-unlock.ts), JSON: the role of an unlock
  * key entered, whether a save from before the force field kept the Odyssey
  * open, and dev mode's view of the field.

@@ -41,6 +41,7 @@ import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { loadDevMode } from "@/data/dev-mode";
 import { redeemUnlockKeyFromLink } from "@/data/odyssey-unlock";
 import { loadHintMode } from "@/data/hint-mode";
+import { loadMomentSettings } from "@/data/moments";
 import { loadSwipeDismissKnown } from "@/data/swipe-dismiss";
 import { loadAutopilotSessions } from "@/hints/hint-store";
 import { FontDisplay, useFonts } from "expo-font";
@@ -70,6 +71,8 @@ ExpoSplashScreen.setOptions({ duration: 150, fade: true });
 void loadDevMode().then(() => redeemUnlockKeyFromLink());
 // "Help from Above" (the header UFO), read before a game's header shows.
 void loadHintMode();
+// How often a quiet moment follows a win, read before the first win.
+void loadMomentSettings();
 // Whether the quick start's swipe still needs its cue.
 void loadSwipeDismissKnown();
 // Deals Autopilot played in, so a resumed one's win still doesn't count.

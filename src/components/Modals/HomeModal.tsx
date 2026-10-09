@@ -39,6 +39,7 @@ import { AddToHomeScreenNotice } from "../common/AddToHomeScreenNotice";
 import { SelectControl } from "../common/SelectControl";
 import { SettingControl } from "../common/SettingControl";
 import { AutoCompleteModeRadio } from "../common/AutoCompletePanel";
+import { MomentSettings } from "../Moments/MomentSettings";
 import { Text } from "../common/Text";
 import ModalFull from "./ModalFull";
 import { UnderlineTabs } from "../ui/Nocturne";
@@ -294,6 +295,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 }}
               />
             </View>
+            <MomentSettings />
             <HelpFromAbovePanel />
           </View>
         )}

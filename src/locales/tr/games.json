@@ -957,5 +957,12 @@
   "machination": {
     "allBuilt": "All four suits built up to the King!",
     "stuck": "{{value}} cards could not come off the piles."
+  },
+  "newDeck": {
+    "runs": "Runs: {{value}} of {{max}}",
+    "moves": "Moves: {{value}}",
+    "par": "Par: {{value}}",
+    "won": "A new deck, in {{moves}} moves!",
+    "wonWithPar": "A new deck, in {{moves}} moves! Par was {{par}}."
   }
 }

@@ -95,6 +95,21 @@
     "label": "Usar títulos de jogos em inglês",
     "description": "Mostrar sempre os nomes dos jogos em inglês, seja qual for o idioma."
   },
+  "moments": {
+    "label": "Momentos de calma",
+    "description": "Viva um momento de reflexão depois de uma partida.",
+    "notInOdyssey": "Não aparece durante as partidas da Odisseia.",
+    "every": "A cada ~{{count}} partidas",
+    "everyGame": "A cada partida",
+    "previewTitle": "Pré-visualizar um momento",
+    "preview": {
+      "intro": "A primeira vez (o ajuste)",
+      "breathe": "Uma respiração",
+      "settle": "Cartas se assentando",
+      "quote": "Uma citação",
+      "artwork": "A obra de um jogo"
+    }
+  },
   "unlockKey": {
     "label": "Chave de desbloqueio",
     "description": "Tem uma chave? Digite-a para desbloquear a Odisseia completa.",

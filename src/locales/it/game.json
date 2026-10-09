@@ -87,5 +87,15 @@
     "swapCards": "Scambia queste carte",
     "tapCard": "Tocca questa carta",
     "press": "Premi {{label}}"
+  },
+  "moments": {
+    "breatheIn": "inspira…",
+    "breatheHold": "trattieni…",
+    "breatheOut": "espira…",
+    "skip": "Salta il momento di quiete",
+    "continue": "Continua",
+    "noThanks": "No, grazie!",
+    "introLater": "Puoi cambiarlo quando vuoi nelle Impostazioni.",
+    "zoomHint": "Ingrandisci per guardare da vicino."
   }
 }

@@ -95,6 +95,21 @@
     "label": "Oyun adlarını İngilizce kullan",
     "description": "Dilden bağımsız olarak oyun adlarını her zaman İngilizce göster."
   },
+  "moments": {
+    "label": "Sakin anlar",
+    "description": "Bir oyunun ardından bir düşünme anı yaşa.",
+    "notInOdyssey": "Yolculuk oyunları sırasında gösterilmez.",
+    "every": "~{{count}} oyunda bir",
+    "everyGame": "Her oyunda",
+    "previewTitle": "Bir anı önizle",
+    "preview": {
+      "intro": "İlk kez (ayar)",
+      "breathe": "Bir nefes",
+      "settle": "Yerine oturan kartlar",
+      "quote": "Bir alıntı",
+      "artwork": "Bir oyunun eseri"
+    }
+  },
   "unlockKey": {
     "label": "Kilit açma anahtarı",
     "description": "Anahtarın mı var? Yolculuk'un tamamını açmak için gir.",
