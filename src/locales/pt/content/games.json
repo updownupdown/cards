@@ -671,41 +671,6 @@
       "value": "Canfield"
     }
   },
-  "carousel": {
-    "howToPlay": {
-      "hash": "972bbaa1",
-      "value": [
-        "## Objetivo",
-        "Esvazie a mão baixando todas as suas cartas na mesa, em jogos. Você perde se a sua mão chegar a **12 cartas**.",
-        "Sua pontuação é o número de cartas que ainda estão no monte e no carrossel quando você esvazia a mão.",
-        "## Jogos",
-        "- **Trinca:** três ou quatro cartas do mesmo valor, todas de naipes diferentes: {7S} {7H} {7D}",
-        "- **Sequência:** três ou mais cartas seguidas do mesmo naipe: {9C} {10C} {JC} {QC}",
-        "- O Ás é baixo ou alto, mas não os dois: {AH} {2H} {3H} e {QH} {KH} {AH} são sequências, {KH} {AH} {2H} não é.",
-        "## Mover cartas",
-        "- Toque nas cartas para selecioná-las, da sua mão e de um único jogo.",
-        "- Toque numa carta de outro jogo para mover a seleção para ele, ou num lugar vazio para começar um jogo novo.",
-        "- Os jogos podem ser divididos, juntados e refeitos como você quiser. As cartas da mesa nunca voltam para a sua mão.",
-        "- Um jogo incompleto fica tingido de vermelho. Desfazer volta qualquer movimento feito desde a sua última carta.",
-        "## O carrossel",
-        "- Quando não tiver jogada, toque numa das três cartas do carrossel para pegá-la. O monte ocupa o lugar dela.",
-        "- Você só pode pegar uma carta quando todos os jogos da mesa estiverem completos. Uma carta pega não pode ser desfeita.",
-        "- A partida começa com três jogos na mesa. Quando o carrossel acabar, continue até esvaziar a mão, ou toque em **Encerrar partida**."
-      ]
-    },
-    "quickStart": {
-      "hash": "75854330",
-      "value": [
-        "Baixe na mesa todas as cartas da sua mão, em jogos.",
-        "Selecione cartas da sua mão ou de um jogo e depois toque em outro jogo ou num lugar vazio para movê-las para lá.",
-        "Reorganize a mesa como quiser, mas cada jogo precisa estar completo antes de você pegar uma carta do carrossel."
-      ]
-    },
-    "title": {
-      "hash": "c9a9fc03",
-      "value": "Carrossel"
-    }
-  },
   "carpet": {
     "howToPlay": {
       "hash": "0af4a81e",
@@ -1680,39 +1645,6 @@
       "value": "Sapo"
     }
   },
-  "gambit": {
-    "howToPlay": {
-      "hash": "71ea66dd",
-      "value": [
-        "## Objetivo",
-        "Cumpra o contrato nas três rodadas: **6**, **8** e depois **10** cartas para cada um. Um contrato é o máximo de vazas que a rodada permite, então toda rodada pode ser cumprida.",
-        "## Vazas",
-        "- Você sai na primeira vaza. Quem leva uma vaza sai na seguinte.",
-        "- Siga o naipe de saída se puder. Se não puder, jogue qualquer carta.",
-        "- O trunfo mais alto leva a vaza. Sem trunfo, leva a carta mais alta do naipe de saída. Os Ases são altos.",
-        "- A carta virada ao lado do monte define o naipe de trunfo.",
-        "## Seu rival",
-        "As cartas do rival ficam viradas para cima, e ele sempre joga do mesmo jeito:",
-        "- **Ao sair:** a carta mais alta que não seja trunfo. Só sai de trunfo quando não tem outra coisa.",
-        "- **Ao responder:** a carta mais baixa que leva a vaza. Se nenhuma levar, a carta mais baixa.",
-        "- Entre cartas do mesmo valor, ♣ é a mais baixa, depois ♦, ♥ e ♠.",
-        "## Derrota",
-        "A partida está perdida assim que um contrato não puder mais ser cumprido. Desfazer deixa você tentar outra linha de jogo."
-      ]
-    },
-    "quickStart": {
-      "hash": "ccfaccab",
-      "value": [
-        "As duas mãos ficam viradas para cima. Em cada rodada, faça tantas vazas quanto o contrato pede.",
-        "Siga o naipe de saída se puder. O trunfo mais alto leva a vaza; sem trunfo, a carta mais alta do naipe de saída.",
-        "Seu rival sai com a carta mais alta que não seja trunfo, e responde com a carta mais baixa que vence, ou então com a carta mais baixa."
-      ]
-    },
-    "title": {
-      "hash": "778ad573",
-      "value": "Gambito"
-    }
-  },
   "gaps": {
     "howToPlay": {
       "hash": "bdf0ca39",
@@ -1813,35 +1745,6 @@
     "title": {
       "hash": "2b72c1f3",
       "value": "Vidraceiro"
-    }
-  },
-  "go-fish": {
-    "howToPlay": {
-      "hash": "f813d631",
-      "value": [
-        "## Objetivo",
-        "Fazer mais livros que o rival: sete dos treze.",
-        "## Pedindo",
-        "- Você e o rival têm sete cartas cada. Na sua vez, toque em uma carta para pedir seu valor. O rival entrega todas as cartas daquele valor que tiver, e você pede de novo.",
-        "- Se ele não tiver nenhuma, você vai pescar: compra uma carta do lago. Se for o valor que pediu, você pede de novo; se não, a vez passa.",
-        "- Quatro cartas de um valor formam um livro, baixado assim que você o tem. Uma mão vazia compra uma carta do lago antes de pedir.",
-        "## Seu rival",
-        "As cartas do rival ficam viradas para baixo, mas ele sempre joga do mesmo jeito: pede um valor que tem e que você pediu, já que você ainda deve tê-lo. Senão, pede o valor do qual tem mais cartas, o mais baixo em caso de empate.",
-        "## Estratégia",
-        "Lembre o que o rival pede: ele tem esses valores, até você tomá-los. E cada valor que você pede conta ao rival o que você tem."
-      ]
-    },
-    "quickStart": {
-      "hash": "44b2756e",
-      "value": [
-        "Toque em uma carta para pedir seu valor ao rival. Se ele tiver alguma, são suas, e você pede de novo.",
-        "Se não tiver nenhuma, vá pescar: compre do lago. Quatro cartas de um valor formam um livro.",
-        "O rival lembra o que você pede. Faça sete livros para vencer."
-      ]
-    },
-    "title": {
-      "hash": "56094d6f",
-      "value": "Vai Pescar"
     }
   },
   "golf": {
@@ -2489,32 +2392,6 @@
       "value": "Monte Carlo"
     }
   },
-  "mosaic": {
-    "howToPlay": {
-      "hash": "e1d505a6",
-      "value": [
-        "## Objetivo",
-        "Vire todas as cartas vermelhas do quadrado com menos de três erros.",
-        "## As pistas",
-        "- Ao lado de cada linha e acima de cada coluna, as pistas dão o comprimento das sequências de cartas vermelhas que ela contém, em ordem. **2 1** significa duas vermelhas juntas, depois pelo menos uma preta, depois uma vermelha. **0** significa nenhuma vermelha.",
-        "- Uma carta virada fica à vista, então cada vermelha encontrada é mais uma pista, e cada erro também.",
-        "## Os erros",
-        "Virar uma carta preta é um erro. Três erros encerram a partida. Cada distribuição é escolhida para ter exatamente uma solução, então com cuidado sempre dá para deduzir sem um único erro; sua pontuação são os erros que ainda lhe sobravam."
-      ]
-    },
-    "quickStart": {
-      "hash": "5e92e498",
-      "value": [
-        "Vinte e cinco cartas estão viradas para baixo. As pistas dão as sequências de cartas vermelhas de cada linha e de cada coluna, em ordem.",
-        "Toque numa carta para virá-la. Encontre todas as cartas vermelhas; virar uma carta preta é um erro, e três erros perdem.",
-        "Cada distribuição tem exatamente uma solução, então sempre dá para deduzir."
-      ]
-    },
-    "title": {
-      "hash": "e8f2ee21",
-      "value": "Mosaico"
-    }
-  },
   "nestor": {
     "howToPlay": {
       "hash": "5a96cea6",
@@ -2574,34 +2451,6 @@
     "title": {
       "hash": "01d23c78",
       "value": "Vigília noturna"
-    }
-  },
-  "osmosis": {
-    "howToPlay": {
-      "hash": "d9f9e7ad",
-      "value": [
-        "## Objetivo",
-        "Mova as 52 cartas para as quatro fileiras de fundação.",
-        "## As fileiras",
-        "- A primeira carta distribuída começa a primeira fileira. Cada fileira recebe um só naipe, em qualquer ordem, exceto que uma carta só pode entrar numa fileira quando o mesmo valor já está na fileira de cima, como se tivesse se infiltrado.",
-        "- Uma nova fileira abaixo das outras só começa com o mesmo valor da primeira carta da primeira fileira.",
-        "## O jogo",
-        "- As quatro reservas estão viradas para cima; jogue suas cartas de cima. Toque no monte para virar uma carta no descarte, e jogue a carta de cima do descarte.",
-        "- Quando o monte acaba, toque nele para virar o descarte e percorrê-lo de novo, quantas vezes quiser.",
-        "- A partida está perdida quando uma passada inteira pelo monte não traz nada para jogar."
-      ]
-    },
-    "quickStart": {
-      "hash": "52283072",
-      "value": [
-        "Cada fileira de fundação recebe seu naipe em qualquer ordem, mas uma carta só pode entrar numa fileira quando seu valor está na fileira de cima.",
-        "A primeira carta distribuída define o valor com que toda outra fileira deve começar.",
-        "Jogue a partir das quatro reservas e do descarte. Vire o monte uma carta por vez, quantas vezes quiser."
-      ]
-    },
-    "title": {
-      "hash": "32e235be",
-      "value": "Osmose"
     }
   },
   "ouroboros": {
@@ -3217,35 +3066,6 @@
       "value": "Torres de Seahaven"
     }
   },
-  "sevens": {
-    "howToPlay": {
-      "hash": "9bc5afcb",
-      "value": [
-        "## Objetivo",
-        "Ser o primeiro a jogar todas as cartas da mão.",
-        "## Jogando",
-        "- Você e o rival têm sete cartas cada, e um 7 do monte é posto na mesa para começar. Um 7 abre a fileira do seu naipe; depois, uma carta pode ser jogada ao lado de qualquer ponta da sua fileira: o 8 depois do 7, o 6 antes, e assim por diante.",
-        "- Se você pode jogar uma carta, deve jogar. Se não pode, toque no monte para comprar uma, e a vez passa. Com o monte vazio, uma mão travada passa.",
-        "- As cartas que você não pode jogar ficam acinzentadas.",
-        "## Seu rival",
-        "As cartas do rival ficam viradas para cima, e ele sempre joga do mesmo jeito: um 7 se tiver; senão, a carta seguida pelo maior número de cartas dele naquela direção e, em caso de empate, sua carta mais baixa, ♣ primeiro.",
-        "## Estratégia",
-        "Segurar uma carta que o rival espera mantém a mão dele travada, enquanto você tiver outra coisa para jogar. Sua pontuação é o número de cartas que sobram na mão do rival."
-      ]
-    },
-    "quickStart": {
-      "hash": "a70f5f8d",
-      "value": [
-        "A fileira de cada naipe cresce a partir do seu 7, um valor por vez, para cima até o Rei e para baixo até o Ás.",
-        "Jogue uma carta que encaixe, ou compre do monte se nenhuma encaixar.",
-        "Esvazie sua mão antes do rival."
-      ]
-    },
-    "title": {
-      "hash": "2e23608f",
-      "value": "Setes"
-    }
-  },
   "shifting-sands": {
     "howToPlay": {
       "hash": "91681187",
@@ -3563,37 +3383,6 @@
     "title": {
       "hash": "5ac8c364",
       "value": "Sultão"
-    }
-  },
-  "sweep": {
-    "howToPlay": {
-      "hash": "ba222213",
-      "value": [
-        "## Objetivo",
-        "Marcar mais pontos que o rival quando o baralho acabar.",
-        "## Levando cartas",
-        "- Você e o rival têm três cartas cada, com quatro na mesa. Cada carta jogada leva cartas da mesa: uma do mesmo valor ou, se não houver, cartas que somem o seu valor. O Ás vale 1, o Valete 11, a Dama 12 e o Rei 13.",
-        "- Uma carta que pode levar algo deve levar. Uma que não pode fica na mesa.",
-        "- Toque em uma carta da sua mão. Se ela puder levar cartas de mais de um jeito, toque nas cartas da mesa que quiser: a captura acontece assim que a soma fechar.",
-        "- Quando as duas mãos estão vazias, mais três cartas são dadas a cada um. Quem levou cartas por último fica com o que sobrar na mesa no fim.",
-        "## Pontuação",
-        "- Uma **varrida**, levar todas as cartas da mesa, vale um ponto.",
-        "- No fim: um ponto por mais cartas, um ponto por mais ouros e um ponto pelo 7♦.",
-        "## Seu rival",
-        "As cartas do rival ficam viradas para cima, e ele sempre joga do mesmo jeito: leva o máximo de cartas que puder (uma varrida primeiro). Entre capturas iguais, prefere o 7♦, depois mais ouros, depois sua carta mais baixa. Sem nada para levar, ele baixa sua carta mais baixa."
-      ]
-    },
-    "quickStart": {
-      "hash": "60a8b88e",
-      "value": [
-        "Jogue uma carta para levar uma carta da mesa do mesmo valor, ou cartas da mesa que somem o seu valor.",
-        "Levar todas as cartas da mesa é uma varrida, que vale um ponto.",
-        "No fim, um ponto por mais cartas, um por mais ouros e um pelo 7♦. Supere seu rival."
-      ]
-    },
-    "title": {
-      "hash": "76bb3813",
-      "value": "Varrida"
     }
   },
   "ten-twenty-thirty": {

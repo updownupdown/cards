@@ -671,41 +671,6 @@
       "value": "Canfield"
     }
   },
-  "carousel": {
-    "howToPlay": {
-      "hash": "972bbaa1",
-      "value": [
-        "## Objectif",
-        "Videz votre main en posant toutes vos cartes sur la table, en combinaisons. Vous perdez si votre main contient un jour **12 cartes**.",
-        "Votre score est le nombre de cartes restant dans la pioche et le carrousel quand vous videz votre main.",
-        "## Combinaisons",
-        "- **Groupe :** trois ou quatre cartes de même rang, toutes de couleurs différentes : {7S} {7H} {7D}",
-        "- **Séquence :** trois cartes ou plus d'une même couleur qui se suivent : {9C} {10C} {JC} {QC}",
-        "- Un As est bas ou haut, mais pas les deux : {AH} {2H} {3H} et {QH} {KH} {AH} sont des séquences, {KH} {AH} {2H} n'en est pas une.",
-        "## Déplacer des cartes",
-        "- Touchez des cartes pour les sélectionner, dans votre main et dans une seule combinaison.",
-        "- Touchez une carte d'une autre combinaison pour y déplacer la sélection, ou une place vide pour commencer une nouvelle combinaison.",
-        "- Les combinaisons peuvent être coupées, réunies et refaites librement. Les cartes posées ne reviennent jamais dans votre main.",
-        "- Une combinaison incomplète est teintée de rouge. Annuler reprend tout coup joué depuis votre dernière carte.",
-        "## Le carrousel",
-        "- Quand vous êtes bloqué, touchez l'une des trois cartes du carrousel pour la prendre en main. La pioche la remplace.",
-        "- Vous ne pouvez prendre une carte que si toutes les combinaisons de la table sont complètes. Une carte prise ne peut pas être annulée.",
-        "- Trois combinaisons sont posées au départ. Quand le carrousel est vide, continuez jusqu'à vider votre main, ou touchez **Terminer la partie**."
-      ]
-    },
-    "quickStart": {
-      "hash": "75854330",
-      "value": [
-        "Posez toutes les cartes de votre main sur la table, en combinaisons.",
-        "Sélectionnez des cartes de votre main ou d'une combinaison, puis touchez une autre combinaison ou une place vide pour les y déplacer.",
-        "Réorganisez la table comme vous le voulez, mais chaque combinaison doit être complète avant de prendre une carte du carrousel."
-      ]
-    },
-    "title": {
-      "hash": "c9a9fc03",
-      "value": "Carrousel"
-    }
-  },
   "carpet": {
     "howToPlay": {
       "hash": "0af4a81e",
@@ -1680,39 +1645,6 @@
       "value": "Grenouille"
     }
   },
-  "gambit": {
-    "howToPlay": {
-      "hash": "71ea66dd",
-      "value": [
-        "## Objectif",
-        "Remplissez le contrat des trois donnes : **6**, **8** puis **10** cartes par joueur. Un contrat est le plus grand nombre de plis que permet sa donne : chaque donne peut donc être réussie.",
-        "## Plis",
-        "- Vous entamez le premier pli. Celui qui remporte un pli entame le suivant.",
-        "- Fournissez à la couleur demandée si vous le pouvez. Sinon, jouez n'importe quelle carte.",
-        "- Le plus haut atout remporte le pli. Sans atout, c'est la plus haute carte de la couleur demandée. L'As est la plus haute carte.",
-        "- La carte retournée à côté de la pioche désigne l'atout.",
-        "## Votre rival",
-        "Les cartes du rival sont visibles, et il joue toujours de la même façon :",
-        "- **Pour entamer :** sa plus haute carte qui n'est pas un atout. Il n'entame atout que s'il n'a rien d'autre.",
-        "- **Pour répondre :** sa plus basse carte qui remporte le pli. S'il n'en a aucune, sa plus basse carte.",
-        "- Entre deux cartes de même rang, ♣ est la plus basse, puis ♦, ♥ et ♠.",
-        "## Défaite",
-        "La partie est perdue dès qu'un contrat ne peut plus être rempli. Annuler vous permet d'essayer un autre plan de jeu."
-      ]
-    },
-    "quickStart": {
-      "hash": "ccfaccab",
-      "value": [
-        "Les deux mains sont visibles. À chaque donne, faites autant de plis que le demande son contrat.",
-        "Fournissez à la couleur demandée si vous le pouvez. Le plus haut atout remporte le pli, sinon la plus haute carte de la couleur demandée.",
-        "Votre rival entame avec sa plus haute carte qui n'est pas un atout, et répond avec sa plus basse carte gagnante, sinon sa plus basse carte."
-      ]
-    },
-    "title": {
-      "hash": "778ad573",
-      "value": "Gambit"
-    }
-  },
   "gaps": {
     "howToPlay": {
       "hash": "bdf0ca39",
@@ -1813,35 +1745,6 @@
     "title": {
       "hash": "2b72c1f3",
       "value": "Le Vitrier"
-    }
-  },
-  "go-fish": {
-    "howToPlay": {
-      "hash": "f813d631",
-      "value": [
-        "## Objectif",
-        "Faire plus de livres que le rival : sept sur treize.",
-        "## Demander",
-        "- Vous et le rival avez sept cartes chacun. À votre tour, touchez une carte pour demander sa valeur. Le rival vous donne toutes les cartes de cette valeur qu'il a, et vous redemandez.",
-        "- S'il n'en a pas, vous allez pêcher : vous piochez une carte dans la mare. Si c'est la valeur demandée, vous redemandez ; sinon, le tour passe.",
-        "- Quatre cartes de même valeur forment un livre, posé dès que vous l'avez. Une main vide pioche une carte dans la mare avant de demander.",
-        "## Votre rival",
-        "Les cartes du rival sont face cachée, mais il joue toujours de la même façon : il demande une valeur qu'il a et que vous avez demandée, puisque vous l'avez forcément encore. Sinon, il demande la valeur dont il a le plus de cartes, la plus basse à égalité.",
-        "## Stratégie",
-        "Retenez ce que le rival demande : il a ces valeurs, jusqu'à ce que vous les lui preniez. Et chaque valeur que vous demandez dit au rival ce que vous avez."
-      ]
-    },
-    "quickStart": {
-      "hash": "44b2756e",
-      "value": [
-        "Touchez une carte pour demander sa valeur au rival. S'il en a, elles sont à vous, et vous redemandez.",
-        "S'il n'en a pas, allez pêcher : piochez dans la mare. Quatre cartes de même valeur forment un livre.",
-        "Le rival se souvient de ce que vous demandez. Faites sept livres pour gagner."
-      ]
-    },
-    "title": {
-      "hash": "56094d6f",
-      "value": "Pêche"
     }
   },
   "golf": {
@@ -2489,32 +2392,6 @@
       "value": "Monte-Carlo"
     }
   },
-  "mosaic": {
-    "howToPlay": {
-      "hash": "e1d505a6",
-      "value": [
-        "## Objectif",
-        "Retournez toutes les cartes rouges du carré avec moins de trois erreurs.",
-        "## Les indices",
-        "- À côté de chaque ligne et au-dessus de chaque colonne, les indices donnent la longueur des suites de cartes rouges qu'elle contient, dans l'ordre. **2 1** signifie deux rouges côte à côte, puis au moins une noire, puis une rouge. **0** signifie aucune rouge.",
-        "- Une carte retournée reste visible : chaque rouge trouvée est un indice de plus, et chaque erreur aussi.",
-        "## Les erreurs",
-        "Retourner une carte noire est une erreur. Trois erreurs mettent fin à la partie. Chaque donne est choisie pour n'avoir qu'une seule solution : avec soin, elle se déduit donc toujours sans la moindre erreur ; votre score est le nombre d'erreurs qu'il vous restait."
-      ]
-    },
-    "quickStart": {
-      "hash": "5e92e498",
-      "value": [
-        "Vingt-cinq cartes sont posées face cachée. Les indices donnent les suites de cartes rouges de chaque ligne et de chaque colonne, dans l'ordre.",
-        "Touchez une carte pour la retourner. Trouvez toutes les cartes rouges ; une carte noire retournée est une erreur, et trois erreurs font perdre.",
-        "Chaque donne a exactement une solution, elle peut donc toujours se déduire."
-      ]
-    },
-    "title": {
-      "hash": "e8f2ee21",
-      "value": "Mosaïque"
-    }
-  },
   "nestor": {
     "howToPlay": {
       "hash": "5a96cea6",
@@ -2574,34 +2451,6 @@
     "title": {
       "hash": "01d23c78",
       "value": "Veille nocturne"
-    }
-  },
-  "osmosis": {
-    "howToPlay": {
-      "hash": "d9f9e7ad",
-      "value": [
-        "## Objectif",
-        "Déplacez les 52 cartes sur les quatre rangées de fondation.",
-        "## Les rangées",
-        "- La première carte distribuée commence la première rangée. Chaque rangée reçoit une seule couleur, dans n'importe quel ordre, sauf qu'une carte ne peut rejoindre une rangée que si la même valeur figure déjà dans la rangée au-dessus, comme si elle s'y était infiltrée.",
-        "- Une nouvelle rangée sous les autres ne commence qu'avec la même valeur que la première carte de la première rangée.",
-        "## Le jeu",
-        "- Les quatre réserves sont face visible ; jouez leur carte du dessus. Touchez la pioche pour retourner une carte sur le talon, et jouez la carte du dessus du talon.",
-        "- Quand la pioche est épuisée, touchez-la pour retourner le talon et le reparcourir, aussi souvent que vous voulez.",
-        "- La partie est perdue quand un tour complet de la pioche ne donne rien à jouer."
-      ]
-    },
-    "quickStart": {
-      "hash": "52283072",
-      "value": [
-        "Chaque rangée de fondation reçoit sa couleur dans n'importe quel ordre, mais une carte ne peut rejoindre une rangée que si sa valeur figure dans la rangée au-dessus.",
-        "La première carte distribuée fixe la valeur par laquelle toute autre rangée doit commencer.",
-        "Jouez depuis les quatre réserves et le talon. Retournez la pioche une carte à la fois, aussi souvent que vous voulez."
-      ]
-    },
-    "title": {
-      "hash": "32e235be",
-      "value": "Osmose"
     }
   },
   "ouroboros": {
@@ -3217,35 +3066,6 @@
       "value": "Tours de Seahaven"
     }
   },
-  "sevens": {
-    "howToPlay": {
-      "hash": "9bc5afcb",
-      "value": [
-        "## Objectif",
-        "Être le premier à jouer toutes les cartes de sa main.",
-        "## Jouer",
-        "- Vous et le rival avez sept cartes chacun, et un 7 de la pioche est posé pour commencer. Un 7 ouvre la rangée de sa couleur ; ensuite, une carte peut être jouée à l'un ou l'autre bout de sa rangée : le 8 après le 7, le 6 avant, et ainsi de suite.",
-        "- Si vous pouvez jouer une carte, vous le devez. Sinon, touchez la pioche pour piocher une carte, et le tour passe. Quand la pioche est vide, une main bloquée passe.",
-        "- Les cartes que vous ne pouvez pas jouer sont grisées.",
-        "## Votre rival",
-        "Les cartes du rival sont face visible, et il joue toujours de la même façon : un 7 s'il en a un ; sinon, la carte suivie du plus grand nombre de ses propres cartes dans cette direction et, à égalité, sa carte la plus basse, ♣ d'abord.",
-        "## Stratégie",
-        "Garder une carte que le rival attend bloque sa main, tant que vous avez autre chose à jouer. Votre score est le nombre de cartes qu'il reste au rival."
-      ]
-    },
-    "quickStart": {
-      "hash": "a70f5f8d",
-      "value": [
-        "La rangée de chaque couleur part de son 7, un rang à la fois, jusqu'au Roi vers le haut et jusqu'à l'As vers le bas.",
-        "Jouez une carte qui convient, ou piochez si aucune ne convient.",
-        "Videz votre main avant le rival."
-      ]
-    },
-    "title": {
-      "hash": "2e23608f",
-      "value": "Les Sept"
-    }
-  },
   "shifting-sands": {
     "howToPlay": {
       "hash": "91681187",
@@ -3563,37 +3383,6 @@
     "title": {
       "hash": "5ac8c364",
       "value": "Sultan"
-    }
-  },
-  "sweep": {
-    "howToPlay": {
-      "hash": "ba222213",
-      "value": [
-        "## Objectif",
-        "Marquer plus de points que votre rival une fois le paquet épuisé.",
-        "## Prendre des cartes",
-        "- Vous et le rival avez trois cartes chacun, et quatre sont sur la table. Chaque carte jouée prend des cartes de la table : une de même valeur ou, s'il n'y en a pas, des cartes dont la somme est égale à sa valeur. L'As vaut 1, le Valet 11, la Dame 12 et le Roi 13.",
-        "- Une carte qui peut prendre quelque chose le doit. Une carte qui ne le peut pas est posée sur la table.",
-        "- Touchez une carte de votre main. Si elle peut prendre des cartes de plusieurs façons, touchez les cartes de la table que vous voulez : la prise se fait dès que la somme est atteinte.",
-        "- Quand les deux mains sont vides, trois nouvelles cartes sont distribuées à chacun. Celui qui a pris des cartes en dernier ramasse ce qui reste sur la table à la fin.",
-        "## Décompte",
-        "- Un **balayage**, prendre toutes les cartes de la table, vaut un point.",
-        "- À la fin : un point pour le plus de cartes, un point pour le plus de carreaux et un point pour le 7♦.",
-        "## Votre rival",
-        "Les cartes du rival sont face visible, et il joue toujours de la même façon : il prend le plus de cartes possible (un balayage d'abord). Entre des prises égales, il préfère le 7♦, puis le plus de carreaux, puis sa carte la plus basse. S'il ne peut rien prendre, il pose sa carte la plus basse."
-      ]
-    },
-    "quickStart": {
-      "hash": "60a8b88e",
-      "value": [
-        "Jouez une carte pour prendre une carte de la table de même valeur, ou des cartes de la table dont la somme lui est égale.",
-        "Prendre toutes les cartes de la table est un balayage, qui vaut un point.",
-        "À la fin, un point pour le plus de cartes, un pour le plus de carreaux et un pour le 7♦. Devancez votre rival."
-      ]
-    },
-    "title": {
-      "hash": "76bb3813",
-      "value": "Balayage"
     }
   },
   "ten-twenty-thirty": {
