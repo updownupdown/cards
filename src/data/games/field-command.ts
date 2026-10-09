@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const fieldCommand: GameDefinition = {
   path: "/field-command",
   title: "Field Command",
+  source: {
+    title: "Card Capture",
+    designer: "Lucas Gentry",
+    year: "2018",
+    link: "https://boardgamegeek.com/boardgamedesigner/109557/lucas-gentry",
+  },
   tags: [GameTag.CardCombat],
   rating: {
     complexity: 60,

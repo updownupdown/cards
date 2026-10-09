@@ -6,6 +6,11 @@ import { GameAnimations } from "@/animations";
 export const lightsOut: GameDefinition = {
   path: "/lights-out",
   title: "Lights Out",
+  source: {
+    title: "Lights Out",
+    designer: "Tiger Electronics",
+    year: "1995",
+  },
   tags: [GameTag.Puzzles, GameTag.SpatialControl],
   // Scored in moves or guesses: fewer is better.
   lowerScoreIsBetter: true,

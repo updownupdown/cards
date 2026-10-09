@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations/types";
 export const threePeaks: GameDefinition = {
   path: "/three-peaks",
   title: "Three Peaks",
+  source: {
+    title: "TriPeaks",
+    designer: "Robert Hogue",
+    year: "1989",
+    link: "https://boardgamegeek.com/boardgamedesigner/127574/robert-hogue",
+  },
   aliases: ["TriPeaks", "Tri Peaks"],
   tags: [
     GameTag.ClearTheBoard,

@@ -6,6 +6,10 @@ import { GameDefinition, GameTag } from "../games-data";
 export const waypoint: GameDefinition = {
   path: "/waypoint",
   title: "Waypoint",
+  source: {
+    title: "Against the Clock",
+    designer: "Kikwik",
+  },
   tags: [GameTag.Sports, GameTag.ScoringPuzzles, GameTag.ModernMechanics],
   rating: {
     complexity: 38,

@@ -5,6 +5,12 @@ import { CardBackColors } from "../card-backs";
 export const bowling: GameDefinition = {
   path: "/bowling",
   title: "Bowling",
+  source: {
+    title: "Bowling Solitaire",
+    designer: "Sid Sackson",
+    year: "1969",
+    link: "https://boardgamegeek.com/boardgamedesigner/4/sid-sackson",
+  },
   tags: [GameTag.Sports, GameTag.ScoringPuzzles],
   rating: {
     complexity: 45,

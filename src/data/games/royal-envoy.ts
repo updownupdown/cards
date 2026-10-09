@@ -6,6 +6,13 @@ import { GameAnimations } from "@/animations";
 export const royalEnvoy: GameDefinition = {
   path: "/royal-envoy",
   title: "Royal Envoy",
+  source: {
+    title: "The Emissary",
+    designer: "Wil Su",
+    year: "2021",
+    collection: "Isaludo",
+    link: "https://boardgamegeek.com/boardgamedesigner/121533/wilhelm-su",
+  },
   tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 85,

@@ -6,6 +6,11 @@ import { GameDefinition, GameTag } from "../games-data";
 export const shiftingSands: GameDefinition = {
   path: "/shifting-sands",
   title: "Shifting Sands",
+  source: {
+    title: "Sandcastle Solitaire",
+    designer: "Austin Palmer",
+    link: "https://boardgamegeek.com/boardgamedesigner/117577/austin-palmer",
+  },
   tags: [GameTag.ModernMechanics, GameTag.SequenceBuilding],
   rating: {
     complexity: 45,

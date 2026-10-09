@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const ascent: GameDefinition = {
   path: "/ascent",
   title: "Ascent",
+  source: {
+    title: "Alpine Solitaire",
+    designer: "Austin Palmer",
+    year: "2023",
+    link: "https://boardgamegeek.com/boardgamedesigner/117577/austin-palmer",
+  },
   tags: [GameTag.Sports, GameTag.ModernMechanics],
   rating: {
     complexity: 75,

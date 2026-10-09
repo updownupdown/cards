@@ -6,6 +6,11 @@ import { GameDefinition, GameTag } from "../games-data";
 export const fifteenPuzzle: GameDefinition = {
   path: "/fifteen-puzzle",
   title: "Fifteen Puzzle",
+  source: {
+    title: "15 Puzzle",
+    designer: "Noyes Chapman",
+    year: "1880",
+  },
   tags: [GameTag.Puzzles, GameTag.SpatialControl],
   // Scored in moves or guesses: fewer is better.
   lowerScoreIsBetter: true,

@@ -6,6 +6,11 @@ import { GameAnimations } from "@/animations";
 export const towerOfHanoi: GameDefinition = {
   path: "/tower-of-hanoi",
   title: "Tower of Hanoi",
+  source: {
+    title: "Tower of Hanoi",
+    designer: "Édouard Lucas",
+    year: "1883",
+  },
   tags: [GameTag.Puzzles, GameTag.SpatialControl, GameTag.SequenceBuilding],
   rating: {
     complexity: 15,

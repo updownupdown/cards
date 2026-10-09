@@ -6,6 +6,10 @@ import { GameAnimations } from "@/animations";
 export const dominion: GameDefinition = {
   path: "/dominion",
   title: "Dominion",
+  source: {
+    title: "Empire",
+    designer: "Jim Owen",
+  },
   tags: [GameTag.Puzzles, GameTag.SpatialControl, GameTag.CardCombat],
   rating: {
     complexity: 35,

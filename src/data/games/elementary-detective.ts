@@ -6,6 +6,13 @@ import { GameAnimations } from "@/animations";
 export const elementaryDetective: GameDefinition = {
   path: "/elementary-detective",
   title: "Elementary Detective",
+  source: {
+    title: "Hide and Seek",
+    designer: "Wil Su",
+    year: "2021",
+    collection: "Isaludo",
+    link: "https://boardgamegeek.com/boardgamedesigner/121533/wilhelm-su",
+  },
   tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 20,

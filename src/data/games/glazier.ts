@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const glazier: GameDefinition = {
   path: "/glazier",
   title: "Glazier",
+  source: {
+    title: "Azul",
+    designer: "Michael Kiesling",
+    year: "2017",
+    link: "https://boardgamegeek.com/boardgame/230802/azul",
+  },
   tags: [GameTag.ModernMechanics, GameTag.ScoringPuzzles],
   rating: {
     complexity: 55,

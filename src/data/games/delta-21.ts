@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const delta21: GameDefinition = {
   path: "/delta-21",
   title: "Delta 21",
+  source: {
+    title: "Blackjack River Research",
+    designer: "Gregg Jewell",
+    year: "2023",
+    link: "https://boardgamegeek.com/boardgamedesigner/71138/gregg-jewell",
+  },
   tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 50,

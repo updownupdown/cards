@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const rogueRun: GameDefinition = {
   path: "/rogue-run",
   title: "Rogue Run",
+  source: {
+    title: "Scoundrel",
+    designer: "Zach Gage and Kurt Bieg",
+    year: "2011",
+    link: "https://boardgamegeek.com/boardgamedesigner/60260/zach-gage",
+  },
   tags: [GameTag.DungeonCrawler, GameTag.CardCombat],
   rating: {
     complexity: 55,

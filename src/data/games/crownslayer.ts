@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const crownslayer: GameDefinition = {
   path: "/crownslayer",
   title: "Crownslayer",
+  source: {
+    title: "Regicide",
+    designer: "Paul Abrahams, Luke Badger and Andy Richdale",
+    year: "2020",
+    link: "https://boardgamegeek.com/boardgame/307002/regicide",
+  },
   tags: [GameTag.CardCombat],
   rating: {
     complexity: 70,

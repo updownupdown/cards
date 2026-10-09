@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const twelveTrials: GameDefinition = {
   path: "/twelve-trials",
   title: "Twelve Trials",
+  source: {
+    title: "Clear the Dungeon",
+    designer: "Mark S. Ball",
+    year: "2019",
+    link: "https://boardgamegeek.com/boardgamedesigner/136705/mark-s-ball",
+  },
   tags: [GameTag.DungeonCrawler, GameTag.CardCombat],
   rating: {
     complexity: 55,

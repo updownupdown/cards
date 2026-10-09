@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const lycan: GameDefinition = {
   path: "/lycan",
   title: "Lycan",
+  source: {
+    title: "Lobo",
+    designer: "James Ernest",
+    year: "2022",
+    link: "https://boardgamegeek.com/boardgamedesigner/61/james-ernest",
+  },
   tags: [GameTag.CardCombat],
   rating: {
     complexity: 60,

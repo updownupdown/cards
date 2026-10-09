@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const boilingOver: GameDefinition = {
   path: "/boiling-over",
   title: "Boiling Over",
+  source: {
+    title: "The Quacks of Quedlinburg",
+    designer: "Wolfgang Warsch",
+    year: "2018",
+    link: "https://boardgamegeek.com/boardgame/244521/the-quacks-of-quedlinburg",
+  },
   tags: [GameTag.ModernMechanics, GameTag.ScoringPuzzles],
   rating: {
     complexity: 50,

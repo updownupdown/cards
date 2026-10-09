@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const pocketPoker: GameDefinition = {
   path: "/pocket-poker",
   title: "Pocket Poker",
+  source: {
+    title: "In-Hand Poker",
+    designer: "John Burton",
+    year: "2021",
+    link: "https://boardgamegeek.com/boardgamedesigner/130937/john-burton",
+  },
   tags: [GameTag.PokerAndCribbage, GameTag.ScoringPuzzles],
   rating: {
     complexity: 30,

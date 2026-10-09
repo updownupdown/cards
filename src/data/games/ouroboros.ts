@@ -6,6 +6,13 @@ import { GameAnimations } from "@/animations";
 export const ouroboros: GameDefinition = {
   path: "/ouroboros",
   title: "Ouroboros",
+  source: {
+    title: "Loot the Loop",
+    designer: "Wil Su",
+    year: "2021",
+    collection: "Isaludo",
+    link: "https://boardgamegeek.com/boardgamedesigner/121533/wilhelm-su",
+  },
   tags: [
     GameTag.DungeonCrawler,
     GameTag.ScoringPuzzles,
