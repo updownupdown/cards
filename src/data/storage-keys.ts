@@ -37,3 +37,9 @@ export const EARNED_ACHIEVEMENTS_STORAGE_KEY = "cards.achievements.v1";
  * JSON, `{ enabled, every }`.
  */
 export const MOMENTS_STORAGE_KEY = "cards.moments.v1";
+/**
+ * The full Odyssey (src/data/odyssey-unlock.ts), JSON: the role of an unlock
+ * key entered, whether a save from before the force field kept the Odyssey
+ * open, and dev mode's view of the field.
+ */
+export const ODYSSEY_UNLOCK_STORAGE_KEY = "cards.odysseyUnlock.v1";

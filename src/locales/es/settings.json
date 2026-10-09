@@ -77,7 +77,14 @@
     "unlockAll": "Desbloquear todas las partidas de la campaña",
     "unlockedAll": "Todas las partidas de la campaña desbloqueadas",
     "grantMercySkip": "Conceder un indulto",
-    "mercySkipGranted": "Indulto concedido ({{count}} sin usar)"
+    "mercySkipGranted": "Indulto concedido ({{count}} sin usar)",
+    "needsKey": "El modo dev necesita una clave de desarrollador",
+    "forceField": {
+      "label": "Campo de fuerza",
+      "asPlayed": "Según la partida",
+      "shown": "Siempre visible",
+      "lifted": "Retirado"
+    }
   },
   "tabs": {
     "general": "General",
@@ -101,6 +108,20 @@
       "settle": "Cartas que se asientan",
       "quote": "Una cita",
       "artwork": "La obra de un juego"
+    }
+  },
+  "unlockKey": {
+    "label": "Clave de desbloqueo",
+    "description": "¿Tienes una clave? Escríbela para desbloquear la Odisea completa.",
+    "unlocked": "La Odisea completa está desbloqueada.",
+    "devKey": "Clave de desarrollador introducida: la Odisea completa está desbloqueada y puedes activar el modo dev.",
+    "submit": "Desbloquear",
+    "clear": "Borrar la clave",
+    "result": {
+      "unlocked": "La Odisea completa está desbloqueada",
+      "devKey": "Clave de desarrollador aceptada",
+      "webOnly": "Esta clave funciona en la aplicación web. En la aplicación, la Odisea completa se consigue en Google Play.",
+      "invalid": "Esa clave no es válida"
     }
   }
 }

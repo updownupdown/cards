@@ -77,7 +77,14 @@
     "unlockAll": "Sblocca tutte le partite della campagna",
     "unlockedAll": "Tutte le partite della campagna sono sbloccate",
     "grantMercySkip": "Concedi una grazia",
-    "mercySkipGranted": "Grazia concessa ({{count}} da usare)"
+    "mercySkipGranted": "Grazia concessa ({{count}} da usare)",
+    "needsKey": "La modalità dev richiede una chiave sviluppatore",
+    "forceField": {
+      "label": "Campo di forza",
+      "asPlayed": "Come in gioco",
+      "shown": "Sempre visibile",
+      "lifted": "Rimosso"
+    }
   },
   "tabs": {
     "general": "Generali",
@@ -101,6 +108,20 @@
       "settle": "Carte che si posano",
       "quote": "Una citazione",
       "artwork": "L'opera di un gioco"
+    }
+  },
+  "unlockKey": {
+    "label": "Chiave di sblocco",
+    "description": "Hai una chiave? Inseriscila per sbloccare l'Odissea completa.",
+    "unlocked": "L'Odissea completa è sbloccata.",
+    "devKey": "Chiave sviluppatore inserita: l'Odissea completa è sbloccata e puoi attivare la modalità dev.",
+    "submit": "Sblocca",
+    "clear": "Cancella la chiave",
+    "result": {
+      "unlocked": "L'Odissea completa è sbloccata",
+      "devKey": "Chiave sviluppatore accettata",
+      "webOnly": "Questa chiave funziona nell'app web. Nell'app, l'Odissea completa si ottiene su Google Play.",
+      "invalid": "Questa chiave non è valida"
     }
   }
 }

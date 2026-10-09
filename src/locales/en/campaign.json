@@ -38,5 +38,13 @@
     "title": "Celestial Odyssey",
     "text": "Chart a path by winning and unlocking games, starting with the classic Klondike. Move outwards to explore new game mechanics, tackle increasingly difficult challenges, and unlock collectibles to create moments of calm and reflection.",
     "close": "Dismiss"
+  },
+  "field": {
+    "title": "Beyond the force field",
+    "text": "This star lies beyond the force field. Unlock the Full Odyssey to travel here and collect what it holds.",
+    "unlock": "Unlock the Full Odyssey",
+    "enterKey": "Enter a key",
+    "getApp": "Get the app",
+    "purchaseSoon": "The Full Odyssey can't be bought yet."
   }
 }

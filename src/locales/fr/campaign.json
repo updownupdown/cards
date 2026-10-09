@@ -38,5 +38,13 @@
     "title": "Odyssée céleste",
     "text": "Tracez votre route en gagnant et en débloquant des jeux, en commençant par le classique Klondike. Avancez vers l'extérieur pour découvrir de nouvelles mécaniques de jeu, relever des défis de plus en plus difficiles et débloquer des objets à collectionner, pour des moments de calme et de réflexion.",
     "close": "Fermer"
+  },
+  "field": {
+    "title": "Au-delà du champ de force",
+    "text": "Cette étoile se trouve au-delà du champ de force. Débloquez l'Odyssée complète pour y voyager et obtenir ce qu'elle renferme.",
+    "unlock": "Débloquer l'Odyssée complète",
+    "enterKey": "Saisir une clé",
+    "getApp": "Obtenir l'application",
+    "purchaseSoon": "L'Odyssée complète n'est pas encore en vente."
   }
 }
