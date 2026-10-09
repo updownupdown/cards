@@ -89,16 +89,20 @@
     "description": "Dilden bağımsız olarak oyun adlarını her zaman İngilizce göster."
   },
   "moments": {
-    "label": "Quiet moments",
-    "description": "Now and then, after a win outside the Odyssey, a moment to pause before the next deal.",
-    "off": "Off",
-    "infrequent": "Infrequent",
-    "frequent": "Frequent",
-    "previewTitle": "Preview a moment",
+    "label": "Sakin anlar",
+    "description": "Arada bir, Yolculuk dışındaki bir galibiyetten sonra, sonraki dağıtımdan önce bir mola anı.",
+    "every": "Sıklık:",
+    "off": "Kapalı",
+    "every3": "~3 oyun",
+    "every5": "~5 oyun",
+    "every10": "~10 oyun",
+    "previewTitle": "Bir anı önizle",
     "preview": {
-      "breathe": "A breath (wordless)",
-      "settle": "Cards settling (wordless)",
-      "ripples": "Ripples (wordless)"
+      "intro": "İlk kez (ayar)",
+      "breathe": "Bir nefes",
+      "settle": "Yerine oturan kartlar",
+      "quote": "Bir alıntı",
+      "artwork": "Bir oyunun eseri"
     }
   }
 }

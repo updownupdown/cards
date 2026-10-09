@@ -91,14 +91,18 @@
   "moments": {
     "label": "Quiet moments",
     "description": "Now and then, after a win outside the Odyssey, a moment to pause before the next deal.",
-    "off": "Off",
-    "infrequent": "Infrequent",
-    "frequent": "Frequent",
+    "every": "Every:",
+    "off": "Disabled",
+    "every3": "~3 games",
+    "every5": "~5 games",
+    "every10": "~10 games",
     "previewTitle": "Preview a moment",
     "preview": {
-      "breathe": "A breath (wordless)",
-      "settle": "Cards settling (wordless)",
-      "ripples": "Ripples (wordless)"
+      "intro": "First time (the setting)",
+      "breathe": "A breath",
+      "settle": "Cards settling",
+      "quote": "A quote",
+      "artwork": "A game's artwork"
     }
   }
 }

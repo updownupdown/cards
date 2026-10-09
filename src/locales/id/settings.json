@@ -89,16 +89,20 @@
     "description": "Selalu tampilkan nama game dalam bahasa Inggris, apa pun bahasanya."
   },
   "moments": {
-    "label": "Quiet moments",
-    "description": "Now and then, after a win outside the Odyssey, a moment to pause before the next deal.",
-    "off": "Off",
-    "infrequent": "Infrequent",
-    "frequent": "Frequent",
-    "previewTitle": "Preview a moment",
+    "label": "Momen tenang",
+    "description": "Sesekali, setelah menang di luar Pengembaraan, ada momen untuk berhenti sejenak sebelum permainan berikutnya.",
+    "every": "Setiap:",
+    "off": "Nonaktif",
+    "every3": "~3 permainan",
+    "every5": "~5 permainan",
+    "every10": "~10 permainan",
+    "previewTitle": "Pratinjau momen",
     "preview": {
-      "breathe": "A breath (wordless)",
-      "settle": "Cards settling (wordless)",
-      "ripples": "Ripples (wordless)"
+      "intro": "Pertama kali (pengaturan)",
+      "breathe": "Satu tarikan napas",
+      "settle": "Kartu yang tertata",
+      "quote": "Sebuah kutipan",
+      "artwork": "Karya seni permainan"
     }
   }
 }

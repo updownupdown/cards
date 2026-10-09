@@ -26,7 +26,12 @@ import { useDevMode } from "@/data/dev-mode";
 import { TaoReveal } from "@/components/TaoReveal/TaoReveal";
 import { QuoteReveal } from "@/components/QuoteReveal/QuoteReveal";
 import { MomentOverlay } from "@/components/Moments/MomentOverlay";
-import { rollMoment, type Moment } from "@/data/moments";
+import {
+  momentKey,
+  rollMoment,
+  type Moment,
+  type MomentOptions,
+} from "@/data/moments";
 import { getQuote, getTaoChapter } from "@/data/collectibles";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import {
@@ -412,6 +417,12 @@ export const GameWrapper = ({
   const [autopilotWin, setAutopilotWin] = useState(false);
   // Now and then a free-play win is followed by a quiet moment.
   const [moment, setMoment] = useState<Moment | null>(null);
+  // What a moment can show: collected quotes, and this game's picture.
+  const momentSourcesRef = useRef<MomentOptions>({});
+  momentSourcesRef.current = {
+    quoteIds: campaignProgress.collectedQuoteIds,
+    artworkPath: gameInfo?.thumbnail ? pathname : undefined,
+  };
 
   // Record stats
   const resultStateRef = useRef({ pathname, outcome });
@@ -474,7 +485,7 @@ export const GameWrapper = ({
     }
     // The Odyssey has its own rewards; a quiet moment is for free play.
     if (outcome === "won" && !isCampaignMode) {
-      setMoment(rollMoment());
+      setMoment(rollMoment(momentSourcesRef.current));
     }
     if (isCampaignMode && outcome === "won") {
       recordCampaignWin(pathname, sessionId)
@@ -741,11 +752,9 @@ export const GameWrapper = ({
 
       {moment && (
         <MomentOverlay
-          key={moment.id}
+          key={momentKey(moment)}
           moment={moment}
-          background={background.source}
-          backgroundColor={backgroundColor}
-          color={titleColor}
+          accent={gameInfo.gameColorAccent}
           cardBackKey={gameInfo.cardBack.toLowerCase()}
           delayMs={REVEAL_TIMING.delayMs}
           onDone={() => setMoment(null)}

@@ -145,6 +145,7 @@ const ARTWORK_ROWS: Record<string, Row> = {
   "/miss-milligan": [1883, "realism", "americas", "painting"],
   "/monte-carlo": [1905, "impressionism", "europe", "painting"],
   "/nestor": [1515, "renaissance", "europe", "object"],
+  "/new-deck": [1737, "rococo", "europe", "painting"],
   "/night-vigil": [1642, "baroque", "europe", "painting"],
   "/ouroboros": [1478, "sacred", "europe", "manuscript"],
   "/ozanams-square": [1514, "renaissance", "europe", "print"],

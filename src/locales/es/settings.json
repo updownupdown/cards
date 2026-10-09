@@ -89,16 +89,20 @@
     "description": "Mostrar siempre los nombres de los juegos en inglés, sea cual sea el idioma."
   },
   "moments": {
-    "label": "Quiet moments",
-    "description": "Now and then, after a win outside the Odyssey, a moment to pause before the next deal.",
-    "off": "Off",
-    "infrequent": "Infrequent",
-    "frequent": "Frequent",
-    "previewTitle": "Preview a moment",
+    "label": "Momentos de calma",
+    "description": "De vez en cuando, tras una victoria fuera de la Odisea, un momento de pausa antes de la siguiente partida.",
+    "every": "Cada:",
+    "off": "Desactivado",
+    "every3": "~3 partidas",
+    "every5": "~5 partidas",
+    "every10": "~10 partidas",
+    "previewTitle": "Vista previa de un momento",
     "preview": {
-      "breathe": "A breath (wordless)",
-      "settle": "Cards settling (wordless)",
-      "ripples": "Ripples (wordless)"
+      "intro": "La primera vez (el ajuste)",
+      "breathe": "Una respiración",
+      "settle": "Cartas que se asientan",
+      "quote": "Una cita",
+      "artwork": "La obra de un juego"
     }
   }
 }

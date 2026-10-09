@@ -1,31 +1,40 @@
 import { Button } from "@/components/Button/Button";
-import { RadioButtons } from "@/components/common/RadioButtons";
 import { Text } from "@/components/common/Text";
+import { QUOTE_COUNT } from "@/data/collectibles";
 import { useDevMode } from "@/data/dev-mode";
-import {
-  MOMENT_FREQUENCIES,
-  MOMENTS,
-  saveMomentFrequency,
-  useMomentFrequency,
-  type Moment,
-} from "@/data/moments";
+import { GAMES_DATA } from "@/data/games-registry";
+import { MOMENT_KINDS, type Moment, type MomentKind } from "@/data/moments";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { usePalette } from "@/styles/palette";
 import { useState } from "react";
 import { Modal, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { MomentFrequencyPicker } from "./MomentFrequencyPicker";
 import { MomentOverlay } from "./MomentOverlay";
+
+/** A moment of this kind to preview: any quote, any game's picture. */
+function previewMoment(kind: MomentKind): Moment {
+  if (kind === "quote") {
+    return { kind, quoteId: 1 + Math.floor(Math.random() * QUOTE_COUNT) };
+  }
+  if (kind === "artwork") {
+    const paths = Object.keys(GAMES_DATA).filter(
+      (path) => GAMES_DATA[path].thumbnail,
+    );
+    return { kind, path: paths[Math.floor(Math.random() * paths.length)] };
+  }
+  return { kind };
+}
 
 /**
  * The Quiet moments setting: how often one follows a win outside the
- * Odyssey. In dev mode every moment is listed under it, to preview.
+ * Odyssey. In dev mode every kind of moment is listed under it, to preview.
  */
 export function MomentSettings() {
   const { spacing } = useResponsiveMetrics();
   const { t } = useTranslation("settings");
-  const { t: tGame } = useTranslation("game");
   const palette = usePalette();
-  const frequency = useMomentFrequency();
   const devMode = useDevMode();
   const [preview, setPreview] = useState<Moment | null>(null);
 
@@ -39,16 +48,7 @@ export function MomentSettings() {
           {t("moments.description")}
         </Text>
       </View>
-      <RadioButtons
-        options={MOMENT_FREQUENCIES.map((option) => ({
-          value: option,
-          label: t(`moments.${option}`),
-        }))}
-        selectedValue={frequency}
-        onChange={(value) => void saveMomentFrequency(value)}
-        containerStyle={{ width: "100%", height: spacing(48) }}
-        buttonStyle={{ flex: 1 }}
-      />
+      <MomentFrequencyPicker />
 
       {devMode && (
         <View
@@ -64,20 +64,14 @@ export function MomentSettings() {
           <Text weight={500} size="sm" color={palette.ink}>
             {t("moments.previewTitle")}
           </Text>
-          {MOMENTS.map((moment) => (
+          {MOMENT_KINDS.map((kind) => (
             <Button
-              key={moment.id}
+              key={kind}
               size="sm"
               uppercase={false}
               theme="blue"
-              text={
-                moment.kind === "words"
-                  ? tGame(`moments.lines.${moment.id}` as "moments.lines.dealt")
-                  : t(
-                      `moments.preview.${moment.kind}` as "moments.preview.breathe",
-                    )
-              }
-              onPress={() => setPreview(moment)}
+              text={t(`moments.preview.${kind}`)}
+              onPress={() => setPreview(previewMoment(kind))}
             />
           ))}
         </View>
@@ -90,13 +84,15 @@ export function MomentSettings() {
           animationType="none"
           onRequestClose={() => setPreview(null)}
         >
-          <MomentOverlay
-            key={preview.id}
-            moment={preview}
-            backgroundColor={palette.night}
-            color={palette.ink}
-            onDone={() => setPreview(null)}
-          />
+          {/* A native Modal is its own root, so the picture's gestures need
+              their own GestureHandlerRootView. */}
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <MomentOverlay
+              moment={preview}
+              accent={palette.accent}
+              onDone={() => setPreview(null)}
+            />
+          </GestureHandlerRootView>
         </Modal>
       )}
     </View>
