@@ -1,5 +1,6 @@
 import { Text } from "@/components/common/Text";
 import { useGameColors } from "@/hooks/useGameColors";
+import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { i18n } from "@/i18n";
 import { flexStyles } from "@/styles/flexStyles";
@@ -22,18 +23,25 @@ import {
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 
-// Strategy (Morehead & Mott-Smith): the whole stock is placed, one card at a
-// time, on eight piles of the player's choosing; Aces go straight to the
-// foundations. Only then are the piles unpacked onto the foundations, so the
-// game is won or lost in the placing.
-const PILE_COUNT = 8;
+// The whole stock is placed, one card at a time, on piles of the player's
+// choosing; Aces go straight to the foundations. Only then are the piles
+// unpacked onto the foundations. The order of that unpacking can't matter (a
+// card that can be built stays buildable until it is), so it plays itself:
+// the game is won or lost in the placing.
+const NORMAL_PILES = 8;
+const HARD_PILES = 7;
+const BOARD_COLS = 8;
+const BUILD_INTERVAL = 150;
 const FOUNDATION_COUNT = 4;
 const DECK_SIZE = 52;
 const PILE_ROW = 1.4;
 const PILE_OFFSET = 0.22;
 const FOUNDATION_COL = 3;
+const BOARD_ROWS = 5.2;
+/** The most a pile may fan down before its cards close up to fit. */
+const PILE_SPAN = BOARD_ROWS - PILE_ROW - 1;
 
-export type StrategyGameState = {
+export type MachinationGameState = {
   /** Face down; the top card is turned as it comes into play. */
   stock: PlayingCard[];
   piles: PlayingCard[][];
@@ -43,17 +51,17 @@ export type StrategyGameState = {
 
 // ========== Rules ========== //
 /** The stock card in play: the top one, once turned. */
-function turnedCard(state: StrategyGameState) {
+function turnedCard(state: MachinationGameState) {
   const card = top(state.stock);
   return card?.faceUp ? card : undefined;
 }
 
-function isPlacing(state: StrategyGameState) {
+function isPlacing(state: MachinationGameState) {
   return state.stock.length > 0;
 }
 
 /** Where a suit builds: the foundation its Ace started, or an empty one. */
-function foundationFor(state: StrategyGameState, card: PlayingCard) {
+function foundationFor(state: MachinationGameState, card: PlayingCard) {
   const own = state.foundations.findIndex(
     (pile) => pile[0]?.suit === card.suit,
   );
@@ -62,7 +70,7 @@ function foundationFor(state: StrategyGameState, card: PlayingCard) {
 }
 
 /** A card builds when it is the next rank of its suit; an Ace starts a suit. */
-function canBuild(state: StrategyGameState, card: PlayingCard | undefined) {
+function canBuild(state: MachinationGameState, card: PlayingCard | undefined) {
   if (!card) return false;
   const index = foundationFor(state, card);
   if (index < 0) return false;
@@ -73,7 +81,7 @@ function canBuild(state: StrategyGameState, card: PlayingCard | undefined) {
 }
 
 /** Turns the top stock card; an Ace goes straight to a foundation. */
-function turnStockCard(state: StrategyGameState) {
+function turnStockCard(state: MachinationGameState) {
   const card = top(state.stock);
   if (!card || card.faceUp) return false;
   if (card.rank === "A") {
@@ -86,7 +94,7 @@ function turnStockCard(state: StrategyGameState) {
 }
 
 /** Places the turned stock card on a pile. */
-function placeCard(state: StrategyGameState, pileIndex: number) {
+function placeCard(state: MachinationGameState, pileIndex: number) {
   const card = turnedCard(state);
   if (!card) return false;
   state.stock.pop();
@@ -95,7 +103,7 @@ function placeCard(state: StrategyGameState, pileIndex: number) {
 }
 
 /** Builds a pile's top card onto its foundation, once the stock is empty. */
-function buildCard(state: StrategyGameState, pileIndex: number) {
+function buildCard(state: MachinationGameState, pileIndex: number) {
   const card = top(state.piles[pileIndex]);
   if (isPlacing(state) || !canBuild(state, card)) return false;
   state.piles[pileIndex].pop();
@@ -103,13 +111,13 @@ function buildCard(state: StrategyGameState, pileIndex: number) {
   return true;
 }
 
-function isWon(state: StrategyGameState) {
+function isWon(state: MachinationGameState) {
   return (
     state.foundations.reduce((sum, pile) => sum + pile.length, 0) === DECK_SIZE
   );
 }
 
-function isLost(state: StrategyGameState) {
+function isLost(state: MachinationGameState) {
   return (
     !isPlacing(state) &&
     !isWon(state) &&
@@ -118,25 +126,35 @@ function isLost(state: StrategyGameState) {
 }
 
 // ========== Deal ========== //
-function createInitialState(): StrategyGameState {
+/** The next pile top that builds, if any. */
+function buildablePile(state: MachinationGameState) {
+  return state.piles.findIndex((pile) => canBuild(state, top(pile)));
+}
+
+function createInitialState(
+  pileCount: number = NORMAL_PILES,
+): MachinationGameState {
   return {
     stock: shuffle(createDeck()),
-    piles: Array.from({ length: PILE_COUNT }, () => []),
+    piles: Array.from({ length: pileCount }, () => []),
     foundations: Array.from({ length: FOUNDATION_COUNT }, () => []),
   };
 }
 
-function gatherState(state: StrategyGameState): StrategyGameState {
+function gatherState(state: MachinationGameState): MachinationGameState {
   return {
     stock: shuffle(flipAllToBack(collectCards(state))),
-    piles: Array.from({ length: PILE_COUNT }, () => []),
+    piles: state.piles.map(() => []),
     foundations: Array.from({ length: FOUNDATION_COUNT }, () => []),
   };
 }
 
 const gameStateInitial = createInitialState();
 
-export const strategyRules = {
+export const machinationRules = {
+  NORMAL_PILES,
+  HARD_PILES,
+  buildablePile,
   turnedCard,
   isPlacing,
   foundationFor,
@@ -150,8 +168,12 @@ export const strategyRules = {
 };
 
 // ========== Component ========== //
-export default function Strategy() {
+export default function Machination() {
   const { colorPale } = useGameColors();
+  const pileCount =
+    useGameSettingValue("difficulty") === "difficult"
+      ? HARD_PILES
+      : NORMAL_PILES;
 
   const {
     isLoaded,
@@ -162,13 +184,15 @@ export default function Strategy() {
     undo,
     canUndo,
     saveUndoState,
-  } = useStateManager<StrategyGameState>({
+  } = useStateManager<MachinationGameState>({
     gameStateInitial,
     resetAndSetup: async () => {
       // Gather every card into the stock, then deal the same cards afresh.
       setGame((draft) => gatherState(draft));
       await delay();
-      setGame((draft) => redealWith(createInitialState(), draft.stock));
+      setGame((draft) =>
+        redealWith(createInitialState(pileCount), draft.stock),
+      );
     },
   });
 
@@ -186,13 +210,24 @@ export default function Strategy() {
     });
   }, [game, isSettingUp, placing, turned, setGame]);
 
+  // Once the stock is empty, the piles build onto the foundations by
+  // themselves, one card at a time.
+  const nextBuild = placing || ended || isSettingUp ? -1 : buildablePile(game);
+  useEffect(() => {
+    if (nextBuild < 0) return;
+    const timer = setTimeout(() => {
+      setGame((draft) => {
+        buildCard(draft, nextBuild);
+      });
+    }, BUILD_INTERVAL);
+    return () => clearTimeout(timer);
+  }, [game, nextBuild, setGame]);
+
   function onPilePress(pileIndex: number) {
-    if (ended || isSettingUp) return;
-    if (placing ? !turned : !canBuild(game, top(game.piles[pileIndex]))) return;
+    if (ended || isSettingUp || !placing || !turned) return;
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      if (placing) placeCard(draft, pileIndex);
-      else buildCard(draft, pileIndex);
+      placeCard(draft, pileIndex);
     });
   }
 
@@ -208,15 +243,23 @@ export default function Strategy() {
       fan: { maxVisible: 3 },
       placeholder: {},
     }));
+    // Fewer piles sit in the middle of the board.
+    const firstCol = (BOARD_COLS - game.piles.length) / 2;
     const pileZones: MapZone[] = game.piles.map((cards, i) => ({
       id: `pile-${i}`,
       name: "pile",
       pileIndex: i,
       cards,
-      col: i,
+      col: firstCol + i,
       row: PILE_ROW,
       baseZIndex: 10,
-      fan: { direction: "down", offset: PILE_OFFSET },
+      fan: {
+        direction: "down",
+        offset: Math.min(
+          PILE_OFFSET,
+          PILE_SPAN / Math.max(1, cards.length - 1),
+        ),
+      },
       placeholder: {},
     }));
     return [
@@ -247,11 +290,8 @@ export default function Strategy() {
     if (mappedCard.zoneName !== "pile" || index === undefined) {
       return { isDisabled: true };
     }
-    // While placing, a whole pile takes the turned card; after, only a top
-    // card that builds can be played.
-    const canPlay = placing
-      ? turned !== undefined
-      : mappedCard.topOfZone && canBuild(game, mappedCard.card);
+    // While placing, a whole pile takes the turned card.
+    const canPlay = placing && turned !== undefined;
     const lit = canPlay && mappedCard.topOfZone;
     return {
       onPress: () => onPilePress(index),
@@ -278,8 +318,8 @@ export default function Strategy() {
     cardMapper,
     zoneMapper,
     cardSize: "small",
-    fixedCols: PILE_COUNT,
-    fixedRows: 5.2,
+    fixedCols: BOARD_COLS,
+    fixedRows: BOARD_ROWS,
   });
 
   return (
@@ -292,8 +332,10 @@ export default function Strategy() {
       undo={undo}
       winLoseMessage={
         won
-          ? i18n.t("games:strategy.allBuilt")
-          : i18n.t("cards:noLegalMovesRemain")
+          ? i18n.t("games:machination.allBuilt")
+          : i18n.t("games:machination.stuck", {
+              value: game.piles.reduce((sum, pile) => sum + pile.length, 0),
+            })
       }
     >
       {cardMap}
@@ -313,8 +355,8 @@ export default function Strategy() {
           adjustsFontSizeToFit
         >
           {placing
-            ? i18n.t("games:strategy.status.place")
-            : i18n.t("games:strategy.status.build")}
+            ? i18n.t("games:machination.status.place")
+            : i18n.t("games:machination.status.build")}
         </Text>
       </View>
     </GameWrapper>
