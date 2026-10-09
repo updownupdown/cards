@@ -482,6 +482,12 @@
     "theWolfBeatYou": "El Lobo te ha vencido {{wolfScore}}-{{playerScore}}.",
     "wolf": "Lobo",
     "round": "Ronda",
+    "action": {
+      "perfect": "Perfecta",
+      "sum": "Suma",
+      "split": "División",
+      "over": "Superar"
+    },
     "selectCardsToCapture": "Elige cartas para capturar",
     "hint": {
       "fold": "Retírate: seguir costaría más",

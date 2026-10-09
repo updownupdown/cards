@@ -482,6 +482,12 @@
     "theWolfBeatYou": "Kurt seni {{wolfScore}}-{{playerScore}} yendi.",
     "wolf": "Kurt",
     "round": "Tur",
+    "action": {
+      "perfect": "Eşit",
+      "sum": "Toplam",
+      "split": "Bölme",
+      "over": "Aşma"
+    },
     "selectCardsToCapture": "Alınacak kartları seç",
     "hint": {
       "fold": "Çekil: devam etmek daha pahalıya patlar",

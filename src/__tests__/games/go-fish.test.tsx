@@ -206,10 +206,18 @@ describe("Go Fish screen", () => {
       (harness.mapConfig as unknown as { game: GoFishGameState }).game;
     expect(mappedCards()).toHaveLength(52);
     const rank = bestRank(game())!;
-    const before = game().hand.length;
+    const before = game()
+      .hand.map((c) => c.id)
+      .sort();
     await pressCardId(game().hand.find((c) => c.rank === rank)!.id);
     expect(game().last).not.toBeNull();
-    expect(game().hand.length).not.toBe(before);
+    // The hand has changed, whatever the rival's turn did to it after (it can
+    // take back the one card the player fished, leaving the count the same).
+    expect(
+      game()
+        .hand.map((c) => c.id)
+        .sort(),
+    ).not.toEqual(before);
     await settle(12);
     expect(outcome()).toBe("playing");
   });

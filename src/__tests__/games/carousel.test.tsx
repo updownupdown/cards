@@ -70,8 +70,10 @@ function autoPlay(state: CarouselGameState) {
   for (let step = 0; step < 300; step += 1) {
     if (isWon(state) || isLost(state)) return;
     const play = findPlay(state);
-    if (play) {
-      const slot = state.melds.findIndex((meld) => meld.length === 0);
+    const slot = state.melds.findIndex((meld) => meld.length === 0);
+    // A new meld needs a free slot; without one the hint would say to take a
+    // card instead, and so does this.
+    if (play && (play.kind === "layOff" || slot >= 0)) {
       if (play.kind === "meld") {
         moveCards(
           state,

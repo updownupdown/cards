@@ -75,6 +75,12 @@ export type AnimatedCardProps = CardMapBGMapping & {
   orbitConfig?: OrbitConfig;
   clickThroughCards?: boolean;
   cardBackPath?: string;
+  /**
+   * The board's layout (card size and grid origin). When it changes, every
+   * card glides to its new place at once, and each passes over the board on
+   * the way like a card flying between piles.
+   */
+  layoutKey?: string;
 };
 
 export type AnimatedCardMapping = Omit<
@@ -101,6 +107,7 @@ const AnimatedCardComponent = ({
   clickThroughCards,
   cardBackPath,
   zIndexOffset = 0,
+  layoutKey,
 }: AnimatedCardProps) => {
   const initialYOffset = (yOffset ?? 0) * cardHeight;
   const duration = animDuration ?? defaultAnimDuration;
@@ -131,13 +138,19 @@ const AnimatedCardComponent = ({
   // then settles to its target zIndex on landing. A card that moves within its
   // own pile, like a selected hand card lifting, a highlighted card nudged out
   // of a fan or a loop turning, takes its target zIndex at once, so it never
-  // passes over the cards stacked on it. The zIndex is set through
-  // React, not the animated style: on Android, Reanimated's synchronous prop
-  // updates change a view's zIndex without re-sorting it among its siblings,
-  // so moving cards were drawn in the wrong order until the animation's end
-  // was committed.
+  // passes over the cards stacked on it. A card gliding to where the board's
+  // new layout puts it (the window resized, the phone turned) is the
+  // exception: the whole board moves together, keeping its order, and a card
+  // crossing another pile's placeholder on the way has to pass over it. The
+  // zIndex is set through React, not the animated style: on Android,
+  // Reanimated's synchronous prop updates change a view's zIndex without
+  // re-sorting it among its siblings, so moving cards were drawn in the wrong
+  // order until the animation's end was committed.
   const targetZ = targetState.zIndex + zIndexOffset;
   const [lastZoneId, setLastZoneId] = useState(targetState.zoneId);
+  const [lastLayoutKey, setLastLayoutKey] = useState(layoutKey);
+  const relaidOut = lastLayoutKey !== layoutKey;
+  if (relaidOut) setLastLayoutKey(layoutKey);
   const moveKey = [
     targetState.zoneId,
     targetState.x,
@@ -162,7 +175,8 @@ const AnimatedCardComponent = ({
     // A card still in flight to its new pile stays above until it lands.
     const changesPile =
       (lastZoneId !== targetState.zoneId && !orbits) ||
-      movingKey === lastMoveKey;
+      movingKey === lastMoveKey ||
+      relaidOut;
     setMovingKey(animates && changesPile ? moveKey : null);
   }
   const endMove = useCallback((key: string) => {

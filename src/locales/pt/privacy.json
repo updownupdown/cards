@@ -8,11 +8,11 @@
   },
   "stored": {
     "title": "Dados armazenados no seu dispositivo",
-    "body": "O Solitarius salva suas estatísticas de jogo, favoritos, configurações e partidas em andamento no armazenamento local do dispositivo. Essas informações nunca saem do seu dispositivo, nunca são enviadas para nós nem para terceiros e são removidas automaticamente se você desinstalar o app ou limpar os dados dele."
+    "body": "O Solitarius salva suas estatísticas de jogo, favoritos, configurações e partidas em andamento no armazenamento local do dispositivo. Essas informações nunca são enviadas para nós nem para terceiros. Se o seu dispositivo faz backup dos dados dos apps (no Android, na sua conta do Google, se essa opção estiver ativada), uma cópia pode ficar guardada nesse backup, que segue a política de privacidade do Google, não a nossa. Os dados são removidos se você desinstalar o app ou limpar os dados dele."
   },
   "collected": {
     "title": "Dados que coletamos",
-    "body": "Apenas diagnósticos de erro. Quando o app encontra um erro ou trava, ele envia um relatório para o Sentry, um serviço de monitoramento de erros, para que a falha possa ser encontrada e corrigida. O relatório contém o erro e o ponto do código de onde ele veio, o modelo do seu dispositivo, a versão do sistema operacional e a do app, e um breve registro do que aconteceu logo antes, como o jogo que estava aberto. Não contém nome, endereço de e-mail, localização nem qualquer outra informação pessoal, e endereços IP não são armazenados. Desativar “Enviar relatórios de erro” nas configurações interrompe isso por completo."
+    "body": "Apenas diagnósticos de erro. Quando o app encontra um erro ou trava, ele envia um relatório para o Sentry, um serviço de monitoramento de erros, para que a falha possa ser encontrada e corrigida. O relatório contém o erro e o ponto do código de onde ele veio, o modelo do seu dispositivo, a versão do sistema operacional e a do app, um breve registro do que aconteceu logo antes, como o jogo que estava aberto, e, no Android, um identificador aleatório criado quando o app foi instalado, para que relatórios repetidos de uma mesma instalação possam ser contados juntos. Esse identificador não está ligado a você, à sua conta nem ao seu dispositivo, e uma reinstalação cria um novo. O relatório não contém nome, endereço de e-mail, localização nem qualquer outra informação pessoal, e endereços IP não são armazenados. Desativar “Enviar relatórios de erro” nas configurações interrompe isso por completo."
   },
   "links": {
     "title": "Links externos",

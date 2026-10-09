@@ -82,6 +82,15 @@ describe("AnimatedCard stacking", () => {
     expect(zIndexOf(renderer)).toBe(-40);
   });
 
+  test("a card gliding to the board's new layout passes over the board", () => {
+    const renderer = render({ layoutKey: "60|84|6|0|0" });
+    update(renderer, {
+      layoutKey: "40|56|4|10|10",
+      targetState: { ...resting, x: 30, y: 150 },
+    });
+    expect(zIndexOf(renderer)).toBeGreaterThan(1);
+  });
+
   test("a card flying to another pile passes over resting cards", () => {
     const renderer = render();
     update(renderer, {

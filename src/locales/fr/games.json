@@ -482,6 +482,12 @@
     "theWolfBeatYou": "Le Loup vous bat {{wolfScore}} à {{playerScore}}.",
     "wolf": "Loup",
     "round": "Manche",
+    "action": {
+      "perfect": "Parfait",
+      "sum": "Somme",
+      "split": "Division",
+      "over": "Dépassement"
+    },
     "selectCardsToCapture": "Choisissez des cartes à capturer",
     "hint": {
       "fold": "Couchez-vous : continuer coûterait plus cher",

@@ -1,0 +1,19 @@
+# Lint, typecheck and the unit tests, on every pull request and on every push
+# to a branch. Pushes to main run the same checks inside the deploy workflow,
+# ahead of the build, so nothing goes live without them.
+name: Checks
+
+on:
+  pull_request:
+  push:
+    branches-ignore:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    uses: ./.github/workflows/checks-job.yml

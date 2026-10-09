@@ -482,6 +482,12 @@
     "theWolfBeatYou": "Il Lupo ti ha battuto {{wolfScore}}-{{playerScore}}.",
     "wolf": "Lupo",
     "round": "Round",
+    "action": {
+      "perfect": "Uguale",
+      "sum": "Somma",
+      "split": "Divisione",
+      "over": "Sorpasso"
+    },
     "selectCardsToCapture": "Scegli le carte da catturare",
     "hint": {
       "fold": "Lascia: continuare costerebbe di più",

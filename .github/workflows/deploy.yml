@@ -15,7 +15,13 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Lint, typecheck and the unit tests (see checks-job.yml): nothing goes live
+  # that fails them.
+  checks:
+    uses: ./.github/workflows/checks-job.yml
+
   build:
+    needs: checks
     runs-on: ubuntu-latest
     env:
       # Job level so the source map step's `if` can see whether it is set:
