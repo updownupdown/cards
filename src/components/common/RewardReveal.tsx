@@ -1,5 +1,7 @@
+import { AttentionSpanSkip } from "@/components/common/AttentionSpanSkip";
 import { Button } from "@/components/Button/Button";
 import { REVEAL_TIMING } from "@/components/common/reveal-timing";
+import { useTapShootingStars } from "@/components/common/TapShootingStars";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { PaletteContext, usePalette } from "@/styles/palette";
@@ -82,8 +84,13 @@ export function RewardReveal({
   const [pageOpen, setPageOpen] = useState(false);
   const [read, setRead] = useState(false);
   const [closing, setClosing] = useState(false);
+  const [skipBox, setSkipBox] = useState(false);
   const cover = useSharedValue(0);
   const button = useSharedValue(0);
+  // Where the button and the skip box are, so taps there send no stars.
+  const islands = useRef<Record<string, { width: number; height: number }>>(
+    {},
+  );
 
   const onDoneRef = useRef(onDone);
   onDoneRef.current = onDone;
@@ -133,17 +140,59 @@ export function RewardReveal({
   }, [button, closing, cover]);
   const onRead = useCallback(() => setRead(true), []);
 
+  // Skipping has a price (see AttentionSpanSkip); once the page is read, the
+  // bright Continue is free, and the box has nothing to ask.
+  useEffect(() => {
+    if (read) setSkipBox(false);
+  }, [read]);
+  const onButton = useCallback(() => {
+    if (read) close();
+    else setSkipBox((open) => !open);
+  }, [close, read]);
+
   const coverStyle = useAnimatedStyle(() => ({ opacity: cover.value }));
   const buttonStyle = useAnimatedStyle(() => ({ opacity: button.value }));
 
   const buttonBottom = insets.bottom + spacing(24);
+  const skipBoxBottom = buttonBottom + spacing(76);
+
+  // The hidden game: taps on the sky send shooting stars (see
+  // TapShootingStars). A press on the button or the skip box is theirs.
+  const sky = useTapShootingStars({
+    enabled: pageOpen && !closing,
+    width: size?.width ?? 0,
+    height: size?.height ?? 0,
+    ignore: (x, y) => {
+      if (!size) return false;
+      // Each island is centred, a known distance up from the bottom.
+      const centred = (name: string, bottom: number) => {
+        const box = islands.current[name];
+        if (!box) return false;
+        const pad = 8;
+        const left = (size.width - box.width) / 2 - pad;
+        const top = size.height - bottom - box.height - pad;
+        return (
+          x >= left &&
+          x <= left + box.width + 2 * pad &&
+          y >= top &&
+          y <= top + box.height + 2 * pad
+        );
+      };
+      return (
+        centred("button", buttonBottom) ||
+        (skipBox && centred("skipBox", skipBoxBottom))
+      );
+    },
+  });
 
   return (
     <Animated.View
       testID={testID}
+      {...sky.rootProps}
       onLayout={(event) => {
         const { width, height } = event.nativeEvent.layout;
         setSize((current) => current ?? { width, height });
+        sky.onLayout();
       }}
       style={[
         StyleSheet.absoluteFill,
@@ -164,6 +213,31 @@ export function RewardReveal({
             onRead,
           })}
 
+        {sky.layer}
+
+        {skipBox && !closing && (
+          <View
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              bottom: skipBoxBottom,
+              alignItems: "center",
+              pointerEvents: "box-none",
+            }}
+          >
+            <AttentionSpanSkip
+              width={size?.width ?? 0}
+              onSkip={close}
+              onDismiss={() => setSkipBox(false)}
+              onLayout={(event) => {
+                const { width, height } = event.nativeEvent.layout;
+                islands.current.skipBox = { width, height };
+              }}
+            />
+          </View>
+        )}
+
         {/* Fixed at the bottom, over the page as it scrolls. A plain view
             holds it in place: a pointerEvents style on an animated view
             reaches the web as "none" and the button under it can't be
@@ -178,13 +252,20 @@ export function RewardReveal({
             pointerEvents: "box-none",
           }}
         >
-          <Animated.View style={buttonStyle}>
+          <Animated.View
+            testID="reveal-button"
+            style={buttonStyle}
+            onLayout={(event) => {
+              const { width, height } = event.nativeEvent.layout;
+              islands.current.button = { width, height };
+            }}
+          >
             {/* Still animating, the way out is there but doesn't call: the
                 palette's night with its accent for the word. Done, it is the
                 bright Continue. One button, so the change is a fade. */}
             <Button
               text={read ? t("reveal.continue") : t("reveal.skip")}
-              onPress={close}
+              onPress={onButton}
               disabled={!pageOpen || closing}
               style={read ? undefined : { backgroundColor: palette.night }}
               textStyle={read ? undefined : { color: palette.accent }}
