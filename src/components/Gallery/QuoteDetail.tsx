@@ -10,13 +10,15 @@ import { isQuoteTranslated, localizeQuote } from "@/i18n/content";
 import { usePalette } from "@/styles/palette";
 import { rgba } from "@/styles/styles";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ScrollView } from "react-native";
+import { AppState, ScrollView } from "react-native";
 import Animated, {
+  cancelAnimation,
   Easing,
   FadeIn,
   useAnimatedProps,
   useSharedValue,
   withDelay,
+  withRepeat,
   withTiming,
 } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
@@ -201,6 +203,67 @@ export function QuoteDetail({
   );
 }
 
+/*
+ * The line is alive. A slow wave runs along it, barely there, moving each
+ * point a little to the side of the line; once a cycle the wave swells for
+ * a few seconds, enough to be seen if you look, then settles. It is a
+ * reminder that the line is a person who once breathed.
+ */
+/** One breath: the wave's swell comes round once in this. */
+export const PORTRAIT_BREATH_MS = 11000;
+/** How far points stray, in the portrait's own units (200 across). */
+const WAVE_REST = 0.3;
+const WAVE_SWELL = 1.1;
+/** Points per wave, and how many waves pass in a breath. */
+const WAVE_LENGTH = 34;
+const WAVE_TURNS = 4;
+
+type PortraitPoints = { x: number[]; y: number[]; nx: number[]; ny: number[] };
+
+/** A portrait's points ("M x y L x y ..."), each with the normal to its line. */
+function portraitPoints(path: string): PortraitPoints {
+  const pairs = path
+    .slice(1)
+    .split("L")
+    .map((pair) => pair.trim().split(/\s+/).map(Number));
+  const x = pairs.map((pair) => pair[0]);
+  const y = pairs.map((pair) => pair[1]);
+  const nx: number[] = [];
+  const ny: number[] = [];
+  for (let index = 0; index < pairs.length; index += 1) {
+    const before = Math.max(0, index - 1);
+    const after = Math.min(pairs.length - 1, index + 1);
+    const dx = x[after] - x[before];
+    const dy = y[after] - y[before];
+    const length = Math.hypot(dx, dy) || 1;
+    nx.push(-dy / length);
+    ny.push(dx / length);
+  }
+  return { x, y, nx, ny };
+}
+
+/** The portrait's line with the wave through it at this point of a breath. */
+function wavedPath(points: PortraitPoints, breath: number): string {
+  "worklet";
+  // A swell in the middle of the breath, gone at both ends so the loop
+  // joins without a jolt.
+  const swell = Math.exp(-(((breath - 0.5) / 0.13) * ((breath - 0.5) / 0.13)));
+  const amplitude = WAVE_REST + WAVE_SWELL * swell;
+  const travel = breath * WAVE_TURNS * Math.PI * 2;
+  const { x, y, nx, ny } = points;
+  let d = "";
+  for (let index = 0; index < x.length; index += 1) {
+    const offset =
+      amplitude * Math.sin((index / WAVE_LENGTH) * Math.PI * 2 - travel);
+    d +=
+      (index === 0 ? "M" : "L") +
+      (x[index] + nx[index] * offset).toFixed(2) +
+      " " +
+      (y[index] + ny[index] * offset).toFixed(2);
+  }
+  return d;
+}
+
 /** An author's one-line portrait, drawn along its line as it appears. */
 function Portrait({
   path,
@@ -214,7 +277,9 @@ function Portrait({
   delay: number;
 }) {
   const length = useMemo(() => portraitLength(path), [path]);
+  const points = useMemo(() => portraitPoints(path), [path]);
   const progress = useSharedValue(0);
+  const breath = useSharedValue(0);
   // Fixed at mount: the line is drawn once.
   const [startDelay] = useState(delay);
   useEffect(() => {
@@ -226,7 +291,31 @@ function Portrait({
       }),
     );
   }, [progress, startDelay]);
-  const dashProps = useAnimatedProps(() => ({
+
+  // Breathing, for as long as the page is in front of someone: paused in
+  // the background, so nothing animates unseen.
+  useEffect(() => {
+    const breathe = () => {
+      breath.value = withRepeat(
+        withTiming(1, { duration: PORTRAIT_BREATH_MS, easing: Easing.linear }),
+        -1,
+        false,
+      );
+    };
+    const rest = () => cancelAnimation(breath);
+    if (AppState.currentState === "active") breathe();
+    const subscription = AppState.addEventListener("change", (state) => {
+      if (state === "active") breathe();
+      else rest();
+    });
+    return () => {
+      subscription.remove();
+      rest();
+    };
+  }, [breath]);
+
+  const lineProps = useAnimatedProps(() => ({
+    d: wavedPath(points, breath.value),
     strokeDashoffset: length * (1 - progress.value),
   }));
   return (
@@ -239,7 +328,7 @@ function Portrait({
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeDasharray={[length, length]}
-        animatedProps={dashProps}
+        animatedProps={lineProps}
       />
     </Svg>
   );
