@@ -33,6 +33,7 @@ import {
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { loadDevMode } from "@/data/dev-mode";
 import { loadHintMode } from "@/data/hint-mode";
+import { loadMomentFrequency } from "@/data/moments";
 import { loadSwipeDismissKnown } from "@/data/swipe-dismiss";
 import { loadAutopilotSessions } from "@/hints/hint-store";
 import { useFonts } from "expo-font";
@@ -56,6 +57,8 @@ SplashScreen.preventAutoHideAsync();
 void loadDevMode();
 // "Help from Above" (the header UFO), read before a game's header shows.
 void loadHintMode();
+// How often a quiet moment follows a win, read before the first win.
+void loadMomentFrequency();
 // Whether the quick start's swipe still needs its cue.
 void loadSwipeDismissKnown();
 // Deals Autopilot played in, so a resumed one's win still doesn't count.

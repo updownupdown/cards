@@ -33,3 +33,8 @@ export const SWIPE_DISMISS_STORAGE_KEY = "cards.swipeDismiss.v1";
  * (which raises "every game" or "every quote") doesn't take one away.
  */
 export const EARNED_ACHIEVEMENTS_STORAGE_KEY = "cards.achievements.v1";
+/**
+ * How often a quiet moment follows a win outside the Odyssey: "off",
+ * "infrequent" or "frequent".
+ */
+export const MOMENTS_STORAGE_KEY = "cards.moments.v1";

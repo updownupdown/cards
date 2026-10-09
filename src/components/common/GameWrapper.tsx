@@ -25,6 +25,8 @@ import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useDevMode } from "@/data/dev-mode";
 import { TaoReveal } from "@/components/TaoReveal/TaoReveal";
 import { QuoteReveal } from "@/components/QuoteReveal/QuoteReveal";
+import { MomentOverlay } from "@/components/Moments/MomentOverlay";
+import { rollMoment, type Moment } from "@/data/moments";
 import { getQuote, getTaoChapter } from "@/data/collectibles";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import {
@@ -408,6 +410,8 @@ export const GameWrapper = ({
   });
 
   const [autopilotWin, setAutopilotWin] = useState(false);
+  // Now and then a free-play win is followed by a quiet moment.
+  const [moment, setMoment] = useState<Moment | null>(null);
 
   // Record stats
   const resultStateRef = useRef({ pathname, outcome });
@@ -435,6 +439,7 @@ export const GameWrapper = ({
       setCampaignWinResult(null);
       setWinTimes(null);
       setAutopilotWin(false);
+      setMoment(null);
     }
     if (!didEnd) {
       return () => {
@@ -466,6 +471,10 @@ export const GameWrapper = ({
       .catch(() => {});
     if (outcome === "won") {
       recordDailyWin(pathname).catch(() => {});
+    }
+    // The Odyssey has its own rewards; a quiet moment is for free play.
+    if (outcome === "won" && !isCampaignMode) {
+      setMoment(rollMoment());
     }
     if (isCampaignMode && outcome === "won") {
       recordCampaignWin(pathname, sessionId)
@@ -727,6 +736,19 @@ export const GameWrapper = ({
           overlayColor={backgroundColor}
           onUncover={() => setUncoveredWinResult(campaignWinResult)}
           onDone={() => setRevealedWinResult(campaignWinResult)}
+        />
+      )}
+
+      {moment && (
+        <MomentOverlay
+          key={moment.id}
+          moment={moment}
+          background={background.source}
+          backgroundColor={backgroundColor}
+          color={titleColor}
+          cardBackKey={gameInfo.cardBack.toLowerCase()}
+          delayMs={REVEAL_TIMING.delayMs}
+          onDone={() => setMoment(null)}
         />
       )}
     </>

@@ -87,5 +87,25 @@
     "swapCards": "Intercambia estas cartas",
     "tapCard": "Toca esta carta",
     "press": "Pulsa {{label}}"
+  },
+  "moments": {
+    "lines": {
+      "dealt": "What will you do with the cards you're dealt?",
+      "shuffled": "Every deck has been shuffled. Every deck can be put back in order.",
+      "choices": "You didn't choose the deal. You chose every move after it.",
+      "stillHere": "The game is over. The cards are still here, and so are you.",
+      "hidden": "A shuffle doesn't take the order away. It hides it, so it can be found again.",
+      "noticed": "Somewhere in that game was a move you almost missed. What helped you see it?",
+      "hands": "Fifty-two cards, each one held for a moment. Let your hands rest.",
+      "attention": "Patience isn't waiting. It's paying attention while you wait.",
+      "smallGood": "A win is a small, good thing. Let it be small. Let it be good.",
+      "forget": "The cards don't remember the last game. You're allowed to forget it too.",
+      "again": "Starting again isn't starting over. You know more than you did.",
+      "noHurry": "Nothing here needs you to hurry."
+    },
+    "breatheIn": "in",
+    "breatheOut": "out",
+    "continue": "Continue",
+    "close": "Close this moment"
   }
 }
