@@ -9,7 +9,7 @@ import {
   UfoColors,
 } from "@/styles/styles";
 import { memo, useEffect, useRef, useState } from "react";
-import { Pressable, View } from "react-native";
+import { Modal, Pressable, StyleSheet, View } from "react-native";
 import {
   setHintDock,
   useHintUfoHovering,
@@ -77,6 +77,7 @@ export const GameHeader = memo(function GameHeader({
 }: Props) {
   const spacing = (value: number) => value * scale;
   const { t } = useTranslation("game");
+  const { t: tCommon } = useTranslation("common");
   // The game's palette: its dark colour behind, its pale one in the icons.
   const theme = usePalette();
   const hasHints = useHasHintFinder();
@@ -165,7 +166,7 @@ export const GameHeader = memo(function GameHeader({
             iconColor={hintDisabled ? theme.faint : theme.accent}
             disabled={hintDisabled}
             intro={intro}
-            onIntro={() => setIntroOpen((open) => !open)}
+            onIntro={() => setIntroOpen(true)}
           />
         )}
 
@@ -196,30 +197,45 @@ export const GameHeader = memo(function GameHeader({
         />
       </View>
 
+      {/* The UFO's introduction, in the middle of the screen until it is
+          dismissed for good. */}
       {intro && introOpen && (
-        <View
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: spacing(layoutDims.pagePadding / 2),
-            right: spacing(layoutDims.pagePadding / 2),
-            marginTop: spacing(-layoutDims.pagePadding / 4),
-          }}
+        <Modal
+          visible
+          transparent
+          animationType="fade"
+          onRequestClose={() => setIntroOpen(false)}
         >
-          <HelpFromAbovePanel>
-            <ActionButton
-              label={t("rules.helpIntro.done")}
-              small
-              color={UfoColors.green}
-              ink={UfoColors.black}
-              style={{ alignSelf: "flex-end" }}
-              onPress={() => {
-                setIntroOpen(false);
-                void markHintIntroSeen();
-              }}
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              padding: spacing(layoutDims.pagePadding),
+              backgroundColor: rgba(theme.night, 0.7),
+            }}
+          >
+            {/* Behind the box, so a tap outside it puts it away for now. */}
+            <Pressable
+              accessibilityLabel={tCommon("close")}
+              onPress={() => setIntroOpen(false)}
+              style={StyleSheet.absoluteFill}
             />
-          </HelpFromAbovePanel>
-        </View>
+            <HelpFromAbovePanel style={{ maxWidth: contentMaxWidth }}>
+              <ActionButton
+                label={t("rules.helpIntro.dismiss")}
+                small
+                color={UfoColors.green}
+                ink={UfoColors.black}
+                style={{ alignSelf: "center" }}
+                onPress={() => {
+                  setIntroOpen(false);
+                  void markHintIntroSeen();
+                }}
+              />
+            </HelpFromAbovePanel>
+          </View>
+        </Modal>
       )}
     </View>
   );

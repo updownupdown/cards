@@ -10,7 +10,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { IconName } from "@/icons/generated";
 import { Icon } from "@/icons";
-import { Logo } from "@/components/common/Logo";
 import { Kicker, RoundButton } from "@/components/ui/Nocturne";
 
 type Props = {
@@ -21,7 +20,6 @@ type Props = {
   /** In a game: its name, small in its accent above the title. */
   gameName?: string;
   backgroundColor?: string;
-  showLogo?: boolean;
   iconName?: IconName;
   onClose: () => void;
 };
@@ -33,7 +31,6 @@ export default function ModalFull({
   subtitle,
   gameName,
   backgroundColor: backgroundColorProp,
-  showLogo,
   iconName,
   onClose,
 }: Props) {
@@ -80,9 +77,6 @@ export default function ModalFull({
               },
             ]}
           >
-            {/* Logo */}
-            {showLogo && <Logo height={spacing(26)} />}
-
             {/* Icon */}
             {iconName && (
               <Icon

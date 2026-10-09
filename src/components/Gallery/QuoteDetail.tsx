@@ -163,10 +163,11 @@ export function QuoteDetail({
           <>
             <Text
               serif
+              italic
               color={palette.ink}
               style={{
-                fontSize: font(20),
-                lineHeight: font(31),
+                fontSize: font(26),
+                lineHeight: font(34),
                 textAlign: "center",
                 maxWidth: spacing(560),
               }}

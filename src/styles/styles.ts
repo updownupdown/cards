@@ -220,14 +220,15 @@ export const FontWeight = {
 };
 
 /**
- * Libre Baskerville, for everything that belongs to the art, the Tao or the
- * quotes. Outfit (FontWeight) is for the games and the interface. Upright
- * only: the serif is never set in italics.
+ * EB Garamond, for what belongs to the art and the quotes. Outfit
+ * (FontWeight) is for the games, the interface and the Tao chapters.
  */
 export const SerifFont = {
-  regular: "LibreBaskerville_400Regular",
-  medium: "LibreBaskerville_500Medium",
-  semibold: "LibreBaskerville_600SemiBold",
+  regular: "EBGaramond_400Regular",
+  italic: "EBGaramond_400Regular_Italic",
+  medium: "EBGaramond_500Medium",
+  mediumItalic: "EBGaramond_500Medium_Italic",
+  semibold: "EBGaramond_600SemiBold",
 };
 
 export const layoutDims = {

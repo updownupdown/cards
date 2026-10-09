@@ -351,7 +351,7 @@ function ShelfWork({
           </Text>
         )}
         {collected && (
-          <Text serif size="xs" color={theme.dim} numberOfLines={1}>
+          <Text serif italic size="xs" color={theme.dim} numberOfLines={1}>
             {credit?.artistName || t("gallery.unknownArtist")}
           </Text>
         )}

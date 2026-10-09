@@ -39,7 +39,7 @@ uncovered it (`actionsHidden`), so it has no gap where the buttons will be.
 ### The quote's page
 
 `QuoteDetail` shows the author's portrait, name and years, then the quote (set
-in Libre Baskerville) and its source:
+in EB Garamond italic) and its source:
 
 - the quote and its source fade in whole (`QUOTE_FADE_MS`);
 - a new author appears only after that (`AUTHOR_AT_MS`), so the words are read
