@@ -87,6 +87,9 @@ function seededStorage(colorTheme) {
 const homeStrings = JSON.parse(
   fs.readFileSync(path.join(ROOT, "src/locales", LANG, "home.json"), "utf8"),
 );
+const gameStrings = JSON.parse(
+  fs.readFileSync(path.join(ROOT, "src/locales", LANG, "game.json"), "utf8"),
+);
 /** Taps a Home tab, by its label in the tab bar. */
 const openTab = (key) => async (page) => {
   await page
@@ -109,9 +112,7 @@ const SHOTS = [
     theme: "nocturne",
     after: async (page) => {
       await page
-        .getByRole("button", {
-          name: /rules|règles|reglas|regole|regras|kurallar|aturan/i,
-        })
+        .getByRole("button", { name: gameStrings.menu.rules, exact: true })
         .first()
         .click();
     },
@@ -170,7 +171,10 @@ const lanAddress = Object.values(os.networkInterfaces())
 if (!lanAddress) throw new Error("No network address to serve the build on.");
 const origin = `http://${lanAddress}:${server.address().port}`;
 fs.mkdirSync(OUT, { recursive: true });
-const browser = await chromium.launch();
+// CHROMIUM_PATH: a Chromium of your own, if Playwright's isn't installed.
+const browser = await chromium.launch({
+  executablePath: process.env.CHROMIUM_PATH,
+});
 
 for (const shot of SHOTS) {
   const context = await browser.newContext({
