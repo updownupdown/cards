@@ -1,6 +1,7 @@
 import {
   CHARGE_MS,
   COMBO_WINDOW_MS,
+  FAN_BEAT_MS,
   PAIR_AT,
   RUN_FULL_AT,
   SHOWER_EVERY,
@@ -39,6 +40,8 @@ afterEach(() => {
 
 const WIDTH = 400;
 const HEIGHT = 800;
+/** Long enough after a tap for a whole fan of three to have set off. */
+const FAN_PAUSE = FAN_BEAT_MS * 2 + 20;
 
 const rgbOf = (hex: string) => [
   parseInt(hex.slice(1, 3), 16),
@@ -260,21 +263,22 @@ describe("Tapping the sky of a reveal", () => {
 
   test("a long run sends stars in pairs, then in threes, and showers", () => {
     const sky = openReveal();
-    for (let count = 1; count < PAIR_AT; count += 1) sky.tap(100, 300, 200);
+    for (let count = 1; count < PAIR_AT; count += 1)
+      sky.tap(100, 300, FAN_PAUSE);
     expect(sky.born()).toBe(PAIR_AT - 1);
 
-    sky.tap(100, 300, 200);
+    sky.tap(100, 300, FAN_PAUSE);
     expect(sky.born()).toBe(PAIR_AT - 1 + 2);
 
     for (let count = PAIR_AT + 1; count < TRIO_AT; count += 1) {
-      sky.tap(100, 300, 200);
+      sky.tap(100, 300, FAN_PAUSE);
     }
     const before = sky.born();
-    sky.tap(100, 300, 200);
+    sky.tap(100, 300, FAN_PAUSE);
     expect(sky.born()).toBe(before + 3);
 
     for (let count = TRIO_AT + 1; count < SHOWER_EVERY; count += 1) {
-      sky.tap(100, 300, 200);
+      sky.tap(100, 300, FAN_PAUSE);
     }
     expect(sky.stars("shower")).toHaveLength(0);
     sky.tap(100, 300, 1000);

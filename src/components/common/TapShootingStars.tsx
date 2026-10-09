@@ -70,6 +70,8 @@ export const TRIO_AT = 13;
 export const SHOWER_EVERY = 20;
 const SHOWER_COUNT = 12;
 const SHOWER_OVER_MS = 2800;
+/** The stars of a pair or a fan set off this far apart. */
+export const FAN_BEAT_MS = 140;
 /** The most stars in flight at once; the oldest make way. */
 const POOL = 24;
 /** Taps this many into a run have the deepest colour and longest trails. */
@@ -571,7 +573,7 @@ export function useTapShootingStars({ enabled, width, height }: Options) {
         const shot = makeShot(from, charge, charge >= 1 && index === 0);
         shot.angle = heading + spread;
         if (index === 0) add(shot);
-        else later(140 * index, () => add(shot));
+        else later(FAN_BEAT_MS * index, () => add(shot));
       });
       if (from.count % SHOWER_EVERY === 0) shower(from);
     },
