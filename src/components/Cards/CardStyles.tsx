@@ -3,7 +3,7 @@ import { cardDims } from "./card-utils";
 import { useEffect, useRef, useState } from "react";
 import { Animated, Platform, StyleSheet, ViewStyle } from "react-native";
 
-export type CardSizes = "small" | "regular" | "tableau" | "classic";
+export type CardSizes = "small" | "regular" | "tableau";
 
 // ===== Card Select Colors ===== //
 const cardSelectColorMap = {

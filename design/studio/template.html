@@ -126,29 +126,6 @@
   .ic[aria-checked="true"] .kf { fill: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
   .ic[aria-checked="true"] .k { stroke: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
 
-  /* Cards */
-  .mix { display: grid; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px; }
-  .mix-controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
-  .field { display: grid; gap: 4px; }
-  select { background: var(--raise); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px; font: 400 14px var(--sans); }
-  .fan { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; }
-  .fan svg, .fan .cardbox { flex: 0 0 auto; width: 118px; height: auto; border-radius: 8px; box-shadow: 0 6px 18px rgb(0 0 0 / .35); }
-  .design { display: grid; gap: 12px; }
-  .design-head { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; }
-  .pickset { display: flex; gap: 6px; flex-wrap: wrap; }
-  .pickset button {
-    border: 1px solid var(--line); background: var(--raise); color: var(--dim); border-radius: 99px;
-    padding: 5px 11px; font-size: 12.5px; cursor: pointer;
-  }
-  .pickset button[aria-pressed="true"] { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
-  .glyphs { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-  .glyph {
-    width: 40px; height: 48px; border-radius: 8px; border: 1px solid var(--line); cursor: copy;
-    display: grid; place-items: center; padding: 4px;
-  }
-  .glyph svg { width: 100%; height: 100%; }
-  .glyph:hover { border-color: var(--accent); }
-
   /* Backs */
   .backs { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
   .back { width: 100%; aspect-ratio: 250 / 350; border-radius: 12px; overflow: hidden; position: relative; box-shadow: 0 8px 22px rgb(0 0 0 / .4); }
@@ -165,9 +142,6 @@
   .note { border: 1px solid var(--line); border-radius: 18px; padding: 20px; background: var(--surface); display: grid; gap: 12px; align-content: start; }
   .note ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
   .note li { max-width: 70ch; }
-  .meter { display: grid; grid-template-columns: 130px 1fr auto; gap: 10px; align-items: center; font-size: 13.5px; }
-  .meter .track { height: 6px; border-radius: 6px; background: color-mix(in srgb, var(--ink) 10%, transparent); overflow: hidden; }
-  .meter .track i { display: block; height: 100%; background: var(--accent); border-radius: 6px; }
   .table-wrap { overflow-x: auto; }
   table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
   th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
@@ -205,7 +179,7 @@
   <div class="bar-in">
     <div class="brand" id="brand"></div>
     <nav class="nav" aria-label="Sections">
-      <a href="#logo">Logo</a><a href="#icons">Icons</a><a href="#cards">Cards</a><a href="#backs">Backs</a><a href="#notes">Notes</a>
+      <a href="#logo">Logo</a><a href="#icons">Icons</a><a href="#backs">Backs</a><a href="#notes">Notes</a>
     </nav>
     <div class="themes" id="themes" role="group" aria-label="Preview in theme"></div>
   </div>
@@ -214,9 +188,9 @@
 <main class="wrap">
   <div class="hero">
     <div class="kicker">Solitarius · asset review</div>
-    <h1>Pick the marks, icons, faces and backs</h1>
+    <h1>Pick the marks, icons and backs</h1>
     <p>Every option here is drawn in the colours of the app theme chosen above, so you can see each one in Nocturne, Folio or any of the others. Tap an option to pick it; your picks are kept in this browser, and the tray at the bottom copies them as a list to send back.</p>
-    <div class="steps"><span>10 spade marks</span><span>3 alternates for each of 68 icons</span><span>7 card designs, mix and match</span><span>10 card backs</span></div>
+    <div class="steps"><span>10 spade marks</span><span>3 alternates for each of 68 icons</span><span>10 card backs</span></div>
   </div>
 
   <section id="logo">
@@ -250,24 +224,6 @@
     <div id="icon-groups" class="grid" style="gap:26px"></div>
   </section>
 
-  <section id="cards">
-    <div class="intro">
-      <div class="kicker">Card faces</div>
-      <h2>Seven decks, in three parts</h2>
-      <p class="dim">Each design has its own suits, index numerals and court figures (jack, queen, king and joker). Pick the suits, the numerals and the courts separately; the preview below combines your three picks. Switch the layout to see each face as the app's Regular, Tableau and Small cards. Tap any suit or numeral to copy it as SVG, ready to paste into Figma.</p>
-    </div>
-    <div class="mix">
-      <div class="mix-controls">
-        <div class="field"><label class="caps" for="mix-suits">Suits</label><select id="mix-suits"></select></div>
-        <div class="field"><label class="caps" for="mix-ranks">Numerals</label><select id="mix-ranks"></select></div>
-        <div class="field"><label class="caps" for="mix-courts">Courts</label><select id="mix-courts"></select></div>
-        <div class="field"><span class="caps">Layout</span><div class="pickset" id="layouts"></div></div>
-      </div>
-      <div class="fan" id="mix-fan"></div>
-    </div>
-    <div id="designs" class="grid" style="gap:34px"></div>
-  </section>
-
   <section id="backs">
     <div class="intro">
       <div class="kicker">Card backs</div>
@@ -280,32 +236,9 @@
   <section id="notes">
     <div class="intro">
       <div class="kicker">Notes</div>
-      <h2>Card sizes, confidence and costs</h2>
+      <h2>Card backs and what they cost</h2>
     </div>
     <div class="notes">
-      <article class="note">
-        <h3>How the card sizes are used</h3>
-        <p class="dim">Each size is a full set of 56 faces at 500 × 700, drawn as a separate Figma frame set.</p>
-        <div id="size-meters" class="grid" style="gap:8px"></div>
-        <ul>
-          <li><b>Classic is used by one game</b> (Rogue Run) and costs 740 KB and a fourth set to maintain. Regular has the same room for large pips and courts, so I'd move Rogue Run to Regular and drop Classic.</li>
-          <li><b>Small, Tableau and Regular each earn their place</b>: Small for dense grids (47 games), Tableau where cards overlap in columns and only the top strip shows (28), Regular for spread-out layouts with room (17).</li>
-          <li><b>Worth an audit:</b> a few Regular games stack cards in columns much like Tableau games do; moving those to Tableau makes the suit visible on every overlapped card. Spider Solitaire uses Small or Tableau depending on its variant, which is right.</li>
-          <li><b>Make the sizes one design with three layouts.</b> The layout switch above draws all three from the same suits, numerals and courts. Built that way in Figma (variants of one component, not three drawings), the sizes can't drift apart.</li>
-        </ul>
-      </article>
-      <article class="note">
-        <h3>How consistent can I make them?</h3>
-        <div class="meter"><span>Suits alone</span><span class="track"><i style="width:95%"></i></span><b>High</b></div>
-        <div class="meter"><span>Numerals alone</span><span class="track"><i style="width:90%"></i></span><b>High</b></div>
-        <div class="meter"><span>Stylised courts</span><span class="track"><i style="width:72%"></i></span><b>Good</b></div>
-        <div class="meter"><span>Detailed courts</span><span class="track"><i style="width:35%"></i></span><b>Low</b></div>
-        <ul>
-          <li><b>Suits and numerals: very confident.</b> They are vector shapes on one fixed grid, generated from a single definition, so every size and colour is geometrically identical. For Figma I'd deliver numerals converted to outlines, on a shared baseline and cap height, so no font needs installing.</li>
-          <li><b>Stylised courts (the ones on this page): confident.</b> They are built from one figure per rank in a given style, so the four suits and three sizes stay in step. They're a starting point to refine, not finished art.</li>
-          <li><b>Richly illustrated courts like today's</b> (hand-drawn figures with ornament, mirrored top and bottom): not something I'd promise at that quality. I can lay out the figures, symmetry and colour rules and produce clean vector drafts, but the finish needs an illustrator's pass.</li>
-        </ul>
-      </article>
       <article class="note" style="grid-column: 1 / -1">
         <h3>Card backs: options and what they cost</h3>
         <p class="dim">Today each game names one of 22 inks, and each ink is its own 500 × 700 image. All of the options below can take the theme's colours and be the same for every game.</p>
@@ -343,9 +276,6 @@
 
 <script>
 /*DATA*/
-</script>
-<script>
-/*CARDS*/
 </script>
 <script>
 /*BACKS*/

@@ -954,43 +954,12 @@
   "elevens": {
     "noMorePairsOrFaceTriplets": "No quedan parejas ni tríos de figuras posibles."
   },
-  "doors": {
-    "path": "Path",
-    "status": "Stock: {{stock}} · Discard: {{discard}}",
-    "prophecy": "Prophecy: tap a card to throw it out",
-    "doorFound": "A door! Spend a key of its suit to open it?",
-    "nightmare": "A nightmare! Choose its price.",
-    "claim": "Claim",
-    "letGo": "Let go",
-    "loseKey": "Lose a key",
-    "returnDoor": "Return a door",
-    "burnFive": "Burn five",
-    "dropHand": "Drop hand",
-    "allOpen": "All eight doors are open!",
-    "faded": "The dream faded with {{count}} doors open."
-  },
-  "lattice": {
-    "pass": "Pass",
-    "favour": "Favour: {{suit}}",
-    "discardCount": "Discard: {{value}}",
-    "suitHearts": "♥ Hearts",
-    "suitDiamonds": "♦ Diamonds",
-    "suitClubs": "♣ Clubs",
-    "suitSpades": "♠ Spades",
-    "tierFine": "Fine Window",
-    "tierRose": "Rose Window",
-    "tierCathedral": "Cathedral Glass",
-    "wonWithTier": "{{tier}}: {{score}} points.",
-    "lostShortOfTarget": "{{score}} points, short of {{target}}."
-  },
-  "maze": {
-    "mazeIsInOrder": "The maze is in order!"
-  },
-  "strategy": {
+  "machination": {
     "status": {
       "place": "Place the card",
-      "build": "Build the foundations"
+      "build": "Building the foundations"
     },
-    "allBuilt": "All four suits built up to the King!"
+    "allBuilt": "All four suits built up to the King!",
+    "stuck": "{{value}} cards could not come off the piles."
   }
 }
