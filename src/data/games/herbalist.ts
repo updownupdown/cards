@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const herbalist: GameDefinition = {
   path: "/herbalist",
   title: "Herbalist",
+  source: {
+    title: "Leafbearer",
+    designer: "Gregg Jewell",
+    year: "2025",
+    link: "https://boardgamegeek.com/boardgamedesigner/71138/gregg-jewell",
+  },
   tags: [GameTag.Puzzles, GameTag.SpatialControl],
   rating: {
     complexity: 65,

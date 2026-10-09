@@ -6,6 +6,11 @@ import { GameAnimations } from "@/animations";
 export const freeCell: GameDefinition = {
   path: "/freecell",
   title: "FreeCell",
+  source: {
+    title: "FreeCell",
+    designer: "Paul Alfille",
+    year: "1978",
+  },
   aliases: ["Baker's Game"],
   tags: [GameTag.FreeCellFamily, GameTag.SequenceBuilding],
   rating: {

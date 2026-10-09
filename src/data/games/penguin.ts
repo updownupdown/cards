@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const penguin: GameDefinition = {
   path: "/penguin",
   title: "Penguin",
+  source: {
+    title: "Penguin",
+    designer: "David Parlett",
+    year: "1979",
+    link: "https://boardgamegeek.com/boardgamedesigner/166/david-parlett",
+  },
   aliases: ["Penguin"],
   tags: [GameTag.FreeCellFamily, GameTag.SequenceBuilding],
   rating: {

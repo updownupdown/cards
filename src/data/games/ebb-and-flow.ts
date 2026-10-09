@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const ebbAndFlow: GameDefinition = {
   path: "/ebb-and-flow",
   title: "Ebb & Flow",
+  source: {
+    title: "The Game",
+    designer: "Steffen Benndorf",
+    year: "2015",
+    link: "https://boardgamegeek.com/boardgame/173090/the-game",
+  },
   tags: [GameTag.ModernMechanics, GameTag.SequenceBuilding],
   rating: {
     complexity: 30,

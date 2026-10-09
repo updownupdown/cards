@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const gremlin: GameDefinition = {
   path: "/gremlin",
   title: "Gremlin",
+  source: {
+    title: "The Bogey",
+    designer: "Katharine Turner",
+    year: "2016",
+    link: "https://boardgamegeek.com/boardgamedesigner/92670/katharine-turner",
+  },
   tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 40,

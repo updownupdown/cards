@@ -6,6 +6,12 @@ import { GameDefinition, GameTag } from "../games-data";
 export const chapterAndVerse: GameDefinition = {
   path: "/chapter-and-verse",
   title: "Chapter & Verse",
+  source: {
+    title: "Bards & Nobles",
+    designer: "Gregg Jewell",
+    year: "2024",
+    link: "https://boardgamegeek.com/boardgamedesigner/71138/gregg-jewell",
+  },
   tags: [GameTag.ModernMechanics, GameTag.ScoringPuzzles],
   rating: { complexity: 45, difficulty: 55, luck: 50 },
   thumbnail: "ChapterAndVerse.webp",

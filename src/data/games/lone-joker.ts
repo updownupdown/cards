@@ -6,6 +6,11 @@ import { GameDefinition, GameTag } from "../games-data";
 export const loneJoker: GameDefinition = {
   path: "/lone-joker",
   title: "Lone Joker",
+  source: {
+    title: "Solatro",
+    designer: "TechDweeb",
+    link: "https://techdweeb.itch.io/",
+  },
   tags: [GameTag.PokerAndCribbage],
   rating: {
     complexity: 62,

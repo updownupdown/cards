@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const nightVigil: GameDefinition = {
   path: "/night-vigil",
   title: "Night Vigil",
+  source: {
+    title: "Shadow Solitaire",
+    designer: "Kendall Woffinden",
+    year: "2025",
+    link: "https://boardgamegeek.com/profile/woffpack",
+  },
   tags: [GameTag.CardCombat],
   rating: {
     complexity: 72,

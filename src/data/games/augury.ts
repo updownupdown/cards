@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const augury: GameDefinition = {
   path: "/augury",
   title: "Augury",
+  source: {
+    title: "Eleusis",
+    designer: "Robert Abbott",
+    year: "1956",
+    link: "https://boardgamegeek.com/boardgame/2458/eleusis",
+  },
   tags: [GameTag.Puzzles],
   rating: {
     complexity: 35,

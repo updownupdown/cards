@@ -6,6 +6,13 @@ import { GameAnimations } from "@/animations";
 export const cafeQueue: GameDefinition = {
   path: "/cafe-queue",
   title: "Cafe Queue",
+  source: {
+    title: "The First Boba Tea Shop in London",
+    designer: "Wil Su",
+    year: "2021",
+    collection: "Isaludo",
+    link: "https://boardgamegeek.com/boardgamedesigner/121533/wilhelm-su",
+  },
   tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 40,

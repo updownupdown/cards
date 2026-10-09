@@ -6,6 +6,12 @@ import { GameDefinition, GameTag } from "../games-data";
 export const infiltrator: GameDefinition = {
   path: "/infiltrator",
   title: "Infiltrator",
+  source: {
+    title: "Deck of Spies",
+    designer: "James Newman",
+    year: "2021",
+    link: "https://boardgamegeek.com/boardgamedesigner/142185/james-newman-i",
+  },
   tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 55,

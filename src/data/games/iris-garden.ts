@@ -6,6 +6,11 @@ import { GameAnimations } from "@/animations";
 export const irisGarden: GameDefinition = {
   path: "/iris-garden",
   title: "Iris Garden",
+  source: {
+    title: "Shisen-Sho",
+    designer: "Tamtex",
+    year: "1989",
+  },
   tags: [GameTag.PairMatching, GameTag.SpatialControl],
   rating: {
     complexity: 15,

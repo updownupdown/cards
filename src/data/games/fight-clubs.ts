@@ -6,6 +6,11 @@ import { GameAnimations } from "@/animations";
 export const fightClubs: GameDefinition = {
   path: "/fight-clubs",
   title: "Fight Clubs",
+  source: {
+    title: "Club Fight",
+    designer: "D. Teuber",
+    year: "2023",
+  },
   tags: [GameTag.CardCombat, GameTag.ScoringPuzzles],
   rating: {
     complexity: 70,

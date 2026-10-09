@@ -6,6 +6,13 @@ import { GameAnimations } from "@/animations";
 export const cityGrid: GameDefinition = {
   path: "/city-grid",
   title: "City Grid",
+  source: {
+    title: "Foursquare",
+    designer: "Wil Su",
+    year: "2021",
+    collection: "Isaludo",
+    link: "https://boardgamegeek.com/boardgamedesigner/121533/wilhelm-su",
+  },
   tags: [GameTag.Puzzles, GameTag.GridPlacement, GameTag.SpatialControl],
   rating: {
     complexity: 30,

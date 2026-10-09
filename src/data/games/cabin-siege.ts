@@ -6,6 +6,13 @@ import { GameAnimations } from "@/animations";
 export const cabinSiege: GameDefinition = {
   path: "/cabin-siege",
   title: "Cabin Siege",
+  source: {
+    title: "Dead Center",
+    designer: "Wil Su",
+    year: "2021",
+    collection: "Isaludo",
+    link: "https://boardgamegeek.com/boardgamedesigner/121533/wilhelm-su",
+  },
   tags: [GameTag.CardCombat, GameTag.SpatialControl],
   rating: {
     complexity: 55,

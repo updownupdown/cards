@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const picketFence: GameDefinition = {
   path: "/picket-fence",
   title: "Picket Fence",
+  source: {
+    title: "Welcome To...",
+    designer: "Benoit Turpin",
+    year: "2018",
+    link: "https://boardgamegeek.com/boardgame/233867/welcome-to",
+  },
   tags: [
     GameTag.ModernMechanics,
     GameTag.ScoringPuzzles,

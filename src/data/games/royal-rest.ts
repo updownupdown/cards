@@ -6,6 +6,11 @@ import { GameAnimations } from "@/animations";
 export const royalRest: GameDefinition = {
   path: "/royal-rest",
   title: "Royal Rest",
+  source: {
+    title: "Jacks' Dream",
+    designer: "Ákos Plesznivy and Petra Hahn",
+    link: "https://deck.unlessgames.com/",
+  },
   thumbnail: "RoyalRest.webp",
   thumbnailCredit: {
     title: "The State Bed Chamber, Stowe Buckinghamshire",

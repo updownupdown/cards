@@ -6,6 +6,12 @@ import { GameAnimations } from "@/animations";
 export const blackHole: GameDefinition = {
   path: "/black-hole",
   title: "Black Hole",
+  source: {
+    title: "Black Hole",
+    designer: "David Parlett",
+    year: "1979",
+    link: "https://boardgamegeek.com/boardgamedesigner/166/david-parlett",
+  },
   aliases: ["Singularity", "All in a Row"],
   tags: [GameTag.FoundationBuilders, GameTag.SequenceBuilding],
   rating: {

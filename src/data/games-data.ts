@@ -69,10 +69,29 @@ export type ArtCredit = {
   sourceLink: string;
 };
 
+/**
+ * The game this one is adapted from, for the catalog's own records. It is
+ * never shown to players: no screen, menu or export reads it.
+ */
+export type GameSource = {
+  /** The original's title. */
+  title: string;
+  /** Its designer or designers, as the original credits them. */
+  designer?: string;
+  /** When it came out, e.g. "2015" or "1979". */
+  year?: string;
+  /** The collection it belongs to, when it is one of a set ("Isaludo"). */
+  collection?: string;
+  /** Its page on BoardGameGeek or the designer's site. */
+  link?: string;
+};
+
 export type GameMenuInfo = {
   // Basic
   title: string;
   aliases?: string[];
+  /** Where the game comes from, when it adapts a known game. Never shown. */
+  source?: GameSource;
   enabledOnLocalOnly?: boolean;
   tags: [GameTag, ...GameTag[]];
   rating: GameRating;

@@ -6,6 +6,13 @@ import { GameAnimations } from "@/animations";
 export const tripleStack: GameDefinition = {
   path: "/triple-stack",
   title: "Triple Stack",
+  source: {
+    title: "The Sandwich Guy",
+    designer: "Wil Su",
+    year: "2021",
+    collection: "Isaludo",
+    link: "https://boardgamegeek.com/boardgamedesigner/121533/wilhelm-su",
+  },
   tags: [GameTag.ModernMechanics],
   rating: {
     complexity: 20,

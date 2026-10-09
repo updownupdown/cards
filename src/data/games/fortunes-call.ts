@@ -7,6 +7,9 @@ export const fortunesCall: GameDefinition = {
   // The Fortune Teller? Unclear if there's an actual source game.
   path: "/fortunes-call",
   title: "Fortune's Call",
+  source: {
+    title: "Higher or Lower (Play Your Cards Right)",
+  },
   thumbnail: "FortunesCall.webp",
   thumbnailCredit: {
     title: "The Fortune-Teller",

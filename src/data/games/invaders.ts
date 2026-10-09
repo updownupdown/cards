@@ -6,6 +6,13 @@ import { GameAnimations } from "@/animations";
 export const invaders: GameDefinition = {
   path: "/invaders",
   title: "Invaders",
+  source: {
+    title: "Area 52",
+    designer: "Wil Su",
+    year: "2021",
+    collection: "Isaludo",
+    link: "https://boardgamegeek.com/boardgamedesigner/121533/wilhelm-su",
+  },
   tags: [GameTag.CardCombat],
   rating: {
     complexity: 40,
