@@ -39,7 +39,7 @@ const RoomSize = EmptyRoom.length;
 const MinHealthAfterSafeStart = 2;
 const MaxSafeShuffleAttempts = 20;
 
-const cardSize = "classic";
+const cardSize = "regular";
 
 type RoomActionSpec = {
   key: string;

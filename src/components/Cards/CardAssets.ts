@@ -7,7 +7,6 @@ type ImageLoadSource = Parameters<typeof Image.loadAsync>[0];
 type LoadedImage = Awaited<ReturnType<typeof Image.loadAsync>>;
 
 const CARD_SIZES = [
-  "classic",
   "regular",
   "small",
   "tableau",
@@ -36,7 +35,7 @@ const EXPECTED_CARD_NAMES = [
 const cardContext = require.context(
   "../../../assets/cards",
   true,
-  /^\.\/(?:classic|regular|small|small-colored|tableau)\/[^/]+\.webp$/,
+  /^\.\/(?:regular|small|small-colored|tableau)\/[^/]+\.webp$/,
 );
 const cardBackContext = require.context(
   "../../../assets/cards/backs",
