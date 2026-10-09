@@ -38,5 +38,13 @@
     "title": "Odisea celestial",
     "text": "Traza tu camino ganando y desbloqueando juegos, empezando por el clásico Klondike. Avanza hacia fuera para explorar nuevas mecánicas de juego, afrontar retos cada vez más difíciles y desbloquear coleccionables que crean momentos de calma y reflexión.",
     "close": "Cerrar"
+  },
+  "field": {
+    "title": "Más allá del campo de fuerza",
+    "text": "Esta estrella está más allá del campo de fuerza. Desbloquea la Odisea completa para viajar hasta aquí y conseguir lo que guarda.",
+    "unlock": "Desbloquear la Odisea completa",
+    "enterKey": "Introducir una clave",
+    "getApp": "Conseguir la aplicación",
+    "purchaseSoon": "La Odisea completa aún no está a la venta."
   }
 }

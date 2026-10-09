@@ -104,6 +104,29 @@ Also on 2026-10-05 Charlatan became Boiling Over, with a plain run: its node kep
 
 On 2026-10-08 local-only games left the map for good: the eight added that day (Gambit, Carousel, Sweep, Sevens, Go Fish, Osmosis, Cipher and Mosaic, none ever released) had been appended at the rim with quotes 185–200; a plain run let them go, and those quotes are unassigned again. Cipher was then deleted, and the other seven on 2026-10-09; none was ever on the map players see.
 
+## The force field
+
+A force field round the centre (`FIELD_RADIUS` in `src/data/force-field.ts`,
+0.45 map units) holds back the games beyond it until the full Odyssey is
+unlocked (`src/data/odyssey-unlock.ts`; see `docs/unlock-keys.md`). Those games
+can still be selected on the map, with a banner under the header saying they
+lie beyond the field, but not played in the Odyssey: their Play button is
+locked, a Campaign win or a Mercy Skip there counts for nothing, and their
+quotes and chapters have no "Win to collect" button. Winning a game next to
+the field still opens its neighbours beyond it, so they are ready once the
+Odyssey is unlocked. Free play is untouched.
+
+When it was set, 46 of the 118 games (39%) lay inside. It sits in the widest
+gap between game dots at that distance, and every game inside can be reached
+from Klondike without leaving it. `src/__tests__/odyssey-field.test.ts` keeps
+the share inside between 30% and 40% and holds the rest: a new game placed
+inside or a change to the map may mean moving the radius. The field is a
+radius, not part of the map, so it never moves a node, link or reward, and
+the lock is unaffected.
+
+The field is drawn from `assets/images/force-field.webp`
+(`npm run force-field:generate`), tinted in the colour theme's accent.
+
 ## Validation
 
 Development validation in `src/data/campaign-map.ts` enforces:

@@ -39,6 +39,7 @@ import {
 } from "@expo-google-fonts/eb-garamond";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { loadDevMode } from "@/data/dev-mode";
+import { redeemUnlockKeyFromLink } from "@/data/odyssey-unlock";
 import { loadHintMode } from "@/data/hint-mode";
 import { loadSwipeDismissKnown } from "@/data/swipe-dismiss";
 import { loadAutopilotSessions } from "@/hints/hint-store";
@@ -63,8 +64,10 @@ initCrashReporting();
 // the intro's hold, before its colours start to move.
 SplashScreen.preventAutoHideAsync();
 ExpoSplashScreen.setOptions({ duration: 150, fade: true });
-// Beta games turned on from the settings, read before Home lists games.
-void loadDevMode();
+// Beta games turned on from the settings, read before Home lists games
+// (after the full Odyssey's unlock, which says whether dev mode may be on).
+// Then, on the web, an unlock key given in the link (`?key=`).
+void loadDevMode().then(() => redeemUnlockKeyFromLink());
 // "Help from Above" (the header UFO), read before a game's header shows.
 void loadHintMode();
 // Whether the quick start's swipe still needs its cue.

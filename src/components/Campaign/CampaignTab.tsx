@@ -4,19 +4,24 @@ import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import {
   getGameDotDefinition,
   getGameDotState,
+  isBeyondField,
   CAMPAIGN_START_PATH,
   type GameDotDefinition,
 } from "@/data/campaign-map";
 import { useCampaignProgress } from "@/hooks/useCampaignProgress";
 import { grantMercySkip } from "@/data/campaign-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Platform, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { layoutDims } from "@/styles/styles";
 import { HomeHeader } from "@/components/Home/HomeHeader";
 import { CampaignMap } from "./CampaignMap";
 import { CampaignIntroPanel } from "./CampaignIntroPanel";
+import { BeyondFieldPanel } from "./BeyondFieldPanel";
+import { useFieldUp } from "@/data/odyssey-field";
+import { settingsView } from "@/components/common/ThemePicker";
+import { haptics } from "@/utils/haptics";
 import { UfoContext } from "./UfoContext";
 import { clearMercySkipVisit, isMercySkipVisitOwed } from "./ufo-visit";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
@@ -138,9 +143,24 @@ export function CampaignTab({
     collectedQuoteIds,
     unlockedPaths,
   );
+  const fieldUp = useFieldUp();
+  const fieldUpRef = useRef(fieldUp);
+  fieldUpRef.current = fieldUp;
   const selectGameDot = useCallback((gameDot: GameDotDefinition) => {
+    // A light touch on reaching across the field.
+    if (fieldUpRef.current && isBeyondField(gameDot)) haptics.validTarget();
     setSelectedPath(gameDot.path);
   }, []);
+  // The game lies beyond the standing force field: it can be looked at, not
+  // played in the Odyssey.
+  const heldBeyondField = fieldUp && isBeyondField(selectedGameDot);
+  const openKeyEntry = useCallback(() => {
+    // Settings opens on its Advanced tab, where the key goes.
+    settingsView.tab = "advanced";
+    settingsView.scrollY = 0;
+    settingsView.restore = true;
+    onOpenSettings?.();
+  }, [onOpenSettings]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -171,7 +191,7 @@ export function CampaignTab({
         <GameInfoPanel
           path={selectedGameDot.path}
           campaign
-          locked={state === "locked"}
+          locked={state === "locked" || heldBeyondField}
           collectedTaoIds={collectedTaoIds}
           collectedQuoteIds={collectedQuoteIds}
           style={{
@@ -196,7 +216,18 @@ export function CampaignTab({
       >
         {/* The same logo and buttons as Home, over the map. */}
         <HomeHeader onOpenStats={onOpenStats} onOpenSettings={onOpenSettings} />
-        {showIntro && (
+        {heldBeyondField && (
+          <View
+            style={{
+              width: "100%",
+              maxWidth: ui.contentMaxWidth,
+              paddingHorizontal: spacing(layoutDims.pagePadding / 2),
+            }}
+          >
+            <BeyondFieldPanel onEnterKey={openKeyEntry} />
+          </View>
+        )}
+        {showIntro && !heldBeyondField && (
           <View
             style={{
               width: "100%",

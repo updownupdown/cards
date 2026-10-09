@@ -43,7 +43,18 @@ import { Text } from "../common/Text";
 import ModalFull from "./ModalFull";
 import { UnderlineTabs } from "../ui/Nocturne";
 import { useToast } from "../common/Toast";
-import { saveDevMode, useDevMode, useDevModeKnock } from "@/data/dev-mode";
+import {
+  canUseDevMode,
+  saveDevMode,
+  useDevMode,
+  useDevModeKnock,
+} from "@/data/dev-mode";
+import {
+  setDevFieldView,
+  useOdysseyUnlock,
+  type DevFieldView,
+} from "@/data/odyssey-unlock";
+import { UnlockKeyPanel } from "../common/UnlockKeyPanel";
 import { HelpFromAbovePanel } from "@/components/common/HelpFromAbovePanel";
 import { resetHintMode } from "@/data/hint-mode";
 
@@ -86,7 +97,19 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const scrollRef = React.useRef<ScrollView>(null);
   const scrollRestored = React.useRef(false);
   const devMode = useDevMode();
+  const { devFieldView } = useOdysseyUnlock();
+  // The unlock key's field: always on the web, where friends are given keys;
+  // in the app, only once the knock has asked for a developer key.
+  const [askedForDevKey, setAskedForDevKey] = React.useState(false);
+  const showKeyField = Platform.OS === "web" || askedForDevKey;
   const devModeKnock = useDevModeKnock(() => {
+    // Dev mode needs a developer key, unless the app runs locally.
+    if (!canUseDevMode()) {
+      setAskedForDevKey(true);
+      setTab("advanced");
+      showToast(t("devMode.needsKey"));
+      return;
+    }
     void saveDevMode(true);
     onHomeDataInvalidated();
     showToast(t("devMode.on"));
@@ -283,6 +306,9 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 { gap: spacing(30) },
               ]}
             >
+              {showKeyField && (
+                <UnlockKeyPanel onRedeemed={onHomeDataInvalidated} />
+              )}
               {/* Language: follow the phone (Auto), or pick one. */}
               <View
                 style={[
@@ -406,6 +432,24 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                     showToast(t("devMode.unlockedAll"));
                   }}
                 />
+                <View style={{ width: "100%", gap: spacing(8) }}>
+                  <Text size="sm" weight={400} color={theme.dim}>
+                    {t("devMode.forceField.label")}
+                  </Text>
+                  <SelectControl<DevFieldView>
+                    value={devFieldView}
+                    options={(["asPlayed", "shown", "lifted"] as const).map(
+                      (view) => ({
+                        value: view,
+                        label: t(`devMode.forceField.${view}`),
+                      }),
+                    )}
+                    accessibilityLabel={t("devMode.forceField.label")}
+                    onChange={(view) => {
+                      void setDevFieldView(view);
+                    }}
+                  />
+                </View>
                 <Button
                   size="md"
                   uppercase={false}

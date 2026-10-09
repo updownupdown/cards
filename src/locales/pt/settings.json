@@ -77,7 +77,14 @@
     "unlockAll": "Desbloquear todas as partidas da campanha",
     "unlockedAll": "Todas as partidas da campanha desbloqueadas",
     "grantMercySkip": "Conceder um indulto",
-    "mercySkipGranted": "Indulto concedido ({{count}} por usar)"
+    "mercySkipGranted": "Indulto concedido ({{count}} por usar)",
+    "needsKey": "O modo dev precisa de uma chave de desenvolvedor",
+    "forceField": {
+      "label": "Campo de força",
+      "asPlayed": "Como no jogo",
+      "shown": "Sempre visível",
+      "lifted": "Removido"
+    }
   },
   "tabs": {
     "general": "Geral",
@@ -87,5 +94,18 @@
   "useEnglishGameTitles": {
     "label": "Usar títulos de jogos em inglês",
     "description": "Mostrar sempre os nomes dos jogos em inglês, seja qual for o idioma."
+  },
+  "unlockKey": {
+    "label": "Chave de desbloqueio",
+    "description": "Tem uma chave? Digite-a para desbloquear a Odisseia completa.",
+    "unlocked": "A Odisseia completa está desbloqueada.",
+    "devKey": "Chave de desenvolvedor inserida: a Odisseia completa está desbloqueada e o modo dev pode ser ativado.",
+    "submit": "Desbloquear",
+    "result": {
+      "unlocked": "A Odisseia completa está desbloqueada",
+      "devKey": "Chave de desenvolvedor aceita",
+      "webOnly": "Esta chave funciona no app web. No app, a Odisseia completa vem do Google Play.",
+      "invalid": "Essa chave não é válida"
+    }
   }
 }

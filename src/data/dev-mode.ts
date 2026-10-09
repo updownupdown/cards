@@ -1,5 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useRef, useState } from "react";
+import { isLocalDevEnvironment } from "@/utils/utils";
+import { hasDevKey, loadOdysseyUnlock } from "./odyssey-unlock";
 import { DEV_MODE_STORAGE_KEY } from "./storage-keys";
 
 /**
@@ -11,6 +13,11 @@ import { DEV_MODE_STORAGE_KEY } from "./storage-keys";
  * a Dev mode box of shortcuts (test progress, unlocking the campaign, a
  * Mercy Skip). The choice is saved under its own key and kept here, so
  * synchronous checks (isGameEnabled) can read it.
+ *
+ * It can only be turned on where the app runs locally (a development build,
+ * or the web build served from this computer), or once a developer key has
+ * been entered (src/data/unlock-keys.ts): elsewhere the knock does nothing,
+ * and a saved "on" is read as off.
  */
 let devMode = false;
 const listeners = new Set<(enabled: boolean) => void>();
@@ -24,10 +31,19 @@ export function isDevMode() {
   return devMode;
 }
 
+/** Whether dev mode may be turned on here. */
+export function canUseDevMode() {
+  return isLocalDevEnvironment() || hasDevKey();
+}
+
 /** Reads the saved choice; called once at startup. */
 export async function loadDevMode() {
   try {
-    setDevMode((await AsyncStorage.getItem(DEV_MODE_STORAGE_KEY)) === "1");
+    await loadOdysseyUnlock();
+    setDevMode(
+      canUseDevMode() &&
+        (await AsyncStorage.getItem(DEV_MODE_STORAGE_KEY)) === "1",
+    );
   } catch {
     setDevMode(false);
   }
@@ -35,6 +51,7 @@ export async function loadDevMode() {
 }
 
 export async function saveDevMode(enabled: boolean) {
+  if (enabled && !canUseDevMode()) return;
   setDevMode(enabled);
   await AsyncStorage.setItem(DEV_MODE_STORAGE_KEY, enabled ? "1" : "0");
 }

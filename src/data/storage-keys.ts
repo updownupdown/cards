@@ -32,3 +32,9 @@ export const SWIPE_DISMISS_STORAGE_KEY = "cards.swipeDismiss.v1";
  * (which raises "every game" or "every quote") doesn't take one away.
  */
 export const EARNED_ACHIEVEMENTS_STORAGE_KEY = "cards.achievements.v1";
+/**
+ * The full Odyssey (src/data/odyssey-unlock.ts), JSON: the role of an unlock
+ * key entered, whether a save from before the force field kept the Odyssey
+ * open, and dev mode's view of the field.
+ */
+export const ODYSSEY_UNLOCK_STORAGE_KEY = "cards.odysseyUnlock.v1";
