@@ -15,7 +15,7 @@ import { getTestGameDotPaths, getTestWonPaths } from "@/data/test-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors, theme } from "@/styles/styles";
+import { Colors, rgba, theme } from "@/styles/styles";
 import { ThemePicker, settingsView } from "../common/ThemePicker";
 import {
   getDeviceLanguageCodes,
@@ -306,9 +306,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 { gap: spacing(30) },
               ]}
             >
-              {showKeyField && (
-                <UnlockKeyPanel onRedeemed={onHomeDataInvalidated} />
-              )}
               {/* Language: follow the phone (Auto), or pick one. */}
               <View
                 style={[
@@ -360,6 +357,13 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               />
             </View>
 
+            {showKeyField && (
+              <UnlockKeyPanel
+                onRedeemed={onHomeDataInvalidated}
+                askedForDevKey={askedForDevKey}
+              />
+            )}
+
             <AddToHomeScreenNotice />
 
             {/* Dev mode's shortcuts, boxed and named so they can't pass for
@@ -368,17 +372,20 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               <View
                 style={{
                   width: "100%",
-                  gap: spacing(10),
-                  padding: spacing(14),
+                  gap: spacing(12),
+                  padding: spacing(20),
                   borderRadius: spacing(16),
-                  borderWidth: 1,
-                  borderColor: theme.faint,
+                  backgroundColor: rgba(theme.ink, 0.1),
                 }}
               >
                 <View
                   style={[
                     flexStyles.rowCentered,
-                    { justifyContent: "space-between", gap: spacing(12) },
+                    {
+                      justifyContent: "space-between",
+                      gap: spacing(12),
+                      paddingBottom: spacing(12),
+                    },
                   ]}
                 >
                   <Text
@@ -403,7 +410,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                   uppercase={false}
                   text={t("populateTestProgress")}
                   iconName="milky-way"
-                  theme="blue"
                   disabled={isPopulatingTestData}
                   onPress={async () => {
                     setIsPopulatingTestData(true);
@@ -425,14 +431,35 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                   uppercase={false}
                   text={t("devMode.unlockAll")}
                   iconName="unlock"
-                  theme="blue"
                   onPress={async () => {
                     await unlockAllCampaignGames();
                     onHomeDataInvalidated();
                     showToast(t("devMode.unlockedAll"));
                   }}
                 />
-                <View style={{ width: "100%", gap: spacing(8) }}>
+                <Button
+                  size="md"
+                  uppercase={false}
+                  text={t("devMode.grantMercySkip")}
+                  iconName="ufo"
+                  theme="blue"
+                  onPress={async () => {
+                    const progress = await grantMercySkip();
+                    onHomeDataInvalidated();
+                    showToast(
+                      t("devMode.mercySkipGranted", {
+                        count: progress.mercySkipCount,
+                      }),
+                    );
+                  }}
+                />
+                <View
+                  style={{
+                    width: "100%",
+                    gap: spacing(4),
+                    paddingTop: spacing(12),
+                  }}
+                >
                   <Text size="sm" weight={400} color={theme.dim}>
                     {t("devMode.forceField.label")}
                   </Text>
@@ -450,22 +477,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                     }}
                   />
                 </View>
-                <Button
-                  size="md"
-                  uppercase={false}
-                  text={t("devMode.grantMercySkip")}
-                  iconName="ufo"
-                  theme="blue"
-                  onPress={async () => {
-                    const progress = await grantMercySkip();
-                    onHomeDataInvalidated();
-                    showToast(
-                      t("devMode.mercySkipGranted", {
-                        count: progress.mercySkipCount,
-                      }),
-                    );
-                  }}
-                />
               </View>
             )}
 

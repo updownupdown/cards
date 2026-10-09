@@ -41,10 +41,10 @@
   },
   "field": {
     "title": "Beyond the force field",
-    "text": "This star lies beyond the force field. Unlock the full Odyssey to travel here and collect what it holds.",
-    "unlock": "Unlock the full Odyssey",
+    "text": "This star lies beyond the force field. Unlock the Full Odyssey to travel here and collect what it holds.",
+    "unlock": "Unlock the Full Odyssey",
     "enterKey": "Enter a key",
     "getApp": "Get the app",
-    "purchaseSoon": "The full Odyssey can't be bought yet."
+    "purchaseSoon": "The Full Odyssey can't be bought yet."
   }
 }

@@ -97,14 +97,15 @@
   },
   "unlockKey": {
     "label": "Unlock key",
-    "description": "Have a key? Enter it to unlock the full Odyssey.",
-    "unlocked": "The full Odyssey is unlocked.",
-    "devKey": "Developer key entered: the full Odyssey is unlocked, and dev mode can be turned on.",
+    "description": "Have a key? Enter it to unlock the Full Odyssey.",
+    "unlocked": "The Full Odyssey is unlocked.",
+    "devKey": "Developer key entered: the Full Odyssey is unlocked, and dev mode can be turned on.",
     "submit": "Unlock",
+    "clear": "Clear key",
     "result": {
-      "unlocked": "The full Odyssey is unlocked",
+      "unlocked": "The Full Odyssey is unlocked",
       "devKey": "Developer key accepted",
-      "webOnly": "This key works in the web app. In the app, the full Odyssey comes from Google Play.",
+      "webOnly": "This key works in the web app. In the app, the Full Odyssey comes from Google Play.",
       "invalid": "That key isn't valid"
     }
   }

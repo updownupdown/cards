@@ -101,6 +101,7 @@
     "unlocked": "La Odisea completa está desbloqueada.",
     "devKey": "Clave de desarrollador introducida: la Odisea completa está desbloqueada y puedes activar el modo dev.",
     "submit": "Desbloquear",
+    "clear": "Borrar la clave",
     "result": {
       "unlocked": "La Odisea completa está desbloqueada",
       "devKey": "Clave de desarrollador aceptada",

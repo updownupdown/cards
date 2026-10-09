@@ -101,6 +101,7 @@
     "unlocked": "Pengembaraan lengkap sudah terbuka.",
     "devKey": "Kunci pengembang dimasukkan: Pengembaraan lengkap terbuka dan mode dev bisa diaktifkan.",
     "submit": "Buka",
+    "clear": "Hapus kunci",
     "result": {
       "unlocked": "Pengembaraan lengkap sudah terbuka",
       "devKey": "Kunci pengembang diterima",

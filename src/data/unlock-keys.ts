@@ -22,5 +22,11 @@ export const UNLOCK_KEY_SALT = "solitarius-unlock-v1:";
 
 // The list between these markers is rewritten by scripts/unlock-keys.mjs.
 // keys:begin
-export const UNLOCK_KEYS: UnlockKey[] = [];
+export const UNLOCK_KEYS: UnlockKey[] = [
+  {
+    label: "Kate",
+    role: "friend",
+    hash: "268f304371c98d6556b38b85e03f54dfc5d631a6c34e28c1e39db62a3fd49f4e",
+  },
+];
 // keys:end

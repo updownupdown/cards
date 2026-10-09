@@ -101,6 +101,7 @@
     "unlocked": "L'Odyssée complète est débloquée.",
     "devKey": "Clé de développeur saisie : l'Odyssée complète est débloquée et le mode dev peut être activé.",
     "submit": "Débloquer",
+    "clear": "Effacer la clé",
     "result": {
       "unlocked": "L'Odyssée complète est débloquée",
       "devKey": "Clé de développeur acceptée",

@@ -101,6 +101,7 @@
     "unlocked": "Yolculuk'un tamamı açıldı.",
     "devKey": "Geliştirici anahtarı girildi: Yolculuk'un tamamı açıldı ve geliştirici modu açılabilir.",
     "submit": "Aç",
+    "clear": "Anahtarı temizle",
     "result": {
       "unlocked": "Yolculuk'un tamamı açıldı",
       "devKey": "Geliştirici anahtarı kabul edildi",
