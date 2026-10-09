@@ -27,24 +27,21 @@ export const scorpion: GameDefinition = {
   gameColorAccent: "#eb9c72",
   cardBack: CardBackColors.Terracotta,
   quickStart: [
-    "Build the four foundations, by suit, from K to A.",
-    "Move any face-up stack, even if out of sequence.",
-    "Only Kings may fill empty columns.",
+    "Build down by suit.",
+    "Move any face-up card with every card on it.",
+    "Only a King fills an empty column.",
   ],
   howToPlay: [
-    "## Objective",
-    "Build **four complete same-suit sequences**, each running from King down to Ace.",
-
+    "## Goal",
+    "Build four runs from King to Ace, each in one suit.",
     "## Rules",
-    "- Build columns **down in rank and in the same suit**.",
-    "- You may pick up **any face-up card** and move it together with **every card on top of it**, even if those cards are not in sequence.",
-    "- Only a **King** (with any cards on it) may move to an **empty column**.",
-    "- Assembled sequences are removed from the tableau and placed in the foundations.",
-
-    "## Stock",
-    "When no useful move remains, deal the three stock cards, one onto each of the first three columns.",
-
-    "## Wasp",
-    "In the Wasp variant, any card (with the cards on it) may move to an empty column.",
+    "| Foundations (4) | Complete King-to-Ace runs of one suit, cleared automatically |",
+    "| Build | Down, same suit |",
+    "| Move | Any face-up card, with every card on it |",
+    "| Empty column | King only |",
+    "| Stock | Deals its 3 cards onto the first three columns |",
+    "| Cards | 52 |",
+    "## Variants",
+    "- **Wasp**: any card fills an empty column.",
   ],
 };

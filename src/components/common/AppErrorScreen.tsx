@@ -1,3 +1,4 @@
+import { dismissLaunchIntro } from "@/components/common/LaunchIntro";
 import { i18n } from "@/i18n";
 import { Colors, FontWeight } from "@/styles/styles";
 import { reportCrash } from "@/utils/crash-reporting";
@@ -14,10 +15,12 @@ type Props = {
  * privacy policy) throws while rendering. Without it the whole app unmounts:
  * a blank screen on web and a crash on Android and iOS. It can take the place
  * of the root layout, so it leans on nothing the layout provides (toasts, safe
- * area). expo-router hides the splash when it catches the error.
+ * area). expo-router hides the splash when it catches the error, and this takes
+ * the launch intro away (on the web, the page's own overlay stays otherwise).
  */
 export function AppErrorScreen({ error, retry }: Props) {
   useEffect(() => {
+    dismissLaunchIntro();
     console.error("Screen crashed:", error);
     reportCrash(error);
   }, [error]);

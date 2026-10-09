@@ -27,16 +27,15 @@ export const monteCarlo: GameDefinition = {
   gameColorAccent: "#df90a2",
   cardBack: CardBackColors.Burgundy,
   quickStart: [
-    "Tap adjacent cards of equal rank to remove them.",
-    "Consolidate the grid to unlock new pairs.",
+    "Remove two touching cards of the same rank.",
+    "Consolidate to close the gaps and deal more.",
   ],
   howToPlay: [
-    "## Objective",
-    "Remove all 52 cards by pairing equal ranks until the grid is empty.",
-
-    "## Playing",
-    "- Remove two cards of the **same rank** when they are **adjacent** horizontally, vertically, or diagonally.",
-    "- When you run out of pairs, **consolidate** the grid. The remaining cards shift to close the gaps, and new cards are dealt from the stock to fill the gaps.",
-    "- Consolidation reorders cards, so new matching pairs may be unlocked.",
+    "## Goal",
+    "Remove all 52 cards.",
+    "## Rules",
+    "| Playable | Every card in the grid |",
+    "| Remove | Two cards of the same rank that touch, diagonally too |",
+    "| Stock | Consolidate: the cards shift to close the gaps, then the stock refills them |",
   ],
 };

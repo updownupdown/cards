@@ -44,20 +44,17 @@ import { Text } from "../common/Text";
 import ModalFull from "./ModalFull";
 import { UnderlineTabs } from "../ui/Nocturne";
 import { useToast } from "../common/Toast";
-import { saveDevMode, useDevMode } from "@/data/dev-mode";
+import { saveDevMode, useDevMode, useDevModeKnock } from "@/data/dev-mode";
 import { HelpFromAbovePanel } from "@/components/common/HelpFromAbovePanel";
+import { resetHintMode } from "@/data/hint-mode";
 
 /** App version and build type; not translated, since it's for bug reports. */
 const BUILD_LABEL = `v${Constants.expoConfig?.version ?? "?"} · ${__DEV__ ? "dev" : "release"}`;
 
-/** Taps on the version number that turn on beta games. */
-/** Taps on the version number that turn dev mode on. */
-const DEV_MODE_TAPS = 10;
-
 /** Taps on Reset, after asking for it, that erase all app data. */
 const RESET_TAPS = 3;
 
-const TABS = ["display", "theme", "other"] as const;
+const TABS = ["general", "advanced", "theme"] as const;
 
 interface Props {
   onClose: () => void;
@@ -76,7 +73,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const [tab, setTabState] = React.useState<(typeof TABS)[number]>(() => {
     // After a theme change the app is rebuilt: come back to the same spot.
     if (!settingsView.restore) {
-      settingsView.tab = "display";
+      settingsView.tab = "general";
       settingsView.scrollY = 0;
     }
     settingsView.restore = false;
@@ -89,17 +86,14 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   };
   const scrollRef = React.useRef<ScrollView>(null);
   const scrollRestored = React.useRef(false);
-  const versionTaps = React.useRef(0);
   const devMode = useDevMode();
-
-  const onVersionPress = () => {
-    if (devMode) return;
-    versionTaps.current += 1;
-    if (versionTaps.current < DEV_MODE_TAPS) return;
-    versionTaps.current = 0;
+  const devModeKnock = useDevModeKnock(() => {
     void saveDevMode(true);
     onHomeDataInvalidated();
     showToast(t("devMode.on"));
+  });
+  const onVersionPress = () => {
+    if (!devMode) devModeKnock.tap();
   };
   const onDevModeOff = () => {
     void saveDevMode(false);
@@ -108,6 +102,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   };
   const { t } = useTranslation("settings");
   const { t: tCommon } = useTranslation("common");
+  const { t: tHome } = useTranslation("home");
   const language = useDisplayLanguage();
 
   const onCloseAndRefresh = () => {
@@ -160,7 +155,11 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   } as const;
 
   return (
-    <ModalFull showLogo onClose={onCloseAndRefresh}>
+    <ModalFull
+      title={tHome("header.settings")}
+      iconName="settings"
+      onClose={onCloseAndRefresh}
+    >
       <UnderlineTabs
         options={TABS.map((id) => ({ value: id, label: t(`tabs.${id}`) }))}
         value={tab}
@@ -194,7 +193,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
         ]}
         showsVerticalScrollIndicator={false}
       >
-        {tab === "display" && (
+        {tab === "general" && (
           <View
             style={[
               flexStyles.colCentered,
@@ -257,26 +256,27 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 }}
               />
             )}
+            <View style={{ width: "100%", gap: spacing(10) }}>
+              <View style={{ gap: spacing(4) }}>
+                <Text weight={500} size="md" color={theme.ink}>
+                  {t("autoComplete.label")}
+                </Text>
+                <Text size="sm" weight={400} color={theme.dim}>
+                  {t("autoComplete.description")}
+                </Text>
+              </View>
+              <AutoCompleteModeRadio
+                value={settings.autoComplete}
+                onChange={(value) => {
+                  void updateSettings({ autoComplete: value });
+                }}
+              />
+            </View>
+            <MomentSettings />
             <HelpFromAbovePanel />
           </View>
         )}
-        {tab === "theme" && (
-          <View
-            style={[
-              flexStyles.colCentered,
-              flexStyles.fullWidth,
-              { gap: spacing(30) },
-            ]}
-          >
-            <ThemePicker
-              value={settings.colorTheme}
-              onChange={(colorTheme) => {
-                void updateSettings({ colorTheme });
-              }}
-            />
-          </View>
-        )}
-        {tab === "other" && (
+        {tab === "advanced" && (
           <>
             <View
               style={[
@@ -285,23 +285,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 { gap: spacing(30) },
               ]}
             >
-              <View style={{ width: "100%", gap: spacing(10) }}>
-                <View style={{ gap: spacing(4) }}>
-                  <Text weight={500} size="md" color={theme.ink}>
-                    {t("autoComplete.label")}
-                  </Text>
-                  <Text size="sm" weight={400} color={theme.dim}>
-                    {t("autoComplete.description")}
-                  </Text>
-                </View>
-                <AutoCompleteModeRadio
-                  value={settings.autoComplete}
-                  onChange={(value) => {
-                    void updateSettings({ autoComplete: value });
-                  }}
-                />
-              </View>
-              <MomentSettings />
               {/* Language: follow the phone (Auto), or pick one. */}
               <View
                 style={[
@@ -509,6 +492,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                           updateSettings(DEFAULT_GLOBAL_SETTINGS);
                           await resetAllSettings();
                           await resetCampaignProgress();
+                          await resetHintMode();
                           onHomeDataInvalidated();
                           setResetTapsLeft(null);
                           onClose();
@@ -555,10 +539,11 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                   {t("privacyPolicy")}
                 </Text>
                 {/* Which build this is, since dev and release installs look
-                    alike. Ten taps turn dev mode on; its box above turns it
-                    off. */}
+                    alike. A knock on it turns dev mode on (red once the
+                    first half is in); its box above turns it off. */}
                 <Text
                   {...footerText}
+                  color={devModeKnock.armed ? Colors.lose : footerText.color}
                   onPress={onVersionPress}
                   suppressHighlighting
                 >
@@ -567,6 +552,22 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               </View>
             </View>
           </>
+        )}
+        {tab === "theme" && (
+          <View
+            style={[
+              flexStyles.colCentered,
+              flexStyles.fullWidth,
+              { gap: spacing(30) },
+            ]}
+          >
+            <ThemePicker
+              value={settings.colorTheme}
+              onChange={(colorTheme) => {
+                void updateSettings({ colorTheme });
+              }}
+            />
+          </View>
         )}
       </ScrollView>
     </ModalFull>

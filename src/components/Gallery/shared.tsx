@@ -1,3 +1,4 @@
+import { skyIslandProps } from "@/components/common/TapShootingStars";
 import { Text } from "@/components/common/Text";
 import { useGlassStyle } from "@/components/ui/FloatingBar";
 import { Kicker, RoundButton } from "@/components/ui/Nocturne";
@@ -75,9 +76,12 @@ export function PickerPanel({
       exiting={FadeOut.duration(150)}
       style={[StyleSheet.absoluteFill, { zIndex: 6 }]}
     >
+      {/* The panel and its backdrop keep their touches: no shooting stars
+          from the sky under them. */}
       <Pressable
         accessibilityLabel={closeLabel}
         onPress={onClose}
+        {...skyIslandProps}
         style={[
           StyleSheet.absoluteFill,
           { backgroundColor: rgba(theme.night, 0.55) },
@@ -97,6 +101,7 @@ export function PickerPanel({
         }}
       >
         <View
+          {...skyIslandProps}
           style={[
             glass,
             {

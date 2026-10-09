@@ -26,15 +26,13 @@ export const nestor: GameDefinition = {
   gameColorPale: "#e7f7ff",
   gameColorAccent: "#ecc878",
   cardBack: CardBackColors.Ocean,
-  quickStart: [
-    "Clear all cards by removing pairs of matching ranks from the bottom of columns or the reserve.",
-  ],
+  quickStart: ["Remove two cards of the same rank."],
   howToPlay: [
-    "## Objective",
-    "Discard all 52 cards by removing matching pairs.",
-
+    "## Goal",
+    "Discard all 52 cards.",
     "## Rules",
-    "- Only the **bottom (exposed)** cards of each column are available, as well as **the reserve cards**.",
-    "- Tap two available cards of the **same rank** to send them face down to the discard pile.",
+    "| Playable | The bottom card of each column, and the reserve |",
+    "| Remove | Two cards of the same rank |",
+    "| Stock | None |",
   ],
 };

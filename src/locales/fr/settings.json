@@ -80,9 +80,9 @@
     "mercySkipGranted": "Passe-droit accordé ({{count}} non utilisé(s))"
   },
   "tabs": {
-    "display": "Affichage",
-    "theme": "Thème",
-    "other": "Autre"
+    "general": "Général",
+    "advanced": "Avancé",
+    "theme": "Thème"
   },
   "useEnglishGameTitles": {
     "label": "Utiliser les titres de jeux en anglais",

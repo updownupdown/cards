@@ -26,7 +26,10 @@
   },
   "reveal": {
     "skip": "Passer",
-    "continue": "Continuer"
+    "continue": "Continuer",
+    "destroyToSkip": "Détruisez votre capacité d'attention pour passer",
+    "attentionSpan": "Ma capacité d'attention",
+    "keepWatching": "Continuer à regarder"
   },
   "original": {
     "label": "Afficher l'original"

@@ -36,7 +36,7 @@
     "title": "Cara bermain",
     "unavailable": "Petunjuk untuk permainan ini belum tersedia.",
     "helpIntro": {
-      "done": "Mengerti"
+      "dismiss": "Tutup"
     }
   },
   "mercySkip": {

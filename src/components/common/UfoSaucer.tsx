@@ -11,7 +11,14 @@ export const UFO_GLOW_SCALE = 1.6;
  * The soft green glow round the flying saucer, centred on a box `size`
  * wide. It spills past that box on every side.
  */
-export function UfoGlow({ size }: { size: number }) {
+export function UfoGlow({
+  size,
+  strength = 1,
+}: {
+  size: number;
+  /** Below 1 for a fainter glow, where the saucer itself should show. */
+  strength?: number;
+}) {
   // Each glow has its own gradient: on the web, every SVG shares one page of
   // ids, and a glow that unmounts must not take another's gradient with it.
   const id = `ufoGlow${useId().replace(/:/g, "")}`;
@@ -29,8 +36,12 @@ export function UfoGlow({ size }: { size: number }) {
       <Svg width={glow} height={glow}>
         <Defs>
           <RadialGradient id={id}>
-            <Stop offset="0" stopColor={green} stopOpacity={0.55} />
-            <Stop offset="0.6" stopColor={green} stopOpacity={0.18} />
+            <Stop offset="0" stopColor={green} stopOpacity={0.55 * strength} />
+            <Stop
+              offset="0.6"
+              stopColor={green}
+              stopOpacity={0.18 * strength}
+            />
             <Stop offset="1" stopColor={green} stopOpacity={0} />
           </RadialGradient>
         </Defs>
@@ -51,10 +62,17 @@ export function UfoGlow({ size }: { size: number }) {
  * one UFO the app draws wherever it flies (Help from Above's, and Mercy
  * Skip's over the campaign map), the same on every platform.
  */
-export function UfoSaucer({ size }: { size: number }) {
+export function UfoSaucer({
+  size,
+  glow = 1,
+}: {
+  size: number;
+  /** The glow's strength (see UfoGlow). */
+  glow?: number;
+}) {
   return (
     <View style={{ width: size, height: size }}>
-      <UfoGlow size={size} />
+      <UfoGlow size={size} strength={glow} />
       <FlyingSaucer width={size} height={size} />
     </View>
   );

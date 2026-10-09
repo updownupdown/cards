@@ -8,6 +8,8 @@ import {
   type GameDotState,
 } from "@/data/campaign-map";
 import { Colors, FontWeight, rgba, textShadow, theme } from "@/styles/styles";
+import { mix } from "@/styles/palette";
+import { seededRandom } from "@/hints/random";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useDisplayLanguage } from "@/i18n";
 import { useStarfield } from "@/components/Home/Starfield";
@@ -28,12 +30,15 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Svg, { Path } from "react-native-svg";
 import { scheduleOnRN } from "react-native-worklets";
 import Animated, {
+  cancelAnimation,
+  Easing,
   Extrapolation,
   interpolate,
   type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
+  withRepeat,
   withTiming,
 } from "react-native-reanimated";
 
@@ -111,6 +116,64 @@ const LOCKED_LINE_SCALE = 1;
 
 /** The selected game dot is drawn this much larger. */
 const SELECTED_SCALE = 1.6;
+
+/**
+ * The selected game dot's rings: three thin hoops turning about it like a
+ * gyroscope's, each on its own axis and at its own pace, in the game's own
+ * colours, passing in front of the dot and behind it. `gap` is the range of
+ * how far outside the enlarged dot a hoop may sit (see gameRings), `axis`
+ * the angle of the line it turns about, `laps` its half turns per cycle (a
+ * hoop looks the same after half a turn, so whole numbers loop without a
+ * jump) and `phase` where in a half turn it starts, so they set off out of
+ * step.
+ */
+const RINGS = [
+  { gap: [3, 5.5], axis: 0, laps: 3, phase: 0.1 },
+  { gap: [6, 8.5], axis: 60, laps: -4, phase: 0.45 },
+  { gap: [9, 11], axis: 120, laps: 5, phase: 0.8 },
+] as const;
+/** The range of a hoop's line width. */
+const RING_WIDTH = [0.7, 1.9] as const;
+/** How far each half of a hoop reaches past the middle, to meet the other. */
+const RING_SEAM = 0.25;
+const RING_CYCLE_MS = 20000;
+/** The hoops' axes drift round too, this many half turns per cycle. */
+const RING_DRIFT_LAPS = 1;
+/** The viewing distance, in hoop diameters: near sides swell a little. */
+const RING_PERSPECTIVE = 3;
+
+/**
+ * A game's hoops, innermost first: its pale colour, its accent, and the two
+ * mixed.
+ */
+export function ringColors(path: string) {
+  const game = GAMES_DATA[path];
+  if (!game) return [theme.ink, theme.accent, theme.accent];
+  return [
+    game.gameColorPale,
+    game.gameColorAccent,
+    mix(game.gameColorAccent, game.gameColorPale, 0.5),
+  ];
+}
+
+/**
+ * A game's rings, innermost first. Each hoop's size and line width are
+ * picked within their ranges from the game's path, so every game has its
+ * own set and keeps it.
+ */
+export function gameRings(path: string) {
+  const random = seededRandom(`rings:${path}`);
+  const within = ([least, most]: readonly [number, number]) =>
+    least + random() * (most - least);
+  const colors = ringColors(path);
+  return RINGS.map((ring, index) => ({
+    ...ring,
+    gap: within(ring.gap),
+    width: within(RING_WIDTH),
+    color: colors[index],
+  }));
+}
+type GameRing = ReturnType<typeof gameRings>[number];
 
 /**
  * Game dot names are drawn like the engraving on a star chart: small, spaced
@@ -457,16 +520,20 @@ const GameDot = memo(function GameDot({
 });
 
 /**
- * The selected game dot, drawn again over its own at twice the size: it
- * grows as it is chosen and shrinks back as another is, in step with the
- * game's card below the map changing its colours.
+ * The selected game dot, drawn again over its own at a larger size, with
+ * rings turning about it (see RINGS): it grows as it is chosen and shrinks
+ * back as another is, in step with the game's card below the map changing
+ * its colours.
  */
 function SelectedDots({
   selected,
   gameDotStates,
+  animated,
 }: {
   selected: GameDotDefinition | undefined;
   gameDotStates: ReadonlyMap<string, GameDotState>;
+  /** "Show animations": off, the rings hold still. */
+  animated: boolean;
 }) {
   // The dot shrinking back stays drawn until it is its own size again.
   const [leaving, setLeaving] = useState<GameDotDefinition[]>([]);
@@ -496,6 +563,7 @@ function SelectedDots({
           gameDot={gameDot}
           state={gameDotStates.get(gameDot.path)!}
           grow={false}
+          animated={animated}
           onDone={done}
         />
       ))}
@@ -505,9 +573,134 @@ function SelectedDots({
           gameDot={selected}
           state={gameDotStates.get(selected.path)!}
           grow
+          animated={animated}
         />
       )}
     </>
+  );
+}
+
+/**
+ * Half of one hoop of the selected dot's rings, turning on the shared clock:
+ * the half nearer the viewer ("front", drawn over the dot) or the half
+ * further away ("back", drawn under it), so the hoop passes round the dot.
+ */
+function RingHalf({
+  ring,
+  size,
+  side,
+  turn,
+}: {
+  ring: GameRing;
+  size: number;
+  side: "front" | "back";
+  turn: SharedValue<number>;
+}) {
+  const { axis, laps, phase } = ring;
+  const style = useAnimatedStyle(() => {
+    // The hoop's turn, kept within its first half: there its left half is
+    // always the nearer one, and a hoop looks the same half a turn on.
+    const halfTurns = phase + turn.value * laps;
+    const angle = (halfTurns - Math.floor(halfTurns)) * 180;
+    return {
+      transform: [
+        { perspective: size * RING_PERSPECTIVE },
+        { rotateZ: `${axis + turn.value * RING_DRIFT_LAPS * 180}deg` },
+        { rotateY: `${angle}deg` },
+      ],
+    };
+  });
+  // The halves overlap by a hair where they meet, clear of the dot.
+  const half = size / 2 + RING_SEAM;
+  const offset = side === "front" ? 0 : size - half;
+  return (
+    <Animated.View
+      style={[{ position: "absolute", width: size, height: size }, style]}
+    >
+      <View
+        style={{
+          position: "absolute",
+          left: offset,
+          top: 0,
+          width: half,
+          height: size,
+          overflow: "hidden",
+        }}
+      >
+        <View
+          testID={`selected-ring-${side}`}
+          style={{
+            position: "absolute",
+            left: -offset,
+            top: 0,
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+            borderWidth: ring.width,
+            borderColor: ring.color,
+          }}
+        />
+      </View>
+    </Animated.View>
+  );
+}
+
+/**
+ * One side of the rings about the selected game dot, centred on it: the
+ * back halves go under the dot and the front halves over it. They open out
+ * as the dot grows and close as it shrinks back, on the dot's own `scale`.
+ */
+function SelectedRings({
+  gameDot,
+  box,
+  side,
+  scale,
+  turn,
+}: {
+  gameDot: GameDotDefinition;
+  box: number;
+  side: "front" | "back";
+  scale: SharedValue<number>;
+  turn: SharedValue<number>;
+}) {
+  const style = useAnimatedStyle(() => {
+    const shown = interpolate(
+      scale.value,
+      [1, SELECTED_SCALE],
+      [0, 1],
+      Extrapolation.CLAMP,
+    );
+    return { opacity: shown, transform: [{ scale: 0.5 + shown * 0.5 }] };
+  });
+  const rings = useMemo(() => gameRings(gameDot.path), [gameDot.path]);
+  const sizes = rings.map((ring) => box * SELECTED_SCALE + ring.gap * 2);
+  const extent = Math.max(...sizes);
+  return (
+    <Animated.View
+      style={[
+        {
+          position: "absolute",
+          pointerEvents: "none",
+          left: toWorld(gameDot.x) - extent / 2,
+          top: toWorld(gameDot.y) - extent / 2,
+          width: extent,
+          height: extent,
+          alignItems: "center",
+          justifyContent: "center",
+        },
+        style,
+      ]}
+    >
+      {rings.map((ring, index) => (
+        <RingHalf
+          key={index}
+          ring={ring}
+          size={sizes[index]}
+          side={side}
+          turn={turn}
+        />
+      ))}
+    </Animated.View>
   );
 }
 
@@ -515,11 +708,13 @@ function GrowingDot({
   gameDot,
   state,
   grow,
+  animated,
   onDone,
 }: {
   gameDot: GameDotDefinition;
   state: GameDotState;
   grow: boolean;
+  animated: boolean;
   onDone?: (path: string) => void;
 }) {
   const scale = useSharedValue(grow ? 1 : SELECTED_SCALE);
@@ -536,23 +731,41 @@ function GrowingDot({
   const style = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
+  // The rings' clock, shared by their halves under and over the dot.
+  const turn = useSharedValue(0);
+  useEffect(() => {
+    if (!animated) return;
+    turn.value = withRepeat(
+      withTiming(1, { duration: RING_CYCLE_MS, easing: Easing.linear }),
+      -1,
+    );
+    return () => {
+      cancelAnimation(turn);
+      turn.value = 0;
+    };
+  }, [animated, turn]);
   const box = markBox(state);
+  const rings = { gameDot, box, scale, turn };
   return (
-    <Animated.View
-      style={[
-        {
-          position: "absolute",
-          pointerEvents: "none",
-          left: toWorld(gameDot.x) - box / 2,
-          top: toWorld(gameDot.y) - box / 2,
-          width: box,
-          height: box,
-        },
-        style,
-      ]}
-    >
-      <DotMark state={state} />
-    </Animated.View>
+    <>
+      <SelectedRings {...rings} side="back" />
+      <Animated.View
+        style={[
+          {
+            position: "absolute",
+            pointerEvents: "none",
+            left: toWorld(gameDot.x) - box / 2,
+            top: toWorld(gameDot.y) - box / 2,
+            width: box,
+            height: box,
+          },
+          style,
+        ]}
+      >
+        <DotMark state={state} />
+      </Animated.View>
+      <SelectedRings {...rings} side="front" />
+    </>
   );
 }
 
@@ -836,6 +1049,7 @@ export function CampaignMap({
           <SelectedDots
             selected={selectedGameDot}
             gameDotStates={gameDotStates}
+            animated={settings.showAnimations}
           />
 
           <GameDotLabels gameDotStates={gameDotStates} scale={scale} />

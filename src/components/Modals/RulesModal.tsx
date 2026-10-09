@@ -68,7 +68,7 @@ export const RulesModal = ({ onClose }: { onClose: () => void }) => {
           />
 
           <HelpFromAbovePanel
-            collapsible
+            showDescription={false}
             unavailable={!hasHints}
             style={{ marginTop: spacing(40) }}
           />

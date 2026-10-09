@@ -28,24 +28,21 @@ export const canfield: GameDefinition = {
   gameColorAccent: "#e2bf8d",
   cardBack: CardBackColors.Burgundy,
   quickStart: [
-    "Build foundations up by suit.",
-    "Build tableau columns down by alternating color.",
-    "Empties use reserve.",
+    "Foundations start at the first foundation card's rank.",
+    "Build down in alternating colors.",
+    "Empty columns fill from the reserve.",
   ],
   howToPlay: [
-    "## Objective",
-    "Send all 52 cards to their foundations, building up by suit from the base rank and wrapping from King to Ace.",
-
-    "## Foundations",
-    "- Build foundations **up by suit** from the base rank.",
-    "- Foundations wrap past the King back to the Ace, for example: 10, J, Q, K, A, 2, 3, etc.",
-
-    "## Tableau",
-    "- Build tableau columns down in **alternating colors** (wrapping from Ace to King).",
-    "- Move single cards or an ordered group of cards between columns.",
-    "- When a tableau column empties, it is refilled from the **reserve** (or, once the reserve is gone, by any card).",
-
-    "## Stock",
-    "Turn cards from the stock (one or three at a time, depending on your settings) to the waste. You may redeal as often as you like.",
+    "## Goal",
+    "Move every card to the foundations.",
+    "## Rules",
+    "| Foundations (4) | Up by suit from the first foundation card's rank, wrapping from King to Ace |",
+    "| Build | Down, alternating colors, wrapping from Ace to King |",
+    "| Move | One card, or an ordered run |",
+    "| Empty column | From the reserve, then any card |",
+    "| Reserve (13) | Top card is playable |",
+    "| Stock | Draw 1 or 3, chosen in the settings |",
+    "| Redeals | Unlimited |",
+    "| Cards | 52 |",
   ],
 };

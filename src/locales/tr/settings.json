@@ -80,9 +80,9 @@
     "mercySkipGranted": "Af verildi ({{count}} kullanılmamış)"
   },
   "tabs": {
-    "display": "Ekran",
-    "theme": "Tema",
-    "other": "Diğer"
+    "general": "Genel",
+    "advanced": "Gelişmiş",
+    "theme": "Tema"
   },
   "useEnglishGameTitles": {
     "label": "Oyun adlarını İngilizce kullan",

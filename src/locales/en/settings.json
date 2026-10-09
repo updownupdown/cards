@@ -80,9 +80,9 @@
     "mercySkipGranted": "Mercy Skip granted ({{count}} unused)"
   },
   "tabs": {
-    "display": "Display",
-    "theme": "Theme",
-    "other": "Other"
+    "general": "General",
+    "advanced": "Advanced",
+    "theme": "Theme"
   },
   "useEnglishGameTitles": {
     "label": "Use English game titles",

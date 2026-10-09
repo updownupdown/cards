@@ -9,7 +9,7 @@ import {
   UfoColors,
 } from "@/styles/styles";
 import { memo, useEffect, useRef, useState } from "react";
-import { Pressable, View } from "react-native";
+import { Modal, Pressable, StyleSheet, View } from "react-native";
 import {
   setHintDock,
   useHintUfoHovering,
@@ -77,6 +77,7 @@ export const GameHeader = memo(function GameHeader({
 }: Props) {
   const spacing = (value: number) => value * scale;
   const { t } = useTranslation("game");
+  const { t: tCommon } = useTranslation("common");
   // The game's palette: its dark colour behind, its pale one in the icons.
   const theme = usePalette();
   const hasHints = useHasHintFinder();
@@ -85,6 +86,11 @@ export const GameHeader = memo(function GameHeader({
   // opens its explanation instead of asking for a hint.
   const intro = showHint && hasHints && !introSeen;
   const [introOpen, setIntroOpen] = useState(false);
+  // However the introduction is closed, it has been read: it doesn't return.
+  const dismissIntro = () => {
+    setIntroOpen(false);
+    void markHintIntroSeen();
+  };
 
   return (
     <View
@@ -165,7 +171,7 @@ export const GameHeader = memo(function GameHeader({
             iconColor={hintDisabled ? theme.faint : theme.accent}
             disabled={hintDisabled}
             intro={intro}
-            onIntro={() => setIntroOpen((open) => !open)}
+            onIntro={() => setIntroOpen(true)}
           />
         )}
 
@@ -196,30 +202,43 @@ export const GameHeader = memo(function GameHeader({
         />
       </View>
 
-      {intro && introOpen && (
-        <View
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: spacing(layoutDims.pagePadding / 2),
-            right: spacing(layoutDims.pagePadding / 2),
-            marginTop: spacing(-layoutDims.pagePadding / 4),
-          }}
+      {/* The UFO's introduction, in the middle of the screen until it is
+          put away, which is for good. Choosing "Hide" in it takes the UFO
+          out of the header, but the box stays until then. */}
+      {introOpen && !introSeen && (
+        <Modal
+          visible
+          transparent
+          animationType="fade"
+          onRequestClose={dismissIntro}
         >
-          <HelpFromAbovePanel>
-            <ActionButton
-              label={t("rules.helpIntro.done")}
-              small
-              color={UfoColors.green}
-              ink={UfoColors.black}
-              style={{ alignSelf: "flex-end" }}
-              onPress={() => {
-                setIntroOpen(false);
-                void markHintIntroSeen();
-              }}
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              padding: spacing(layoutDims.pagePadding),
+              backgroundColor: rgba(theme.night, 0.7),
+            }}
+          >
+            {/* Behind the box, so a tap outside it puts it away too. */}
+            <Pressable
+              accessibilityLabel={tCommon("close")}
+              onPress={dismissIntro}
+              style={StyleSheet.absoluteFill}
             />
-          </HelpFromAbovePanel>
-        </View>
+            <HelpFromAbovePanel style={{ maxWidth: contentMaxWidth }}>
+              <ActionButton
+                label={t("rules.helpIntro.dismiss")}
+                small
+                color={UfoColors.green}
+                ink={UfoColors.black}
+                style={{ alignSelf: "center" }}
+                onPress={dismissIntro}
+              />
+            </HelpFromAbovePanel>
+          </View>
+        </Modal>
       )}
     </View>
   );

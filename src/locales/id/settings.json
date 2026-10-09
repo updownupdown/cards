@@ -80,9 +80,9 @@
     "mercySkipGranted": "Pengampunan diberikan ({{count}} belum dipakai)"
   },
   "tabs": {
-    "display": "Tampilan",
-    "theme": "Tema",
-    "other": "Lainnya"
+    "general": "Umum",
+    "advanced": "Lanjutan",
+    "theme": "Tema"
   },
   "useEnglishGameTitles": {
     "label": "Gunakan judul game dalam bahasa Inggris",

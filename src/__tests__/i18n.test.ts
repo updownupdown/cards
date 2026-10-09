@@ -117,11 +117,11 @@ function flatten(value: unknown, prefix = ""): Record<string, string> {
 const tokens = (text: string) =>
   (text.match(/\{\{[^}]+\}\}|<\/?[a-zA-Z0-9]+>|\n/g) ?? []).sort();
 
-/** Markdown markers at the start of rule lines, which translations must keep. */
+/** Markdown markers in rule lines (start, bold, table pipes), which translations must keep. */
 const markers = (lines: unknown) =>
   (lines as string[]).map(
     (line) =>
-      `${line.match(/^(##|-+)\s/)?.[1] ?? ""}|${(line.match(/\*\*/g) ?? []).length}`,
+      `${line.match(/^(##|-+|\|)\s/)?.[1] ?? ""}|${(line.match(/\*\*/g) ?? []).length}|${(line.match(/\|/g) ?? []).length}`,
   );
 
 describe("Languages", () => {
