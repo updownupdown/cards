@@ -102,7 +102,7 @@ On 2026-10-05 Seer and Pickpocket were retired and Four Seasons became Little Wi
 
 Also on 2026-10-05 Charlatan became Boiling Over, with a plain run: its node kept its place, links and rewards under `/boiling-over`.
 
-On 2026-10-08 local-only games left the map for good: the eight added that day (Gambit, Carousel, Sweep, Sevens, Go Fish, Osmosis, Cipher and Mosaic, none ever released) had been appended at the rim with quotes 185–200; a plain run let them go, and those quotes are unassigned again. Cipher was then deleted.
+On 2026-10-08 local-only games left the map for good: the eight added that day (Gambit, Carousel, Sweep, Sevens, Go Fish, Osmosis, Cipher and Mosaic, none ever released) had been appended at the rim with quotes 185–200; a plain run let them go, and those quotes are unassigned again. Cipher was then deleted, and the other seven on 2026-10-09; none was ever on the map players see.
 
 ## Validation
 

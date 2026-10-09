@@ -671,41 +671,6 @@
       "value": "Canfield"
     }
   },
-  "carousel": {
-    "howToPlay": {
-      "hash": "972bbaa1",
-      "value": [
-        "## Obiettivo",
-        "Svuota la mano calando tutte le carte sul tavolo, in combinazioni. Perdi se la tua mano arriva ad avere **12 carte**.",
-        "Il tuo punteggio è il numero di carte rimaste nel mazzo e nella giostra quando svuoti la mano.",
-        "## Combinazioni",
-        "- **Gruppo:** tre o quattro carte dello stesso valore, tutte di semi diversi: {7S} {7H} {7D}",
-        "- **Sequenza:** tre o più carte consecutive dello stesso seme: {9C} {10C} {JC} {QC}",
-        "- L'Asso è basso o alto, ma non tutte e due le cose: {AH} {2H} {3H} e {QH} {KH} {AH} sono sequenze, {KH} {AH} {2H} no.",
-        "## Spostare le carte",
-        "- Tocca le carte per selezionarle, dalla tua mano e da una sola combinazione.",
-        "- Tocca una carta di un'altra combinazione per spostarci la selezione, o un posto vuoto per iniziare una nuova combinazione.",
-        "- Le combinazioni si possono dividere, unire e ricomporre come vuoi. Le carte sul tavolo non tornano mai nella tua mano.",
-        "- Una combinazione incompleta è colorata di rosso. Annulla ritira ogni mossa fatta dopo la tua ultima carta.",
-        "## La giostra",
-        "- Quando sei bloccato, tocca una delle tre carte della giostra per prenderla in mano. Il mazzo ne prende il posto.",
-        "- Puoi prendere una carta solo quando tutte le combinazioni sul tavolo sono complete. Una carta presa non si può annullare.",
-        "- Si parte con tre combinazioni sul tavolo. Quando la giostra è vuota, continua finché non svuoti la mano, o tocca **Termina partita**."
-      ]
-    },
-    "quickStart": {
-      "hash": "75854330",
-      "value": [
-        "Cala sul tavolo tutte le carte della tua mano, in combinazioni.",
-        "Seleziona carte dalla tua mano o da una combinazione, poi tocca un'altra combinazione o un posto vuoto per spostarle lì.",
-        "Riorganizza il tavolo come vuoi, ma ogni combinazione deve essere completa prima di prendere una carta dalla giostra."
-      ]
-    },
-    "title": {
-      "hash": "c9a9fc03",
-      "value": "Giostra"
-    }
-  },
   "carpet": {
     "howToPlay": {
       "hash": "0af4a81e",
@@ -1680,39 +1645,6 @@
       "value": "Rana"
     }
   },
-  "gambit": {
-    "howToPlay": {
-      "hash": "71ea66dd",
-      "value": [
-        "## Obiettivo",
-        "Rispetta il contratto in tutte e tre le mani: **6**, **8** e poi **10** carte a testa. Un contratto è il massimo di prese che la sua mano consente, quindi ogni mano si può vincere.",
-        "## Prese",
-        "- Esci tu nella prima presa. Chi vince una presa esce nella successiva.",
-        "- Rispondi al seme di uscita se puoi. Se non puoi, gioca una carta qualsiasi.",
-        "- La briscola più alta vince la presa. Senza briscole, la vince la carta più alta del seme di uscita. Gli Assi sono alti.",
-        "- La carta scoperta accanto al mazzo indica il seme di briscola.",
-        "## Il tuo rivale",
-        "Le carte del rivale sono scoperte, e gioca sempre allo stesso modo:",
-        "- **Quando esce:** la sua carta più alta che non sia briscola. Esce di briscola solo se non ha altro.",
-        "- **Quando risponde:** la sua carta più bassa che vince la presa. Se nessuna può, la sua carta più bassa.",
-        "- Tra carte dello stesso valore, ♣ è la più bassa, poi ♦, ♥ e ♠.",
-        "## Sconfitta",
-        "La partita è persa appena un contratto non si può più rispettare. Annulla ti permette di provare un'altra linea di gioco."
-      ]
-    },
-    "quickStart": {
-      "hash": "ccfaccab",
-      "value": [
-        "Le due mani sono scoperte. In ogni mano, fai tante prese quante ne chiede il suo contratto.",
-        "Rispondi al seme di uscita se puoi. La briscola più alta vince la presa, altrimenti la carta più alta del seme di uscita.",
-        "Il tuo rivale esce con la sua carta più alta che non sia briscola, e risponde con la sua carta più bassa che vince, altrimenti con la sua carta più bassa."
-      ]
-    },
-    "title": {
-      "hash": "778ad573",
-      "value": "Gambetto"
-    }
-  },
   "gaps": {
     "howToPlay": {
       "hash": "bdf0ca39",
@@ -1813,35 +1745,6 @@
     "title": {
       "hash": "2b72c1f3",
       "value": "Il Vetraio"
-    }
-  },
-  "go-fish": {
-    "howToPlay": {
-      "hash": "f813d631",
-      "value": [
-        "## Obiettivo",
-        "Fare più libri del rivale: sette su tredici.",
-        "## Chiedere",
-        "- Tu e il rivale avete sette carte ciascuno. Nel tuo turno, tocca una carta per chiedere il suo valore. Il rivale consegna tutte le carte di quel valore che ha, e chiedi ancora.",
-        "- Se non ne ha, vai a pescare: peschi una carta dallo stagno. Se è il valore che hai chiesto, chiedi ancora; altrimenti il turno passa.",
-        "- Quattro carte di un valore fanno un libro, calato appena lo hai. Una mano vuota pesca una carta dallo stagno prima di chiedere.",
-        "## Il tuo rivale",
-        "Le carte del rivale sono coperte, ma gioca sempre allo stesso modo: chiede un valore che ha e che tu hai chiesto, perché devi averlo ancora. Altrimenti chiede il valore di cui ha più carte, il più basso a parità.",
-        "## Strategia",
-        "Ricorda ciò che chiede il rivale: ha quei valori, finché non glieli prendi. E ogni valore che chiedi dice al rivale ciò che hai."
-      ]
-    },
-    "quickStart": {
-      "hash": "44b2756e",
-      "value": [
-        "Tocca una carta per chiedere al rivale il suo valore. Se ne ha, sono tue, e chiedi ancora.",
-        "Se non ne ha, vai a pescare: pesca dallo stagno. Quattro carte di un valore fanno un libro.",
-        "Il rivale ricorda ciò che chiedi. Fai sette libri per vincere."
-      ]
-    },
-    "title": {
-      "hash": "56094d6f",
-      "value": "Pesca"
     }
   },
   "golf": {
@@ -2489,32 +2392,6 @@
       "value": "Montecarlo"
     }
   },
-  "mosaic": {
-    "howToPlay": {
-      "hash": "e1d505a6",
-      "value": [
-        "## Obiettivo",
-        "Scopri tutte le carte rosse del quadrato con meno di tre errori.",
-        "## Gli indizi",
-        "- Accanto a ogni riga e sopra ogni colonna, gli indizi danno la lunghezza delle serie di carte rosse che contiene, in ordine. **2 1** significa due rosse vicine, poi almeno una nera, poi una rossa. **0** significa nessuna rossa.",
-        "- Una carta scoperta resta in vista, così ogni rossa trovata è un indizio in più, e lo è anche ogni errore.",
-        "## Gli errori",
-        "Scoprire una carta nera è un errore. Tre errori chiudono la partita. Ogni smazzata è scelta in modo da avere una sola soluzione, quindi con attenzione si può sempre dedurre senza un solo errore; il tuo punteggio sono gli errori che ti restavano."
-      ]
-    },
-    "quickStart": {
-      "hash": "5e92e498",
-      "value": [
-        "Venticinque carte sono coperte. Gli indizi danno le serie di carte rosse di ogni riga e di ogni colonna, in ordine.",
-        "Tocca una carta per scoprirla. Trova tutte le carte rosse; scoprire una carta nera è un errore, e tre errori fanno perdere.",
-        "Ogni smazzata ha esattamente una soluzione, quindi si può sempre dedurre."
-      ]
-    },
-    "title": {
-      "hash": "e8f2ee21",
-      "value": "Mosaico"
-    }
-  },
   "nestor": {
     "howToPlay": {
       "hash": "5a96cea6",
@@ -2574,34 +2451,6 @@
     "title": {
       "hash": "01d23c78",
       "value": "Veglia notturna"
-    }
-  },
-  "osmosis": {
-    "howToPlay": {
-      "hash": "d9f9e7ad",
-      "value": [
-        "## Obiettivo",
-        "Sposta tutte le 52 carte sulle quattro file di fondazione.",
-        "## Le file",
-        "- La prima carta distribuita comincia la prima fila. Ogni fila riceve un solo seme, in qualsiasi ordine, salvo che una carta può unirsi a una fila solo quando lo stesso valore è già nella fila sopra, come se vi fosse filtrata.",
-        "- Una nuova fila sotto le altre comincia solo con lo stesso valore della prima carta della prima fila.",
-        "## Il gioco",
-        "- Le quattro riserve sono scoperte; gioca le loro carte in cima. Tocca il mazzo per girare una carta nel pozzo, e gioca la carta in cima al pozzo.",
-        "- Quando il mazzo si esaurisce, toccalo per rigirare il pozzo e ripercorrerlo, quante volte vuoi.",
-        "- La partita è persa quando un intero giro del mazzo non dà nulla da giocare."
-      ]
-    },
-    "quickStart": {
-      "hash": "52283072",
-      "value": [
-        "Ogni fila di fondazione riceve il suo seme in qualsiasi ordine, ma una carta può unirsi a una fila solo quando il suo valore è nella fila sopra.",
-        "La prima carta distribuita fissa il valore con cui ogni altra fila deve cominciare.",
-        "Gioca dalle quattro riserve e dal pozzo. Gira il mazzo una carta alla volta, quante volte vuoi."
-      ]
-    },
-    "title": {
-      "hash": "32e235be",
-      "value": "Osmosi"
     }
   },
   "ouroboros": {
@@ -3217,35 +3066,6 @@
       "value": "Torri di Seahaven"
     }
   },
-  "sevens": {
-    "howToPlay": {
-      "hash": "9bc5afcb",
-      "value": [
-        "## Obiettivo",
-        "Essere il primo a giocare tutte le carte della propria mano.",
-        "## Giocare",
-        "- Tu e il rivale avete sette carte ciascuno, e un 7 del mazzo viene messo in tavola per iniziare. Un 7 apre la fila del suo seme; poi una carta si può giocare accanto a uno dei due capi della sua fila: l'8 dopo il 7, il 6 prima, e così via.",
-        "- Se puoi giocare una carta, devi farlo. Se non puoi, tocca il mazzo per pescarne una, e il turno passa. Con il mazzo vuoto, una mano bloccata passa.",
-        "- Le carte che non puoi giocare sono in grigio.",
-        "## Il tuo rivale",
-        "Le carte del rivale sono scoperte, e gioca sempre allo stesso modo: un 7 se ne ha uno; altrimenti la carta seguita dal maggior numero di sue carte in quella direzione e, a parità, la sua carta più bassa, ♣ per prima.",
-        "## Strategia",
-        "Tenere una carta che il rivale aspetta blocca la sua mano, finché hai altro da giocare. Il tuo punteggio è il numero di carte rimaste al rivale."
-      ]
-    },
-    "quickStart": {
-      "hash": "a70f5f8d",
-      "value": [
-        "La fila di ogni seme cresce dal suo 7, un valore alla volta, su fino al Re e giù fino all'Asso.",
-        "Gioca una carta che si può giocare, o pesca dal mazzo se nessuna si può.",
-        "Svuota la tua mano prima del rivale."
-      ]
-    },
-    "title": {
-      "hash": "2e23608f",
-      "value": "Sette"
-    }
-  },
   "shifting-sands": {
     "howToPlay": {
       "hash": "91681187",
@@ -3563,37 +3383,6 @@
     "title": {
       "hash": "5ac8c364",
       "value": "Sultano"
-    }
-  },
-  "sweep": {
-    "howToPlay": {
-      "hash": "ba222213",
-      "value": [
-        "## Obiettivo",
-        "Fare più punti del rivale quando il mazzo è esaurito.",
-        "## Prendere le carte",
-        "- Tu e il rivale avete tre carte ciascuno, con quattro sul tavolo. Ogni carta giocata prende carte dal tavolo: una dello stesso valore o, se non c'è, più carte che sommino il suo valore. L'Asso vale 1, il Fante 11, la Regina 12 e il Re 13.",
-        "- Una carta che può prendere qualcosa deve farlo. Una che non può viene posata sul tavolo.",
-        "- Tocca una carta della tua mano. Se può prendere carte in più modi, tocca le carte del tavolo che vuoi: la presa avviene appena la somma torna.",
-        "- Quando entrambe le mani sono vuote, si danno tre carte in più a ciascuno. Chi ha preso carte per ultimo si tiene ciò che resta sul tavolo alla fine.",
-        "## Punteggio",
-        "- Una **scopa**, prendere tutte le carte del tavolo, vale un punto.",
-        "- Alla fine: un punto per più carte, un punto per più quadri e un punto per il 7♦.",
-        "## Il tuo rivale",
-        "Le carte del rivale sono scoperte, e gioca sempre allo stesso modo: prende più carte che può (prima una scopa). Tra prese uguali, preferisce il 7♦, poi più quadri, poi la sua carta più bassa. Se non può prendere nulla, posa la sua carta più bassa."
-      ]
-    },
-    "quickStart": {
-      "hash": "60a8b88e",
-      "value": [
-        "Gioca una carta per prendere una carta del tavolo dello stesso valore, o più carte del tavolo che sommino il suo valore.",
-        "Prendere tutte le carte del tavolo è una scopa, che vale un punto.",
-        "Alla fine, un punto per più carte, uno per più quadri e uno per il 7♦. Supera il rivale."
-      ]
-    },
-    "title": {
-      "hash": "76bb3813",
-      "value": "Scopa"
     }
   },
   "ten-twenty-thirty": {
