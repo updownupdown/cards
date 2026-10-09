@@ -101,3 +101,16 @@ export async function markHintIntroSeen() {
   introSeen.set(true);
   await AsyncStorage.setItem(HINT_INTRO_STORAGE_KEY, "1");
 }
+
+/**
+ * "Reset all app data": back to the default choice, with the introduction
+ * unread again.
+ */
+export async function resetHintMode() {
+  mode.set(DEFAULT_HINT_MODE);
+  introSeen.set(false);
+  await AsyncStorage.multiRemove([
+    HINT_BUTTON_STORAGE_KEY,
+    HINT_INTRO_STORAGE_KEY,
+  ]);
+}

@@ -251,8 +251,8 @@ export function TaoChapterDetail({
       >
         {constellation?.name ? (
           <Text
-            serif
             size="lg"
+            weight={300}
             color={theme.dim}
             style={{ textAlign: "center" }}
           >
@@ -260,7 +260,6 @@ export function TaoChapterDetail({
           </Text>
         ) : null}
         <Text
-          serif
           weight={500}
           color={collected ? theme.accent : theme.dim}
           style={{

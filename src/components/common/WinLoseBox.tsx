@@ -1,5 +1,5 @@
 import { Text } from "@/components/common/Text";
-import { usePalette } from "@/styles/palette";
+import { useGameAccent, usePalette } from "@/styles/palette";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
@@ -75,6 +75,7 @@ export const WinLoseBox = ({
 }: Props) => {
   const { ui, spacing } = useResponsiveMetrics();
   const theme = usePalette();
+  const gameAccent = useGameAccent();
   const { t } = useTranslation("game");
   const { t: tCommon } = useTranslation("common");
   const stat = (label: string, value: string) => (
@@ -228,7 +229,7 @@ export const WinLoseBox = ({
             }}
           >
             <View style={{ flex: 1, minWidth: 0 }}>
-              <Kicker color={won ? theme.accent : theme.dim}>{title}</Kicker>
+              <Kicker color={won ? gameAccent : theme.dim}>{title}</Kicker>
               <Text weight={500} size="xxxl" numberOfLines={2}>
                 {won ? t("result.won") : t("result.lost")}
               </Text>
@@ -252,9 +253,7 @@ export const WinLoseBox = ({
                     hitSlop={spacing(10)}
                     style={{ opacity: actionsHidden ? 0.2 : 1 }}
                   >
-                    <Text size="md" weight={500} color={theme.accent}>
-                      {t("result.share")}
-                    </Text>
+                    <Kicker color={gameAccent}>{t("result.share")}</Kicker>
                   </Pressable>
                 )}
               </View>

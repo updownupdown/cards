@@ -6,6 +6,7 @@ import {
   collectCards,
   createDeck,
   flipAllToBack,
+  flipToFace,
   rankValue,
   redealWith,
   shuffle,
@@ -96,7 +97,9 @@ function createInitialState(): MazeGameState {
     if (!EMPTY_AT_DEAL.includes(index)) grid[index] = deck[dealt++];
   });
   return {
-    grid: grid.map((card) => (card?.rank === "K" ? null : card)),
+    grid: grid.map((card) =>
+      !card || card?.rank === "K" ? null : flipToFace(card),
+    ),
     removed: deck.filter((card) => card.rank === "K"),
     deal: [],
   };

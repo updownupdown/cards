@@ -126,11 +126,12 @@ export function WorkViewer({
             >
               <Text
                 serif
+                italic
                 style={{
                   textAlign: "center",
                   fontSize: font(25),
-                  // Tall enough for the descenders, which two clipped
-                  // lines would otherwise cut off.
+                  // Tall enough for the italic's descenders, which two
+                  // clipped lines would otherwise cut off.
                   lineHeight: font(34),
                 }}
                 numberOfLines={2}
