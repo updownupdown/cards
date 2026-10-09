@@ -89,12 +89,12 @@
     "press": "Premi {{label}}"
   },
   "moments": {
-    "breatheIn": "inspira",
-    "breatheOut": "espira",
+    "breatheIn": "inspira…",
+    "breatheHold": "trattieni…",
+    "breatheOut": "espira…",
     "skip": "Salta il momento di quiete",
     "continue": "Continua",
-    "introTitle": "Momenti di quiete",
-    "introText": "Ogni tanto, dopo una vittoria, una breve pausa: un respiro, una citazione, uno sguardo da vicino all'opera del gioco.",
+    "noThanks": "No, grazie!",
     "introLater": "Puoi cambiarlo quando vuoi nelle Impostazioni.",
     "zoomHint": "Ingrandisci per guardare da vicino."
   }

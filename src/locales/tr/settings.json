@@ -90,12 +90,10 @@
   },
   "moments": {
     "label": "Sakin anlar",
-    "description": "Arada bir, Yolculuk dışındaki bir galibiyetten sonra, sonraki dağıtımdan önce bir mola anı.",
-    "every": "Sıklık:",
-    "off": "Kapalı",
-    "every3": "~3 oyun",
-    "every5": "~5 oyun",
-    "every10": "~10 oyun",
+    "description": "Bir oyunun ardından bir düşünme anı yaşa.",
+    "notInOdyssey": "Yolculuk oyunları sırasında gösterilmez.",
+    "every": "~{{count}} oyunda bir",
+    "everyGame": "Her oyunda",
     "previewTitle": "Bir anı önizle",
     "preview": {
       "intro": "İlk kez (ayar)",

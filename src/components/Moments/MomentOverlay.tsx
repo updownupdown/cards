@@ -9,9 +9,9 @@ import {
 } from "@/data/game-thumbnails";
 import { GAMES_DATA } from "@/data/games-registry";
 import {
-  getMomentFrequency,
+  getMomentSettings,
   isMomentIntroduced,
-  saveMomentFrequency,
+  saveMomentSettings,
   type Moment,
 } from "@/data/moments";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
@@ -32,7 +32,6 @@ import {
   Pressable,
   StyleSheet,
   View,
-  useWindowDimensions,
 } from "react-native";
 import Animated, {
   cancelAnimation,
@@ -49,7 +48,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { scheduleOnRN } from "react-native-worklets";
-import Svg, { Defs, Path, RadialGradient, Stop } from "react-native-svg";
+import Svg, { Path } from "react-native-svg";
 import { MomentFrequencyPicker } from "./MomentFrequencyPicker";
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
@@ -58,9 +57,10 @@ const AnimatedPath = Animated.createAnimatedComponent(Path);
 const IN_MS = 1400;
 const OUT_MS = 700;
 const BLACK = "#000000";
+const SKIP_BACKGROUND = "rgba(0, 0, 0, 0.6)";
 
-/** The breath to follow: in, held, out, held; twice, then it moves on. */
-const BREATH = { inMs: 4000, holdInMs: 1000, outMs: 6000, holdOutMs: 1000 };
+/** The breath to follow: in, held, out, a rest; twice, then it moves on. */
+const BREATH = { inMs: 4000, holdInMs: 3000, outMs: 6000, holdOutMs: 1000 };
 const BREATH_MS =
   BREATH.inMs + BREATH.holdInMs + BREATH.outMs + BREATH.holdOutMs;
 const BREATHS = 2;
@@ -69,6 +69,7 @@ const BREATH_SMALL = 0.55;
 const DRIFT_MS = 40000;
 
 const SETTLE_CARDS = 26;
+const CARD_ASPECT = 1.4;
 const SETTLE_START_MS = 900;
 const SETTLE_STAGGER_MS = 260;
 const SETTLE_MS = 3400;
@@ -77,11 +78,12 @@ const SETTLE_MS = 3400;
 const ARTWORK_MS = 10000;
 const SETTLE_TOTAL_MS = 12500;
 /** A quote stays long enough to be read slowly, and at least this long. */
-const QUOTE_MIN_MS = 12000;
-const QUOTE_MAX_MS = 24000;
+const QUOTE_MIN_MS = 15000;
+const QUOTE_MAX_MS = 27000;
 const QUOTE_MS_PER_CHARACTER = 60;
-const QUOTE_FADE_MS = 2200;
-const QUOTE_AUTHOR_AT_MS = 2600;
+const QUOTE_FADE_MS = 4000;
+/** Who said it comes well after the words have settled. */
+const QUOTE_AUTHOR_AT_MS = 6500;
 
 export function momentDuration(moment: Moment) {
   switch (moment.kind) {
@@ -97,7 +99,7 @@ export function momentDuration(moment: Moment) {
       const length = getQuote(moment.quoteId)?.text.length ?? 0;
       return Math.min(
         QUOTE_MAX_MS,
-        Math.max(QUOTE_MIN_MS, 5000 + length * QUOTE_MS_PER_CHARACTER),
+        Math.max(QUOTE_MIN_MS, 9000 + length * QUOTE_MS_PER_CHARACTER),
       );
     }
   }
@@ -105,8 +107,6 @@ export function momentDuration(moment: Moment) {
 
 type Props = {
   moment: Moment;
-  /** The breath's colour: the game's accent, or the app's. */
-  accent: string;
   /** For the settling cards' backs. */
   cardBackKey?: string;
   /** How long to wait, hidden and letting taps through, before coming up. */
@@ -123,7 +123,6 @@ type Props = {
  */
 export function MomentOverlay({
   moment,
-  accent,
   cardBackKey,
   delayMs = 0,
   onDone,
@@ -158,7 +157,7 @@ export function MomentOverlay({
     cancelAnimation(progress);
     // The first moment is the choice: closing it keeps whatever is picked.
     if (moment.kind === "intro" && !isMomentIntroduced()) {
-      void saveMomentFrequency(getMomentFrequency());
+      void saveMomentSettings(getMomentSettings());
     }
     cover.value = withTiming(0, {
       duration: OUT_MS,
@@ -166,6 +165,11 @@ export function MomentOverlay({
     });
     exitTimer.current = setTimeout(() => onDoneRef.current(), OUT_MS);
   }, [cover, moment.kind, progress]);
+
+  const disable = useCallback(() => {
+    void saveMomentSettings({ ...getMomentSettings(), enabled: false });
+    close();
+  }, [close]);
 
   // The time left fills the skip button; held while the picture is zoomed
   // and while the app is away.
@@ -237,8 +241,8 @@ export function MomentOverlay({
           paddingHorizontal: spacing(28),
         }}
       >
-        {moment.kind === "intro" && <IntroMoment />}
-        {moment.kind === "breathe" && <Breath accent={accent} />}
+        {moment.kind === "intro" && <IntroMoment onDisable={disable} />}
+        {moment.kind === "breathe" && <Breath />}
         {moment.kind === "settle" && (
           <SettlingCards cardBackKey={cardBackKey} />
         )}
@@ -248,8 +252,10 @@ export function MomentOverlay({
         )}
       </View>
 
+      {/* Above the moment: scattered cards and a zoomed picture pass under. */}
       <View
         style={{
+          zIndex: 2,
           alignItems: "center",
           paddingTop: spacing(16),
           paddingBottom: insets.bottom + spacing(28),
@@ -260,6 +266,7 @@ export function MomentOverlay({
             moment.kind === "intro" ? t("moments.continue") : t("moments.skip")
           }
           progress={duration === null ? undefined : progress}
+          look={moment.kind === "intro" ? "filled" : "quiet"}
           onPress={close}
         />
       </View>
@@ -267,25 +274,40 @@ export function MomentOverlay({
   );
 }
 
-/** A quiet pill at the foot, filling from the left as the moment runs. */
+type MomentButtonLook = "quiet" | "outline" | "filled";
+
+/**
+ * A pill: quiet at the foot, filling from the left as the moment runs; or,
+ * for the first moment's two answers, in the accent, outlined or filled.
+ */
 function MomentButton({
   label,
   progress,
   onPress,
+  look = "quiet",
+  testID = "moment-skip",
 }: {
   label: string;
   progress?: SharedValue<number>;
   onPress: () => void;
+  look?: MomentButtonLook;
+  testID?: string;
 }) {
   const { spacing } = useResponsiveMetrics();
   const palette = usePalette();
   const fillStyle = useAnimatedStyle(() => ({
     width: `${(progress?.value ?? 0) * 100}%`,
   }));
+  const ink =
+    look === "filled"
+      ? palette.accentInk
+      : look === "outline"
+        ? palette.accent
+        : rgba(palette.ink, 0.75);
   return (
     <Animated.View entering={FadeIn.delay(IN_MS).duration(900)}>
       <Pressable
-        testID="moment-skip"
+        testID={testID}
         accessibilityRole="button"
         accessibilityLabel={label}
         onPress={onPress}
@@ -295,7 +317,11 @@ function MomentButton({
           paddingHorizontal: spacing(22),
           borderRadius: spacing(22),
           borderWidth: 1,
-          borderColor: rgba(palette.ink, 0.22),
+          borderColor:
+            look === "quiet" ? rgba(palette.ink, 0.22) : palette.accent,
+          // Quiet, it is dark enough to read over the picture, zoomed in
+          // under it.
+          backgroundColor: look === "filled" ? palette.accent : SKIP_BACKGROUND,
           overflow: "hidden",
           alignItems: "center",
           justifyContent: "center",
@@ -316,7 +342,7 @@ function MomentButton({
             ]}
           />
         )}
-        <Text size="sm" weight={400} color={rgba(palette.ink, 0.75)}>
+        <Text size="sm" weight={look === "quiet" ? 400 : 500} color={ink}>
           {label}
         </Text>
       </Pressable>
@@ -324,9 +350,13 @@ function MomentButton({
   );
 }
 
-/** The first moment: what these are, and how often they should come. */
-function IntroMoment() {
+/**
+ * The first moment: what these are, and how often they should come.
+ * "Continue", at the foot, keeps them; "No thank you!" turns them off.
+ */
+function IntroMoment({ onDisable }: { onDisable: () => void }) {
   const { t } = useTranslation("game");
+  const { t: tSettings } = useTranslation("settings");
   const { spacing, font } = useResponsiveMetrics();
   const palette = usePalette();
   return (
@@ -334,100 +364,80 @@ function IntroMoment() {
       entering={FadeIn.delay(IN_MS / 2).duration(1200)}
       style={{
         width: "100%",
-        maxWidth: spacing(420),
+        maxWidth: spacing(476),
+        // With the screen's own, twice the usual room at the sides.
+        paddingHorizontal: spacing(28),
         alignItems: "center",
         gap: spacing(28),
       }}
     >
-      <View style={{ alignItems: "center", gap: spacing(12) }}>
-        <Text serif color={palette.ink} style={{ fontSize: font(26) }}>
-          {t("moments.introTitle")}
+      <View style={{ alignItems: "center", gap: spacing(14) }}>
+        <Text serif color={palette.ink} style={{ fontSize: font(28) }}>
+          {tSettings("moments.label")}
         </Text>
         <Text
-          size="md"
+          size="lg"
           weight={400}
           color={palette.dim}
           style={{ textAlign: "center" }}
         >
-          {t("moments.introText")}
+          {tSettings("moments.description")} {tSettings("moments.notInOdyssey")}
+        </Text>
+        <Text
+          size="sm"
+          weight={400}
+          color={rgba(palette.dim, 0.75)}
+          style={{ textAlign: "center" }}
+        >
+          {t("moments.introLater")}
         </Text>
       </View>
       <MomentFrequencyPicker />
-      <Text
-        size="sm"
-        weight={400}
-        color={rgba(palette.dim, 0.75)}
-        style={{ textAlign: "center" }}
-      >
-        {t("moments.introLater")}
-      </Text>
+      <MomentButton
+        testID="moment-disable"
+        look="outline"
+        label={t("moments.noThanks")}
+        onPress={onDisable}
+      />
     </Animated.View>
   );
 }
 
 // --- The breath -----------------------------------------------------------
 
-type Hsl = { h: number; s: number; l: number };
-
-function toHsl(hex: string): Hsl {
-  const value = parseInt(hex.replace("#", "").slice(0, 6), 16);
-  const r = ((value >> 16) & 255) / 255;
-  const g = ((value >> 8) & 255) / 255;
-  const b = (value & 255) / 255;
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  const l = (max + min) / 2;
-  if (max === min) return { h: 0, s: 0, l };
-  const d = max - min;
-  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-  const h =
-    max === r
-      ? (g - b) / d + (g < b ? 6 : 0)
-      : max === g
-        ? (b - r) / d + 2
-        : (r - g) / d + 4;
-  return { h: h * 60, s, l };
-}
-
-function fromHsl({ h, s, l }: Hsl): string {
-  const k = (n: number) => (n + h / 30) % 12;
-  const a = s * Math.min(l, 1 - l);
-  const f = (n: number) =>
-    l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-  const hex = (x: number) =>
-    Math.round(Math.max(0, Math.min(1, x)) * 255)
-      .toString(16)
-      .padStart(2, "0");
-  return `#${hex(f(0))}${hex(f(8))}${hex(f(4))}`;
-}
-
-/** A calm sea-green, for an accent too grey to colour a breath. */
-const BREATH_FALLBACK: Hsl = { h: 172, s: 0.42, l: 0.55 };
-
-/** Three shades round the accent, one for each shape. */
-function breathColours(accent: string) {
-  const base = toHsl(accent);
-  const hue = base.s < 0.18 ? BREATH_FALLBACK : base;
-  const s = Math.max(0.35, Math.min(0.65, hue.s));
-  return [-22, 0, 22].map((shift) => {
-    const h = (hue.h + shift + 360) % 360;
-    return {
-      light: fromHsl({ h, s, l: 0.74 }),
-      mid: fromHsl({ h, s, l: 0.56 }),
-      deep: fromHsl({ h, s: s * 0.9, l: 0.3 }),
-    };
-  });
-}
-
 /**
- * Each shape: its size, how much its edge wobbles, which way it turns, and
- * how far its centre wanders, so the three overlap unevenly, never nested.
+ * Each shape: its soft, flat colour (mostly blues, with a green and a
+ * purple), its size, how much its edge wobbles, which way it turns, and how
+ * far its centre wanders, so they overlap unevenly, never nested.
  */
 const BLOBS = [
-  { radius: 72, wobble: 0.11, seed: 0.4, turn: 1, orbit: 10, opacity: 0.6 },
-  { radius: 68, wobble: 0.13, seed: 2.1, turn: -1, orbit: 12, opacity: 0.6 },
-  { radius: 64, wobble: 0.1, seed: 4.3, turn: 1, orbit: 9, opacity: 0.65 },
+  {
+    colour: "#7FA9DD",
+    radius: 72,
+    wobble: 0.11,
+    seed: 0.4,
+    turn: 1,
+    orbit: 10,
+  },
+  {
+    colour: "#A79BDB",
+    radius: 68,
+    wobble: 0.13,
+    seed: 2.1,
+    turn: -1,
+    orbit: 12,
+  },
+  { colour: "#86C8B4", radius: 64, wobble: 0.1, seed: 4.3, turn: 1, orbit: 9 },
+  {
+    colour: "#8FC3E8",
+    radius: 60,
+    wobble: 0.12,
+    seed: 5.6,
+    turn: -1,
+    orbit: 13,
+  },
 ];
+const BLOB_OPACITY = 0.55;
 const BLOB_POINTS = 8;
 
 /**
@@ -479,34 +489,47 @@ function blobPath(
 }
 
 function Blob({ drift, index }: { drift: SharedValue<number>; index: number }) {
-  const { radius, wobble, seed, turn, orbit, opacity } = BLOBS[index];
+  const { colour, radius, wobble, seed, turn, orbit } = BLOBS[index];
   const animatedProps = useAnimatedProps(() => ({
     d: blobPath(drift.value, radius, wobble, seed, turn, orbit),
   }));
   return (
     <AnimatedPath
       d={blobPath(0, radius, wobble, seed, turn, orbit)}
-      fill={`url(#breath-${index})`}
-      opacity={opacity}
+      fill={colour}
+      opacity={BLOB_OPACITY}
       animatedProps={animatedProps}
     />
   );
 }
 
+type BreathPhase = "in" | "hold" | "out";
+
+/** Each part of a breath: its words, how long, and where the shapes go. */
+const BREATH_PHASES: { phase: BreathPhase; ms: number; scale?: number }[] = [
+  { phase: "in", ms: BREATH.inMs, scale: 1 },
+  { phase: "hold", ms: BREATH.holdInMs },
+  { phase: "out", ms: BREATH.outMs, scale: BREATH_SMALL },
+];
+const BREATH_WORDS = {
+  in: "moments.breatheIn",
+  hold: "moments.breatheHold",
+  out: "moments.breatheOut",
+} as const;
+
 /**
- * Soft shapes to breathe with, filled and lit from above, slowly turning
- * and changing shape: together they swell while you breathe in, rest, and
- * slowly shrink while you breathe out, twice, with the one word for each
- * half under them.
+ * Soft, flat shapes to breathe with, slowly turning and changing shape:
+ * together they swell while you breathe in, stay while you hold, and slowly
+ * shrink while you breathe out, twice, with the words for each part under
+ * them.
  */
-function Breath({ accent }: { accent: string }) {
+function Breath() {
   const { t } = useTranslation("game");
-  const { spacing } = useResponsiveMetrics();
+  const { spacing, font } = useResponsiveMetrics();
   const palette = usePalette();
   const scale = useSharedValue(BREATH_SMALL);
   const drift = useSharedValue(0);
-  const [inhaling, setInhaling] = useState<boolean | null>(null);
-  const colours = useMemo(() => breathColours(accent), [accent]);
+  const [phase, setPhase] = useState<BreathPhase | null>(null);
 
   useEffect(() => {
     drift.value = withRepeat(
@@ -520,24 +543,22 @@ function Breath({ accent }: { accent: string }) {
   useEffect(() => {
     let alive = true;
     let timer: ReturnType<typeof setTimeout>;
-    let halves = 0;
-    const phase = (inhale: boolean) => {
-      if (!alive || halves >= BREATHS * 2) return;
-      halves += 1;
-      setInhaling(inhale);
-      scale.value = withTiming(inhale ? 1 : BREATH_SMALL, {
-        duration: inhale ? BREATH.inMs : BREATH.outMs,
-        easing: Easing.inOut(Easing.sin),
-      });
-      timer = setTimeout(
-        () => phase(!inhale),
-        inhale
-          ? BREATH.inMs + BREATH.holdInMs
-          : BREATH.outMs + BREATH.holdOutMs,
-      );
+    const step = (index: number) => {
+      if (!alive || index >= BREATHS * BREATH_PHASES.length) return;
+      const part = BREATH_PHASES[index % BREATH_PHASES.length];
+      setPhase(part.phase);
+      if (part.scale !== undefined) {
+        scale.value = withTiming(part.scale, {
+          duration: part.ms,
+          easing: Easing.inOut(Easing.sin),
+        });
+      }
+      // After breathing out, a short rest before the next breath in.
+      const rest = part.phase === "out" ? BREATH.holdOutMs : 0;
+      timer = setTimeout(() => step(index + 1), part.ms + rest);
     };
     // Begins once the black has come up.
-    timer = setTimeout(() => phase(true), IN_MS);
+    timer = setTimeout(() => step(0), IN_MS);
     return () => {
       alive = false;
       clearTimeout(timer);
@@ -556,58 +577,26 @@ function Breath({ accent }: { accent: string }) {
     >
       <Animated.View style={[{ width: size, height: size }, breathStyle]}>
         <Svg width={size} height={size} viewBox="-100 -100 200 200">
-          <Defs>
-            <RadialGradient
-              id="breath-glow"
-              cx="0"
-              cy="0"
-              r="100"
-              gradientUnits="userSpaceOnUse"
-            >
-              <Stop
-                offset="0.55"
-                stopColor={colours[1].mid}
-                stopOpacity={0.22}
-              />
-              <Stop offset="1" stopColor={colours[1].mid} stopOpacity={0} />
-            </RadialGradient>
-            {colours.map((colour, index) => (
-              <RadialGradient
-                key={index}
-                id={`breath-${index}`}
-                cx="0"
-                cy="0"
-                r={BLOBS[index].radius * 1.15}
-                fx={-BLOBS[index].radius * 0.3}
-                fy={-BLOBS[index].radius * 0.4}
-                gradientUnits="userSpaceOnUse"
-              >
-                <Stop offset="0" stopColor={colour.light} />
-                <Stop offset="0.6" stopColor={colour.mid} />
-                <Stop offset="1" stopColor={colour.deep} />
-              </RadialGradient>
-            ))}
-          </Defs>
-          <Path
-            d="M-100 0a100 100 0 1 0 200 0a100 100 0 1 0 -200 0Z"
-            fill="url(#breath-glow)"
-          />
           {BLOBS.map((_, index) => (
             <Blob key={index} drift={drift} index={index} />
           ))}
         </Svg>
       </Animated.View>
-      {/* The two words take turns in the same place. */}
-      <View style={{ width: spacing(160), height: spacing(28) }}>
-        {inhaling !== null && (
+      {/* The words take turns in the same place. */}
+      <View style={{ width: spacing(300), height: font(40) }}>
+        {phase !== null && (
           <Animated.View
-            key={inhaling ? "in" : "out"}
+            key={phase}
             entering={FadeIn.duration(900)}
             exiting={FadeOut.duration(600)}
             style={[StyleSheet.absoluteFill, { alignItems: "center" }]}
           >
-            <Text serif color={rgba(palette.ink, 0.75)} size="lg">
-              {inhaling ? t("moments.breatheIn") : t("moments.breatheOut")}
+            <Text
+              serif
+              color={rgba(palette.ink, 0.8)}
+              style={{ fontSize: font(28), lineHeight: font(38) }}
+            >
+              {t(BREATH_WORDS[phase])}
             </Text>
           </Animated.View>
         )}
@@ -635,12 +624,15 @@ function QuoteMoment({ quoteId }: { quoteId: number }) {
     [english, language, quoteId, settings.translateCollectibles],
   );
   if (!quote) return null;
+  // Large, but a long quote still has to fit a phone's screen.
+  const size =
+    quote.text.length <= 120 ? 32 : quote.text.length <= 220 ? 28 : 25;
   return (
     <View
       style={{
         alignItems: "center",
-        gap: spacing(22),
-        maxWidth: spacing(520),
+        gap: spacing(26),
+        maxWidth: spacing(560),
       }}
     >
       <Animated.View entering={FadeIn.delay(IN_MS / 2).duration(QUOTE_FADE_MS)}>
@@ -649,8 +641,8 @@ function QuoteMoment({ quoteId }: { quoteId: number }) {
           italic
           color={palette.ink}
           style={{
-            fontSize: font(24),
-            lineHeight: font(33),
+            fontSize: font(size),
+            lineHeight: font(size * 1.38),
             textAlign: "center",
           }}
         >
@@ -658,7 +650,7 @@ function QuoteMoment({ quoteId }: { quoteId: number }) {
         </Text>
       </Animated.View>
       <Animated.View
-        entering={FadeIn.delay(IN_MS / 2 + QUOTE_AUTHOR_AT_MS).duration(1500)}
+        entering={FadeIn.delay(IN_MS / 2 + QUOTE_AUTHOR_AT_MS).duration(2000)}
         style={{ alignItems: "center", gap: spacing(4) }}
       >
         <Text size="md" weight={500} color={rgba(palette.ink, 0.85)}>
@@ -773,44 +765,85 @@ const SETTLE_DECK: PlayingCard[] = Array.from(
   (_, i) => ({ id: `moment-${i}`, suit: "spades", rank: "A", faceUp: false }),
 );
 
-type SettleStart = {
-  x: number;
-  y: number;
-  rotation: number;
-  restX: number;
-  restY: number;
-  restRotation: number;
-};
+type SettleStart = { x: number; y: number; rotation: number };
 
-/** Scattered cards drift, one by one, into a neat pile, and rest there. */
+/** How far past the edges a card may start, in cards. */
+const SETTLE_OVERHANG = 0.35;
+/** How much of a card may start over where the pile will be, each way. */
+const SETTLE_PILE_OVERLAP = 0.25;
+
+/**
+ * Where each card starts, from the pile's centre: thrown anywhere, at any
+ * angle, some hanging off the edges and some just touching where the pile
+ * will be, but none covering it.
+ */
+function settleStarts(
+  count: number,
+  box: { width: number; height: number },
+  cardWidth: number,
+): SettleStart[] {
+  const cardHeight = cardWidth * CARD_ASPECT;
+  const maxX = box.width / 2 + cardWidth * SETTLE_OVERHANG;
+  const maxY = box.height / 2 + cardHeight * SETTLE_OVERHANG;
+  const clearX = cardWidth * (1 - SETTLE_PILE_OVERLAP);
+  const clearY = cardHeight * (1 - SETTLE_PILE_OVERLAP);
+  return Array.from({ length: count }, () => {
+    let x = 0;
+    let y = 0;
+    for (let attempt = 0; attempt < 30; attempt += 1) {
+      x = (Math.random() * 2 - 1) * maxX;
+      y = (Math.random() * 2 - 1) * maxY;
+      if (Math.abs(x) >= clearX || Math.abs(y) >= clearY) break;
+    }
+    // A space too small to miss the pile in: out to an edge instead.
+    if (Math.abs(x) < clearX && Math.abs(y) < clearY) {
+      if (maxX >= maxY) x = Math.random() < 0.5 ? -maxX : maxX;
+      else y = Math.random() < 0.5 ? -maxY : maxY;
+    }
+    return { x, y, rotation: (Math.random() * 2 - 1) * 180 };
+  });
+}
+
+/**
+ * Cards thrown about the screen drift, one by one, into a pile, and rest
+ * there, exactly square. None starts on top of where the pile will be, so
+ * it can be seen growing.
+ */
 function SettlingCards({ cardBackKey }: { cardBackKey?: string }) {
-  const { width, height } = useWindowDimensions();
   const { spacing } = useResponsiveMetrics();
-  const cardWidth = spacing(96);
-  const [starts] = useState<SettleStart[]>(() =>
-    SETTLE_DECK.map(() => ({
-      // Anywhere on the screen, but whole cards: none hang off its edges.
-      x: (Math.random() - 0.5) * (width - cardWidth * 1.6),
-      y: (Math.random() - 0.5) * (height * 0.6 - cardWidth * 1.4),
-      rotation: (Math.random() - 0.5) * 80,
-      // Where it comes to rest: nearly, but not quite, square on the pile.
-      restX: (Math.random() - 0.5) * 4,
-      restY: (Math.random() - 0.5) * 4,
-      restRotation: (Math.random() - 0.5) * 6,
-    })),
-  );
+  const cardWidth = spacing(84);
+  const [starts, setStarts] = useState<SettleStart[] | null>(null);
   return (
-    <View style={{ width: cardWidth, height: cardWidth * 1.4 }}>
-      {SETTLE_DECK.map((card, i) => (
-        <SettlingCard
-          key={card.id}
-          card={card}
-          index={i}
-          start={starts[i]}
-          cardWidth={cardWidth}
-          cardBackKey={cardBackKey}
-        />
-      ))}
+    <View
+      style={{
+        flex: 1,
+        alignSelf: "stretch",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onLayout={(event) => {
+        const { width, height } = event.nativeEvent.layout;
+        // Once: turning the screen mid-way doesn't scatter them again.
+        setStarts(
+          (current) =>
+            current ?? settleStarts(SETTLE_CARDS, { width, height }, cardWidth),
+        );
+      }}
+    >
+      {starts && (
+        <View style={{ width: cardWidth, height: cardWidth * CARD_ASPECT }}>
+          {SETTLE_DECK.map((card, i) => (
+            <SettlingCard
+              key={card.id}
+              card={card}
+              index={i}
+              start={starts[i]}
+              cardWidth={cardWidth}
+              cardBackKey={cardBackKey}
+            />
+          ))}
+        </View>
+      )}
     </View>
   );
 }
@@ -843,11 +876,10 @@ function SettlingCard({
     const p = progress.value;
     return {
       transform: [
-        { translateX: start.x + (start.restX - start.x) * p },
-        { translateY: start.y + (start.restY - start.y) * p },
-        {
-          rotate: `${start.rotation + (start.restRotation - start.rotation) * p}deg`,
-        },
+        // All end at the same place, square: nothing left over.
+        { translateX: start.x * (1 - p) },
+        { translateY: start.y * (1 - p) },
+        { rotate: `${start.rotation * (1 - p)}deg` },
       ],
     };
   });

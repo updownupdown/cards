@@ -89,12 +89,12 @@
     "press": "Pulsa {{label}}"
   },
   "moments": {
-    "breatheIn": "inhala",
-    "breatheOut": "exhala",
+    "breatheIn": "inhala…",
+    "breatheHold": "mantén…",
+    "breatheOut": "exhala…",
     "skip": "Omitir el momento de calma",
     "continue": "Continuar",
-    "introTitle": "Momentos de calma",
-    "introText": "De vez en cuando, tras una victoria, una breve pausa: una respiración, una cita, una mirada de cerca a la obra del juego.",
+    "noThanks": "¡No, gracias!",
     "introLater": "Puedes cambiarlo cuando quieras en Ajustes.",
     "zoomHint": "Amplía para mirar de cerca."
   }

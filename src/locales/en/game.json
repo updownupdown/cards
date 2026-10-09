@@ -89,12 +89,12 @@
     "press": "Press {{label}}"
   },
   "moments": {
-    "breatheIn": "in",
-    "breatheOut": "out",
+    "breatheIn": "breathe in…",
+    "breatheHold": "hold…",
+    "breatheOut": "breathe out…",
     "skip": "Skip quiet moment",
     "continue": "Continue",
-    "introTitle": "Quiet moments",
-    "introText": "Now and then, after a win, a short pause: a breath, a quote, a closer look at the game's art.",
+    "noThanks": "No thank you!",
     "introLater": "You can change this any time in Settings.",
     "zoomHint": "Zoom in to look closer."
   }

@@ -90,12 +90,10 @@
   },
   "moments": {
     "label": "Momentos de calma",
-    "description": "De vez em quando, depois de uma vitória fora da Odisseia, um momento de pausa antes da próxima partida.",
-    "every": "A cada:",
-    "off": "Desativado",
-    "every3": "~3 partidas",
-    "every5": "~5 partidas",
-    "every10": "~10 partidas",
+    "description": "Viva um momento de reflexão depois de uma partida.",
+    "notInOdyssey": "Não aparece durante as partidas da Odisseia.",
+    "every": "A cada ~{{count}} partidas",
+    "everyGame": "A cada partida",
     "previewTitle": "Pré-visualizar um momento",
     "preview": {
       "intro": "A primeira vez (o ajuste)",

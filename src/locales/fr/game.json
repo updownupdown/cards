@@ -89,12 +89,12 @@
     "press": "Appuyez sur {{label}}"
   },
   "moments": {
-    "breatheIn": "inspirez",
-    "breatheOut": "expirez",
+    "breatheIn": "inspirez…",
+    "breatheHold": "retenez…",
+    "breatheOut": "expirez…",
     "skip": "Passer le moment calme",
     "continue": "Continuer",
-    "introTitle": "Moments calmes",
-    "introText": "De temps en temps, après une victoire, une courte pause : une respiration, une citation, un regard sur l'œuvre du jeu.",
+    "noThanks": "Non merci !",
     "introLater": "Vous pourrez le changer à tout moment dans les Paramètres.",
     "zoomHint": "Zoomez pour regarder de plus près."
   }

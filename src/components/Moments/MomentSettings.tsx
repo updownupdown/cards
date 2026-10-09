@@ -28,8 +28,8 @@ function previewMoment(kind: MomentKind): Moment {
 }
 
 /**
- * The Quiet moments setting: how often one follows a win outside the
- * Odyssey. In dev mode every kind of moment is listed under it, to preview.
+ * The Quiet moments setting: whether, and how often, one follows a win
+ * outside the Odyssey. In dev mode every kind of moment is listed under it, to preview.
  */
 export function MomentSettings() {
   const { spacing } = useResponsiveMetrics();
@@ -40,15 +40,12 @@ export function MomentSettings() {
 
   return (
     <View style={{ width: "100%", gap: spacing(10) }}>
-      <View style={{ gap: spacing(4) }}>
-        <Text weight={500} size="md" color={palette.ink}>
-          {t("moments.label")}
-        </Text>
-        <Text size="sm" weight={400} color={palette.dim}>
-          {t("moments.description")}
-        </Text>
-      </View>
-      <MomentFrequencyPicker />
+      <MomentFrequencyPicker
+        toggle={{
+          label: t("moments.label"),
+          description: `${t("moments.description")} ${t("moments.notInOdyssey")}`,
+        }}
+      />
 
       {devMode && (
         <View
@@ -87,11 +84,7 @@ export function MomentSettings() {
           {/* A native Modal is its own root, so the picture's gestures need
               their own GestureHandlerRootView. */}
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <MomentOverlay
-              moment={preview}
-              accent={palette.accent}
-              onDone={() => setPreview(null)}
-            />
+            <MomentOverlay moment={preview} onDone={() => setPreview(null)} />
           </GestureHandlerRootView>
         </Modal>
       )}

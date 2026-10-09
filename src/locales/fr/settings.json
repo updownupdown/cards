@@ -90,12 +90,10 @@
   },
   "moments": {
     "label": "Moments calmes",
-    "description": "De temps en temps, après une victoire hors de l'Odyssée, un moment de pause avant la prochaine donne.",
-    "every": "Tous les :",
-    "off": "Désactivé",
-    "every3": "~3 parties",
-    "every5": "~5 parties",
-    "every10": "~10 parties",
+    "description": "Vivez un moment de réflexion après une partie.",
+    "notInOdyssey": "Non affiché pendant les parties de l'Odyssée.",
+    "every": "Toutes les ~{{count}} parties",
+    "everyGame": "Chaque partie",
     "previewTitle": "Aperçu d'un moment",
     "preview": {
       "intro": "La première fois (le réglage)",

@@ -90,12 +90,10 @@
   },
   "moments": {
     "label": "Momenti di quiete",
-    "description": "Ogni tanto, dopo una vittoria fuori dall'Odissea, un momento di pausa prima della prossima partita.",
-    "every": "Ogni:",
-    "off": "Disattivato",
-    "every3": "~3 partite",
-    "every5": "~5 partite",
-    "every10": "~10 partite",
+    "description": "Vivi un momento di riflessione dopo una partita.",
+    "notInOdyssey": "Non compare durante le partite dell'Odissea.",
+    "every": "Ogni ~{{count}} partite",
+    "everyGame": "Ogni partita",
     "previewTitle": "Anteprima di un momento",
     "preview": {
       "intro": "La prima volta (l'impostazione)",

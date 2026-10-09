@@ -90,12 +90,10 @@
   },
   "moments": {
     "label": "Momen tenang",
-    "description": "Sesekali, setelah menang di luar Pengembaraan, ada momen untuk berhenti sejenak sebelum permainan berikutnya.",
-    "every": "Setiap:",
-    "off": "Nonaktif",
-    "every3": "~3 permainan",
-    "every5": "~5 permainan",
-    "every10": "~10 permainan",
+    "description": "Nikmati momen perenungan setelah bermain.",
+    "notInOdyssey": "Tidak muncul selama permainan Pengembaraan.",
+    "every": "Setiap ~{{count}} permainan",
+    "everyGame": "Setiap permainan",
     "previewTitle": "Pratinjau momen",
     "preview": {
       "intro": "Pertama kali (pengaturan)",

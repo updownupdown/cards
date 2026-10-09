@@ -750,11 +750,11 @@ export const GameWrapper = ({
         />
       )}
 
-      {moment && (
+      {/* Never on top of a collectible just won: that has its own reveal. */}
+      {moment && !campaignWinResult?.awardedReward && (
         <MomentOverlay
           key={momentKey(moment)}
           moment={moment}
-          accent={gameInfo.gameColorAccent}
           cardBackKey={gameInfo.cardBack.toLowerCase()}
           delayMs={REVEAL_TIMING.delayMs}
           onDone={() => setMoment(null)}

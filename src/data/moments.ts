@@ -10,26 +10,27 @@ import { MOMENTS_STORAGE_KEY } from "./storage-keys";
  * "Skip quiet moment" at the foot (with how long is left) ends it at once.
  *
  * The first one is the setting itself, so the player picks how often they
- * come (or turns them off) before ever seeing one. How often is saved under
+ * come (or turns them off) before ever seeing one. The choice is saved under
  * its own key, which is only written once that choice has been shown.
  */
-export type MomentFrequency = "off" | "every3" | "every5" | "every10";
+export type MomentSettings = {
+  enabled: boolean;
+  /** A moment follows about one win in this many. */
+  every: number;
+};
 
-export const MOMENT_FREQUENCIES: readonly MomentFrequency[] = [
-  "off",
-  "every3",
-  "every5",
-  "every10",
-];
-export const DEFAULT_MOMENT_FREQUENCY: MomentFrequency = "every5";
+/** 1 is every win. */
+export const MOMENT_EVERY_MIN = 1;
+export const MOMENT_EVERY_MAX = 15;
+export const DEFAULT_MOMENT_SETTINGS: MomentSettings = {
+  enabled: true,
+  every: 3,
+};
 
 /** The chance that a win is followed by a moment: about one in N games. */
-export const MOMENT_CHANCE: Record<MomentFrequency, number> = {
-  off: 0,
-  every3: 1 / 3,
-  every5: 1 / 5,
-  every10: 1 / 10,
-};
+export function momentChance({ enabled, every }: MomentSettings) {
+  return enabled ? 1 / every : 0;
+}
 
 export type MomentKind = "intro" | "breathe" | "settle" | "quote" | "artwork";
 
@@ -53,19 +54,40 @@ export function momentKey(moment: Moment) {
   return moment.kind;
 }
 
-export function parseMomentFrequency(saved: string | null): MomentFrequency {
-  return (MOMENT_FREQUENCIES as readonly string[]).includes(saved ?? "")
-    ? (saved as MomentFrequency)
-    : DEFAULT_MOMENT_FREQUENCY;
+function clampEvery(every: unknown) {
+  return typeof every === "number" && Number.isFinite(every)
+    ? Math.min(MOMENT_EVERY_MAX, Math.max(MOMENT_EVERY_MIN, Math.round(every)))
+    : DEFAULT_MOMENT_SETTINGS.every;
 }
 
-const frequency = createStore<MomentFrequency>(DEFAULT_MOMENT_FREQUENCY);
+/**
+ * The saved choice, or null if there is none yet (or it can't be read).
+ * Before the slider it was one word: "off", or "every3", "every5", "every10".
+ */
+export function parseMomentSettings(
+  saved: string | null,
+): MomentSettings | null {
+  if (!saved) return null;
+  if (saved === "off") return { ...DEFAULT_MOMENT_SETTINGS, enabled: false };
+  const word = /^every(\d+)$/.exec(saved);
+  if (word) return { enabled: true, every: clampEvery(Number(word[1])) };
+  try {
+    const parsed: unknown = JSON.parse(saved);
+    if (!parsed || typeof parsed !== "object") return null;
+    const { enabled, every } = parsed as Record<string, unknown>;
+    return { enabled: enabled !== false, every: clampEvery(every) };
+  } catch {
+    return null;
+  }
+}
+
+const settings = createStore<MomentSettings>(DEFAULT_MOMENT_SETTINGS);
 /** Whether the player has been shown the choice (a moment's first time). */
 let introduced = false;
 let last: { kind: MomentKind; quoteId?: number } | null = null;
 
-export function getMomentFrequency() {
-  return frequency.get();
+export function getMomentSettings() {
+  return settings.get();
 }
 
 export function isMomentIntroduced() {
@@ -73,33 +95,33 @@ export function isMomentIntroduced() {
 }
 
 /** Reads the saved choice; called once at startup. */
-export async function loadMomentFrequency() {
+export async function loadMomentSettings() {
   try {
-    const saved = await AsyncStorage.getItem(MOMENTS_STORAGE_KEY);
-    introduced = (MOMENT_FREQUENCIES as readonly string[]).includes(
-      saved ?? "",
+    const saved = parseMomentSettings(
+      await AsyncStorage.getItem(MOMENTS_STORAGE_KEY),
     );
-    frequency.set(parseMomentFrequency(saved));
+    introduced = saved !== null;
+    settings.set(saved ?? DEFAULT_MOMENT_SETTINGS);
   } catch {
-    frequency.set(DEFAULT_MOMENT_FREQUENCY);
+    settings.set(DEFAULT_MOMENT_SETTINGS);
   }
-  return frequency.get();
+  return settings.get();
 }
 
 /** Saves a choice, which also means the player has seen it. */
-export async function saveMomentFrequency(next: MomentFrequency) {
-  frequency.set(next);
+export async function saveMomentSettings(next: MomentSettings) {
+  settings.set(next);
   introduced = true;
-  await AsyncStorage.setItem(MOMENTS_STORAGE_KEY, next);
+  await AsyncStorage.setItem(MOMENTS_STORAGE_KEY, JSON.stringify(next));
 }
 
 /** The player's choice, updating when it changes. */
-export function useMomentFrequency() {
-  return frequency.use();
+export function useMomentSettings() {
+  return settings.use();
 }
 
 export type MomentOptions = {
-  frequency?: MomentFrequency;
+  settings?: MomentSettings;
   random?: () => number;
   /** Whether the choice has been shown; if not, it is the moment. */
   introduced?: boolean;
@@ -115,13 +137,13 @@ export type MomentOptions = {
  * shown last, and a quote never twice running.
  */
 export function rollMoment({
-  frequency: chosen = frequency.get(),
+  settings: chosen = settings.get(),
   random = Math.random,
   introduced: shown = introduced,
   quoteIds = [],
   artworkPath,
 }: MomentOptions = {}): Moment | null {
-  if (random() >= MOMENT_CHANCE[chosen]) return null;
+  if (random() >= momentChance(chosen)) return null;
   if (!shown) return { kind: "intro" };
 
   const quotes = quoteIds.filter((id) => id !== last?.quoteId);

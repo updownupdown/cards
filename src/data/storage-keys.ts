@@ -33,7 +33,7 @@ export const SWIPE_DISMISS_STORAGE_KEY = "cards.swipeDismiss.v1";
  */
 export const EARNED_ACHIEVEMENTS_STORAGE_KEY = "cards.achievements.v1";
 /**
- * How often a quiet moment follows a win outside the Odyssey: "off",
- * "infrequent" or "frequent".
+ * Whether, and how often, a quiet moment follows a win outside the Odyssey:
+ * JSON, `{ enabled, every }`.
  */
 export const MOMENTS_STORAGE_KEY = "cards.moments.v1";

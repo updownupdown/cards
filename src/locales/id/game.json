@@ -89,12 +89,12 @@
     "press": "Tekan {{label}}"
   },
   "moments": {
-    "breatheIn": "tarik napas",
-    "breatheOut": "embuskan",
+    "breatheIn": "tarik napas…",
+    "breatheHold": "tahan…",
+    "breatheOut": "embuskan…",
     "skip": "Lewati momen tenang",
     "continue": "Lanjutkan",
-    "introTitle": "Momen tenang",
-    "introText": "Sesekali, setelah menang, ada jeda singkat: satu tarikan napas, sebuah kutipan, atau melihat lebih dekat karya seni permainan.",
+    "noThanks": "Tidak, terima kasih!",
     "introLater": "Bisa diubah kapan saja di Pengaturan.",
     "zoomHint": "Perbesar untuk melihat lebih dekat."
   }

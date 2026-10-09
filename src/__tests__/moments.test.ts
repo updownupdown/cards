@@ -1,41 +1,64 @@
 import { describe, expect, test } from "@jest/globals";
 import settingsEn from "@/locales/en/settings.json";
 import {
-  MOMENT_CHANCE,
-  MOMENT_FREQUENCIES,
+  DEFAULT_MOMENT_SETTINGS,
   MOMENT_KINDS,
-  parseMomentFrequency,
+  momentChance,
+  parseMomentSettings,
   rollMoment,
   type Moment,
 } from "@/data/moments";
 import { momentDuration } from "@/components/Moments/MomentOverlay";
 
 const always = () => 0;
+const every = (n: number) => ({ enabled: true, every: n });
 
 describe("Quiet moments", () => {
-  test("every kind and frequency has a name in the settings", () => {
+  test("every kind has a name in the settings", () => {
     for (const kind of MOMENT_KINDS) {
       expect(settingsEn.moments.preview[kind]).toBeTruthy();
     }
-    for (const frequency of MOMENT_FREQUENCIES) {
-      expect(settingsEn.moments[frequency]).toBeTruthy();
-    }
+    expect(settingsEn.moments.every).toContain("{{count}}");
+    expect(settingsEn.moments.everyGame).toBeTruthy();
   });
 
-  test("never comes when disabled, and comes about once in N games", () => {
-    expect(rollMoment({ frequency: "off", random: always })).toBeNull();
-    expect(MOMENT_CHANCE.every3).toBeCloseTo(1 / 3);
-    expect(MOMENT_CHANCE.every10).toBeCloseTo(1 / 10);
-    const roll = (frequency: "every5" | "every10", value: number) =>
-      rollMoment({ frequency, random: () => value, introduced: true });
-    expect(roll("every5", 0.15)).not.toBeNull();
-    expect(roll("every10", 0.15)).toBeNull();
+  test("never comes when turned off, and comes about once in N games", () => {
+    const off = { enabled: false, every: 3 };
+    expect(rollMoment({ settings: off, random: always })).toBeNull();
+    expect(momentChance(every(3))).toBeCloseTo(1 / 3);
+    expect(momentChance(every(15))).toBeCloseTo(1 / 15);
+    // At 1, every win: whatever is rolled.
+    expect(
+      rollMoment({
+        settings: every(1),
+        random: () => 0.999,
+        introduced: false,
+      }),
+    ).not.toBeNull();
+    const roll = (n: number, value: number) =>
+      rollMoment({ settings: every(n), random: () => value, introduced: true });
+    expect(roll(5, 0.15)).not.toBeNull();
+    expect(roll(10, 0.15)).toBeNull();
   });
 
-  test("defaults to about every five games", () => {
-    expect(parseMomentFrequency(null)).toBe("every5");
-    expect(parseMomentFrequency("frequent")).toBe("every5");
-    expect(parseMomentFrequency("off")).toBe("off");
+  test("defaults to on, about every three games", () => {
+    expect(DEFAULT_MOMENT_SETTINGS).toEqual({ enabled: true, every: 3 });
+    expect(parseMomentSettings(null)).toBeNull();
+    expect(parseMomentSettings("frequent")).toBeNull();
+  });
+
+  test("reads a saved choice, kept between 1 and 15", () => {
+    const saved = (value: unknown) =>
+      parseMomentSettings(JSON.stringify(value));
+    expect(saved({ enabled: false, every: 9 })).toEqual({
+      enabled: false,
+      every: 9,
+    });
+    expect(saved({ enabled: true, every: 40 })?.every).toBe(15);
+    expect(saved({ enabled: true, every: 0 })?.every).toBe(1);
+    // The one-word choices from before the slider.
+    expect(parseMomentSettings("off")?.enabled).toBe(false);
+    expect(parseMomentSettings("every10")).toEqual(every(10));
   });
 
   test("the first moment is the setting", () => {
@@ -48,7 +71,7 @@ describe("Quiet moments", () => {
     const seen = new Set<string>();
     for (let i = 0; i < 200; i += 1) {
       const moment = rollMoment({
-        frequency: "every3",
+        settings: every(3),
         random: Math.random,
         introduced: true,
         quoteIds: [7, 12],
@@ -63,7 +86,7 @@ describe("Quiet moments", () => {
 
     for (let i = 0; i < 50; i += 1) {
       const moment = rollMoment({
-        frequency: "every3",
+        settings: every(3),
         random: Math.random,
         introduced: true,
       });
@@ -75,7 +98,7 @@ describe("Quiet moments", () => {
     let last: string | null = null;
     for (let i = 0; i < 200; i += 1) {
       const moment = rollMoment({
-        frequency: "every3",
+        settings: every(3),
         random: Math.random,
         introduced: true,
         quoteIds: [1, 2, 3],

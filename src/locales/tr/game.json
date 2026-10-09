@@ -89,12 +89,12 @@
     "press": "{{label}} düğmesine dokunun"
   },
   "moments": {
-    "breatheIn": "nefes al",
-    "breatheOut": "nefes ver",
+    "breatheIn": "nefes al…",
+    "breatheHold": "tut…",
+    "breatheOut": "nefes ver…",
     "skip": "Sakin anı geç",
     "continue": "Devam et",
-    "introTitle": "Sakin anlar",
-    "introText": "Arada bir, bir galibiyetten sonra kısa bir mola: bir nefes, bir alıntı, oyunun eserine yakından bir bakış.",
+    "noThanks": "Hayır, teşekkürler!",
     "introLater": "Bunu istediğin zaman Ayarlar'dan değiştirebilirsin.",
     "zoomHint": "Daha yakından bakmak için yakınlaştır."
   }
