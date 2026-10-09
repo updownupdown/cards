@@ -8,11 +8,11 @@
   },
   "stored": {
     "title": "Data yang disimpan di perangkatmu",
-    "body": "Solitarius menyimpan statistik permainan, favorit, pengaturan, dan permainan yang sedang berjalan di penyimpanan lokal perangkat. Informasi ini tidak pernah meninggalkan perangkatmu, tidak pernah dikirim kepada kami atau pihak ketiga mana pun, dan terhapus otomatis jika kamu mencopot aplikasi atau menghapus datanya."
+    "body": "Solitarius menyimpan statistik permainan, favorit, pengaturan, dan permainan yang sedang berjalan di penyimpanan lokal perangkat. Informasi ini tidak pernah dikirim kepada kami atau pihak ketiga mana pun. Jika perangkatmu mencadangkan data aplikasi (di Android, ke akun Google-mu, jika diaktifkan), salinannya bisa tersimpan dalam cadangan itu, yang tunduk pada kebijakan privasi Google, bukan kebijakan kami. Data ini terhapus jika kamu mencopot aplikasi atau menghapus datanya."
   },
   "collected": {
     "title": "Data yang kami kumpulkan",
-    "body": "Hanya diagnostik kerusakan. Saat aplikasi mengalami error atau berhenti, aplikasi mengirim laporan ke Sentry, layanan pemantauan error, agar masalahnya bisa ditemukan dan diperbaiki. Laporan berisi error dan bagian kode asalnya, model perangkatmu, versi sistem operasi dan versi aplikasi, serta catatan singkat tentang apa yang terjadi sebelumnya, misalnya permainan yang sedang dibuka. Laporan tidak berisi nama, alamat email, lokasi, atau informasi pribadi lainnya, dan alamat IP tidak disimpan. Mematikan “Kirim laporan kerusakan” di pengaturan menghentikannya sepenuhnya."
+    "body": "Hanya diagnostik kerusakan. Saat aplikasi mengalami error atau berhenti, aplikasi mengirim laporan ke Sentry, layanan pemantauan error, agar masalahnya bisa ditemukan dan diperbaiki. Laporan berisi error dan bagian kode asalnya, model perangkatmu, versi sistem operasi dan versi aplikasi, catatan singkat tentang apa yang terjadi sebelumnya, misalnya permainan yang sedang dibuka, serta, di Android, pengenal acak yang dibuat saat aplikasi dipasang, agar laporan berulang dari satu pemasangan bisa dihitung bersama. Pengenal itu tidak terkait denganmu, akunmu, atau perangkatmu, dan pemasangan ulang membuat pengenal baru. Laporan tidak berisi nama, alamat email, lokasi, atau informasi pribadi lainnya, dan alamat IP tidak disimpan. Mematikan “Kirim laporan kerusakan” di pengaturan menghentikannya sepenuhnya."
   },
   "links": {
     "title": "Tautan eksternal",

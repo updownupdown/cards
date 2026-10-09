@@ -49,7 +49,13 @@ Alternatives:
 3. **The setting:** `crashReports` in `GlobalSettings`, on by default, with a
    "Send crash reports" toggle in the settings modal. The module mirrors the
    value in a variable of its own, because `beforeSend` is synchronous and the
-   settings cache is native-only (and empty at startup).
+   settings cache is native-only (and empty at startup). `beforeSend` only
+   sees JavaScript events, though: a native crash or an ANR is sent by the
+   native SDK on the next launch whatever it returns. So the SDK waits for
+   the saved setting before it starts (a storage read, so only a failure in
+   the first moments goes unreported), and `Sentry.close()` shuts it down,
+   native side included, when the player turns reports off; turning them
+   back on starts it again.
 4. **Config:** the `@sentry/react-native/expo` plugin in `app.config.js`, and
    `getSentryExpoConfig` in `metro.config.js` for source maps. `extra.sentryDsn`
    carries the DSN and `extra.sentryEnvironment` the EAS build profile.
@@ -87,7 +93,11 @@ would mean turning tracing on.
   collect" and "Children's privacy" sections now describe the diagnostics sent,
   say that no personal information is included and that IP addresses are not
   stored, and point at the setting. Translated into all seven languages, and the
-  policy's date moved to 2026-09-21.
+  policy's date moved to 2026-09-21. On 2026-10-09, "Data we collect" gained
+  the installation id the Android SDK attaches to every event as `user.id`
+  (`Installation.id`, random, new on each install, sent whatever
+  `sendDefaultPii` says), and "Data stored on your device" the copy Android's
+  own backup may keep (Expo leaves `allowBackup` on).
 - **Settings:** done - "Send crash reports", on by default.
 - **Sentry project settings** and the **store forms** are still to do; see
   "What's left".
@@ -119,9 +129,13 @@ would mean turning tracing on.
    `Sentry.nativeCrash()`. Confirm both arrive with readable stack traces, and
    that turning the setting off stops them. Remove the action afterwards.
 4. **Sentry project settings:** turn on "Prevent storing of IP addresses" - the
-   privacy policy now promises it.
+   privacy policy now promises it. (Settings -> Projects -> solitarius ->
+   Security & Privacy; the organization has the same switch, which applies to
+   every project.) Leave "Data Scrubber" and "Use Default Scrubbers" on there.
 5. **Google Play data safety form:** declare "Crash logs" and "Diagnostics",
    collected for app stability, not shared, not linked to identity, encrypted in
-   transit. App Store: "Crash Data", not linked to the user.
+   transit, optional (the setting). The installation id counts as "Device or
+   other IDs": the same answers. App Store: "Crash Data", not linked to the
+   user.
 6. **Measure on the Pixel 7:** cold start (0.65-0.8 s before), memory and APK
    size.

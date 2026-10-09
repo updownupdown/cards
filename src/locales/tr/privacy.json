@@ -8,11 +8,11 @@
   },
   "stored": {
     "title": "Cihazında saklanan veriler",
-    "body": "Solitarius oyun istatistiklerini, favorilerini, ayarlarını ve devam eden oyunlarını cihazın yerel depolama alanına kaydeder. Bu bilgiler cihazından asla çıkmaz, bize veya herhangi bir üçüncü tarafa asla gönderilmez ve uygulamayı kaldırdığında ya da verilerini temizlediğinde otomatik olarak silinir."
+    "body": "Solitarius oyun istatistiklerini, favorilerini, ayarlarını ve devam eden oyunlarını cihazın yerel depolama alanına kaydeder. Bu bilgiler bize veya herhangi bir üçüncü tarafa asla gönderilmez. Cihazın uygulama verilerini yedekliyorsa (Android'de, açıksa, Google hesabına), bir kopyası o yedekte tutulabilir; bu yedek bizim değil Google'ın gizlilik politikasına tabidir. Uygulamayı kaldırdığında ya da verilerini temizlediğinde bu veriler silinir."
   },
   "collected": {
     "title": "Topladığımız veriler",
-    "body": "Yalnızca hata tanılaması. Uygulama bir hatayla karşılaştığında veya çöktüğünde, sorunun bulunup düzeltilebilmesi için Sentry adlı hata izleme hizmetine bir rapor gönderir. Rapor; hatayı ve koddaki kaynağını, cihazının modelini, işletim sistemi sürümünü ve uygulama sürümünü, ayrıca hemen öncesinde olanların kısa bir listesini (örneğin hangi oyunun açık olduğunu) içerir. Ad, e-posta adresi, konum veya başka bir kişisel bilgi içermez ve IP adresleri saklanmaz. Ayarlardan “Hata raporları gönder” seçeneğini kapatmak bunu tamamen durdurur."
+    "body": "Yalnızca hata tanılaması. Uygulama bir hatayla karşılaştığında veya çöktüğünde, sorunun bulunup düzeltilebilmesi için Sentry adlı hata izleme hizmetine bir rapor gönderir. Rapor; hatayı ve koddaki kaynağını, cihazının modelini, işletim sistemi sürümünü ve uygulama sürümünü, hemen öncesinde olanların kısa bir listesini (örneğin hangi oyunun açık olduğunu) ve Android'de, aynı kurulumdan gelen tekrarlanan raporların birlikte sayılabilmesi için uygulama kurulduğunda oluşturulan rastgele bir tanımlayıcıyı içerir. Bu tanımlayıcı seninle, hesabınla veya cihazınla bağlantılı değildir ve yeniden kurulumda yenisi oluşturulur. Rapor ad, e-posta adresi, konum veya başka bir kişisel bilgi içermez ve IP adresleri saklanmaz. Ayarlardan “Hata raporları gönder” seçeneğini kapatmak bunu tamamen durdurur."
   },
   "links": {
     "title": "Dış bağlantılar",

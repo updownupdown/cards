@@ -8,11 +8,11 @@
   },
   "stored": {
     "title": "Dati salvati sul tuo dispositivo",
-    "body": "Solitarius salva le statistiche di gioco, i preferiti, le impostazioni e le partite in corso nella memoria locale del dispositivo. Queste informazioni non lasciano mai il dispositivo, non vengono mai trasmesse a noi né a terzi e vengono rimosse automaticamente se disinstalli l'app o ne cancelli i dati."
+    "body": "Solitarius salva le statistiche di gioco, i preferiti, le impostazioni e le partite in corso nella memoria locale del dispositivo. Queste informazioni non vengono mai trasmesse a noi né a terzi. Se il dispositivo esegue il backup dei dati delle app (su Android, nel tuo account Google, se l'opzione è attiva), una copia può essere conservata in quel backup, che è soggetto all'informativa sulla privacy di Google e non alla nostra. I dati vengono rimossi se disinstalli l'app o ne cancelli i dati."
   },
   "collected": {
     "title": "Dati che raccogliamo",
-    "body": "Solo diagnostica degli errori. Quando l'app incontra un errore o si blocca, invia una segnalazione a Sentry, un servizio di monitoraggio degli errori, così il problema può essere individuato e corretto. La segnalazione contiene l'errore e il punto del codice da cui proviene, il modello del dispositivo, la versione del sistema operativo e quella dell'app, e un breve elenco di ciò che è successo poco prima, come il gioco che era aperto. Non contiene nome, indirizzo e-mail, posizione o altre informazioni personali, e gli indirizzi IP non vengono conservati. Disattivare «Invia segnalazioni di errore» nelle impostazioni interrompe del tutto questo invio."
+    "body": "Solo diagnostica degli errori. Quando l'app incontra un errore o si blocca, invia una segnalazione a Sentry, un servizio di monitoraggio degli errori, così il problema può essere individuato e corretto. La segnalazione contiene l'errore e il punto del codice da cui proviene, il modello del dispositivo, la versione del sistema operativo e quella dell'app, un breve elenco di ciò che è successo poco prima, come il gioco che era aperto, e, su Android, un identificatore casuale creato all'installazione dell'app, così le segnalazioni ripetute di una stessa installazione possono essere contate insieme. Quell'identificatore non è collegato a te, al tuo account o al tuo dispositivo, e una reinstallazione ne crea uno nuovo. La segnalazione non contiene nome, indirizzo e-mail, posizione o altre informazioni personali, e gli indirizzi IP non vengono conservati. Disattivare «Invia segnalazioni di errore» nelle impostazioni interrompe del tutto questo invio."
   },
   "links": {
     "title": "Link esterni",

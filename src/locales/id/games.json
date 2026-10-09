@@ -482,6 +482,12 @@
     "theWolfBeatYou": "Serigala mengalahkanmu {{wolfScore}}-{{playerScore}}.",
     "wolf": "Serigala",
     "round": "Ronde",
+    "action": {
+      "perfect": "Sama",
+      "sum": "Jumlah",
+      "split": "Pecah",
+      "over": "Lampaui"
+    },
     "selectCardsToCapture": "Pilih kartu untuk ditangkap",
     "hint": {
       "fold": "Menyerahlah: lanjut bermain akan lebih merugikan",

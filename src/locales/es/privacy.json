@@ -8,11 +8,11 @@
   },
   "stored": {
     "title": "Datos almacenados en tu dispositivo",
-    "body": "Solitarius guarda tus estadísticas de juego, favoritos, ajustes y partidas en curso en el almacenamiento local de tu dispositivo. Esta información nunca sale de tu dispositivo, nunca se nos transmite a nosotros ni a terceros, y se elimina automáticamente si desinstalas la app o borras sus datos."
+    "body": "Solitarius guarda tus estadísticas de juego, favoritos, ajustes y partidas en curso en el almacenamiento local de tu dispositivo. Esta información nunca se nos envía a nosotros ni a terceros. Si tu dispositivo hace copias de seguridad de los datos de sus apps (en Android, en tu cuenta de Google, si lo tienes activado), puede guardarse una copia en esa copia de seguridad, que se rige por la política de privacidad de Google y no por la nuestra. Los datos se eliminan si desinstalas la app o borras sus datos."
   },
   "collected": {
     "title": "Datos que recopilamos",
-    "body": "Solo diagnósticos de errores. Cuando la app encuentra un error o se cierra de forma inesperada, envía un informe a Sentry, un servicio de supervisión de errores, para que el fallo pueda localizarse y corregirse. El informe contiene el error y el punto del código del que procede, el modelo de tu dispositivo, la versión de su sistema operativo y la de la app, y un breve historial de lo ocurrido justo antes, como el juego que estaba abierto. No contiene nombre, dirección de correo electrónico, ubicación ni ninguna otra información personal, y las direcciones IP no se almacenan. Desactivar «Enviar informes de errores» en los ajustes detiene esto por completo."
+    "body": "Solo diagnósticos de errores. Cuando la app encuentra un error o se cierra de forma inesperada, envía un informe a Sentry, un servicio de supervisión de errores, para que el fallo pueda localizarse y corregirse. El informe contiene el error y el punto del código del que procede, el modelo de tu dispositivo, la versión de su sistema operativo y la de la app, un breve historial de lo ocurrido justo antes, como el juego que estaba abierto, y, en Android, un identificador aleatorio creado al instalar la app, para que los informes repetidos de una misma instalación puedan contarse juntos. Ese identificador no está vinculado a ti, a tu cuenta ni a tu dispositivo, y una reinstalación crea uno nuevo. El informe no contiene nombre, dirección de correo electrónico, ubicación ni ninguna otra información personal, y las direcciones IP no se almacenan. Desactivar «Enviar informes de errores» en los ajustes detiene esto por completo."
   },
   "links": {
     "title": "Enlaces externos",

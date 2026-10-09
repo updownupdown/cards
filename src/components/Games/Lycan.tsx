@@ -377,9 +377,18 @@ function executeLycanCaptureAction(
 
 // ── Hints ────────────────────────────────────────────────────────────────────
 
-/** The capture button's label, named after the capture. */
+/** The capture button's label, named after the capture, as the rules name it. */
 function lycanActionLabel(action: LycanAction) {
-  return action.charAt(0).toUpperCase() + action.slice(1);
+  switch (action) {
+    case "perfect":
+      return i18n.t("games:lycan.action.perfect");
+    case "sum":
+      return i18n.t("games:lycan.action.sum");
+    case "split":
+      return i18n.t("games:lycan.action.split");
+    case "over":
+      return i18n.t("games:lycan.action.over");
+  }
 }
 
 /**

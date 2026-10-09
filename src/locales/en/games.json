@@ -482,6 +482,12 @@
     "theWolfBeatYou": "The Wolf beat you {{wolfScore}}-{{playerScore}}.",
     "wolf": "Wolf",
     "round": "Round",
+    "action": {
+      "perfect": "Perfect",
+      "sum": "Sum",
+      "split": "Split",
+      "over": "Over"
+    },
     "selectCardsToCapture": "Select cards to capture",
     "hint": {
       "fold": "Fold now: playing on would cost more",

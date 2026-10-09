@@ -30,9 +30,16 @@ const DSN = extra?.sentryDsn ?? "";
  * synchronously and the settings cache is native-only (and empty at startup).
  */
 let isEnabledBySetting = DEFAULT_GLOBAL_SETTINGS.crashReports;
+let isRunning = false;
 
-export function initCrashReporting() {
-  if (!DSN) return;
+/**
+ * Starts the SDK. beforeSend only sees JavaScript events: a native crash or
+ * an ANR is reported by the native SDK on the next launch, whatever the
+ * setting says, so the setting decides whether the SDK runs at all.
+ */
+function startCrashReporting() {
+  if (isRunning) return;
+  isRunning = true;
 
   Sentry.init({
     dsn: DSN,
@@ -46,18 +53,32 @@ export function initCrashReporting() {
     tracesSampleRate: 0,
     beforeSend: (event) => (isEnabledBySetting ? event : null),
   });
+}
 
-  // Settings load after init, so the first read applies the saved choice and
-  // the subscription keeps up with later changes.
+/** Shuts the SDK down, the native side included; init starts it again. */
+function stopCrashReporting() {
+  if (!isRunning) return;
+  isRunning = false;
+  void Sentry.close().catch(() => {});
+}
+
+function applySetting(crashReports: boolean) {
+  isEnabledBySetting = crashReports;
+  if (crashReports) startCrashReporting();
+  else stopCrashReporting();
+}
+
+export function initCrashReporting() {
+  if (!DSN) return;
+
+  // The SDK waits for the saved setting, so a player who turned reports off
+  // sends nothing, not even a crash from an earlier run. The wait is a
+  // storage read, so only a failure in the first moments goes unreported.
   void loadGlobalSettings()
-    .then(({ crashReports }) => {
-      isEnabledBySetting = crashReports;
-    })
-    .catch(() => {});
+    .then(({ crashReports }) => applySetting(crashReports))
+    .catch(() => applySetting(DEFAULT_GLOBAL_SETTINGS.crashReports));
 
-  subscribeToGlobalSettings(({ crashReports }) => {
-    isEnabledBySetting = crashReports;
-  });
+  subscribeToGlobalSettings(({ crashReports }) => applySetting(crashReports));
 }
 
 /**

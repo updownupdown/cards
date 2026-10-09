@@ -531,6 +531,10 @@ export function useCardMap({
     return positionMap;
   }, [game, getCardPosition, zones]);
 
+  // Changes when the board is laid out anew (the window resized, the phone
+  // turned), so a card gliding to its new place passes over the board.
+  const layoutKey = `${cardWidth}|${cardHeight}|${gridGap}|${startX}|${startY}`;
+
   // Games build a new onPress closure for each card on every render. Passing
   // those straight through would defeat AnimatedCard's memo, so each card gets
   // a stable wrapper that calls the latest handler from this render.
@@ -569,6 +573,7 @@ export function useCardMap({
             cardHeight={cardHeight}
             cardSize={cardSize}
             cardBackPath={cardBackPath}
+            layoutKey={layoutKey}
             {...mapping}
             onPress={
               mapping?.onPress ? getStablePressHandler(cardId) : undefined
@@ -584,6 +589,7 @@ export function useCardMap({
       cardSize,
       cardWidth,
       getStablePressHandler,
+      layoutKey,
     ],
   );
 

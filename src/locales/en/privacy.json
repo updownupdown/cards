@@ -8,11 +8,11 @@
   },
   "stored": {
     "title": "Data stored on your device",
-    "body": "Solitarius saves your game statistics, favorites, settings, and in-progress games using on-device local storage. This information never leaves your device, is never transmitted to us or to any third party, and is removed automatically if you uninstall the app or clear its data."
+    "body": "Solitarius saves your game statistics, favorites, settings, and in-progress games using on-device local storage. It is never sent to us or to any third party. If your device backs up its apps' data (on Android, to your Google account, if you have that turned on), a copy may be kept in that backup, which is handled under Google's privacy policy, not ours. The data is removed if you uninstall the app or clear its data."
   },
   "collected": {
     "title": "Data we collect",
-    "body": "Only crash diagnostics. When the app hits an error or crashes, it sends a report to Sentry, an error monitoring service, so the fault can be found and fixed. The report contains the error and the place in the app's code it came from, your device model, its operating system version and the app version, and a short trail of what happened just before, such as which game was open. It contains no name, email address, location, or any other personal information, and IP addresses are not stored. Turning off “Send crash reports” in the settings stops this entirely."
+    "body": "Only crash diagnostics. When the app hits an error or crashes, it sends a report to Sentry, an error monitoring service, so the fault can be found and fixed. The report contains the error and the place in the app's code it came from, your device model, its operating system version and the app version, a short trail of what happened just before, such as which game was open, and, on Android, a random identifier created when the app was installed, so repeated reports from one installation can be counted together. That identifier is not linked to you, your account or your device, and a reinstall creates a new one. The report contains no name, email address, location, or any other personal information, and IP addresses are not stored. Turning off “Send crash reports” in the settings stops this entirely."
   },
   "links": {
     "title": "External links",
