@@ -28,21 +28,19 @@ export const parallels: GameDefinition = {
   gameColorAccent: "#97b4d8",
   cardBack: CardBackColors.Slate,
   quickStart: [
-    "Move all 104 cards to the foundations. Build As up and Ks down by suit.",
-    "With three or more rows, a card needs an open space above or below.",
-    "Tap the stock to fill gaps, or add a row once there are none.",
+    "Build Aces up and Kings down, by suit.",
+    "From three rows on, a card needs an empty space above or below.",
+    "The stock fills gaps, or adds a row.",
   ],
   howToPlay: [
-    "## Objective",
-    "Move all 104 cards onto the eight foundations.",
-
-    "## Foundations",
-    "- Aces build **up** by suit; Kings build **down** by suit.",
-
+    "## Goal",
+    "Move every card to the foundations.",
     "## Rules",
-    "- While there are one or two rows, every card is available.",
-    "- From three rows on, a card is **free** only when the space directly above or below it is empty.",
-    "- Tap the **stock** to fill every gap in the tableau. If there are no gaps, it deals a new row of ten across the bottom.",
-    "- There is no building in the tableau and no redeal.",
+    "| Foundations (8) | Four Ace to King and four King to Ace, by suit |",
+    "| Playable | With one or two rows, every card; from three rows, cards with an empty space above or below |",
+    "| Build | None |",
+    "| Stock | Fills every gap, or adds a row of 10 |",
+    "| Redeals | None |",
+    "| Cards | 104 (two decks) |",
   ],
 };

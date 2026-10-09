@@ -601,8 +601,12 @@ export function CampaignUFO({
         hitSlop={26}
       >
         <View style={touchPadStyle} />
-        {/* The same saucer, glow and all, that Help from Above flies. */}
-        <UfoSaucer size={caught || visiting ? SAUCER_BIG : SAUCER_SIZE} />
+        {/* The same saucer that Help from Above flies, in a fainter glow:
+            over the dark sky the full one drowns the drawing. */}
+        <UfoSaucer
+          size={caught || visiting ? SAUCER_BIG : SAUCER_SIZE}
+          glow={SAUCER_GLOW}
+        />
       </Pressable>
 
       {caught && (
@@ -654,6 +658,8 @@ export function CampaignUFO({
 /** The saucer's size flying past, and once it has stopped to talk. */
 const SAUCER_SIZE = 30;
 const SAUCER_BIG = 36;
+/** The share of the saucer's usual green glow it keeps over the map. */
+const SAUCER_GLOW = 0.4;
 
 // An invisible, generously-sized touch target centred on the UFO glyph, so a
 // slightly-off tap still catches it instead of falling through to a game dot.

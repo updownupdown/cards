@@ -86,6 +86,11 @@ export const GameHeader = memo(function GameHeader({
   // opens its explanation instead of asking for a hint.
   const intro = showHint && hasHints && !introSeen;
   const [introOpen, setIntroOpen] = useState(false);
+  // However the introduction is closed, it has been read: it doesn't return.
+  const dismissIntro = () => {
+    setIntroOpen(false);
+    void markHintIntroSeen();
+  };
 
   return (
     <View
@@ -198,13 +203,14 @@ export const GameHeader = memo(function GameHeader({
       </View>
 
       {/* The UFO's introduction, in the middle of the screen until it is
-          dismissed for good. */}
-      {intro && introOpen && (
+          put away, which is for good. Choosing "Hide" in it takes the UFO
+          out of the header, but the box stays until then. */}
+      {introOpen && !introSeen && (
         <Modal
           visible
           transparent
           animationType="fade"
-          onRequestClose={() => setIntroOpen(false)}
+          onRequestClose={dismissIntro}
         >
           <View
             style={{
@@ -215,10 +221,10 @@ export const GameHeader = memo(function GameHeader({
               backgroundColor: rgba(theme.night, 0.7),
             }}
           >
-            {/* Behind the box, so a tap outside it puts it away for now. */}
+            {/* Behind the box, so a tap outside it puts it away too. */}
             <Pressable
               accessibilityLabel={tCommon("close")}
-              onPress={() => setIntroOpen(false)}
+              onPress={dismissIntro}
               style={StyleSheet.absoluteFill}
             />
             <HelpFromAbovePanel style={{ maxWidth: contentMaxWidth }}>
@@ -228,10 +234,7 @@ export const GameHeader = memo(function GameHeader({
                 color={UfoColors.green}
                 ink={UfoColors.black}
                 style={{ alignSelf: "center" }}
-                onPress={() => {
-                  setIntroOpen(false);
-                  void markHintIntroSeen();
-                }}
+                onPress={dismissIntro}
               />
             </HelpFromAbovePanel>
           </View>
