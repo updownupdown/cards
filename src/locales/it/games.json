@@ -955,10 +955,6 @@
     "noMorePairsOrFaceTriplets": "Non si possono più formare coppie né tris di figure."
   },
   "machination": {
-    "status": {
-      "place": "Place the card",
-      "build": "Building the foundations"
-    },
     "allBuilt": "All four suits built up to the King!",
     "stuck": "{{value}} cards could not come off the piles."
   },

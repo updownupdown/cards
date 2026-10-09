@@ -1,15 +1,13 @@
-import { Text } from "@/components/common/Text";
 import { useGameColors } from "@/hooks/useGameColors";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
 import { i18n } from "@/i18n";
-import { flexStyles } from "@/styles/flexStyles";
-import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo } from "react";
 import { View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
+  cardDims,
   collectCards,
   createDeck,
   flipAllToBack,
@@ -18,10 +16,13 @@ import {
   redealWith,
   shuffle,
   top,
+  zoneFanOffset,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
+import { ProgressBar } from "../Home/ProgressBar";
+import { rgba } from "@/styles/styles";
 
 // The whole stock is placed, one card at a time, on piles of the player's
 // choosing; Aces go straight to the foundations. Only then are the piles
@@ -34,12 +35,15 @@ const BOARD_COLS = 8;
 const BUILD_INTERVAL = 150;
 const FOUNDATION_COUNT = 4;
 const DECK_SIZE = 52;
-const PILE_ROW = 1.4;
-const PILE_OFFSET = 0.22;
-const FOUNDATION_COL = 3;
-const BOARD_ROWS = 5.2;
+const BOARD_GAP = 0.12;
+/** The bar across the top that drains with the stock, in card heights. */
+const BAR_HEIGHT = 0.12;
+const TOP_ROW = BAR_HEIGHT + 0.5;
+const PILE_ROW = TOP_ROW + 1.4;
 /** The most a pile may fan down before its cards close up to fit. */
-const PILE_SPAN = BOARD_ROWS - PILE_ROW - 1;
+const PILE_SPAN = 3.4;
+const FOUNDATION_COL = 3;
+const BOARD_ROWS = PILE_ROW + 1 + PILE_SPAN;
 
 export type MachinationGameState = {
   /** Face down; the top card is turned as it comes into play. */
@@ -169,7 +173,7 @@ export const machinationRules = {
 
 // ========== Component ========== //
 export default function Machination() {
-  const { colorPale } = useGameColors();
+  const { colorAccent } = useGameColors();
   const pileCount =
     useGameSettingValue("difficulty") === "difficult"
       ? HARD_PILES
@@ -238,10 +242,10 @@ export default function Machination() {
       pileIndex: i,
       cards,
       col: FOUNDATION_COL + i,
-      row: 0,
+      row: TOP_ROW,
       baseZIndex: 30,
       fan: { maxVisible: 3 },
-      placeholder: {},
+      placeholder: { iconName: "ace" },
     }));
     // Fewer piles sit in the middle of the board.
     const firstCol = (BOARD_COLS - game.piles.length) / 2;
@@ -255,29 +259,38 @@ export default function Machination() {
       baseZIndex: 10,
       fan: {
         direction: "down",
-        offset: Math.min(
-          PILE_OFFSET,
-          PILE_SPAN / Math.max(1, cards.length - 1),
+        offset: zoneFanOffset(
+          cards.length,
+          PILE_SPAN + 1,
+          0.1,
+          cardDims.tableauOffset,
         ),
       },
       placeholder: {},
     }));
     return [
       {
+        id: "stock-bar",
+        col: 0,
+        row: 0,
+        width: "full",
+        height: BAR_HEIGHT,
+        baseZIndex: 1,
+      },
+      // The bar above says how many cards are left, so the stock needs no label.
+      {
         id: "stock",
         name: "stock",
         cards: game.stock,
         col: 0,
-        row: 0,
+        row: TOP_ROW,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
         placeholder: {
-          text: i18n.t("cards:stock"),
-          showCount: true,
-          infoPos: "below",
+          text: "Stock",
+          infoPos: "right",
         },
       },
-      { id: "status", col: 1, row: 0, width: 2, height: 1 },
       ...foundationZones,
       ...pileZones,
     ];
@@ -290,14 +303,12 @@ export default function Machination() {
     if (mappedCard.zoneName !== "pile" || index === undefined) {
       return { isDisabled: true };
     }
-    // While placing, a whole pile takes the turned card.
+    // While placing, a whole pile takes the turned card; every pile does, so
+    // none is marked.
     const canPlay = placing && turned !== undefined;
-    const lit = canPlay && mappedCard.topOfZone;
     return {
       onPress: () => onPilePress(index),
       isDisabled: ended || !canPlay,
-      selectColor: lit ? "green" : "none",
-      forceOverlayColor: lit,
     };
   };
 
@@ -308,16 +319,16 @@ export default function Machination() {
     return {
       onPress: () => onPilePress(index),
       isDisabled: ended || !canPlay,
-      selectColor: canPlay ? "green" : "none",
     };
   };
 
-  const { cardMap, getZoneStylesById } = useCardMap({
+  const { cardMap, cardHeight, getZoneStylesById } = useCardMap({
     game,
     zones,
+    gap: BOARD_GAP,
     cardMapper,
     zoneMapper,
-    cardSize: "small",
+    cardSize: "tableau",
     fixedCols: BOARD_COLS,
     fixedRows: BOARD_ROWS,
   });
@@ -340,24 +351,15 @@ export default function Machination() {
     >
       {cardMap}
 
-      <View
-        style={[
-          pointerEventsStyles.none,
-          flexStyles.colCentered,
-          getZoneStylesById("status"),
-        ]}
-      >
-        <Text
-          size="xs"
-          weight={500}
-          color={colorPale}
-          numberOfLines={2}
-          adjustsFontSizeToFit
-        >
-          {placing
-            ? i18n.t("games:machination.status.place")
-            : i18n.t("games:machination.status.build")}
-        </Text>
+      {/* Cards still to place */}
+      <View style={getZoneStylesById("stock-bar")}>
+        <ProgressBar
+          totalValue={DECK_SIZE}
+          progressValue={game.stock.length}
+          color={colorAccent}
+          scaledHeight={cardHeight * BAR_HEIGHT}
+          backgroundColor={rgba(colorAccent, 0.2)}
+        />
       </View>
     </GameWrapper>
   );
