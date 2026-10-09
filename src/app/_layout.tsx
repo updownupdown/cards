@@ -31,10 +31,12 @@ import {
   Outfit_700Bold,
 } from "@expo-google-fonts/outfit";
 import {
-  LibreBaskerville_400Regular,
-  LibreBaskerville_500Medium,
-  LibreBaskerville_600SemiBold,
-} from "@expo-google-fonts/libre-baskerville";
+  EBGaramond_400Regular,
+  EBGaramond_400Regular_Italic,
+  EBGaramond_500Medium,
+  EBGaramond_500Medium_Italic,
+  EBGaramond_600SemiBold,
+} from "@expo-google-fonts/eb-garamond";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { loadDevMode } from "@/data/dev-mode";
 import { loadHintMode } from "@/data/hint-mode";
@@ -96,9 +98,11 @@ function Layout() {
           },
           Outfit_600SemiBold,
           Outfit_700Bold,
-          LibreBaskerville_400Regular,
-          LibreBaskerville_500Medium,
-          LibreBaskerville_600SemiBold,
+          EBGaramond_400Regular,
+          EBGaramond_400Regular_Italic,
+          EBGaramond_500Medium,
+          EBGaramond_500Medium_Italic,
+          EBGaramond_600SemiBold,
         },
   );
   const fontsLoaded = embedsFonts || fontsLoadedAtRuntime;

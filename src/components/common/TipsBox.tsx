@@ -154,8 +154,10 @@ export function TipsBox({ onClose, showRulesModal }: Props) {
           style={[
             flexStyles.colCentered,
             {
-              padding: spacing(12),
-              gap: spacing(16),
+              paddingHorizontal: spacing(14),
+              paddingTop: spacing(18),
+              paddingBottom: spacing(14),
+              gap: spacing(12),
               outline: "none",
               borderRadius: spacing(18),
               backgroundColor: theme.surface,
@@ -200,7 +202,11 @@ export function TipsBox({ onClose, showRulesModal }: Props) {
             style={[
               flexStyles.rowCentered,
               flexStyles.fullWidth,
-              { justifyContent: "space-between", gap: spacing(12) },
+              {
+                justifyContent: "space-between",
+                gap: spacing(12),
+                paddingTop: spacing(4),
+              },
             ]}
           >
             <Button

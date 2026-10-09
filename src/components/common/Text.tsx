@@ -87,26 +87,28 @@ export interface TextProps extends RNTextProps {
   weight?: TextWeight;
   textTransform?: "none" | "capitalize" | "uppercase" | "lowercase";
   /**
-   * Libre Baskerville, for anything belonging to the art, the Tao or the
-   * quotes (Outfit is for the games and the interface). Always upright:
-   * there is no italic serif. Serif text uses oldstyle figures.
+   * EB Garamond, for anything belonging to the art or the quotes (Outfit
+   * is for the games, the interface and the Tao chapters). Serif text uses
+   * oldstyle figures.
    */
   serif?: boolean;
+  /** Serif only. The heaviest italic is the medium. */
+  italic?: boolean;
   /** Small caps: serif labels. Write the label in normal case. */
   smallCaps?: boolean;
 }
 
-/** The Libre Baskerville face closest to an Outfit weight. */
-export function serifFontFamily(weight: TextWeight) {
+/** The EB Garamond face closest to an Outfit weight. */
+export function serifFontFamily(weight: TextWeight, italic = false) {
   const heavy =
     weight === 600 ||
     weight === 700 ||
     weight === "bold" ||
     weight === "semibold";
   const medium = weight === 500 || weight === "medium";
-  if (heavy) return SerifFont.semibold;
-  if (medium) return SerifFont.medium;
-  return SerifFont.regular;
+  if (heavy) return italic ? SerifFont.mediumItalic : SerifFont.semibold;
+  if (medium) return italic ? SerifFont.mediumItalic : SerifFont.medium;
+  return italic ? SerifFont.italic : SerifFont.regular;
 }
 
 export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
@@ -120,6 +122,7 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
       style,
       color: colorProp,
       serif = false,
+      italic = false,
       smallCaps = false,
       ...otherProps
     } = props;
@@ -132,7 +135,7 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
     }, [size, ui.textScale]);
 
     const fontFamily = serif
-      ? serifFontFamily(weight)
+      ? serifFontFamily(weight, italic)
       : Typography.fontFamily[weight];
     const resolvedLineHeight = fontSize * lineHeight;
     const fontVariant: TextStyle["fontVariant"] = serif

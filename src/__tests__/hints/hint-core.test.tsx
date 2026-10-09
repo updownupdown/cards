@@ -25,6 +25,7 @@ import {
   loadHintMode,
   markHintIntroSeen,
   parseHintMode,
+  resetHintMode,
   saveHintMode,
 } from "@/data/hint-mode";
 import {
@@ -312,6 +313,15 @@ describe("the Help from Above setting", () => {
   test("remembers that the introduction was put away", async () => {
     await markHintIntroSeen();
     expect(await AsyncStorage.getItem(HINT_INTRO_STORAGE_KEY)).toBe("1");
+  });
+
+  test("resetting the app data brings the introduction back", async () => {
+    await saveHintMode("autopilot");
+    await markHintIntroSeen();
+    await resetHintMode();
+    expect(getHintMode()).toBe("beacons");
+    expect(await AsyncStorage.getItem(HINT_BUTTON_STORAGE_KEY)).toBeNull();
+    expect(await AsyncStorage.getItem(HINT_INTRO_STORAGE_KEY)).toBeNull();
   });
 });
 

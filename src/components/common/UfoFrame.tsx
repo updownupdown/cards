@@ -103,7 +103,7 @@ export function UfoFrame({
   children,
 }: {
   radius: number;
-  /** Keeps the border still (a folded-away panel). */
+  /** Keeps the border still (a panel with nothing to offer). */
   still?: boolean;
   style?: StyleProp<ViewStyle>;
   children?: ReactNode;

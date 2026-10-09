@@ -26,7 +26,10 @@
   },
   "reveal": {
     "skip": "Salta",
-    "continue": "Continua"
+    "continue": "Continua",
+    "destroyToSkip": "Distruggi la tua capacità di attenzione per saltare",
+    "attentionSpan": "La mia capacità di attenzione",
+    "keepWatching": "Continua a guardare"
   },
   "original": {
     "label": "Mostra l'originale"

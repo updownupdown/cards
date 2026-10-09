@@ -26,7 +26,10 @@
   },
   "reveal": {
     "skip": "Skip",
-    "continue": "Continue"
+    "continue": "Continue",
+    "destroyToSkip": "Destroy your attention span to skip",
+    "attentionSpan": "My attention span",
+    "keepWatching": "Keep watching"
   },
   "original": {
     "label": "Show original"

@@ -1,5 +1,10 @@
+import { AttentionSpanSkip } from "@/components/common/AttentionSpanSkip";
 import { Button } from "@/components/Button/Button";
 import { REVEAL_TIMING } from "@/components/common/reveal-timing";
+import {
+  SkyIsland,
+  useTapShootingStars,
+} from "@/components/common/TapShootingStars";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { PaletteContext, usePalette } from "@/styles/palette";
@@ -82,6 +87,7 @@ export function RewardReveal({
   const [pageOpen, setPageOpen] = useState(false);
   const [read, setRead] = useState(false);
   const [closing, setClosing] = useState(false);
+  const [skipBox, setSkipBox] = useState(false);
   const cover = useSharedValue(0);
   const button = useSharedValue(0);
 
@@ -133,17 +139,37 @@ export function RewardReveal({
   }, [button, closing, cover]);
   const onRead = useCallback(() => setRead(true), []);
 
+  // Skipping has a price (see AttentionSpanSkip); once the page is read, the
+  // bright Continue is free, and the box has nothing to ask.
+  useEffect(() => {
+    if (read) setSkipBox(false);
+  }, [read]);
+  const onButton = useCallback(() => {
+    if (read) close();
+    else setSkipBox((open) => !open);
+  }, [close, read]);
+
   const coverStyle = useAnimatedStyle(() => ({ opacity: cover.value }));
   const buttonStyle = useAnimatedStyle(() => ({ opacity: button.value }));
 
   const buttonBottom = insets.bottom + spacing(24);
 
+  // The hidden game: taps on the sky send shooting stars (see
+  // TapShootingStars). The button and the skip box are islands.
+  const sky = useTapShootingStars({
+    enabled: pageOpen && !closing,
+    width: size?.width ?? 0,
+    height: size?.height ?? 0,
+  });
+
   return (
     <Animated.View
       testID={testID}
+      {...sky.rootProps}
       onLayout={(event) => {
         const { width, height } = event.nativeEvent.layout;
         setSize((current) => current ?? { width, height });
+        sky.onLayout();
       }}
       style={[
         StyleSheet.absoluteFill,
@@ -164,33 +190,64 @@ export function RewardReveal({
             onRead,
           })}
 
+        {sky.layer}
+
+        {/* The skip box sits where the button is, in its place: closed,
+            the button is back (Skip, or Continue if the page has finished
+            meanwhile). */}
+        {skipBox && !closing && (
+          <View
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              bottom: buttonBottom,
+              alignItems: "center",
+              pointerEvents: "box-none",
+            }}
+          >
+            <SkyIsland>
+              <AttentionSpanSkip
+                width={size?.width ?? 0}
+                onSkip={close}
+                onDismiss={() => setSkipBox(false)}
+              />
+            </SkyIsland>
+          </View>
+        )}
+
         {/* Fixed at the bottom, over the page as it scrolls. A plain view
             holds it in place: a pointerEvents style on an animated view
             reaches the web as "none" and the button under it can't be
             pressed. */}
-        <View
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: buttonBottom,
-            alignItems: "center",
-            pointerEvents: "box-none",
-          }}
-        >
-          <Animated.View style={buttonStyle}>
-            {/* Still animating, the way out is there but doesn't call: the
-                palette's night with its accent for the word. Done, it is the
-                bright Continue. One button, so the change is a fade. */}
-            <Button
-              text={read ? t("reveal.continue") : t("reveal.skip")}
-              onPress={close}
-              disabled={!pageOpen || closing}
-              style={read ? undefined : { backgroundColor: palette.night }}
-              textStyle={read ? undefined : { color: palette.accent }}
-            />
-          </Animated.View>
-        </View>
+        {!(skipBox && !closing) && (
+          <View
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              bottom: buttonBottom,
+              alignItems: "center",
+              pointerEvents: "box-none",
+            }}
+          >
+            <Animated.View style={buttonStyle}>
+              <SkyIsland testID="reveal-button">
+                {/* Still animating, the way out is there but doesn't call:
+                    the palette's night with its accent for the word. Done,
+                    it is the bright Continue. One button, so the change is
+                    a fade. */}
+                <Button
+                  text={read ? t("reveal.continue") : t("reveal.skip")}
+                  onPress={onButton}
+                  disabled={!pageOpen || closing}
+                  style={read ? undefined : { backgroundColor: palette.night }}
+                  textStyle={read ? undefined : { color: palette.accent }}
+                />
+              </SkyIsland>
+            </Animated.View>
+          </View>
+        )}
       </PaletteContext.Provider>
     </Animated.View>
   );
