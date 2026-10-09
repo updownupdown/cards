@@ -1,10 +1,13 @@
 import { describe, expect, test } from "@jest/globals";
 import {
+  HURRY_STEP_MS,
+  scheduleLines,
+} from "@/components/TaoCollection/ChapterText";
+import {
   parseChapterText,
-  planReveal,
   planStarDust,
   REVEAL,
-  ROLE_STAR,
+  scheduleReading,
 } from "@/components/TaoReveal/timeline";
 import { getTaoChapter, TAO_CHAPTER_COUNT } from "@/data/collectibles";
 import {
@@ -14,16 +17,6 @@ import {
 } from "@/data/tao-constellations";
 import { localizeTaoChapter } from "@/i18n/content";
 import { SUPPORTED_LANGUAGES } from "@/i18n/languages";
-
-const screen = { width: 390, height: 780, top: 24, bottom: 0 };
-
-/** Letters laid out on a simple grid, as the measuring pass would report. */
-function fakeBoxes(count: number) {
-  return Array.from({ length: count }, (_, index) => ({
-    cx: 24 + (index % 30) * 11,
-    cy: 120 + Math.floor(index / 30) * 26,
-  }));
-}
 
 describe("Tao constellations", () => {
   test("every chapter has one, in order", () => {
@@ -101,92 +94,13 @@ describe("Star dust", () => {
   });
 });
 
-describe("Reveal plan", () => {
-  const constellation = getTaoConstellation(11)!;
-  const parsed = parseChapterText(getTaoChapter(11)!.text);
-  const plan = planReveal({
-    parsed,
-    boxes: fakeBoxes(parsed.glyphs.length),
-    fontSize: 18,
-    constellation,
-    keyLines: getKeyLineIndices(constellation),
-    screen,
-  });
-
-  /** When a letter lands in the text and is read. */
-  const readAt = (glyph: (typeof plan.glyphs)[number]) =>
-    glyph.tFly + glyph.flyMs - REVEAL.wordFadeMs;
-
-  test("gives every star a letter and keeps the phases in order", () => {
-    const stars = plan.glyphs.filter((glyph) => glyph.role === ROLE_STAR);
-    expect(stars).toHaveLength(constellation.stars.length);
-    expect(plan.stars).toHaveLength(constellation.stars.length);
-    expect(plan.edges.length).toBeGreaterThan(0);
-
-    // The constellation forms first, then dims, then the words are written.
-    const t = plan.times;
-    expect(t.skyIn + t.skyInMs).toBeGreaterThan(t.bloom);
-    expect(t.bloom).toBeLessThan(t.linesStart);
-    expect(t.linesStart).toBeLessThan(t.formed);
-    expect(t.dim).toBe(t.formed + REVEAL.formedHoldMs);
-    expect(t.textStart).toBe(t.dim + REVEAL.writeLeadMs);
-    expect(t.textStart).toBeLessThan(t.textEnd);
-    expect(t.canClose).toBe(t.textEnd + REVEAL.closeAfterMs);
-    for (const star of plan.stars) {
-      expect(star.tIn).toBeGreaterThanOrEqual(t.bloom);
-      expect(star.tIn).toBeLessThan(t.formed);
-      // Each one sends a letter.
-      expect(star.tWrite).toBeGreaterThanOrEqual(t.dim);
-    }
-    for (const edge of plan.edges) {
-      expect(edge.tDraw + edge.drawMs).toBeLessThanOrEqual(t.formed + 1);
-    }
-
-    // No letter leaves its star before the figure dims, and they are read
-    // in order, the last as the text ends.
-    for (const glyph of plan.glyphs) {
-      expect(glyph.tFly).toBeGreaterThanOrEqual(t.dim);
-      expect(glyph.tBorn).toBeLessThan(t.formed);
-    }
-    const read = plan.glyphs.map(readAt);
-    expect(read).toEqual([...read].sort((a, b) => a - b));
-    expect(Math.max(...read) + REVEAL.wordFadeMs).toBeCloseTo(t.textEnd);
-  });
-
-  test("star dust stays mostly with the figure", () => {
-    const boxes = fakeBoxes(parsed.glyphs.length);
-    const origins = plan.glyphs
-      .map((glyph, index) => ({ glyph, x: boxes[index].cx + glyph.dx }))
-      .filter(({ glyph }) => glyph.role !== ROLE_STAR);
-    const near = origins.filter(
-      ({ x }) => Math.abs(x - screen.width / 2) < screen.width * 0.45,
-    );
-    expect(near.length / origins.length).toBeGreaterThan(0.8);
-    expect(plan.stars.some((star) => star.bright)).toBe(true);
-  });
-
-  test("the named stars are the key line's letters", () => {
-    const keyLines = new Set(getKeyLineIndices(constellation));
-    plan.glyphs.forEach((glyph, index) => {
-      if (glyph.role === ROLE_STAR) {
-        expect(keyLines.has(parsed.glyphs[index].line)).toBe(true);
-      }
-    });
-  });
-
+describe("Reading pace", () => {
   test("words, line breaks and paragraphs keep their pace", () => {
     expect(REVEAL.charsPerSecond).toBe(30);
     const text = parseChapterText("ab\ncd,\ngh\nij.\nkl\n\nmn");
-    const t = planReveal({
-      parsed: text,
-      boxes: fakeBoxes(text.glyphs.length),
-      fontSize: 18,
-      constellation,
-      keyLines: [],
-      screen,
-    }).glyphs.map(readAt);
+    const t = scheduleReading(text, 0).tIn;
     const msPerChar = 1000 / 30;
-    // ab | cd, | gh | ij. | kl || mn: a word's letters appear together,
+    // ab | cd, | gh | ij. | kl || mn: a word's letters are timed together,
     // when the reading reaches the word.
     expect(t[1]).toBeCloseTo(t[0]);
     expect(t[3]).toBeCloseTo(t[2]);
@@ -196,5 +110,29 @@ describe("Reveal plan", () => {
     expect(t[7] - t[5]).toBeCloseTo(2 * msPerChar + 450);
     expect(t[10] - t[7]).toBeCloseTo(3 * msPerChar + 1000);
     expect(t[12] - t[10]).toBeCloseTo(2 * msPerChar + 2000);
+  });
+
+  test("lines come one at a time, a longer line holding the reading longer", () => {
+    const text = parseChapterText(
+      "A short line\nA much longer line that takes a while to read\nThe end",
+    );
+    const { startsAt, textEnd } = scheduleLines(text, 100);
+    expect(startsAt[0]).toBe(100);
+    expect(startsAt[2] - startsAt[1]).toBeGreaterThan(
+      startsAt[1] - startsAt[0],
+    );
+    expect(textEnd).toBe(startsAt[2] + REVEAL.lineFadeMs);
+  });
+
+  test("hurried, the lines still to come arrive quickly, in order", () => {
+    const text = parseChapterText("one\ntwo\nthree\nfour");
+    const calm = scheduleLines(text, 0);
+    const hurriedAt = calm.startsAt[1] + 1;
+    const hurried = scheduleLines(text, 0, hurriedAt);
+    // Lines already shown keep their time; the rest follow at once.
+    expect(hurried.startsAt.slice(0, 2)).toEqual(calm.startsAt.slice(0, 2));
+    expect(hurried.startsAt[2]).toBe(hurriedAt);
+    expect(hurried.startsAt[3]).toBe(hurriedAt + HURRY_STEP_MS);
+    expect(hurried.textEnd).toBeLessThan(calm.textEnd);
   });
 });

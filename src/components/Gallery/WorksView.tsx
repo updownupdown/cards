@@ -230,12 +230,12 @@ export function WorksView({
               }}
             >
               <Text
-                size="md"
+                size="sm"
                 weight={500}
                 color={theme.accent}
                 textTransform="uppercase"
                 numberOfLines={1}
-                style={{ flex: 1, letterSpacing: spacing(1.5) }}
+                style={{ flex: 1, letterSpacing: spacing(2.5) }}
               >
                 {title}
               </Text>
@@ -352,7 +352,7 @@ function ShelfWork({
           </Text>
         )}
         {collected && (
-          <Text serif italic size="xs" color={theme.dim} numberOfLines={1}>
+          <Text serif size="xs" color={theme.dim} numberOfLines={1}>
             {credit?.artistName || t("gallery.unknownArtist")}
           </Text>
         )}

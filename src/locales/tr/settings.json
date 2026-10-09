@@ -62,7 +62,9 @@
   "privacyPolicy": "Gizlilik Politikası",
   "resetData": {
     "button": "Tüm uygulama verilerini sıfırla",
-    "confirm": "Tüm ilerleme ve ayarlar silinsin mi?"
+    "warning": "Tüm ilerlemeni ve tercihlerini kaybetmek üzeresin.",
+    "tapsLeft_one": "Sıfırlamak için {{count}} kez daha dokun",
+    "tapsLeft_other": "Sıfırlamak için {{count}} kez daha dokun"
   },
   "colorTheme": {
     "label": "Renk teması"
@@ -70,7 +72,6 @@
   "devMode": {
     "on": "Geliştirici modu açık",
     "off": "Geliştirici modu kapalı",
-    "status": "Geliştirici modu açık.",
     "turnOff": "Kapat",
     "title": "Geliştirici modu",
     "unlockAll": "Kampanyadaki tüm oyunları aç",

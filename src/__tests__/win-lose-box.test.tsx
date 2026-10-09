@@ -186,10 +186,15 @@ describe("WinLoseBox", () => {
     expect(mockToasts).toEqual(["Copied to the clipboard"]);
   });
 
-  test("disabled actions can't be pressed", async () => {
-    const hidden = await render(true, { actionsDisabled: true });
-    const buttons = hidden.root.findAll((node) => node.type === ActionButton);
-    expect(buttons.length).toBeGreaterThan(0);
-    for (const button of buttons) expect(button.props.disabled).toBe(true);
+  test("hidden actions are left out altogether, and Share can't be pressed", async () => {
+    const shown = await render(true);
+    expect(
+      shown.root.findAll((node) => node.type === ActionButton).length,
+    ).toBeGreaterThan(0);
+    const hidden = await render(true, { actionsHidden: true });
+    expect(hidden.root.findAll((node) => node.type === ActionButton)).toEqual(
+      [],
+    );
+    expect(shareButton(hidden)!.props.disabled).toBe(true);
   });
 });

@@ -15,7 +15,8 @@ import { dustLayers, figureDust, figureSegments, STAR_COLOR } from "./figure";
 
 /**
  * A chapter's constellation coming into being: the minor stars fade in, the
- * named stars light up in the pen's order, then the lines are drawn. Every
+ * named stars light up in the pen's order, then the lines are drawn. It
+ * stays as bright once drawn, its named stars slowly twinkling. Every
  * step is a CSS animation, so nothing runs per frame on the JS thread and
  * the page can scroll freely meanwhile.
  */
@@ -49,25 +50,16 @@ const DRAW = {
 
 const ms = (value: number) => `${Math.round(value)}ms` as const;
 
-const DIM = { from: { opacity: 1 }, to: { opacity: 0.4 } };
-const DIM_MS = 2200;
-
 type Props = {
   constellation: Constellation;
   size: number;
   dustCount: number;
-  /**
-   * When (ms after mount) the figure dims for the words it writes, as the
-   * reveal's does. It stays bright without it.
-   */
-  dimAt?: number;
 };
 
 export const ConstellationBloom = memo(function ConstellationBloom({
   constellation,
   size,
   dustCount,
-  dimAt,
 }: Props) {
   const scale = size / 100;
   const dustGroups = useMemo(() => {
@@ -132,18 +124,7 @@ export const ConstellationBloom = memo(function ConstellationBloom({
   }, [constellation, size]);
 
   return (
-    <Animated.View
-      style={[
-        { width: size, height: size },
-        dimAt !== undefined && {
-          animationName: DIM,
-          animationDuration: ms(DIM_MS),
-          animationDelay: ms(dimAt),
-          animationFillMode: "both",
-          animationTimingFunction: "ease-in-out",
-        },
-      ]}
-    >
+    <View style={{ width: size, height: size }}>
       {dustGroups.map((layers, group) => (
         <Animated.View
           key={`dust-${group}`}
@@ -232,6 +213,6 @@ export const ConstellationBloom = memo(function ConstellationBloom({
           />
         </Animated.View>
       ))}
-    </Animated.View>
+    </View>
   );
 });

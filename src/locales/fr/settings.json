@@ -62,7 +62,9 @@
   "privacyPolicy": "Politique de confidentialité",
   "resetData": {
     "button": "Réinitialiser toutes les données",
-    "confirm": "Effacer toute la progression et tous les réglages ?"
+    "warning": "Vous êtes sur le point de perdre toute votre progression et vos préférences.",
+    "tapsLeft_one": "Touchez encore {{count}} fois pour réinitialiser",
+    "tapsLeft_other": "Touchez encore {{count}} fois pour réinitialiser"
   },
   "colorTheme": {
     "label": "Thème de couleurs"
@@ -70,9 +72,8 @@
   "devMode": {
     "on": "Mode dev activé",
     "off": "Mode dev désactivé",
-    "status": "Le mode dev est activé.",
     "turnOff": "Désactiver",
-    "title": "Mode dev",
+    "title": "Mode développeur",
     "unlockAll": "Débloquer toutes les parties de la campagne",
     "unlockedAll": "Toutes les parties de la campagne sont débloquées",
     "grantMercySkip": "Accorder un passe-droit",

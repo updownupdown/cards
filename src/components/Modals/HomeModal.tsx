@@ -53,6 +53,9 @@ const BUILD_LABEL = `v${Constants.expoConfig?.version ?? "?"} · ${__DEV__ ? "de
 /** Taps on the version number that turn dev mode on. */
 const DEV_MODE_TAPS = 10;
 
+/** Taps on Reset, after asking for it, that erase all app data. */
+const RESET_TAPS = 3;
+
 const TABS = ["display", "theme", "other"] as const;
 
 interface Props {
@@ -63,8 +66,8 @@ interface Props {
 export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const { settings, updateSettings, isLoading } = useGlobalSettings();
   const modalStyles = useModalStyles();
-  const [isResetConfirmationVisible, setIsResetConfirmationVisible] =
-    React.useState(false);
+  // Taps on Reset still needed to erase everything; null while not asked.
+  const [resetTapsLeft, setResetTapsLeft] = React.useState<number | null>(null);
   const [isResettingData, setIsResettingData] = React.useState(false);
   const [isPopulatingTestData, setIsPopulatingTestData] = React.useState(false);
   const { spacing } = useResponsiveMetrics();
@@ -363,9 +366,29 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                   borderColor: theme.faint,
                 }}
               >
-                <Text weight={500} size="md" color={theme.ink}>
-                  {t("devMode.title")}
-                </Text>
+                <View
+                  style={[
+                    flexStyles.rowCentered,
+                    { justifyContent: "space-between", gap: spacing(12) },
+                  ]}
+                >
+                  <Text
+                    weight={500}
+                    size="md"
+                    color={theme.ink}
+                    style={{ flexShrink: 1 }}
+                  >
+                    {t("devMode.title")}
+                  </Text>
+                  <Text
+                    {...footerLink}
+                    accessibilityRole="button"
+                    onPress={onDevModeOff}
+                    suppressHighlighting
+                  >
+                    {t("devMode.turnOff")}
+                  </Text>
+                </View>
                 <Button
                   size="md"
                   uppercase={false}
@@ -443,54 +466,65 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 {t("credits.taoTranslation.suffix")}
               </Text>
 
-              <Text
-                {...footerLink}
-                style={{ textAlign: "center" }}
-                onPress={() => {
-                  onClose();
-                  router.push("/privacy");
-                }}
-              >
-                {t("privacyPolicy")}
-              </Text>
-
-              {isResetConfirmationVisible ? (
+              {/* Resetting takes several taps on Reset, counted down in the
+                  warning, so it can't happen by accident. */}
+              {resetTapsLeft !== null ? (
                 <View
                   style={[
-                    flexStyles.rowCentered,
-                    { gap: spacing(14), flexWrap: "wrap" },
+                    flexStyles.colCentered,
+                    {
+                      width: "100%",
+                      gap: spacing(12),
+                      padding: spacing(14),
+                      borderRadius: spacing(16),
+                      borderWidth: 1,
+                      borderColor: theme.faint,
+                    },
                   ]}
                 >
-                  <Text {...footerText}>{t("resetData.confirm")}</Text>
-                  <Button
-                    textOnly
-                    size="xs"
-                    uppercase={false}
-                    text={tCommon("cancel")}
-                    disabled={isResettingData}
-                    onPress={() => setIsResetConfirmationVisible(false)}
-                  />
-                  <Button
-                    textOnly
-                    size="xs"
-                    uppercase={false}
-                    text={tCommon("reset")}
-                    theme={Colors.cardSelectRed}
-                    disabled={isResettingData}
-                    onPress={async () => {
-                      setIsResettingData(true);
-                      try {
-                        updateSettings(DEFAULT_GLOBAL_SETTINGS);
-                        await resetAllSettings();
-                        await resetCampaignProgress();
-                        onHomeDataInvalidated();
-                        setIsResetConfirmationVisible(false);
-                        onClose();
-                      } finally {
-                        setIsResettingData(false);
-                      }
-                    }}
-                  />
+                  <Text
+                    size="sm"
+                    weight={400}
+                    color={theme.ink}
+                    style={{ textAlign: "center" }}
+                  >
+                    {t("resetData.warning")}
+                  </Text>
+                  <View style={{ width: "100%", gap: spacing(10) }}>
+                    <Button
+                      fullWidth
+                      size="md"
+                      uppercase={false}
+                      text={t("resetData.tapsLeft", { count: resetTapsLeft })}
+                      disabled={isResettingData}
+                      onPress={async () => {
+                        if (resetTapsLeft > 1) {
+                          setResetTapsLeft(resetTapsLeft - 1);
+                          return;
+                        }
+                        setIsResettingData(true);
+                        try {
+                          updateSettings(DEFAULT_GLOBAL_SETTINGS);
+                          await resetAllSettings();
+                          await resetCampaignProgress();
+                          onHomeDataInvalidated();
+                          setResetTapsLeft(null);
+                          onClose();
+                        } finally {
+                          setIsResettingData(false);
+                        }
+                      }}
+                    />
+                    <Button
+                      fullWidth
+                      size="md"
+                      uppercase={false}
+                      text={tCommon("cancel")}
+                      theme="blue"
+                      disabled={isResettingData}
+                      onPress={() => setResetTapsLeft(null)}
+                    />
+                  </View>
                 </View>
               ) : (
                 <Button
@@ -499,34 +533,36 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                   uppercase={false}
                   text={t("resetData.button")}
                   theme={Colors.cardSelectRed}
-                  onPress={() => setIsResetConfirmationVisible(true)}
+                  onPress={() => setResetTapsLeft(RESET_TAPS)}
                 />
               )}
 
-              {/* Which build this is, since dev and release installs look
-                  alike. Ten taps turn dev mode on; the line under it turns
-                  it off. */}
-              <Text
-                {...footerText}
-                style={{ textAlign: "center" }}
-                onPress={onVersionPress}
-                suppressHighlighting
+              <View
+                style={[
+                  flexStyles.rowCentered,
+                  { gap: spacing(16), flexWrap: "wrap" },
+                ]}
               >
-                {BUILD_LABEL}
-              </Text>
-              {devMode && (
-                <Text {...footerText} style={{ textAlign: "center" }}>
-                  {t("devMode.status")}{" "}
-                  <Text
-                    {...footerLink}
-                    accessibilityRole="link"
-                    onPress={onDevModeOff}
-                    suppressHighlighting
-                  >
-                    {t("devMode.turnOff")}
-                  </Text>
+                <Text
+                  {...footerLink}
+                  onPress={() => {
+                    onClose();
+                    router.push("/privacy");
+                  }}
+                >
+                  {t("privacyPolicy")}
                 </Text>
-              )}
+                {/* Which build this is, since dev and release installs look
+                    alike. Ten taps turn dev mode on; its box above turns it
+                    off. */}
+                <Text
+                  {...footerText}
+                  onPress={onVersionPress}
+                  suppressHighlighting
+                >
+                  {BUILD_LABEL}
+                </Text>
+              </View>
             </View>
           </>
         )}

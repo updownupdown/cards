@@ -62,7 +62,9 @@
   "privacyPolicy": "Privacy Policy",
   "resetData": {
     "button": "Reset all app data",
-    "confirm": "Erase all progress and settings?"
+    "warning": "You are about to lose all your progress and preferences.",
+    "tapsLeft_one": "Tap {{count}} more time to reset",
+    "tapsLeft_other": "Tap {{count}} more times to reset"
   },
   "colorTheme": {
     "label": "Colour theme"
@@ -70,9 +72,8 @@
   "devMode": {
     "on": "Dev mode enabled",
     "off": "Dev mode disabled",
-    "status": "Dev mode is enabled.",
     "turnOff": "Turn off",
-    "title": "Dev mode",
+    "title": "Developer mode",
     "unlockAll": "Unlock every campaign game",
     "unlockedAll": "Every campaign game unlocked",
     "grantMercySkip": "Grant a Mercy Skip",

@@ -4,38 +4,54 @@ When a Campaign win earns a quote, the quote is revealed over the game, much as
 a Tao chapter is; the Campaign tab's **Quotes** collection then shows every
 author on one long line, with a one-line portrait for each author collected.
 
-| Piece | Where |
-| --- | --- |
-| The quotes themselves (text, author, source) | `src/components/Collectibles/QuotesText.ts` |
-| Authors: years of birth and death, and portrait (generated) | `src/data/quote-authors.generated.ts`, read through `src/data/quote-authors.ts` |
-| Portrait drawings (one Python file per author) | `scripts/portraits/` |
-| The reveal | `src/components/QuoteReveal/QuoteReveal.tsx` (timeline in `REVEAL_TIMES`) |
-| Writing: the pen font, layout and timing | `src/components/QuoteReveal/pen-font.generated.ts`, `pen-text.ts` |
-| Portrait harmonics (Fourier series) | `src/components/QuoteReveal/fourier.ts` |
-| Win-box announcement ("A quote by ...") | `src/components/Campaign/CampaignWinRewardPreview.tsx` |
-| The collection | `src/components/Modals/QuotesCollectionModal.tsx`, `src/components/QuotesCollection/` |
-| Tests | `src/__tests__/quote-collectibles.test.ts`, `src/__tests__/quotes-collection.test.tsx` |
+| Piece                                                       | Where                                                                                     |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| The quotes themselves (text, author, source)                | `src/components/Collectibles/QuotesText.ts`                                               |
+| Authors: years of birth and death, and portrait (generated) | `src/data/quote-authors.generated.ts`, read through `src/data/quote-authors.ts`           |
+| Portrait drawings (one Python file per author)              | `scripts/portraits/`                                                                      |
+| The reveal                                                  | `src/components/QuoteReveal/QuoteReveal.tsx`, on `src/components/common/RewardReveal.tsx` |
+| The quote's page (Gallery and reveal)                       | `src/components/Gallery/QuoteDetail.tsx`                                                  |
+| Win-box announcement ("A quote by ...")                     | `src/components/Campaign/CampaignWinRewardPreview.tsx`                                    |
+| The collection                                              | `src/components/Modals/QuotesCollectionModal.tsx`, `src/components/QuotesCollection/`     |
+| Tests                                                       | `src/__tests__/quote-collectibles.test.ts`, `src/__tests__/quote-reveal.test.tsx`         |
 
 ## The reveal
 
 `GameWrapper` mounts `QuoteReveal` when a Campaign win awards a quote, just as
-it mounts `TaoReveal` for a chapter. The reveal:
+it mounts `TaoReveal` for a chapter. Both sit on `RewardReveal`, which:
 
-1. redraws the game's background over its UI, with the game colour at 85%, so
-   the board fades away (fading the game's own views instead would make every
-   game's tree take part, and on Android overlapping cards show through each
-   other while fading);
-2. writes the quote in a single-line hand (Oooh Baby), each letter fading in as
-   it is written;
-3. 2 s into the writing, resolves the author's portrait from a faint circle,
-   over the rest of the writing (at least 3 s), fading in as it goes;
-4. fades in the author's name, then the source (Outfit Light, 20 and 13 px);
-5. holds for 3 s, then clears, and the win box's buttons come back.
+1. fades a backdrop in over the game. For a quote it is the game's own
+   background redrawn with the game colour at 86%, so the board fades away
+   (fading the game's own views instead would make every game's tree take
+   part, and on Android overlapping cards show through each other while
+   fading);
+2. opens the collectible's page from the Gallery on it. For a quote that is
+   `QuoteDetail`, the same component the Gallery shows, so a quote looks the
+   same when it is earned and when it is read again;
+3. keeps one button fixed at the bottom: a quiet **Skip** (the palette's night,
+   its accent for the word) while the page is still animating, then the bright
+   **Continue**. Either closes the reveal and gives the win box back. Nothing
+   closes it by itself; the Android back button is swallowed.
 
-It cannot be skipped; the Android back button is swallowed while it runs. The
-quote is shown translated when "translate collectibles" is on and a translation
-exists. All timings are in `REVEAL_TIMES`; the pen's pace in `PEN_SPEED` and
-`PEN_MAX_MS` (a long quote is written faster rather than taking longer).
+The win box shows without its button row until the reveal has covered and
+uncovered it (`actionsHidden`), so it has no gap where the buttons will be.
+
+### The quote's page
+
+`QuoteDetail` shows the author's portrait, name and years, then the quote (set
+in Libre Baskerville) and its source:
+
+- the quote and its source fade in whole (`QUOTE_FADE_MS`);
+- a new author appears only after that (`AUTHOR_AT_MS`), so the words are read
+  before the portrait draws the eye: the portrait's single line is drawn along
+  its length (`PORTRAIT_DRAW_MS`) while the name and years fade in;
+- in the Gallery, stepping to another quote by the same author changes the
+  words alone; the author is not drawn again;
+- it draws in the palette around it (`usePalette`): the app's colour theme in
+  the Gallery, the game's own colours in the reveal, so the portrait's line is
+  the theme's accent there and the game's accent here;
+- the quote is shown translated when "translate collectibles" is on and a
+  translation exists.
 
 ## The collection
 
@@ -73,8 +89,7 @@ directions, see `onEnd` in `QuoteGallery.tsx`.
    show in English until translated again). Run `npm run i18n -- status`, then
    translate (`npm run i18n -- translate --lang fr --type quotes`, and so on).
 4. Run the tests. `quote-collectibles.test.ts` fails if a quote's author has no
-   portrait, if an author no longer has any quote, or if the pen font can't
-   write a character of any quote in any language.
+   portrait or if an author no longer has any quote.
 
 **A new author** needs a portrait and their years:
 
@@ -109,38 +124,11 @@ preview only). The rules, checked by the tests:
   to make a corner. `face.py` and `parts.py` hold the shared features; most
   portraits are a few parts in the order described at the top of `parts.py`.
 
-The harmonics in the reveal are computed from the drawing when the reveal
-starts, so there is nothing else to regenerate.
-
-## The pen font
-
-The quote is written in a single-line font traced from
-[Oooh Baby](https://fonts.google.com/specimen/Oooh+Baby) (SIL OFL,
-`assets/pen-fonts/OFL.txt`). It covers ASCII, Latin-1 and Latin Extended-A,
-so French, Spanish, Italian, Portuguese, Turkish, Indonesian and most other
-Latin-script languages; letters the font lacks are composed from the base
-letter and the accent at build time. Anything it still can't write is drawn as
-"?", and the tests list it.
-
-- `npm run pen-font:generate` turns `assets/pen-fonts/OoohBabyPen.svg` into
-  `src/components/QuoteReveal/pen-font.generated.ts`. Run it after changing the
-  character set or the composition rules in `scripts/generate-pen-font.mjs`.
-- `OoohBabyPen.svg` itself is traced from
-  `assets/pen-fonts/source/OoohBaby-Regular.ttf` by
-  `scripts/skeletonize-pen-font.py` (see its header; it needs scikit-image,
-  best in a throwaway virtual environment). Only needed to trace another font
-  or retrace this one. Mind Reserved Font Names: an OFL font with one must not
-  lend its name to the traced version.
+The line is drawn straight from the exported path, so there is nothing else to
+regenerate.
 
 ## To check on Android
 
-- Frame rate while writing: only the strokes being written are animated (a
-  handful at a time); finished ones are plain paths.
-- Frame rate while the portrait resolves: each frame rebuilds a 360-point line
-  from up to 160 terms on the UI thread. If it stutters, lower
-  `HARMONIC_POINTS` or `SERIES_TERMS` in `QuoteReveal.tsx`.
-- The reveal computes the portrait's series when it starts (about 20 ms on a
-  desktop); if that shows as a hitch on slow phones, the series can be
-  precomputed by `scripts/portraits/export.py` instead.
-- The collection draws all the portraits at once (137 of them; static paths).
-- Swipes in the collection, and that they don't fight the Android back gesture.
+- The portrait's line being drawn: one animated dash offset on one path.
+- The Gallery's quote list and steppers, and that swipes don't fight the
+  Android back gesture.

@@ -62,7 +62,9 @@
   "privacyPolicy": "Política de Privacidade",
   "resetData": {
     "button": "Redefinir todos os dados do app",
-    "confirm": "Apagar todo o progresso e as configurações?"
+    "warning": "Você está prestes a perder todo o seu progresso e as suas preferências.",
+    "tapsLeft_one": "Toque mais {{count}} vez para redefinir",
+    "tapsLeft_other": "Toque mais {{count}} vezes para redefinir"
   },
   "colorTheme": {
     "label": "Tema de cores"
@@ -70,9 +72,8 @@
   "devMode": {
     "on": "Modo dev ativado",
     "off": "Modo dev desativado",
-    "status": "O modo dev está ativado.",
     "turnOff": "Desativar",
-    "title": "Modo dev",
+    "title": "Modo desenvolvedor",
     "unlockAll": "Desbloquear todas as partidas da campanha",
     "unlockedAll": "Todas as partidas da campanha desbloqueadas",
     "grantMercySkip": "Conceder um indulto",
