@@ -12,39 +12,17 @@ import { View, type StyleProp, type ViewStyle } from "react-native";
  */
 export function UfoPanel({
   title,
-  trailing,
-  wrapHeading,
   still,
   style,
   children,
 }: {
   title: string;
-  /** Next to the title, at the end (an expand arrow, say). */
-  trailing?: ReactNode;
-  /** Wraps the heading, e.g. a Pressable that opens the panel. */
-  wrapHeading?: (heading: ReactNode) => ReactNode;
   /** A plain border instead of the turning one. */
   still?: boolean;
   style?: StyleProp<ViewStyle>;
   children?: ReactNode;
 }) {
   const { spacing } = useResponsiveMetrics();
-  const heading = (
-    <View
-      style={{ flexDirection: "row", alignItems: "center", gap: spacing(10) }}
-    >
-      <Icon name="ufo" size={spacing(28)} color={UfoColors.green} />
-      <Text
-        size="xs"
-        weight={500}
-        color={UfoColors.green}
-        style={{ flex: 1, letterSpacing: 2 }}
-      >
-        {toDisplayUpperCase(title)}
-      </Text>
-      {trailing}
-    </View>
-  );
   return (
     <UfoFrame
       radius={spacing(10)}
@@ -59,7 +37,19 @@ export function UfoPanel({
         style,
       ]}
     >
-      {wrapHeading ? wrapHeading(heading) : heading}
+      <View
+        style={{ flexDirection: "row", alignItems: "center", gap: spacing(10) }}
+      >
+        <Icon name="ufo" size={spacing(28)} color={UfoColors.green} />
+        <Text
+          size="xs"
+          weight={500}
+          color={UfoColors.green}
+          style={{ flex: 1, letterSpacing: 2 }}
+        >
+          {toDisplayUpperCase(title)}
+        </Text>
+      </View>
       {children}
     </UfoFrame>
   );

@@ -36,7 +36,7 @@
     "title": "Como jogar",
     "unavailable": "As instruções não estão disponíveis para este jogo.",
     "helpIntro": {
-      "done": "Entendi"
+      "dismiss": "Fechar"
     }
   },
   "mercySkip": {

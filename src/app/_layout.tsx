@@ -1,5 +1,9 @@
 import { AppErrorScreen } from "@/components/common/AppErrorScreen";
 import { GameLaunchOverlay } from "@/components/common/GameLaunchOverlay";
+import {
+  LaunchIntro,
+  useLaunchIntroPhase,
+} from "@/components/common/LaunchIntro";
 import { SystemBarScrims } from "@/components/common/SystemBarScrims";
 import { ToastProvider } from "@/components/common/Toast";
 import { useGameColors } from "@/hooks/useGameColors";
@@ -8,7 +12,8 @@ import { getGameInfo, isGamePath } from "@/data/game-menu";
 import { useDisplayLanguage } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
 import { SOURCE_LANGUAGE } from "@/i18n/languages";
-import { applyColorTheme, Colors, theme } from "@/styles/styles";
+import { applyColorTheme, Colors } from "@/styles/styles";
+import { getColorTheme } from "@/styles/themes";
 import {
   addGameBreadcrumb,
   initCrashReporting,
@@ -26,22 +31,25 @@ import {
   Outfit_700Bold,
 } from "@expo-google-fonts/outfit";
 import {
-  LibreBaskerville_400Regular,
-  LibreBaskerville_500Medium,
-  LibreBaskerville_600SemiBold,
-} from "@expo-google-fonts/libre-baskerville";
+  EBGaramond_400Regular,
+  EBGaramond_400Regular_Italic,
+  EBGaramond_500Medium,
+  EBGaramond_500Medium_Italic,
+  EBGaramond_600SemiBold,
+} from "@expo-google-fonts/eb-garamond";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { loadDevMode } from "@/data/dev-mode";
 import { loadHintMode } from "@/data/hint-mode";
 import { loadSwipeDismissKnown } from "@/data/swipe-dismiss";
 import { loadAutopilotSessions } from "@/hints/hint-store";
-import { useFonts } from "expo-font";
+import { FontDisplay, useFonts } from "expo-font";
 import {
   Stack,
   usePathname,
   SplashScreen,
   type ErrorBoundaryProps,
 } from "expo-router";
+import * as ExpoSplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { View, Platform } from "react-native";
@@ -50,8 +58,11 @@ import { View, Platform } from "react-native";
 // during startup is still reported.
 initCrashReporting();
 
-// Keep the splash screen visible while we fetch resources
+// Keep the splash screen visible while we fetch resources; the launch intro
+// hides it once it's drawn the same picture underneath. A short fade, over in
+// the intro's hold, before its colours start to move.
 SplashScreen.preventAutoHideAsync();
+ExpoSplashScreen.setOptions({ duration: 150, fade: true });
 // Beta games turned on from the settings, read before Home lists games.
 void loadDevMode();
 // "Help from Above" (the header UFO), read before a game's header shows.
@@ -64,7 +75,7 @@ void loadAutopilotSessions();
 function Layout() {
   // The colour theme is applied before anything below renders, and the app
   // is rebuilt under a new key when it changes, so every screen restyles.
-  const { settings } = useGlobalSettings();
+  const { settings, isLoading: settingsLoading } = useGlobalSettings();
   applyColorTheme(settings.colorTheme);
   const { colorDark } = useGameColors();
   const pathname = usePathname();
@@ -79,12 +90,19 @@ function Layout() {
           Outfit_200ExtraLight,
           Outfit_300Light,
           Outfit_400Regular,
-          Outfit_500Medium,
+          // font-display: block. The web's launch intro sets the name in it
+          // before the app loads, and it mustn't show in a fallback first.
+          Outfit_500Medium: {
+            uri: Outfit_500Medium,
+            display: FontDisplay.BLOCK,
+          },
           Outfit_600SemiBold,
           Outfit_700Bold,
-          LibreBaskerville_400Regular,
-          LibreBaskerville_500Medium,
-          LibreBaskerville_600SemiBold,
+          EBGaramond_400Regular,
+          EBGaramond_400Regular_Italic,
+          EBGaramond_500Medium,
+          EBGaramond_500Medium_Italic,
+          EBGaramond_600SemiBold,
         },
   );
   const fontsLoaded = embedsFonts || fontsLoadedAtRuntime;
@@ -92,21 +110,22 @@ function Layout() {
   const languageReady = startLanguage !== null;
   const displayLanguage = useDisplayLanguage();
   const isSplashVisible = !fontsLoaded || !languageReady;
+  const introPhase = useLaunchIntroPhase();
 
   // Colour for the chrome the app can't draw behind: Chrome mobile's header,
   // and the page background Chrome samples for Android's button bar in a
   // standalone PWA. Each value is the flattest match for what the screen
-  // itself shows - the theme's night until the app is ready, a game's own dark
-  // colour inside a game, and the starfield's overlay colour on the home
-  // screen, whose tabs all sit on the same background image.
-  const themeColor = isSplashVisible
-    ? theme.night
-    : isGamePath(pathname)
-      ? colorDark
-      : Colors.starfieldOverlay;
+  // itself shows - a game's own dark colour inside a game, and the starfield's
+  // overlay colour on the home screen, whose tabs all sit on the same
+  // background image (the theme's night, looked up from the setting so this
+  // follows it). Until the launch intro is gone, it has these: black (the
+  // page's head and global.css), then easing into this colour.
+  const themeColor = isGamePath(pathname)
+    ? colorDark
+    : getColorTheme(settings.colorTheme).colors.night;
 
   useEffect(() => {
-    if (typeof document === "undefined") return;
+    if (typeof document === "undefined" || introPhase !== "done") return;
 
     const updateMeta = (name: string, content: string) => {
       document
@@ -120,12 +139,12 @@ function Layout() {
     // Tint the Android system navigation (bottom button) bar to match the
     // current screen. Chrome paints that area with the canvas background,
     // which comes from the root element whenever the root has a background of
-    // its own - and global.css gives <html> the splash red so the page is red
-    // before the app mounts. That means body's colour never propagates to the
-    // canvas, so the root has to be updated too or the bar stays red.
+    // its own - and global.css gives <html> the splash black so the page is
+    // black before the app mounts. That means body's colour never propagates
+    // to the canvas, so the root has to be updated too or the bar stays black.
     document.documentElement.style.backgroundColor = themeColor;
     document.body.style.backgroundColor = themeColor;
-  }, [themeColor]);
+  }, [themeColor, introPhase]);
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -166,13 +185,6 @@ function Layout() {
       active.blur();
     }
   }, [pathname]);
-
-  // Hide the splash screen once fonts are ready and the saved language applied.
-  useEffect(() => {
-    if (fontsLoaded && languageReady) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, languageReady]);
 
   // Native apps will crash if fonts aren't loaded, so we return null.
   // Web browsers handle missing fonts gracefully, and returning null breaks SSR/Hydration.
@@ -223,6 +235,12 @@ function Layout() {
             <SystemBarScrims inGame={isGamePath(pathname)} />
           </View>
         </ToastProvider>
+        {/* Over everything, once fonts are ready, the saved language applied
+            and the colour theme known: it takes over from the splash, hides
+            it and eases into the theme. */}
+        {!isSplashVisible && !settingsLoading && (
+          <LaunchIntro pageColor={themeColor} />
+        )}
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

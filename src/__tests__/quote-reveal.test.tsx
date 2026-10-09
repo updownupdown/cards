@@ -94,7 +94,7 @@ function button(renderer: ReactTestRenderer) {
 }
 
 describe("Quote reveal", () => {
-  test("shows the quote as the Gallery does, in the game's colours, with a quiet Skip that gives the win box back", async () => {
+  test("shows the quote as the Gallery does, in the game's colours, with a quiet Skip that asks for an attention span", async () => {
     const onUncover = jest.fn();
     const onDone = jest.fn();
     const renderer = await open(onUncover, onDone);
@@ -112,13 +112,19 @@ describe("Quote reveal", () => {
     expect(skip.fill).toBe(palette.night);
     expect(skip.ink).toBe(palette.accent);
 
+    // Skipping has a price: the box asks for the attention span (dragging
+    // it into the bin, and the leaving, are pinned by
+    // reward-reveals-skippable).
     skip.press();
     expect(onDone).not.toHaveBeenCalled();
-    act(() => {
-      jest.advanceTimersByTime(EXIT_TOTAL_MS);
-    });
-    expect(onUncover).toHaveBeenCalledTimes(1);
-    expect(onDone).toHaveBeenCalledTimes(1);
+    expect(onUncover).not.toHaveBeenCalled();
+    expect(
+      renderer.root.findAll(
+        (node: ReactTestInstance) =>
+          typeof node.type === "string" &&
+          node.props.testID === "attention-span-skip",
+      ),
+    ).toHaveLength(1);
     act(() => renderer.unmount());
   });
 

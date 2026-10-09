@@ -4,6 +4,7 @@ import {
   voicesGroups,
   type VoicesAuthor,
 } from "@/components/Campaign/voices";
+import { useTapShootingStars } from "@/components/common/TapShootingStars";
 import {
   StepperBar,
   useStackedBarBottom,
@@ -69,6 +70,14 @@ export function QuotesView({
     (value) => entries.some((entry) => entry.quoteId === value),
   );
   const [picking, setPicking] = useState(false);
+  const [size, setSize] = useState<{ width: number; height: number }>();
+  // The hidden game: taps on the sky send shooting stars (the picker and
+  // the bar keep theirs).
+  const sky = useTapShootingStars({
+    enabled: true,
+    width: size?.width ?? 0,
+    height: size?.height ?? 0,
+  });
 
   const index = entries.findIndex((entry) => entry.quoteId === savedQuote);
   const entry = entries[index];
@@ -110,7 +119,15 @@ export function QuotesView({
   );
 
   return (
-    <View style={StyleSheet.absoluteFill}>
+    <View
+      style={StyleSheet.absoluteFill}
+      {...sky.rootProps}
+      onLayout={(event) => {
+        const { width, height } = event.nativeEvent.layout;
+        setSize({ width, height });
+        sky.onLayout();
+      }}
+    >
       {entry && (
         <QuoteDetail
           author={entry.author}
@@ -120,6 +137,8 @@ export function QuotesView({
           bottomInset={barHeight}
         />
       )}
+
+      {sky.layer}
 
       {picking && entry && (
         <PickerPanel

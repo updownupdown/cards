@@ -80,9 +80,9 @@
     "mercySkipGranted": "Indulto concedido ({{count}} por usar)"
   },
   "tabs": {
-    "display": "Ecrã",
-    "theme": "Tema",
-    "other": "Outros"
+    "general": "Geral",
+    "advanced": "Avançado",
+    "theme": "Tema"
   },
   "useEnglishGameTitles": {
     "label": "Usar títulos de jogos em inglês",

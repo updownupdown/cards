@@ -26,7 +26,10 @@
   },
   "reveal": {
     "skip": "Geç",
-    "continue": "Devam et"
+    "continue": "Devam et",
+    "destroyToSkip": "Geçmek için dikkat süreni yok et",
+    "attentionSpan": "Dikkat sürem",
+    "keepWatching": "İzlemeye devam et"
   },
   "original": {
     "label": "Orijinalini göster"

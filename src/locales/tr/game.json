@@ -36,7 +36,7 @@
     "title": "Nasıl oynanır",
     "unavailable": "Bu oyun için talimat yok.",
     "helpIntro": {
-      "done": "Anladım"
+      "dismiss": "Kapat"
     }
   },
   "mercySkip": {

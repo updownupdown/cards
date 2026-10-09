@@ -12,16 +12,19 @@ const config = {
   // modals (which React Native draws edge-to-edge with a contrast scrim) a
   // light navigation bar with dark buttons.
   userInterfaceStyle: "dark",
-  backgroundColor: "#07080d",
+  // Black, like the splash, so the launch shows no other colour before the
+  // intro eases into the colour theme (LaunchIntro).
+  backgroundColor: "#000000",
   primaryColor: "#C62440",
   ios: {
     icon: "./assets/app-icon/icon.png",
   },
   android: {
-    backgroundColor: "#07080d",
+    backgroundColor: "#000000",
     softwareKeyboardLayoutMode: "resize",
     adaptiveIcon: {
-      backgroundColor: "#07080d",
+      // The white spade on black, like every icon.
+      backgroundColor: "#000000",
       foregroundImage: "./assets/app-icon/android-foreground.png",
       backgroundImage: "./assets/app-icon/android-background.png",
       monochromeImage: "./assets/app-icon/android-monochrome.png",
@@ -47,8 +50,10 @@ const config = {
     favicon: "./assets/app-icon/icon.png",
     // Chrome 152 can pin installed PWAs to this color and ignore runtime
     // theme-color updates (crbug.com/554055703), so it is Nocturne's night,
-    // where the app opens, as is the splash (backgroundColor). Mirrored in
-    // public/manifest.json, the manifest the static web build actually ships.
+    // where the app opens. The splash (backgroundColor) is black, like the
+    // native one, and the launch intro eases from it into the theme. Mirrored
+    // in public/manifest.json, the manifest the static web build actually
+    // ships.
     themeColor: "#07080d",
     name: "Solitarius",
     shortName: "Solitarius",
@@ -56,7 +61,7 @@ const config = {
     display: "standalone",
     startUrl: "./",
     scope: "./",
-    backgroundColor: "#07080d",
+    backgroundColor: "#000000",
     orientation: "any",
   },
   plugins: [
@@ -86,11 +91,15 @@ const config = {
     [
       "expo-splash-screen",
       {
-        // The spade in gold on Nocturne's night. The splash shows before the
-        // app can read the chosen colour theme, so it keeps the default one.
-        backgroundColor: "#07080d",
+        // The white spade on black: the splash shows before the app can read
+        // the colour theme. The image is a square as tall as the launch
+        // lockup (spade, gap and name) with the spade at its top, shown
+        // imageWidth dp (pt on iOS) wide and centred, so the spade sits where
+        // the launch intro, which takes over from it, draws it. imageWidth is
+        // LOCKUP_HEIGHT in components/common/launch-lockup.ts.
+        backgroundColor: "#000000",
         image: "./assets/app-icon/splash-icon.png",
-        imageWidth: 72,
+        imageWidth: 106,
       },
     ],
     [
@@ -107,9 +116,11 @@ const config = {
             "./node_modules/@expo-google-fonts/outfit/500Medium/Outfit_500Medium.ttf",
             "./node_modules/@expo-google-fonts/outfit/600SemiBold/Outfit_600SemiBold.ttf",
             "./node_modules/@expo-google-fonts/outfit/700Bold/Outfit_700Bold.ttf",
-            "./node_modules/@expo-google-fonts/libre-baskerville/400Regular/LibreBaskerville_400Regular.ttf",
-            "./node_modules/@expo-google-fonts/libre-baskerville/500Medium/LibreBaskerville_500Medium.ttf",
-            "./node_modules/@expo-google-fonts/libre-baskerville/600SemiBold/LibreBaskerville_600SemiBold.ttf",
+            "./node_modules/@expo-google-fonts/eb-garamond/400Regular/EBGaramond_400Regular.ttf",
+            "./node_modules/@expo-google-fonts/eb-garamond/400Regular_Italic/EBGaramond_400Regular_Italic.ttf",
+            "./node_modules/@expo-google-fonts/eb-garamond/500Medium/EBGaramond_500Medium.ttf",
+            "./node_modules/@expo-google-fonts/eb-garamond/500Medium_Italic/EBGaramond_500Medium_Italic.ttf",
+            "./node_modules/@expo-google-fonts/eb-garamond/600SemiBold/EBGaramond_600SemiBold.ttf",
           ],
         },
       },

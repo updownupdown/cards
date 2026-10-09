@@ -21,7 +21,7 @@ export function consumeReopenSettings() {
  * theme change rebuilds the app. Only used when `restore` is set.
  */
 export const settingsView = {
-  tab: "display" as "display" | "theme" | "other",
+  tab: "general" as "general" | "advanced" | "theme",
   scrollY: 0,
   restore: false,
 };

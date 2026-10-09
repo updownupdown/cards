@@ -153,13 +153,6 @@ if (missing.length || extra.length)
 
 const CURRENT_MARK = `<g fill="none" stroke="var(--a)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3C12.2 8 4.5 11.4 4.5 17c0 3.6 3.2 5.9 6.6 5.5 2.1-.2 3.7-1.6 4.9-3.5 1.2 1.9 2.8 3.3 4.9 3.5 3.4.4 6.6-1.9 6.6-5.5C27.5 11.4 19.8 8 16 3Z"/><path d="M16 19c0 4-1.1 7.1-4 9.5h8c-2.9-2.4-4-5.5-4-9.5"/></g>`;
 
-const SIZE_USE = [
-  { name: "Small", games: 47, kb: 596 },
-  { name: "Tableau", games: 28, kb: 604 },
-  { name: "Regular", games: 17, kb: 548 },
-  { name: "Classic", games: 1, kb: 740 },
-];
-
 async function main() {
   const thumbs = await artThumbs();
   const data = [
@@ -171,13 +164,11 @@ async function main() {
     `const CURRENT_MARK = ${JSON.stringify(CURRENT_MARK)};`,
     `const ORNAMENT = ${JSON.stringify(ornament)};`,
     `const THUMBS = ${JSON.stringify(thumbs)};`,
-    `const SIZE_USE = ${JSON.stringify(SIZE_USE)};`,
   ].join("\n");
 
   let html = read(path.join(here, "template.html"));
   html = html
     .replace("/*DATA*/", () => data)
-    .replace("/*CARDS*/", () => read(path.join(here, "cards.js")))
     .replace("/*BACKS*/", () => read(path.join(here, "backs.js")))
     .replace("/*APP*/", () => read(path.join(here, "app.js")));
   const out = path.join(here, "studio.html");

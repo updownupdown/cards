@@ -1,8 +1,7 @@
 # Design studio
 
-The source of the asset review page (spade marks, icon alternates, card
-faces and card backs). The drawings live in `logos.js`, `icon-alts.js`,
-`cards.js` and `backs.js`; `build.js` combines them with the app's own
+The source of the asset review page (spade marks, icon alternates and card
+backs). The drawings live in `logos.js`, `icon-alts.js` and `backs.js`; `build.js` combines them with the app's own
 icons, themes and art into `studio.html`:
 
     node design/studio/build.js

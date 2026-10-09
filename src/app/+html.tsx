@@ -1,5 +1,18 @@
-import { GLOBAL_SETTINGS_STORAGE_KEY } from "@/data/storage-keys";
-import { COLOR_THEMES, DEFAULT_COLOR_THEME } from "@/styles/themes";
+import {
+  LAUNCH_INTRO_ID,
+  LAUNCH_INTRO_NAME_ID,
+  LAUNCH_INTRO_SPADE_ID,
+  LAUNCH_SPADE_CENTRED_CLASS,
+  NAME_GAP,
+  NAME_SIZE,
+  SPADE_FILL,
+  SPADE_HEIGHT,
+  SPADE_PATH,
+  SPADE_VIEWBOX,
+  SPLASH_BACKGROUND,
+  SPLASH_SPADE,
+} from "@/components/common/launch-lockup";
+import { FontWeight } from "@/styles/styles";
 import { ScrollViewStyleReset } from "expo-router/html";
 import { SITE_URL } from "@/utils/share-win";
 import type { ReactNode } from "react";
@@ -40,13 +53,16 @@ export default function Root({ children }: { children: ReactNode }) {
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
-        {/* The splash colour, matching the manifest's background_color, until
-            the script below swaps in the saved colour theme's. The app
-            switches these to the current screen's colour once it mounts (see
-            the theme-color effect in _layout). */}
-        <meta name="theme-color" content="#07080d" />
-        <meta name="msapplication-navbutton-color" content="#07080d" />
-        <script dangerouslySetInnerHTML={{ __html: themedSplash }} />
+        {/* The splash's black, matching the manifest's background_color. The
+            launch intro eases it into the current screen's colour, which the
+            theme-color effect in _layout keeps up after. */}
+        <meta name="theme-color" content={SPLASH_BACKGROUND} />
+        <meta
+          name="msapplication-navbutton-color"
+          content={SPLASH_BACKGROUND}
+        />
+        <script dangerouslySetInnerHTML={{ __html: launchLayout }} />
+        <style dangerouslySetInnerHTML={{ __html: launchStyle }} />
         <meta name="color-scheme" content="dark" />
         <link rel="manifest" href="./manifest.json" />
         <link rel="icon" href="./favicon.ico" sizes="any" />
@@ -54,7 +70,24 @@ export default function Root({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: swBootstrap }} />
         <ScrollViewStyleReset />
       </head>
-      <body>{children}</body>
+      <body>
+        {/* The launch intro, painted before the app loads, which then eases
+            it into the colour theme and takes it away (LaunchIntro). */}
+        <div id={LAUNCH_INTRO_ID} aria-hidden="true">
+          <svg
+            id={LAUNCH_INTRO_SPADE_ID}
+            viewBox={SPADE_VIEWBOX}
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d={SPADE_PATH} fill="currentColor" />
+          </svg>
+          <div id={LAUNCH_INTRO_NAME_ID}>Solitarius</div>
+        </div>
+        <noscript>
+          <style>{`#${LAUNCH_INTRO_ID}{display:none}`}</style>
+        </noscript>
+        {children}
+      </body>
     </html>
   );
 }
@@ -110,21 +143,61 @@ if ('serviceWorker' in navigator) {
 `;
 
 /**
- * Paints the page in the saved colour theme's night before the app loads, so
- * the splash already matches the theme (settings are in localStorage, where
- * AsyncStorage keeps them on the web).
+ * The installed Android web app opens on Chrome's splash, which centres the
+ * spade (the manifest's icon), so there the intro centres the spade and hangs
+ * the name under it. Elsewhere it centres the whole lockup, like the native
+ * splash. Runs before the first paint.
  */
-const themeNights = Object.fromEntries(
-  COLOR_THEMES.map((theme) => [theme.id, theme.colors.night]),
-);
-const themedSplash = `
+const launchLayout = `
 try {
-  var nights = ${JSON.stringify(themeNights)};
-  var saved = JSON.parse(localStorage.getItem(${JSON.stringify(GLOBAL_SETTINGS_STORAGE_KEY)}) || "{}");
-  var night = nights[saved.colorTheme] || nights[${JSON.stringify(DEFAULT_COLOR_THEME)}];
-  document.documentElement.style.backgroundColor = night;
-  document.querySelectorAll('meta[name="theme-color"], meta[name="msapplication-navbutton-color"]').forEach(function (meta) {
-    meta.setAttribute("content", night);
-  });
+  var android = /Android/i.test(navigator.userAgent);
+  if (android && matchMedia("(display-mode: standalone)").matches) {
+    document.documentElement.classList.add("${LAUNCH_SPADE_CENTRED_CLASS}");
+  }
 } catch (error) {}
+`;
+
+/** The launch lockup's geometry (launch-lockup.ts), in CSS px. */
+const px = (value: number) => `${Math.round(value * 100) / 100}px`;
+const spadeBox = SPADE_HEIGHT / SPADE_FILL;
+/** How far the lockup's centre sits below the spade's. */
+const lockupShift = (NAME_GAP + NAME_SIZE) / 2;
+const launchStyle = `
+#${LAUNCH_INTRO_ID} {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  overflow: hidden;
+  background-color: ${SPLASH_BACKGROUND};
+  user-select: none;
+  -webkit-user-select: none;
+}
+#${LAUNCH_INTRO_SPADE_ID} {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  width: ${px(spadeBox)};
+  height: ${px(spadeBox)};
+  margin: ${px(-spadeBox / 2 - lockupShift)} 0 0 ${px(-spadeBox / 2)};
+  color: ${SPLASH_SPADE};
+}
+#${LAUNCH_INTRO_NAME_ID} {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  margin-top: ${px(SPADE_HEIGHT / 2 + NAME_GAP - lockupShift)};
+  height: ${px(NAME_SIZE)};
+  font: 500 ${px(NAME_SIZE)}/${px(NAME_SIZE)} "${FontWeight[500]}", sans-serif;
+  text-align: center;
+  white-space: nowrap;
+  color: ${SPLASH_SPADE};
+}
+.${LAUNCH_SPADE_CENTRED_CLASS} #${LAUNCH_INTRO_SPADE_ID} {
+  margin-top: ${px(-spadeBox / 2)};
+}
+.${LAUNCH_SPADE_CENTRED_CLASS} #${LAUNCH_INTRO_NAME_ID} {
+  margin-top: ${px(SPADE_HEIGHT / 2 + NAME_GAP)};
+}
 `;

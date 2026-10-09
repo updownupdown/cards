@@ -26,7 +26,10 @@
   },
   "reveal": {
     "skip": "Lewati",
-    "continue": "Lanjutkan"
+    "continue": "Lanjutkan",
+    "destroyToSkip": "Hancurkan rentang perhatianmu untuk melewati",
+    "attentionSpan": "Rentang perhatianku",
+    "keepWatching": "Terus menonton"
   },
   "original": {
     "label": "Tampilkan aslinya"
