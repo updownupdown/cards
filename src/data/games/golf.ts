@@ -39,5 +39,7 @@ export const golf: GameDefinition = {
     "| Values | Ace and King don't meet (they do on Easy) |",
     "| Stock | Draw 1 |",
     "| Redeals | None |",
+    "## Special rules",
+    "- You lose when the stock is empty and no card can go to the waste.",
   ],
 };

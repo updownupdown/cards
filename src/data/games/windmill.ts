@@ -48,5 +48,6 @@ export const windmill: GameDefinition = {
     "| Cards | 104 (two decks) |",
     "## Special rules",
     "- A corner's top card may move to the center, but the next card played to the center must come from a sail or the waste.",
+    "- When a card could go to more than one place, tap it, then tap where it should go.",
   ],
 };

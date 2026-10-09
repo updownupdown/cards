@@ -46,6 +46,6 @@ export const fortyThieves: GameDefinition = {
     "## Variants",
     "- **Josephine**: same-suit runs move together.",
     "- **Lucas**: thirteen columns of three, with the Aces starting on the foundations.",
-    "- **Busy Aces**: twelve columns of two.",
+    "- **Busy Aces**: twelve columns of two, the bottom card face down.",
   ],
 };

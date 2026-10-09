@@ -41,5 +41,6 @@ export const bristol: GameDefinition = {
     "| Cards | 52 |",
     "## Special rules",
     "- Kings go to the bottom of their fan in the deal.",
+    "- The three reserve piles start with one card each.",
   ],
 };

@@ -41,7 +41,7 @@ export const missMilligan: GameDefinition = {
     "| Move | One card, or an ordered run |",
     "| Empty column | King, or a run headed by one |",
     "| Pocket | One card or run at a time, once the stock is empty |",
-    "| Stock | Deals one card to every column |",
+    "| Stock | Deals one card to every column, empty or not |",
     "| Cards | 104 (two decks) |",
     "## Variants",
     "- **Giant**: any card or run fills an empty column, and there is no pocket.",

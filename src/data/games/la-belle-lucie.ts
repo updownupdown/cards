@@ -43,7 +43,7 @@ export const laBelleLucie: GameDefinition = {
     "## Special rules",
     "- A redeal shuffles the cards left in the fans and deals them out in threes.",
     "## Variants",
-    "- **Trefoil**: the Aces start on the foundations.",
+    "- **Trefoil**: the Aces start on the foundations, leaving sixteen fans.",
     "- **Shamrocks**: build up or down regardless of suit, no fan may hold more than three cards, and there are no redeals.",
   ],
 };

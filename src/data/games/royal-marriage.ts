@@ -39,6 +39,7 @@ export const royalMarriage: GameDefinition = {
     "| Remove | One or two cards between two that match in rank or suit; a longer run only if it's all one suit |",
     "| Stock | None; every card is dealt in a line |",
     "## Special rules",
+    "- Select the card or cards to remove, then press **Discard**.",
     "- The Queen of Hearts starts the line, the King of Hearts ends it, and neither ever leaves.",
   ],
 };

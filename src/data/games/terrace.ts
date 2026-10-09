@@ -40,7 +40,7 @@ export const terrace: GameDefinition = {
     "| Foundations (8) | Up from the base rank in alternating colors, wrapping from King to Ace |",
     "| Build | Down, alternating colors, wrapping from Ace to King |",
     "| Move | One card at a time |",
-    "| Empty column | From the waste, or the stock |",
+    "| Empty column | Must be filled, from the waste or the stock |",
     "| Terrace (11) | Top card, to the foundations only |",
     "| Stock | Draw 1 |",
     "| Redeals | None |",

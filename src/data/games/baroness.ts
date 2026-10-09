@@ -42,5 +42,7 @@ export const baroness: GameDefinition = {
     "| Empty pile | Any top card on Easy; stays empty on Difficult |",
     "| Stock | Deals one card to every pile |",
     "| Redeals | None |",
+    "## Special rules",
+    "- You lose when the stock is empty and no move remains.",
   ],
 };

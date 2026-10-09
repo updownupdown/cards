@@ -40,10 +40,11 @@ export const frog: GameDefinition = {
     "| Foundations (8) | Ace to King, regardless of suit |",
     "| Reserve (13) | Top card is playable |",
     "| Waste piles (5) | Any card; only the top card plays, to a foundation |",
-    "| Stock | Draw 1, onto a waste pile |",
+    "| Stock | Draw 1, onto a waste pile or a foundation |",
     "| Redeals | None |",
     "| Cards | 104 (two decks) |",
     "## Special rules",
+    "- Tap a waste pile to place the stock card there, or double-tap a card to play it to a foundation.",
     "- One Ace starts on a foundation, and any Ace met while dealing the reserve goes up too.",
   ],
 };

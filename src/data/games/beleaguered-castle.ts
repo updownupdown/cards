@@ -42,5 +42,7 @@ export const beleagueredCastle: GameDefinition = {
     "| Empty row | Any card |",
     "| Stock | None |",
     "| Cards | 52 |",
+    "## Special rules",
+    "- You lose when no move remains.",
   ],
 };
