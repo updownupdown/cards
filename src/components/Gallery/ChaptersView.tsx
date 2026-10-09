@@ -1,3 +1,4 @@
+import { Button } from "@/components/Button/Button";
 import { Text } from "@/components/common/Text";
 import { TaoChapterDetail } from "@/components/TaoCollection/TaoChapterDetail";
 import {
@@ -44,7 +45,13 @@ export function ChaptersView({
   );
   const [size, setSize] = useState<{ width: number; height: number }>();
   const [picking, setPicking] = useState(false);
+  // The picker's other page: what the Tao Te Ching is.
+  const [aboutOpen, setAboutOpen] = useState(false);
 
+  const openPicker = () => {
+    setAboutOpen(false);
+    setPicking(true);
+  };
   const go = (next: number) => {
     setPicking(false);
     setChapter(wrap(next));
@@ -72,7 +79,6 @@ export function ChaptersView({
           key={chapter}
           chapterNumber={chapter}
           collected={collectedIds.has(chapter)}
-          about={collectedIds.size === 0 ? t("tao.about") : undefined}
           width={size.width}
           height={size.height}
           topInset={topInset}
@@ -82,18 +88,31 @@ export function ChaptersView({
 
       {picking && chapter !== undefined && (
         <PickerPanel
-          title={t("tao.pick")}
+          title={aboutOpen ? t("tao.aboutTitle") : t("tao.pick")}
           closeLabel={t("tao.pick")}
           onClose={() => setPicking(false)}
           top={topInset}
           // Over the bar, which it replaces while open.
           bottom={barBottom}
         >
-          <ChapterGrid
-            current={chapter}
-            collectedIds={collectedIds}
-            onPick={pick}
-          />
+          {aboutOpen ? (
+            <AboutTheTao onBack={() => setAboutOpen(false)} />
+          ) : (
+            <>
+              <View style={{ alignItems: "center" }}>
+                <Button
+                  textOnly
+                  text={t("tao.aboutTitle")}
+                  onPress={() => setAboutOpen(true)}
+                />
+              </View>
+              <ChapterGrid
+                current={chapter}
+                collectedIds={collectedIds}
+                onPick={pick}
+              />
+            </>
+          )}
         </PickerPanel>
       )}
 
@@ -105,7 +124,7 @@ export function ChaptersView({
             iconName: "expand-less",
             label: t("tao.chapter", { number: chapter }),
             accessibilityLabel: t("tao.pick"),
-            onPress: () => setPicking(true),
+            onPress: openPicker,
           }}
           swapColours
           onPrevious={() => go(chapter - 1)}
@@ -115,6 +134,27 @@ export function ChaptersView({
         />
       )}
     </View>
+  );
+}
+
+/** What the Tao Te Ching is, in the picker's place, and the way back. */
+function AboutTheTao({ onBack }: { onBack: () => void }) {
+  const { t } = useTranslation("campaign");
+  const { spacing } = useResponsiveMetrics();
+  return (
+    <ScrollView
+      contentContainerStyle={{
+        paddingHorizontal: spacing(18),
+        paddingBottom: spacing(12),
+        gap: spacing(16),
+        alignItems: "center",
+      }}
+    >
+      <Text size="md" weight={300} color={theme.ink} lineHeight={1.45}>
+        {t("tao.about")}
+      </Text>
+      <Button textOnly text={t("tao.pick")} onPress={onBack} />
+    </ScrollView>
   );
 }
 

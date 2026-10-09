@@ -18,11 +18,14 @@
     "chapter": "Capitolo {{number}}",
     "previous": "Capitolo precedente",
     "next": "Capitolo successivo",
+    "aboutTitle": "Sul Tao Te Ching",
     "about": "Il Tao Te Ching è un testo fondamentale dell'antica Cina, tradizionalmente attribuito al saggio Laozi. Insegna a vivere in armonia con il Tao, il flusso e il ritmo naturali dell'universo. Si dice che praticando il wu wei (l'azione senza sforzo) e coltivando umiltà, semplicità e flessibilità si possano trovare pace ed equilibrio duraturi.",
     "pick": "Scegli un capitolo",
     "uncollected": "Questo capitolo non è ancora stato ottenuto.",
-    "playToCollect": "Gioca all'Odissea per ottenere questo capitolo.",
-    "breathe": "Respira",
+    "playToCollect": "Gioca all'Odissea per ottenere questo capitolo."
+  },
+  "reveal": {
+    "skip": "Salta",
     "continue": "Continua"
   },
   "original": {

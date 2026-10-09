@@ -297,7 +297,7 @@ export const GameWrapper = ({
         : quoteRevealEnglish
       : null;
   const revealing = !!taoRevealText || !!quoteReveal;
-  // The win box shows first, its buttons faded, then after a pause the
+  // The win box shows first, without its buttons, then after a pause the
   // reward's reveal fades in over it.
   const [revealStarted, setRevealStarted] = useState<CampaignWinResult | null>(
     null,
@@ -545,7 +545,7 @@ export const GameWrapper = ({
         newlyEarnedReward={campaignWinResult?.awardedReward}
         title={localizeGameTitle(gameInfo, pathname, displayLanguage)}
         winCount={won ? winCount : undefined}
-        actionsDisabled={revealing && uncoveredWinResult !== campaignWinResult}
+        actionsHidden={revealing && uncoveredWinResult !== campaignWinResult}
         onExit={async () => {
           setCampaignWinResult(null);
           try {
@@ -714,7 +714,6 @@ export const GameWrapper = ({
         <TaoReveal
           key={taoReward.id}
           chapter={taoReward.id}
-          text={taoRevealText}
           onUncover={() => setUncoveredWinResult(campaignWinResult)}
           onDone={() => setRevealedWinResult(campaignWinResult)}
         />
@@ -723,9 +722,7 @@ export const GameWrapper = ({
       {quoteReward && quoteReveal && revealStarted === campaignWinResult && (
         <QuoteReveal
           key={quoteReward.id}
-          text={quoteReveal.text}
-          author={quoteReveal.author}
-          source={quoteReveal.source}
+          quoteId={quoteReward.id}
           background={background.source}
           overlayColor={backgroundColor}
           onUncover={() => setUncoveredWinResult(campaignWinResult)}

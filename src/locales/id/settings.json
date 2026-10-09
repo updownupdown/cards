@@ -62,7 +62,9 @@
   "privacyPolicy": "Kebijakan Privasi",
   "resetData": {
     "button": "Atur ulang semua data aplikasi",
-    "confirm": "Hapus semua progres dan pengaturan?"
+    "warning": "Kamu akan kehilangan semua progres dan preferensimu.",
+    "tapsLeft_one": "Ketuk {{count}} kali lagi untuk mengatur ulang",
+    "tapsLeft_other": "Ketuk {{count}} kali lagi untuk mengatur ulang"
   },
   "colorTheme": {
     "label": "Tema warna"
@@ -70,9 +72,8 @@
   "devMode": {
     "on": "Mode dev aktif",
     "off": "Mode dev nonaktif",
-    "status": "Mode dev sedang aktif.",
     "turnOff": "Matikan",
-    "title": "Mode dev",
+    "title": "Mode pengembang",
     "unlockAll": "Buka semua game kampanye",
     "unlockedAll": "Semua game kampanye terbuka",
     "grantMercySkip": "Beri sebuah pengampunan",

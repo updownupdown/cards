@@ -87,27 +87,26 @@ export interface TextProps extends RNTextProps {
   weight?: TextWeight;
   textTransform?: "none" | "capitalize" | "uppercase" | "lowercase";
   /**
-   * EB Garamond, for anything belonging to the art, the Tao or the quotes
-   * (Outfit is for the games and the interface). Serif text uses oldstyle
-   * figures.
+   * Libre Baskerville, for anything belonging to the art, the Tao or the
+   * quotes (Outfit is for the games and the interface). Always upright:
+   * there is no italic serif. Serif text uses oldstyle figures.
    */
   serif?: boolean;
-  italic?: boolean;
   /** Small caps: serif labels. Write the label in normal case. */
   smallCaps?: boolean;
 }
 
-/** The EB Garamond face closest to an Outfit weight. */
-export function serifFontFamily(weight: TextWeight, italic = false) {
+/** The Libre Baskerville face closest to an Outfit weight. */
+export function serifFontFamily(weight: TextWeight) {
   const heavy =
     weight === 600 ||
     weight === 700 ||
     weight === "bold" ||
     weight === "semibold";
   const medium = weight === 500 || weight === "medium";
-  if (heavy) return italic ? SerifFont.mediumItalic : SerifFont.semibold;
-  if (medium) return italic ? SerifFont.mediumItalic : SerifFont.medium;
-  return italic ? SerifFont.italic : SerifFont.regular;
+  if (heavy) return SerifFont.semibold;
+  if (medium) return SerifFont.medium;
+  return SerifFont.regular;
 }
 
 export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
@@ -121,7 +120,6 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
       style,
       color: colorProp,
       serif = false,
-      italic = false,
       smallCaps = false,
       ...otherProps
     } = props;
@@ -134,7 +132,7 @@ export const Text = forwardRef<React.ElementRef<typeof RNText>, TextProps>(
     }, [size, ui.textScale]);
 
     const fontFamily = serif
-      ? serifFontFamily(weight, italic)
+      ? serifFontFamily(weight)
       : Typography.fontFamily[weight];
     const resolvedLineHeight = fontSize * lineHeight;
     const fontVariant: TextStyle["fontVariant"] = serif

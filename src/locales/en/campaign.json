@@ -18,11 +18,14 @@
     "chapter": "Chapter {{number}}",
     "previous": "Previous chapter",
     "next": "Next chapter",
+    "aboutTitle": "About the Tao Te Ching",
     "about": "The Tao Te Ching is a foundational ancient Chinese text traditionally attributed to the sage Laozi. It teaches individuals to live in harmony with the Tao, the natural flow and rhythm of the universe. By practicing wu wei (effortless action) and embracing humility, simplicity, and flexibility, it is said that one can find lasting peace and balance.",
     "pick": "Select chapter",
     "uncollected": "This chapter has not been collected yet.",
-    "playToCollect": "Play the Odyssey to collect this chapter.",
-    "breathe": "Breathe",
+    "playToCollect": "Play the Odyssey to collect this chapter."
+  },
+  "reveal": {
+    "skip": "Skip",
     "continue": "Continue"
   },
   "original": {

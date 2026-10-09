@@ -62,7 +62,9 @@
   "privacyPolicy": "Informativa sulla privacy",
   "resetData": {
     "button": "Azzera tutti i dati dell'app",
-    "confirm": "Cancellare tutti i progressi e le impostazioni?"
+    "warning": "Stai per perdere tutti i tuoi progressi e le tue preferenze.",
+    "tapsLeft_one": "Tocca ancora {{count}} volta per azzerare",
+    "tapsLeft_other": "Tocca ancora {{count}} volte per azzerare"
   },
   "colorTheme": {
     "label": "Tema colori"
@@ -70,9 +72,8 @@
   "devMode": {
     "on": "Modalità dev attiva",
     "off": "Modalità dev disattivata",
-    "status": "La modalità dev è attiva.",
     "turnOff": "Disattiva",
-    "title": "Modalità dev",
+    "title": "Modalità sviluppatore",
     "unlockAll": "Sblocca tutte le partite della campagna",
     "unlockedAll": "Tutte le partite della campagna sono sbloccate",
     "grantMercySkip": "Concedi una grazia",

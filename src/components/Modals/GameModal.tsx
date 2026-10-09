@@ -319,7 +319,7 @@ export const CreditsSection = ({ style }: CreditsSectionProps) => {
             }}
           >
             <View style={{ flex: 1, gap: spacing(2) }}>
-              <Text serif italic size="lg" color={theme.ink}>
+              <Text serif size="lg" color={theme.ink}>
                 {art.title}
               </Text>
               <Text serif size="sm" color={theme.dim}>

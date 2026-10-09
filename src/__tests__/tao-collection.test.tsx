@@ -70,7 +70,7 @@ function textsIn(renderer: ReactTestRenderer) {
 }
 
 describe("Chapter text", () => {
-  test("is read out word by word", () => {
+  test("is read out line by line", () => {
     jest.useFakeTimers();
     let renderer!: ReactTestRenderer;
     act(() => {
@@ -85,19 +85,9 @@ describe("Chapter text", () => {
     act(() => {
       jest.advanceTimersByTime(200);
     });
-    const words = textsIn(renderer);
-    expect(words).toEqual([
-      "The",
-      "Tao",
-      "that",
-      "can",
-      "be",
-      "told",
-      "is",
-      "not",
-      "the",
-      "eternal",
-      "Tao.",
+    expect(textsIn(renderer)).toEqual([
+      "The Tao that can be told",
+      "is not the eternal Tao.",
     ]);
     jest.useRealTimers();
   });

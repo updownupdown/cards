@@ -43,24 +43,24 @@ type Props = {
   chapterNumber: number;
   /** Not collected yet: a faint figure and a note on how to collect it. */
   collected: boolean;
-  /** Shown under the note while nothing at all is collected. */
-  about?: string;
   width: number;
   height: number;
   /** Room left at the top for the modal's header. */
   topInset: number;
   /** Room left at the bottom for the chapter bar. */
   bottomInset: number;
+  /** The last line has appeared (or the reader hurried it all in). */
+  onRead?: () => void;
 };
 
 export function TaoChapterDetail({
   chapterNumber,
   collected,
-  about,
   width,
   height,
   topInset,
   bottomInset,
+  onRead: onReadProp,
 }: Props) {
   const { spacing, font } = useResponsiveMetrics();
   const { t } = useTranslation("campaign");
@@ -69,19 +69,32 @@ export function TaoChapterDetail({
   const [openedAt] = useState(() => Date.now());
   const [showOriginal, setShowOriginal] = useState(false);
   const [read, setRead] = useState(false);
-  const onRead = useCallback(() => setRead(true), []);
+  const onReadRef = useRef(onReadProp);
+  onReadRef.current = onReadProp;
+  const onRead = useCallback(() => {
+    setRead(true);
+    onReadRef.current?.();
+  }, []);
+  // When (ms after opening) the reader took the page over: from then on the
+  // lines still to come arrive quickly, so a swipe is a way to read faster.
+  const [hurriedAt, setHurriedAt] = useState<number>();
   const scrollRef = useRef<ScrollView>(null);
   const titleY = useRef<number | null>(null);
   const textY = useRef(0);
   const lines = useRef<{ y: number; height: number; startsAt: number }[]>([]);
   const scrollY = useRef(0);
+  // How far the page can scroll: it never steers past its own content, so a
+  // chapter that fits the screen stays where it is.
+  const maxScroll = useRef(0);
   const glide = useRef<{ frame: number; to: number } | null>(null);
   // Once the reader scrolls for themselves, the page stops steering.
   const steered = useRef(true);
 
-  const glideTo = useCallback((to: number, duration: number) => {
+  const glideTo = useCallback((target: number, duration: number) => {
     if (glide.current) cancelAnimationFrame(glide.current.frame);
     const from = scrollY.current;
+    const to = Math.min(target, maxScroll.current);
+    if (to <= from + 1) return;
     const start = Date.now();
     const step = () => {
       if (!steered.current) return;
@@ -102,9 +115,10 @@ export function TaoChapterDetail({
     [],
   );
 
-  // As the words start, the page drifts up so the chapter's title sits at the
-  // top, the figure above it scrolled away, leaving the most room to read.
-  // Then it follows the reading down, so a line never appears under the bar.
+  // As the words start, a chapter too long for the screen drifts up, as far
+  // as its title at the top, the figure above it scrolled away, leaving the
+  // most room to read. Then the page follows the reading down, so a line
+  // never appears under the bar.
   useEffect(() => {
     if (!collected) return;
     const rise = setTimeout(() => {
@@ -138,6 +152,7 @@ export function TaoChapterDetail({
   }, [bottomInset, collected, glideTo, height, openedAt, spacing, topInset]);
   const stopSteering = () => {
     steered.current = false;
+    setHurriedAt((current) => current ?? Date.now() - openedAt);
   };
   const onLineLayout = useCallback(
     (index: number, line: { y: number; height: number; startsAt: number }) => {
@@ -164,7 +179,10 @@ export function TaoChapterDetail({
   const shown = showOriginal ? chapter : translated;
   // The chapter is read out; the English original, when asked for, shows at
   // once.
-  const timing = useMemo(() => ({ openedAt, startMs: TEXT_AT }), [openedAt]);
+  const timing = useMemo(
+    () => ({ openedAt, startMs: TEXT_AT, hurriedAt }),
+    [hurriedAt, openedAt],
+  );
 
   const pad = spacing(20);
   const contentWidth = Math.min(width - pad * 2, spacing(560));
@@ -188,6 +206,9 @@ export function TaoChapterDetail({
         scrollY.current = event.nativeEvent.contentOffset.y;
       }}
       scrollEventThrottle={16}
+      onContentSizeChange={(_, contentHeight) => {
+        maxScroll.current = Math.max(0, contentHeight - height);
+      }}
       onScrollBeginDrag={stopSteering}
       // On the web, a mouse wheel or a touch takes over as well.
       {...({
@@ -197,8 +218,6 @@ export function TaoChapterDetail({
       style={{ flex: 1 }}
       contentContainerStyle={{
         alignItems: "center",
-        // Room to lift even a short chapter's title to the top.
-        minHeight: collected ? height + figureSize + spacing(60) : undefined,
         paddingTop: topInset,
         paddingBottom: bottomInset + spacing(32),
         paddingHorizontal: pad,
@@ -217,8 +236,6 @@ export function TaoChapterDetail({
             constellation={constellation}
             size={figureSize}
             dustCount={dustCount}
-            // As the words start, the figure dims: its stars are writing.
-            dimAt={collected ? TEXT_AT - 400 : undefined}
           />
         </View>
       )}
@@ -235,7 +252,6 @@ export function TaoChapterDetail({
         {constellation?.name ? (
           <Text
             serif
-            italic
             size="lg"
             color={theme.dim}
             style={{ textAlign: "center" }}
@@ -274,16 +290,6 @@ export function TaoChapterDetail({
             {lockedOnMap ? t("tao.playToCollect") : t("tao.uncollected")}
           </Text>
           {source && <CollectFrom path={source} campaign />}
-          {about ? (
-            <Text
-              size="sm"
-              weight={300}
-              color={theme.faint}
-              style={{ textAlign: "center" }}
-            >
-              {about}
-            </Text>
-          ) : null}
         </View>
       )}
 

@@ -39,8 +39,11 @@ interface Props {
   collectedQuoteIds?: ReadonlySet<number>;
   newlyEarnedReward?: CollectibleReward;
   rewardPreview?: ReactNode;
-  /** Show the buttons faded and disabled, e.g. until a reward has played. */
-  actionsDisabled?: boolean;
+  /**
+   * Leave the buttons out (and Share faded and disabled) until a reward has
+   * played: the box is shorter meanwhile, with no gap where they will be.
+   */
+  actionsHidden?: boolean;
   /** The game's name, large at the top. */
   title: string;
   /** How many times the game has been won, this win included. */
@@ -65,7 +68,7 @@ export const WinLoseBox = ({
   collectedQuoteIds,
   newlyEarnedReward,
   rewardPreview,
-  actionsDisabled = false,
+  actionsHidden = false,
   title,
   winCount,
   onExit,
@@ -244,10 +247,10 @@ export const WinLoseBox = ({
                   <Pressable
                     testID="share-win"
                     accessibilityRole="button"
-                    disabled={actionsDisabled}
+                    disabled={actionsHidden}
                     onPress={share}
                     hitSlop={spacing(10)}
-                    style={{ opacity: actionsDisabled ? 0.2 : 1 }}
+                    style={{ opacity: actionsHidden ? 0.2 : 1 }}
                   >
                     <Text size="md" weight={500} color={theme.accent}>
                       {t("result.share")}
@@ -288,41 +291,35 @@ export const WinLoseBox = ({
             </View>
           )}
 
-          <View
-            style={{
-              flexDirection: "row",
-              gap: spacing(10),
-              opacity: actionsDisabled ? 0.2 : 1,
-              pointerEvents: actionsDisabled ? "none" : "auto",
-            }}
-          >
-            {handleUndo && !won && (
+          {!actionsHidden && (
+            <View style={{ flexDirection: "row", gap: spacing(10) }}>
+              {handleUndo && !won && (
+                <ActionButton
+                  secondary
+                  iconName="undo"
+                  label=""
+                  accessibilityLabel={tCommon("undo")}
+                  onPress={() => fadeOutWLM(handleUndo)}
+                />
+              )}
               <ActionButton
                 secondary
-                iconName="undo"
-                label=""
-                accessibilityLabel={tCommon("undo")}
-                disabled={actionsDisabled}
-                onPress={() => fadeOutWLM(handleUndo)}
+                iconName="reset"
+                label={won ? t("result.playAgain") : t("result.tryAgain")}
+                onPress={() => fadeOutWLM(reset)}
+                style={{ flex: 1 }}
               />
-            )}
-            <ActionButton
-              secondary
-              iconName="reset"
-              label={won ? t("result.playAgain") : t("result.tryAgain")}
-              disabled={actionsDisabled}
-              onPress={() => fadeOutWLM(reset)}
-              style={{ flex: 1 }}
-            />
-            <ActionButton
-              iconName={isCampaignMode ? "milky-way" : "home"}
-              label={
-                isCampaignMode ? t("result.continueOdyssey") : t("result.home")
-              }
-              disabled={actionsDisabled}
-              onPress={() => fadeOutWLM(onExit)}
-            />
-          </View>
+              <ActionButton
+                iconName={isCampaignMode ? "milky-way" : "home"}
+                label={
+                  isCampaignMode
+                    ? t("result.continueOdyssey")
+                    : t("result.home")
+                }
+                onPress={() => fadeOutWLM(onExit)}
+              />
+            </View>
+          )}
         </View>
       </Animated.View>
     </>

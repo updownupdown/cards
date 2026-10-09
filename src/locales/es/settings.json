@@ -62,7 +62,9 @@
   "privacyPolicy": "Política de privacidad",
   "resetData": {
     "button": "Restablecer todos los datos",
-    "confirm": "¿Borrar todo el progreso y los ajustes?"
+    "warning": "Estás a punto de perder todo tu progreso y tus preferencias.",
+    "tapsLeft_one": "Toca {{count}} vez más para restablecer",
+    "tapsLeft_other": "Toca {{count}} veces más para restablecer"
   },
   "colorTheme": {
     "label": "Tema de color"
@@ -70,9 +72,8 @@
   "devMode": {
     "on": "Modo dev activado",
     "off": "Modo dev desactivado",
-    "status": "El modo dev está activado.",
     "turnOff": "Desactivar",
-    "title": "Modo dev",
+    "title": "Modo desarrollador",
     "unlockAll": "Desbloquear todas las partidas de la campaña",
     "unlockedAll": "Todas las partidas de la campaña desbloqueadas",
     "grantMercySkip": "Conceder un indulto",

@@ -10,10 +10,12 @@ import { theme } from "@/styles/styles";
 import Animated from "react-native-reanimated";
 
 /**
- * A Tao chapter read out word by word, at the pace of the reveal after a win.
- * The words sit in the normal layout from the start (just transparent), so
- * the page has its full height and scrolls freely while they appear. Each
- * word's fade is a CSS animation with a delay: nothing runs per frame.
+ * A Tao chapter read out line by line. Each line fades in whole when the
+ * reading reaches it, and a longer line holds the reading longer before the
+ * next, so the pace is the reader's. The lines sit in the normal layout from
+ * the start (just transparent), so the page has its full height and scrolls
+ * freely while they appear. Each line's fade is a CSS animation with a
+ * delay: nothing runs per frame.
  */
 
 const FONT_FAMILY = "Outfit_300Light";
@@ -21,18 +23,15 @@ const LINE_HEIGHT = 1.5;
 // Lines are mounted a chunk (counted in letters) per frame, so opening a long
 // chapter never stalls a frame of the constellation drawing itself above.
 const MOUNT_CHUNK = 240;
-
 /**
- * Each word is written by starlight: it shows first as a speck of light,
- * which swells into the word, as in the reveal after a win.
+ * How much faster than the plain reading pace the lines come: the pace was
+ * set for words appearing one by one, and whole lines read quicker.
  */
-const WORD_IN = {
-  from: { opacity: 0, transform: [{ scale: 0.15 }] },
-  "35%": { opacity: 0.9, transform: [{ scale: 0.3 }] },
-  to: { opacity: 1, transform: [{ scale: 1 }] },
-};
-/** Longer than the reveal's plain fade, so the speck is seen to swell. */
-const WORD_IN_MS = REVEAL.wordFadeMs * 2;
+export const LINE_PACE = 1.2;
+/** Hurried, the lines still come one after another, this far apart. */
+export const HURRY_STEP_MS = 220;
+
+const LINE_IN = { from: { opacity: 0 }, to: { opacity: 1 } };
 
 const textStyle = (fontSize: number) =>
   ({
@@ -41,26 +40,62 @@ const textStyle = (fontSize: number) =>
     lineHeight: fontSize * LINE_HEIGHT,
     color: theme.ink,
     includeFontPadding: false,
+    textAlign: "center",
   }) as const;
+
+export type ChapterTiming = {
+  /** `Date.now()` of the moment the lines are timed from... */
+  openedAt: number;
+  /** ...and when (ms after it) the first one appears. */
+  startMs: number;
+  /**
+   * When (ms after `openedAt`) the reader hurried the reading: every line
+   * not yet shown by then comes quickly, one after another.
+   */
+  hurriedAt?: number;
+};
 
 type Props = {
   text: string;
   fontSize: number;
-  /**
-   * `Date.now()` of the moment the words are timed from, and when (ms after
-   * it) the first one appears. Without it the text shows at once.
-   */
-  timing?: { openedAt: number; startMs: number };
+  /** Without it the text shows at once. */
+  timing?: ChapterTiming;
   onDone?: () => void;
   /**
-   * Each line's place in the text, and when (ms after `openedAt`) its first
-   * word appears: lets the page follow the reading.
+   * Each line's place in the text, and when (ms after `openedAt`) it
+   * appears: lets the page follow the reading.
    */
   onLineLayout?: (
     lineIndex: number,
     line: { y: number; height: number; startsAt: number },
   ) => void;
 };
+
+/** When (ms after opening) each line appears, and when the last is in. */
+export function scheduleLines(
+  parsed: ParsedText,
+  startMs: number,
+  hurriedAt?: number,
+) {
+  const reading = scheduleReading(parsed, startMs);
+  const startsAt = parsed.lines.map(
+    (line) =>
+      startMs +
+      (reading.tIn[parsed.words[line.words[0]].glyphs[0]] - startMs) /
+        LINE_PACE,
+  );
+  if (hurriedAt !== undefined) {
+    let hurried = 0;
+    startsAt.forEach((at, index) => {
+      if (at > hurriedAt) {
+        startsAt[index] = hurriedAt + hurried * HURRY_STEP_MS;
+        hurried += 1;
+      }
+    });
+  }
+  const last = startsAt.length ? startsAt[startsAt.length - 1] : startMs;
+  return { startsAt, textEnd: last + REVEAL.lineFadeMs };
+}
 
 export const ChapterText = memo(function ChapterText({
   text,
@@ -71,7 +106,8 @@ export const ChapterText = memo(function ChapterText({
 }: Props) {
   const parsed = useMemo(() => parseChapterText(text), [text]);
   const schedule = useMemo(
-    () => (timing ? scheduleReading(parsed, timing.startMs) : null),
+    () =>
+      timing ? scheduleLines(parsed, timing.startMs, timing.hurriedAt) : null,
     [parsed, timing],
   );
 
@@ -117,102 +153,82 @@ export const ChapterText = memo(function ChapterText({
   const lineHeight = fontSize * LINE_HEIGHT;
   return (
     <View style={{ width: "100%" }}>
-      {parsed.lines.slice(0, mountedLines).map((line, lineIndex) => (
-        <View
-          key={lineIndex}
-          onLayout={
-            onLineLayout && schedule
-              ? (event) => {
-                  const { y, height } = event.nativeEvent.layout;
-                  const firstGlyph = parsed.words[line.words[0]]?.glyphs[0];
-                  onLineLayout(lineIndex, {
-                    y,
-                    height,
-                    startsAt: schedule.tIn[firstGlyph] ?? 0,
-                  });
-                }
-              : undefined
-          }
-          style={{
-            marginTop:
-              line.paragraphStart && lineIndex > 0 ? lineHeight * 0.7 : 0,
-          }}
-        >
-          {schedule && timing ? (
-            <AnimatedLine
-              parsed={parsed}
-              lineIndex={lineIndex}
-              fontSize={fontSize}
-              tIn={schedule.tIn}
-              openedAt={timing.openedAt}
-            />
-          ) : (
-            <Text
-              allowFontScaling={false}
-              style={[textStyle(fontSize), { textAlign: "center" }]}
-            >
-              {line.words
-                .map((word) =>
-                  parsed.words[word].glyphs
-                    .map((glyph) => parsed.glyphs[glyph].char)
-                    .join(""),
-                )
-                .join(" ")}
-            </Text>
-          )}
-        </View>
-      ))}
+      {parsed.lines.slice(0, mountedLines).map((line, lineIndex) => {
+        const content = line.words
+          .map((word) =>
+            parsed.words[word].glyphs
+              .map((glyph) => parsed.glyphs[glyph].char)
+              .join(""),
+          )
+          .join(" ");
+        return (
+          <View
+            key={lineIndex}
+            onLayout={
+              onLineLayout && schedule
+                ? (event) => {
+                    const { y, height } = event.nativeEvent.layout;
+                    onLineLayout(lineIndex, {
+                      y,
+                      height,
+                      startsAt: schedule.startsAt[lineIndex],
+                    });
+                  }
+                : undefined
+            }
+            style={{
+              marginTop:
+                line.paragraphStart && lineIndex > 0 ? lineHeight * 0.7 : 0,
+            }}
+          >
+            {schedule && timing ? (
+              <AnimatedLine
+                text={content}
+                fontSize={fontSize}
+                startsAt={schedule.startsAt[lineIndex]}
+                openedAt={timing.openedAt}
+              />
+            ) : (
+              <Text allowFontScaling={false} style={textStyle(fontSize)}>
+                {content}
+              </Text>
+            )}
+          </View>
+        );
+      })}
     </View>
   );
 });
 
 const AnimatedLine = memo(function AnimatedLine({
-  parsed,
-  lineIndex,
+  text,
   fontSize,
-  tIn,
+  startsAt,
   openedAt,
 }: {
-  parsed: ParsedText;
-  lineIndex: number;
+  text: string;
   fontSize: number;
-  tIn: number[];
+  startsAt: number;
   openedAt: number;
 }) {
-  // Fixed at mount: a changed delay would restart the animation.
+  // Fixed at mount, so a re-render never restarts a fade already under way.
+  // A hurried line's start moves, but only while it is still in the future.
   const [elapsed] = useState(() => Date.now() - openedAt);
-  const style = textStyle(fontSize);
-
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        columnGap: fontSize * 0.3,
-      }}
+    <Animated.Text
+      allowFontScaling={false}
+      style={[
+        textStyle(fontSize),
+        {
+          animationName: LINE_IN,
+          animationDuration: `${REVEAL.lineFadeMs}ms`,
+          animationDelay: `${Math.max(0, Math.round(startsAt - elapsed))}ms`,
+          animationFillMode: "both",
+          animationTimingFunction: "ease-in-out",
+        },
+      ]}
     >
-      {parsed.lines[lineIndex].words.map((wordIndex) => {
-        const glyphs = parsed.words[wordIndex].glyphs;
-        return (
-          <Animated.Text
-            key={wordIndex}
-            allowFontScaling={false}
-            style={[
-              style,
-              {
-                animationName: WORD_IN,
-                animationDuration: `${WORD_IN_MS}ms`,
-                animationDelay: `${Math.max(0, Math.round(tIn[glyphs[0]] - elapsed))}ms`,
-                animationFillMode: "both",
-                animationTimingFunction: "ease-in-out",
-              },
-            ]}
-          >
-            {glyphs.map((glyph) => parsed.glyphs[glyph].char).join("")}
-          </Animated.Text>
-        );
-      })}
-    </View>
+      {text}
+    </Animated.Text>
   );
 });
