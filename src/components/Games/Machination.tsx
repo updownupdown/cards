@@ -7,6 +7,7 @@ import { useEffect, useMemo } from "react";
 import { View } from "react-native";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
+  cardDims,
   collectCards,
   createDeck,
   flipAllToBack,
@@ -15,11 +16,13 @@ import {
   redealWith,
   shuffle,
   top,
+  zoneFanOffset,
   type PlayingCard,
 } from "../Cards/card-utils";
 import { MappedCard, MapZone, useCardMap } from "../Cards/CardMap";
 import { GameWrapper } from "../common/GameWrapper";
 import { ProgressBar } from "../Home/ProgressBar";
+import { rgba } from "@/styles/styles";
 
 // The whole stock is placed, one card at a time, on piles of the player's
 // choosing; Aces go straight to the foundations. Only then are the piles
@@ -32,13 +35,11 @@ const BOARD_COLS = 8;
 const BUILD_INTERVAL = 150;
 const FOUNDATION_COUNT = 4;
 const DECK_SIZE = 52;
-const BOARD_GAP = 0.18;
+const BOARD_GAP = 0.12;
 /** The bar across the top that drains with the stock, in card heights. */
-const BAR_HEIGHT = 0.3;
-const TOP_ROW = BAR_HEIGHT + 0.25;
+const BAR_HEIGHT = 0.12;
+const TOP_ROW = BAR_HEIGHT + 0.5;
 const PILE_ROW = TOP_ROW + 1.4;
-/** A fan that leaves each card's corner index in view. */
-const PILE_OFFSET = 0.4;
 /** The most a pile may fan down before its cards close up to fit. */
 const PILE_SPAN = 3.4;
 const FOUNDATION_COL = 3;
@@ -258,9 +259,11 @@ export default function Machination() {
       baseZIndex: 10,
       fan: {
         direction: "down",
-        offset: Math.min(
-          PILE_OFFSET,
-          PILE_SPAN / Math.max(1, cards.length - 1),
+        offset: zoneFanOffset(
+          cards.length,
+          PILE_SPAN + 1,
+          0.1,
+          cardDims.tableauOffset,
         ),
       },
       placeholder: {},
@@ -283,7 +286,10 @@ export default function Machination() {
         row: TOP_ROW,
         baseZIndex: 50,
         fan: { maxVisible: 3 },
-        placeholder: {},
+        placeholder: {
+          text: "Stock",
+          infoPos: "right",
+        },
       },
       ...foundationZones,
       ...pileZones,
@@ -322,7 +328,7 @@ export default function Machination() {
     gap: BOARD_GAP,
     cardMapper,
     zoneMapper,
-    cardSize: "regular",
+    cardSize: "tableau",
     fixedCols: BOARD_COLS,
     fixedRows: BOARD_ROWS,
   });
@@ -348,12 +354,11 @@ export default function Machination() {
       {/* Cards still to place */}
       <View style={getZoneStylesById("stock-bar")}>
         <ProgressBar
-          iconName="card-column"
           totalValue={DECK_SIZE}
           progressValue={game.stock.length}
-          tallyText={game.stock.length}
           color={colorAccent}
           scaledHeight={cardHeight * BAR_HEIGHT}
+          backgroundColor={rgba(colorAccent, 0.2)}
         />
       </View>
     </GameWrapper>
