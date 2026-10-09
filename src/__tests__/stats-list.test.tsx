@@ -105,7 +105,8 @@ jest.mock("@/components/Home/HomeArt", () => {
 // Earned achievements are read and written through storage, which would
 // finish after the test and render into a torn-down environment.
 jest.mock("@/data/earned-achievements", () => ({
-  loadEarnedAchievements: () => Promise.resolve(new Set()),
+  // Never settles: none are saved here, and a late update would be outside act.
+  loadEarnedAchievements: () => new Promise(() => {}),
   subscribeToEarnedAchievements: () => () => {},
   recordEarnedAchievements: () => Promise.resolve(new Set()),
 }));
