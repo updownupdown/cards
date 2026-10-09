@@ -101,17 +101,30 @@ function hslToHex(h: number, s: number, l: number): string {
 }
 
 /**
- * The colour of the nth star in a run: hues scan round the wheel from star
- * to star (by the golden angle, so neighbours differ), and the colour
- * deepens with the run, from all but white to fully saturated by
- * RUN_FULL_AT. `jitter` (0 to 1) varies it a little.
+ * The hues meteors really burn with: blue-white, the greens of magnesium
+ * and oxygen, sodium gold, amber, and now and then a rose. The run scans
+ * through them in turn.
+ */
+export const STAR_HUES = [210, 160, 125, 95, 50, 32, 350] as const;
+/** As deep as the colour ever gets: a clear tint, well short of neon. */
+export const MAX_SATURATION = 0.55;
+
+/**
+ * The colour of the nth star in a run: the hue steps through STAR_HUES
+ * from star to star, and the colour deepens with the run, from all but
+ * white to its deepest tint by RUN_FULL_AT. `jitter` (0 to 1) varies it a
+ * little.
  */
 export function starColor(count: number, jitter = 0.5): string {
-  const hue = (count * 137.508 + jitter * 40) % 360;
+  const hue =
+    STAR_HUES[(count - 1 + STAR_HUES.length) % STAR_HUES.length] +
+    (jitter - 0.5) * 16;
   const run = clamp01((count - 1) / (RUN_FULL_AT - 1));
-  const saturation = clamp01(0.06 + 0.94 * run + (jitter - 0.5) * 0.12);
-  const lightness = 0.95 - 0.3 * saturation;
-  return hslToHex(hue, saturation, lightness);
+  const saturation = clamp01(
+    0.04 + (MAX_SATURATION - 0.04) * run + (jitter - 0.5) * 0.08,
+  );
+  const lightness = 0.93 - 0.26 * run;
+  return hslToHex((hue + 360) % 360, saturation, lightness);
 }
 
 // --- One star ------------------------------------------------------------------
@@ -135,9 +148,8 @@ export type Shot = {
 };
 
 const SPARKS = 8;
-/** The trail's thickness; the glow needs some room above and below. */
-const LINE = 2;
-const LANE = 6;
+/** The trail's thickness: one fine line, as the sky's own stars are drawn. */
+const LINE = 1;
 
 /**
  * One streak across the sky. The path is fixed; a lit length sweeps along
@@ -169,7 +181,7 @@ const ShootingStar = memo(function ShootingStar({
   const sweep = shot.travel + tail;
   /** When the burning edge reaches the end of the path, as a share of the sweep. */
   const burnOutAt = shot.travel / sweep;
-  const peak = 0.55 + 0.45 * shot.brightness;
+  const peak = 0.6 + 0.4 * shot.brightness;
 
   // It is seen igniting, burns brightest along the way, and is gone soon
   // after the burning edge leaves the path.
@@ -187,19 +199,12 @@ const ShootingStar = memo(function ShootingStar({
     transform: [{ translateX: -tail + progress.value * sweep }],
   }));
 
+  // Faint where it began burning, brightest at the burning edge.
   const stops = useMemo(
-    () =>
-      [
-        rgba(shot.color, 0),
-        rgba(shot.color, 0.12),
-        rgba(shot.color, 0.45),
-        shot.color,
-        rgba(shot.color, 0.75),
-      ] as const,
+    () => [rgba(shot.color, 0), rgba(shot.color, 0.32), shot.color] as const,
     [shot.color],
   );
-  const locations = [0, 0.4, 0.78, 0.96, 1] as const;
-  const glow = `0 0 ${2 + 2 * shot.brightness}px ${rgba(shot.color, 0.35 + 0.45 * shot.brightness)}`;
+  const locations = [0, 0.65, 1] as const;
 
   return (
     <Animated.View
@@ -208,9 +213,9 @@ const ShootingStar = memo(function ShootingStar({
         {
           position: "absolute",
           left: shot.x,
-          top: shot.y - LANE / 2,
+          top: shot.y - LINE / 2,
           width: shot.travel,
-          height: LANE,
+          height: LINE,
           transformOrigin: "0% 50%",
           transform: [{ rotate: `${shot.angle}rad` }],
           overflow: "hidden",
@@ -224,11 +229,11 @@ const ShootingStar = memo(function ShootingStar({
           {
             position: "absolute",
             left: 0,
-            top: (LANE - LINE) / 2,
+            top: 0,
             width: tail,
             height: LINE,
-            borderRadius: LINE / 2,
-            boxShadow: glow,
+            // Read by the tests, which can't see a gradient.
+            borderColor: shot.color,
           },
           litStyle,
         ]}
@@ -238,7 +243,6 @@ const ShootingStar = memo(function ShootingStar({
             style={[
               StyleSheet.absoluteFill,
               {
-                borderRadius: LINE / 2,
                 backgroundImage: `linear-gradient(to right, ${stops
                   .map((stop, index) => `${stop} ${locations[index] * 100}%`)
                   .join(", ")})`,
@@ -251,7 +255,7 @@ const ShootingStar = memo(function ShootingStar({
             locations={locations}
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
-            style={[StyleSheet.absoluteFill, { borderRadius: LINE / 2 }]}
+            style={StyleSheet.absoluteFill}
           />
         )}
       </Animated.View>
@@ -301,12 +305,11 @@ function Spark({
         {
           position: "absolute",
           left: shot.travel - dot / 2 - 2,
-          top: LANE / 2 - dot / 2,
+          top: LINE / 2 - dot / 2,
           width: dot,
           height: dot,
           borderRadius: dot / 2,
           backgroundColor: shot.color,
-          boxShadow: `0 0 4px 1px ${rgba(shot.color, 0.6)}`,
         },
         style,
       ]}
@@ -547,7 +550,11 @@ export function useTapShootingStars({ enabled, width, height }: Options) {
             travel,
             tail,
             durationMs: ((travel + tail) / speed) * 1000,
-            color: hslToHex((from.count * 47 + index * 30) % 360, 1, 0.7),
+            color: hslToHex(
+              STAR_HUES[(from.count + index) % STAR_HUES.length],
+              0.3 + Math.random() * (MAX_SATURATION - 0.3),
+              0.78,
+            ),
             brightness: 0.3 + Math.random() * 0.7,
             burst: false,
           }),

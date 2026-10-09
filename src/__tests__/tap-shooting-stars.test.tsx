@@ -2,9 +2,11 @@ import {
   CHARGE_MS,
   COMBO_WINDOW_MS,
   FAN_BEAT_MS,
+  MAX_SATURATION,
   PAIR_AT,
   RUN_FULL_AT,
   SHOWER_EVERY,
+  STAR_HUES,
   starColor,
   TRIO_AT,
 } from "@/components/common/TapShootingStars";
@@ -143,14 +145,13 @@ function openReveal() {
     )[0];
     const style = StyleSheet.flatten(star.props.style);
     const lit = StyleSheet.flatten(trail.props.style);
-    const match = /rgba\((\d+), (\d+), (\d+)/.exec(String(lit.boxShadow));
     return {
       travel: style.width as number,
       tail: lit.width as number,
       angle: parseFloat(
         String((style.transform as { rotate: string }[])[0].rotate),
       ),
-      rgb: match ? [+match[1], +match[2], +match[3]] : null,
+      rgb: rgbOf(String(lit.borderColor)),
     };
   };
 
@@ -193,7 +194,7 @@ describe("Tapping the sky of a reveal", () => {
     expect(style.left).toBe(100);
     // All but white, and no head: the trail is a lit length of the path.
     const first = sky.latest();
-    expect(saturation(first.rgb!)).toBeLessThan(0.2);
+    expect(saturation(first.rgb!)).toBeLessThan(0.15);
     expect(first.tail).toBeLessThan(first.travel);
     expect(sky.trails()).toHaveLength(1);
     expect(sky.sparks()).toHaveLength(0);
@@ -215,9 +216,11 @@ describe("Tapping the sky of a reveal", () => {
       seen.push(saturation(star.rgb!));
       travels.push(star.travel);
     }
-    // The first all but white, the last fully coloured, deepening between.
-    expect(seen[0]).toBeLessThan(0.2);
-    expect(seen[RUN_FULL_AT - 1]).toBeGreaterThan(0.8);
+    // The first all but white, the last a clear tint but never neon,
+    // deepening between.
+    expect(seen[0]).toBeLessThan(0.15);
+    expect(seen[RUN_FULL_AT - 1]).toBeGreaterThan(0.4);
+    expect(seen[RUN_FULL_AT - 1]).toBeLessThanOrEqual(MAX_SATURATION + 0.06);
     expect(seen[5]).toBeGreaterThan(seen[0]);
     expect(seen[5]).toBeLessThan(seen[RUN_FULL_AT - 1]);
     // Longer with the run (the random variation is smaller than that).
@@ -229,18 +232,21 @@ describe("Tapping the sky of a reveal", () => {
     act(() => {
       jest.advanceTimersByTime(COMBO_WINDOW_MS + 1);
     });
-    expect(saturation(sky.tap(100, 300)!.rgb!)).toBeLessThan(0.2);
+    expect(saturation(sky.tap(100, 300)!.rgb!)).toBeLessThan(0.15);
     sky.unmount();
   });
 
-  test("every star has a hue of its own, scanning round the wheel", () => {
-    const hues = Array.from({ length: 6 }, (_, index) =>
+  test("the hues step through the ones meteors really burn with", () => {
+    const hues = Array.from({ length: STAR_HUES.length }, (_, index) =>
       hue(rgbOf(starColor(RUN_FULL_AT + index, 0.5))),
     );
-    for (let index = 1; index < hues.length; index += 1) {
-      const apart = Math.abs(hues[index] - hues[index - 1]);
-      expect(Math.min(apart, 360 - apart)).toBeGreaterThan(40);
-    }
+    hues.forEach((seen, index) => {
+      const wanted = STAR_HUES[(RUN_FULL_AT - 1 + index) % STAR_HUES.length];
+      const apart = Math.abs(seen - wanted);
+      expect(Math.min(apart, 360 - apart)).toBeLessThan(6);
+    });
+    // Neighbours differ, so a run is seen to change colour.
+    expect(new Set(hues.map(Math.round)).size).toBe(STAR_HUES.length);
   });
 
   test("stars set off in every direction", () => {
@@ -312,7 +318,7 @@ describe("Tapping the sky of a reveal", () => {
     const sky = openReveal();
     let sixth = null;
     for (let count = 0; count < 6; count += 1) sixth = sky.tap(100, 300);
-    expect(saturation(sixth!.rgb!)).toBeGreaterThan(0.3);
+    expect(saturation(sixth!.rgb!)).toBeGreaterThan(0.2);
 
     sky.touch("onTouchStart", 100, 300);
     sky.touch("onTouchMove", 100, 340);
@@ -321,7 +327,7 @@ describe("Tapping the sky of a reveal", () => {
 
     const fresh = sky.tap(100, 300);
     expect(sky.born()).toBe(7);
-    expect(saturation(fresh!.rgb!)).toBeLessThan(0.2);
+    expect(saturation(fresh!.rgb!)).toBeLessThan(0.15);
     sky.unmount();
   });
 

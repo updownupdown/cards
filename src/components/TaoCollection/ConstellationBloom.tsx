@@ -39,13 +39,14 @@ const STAR_IN = {
   "60%": { opacity: 1, transform: [{ scale: 1.3 }] },
   to: { opacity: 1, transform: [{ scale: 1 }] },
 };
-// A glimmer: each star dims and swells back, with a brief overshoot, so the
-// figure keeps moving once drawn.
+// A glimmer: a star holds steady for most of its long cycle, then dims and
+// swells back once. With every star on its own cycle, a couple glimmer at
+// any one time, and the rest are still.
 const TWINKLE = {
   from: { opacity: 1, transform: [{ scale: 1 }] },
-  "35%": { opacity: 0.35, transform: [{ scale: 0.78 }] },
-  "60%": { opacity: 1, transform: [{ scale: 1.12 }] },
-  "80%": { opacity: 0.6, transform: [{ scale: 0.9 }] },
+  "84%": { opacity: 1, transform: [{ scale: 1 }] },
+  "89%": { opacity: 0.45, transform: [{ scale: 0.82 }] },
+  "94%": { opacity: 1, transform: [{ scale: 1.1 }] },
   to: { opacity: 1, transform: [{ scale: 1 }] },
 };
 const DRAW = {
@@ -98,9 +99,10 @@ export const ConstellationBloom = memo(function ConstellationBloom({
         color: STAR_TINTS[tints[id]],
         delay:
           STARS_START + (rank / Math.max(order.length - 1, 1)) * STARS_SPREAD,
-        // Each star glimmers at its own pace once the figure is drawn.
-        twinkleMs: 1400 + ((id * 577 + constellation.chapter * 131) % 1800),
-        twinkleDelay: BLOOM_MS + ((id * 389) % 1600),
+        // Each star glimmers on its own long cycle once the figure is drawn.
+        twinkleMs: 7000 + ((id * 577 + constellation.chapter * 131) % 7000),
+        twinkleDelay:
+          BLOOM_MS + ((id * 389 + constellation.chapter * 97) % 9000),
       };
     });
   }, [constellation, scale, size]);
