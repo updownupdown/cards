@@ -1,23 +1,26 @@
 {
   "accordion": {
     "howToPlay": {
-      "hash": "5a32be9c",
+      "hash": "583fd7f3",
       "value": [
         "## Objetivo",
-        "Vença reduzindo as 52 cartas a uma **só pilha**.",
-        "## Empilhamento",
-        "- Uma carta pode ir para a carta **logo à sua esquerda** ou para a carta **três posições à sua esquerda**, se as duas cartas forem **do mesmo naipe ou valor**.",
-        "- Só a carta do topo de cada pilha conta para as combinações (as cartas de baixo podem ser ignoradas).",
-        "- Depois de uma jogada, as cartas deslizam para a esquerda para fechar o espaço.",
+        "Junte as 52 cartas numa só pilha.",
+        "## Regras",
+        "| Jogáveis | A carta do topo de cada pilha |",
+        "| Movimento | Para a pilha 1 ou 3 posições à esquerda, do mesmo naipe ou valor |",
+        "| Monte | Não há; todas as cartas são distribuídas numa linha |",
+        "## Regras especiais",
+        "- As pilhas deslizam para a esquerda para fechar cada buraco.",
         "## Dicas",
-        "- **Use a técnica do “varredor”**: antes de jogar, procure quatro cartas do mesmo valor (por exemplo, quatro 8) perto do fim da fileira. Proteja-as nunca colocando outra carta sobre um varredor. Seu objetivo final é chegar a exatamente quatro pilhas, cada uma com um varredor no topo. Como elas têm o mesmo valor, você pode então empilhá-las umas sobre as outras e vencer."
+        "- **Use a técnica do “varredor”**: antes de jogar, procure quatro cartas do mesmo valor (por exemplo, quatro 8) perto do fim da mesa. Proteja-as nunca colocando outra carta sobre um varredor. Seu objetivo final é chegar a exatamente quatro pilhas, cada uma com um varredor no topo. Como elas têm o mesmo valor, você pode então empilhá-las umas sobre as outras e vencer."
       ]
     },
     "quickStart": {
-      "hash": "704152e7",
+      "hash": "a6f37d4b",
       "value": [
-        "Reduza o baralho inteiro a uma só pilha.",
-        "Uma carta pode ir 1 ou 3 posições para a esquerda, sobre uma carta do mesmo naipe ou valor."
+        "Junte o baralho inteiro numa só pilha.",
+        "Mova uma pilha para a pilha 1 ou 3 posições à sua esquerda.",
+        "As cartas do topo devem ser do mesmo naipe ou valor."
       ]
     },
     "title": {
@@ -27,23 +30,25 @@
   },
   "aces-up": {
     "howToPlay": {
-      "hash": "0c45e0c2",
+      "hash": "510c00cf",
       "value": [
         "## Objetivo",
-        "Descarte o baralho inteiro, menos os quatro Ases, deixando um Ás em cada pilha.",
-        "## Regras de descarte",
-        "- Compare as cartas do topo das pilhas. Se duas ou mais pilhas mostrarem **o mesmo naipe**, descarte a(s) carta(s) **de menor valor**.",
-        "- **Os Ases são altos** e nunca podem ser descartados.",
-        "- Qualquer carta do topo pode ir para uma **pilha vazia**.",
-        "- Quando não houver mais descartes nem jogadas, distribua mais 4 cartas, uma em cada pilha."
+        "Descarte todas as cartas, exceto os quatro Ases.",
+        "## Regras",
+        "| Jogáveis | A carta do topo de cada pilha |",
+        "| Remoção | Uma carta, quando uma carta mais alta do mesmo naipe também está no topo |",
+        "| Valores | Ases altos |",
+        "| Pilha vazia | Qualquer carta do topo |",
+        "| Monte | Distribui uma carta em cada pilha |",
+        "| Redistribuições | Não há |"
       ]
     },
     "quickStart": {
-      "hash": "f8cf218d",
+      "hash": "cc6ab3e0",
       "value": [
-        "Descarte uma carta exposta se houver outra carta exposta do mesmo naipe, mas de valor maior.",
-        "Vença descartando todas as cartas, menos os quatro Ases.",
-        "Mova cartas para pilhas vazias e distribua quando não houver jogadas."
+        "Descarte todas as cartas, exceto os quatro Ases.",
+        "Descarte uma carta quando houver uma mais alta do mesmo naipe no topo.",
+        "Qualquer carta do topo preenche uma pilha vazia."
       ]
     },
     "title": {
@@ -204,23 +209,26 @@
   },
   "australian-patience": {
     "howToPlay": {
-      "hash": "1faa036d",
+      "hash": "f9e9af74",
       "value": [
         "## Objetivo",
-        "Construa as quatro fundações por naipe, do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- As sete colunas começam com quatro cartas viradas para cima.",
-        "- Construa em ordem decrescente por naipe; só Reis ocupam colunas vazias.",
-        "- Mova qualquer carta virada para cima junto com todas as cartas abaixo dela.",
-        "- Vire o monte uma carta de cada vez, sem redistribuir."
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, mesmo naipe |",
+        "| Movimento | Qualquer carta virada para cima, com todas as cartas sobre ela |",
+        "| Coluna vazia | Só Rei |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "6ef4e415",
+      "hash": "69450c36",
       "value": [
-        "Construa as fundações por naipe em ordem crescente.",
-        "Construa as colunas em ordem decrescente por naipe; só os Reis ocupam espaços vazios.",
-        "Mova qualquer grupo exposto e passe pelo monte uma só vez."
+        "Construa em ordem decrescente por naipe.",
+        "Mova qualquer carta virada para cima com todas as cartas sobre ela.",
+        "Só um Rei preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -230,25 +238,27 @@
   },
   "bakers-dozen": {
     "howToPlay": {
-      "hash": "b7b35342",
+      "hash": "26047edc",
       "value": [
         "## Objetivo",
-        "Leve as 52 cartas para as quatro fundações, construídas por naipe do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- As fundações são construídas **em ordem crescente por naipe**, do Ás ao Rei.",
-        "- As colunas são construídas **em ordem decrescente**, independentemente do naipe.",
-        "- Mova só uma carta exposta do fim da coluna de cada vez.",
-        "- As colunas vazias se fecham na hora e não podem ser preenchidas.",
-        "- Toque numa coluna para selecionar a última carta, depois toque numa coluna de destino válida.",
-        "- Toque duas vezes numa carta exposta para enviá-la à sua fundação, quando possível."
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, independentemente do naipe |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Coluna vazia | Não se preenche |",
+        "| Monte | Não há |",
+        "| Cartas | 52 |",
+        "## Regras especiais",
+        "- Os Reis vão para o fundo da sua coluna na distribuição."
       ]
     },
     "quickStart": {
-      "hash": "9c3be2e3",
+      "hash": "6924ace3",
       "value": [
-        "Construa as fundações por naipe, de A a K.",
-        "Construa as colunas em ordem decrescente, independentemente do naipe.",
-        "Mova uma carta de cada vez; colunas vazias não podem ser usadas."
+        "Construa em ordem decrescente, independentemente do naipe.",
+        "Mova uma carta de cada vez.",
+        "As colunas vazias ficam vazias."
       ]
     },
     "title": {
@@ -258,23 +268,27 @@
   },
   "baroness": {
     "howToPlay": {
-      "hash": "e0cdb3c4",
+      "hash": "9963e04a",
       "value": [
         "## Objetivo",
-        "- **Vença** descartando as 52 cartas.",
-        "- **Perca** quando o monte estiver vazio e não restarem jogadas.",
-        "## Descarte",
-        "- Descarte qualquer **Rei** sozinho, ou duas cartas disponíveis cujos valores somem **13** (por exemplo, {5H} + {8S}, ou {AS} + {QC}).",
-        "- Só a carta do **topo** de cada pilha está disponível.",
-        "- Quando não restarem jogadas, **toque no monte** para distribuir uma carta em cada pilha.",
-        "- Os Ases valem 1."
+        "Descarte as 52 cartas.",
+        "## Regras",
+        "| Jogáveis | A carta do topo de cada pilha |",
+        "| Remoção | Pares que somam 13, ou um Rei sozinho |",
+        "| Valores | Ás 1, Valete 11, Dama 12 |",
+        "| Pilha vazia | Qualquer carta do topo no Fácil; não se preenche no Difícil |",
+        "| Monte | Distribui uma carta em cada pilha |",
+        "| Redistribuições | Não há |",
+        "## Regras especiais",
+        "- Você perde quando o monte estiver vazio e não restar nenhuma jogada."
       ]
     },
     "quickStart": {
-      "hash": "8b385734",
+      "hash": "4d42f86c",
       "value": [
-        "Descarte K sozinhos, ou pares que somam 13.",
-        "A = 1. Distribua quando não houver jogadas."
+        "Remova pares que somam 13.",
+        "Os Reis saem sozinhos.",
+        "Distribua quando não houver jogadas."
       ]
     },
     "title": {
@@ -310,25 +324,27 @@
   },
   "beleaguered-castle": {
     "howToPlay": {
-      "hash": "8fb5fdcb",
+      "hash": "0c14b15c",
       "value": [
         "## Objetivo",
-        "- **Vença** construindo as quatro **fundações** por naipe, **do Ás ao Rei**.",
-        "- **Perca** se não restarem jogadas válidas e as fundações estiverem incompletas.",
-        "## Como jogar",
-        "- Construa as colunas **em ordem decrescente**, independentemente do naipe (por exemplo, um {7C} sobre um {8H}).",
-        "- Envie uma carta para sua **fundação** quando ela for o próximo valor do mesmo naipe.",
-        "- Toque numa carta exposta para pegá-la, depois toque num destino.",
-        "- Toque duas vezes numa carta exposta para enviá-la a uma fundação válida.",
-        "- Mova as cartas **uma de cada vez**.",
-        "- Uma **coluna vazia** pode receber qualquer carta avulsa."
+        "Leve todas as cartas para as fundações.",
+        "## Regras",
+        "| Fundações (4) | Do Ás ao Rei, por naipe; os Ases começam nelas |",
+        "| Construção | Decrescente, independentemente do naipe |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Fileira vazia | Qualquer carta |",
+        "| Monte | Não há |",
+        "| Cartas | 52 |",
+        "## Regras especiais",
+        "- Você perde quando não restar nenhuma jogada."
       ]
     },
     "quickStart": {
-      "hash": "3cf0fa17",
+      "hash": "8b657e09",
       "value": [
-        "Construa todas as fundações por naipe em ordem crescente, de A a K.",
-        "Construa as colunas em ordem decrescente, independentemente do naipe, uma carta de cada vez."
+        "Construa em ordem decrescente, independentemente do naipe.",
+        "Mova uma carta de cada vez.",
+        "Qualquer carta preenche uma fileira vazia."
       ]
     },
     "title": {
@@ -338,24 +354,25 @@
   },
   "bisley": {
     "howToPlay": {
-      "hash": "9a5911e7",
+      "hash": "7f95c912",
       "value": [
         "## Objetivo",
-        "Leve todas as cartas para oito fundações: quatro crescentes a partir dos Ases e quatro decrescentes a partir dos Reis.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Os Ases começam nas suas fundações crescentes.",
-        "- Construa as colunas um valor acima ou abaixo, no mesmo naipe.",
-        "- Só a última carta exposta de cada coluna pode ser jogada.",
-        "- Mova uma carta de cada vez.",
-        "- As colunas vazias não podem ser preenchidas."
+        "| Fundações (8) | Quatro do Ás ao Rei e quatro do Rei ao Ás, por naipe; os Ases começam nelas |",
+        "| Construção | Crescente ou decrescente, mesmo naipe |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Coluna vazia | Não se preenche |",
+        "| Monte | Não há |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "db6b2f70",
+      "hash": "6adb8ffb",
       "value": [
-        "Construa as fundações dos Ases em ordem crescente e as dos Reis em ordem decrescente, por naipe.",
-        "Construa as colunas um valor acima ou abaixo, no mesmo naipe.",
-        "Mova uma carta exposta de cada vez; colunas vazias ficam fechadas."
+        "Construa em ordem crescente ou decrescente por naipe.",
+        "Mova uma carta de cada vez.",
+        "As colunas vazias ficam vazias."
       ]
     },
     "title": {
@@ -365,27 +382,30 @@
   },
   "black-hole": {
     "howToPlay": {
-      "hash": "f8156c21",
+      "hash": "01ede0a0",
       "value": [
         "## Objetivo",
-        "- **Você vence** ao puxar todas as cartas para o buraco negro.",
-        "- **Você perde** se nenhuma carta exposta puder ser jogada.",
+        "Puxe todas as cartas para o buraco negro.",
         "## Regras",
-        "- O Ás de Espadas começa no buraco negro.",
-        "- Mova uma carta exposta para o buraco negro se ela for **um valor acima ou abaixo** da carta atual dele.",
-        "- Só a carta **exposta** (do topo) de cada pilha está disponível.",
-        "- Os valores **dão a volta**: depois de um Rei você pode jogar um Ás, e vice-versa.",
-        "## Tudo em fila",
-        "Na variante Tudo em fila, as cartas são distribuídas em treze colunas de quatro e o buraco negro começa vazio: qualquer carta exposta pode entrar primeiro.",
+        "| Jogáveis | A carta do topo de cada leque |",
+        "| Remoção | Para o buraco negro, um valor acima ou abaixo da carta dele |",
+        "| Valores | Ás e Rei são vizinhos |",
+        "| Monte | Não há |",
+        "## Regras especiais",
+        "- O Ás de espadas começa no buraco negro.",
+        "- Você perde quando nenhuma carta do topo puder ir para o buraco.",
+        "## Variantes",
+        "- **Tudo em fila**: treze colunas de quatro, e o buraco negro começa vazio, aceitando qualquer carta primeiro.",
         "## Dicas",
         "- Não há monte nem reembaralhamento, então planeje suas jogadas em ordem e com a maior antecedência possível.",
         "- Evite becos sem saída, ou chegar ao fim do jogo com cartas de valores que não são vizinhos."
       ]
     },
     "quickStart": {
-      "hash": "f703e406",
+      "hash": "eab6128b",
       "value": [
-        "Cartas de valor vizinho ao da carta do buraco podem ser removidas. Remova todas para vencer. A<->K se ligam."
+        "Jogue uma carta um valor acima ou abaixo da carta do buraco negro.",
+        "Ás e Rei são vizinhos."
       ]
     },
     "title": {
@@ -515,27 +535,30 @@
   },
   "bristol": {
     "howToPlay": {
-      "hash": "21ddab2f",
+      "hash": "55dce505",
       "value": [
         "## Objetivo",
-        "Leve as 52 cartas para as quatro fundações, cada uma construída do Ás ao Rei **independentemente do naipe**.",
-        "## Distribuição",
-        "- São distribuídos oito leques de três cartas, e cada Rei vai para o fundo do seu leque.",
-        "- Três pilhas de reserva começam com uma carta cada.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- A carta do topo de cada leque e de cada pilha de reserva está disponível.",
-        "- Construa os leques **em ordem decrescente, independentemente do naipe**, movendo uma carta de cada vez.",
-        "- Um leque vazio nunca é preenchido.",
-        "- Toque no **monte** para distribuir três cartas, uma em cada pilha de reserva. Não é possível jogar cartas nas pilhas de reserva.",
-        "- Não há redistribuição."
+        "| Fundações (4) | Do Ás ao Rei, independentemente do naipe |",
+        "| Construção | Decrescente, independentemente do naipe |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Leque vazio | Não se preenche |",
+        "| Reserva (3) | As cartas do topo são jogáveis; nenhuma carta é jogada sobre elas |",
+        "| Monte | Distribui uma carta em cada pilha de reserva |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 52 |",
+        "## Regras especiais",
+        "- Os Reis vão para o fundo do seu leque na distribuição.",
+        "- As três pilhas de reserva começam com uma carta cada."
       ]
     },
     "quickStart": {
-      "hash": "949d0103",
+      "hash": "783b8b93",
       "value": [
-        "Construa as fundações de A a K, independentemente do naipe.",
-        "Construa os leques em ordem decrescente, independentemente do naipe, uma carta de cada vez.",
-        "Toque no monte para distribuir uma carta em cada pilha de reserva."
+        "As fundações ignoram o naipe.",
+        "Construa em ordem decrescente, independentemente do naipe, uma carta de cada vez.",
+        "O monte distribui nas três pilhas de reserva."
       ]
     },
     "title": {
@@ -613,27 +636,29 @@
   },
   "calculation": {
     "howToPlay": {
-      "hash": "08af239e",
+      "hash": "48ce9541",
       "value": [
         "## Objetivo",
-        "**Vença** construindo as quatro **fundações** até os Reis.",
-        "## Fundações",
-        "Cada fundação sobe **em passos fixos** (+1, +2, +3 ou +4) e, depois do Rei, recomeça (no Ás, depois no 2 etc.).",
-        "- **Fundação 1**: A, 2, 3, 4 … K",
-        "- **Fundação 2**: 2, 4, 6, 8, 10, Q, A, 3 … K",
-        "- **Fundação 3**: 3, 6, 9, Q, 2, 5 … K",
-        "- **Fundação 4**: 4, 8, Q, 3, 7 … K",
-        "## Como jogar",
-        "- Jogue a carta do topo do monte ou de qualquer pilha de descarte em qualquer fundação, se ela seguir o passo da fundação.",
-        "- Você pode colocar a carta comprada numa das 4 pilhas de descarte.",
-        "- Não é possível mover cartas de uma pilha de descarte para outra."
+        "Construa todas as fundações até um Rei.",
+        "## Regras",
+        "| Fundações (4) | Começam com A, 2, 3, 4; crescente em passos de 1, 2, 3, 4, independentemente do naipe, passando do Rei ao Ás |",
+        "| Pilhas de descarte (4) | Qualquer carta; só a carta do topo é jogada, numa fundação |",
+        "| Monte | Vira 1, para uma fundação ou uma pilha de descarte |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 52 |",
+        "## Regras especiais",
+        "- Fundação 1: A, 2, 3, 4 … K.",
+        "- Fundação 2: 2, 4, 6, 8, 10, Q, A, 3 … K.",
+        "- Fundação 3: 3, 6, 9, Q, 2, 5 … K.",
+        "- Fundação 4: 4, 8, Q, 3, 7 … K."
       ]
     },
     "quickStart": {
-      "hash": "9cd76283",
+      "hash": "60808e6a",
       "value": [
-        "Construa quatro fundações em passos de 1, 2, 3 e 4, até K.",
-        "As pilhas de descarte guardam cartas em qualquer ordem."
+        "As fundações contam de um em um, de dois em dois, de três em três e de quatro em quatro.",
+        "Os naipes não importam.",
+        "As cartas do descarte só vão para as fundações."
       ]
     },
     "title": {
@@ -643,27 +668,27 @@
   },
   "canfield": {
     "howToPlay": {
-      "hash": "d1f393e8",
+      "hash": "44d3a997",
       "value": [
         "## Objetivo",
-        "Envie as 52 cartas para suas fundações, construídas por naipe a partir do valor base e voltando do Rei ao Ás.",
-        "## Fundações",
-        "- Construa as fundações **em ordem crescente por naipe** a partir do valor base.",
-        "- Depois do Rei, as fundações voltam ao Ás, por exemplo: 10, J, Q, K, A, 2, 3 etc.",
-        "## Colunas",
-        "- Construa as colunas em ordem decrescente, **alternando cores** (do Ás se passa ao Rei).",
-        "- Mova cartas avulsas ou grupos ordenados de cartas entre as colunas.",
-        "- Quando uma coluna fica vazia, ela é preenchida pela **reserva** (ou, quando a reserva acabar, por qualquer carta).",
-        "## Monte",
-        "Vire cartas do monte para o descarte (uma ou três de cada vez, conforme suas configurações). Você pode redistribuir quantas vezes quiser."
+        "Leve todas as cartas para as fundações.",
+        "## Regras",
+        "| Fundações (4) | Crescente por naipe a partir do valor da primeira carta de fundação, passando do Rei ao Ás |",
+        "| Construção | Decrescente, alternando cores, passando do Ás ao Rei |",
+        "| Movimento | Uma carta, ou uma sequência ordenada |",
+        "| Coluna vazia | Pela reserva, depois qualquer carta |",
+        "| Reserva (13) | A carta do topo é jogável |",
+        "| Monte | Vira 1 ou 3, conforme as configurações |",
+        "| Redistribuições | Ilimitadas |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "4ad05a24",
+      "hash": "a70e6806",
       "value": [
-        "Construa as fundações por naipe em ordem crescente.",
-        "Construa as colunas em ordem decrescente, alternando cores.",
-        "Espaços vazios são preenchidos pela reserva."
+        "As fundações começam no valor da primeira carta de fundação.",
+        "Construa em ordem decrescente, alternando cores.",
+        "As colunas vazias são preenchidas pela reserva."
       ]
     },
     "title": {
@@ -673,23 +698,26 @@
   },
   "carpet": {
     "howToPlay": {
-      "hash": "0af4a81e",
+      "hash": "21ec8bf0",
       "value": [
         "## Objetivo",
-        "Leve as 52 cartas para as quatro fundações, construídas por naipe do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Qualquer carta do tapete, e a carta do topo do descarte, pode ir para uma fundação.",
-        "- Um buraco no tapete é preenchido automaticamente com a carta do topo do **descarte**, ou pelo **monte** se o descarte estiver vazio.",
-        "- Toque no **monte** para virar uma carta no descarte.",
-        "- **Não há redistribuição**."
+        "| Fundações (4) | Do Ás ao Rei, por naipe; os Ases começam nelas |",
+        "| Jogáveis | Todas as cartas do tapete, e a carta do topo do descarte |",
+        "| Construção | Não há |",
+        "| Espaço vazio | Recebe carta do descarte, depois do monte |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "760fc5c7",
+      "hash": "704f9716",
       "value": [
-        "Construa as fundações por naipe a partir dos Ases.",
-        "Toque numa carta do tapete ou do descarte para enviá-la.",
-        "Os buracos do tapete são preenchidos pelo descarte, depois pelo monte."
+        "Todas as cartas do tapete são jogáveis.",
+        "Nada se constrói no tapete.",
+        "Os buracos são preenchidos pelo descarte."
       ]
     },
     "title": {
@@ -819,24 +847,26 @@
   },
   "congress": {
     "howToPlay": {
-      "hash": "686ea922",
+      "hash": "9e657720",
       "value": [
         "## Objetivo",
-        "Construa oito fundações por naipe, do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Oito colunas começam com uma carta cada.",
-        "- Construa as colunas em ordem decrescente, independentemente do naipe.",
-        "- Mova uma carta exposta de cada vez.",
-        "- Qualquer carta pode ocupar uma coluna vazia.",
-        "- Vire o monte uma carta de cada vez, sem redistribuir."
+        "| Fundações (8) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, independentemente do naipe |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Coluna vazia | Qualquer carta |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 104 (dois baralhos) |"
       ]
     },
     "quickStart": {
-      "hash": "c4fd113b",
+      "hash": "c79129d7",
       "value": [
-        "Construa oito fundações por naipe em ordem crescente.",
-        "Construa as colunas em ordem decrescente, independentemente do naipe.",
-        "Mova uma carta de cada vez; qualquer carta ocupa um espaço vazio."
+        "Construa em ordem decrescente, independentemente do naipe.",
+        "Mova uma carta de cada vez.",
+        "Qualquer carta preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -875,25 +905,29 @@
   },
   "crescent": {
     "howToPlay": {
-      "hash": "2122d621",
+      "hash": "f4fecc7c",
       "value": [
         "## Objetivo",
-        "Leve os dois baralhos para oito fundações: quatro crescentes a partir dos Ases e quatro decrescentes a partir dos Reis.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Só a carta exposta de cada uma das dezesseis pilhas pode ser jogada.",
-        "- Construa as pilhas um valor acima ou abaixo no mesmo naipe; Ás e Rei são vizinhos e “dão a volta”.",
-        "- Mova uma carta de cada vez.",
-        "- As pilhas vazias não podem ser preenchidas.",
-        "- As cartas que não são de base podem passar de uma fundação para outra.",
-        "- Três vezes por partida, você pode “reempilhar” para levar a carta de baixo de cada pilha para o topo."
+        "| Fundações (8) | Quatro do Ás ao Rei e quatro do Rei ao Ás, por naipe |",
+        "| Construção | Crescente ou decrescente, mesmo naipe, passando entre o Ás e o Rei |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Pilha vazia | Não se preenche |",
+        "| Monte | Não há |",
+        "| Reempilhamentos | 3 |",
+        "| Cartas | 104 (dois baralhos) |",
+        "## Regras especiais",
+        "- Um **reempilhamento** leva a carta de baixo de cada pilha para o topo.",
+        "- As cartas acima da primeira carta de uma fundação podem passar de uma fundação para outra."
       ]
     },
     "quickStart": {
-      "hash": "f9edde34",
+      "hash": "7585cf47",
       "value": [
-        "Construa as fundações dos Ases em ordem crescente e as dos Reis em ordem decrescente, por naipe.",
-        "Construa as pilhas um valor acima ou abaixo no mesmo naipe; o Ás e o Rei são vizinhos.",
-        "Mova uma carta exposta; gire cada pilha até três vezes."
+        "Construa em ordem crescente ou decrescente por naipe; Ás e Rei são vizinhos.",
+        "Mova uma carta de cada vez.",
+        "Reempilhe até três vezes quando não houver jogadas."
       ]
     },
     "title": {
@@ -1023,23 +1057,28 @@
   },
   "cruel": {
     "howToPlay": {
-      "hash": "14e03858",
+      "hash": "cd3df097",
       "value": [
         "## Objetivo",
-        "Leve as 52 cartas para as quatro fundações, construídas por naipe do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Só a carta do topo de uma pilha pode se mover, para uma fundação ou para uma pilha **um valor acima no mesmo naipe**.",
-        "- As pilhas vazias **nunca** são preenchidas.",
-        "- Toque na pilha de **redistribuição** para juntar as pilhas em ordem, sem embaralhar, e distribuí-las de novo de quatro em quatro.",
-        "- Você pode redistribuir quantas vezes quiser, mas só depois de fazer uma jogada desde a última redistribuição."
+        "| Fundações (4) | Do Ás ao Rei, por naipe; os Ases começam nelas |",
+        "| Construção | Decrescente, mesmo naipe |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Pilha vazia | Não se preenche |",
+        "| Monte | Não há |",
+        "| Redistribuições | Ilimitadas, depois de uma jogada |",
+        "| Cartas | 52 |",
+        "## Regras especiais",
+        "- Uma redistribuição junta as pilhas em ordem, sem embaralhar, e as distribui de novo em grupos de quatro."
       ]
     },
     "quickStart": {
-      "hash": "fd1b5503",
+      "hash": "24e31313",
       "value": [
-        "Construa as fundações por naipe a partir dos Ases.",
-        "Mova as cartas do topo em ordem decrescente por naipe; os espaços ficam vazios.",
-        "Depois de qualquer jogada, toque na pilha de redistribuição para refazer as pilhas de quatro em quatro."
+        "Construa em ordem decrescente por naipe.",
+        "Mova uma carta de cada vez.",
+        "Redistribua para juntar as pilhas de novo em grupos de quatro."
       ]
     },
     "title": {
@@ -1147,24 +1186,26 @@
   },
   "diplomat": {
     "howToPlay": {
-      "hash": "ca4c9166",
+      "hash": "9e657720",
       "value": [
         "## Objetivo",
-        "Leve os dois baralhos para oito fundações, do Ás ao Rei por naipe.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- São distribuídas oito colunas de quatro cartas viradas para cima.",
-        "- Construa as colunas em ordem decrescente, independentemente do naipe.",
-        "- Mova uma carta de cada vez e ocupe as colunas vazias com qualquer carta.",
-        "- Distribua o monte uma carta de cada vez. Não há redistribuição."
+        "| Fundações (8) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, independentemente do naipe |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Coluna vazia | Qualquer carta |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 104 (dois baralhos) |"
       ]
     },
     "quickStart": {
-      "hash": "452bb2bf",
+      "hash": "c79129d7",
       "value": [
-        "Leve os dois baralhos para oito fundações, construídas por naipe de A a K.",
-        "Construa as colunas em ordem decrescente, independentemente do naipe.",
-        "Mova uma carta de cada vez; qualquer carta ocupa um espaço vazio.",
-        "Não há redistribuição."
+        "Construa em ordem decrescente, independentemente do naipe.",
+        "Mova uma carta de cada vez.",
+        "Qualquer carta preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -1235,23 +1276,26 @@
   },
   "easthaven": {
     "howToPlay": {
-      "hash": "0253c855",
+      "hash": "d2e36af0",
       "value": [
         "## Objetivo",
-        "Construa quatro fundações por naipe, do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Construa as colunas **em ordem decrescente, alternando cores**.",
-        "- Sequências construídas corretamente se movem juntas.",
-        "- Só Reis ocupam colunas vazias.",
-        "- Cada toque no monte distribui uma carta em cada coluna."
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, alternando cores |",
+        "| Movimento | Uma carta, ou uma sequência ordenada |",
+        "| Coluna vazia | Só Rei |",
+        "| Monte | Distribui uma carta em cada coluna |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "9d17fc0b",
+      "hash": "e95b4713",
       "value": [
-        "Construa as fundações por naipe em ordem crescente.",
-        "Construa as colunas em ordem decrescente, alternando cores.",
-        "Distribua uma carta do monte em cada coluna; K ocupam os espaços vazios."
+        "Construa em ordem decrescente, alternando cores.",
+        "Mova sequências ordenadas juntas.",
+        "Só um Rei preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -1290,24 +1334,25 @@
   },
   "eight-off": {
     "howToPlay": {
-      "hash": "014c8f8e",
+      "hash": "d2e2c9c1",
       "value": [
         "## Objetivo",
-        "Leve as 52 cartas para as quatro fundações, cada uma construída por naipe do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Construa as colunas **em ordem decrescente e no mesmo naipe**.",
-        "- Cada **célula livre** guarda uma só carta.",
-        "- Você pode mover uma carta de cada vez. Pode mover grupos de cartas juntos, mas só se tiver células livres e colunas vazias suficientes para fazer a mesma jogada uma carta de cada vez.",
-        "- Só um **Rei** (com as cartas que carrega) pode ir para uma **coluna vazia**.",
-        "- Envie as cartas para as fundações por naipe, em ordem crescente a partir dos Ases."
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, mesmo naipe |",
+        "| Movimento | Uma carta, ou uma sequência se houver espaços livres |",
+        "| Coluna vazia | Só Rei |",
+        "| Monte | Não há |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "7d7fc408",
+      "hash": "205a53a2",
       "value": [
-        "Leve as cartas para as fundações por naipe, de A a K.",
-        "Construa as colunas em ordem decrescente por naipe.",
-        "Use 8 células livres; só os Reis ocupam colunas vazias."
+        "Construa em ordem decrescente por naipe.",
+        "Cada célula livre guarda uma carta.",
+        "Só um Rei preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -1343,30 +1388,25 @@
   },
   "elevens": {
     "howToPlay": {
-      "hash": "48901e1c",
+      "hash": "27a3ddc2",
       "value": [
         "## Objetivo",
-        "Esvazie o baralho inteiro removendo pares de cartas que somem **11**, ou um trio real **Valete-Dama-Rei**.",
-        "## Distribuição",
-        "- As cartas são distribuídas viradas para cima numa grade: 5x3 no Fácil, 4x3 no Médio ou 3x3 no Difícil (o padrão).",
-        "- O resto do baralho forma o monte.",
-        "## Valores das cartas",
-        "- O Ás vale 1 e as cartas numéricas valem o número que mostram.",
-        "- Valetes, Damas e Reis não têm valor e só saem juntos.",
-        "## Como jogar",
-        "- Selecione duas cartas que somem 11: Ás e 10, 2 e 9, 3 e 8, 4 e 7, ou 5 e 6.",
-        "- Ou selecione um Valete, uma Dama e um Rei, em qualquer ordem.",
-        "- As cartas removidas são repostas na hora com cartas do monte.",
-        "## Vitória e derrota",
-        "- Você vence quando a grade e o monte estiverem ambos vazios.",
-        "- Você perde quando não for possível formar nenhum par nem trio real e ainda restarem cartas."
+        "Esvazie a grade e o monte.",
+        "## Regras",
+        "| Jogáveis | Todas as cartas da grade |",
+        "| Remoção | Pares que somam 11, ou um Valete, uma Dama e um Rei |",
+        "| Valores | Ás 1 |",
+        "| Monte | Repõe cada buraco na hora |",
+        "| Redistribuições | Não há |",
+        "## Regras especiais",
+        "- Você perde quando não for possível formar nenhum par nem trio real.",
+        "## Variantes",
+        "- **Tamanho da grade**: 5 × 3 no Fácil, 4 × 3 no Médio e 3 × 3 no Difícil (o padrão)."
       ]
     },
     "quickStart": {
-      "hash": "be04eab8",
-      "value": [
-        "Remova pares que somem 11, ou um Valete, uma Dama e um Rei juntos."
-      ]
+      "hash": "6f936e84",
+      "value": ["Remova pares que somam 11.", "Valete, Dama e Rei saem juntos."]
     },
     "title": {
       "hash": "b11d7c71",
@@ -1482,23 +1522,26 @@
   },
   "flower-garden": {
     "howToPlay": {
-      "hash": "e4cc4b14",
+      "hash": "ebad4d6c",
       "value": [
         "## Objetivo",
-        "Leve as 52 cartas para quatro fundações, construídas por naipe do Ás ao Rei.",
-        "## Jardim",
-        "- Só a última carta exposta de cada um dos seis canteiros pode ser jogada.",
-        "- Construa os canteiros em ordem decrescente, independentemente do naipe, movendo uma carta de cada vez.",
-        "- Qualquer carta pode ocupar um canteiro vazio.",
-        "- As dezesseis cartas do buquê ficam expostas e disponíveis o tempo todo."
+        "Leve todas as cartas para as fundações.",
+        "## Regras",
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, independentemente do naipe |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Canteiro vazio | Qualquer carta |",
+        "| Buquê (16) | Todas as cartas são jogáveis; nada volta |",
+        "| Monte | Não há |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "4cb14090",
+      "hash": "9d037fbc",
       "value": [
-        "Construa as fundações por naipe, do Ás ao Rei.",
-        "Construa os canteiros em ordem decrescente, independentemente do naipe.",
-        "Todas as cartas do buquê estão disponíveis; qualquer carta ocupa um canteiro vazio."
+        "Construa em ordem decrescente, independentemente do naipe.",
+        "Todas as cartas do buquê são jogáveis.",
+        "Qualquer carta preenche um canteiro vazio."
       ]
     },
     "title": {
@@ -1508,23 +1551,25 @@
   },
   "fortress": {
     "howToPlay": {
-      "hash": "0591fc6a",
+      "hash": "bb74089b",
       "value": [
         "## Objetivo",
-        "Leve as 52 cartas para quatro fundações, construídas por naipe do Ás ao Rei.",
-        "## Corredores",
-        "- Só a carta exposta de cada corredor pode ser jogada.",
-        "- Construa um valor acima ou abaixo, no mesmo naipe.",
-        "- Mova uma carta de cada vez.",
-        "- Qualquer carta pode ocupar um corredor vazio."
+        "Leve todas as cartas para as fundações.",
+        "## Regras",
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Crescente ou decrescente, mesmo naipe |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Corredor vazio | Qualquer carta |",
+        "| Monte | Não há |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "0f1f4350",
+      "hash": "16527157",
       "value": [
-        "Construa as fundações por naipe, do Ás ao Rei.",
-        "Construa os corredores um valor acima ou abaixo, no mesmo naipe.",
-        "Mova uma carta de cada vez; qualquer carta ocupa um corredor vazio."
+        "Construa em ordem crescente ou decrescente por naipe.",
+        "Mova uma carta de cada vez.",
+        "Qualquer carta preenche um corredor vazio."
       ]
     },
     "title": {
@@ -1560,17 +1605,18 @@
   },
   "forty-thieves": {
     "howToPlay": {
-      "hash": "327ab3c4",
+      "hash": "3ac3d532",
       "value": [
         "## Objetivo",
-        "Leve as 104 cartas para as oito fundações, cada uma construída por naipe do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Envie as cartas para as fundações por naipe, em ordem crescente do Ás ao Rei.",
-        "- Construa as colunas **em ordem decrescente e no mesmo naipe**.",
-        "- Mova só uma carta de cada vez entre as colunas.",
-        "- Qualquer carta avulsa pode ir para uma coluna vazia.",
-        "- Vire as cartas do monte uma de cada vez para a pilha de descarte. A carta do topo do descarte pode ser jogada.",
-        "- Não há redistribuição, a menos que você permita redistribuições ilimitadas nas configurações.",
+        "| Fundações (8) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, mesmo naipe |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Coluna vazia | Qualquer carta |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há, ou ilimitadas nas configurações |",
+        "| Cartas | 104 (dois baralhos) |",
         "## Variantes",
         "- **Josefina**: sequências do mesmo naipe se movem juntas.",
         "- **Lucas**: treze colunas de três, com os Ases começando nas fundações.",
@@ -1578,11 +1624,11 @@
       ]
     },
     "quickStart": {
-      "hash": "10a685b4",
+      "hash": "568cdabd",
       "value": [
-        "Construa as 8 fundações por naipe, de A a K.",
-        "Construa as colunas em ordem decrescente por naipe, movendo uma carta de cada vez.",
-        "Vire as cartas do monte para o descarte uma de cada vez, sem redistribuição."
+        "Construa em ordem decrescente por naipe.",
+        "Mova uma carta de cada vez.",
+        "Qualquer carta preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -1592,25 +1638,27 @@
   },
   "freecell": {
     "howToPlay": {
-      "hash": "1d797da4",
+      "hash": "6e011b71",
       "value": [
         "## Objetivo",
-        "Leve as 52 cartas para as quatro **fundações**, cada uma construída por naipe do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Construa as colunas **em ordem decrescente, alternando cores**.",
-        "- Mova uma carta de cada vez; cada **célula livre** guarda uma só carta.",
-        "- Você pode mover uma carta de cada vez. Pode mover grupos de cartas juntos, mas só se tiver células livres e colunas vazias suficientes para fazer a mesma jogada uma carta de cada vez.",
-        "- Qualquer carta pode ir para uma coluna vazia.",
-        "## Jogo do padeiro",
-        "O antecessor do FreeCell, escolhido nas configurações: as colunas são construídas em ordem decrescente **no mesmo naipe** em vez de alternando cores."
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, alternando cores |",
+        "| Movimento | Uma carta, ou uma sequência se houver espaços livres |",
+        "| Coluna vazia | Qualquer carta |",
+        "| Monte | Não há |",
+        "| Cartas | 52 |",
+        "## Variantes",
+        "- **Jogo do padeiro**: construa em ordem decrescente no mesmo naipe."
       ]
     },
     "quickStart": {
-      "hash": "6e99a6bc",
+      "hash": "fd58862c",
       "value": [
-        "Construa as fundações por naipe, de A a K.",
-        "Construa as colunas em ordem decrescente, alternando cores.",
-        "Use as células livres para guardar uma carta cada."
+        "Construa em ordem decrescente, alternando cores.",
+        "Cada célula livre guarda uma carta.",
+        "Qualquer carta preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -1620,24 +1668,28 @@
   },
   "frog": {
     "howToPlay": {
-      "hash": "2f091e43",
+      "hash": "85617294",
       "value": [
         "## Objetivo",
-        "Leve as 104 cartas para as oito fundações, cada uma construída do Ás ao Rei **independentemente do naipe**.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Só a carta do topo da reserva está disponível.",
-        "- Cada carta do monte deve ir para uma das **cinco pilhas de descarte** ou ser jogada numa fundação.",
-        "- Qualquer carta pode ir para qualquer pilha de descarte, mas as cartas nunca passam de uma pilha de descarte para outra.",
-        "- Só a carta do topo de cada pilha de descarte pode ser jogada.",
-        "- **Toque duas vezes** numa carta disponível para jogá-la numa fundação. Não há redistribuição."
+        "| Fundações (8) | Do Ás ao Rei, independentemente do naipe |",
+        "| Reserva (13) | A carta do topo é jogável |",
+        "| Pilhas de descarte (5) | Qualquer carta; só a carta do topo é jogada, numa fundação |",
+        "| Monte | Vira 1, para uma pilha de descarte ou uma fundação |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 104 (dois baralhos) |",
+        "## Regras especiais",
+        "- Toque numa pilha de descarte para colocar ali a carta do monte, ou toque duas vezes numa carta para jogá-la numa fundação.",
+        "- Um Ás começa numa fundação, e qualquer Ás que aparecer ao distribuir a reserva também sobe."
       ]
     },
     "quickStart": {
-      "hash": "45d42e10",
+      "hash": "fd0d1d47",
       "value": [
-        "Construa as fundações de A a K, independentemente do naipe.",
-        "Toque numa pilha de descarte para colocar nela a carta do monte.",
-        "Toque duas vezes numa carta do monte, da reserva ou do descarte para enviá-la."
+        "As fundações ignoram o naipe.",
+        "Coloque cada carta do monte numa pilha de descarte.",
+        "As cartas do descarte só vão para as fundações."
       ]
     },
     "title": {
@@ -1677,25 +1729,28 @@
   },
   "gargantua": {
     "howToPlay": {
-      "hash": "4a898796",
+      "hash": "80b0af5b",
       "value": [
         "## Objetivo",
-        "Leve os dois baralhos para oito fundações, construídas do Ás ao Rei por naipe.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- As nove colunas são distribuídas em escada, como no Klondike.",
-        "- Construa em ordem decrescente, alternando cores, e mova sequências ordenadas.",
-        "- Só os Reis podem ocupar colunas vazias.",
-        "- Vire as cartas do monte uma de cada vez; 1 redistribuição dá 2 passadas no total.",
-        "## Harpa",
-        "Harpa é o mesmo jogo com 3 redistribuições, ou seja, 4 passadas pelo monte."
+        "| Fundações (8) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, alternando cores |",
+        "| Movimento | Uma carta, ou uma sequência ordenada |",
+        "| Coluna vazia | Só Rei |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | 1 |",
+        "| Cartas | 104 (dois baralhos) |",
+        "## Variantes",
+        "- **Harpa**: 3 redistribuições."
       ]
     },
     "quickStart": {
-      "hash": "b3a33e8e",
+      "hash": "e95b4713",
       "value": [
-        "Leve os dois baralhos para oito fundações, construídas por naipe de A a K.",
-        "Construa as colunas em ordem decrescente, alternando cores, e mova sequências ordenadas.",
-        "Só os K ocupam colunas vazias; 1 redistribuição (3 em Harpa)."
+        "Construa em ordem decrescente, alternando cores.",
+        "Mova sequências ordenadas juntas.",
+        "Só um Rei preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -1749,24 +1804,25 @@
   },
   "golf": {
     "howToPlay": {
-      "hash": "24a82fa3",
+      "hash": "e0d88fac",
       "value": [
         "## Objetivo",
-        "**Vença removendo as 35 cartas das colunas.**",
-        "**Perca** se o monte estiver vazio e nenhuma carta das colunas puder ir para o descarte.",
-        "## Remover cartas",
-        "- Só a **última carta (exposta)** de cada coluna está disponível.",
-        "- Mova uma carta disponível para o descarte se ela for **um valor acima ou abaixo** da carta atual do descarte.",
-        "- As sequências **não** dão a volta: como os Ases são baixos e os Reis altos, nunca se passa do Rei ao Ás.",
-        "- Quando não houver jogadas, vire uma carta do monte para o descarte."
+        "Remova as 35 cartas das colunas.",
+        "## Regras",
+        "| Jogáveis | A última carta de cada coluna |",
+        "| Remoção | Para o descarte, um valor acima ou abaixo da carta dele |",
+        "| Valores | Ás e Rei não são vizinhos (no Fácil, são) |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |",
+        "## Regras especiais",
+        "- Você perde quando o monte estiver vazio e nenhuma carta puder ir para o descarte."
       ]
     },
     "quickStart": {
-      "hash": "2f6866eb",
+      "hash": "95c889ae",
       "value": [
-        "Remova todas as cartas para vencer.",
-        "Remova cartas expostas um valor acima ou abaixo da carta do topo do descarte.",
-        "Compre do monte quando não houver jogadas."
+        "Jogue uma carta das colunas um valor acima ou abaixo da carta do descarte.",
+        "Vire uma carta do monte quando não houver jogadas."
       ]
     },
     "title": {
@@ -1776,28 +1832,27 @@
   },
   "grandfathers-clock": {
     "howToPlay": {
-      "hash": "d994567d",
+      "hash": "9a231296",
       "value": [
         "## Objetivo",
-        "Construa cada fundação do relógio até a carta do topo corresponder à sua hora, por exemplo:",
-        "- a pilha da 1 hora termina com um Ás,",
-        "- a pilha das 2 horas, com um 2,",
-        "- a pilha das 11 horas, com um Valete,",
-        "- a pilha das 12 horas, com uma Dama.",
-        "- etc.",
+        "Construa cada fundação do relógio até ela mostrar a sua hora.",
         "## Regras",
-        "- As fundações são construídas **em ordem crescente por naipe**, passando do Rei ao Ás, e param na sua hora.",
-        "- Mova as cartas do topo uma de cada vez. Construa as pilhas **em ordem decrescente, independentemente do naipe**.",
-        "- Qualquer carta pode ocupar uma pilha vazia.",
-        "- **Toque duas vezes** numa carta, ou arraste-a, para jogá-la na sua fundação."
+        "| Fundações (12) | Crescente por naipe, passando do Rei ao Ás, cada uma parando na sua hora |",
+        "| Construção | Decrescente, independentemente do naipe; um Rei vai sobre um Ás |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Pilha vazia | Qualquer carta |",
+        "| Monte | Não há |",
+        "| Cartas | 52 |",
+        "## Regras especiais",
+        "- As fundações do relógio começam com cartas definidas, e cada uma fica completa quando a carta do topo mostra a sua hora: um Ás na 1 hora, um Valete nas 11 e uma Dama nas 12."
       ]
     },
     "quickStart": {
-      "hash": "7fa8c31a",
+      "hash": "3ceacbaa",
       "value": [
-        "Construa cada fundação do relógio por naipe até ela mostrar sua hora.",
-        "Construa as pilhas em ordem decrescente, independentemente do naipe; o K vai sobre o A.",
-        "Qualquer carta ocupa uma pilha vazia. Toque duas vezes para enviar uma carta."
+        "Construa cada pilha do relógio em ordem crescente por naipe até a sua hora.",
+        "Construa em ordem decrescente, independentemente do naipe; um Rei vai sobre um Ás.",
+        "Qualquer carta preenche uma pilha vazia."
       ]
     },
     "title": {
@@ -1879,23 +1934,26 @@
   },
   "indian": {
     "howToPlay": {
-      "hash": "96bf0d1c",
+      "hash": "49243709",
       "value": [
         "## Objetivo",
-        "Construa oito fundações por naipe, do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- São distribuídas dez colunas de três cartas; a primeira carta de cada uma fica virada para baixo.",
-        "- Construa em ordem decrescente sobre qualquer naipe, menos o naipe da carta de destino.",
-        "- Mova uma carta exposta de cada vez.",
-        "- As colunas vazias aceitam qualquer carta, e o monte é distribuído uma só vez."
+        "| Fundações (8) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, qualquer outro naipe |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Coluna vazia | Qualquer carta |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 104 (dois baralhos) |"
       ]
     },
     "quickStart": {
-      "hash": "81c90e2d",
+      "hash": "e4b1b9bb",
       "value": [
-        "Construa em ordem decrescente sobre qualquer naipe, menos o mesmo.",
-        "Mova uma carta exposta de cada vez.",
-        "Qualquer carta ocupa uma coluna vazia; o monte tem uma só passada."
+        "Construa em ordem decrescente sobre qualquer naipe que não seja o da carta.",
+        "Mova uma carta de cada vez.",
+        "Qualquer carta preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -2024,28 +2082,28 @@
   },
   "king-albert": {
     "howToPlay": {
-      "hash": "6c0f25fe",
+      "hash": "96d6c4f9",
       "value": [
         "## Objetivo",
-        "Leve todas as cartas para as quatro fundações por naipe, do Ás ao Rei.",
-        "## Distribuição",
-        "- Nove colunas são distribuídas viradas para cima, de uma a nove cartas.",
-        "- As sete cartas que sobram formam a **reserva**. Todas podem ser jogadas.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Construa as colunas **em ordem decrescente, alternando cores**.",
-        "- Mova **uma carta de cada vez**; sequências nunca se movem juntas.",
-        "- As cartas da reserva podem ir para uma fundação ou uma coluna, mas nenhuma carta pode voltar para a reserva.",
-        "- Qualquer carta pode preencher uma coluna vazia.",
-        "## Raglan",
-        "Na variante Raglan, os Ases começam nas fundações, as colunas mais longas têm sete cartas e a reserva tem seis."
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, alternando cores |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Coluna vazia | Qualquer carta |",
+        "| Reserva (7) | Todas as cartas são jogáveis; nada volta |",
+        "| Monte | Não há |",
+        "| Cartas | 52 |",
+        "## Variantes",
+        "- **Raglan**: os Ases começam nas fundações, a coluna mais longa tem sete cartas e a reserva tem seis."
       ]
     },
     "quickStart": {
-      "hash": "04c12855",
+      "hash": "2c48201d",
       "value": [
-        "Leve todas as cartas para as quatro fundações por naipe, de A a K.",
-        "Construa em ordem decrescente alternando cores, uma carta de cada vez.",
-        "As cartas da reserva podem ser jogadas, mas nada volta para a reserva."
+        "Construa em ordem decrescente, alternando cores.",
+        "Mova uma carta de cada vez.",
+        "As cartas da reserva podem ser jogadas, mas nunca devolvidas."
       ]
     },
     "title": {
@@ -2055,24 +2113,26 @@
   },
   "klondike": {
     "howToPlay": {
-      "hash": "6b0bf248",
+      "hash": "f85d9798",
       "value": [
         "## Objetivo",
-        "Leve as 52 cartas para as quatro fundações, cada uma construída por naipe, do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Construa as colunas **em ordem decrescente, alternando cores**.",
-        "- Mova entre as colunas uma carta avulsa ou um grupo na ordem correta.",
-        "- Só um **Rei** (ou uma sequência começando por um Rei) pode ir para uma coluna vazia.",
-        "## Monte",
-        "Vire as cartas do monte para a pilha de descarte (uma ou três de cada vez, conforme suas configurações). A carta do topo do descarte pode ser jogada, e você pode redistribuir o monte quando ele acabar."
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, alternando cores |",
+        "| Movimento | Uma carta, ou uma sequência ordenada |",
+        "| Coluna vazia | Só Rei |",
+        "| Monte | Vira 1 ou 3, conforme as configurações |",
+        "| Redistribuições | Ilimitadas |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "6358aab0",
+      "hash": "8d2f1a42",
       "value": [
-        "Construa as fundações por naipe em ordem crescente.",
         "Construa as colunas em ordem decrescente, alternando cores.",
-        "Só os Reis podem ocupar colunas vazias."
+        "Mova sequências ordenadas juntas.",
+        "Só um Rei preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -2082,26 +2142,31 @@
   },
   "la-belle-lucie": {
     "howToPlay": {
-      "hash": "64ab3a33",
+      "hash": "4efb2f15",
       "value": [
         "## Objetivo",
-        "Leve as 52 cartas para quatro fundações, construídas por naipe do Ás ao Rei.",
-        "## Leques",
-        "- Só a última carta exposta de cada leque pode ser jogada.",
-        "- Construa em ordem decrescente por naipe, uma carta de cada vez.",
-        "- Os leques vazios não podem ser preenchidos.",
-        "- Duas vezes por partida, reembaralhe todas as cartas que ainda estão nos leques e redistribua-as em grupos de três.",
+        "Leve todas as cartas para as fundações.",
+        "## Regras",
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, mesmo naipe |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Leque vazio | Não se preenche |",
+        "| Monte | Não há |",
+        "| Redistribuições | 2 |",
+        "| Cartas | 52 |",
+        "## Regras especiais",
+        "- Uma redistribuição embaralha as cartas que restam nos leques e as distribui de novo em grupos de três.",
         "## Variantes",
         "- **Trifólio**: os Ases começam nas fundações, deixando dezesseis leques.",
         "- **Trevos**: construa em ordem crescente ou decrescente independentemente do naipe; nenhum leque pode ter mais de três cartas e não há redistribuições."
       ]
     },
     "quickStart": {
-      "hash": "b6eebcbd",
+      "hash": "61f0b869",
       "value": [
-        "Construa as fundações por naipe, de A a K.",
-        "Construa os leques em ordem decrescente por naipe, movendo uma carta exposta de cada vez.",
-        "Leques vazios continuam vazios; reembaralhe as cartas da mesa até duas vezes."
+        "Construa em ordem decrescente por naipe, uma carta de cada vez.",
+        "Os leques vazios ficam vazios.",
+        "Redistribua os leques até duas vezes."
       ]
     },
     "title": {
@@ -2111,23 +2176,26 @@
   },
   "labyrinth": {
     "howToPlay": {
-      "hash": "d02b7d3c",
+      "hash": "a98ef23c",
       "value": [
         "## Objetivo",
-        "Leve as 52 cartas para as quatro fundações, construídas por naipe do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Uma carta fica **livre** quando o espaço logo acima ou logo abaixo dela está vazio, então a primeira e a última fileira estão sempre livres.",
-        "- Toque numa carta livre para jogá-la na sua fundação.",
-        "- Um buraco na **primeira fileira** é preenchido na hora pelo monte. Os buracos mais abaixo ficam vazios.",
-        "- Toque no **monte** para distribuir uma nova fileira de oito cartas embaixo. Não há redistribuição."
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Jogáveis | Cartas com um espaço vazio acima ou abaixo |",
+        "| Construção | Não há |",
+        "| Espaço vazio | Só a primeira fileira é reposta, pelo monte |",
+        "| Monte | Distribui uma nova fileira de 8 |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "1432729b",
+      "hash": "6a1d49d8",
       "value": [
-        "Construa as quatro fundações por naipe, do Ás ao Rei.",
-        "Só ficam livres as cartas com um espaço vazio acima ou abaixo.",
-        "Toque no monte para distribuir uma nova fileira quando você travar."
+        "Uma carta está livre quando o espaço acima ou abaixo dela está vazio.",
+        "As cartas livres vão para as fundações.",
+        "Distribua uma nova fileira quando não houver jogadas."
       ]
     },
     "title": {
@@ -2161,28 +2229,28 @@
   },
   "little-windmill": {
     "howToPlay": {
-      "hash": "f34f0359",
+      "hash": "55c820c7",
       "value": [
         "## Objetivo",
-        "Leve as 52 cartas para as quatro fundações dos cantos.",
-        "## Fundações",
-        "- Um **Ás** é tirado do monte para iniciar a primeira fundação. As outras três começam com os outros Ases, à medida que forem aparecendo.",
-        "- Construa cada fundação **por naipe em ordem crescente**, do Ás ao Rei.",
-        "## A cruz",
-        "- Construa as cinco pilhas da cruz **em ordem decrescente, independentemente do naipe**. Nada pode ir sobre um Ás.",
-        "- Só a carta do topo de cada pilha está disponível, e as cartas se movem uma de cada vez.",
-        "- Qualquer carta disponível pode preencher um espaço vazio na cruz.",
-        "## Monte",
-        "- Vire o monte uma carta de cada vez para o descarte.",
-        "- No Normal, não há redistribuição. No Fácil, o descarte pode ser virado uma vez para percorrer o monte de novo."
+        "Leve todas as cartas para as fundações.",
+        "## Regras",
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, independentemente do naipe; nada sobre um Ás |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Espaço vazio | Qualquer carta |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há, ou 1 no Fácil |",
+        "| Cartas | 52 |",
+        "## Regras especiais",
+        "- Um Ás é tirado do monte para começar a primeira fundação; os outros Ases começam as demais à medida que aparecem."
       ]
     },
     "quickStart": {
-      "hash": "a1f0545c",
+      "hash": "b5654456",
       "value": [
-        "Um Ás inicia a primeira fundação de canto; os outros Ases iniciam as demais.",
-        "As fundações são construídas por naipe em ordem crescente, do Ás ao Rei.",
-        "Construa a cruz em ordem decrescente, independentemente do naipe, uma carta de cada vez."
+        "Construa a cruz em ordem decrescente, independentemente do naipe.",
+        "Nada vai sobre um Ás.",
+        "Qualquer carta preenche um espaço vazio."
       ]
     },
     "title": {
@@ -2291,24 +2359,26 @@
   },
   "maria": {
     "howToPlay": {
-      "hash": "3ac89609",
+      "hash": "6df7d8cf",
       "value": [
         "## Objetivo",
-        "Construa oito fundações por naipe, do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- São distribuídas nove colunas de quatro cartas viradas para cima.",
-        "- Construa em ordem decrescente, alternando cores, e mova uma carta de cada vez.",
-        "- As colunas vazias aceitam qualquer carta.",
-        "- Distribua o monte uma carta de cada vez. Não há redistribuição."
+        "| Fundações (8) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, alternando cores |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Coluna vazia | Qualquer carta |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 104 (dois baralhos) |"
       ]
     },
     "quickStart": {
-      "hash": "1b057f34",
+      "hash": "6a765a29",
       "value": [
-        "Construa oito fundações por naipe, de A a K.",
-        "Construa as colunas em ordem decrescente, alternando cores.",
+        "Construa em ordem decrescente, alternando cores.",
         "Mova uma carta de cada vez.",
-        "Qualquer carta ocupa uma coluna vazia. Não há redistribuição."
+        "Qualquer carta preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -2342,25 +2412,28 @@
   },
   "miss-milligan": {
     "howToPlay": {
-      "hash": "d95de4df",
+      "hash": "f8ebd96d",
       "value": [
         "## Objetivo",
-        "Leve os dois baralhos para as oito fundações, cada uma construída por naipe em ordem crescente, do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Construa as colunas **em ordem decrescente, alternando cores**. Uma sequência construída corretamente pode ser movida inteira.",
-        "- Só um **Rei** (ou uma sequência começando por um Rei) pode preencher uma coluna vazia.",
-        "- Toque no **monte** para distribuir uma carta em cada coluna, vazia ou não.",
+        "| Fundações (8) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, alternando cores |",
+        "| Movimento | Uma carta, ou uma sequência ordenada |",
+        "| Coluna vazia | Rei, ou uma sequência encabeçada por um |",
+        "| Bolso | Uma carta ou sequência de cada vez, quando o monte estiver vazio |",
+        "| Monte | Distribui uma carta em cada coluna, vazia ou não |",
+        "| Cartas | 104 (dois baralhos) |",
         "## Variantes",
-        "- **Miss Milligan**: quando o monte estiver vazio, você pode deixar uma carta ou sequência de lado no **bolso**.",
-        "- **Gigante**: qualquer carta ou sequência pode preencher uma coluna vazia, mas não há bolso."
+        "- **Gigante**: qualquer carta ou sequência preenche uma coluna vazia, e não há bolso."
       ]
     },
     "quickStart": {
-      "hash": "d6a2a898",
+      "hash": "e9203850",
       "value": [
-        "Construa oito fundações por naipe em ordem crescente, do A ao K.",
-        "Construa as colunas em ordem decrescente, alternando cores; você pode mover sequências.",
-        "Toque no monte para distribuir uma carta em cada coluna."
+        "Construa em ordem decrescente, alternando cores.",
+        "Mova sequências ordenadas juntas.",
+        "O monte distribui uma carta em cada coluna."
       ]
     },
     "title": {
@@ -2370,21 +2443,21 @@
   },
   "monte-carlo": {
     "howToPlay": {
-      "hash": "9447fa02",
+      "hash": "4f87124b",
       "value": [
         "## Objetivo",
-        "Remova as 52 cartas formando pares de mesmo valor até a grade ficar vazia.",
-        "## Como jogar",
-        "- Remova duas cartas **do mesmo valor** quando estiverem **vizinhas** na horizontal, na vertical ou na diagonal.",
-        "- Quando os pares acabarem, **compacte** a grade. As cartas restantes deslizam para fechar os buracos, e novas cartas são distribuídas do monte para preencher os espaços.",
-        "- Compactar muda a ordem das cartas, então novos pares podem ser liberados."
+        "Remova as 52 cartas.",
+        "## Regras",
+        "| Jogáveis | Todas as cartas da grade |",
+        "| Remoção | Duas cartas vizinhas do mesmo valor, também na diagonal |",
+        "| Monte | Compactar: as cartas deslizam para fechar os buracos, depois o monte os preenche |"
       ]
     },
     "quickStart": {
-      "hash": "7d8ec4dd",
+      "hash": "120cab63",
       "value": [
-        "Toque em cartas vizinhas de mesmo valor para removê-las.",
-        "Compacte a grade para liberar novos pares."
+        "Remova duas cartas vizinhas do mesmo valor.",
+        "Compacte para fechar os buracos e distribuir mais."
       ]
     },
     "title": {
@@ -2394,20 +2467,19 @@
   },
   "nestor": {
     "howToPlay": {
-      "hash": "5a96cea6",
+      "hash": "46bbefcd",
       "value": [
         "## Objetivo",
-        "Descarte as 52 cartas removendo pares iguais.",
+        "Descarte as 52 cartas.",
         "## Regras",
-        "- Só estão disponíveis as **últimas cartas (expostas)** de cada coluna e **as cartas da reserva**.",
-        "- Toque em duas cartas disponíveis **do mesmo valor** para enviá-las viradas para baixo ao lixo."
+        "| Jogáveis | A última carta de cada coluna, e a reserva |",
+        "| Remoção | Duas cartas do mesmo valor |",
+        "| Monte | Não há |"
       ]
     },
     "quickStart": {
-      "hash": "25ae690c",
-      "value": [
-        "Remova todas as cartas tirando pares do mesmo valor do fim das colunas ou da reserva."
-      ]
+      "hash": "c43135e0",
+      "value": ["Remova duas cartas do mesmo valor."]
     },
     "title": {
       "hash": "142bf888",
@@ -2561,25 +2633,25 @@
   },
   "parallels": {
     "howToPlay": {
-      "hash": "a09786ce",
+      "hash": "1b223ebe",
       "value": [
         "## Objetivo",
-        "Leve as 104 cartas para as oito fundações.",
-        "## Fundações",
-        "- Os Ases sobem **em ordem crescente** por naipe; os Reis descem **em ordem decrescente** por naipe.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Enquanto houver uma ou duas fileiras, todas as cartas estão disponíveis.",
-        "- A partir de três fileiras, uma carta só fica **livre** quando o espaço logo acima ou logo abaixo dela está vazio.",
-        "- Toque no **monte** para preencher todos os buracos da mesa. Se não houver buracos, ele distribui uma nova fileira de dez cartas embaixo.",
-        "- Não se constrói na mesa e não há redistribuição."
+        "| Fundações (8) | Quatro do Ás ao Rei e quatro do Rei ao Ás, por naipe |",
+        "| Jogáveis | Com uma ou duas fileiras, todas as cartas; a partir de três fileiras, cartas com um espaço vazio acima ou abaixo |",
+        "| Construção | Não há |",
+        "| Monte | Preenche todos os buracos, ou acrescenta uma fileira de 10 |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 104 (dois baralhos) |"
       ]
     },
     "quickStart": {
-      "hash": "333d1355",
+      "hash": "32c09e4a",
       "value": [
-        "Mova todas as 104 cartas para as fundações. Construa com os A para cima e os K para baixo por naipe.",
-        "Com três ou mais fileiras, uma carta precisa de um espaço vazio acima ou abaixo.",
-        "Toque no monte para preencher lacunas ou adicionar uma fileira quando não houver nenhuma."
+        "Construa a partir dos Ases em ordem crescente e dos Reis em ordem decrescente, por naipe.",
+        "A partir de três fileiras, uma carta precisa de um espaço vazio acima ou abaixo.",
+        "O monte preenche os buracos, ou acrescenta uma fileira."
       ]
     },
     "title": {
@@ -2589,24 +2661,27 @@
   },
   "penguin": {
     "howToPlay": {
-      "hash": "362cf9e1",
+      "hash": "88ea4103",
       "value": [
         "## Objetivo",
-        "Construa as quatro fundações por naipe em ordem crescente, a partir do “valor do bico”, até cada uma ter 13 cartas.",
-        "## Fundações",
-        "- A primeira fundação começa com a **carta bico**, sorteada a cada partida.",
-        "- Construa as fundações **por naipe** em ordem crescente a partir do valor do bico; depois do Rei, volta-se ao Ás.",
-        "## Colunas",
-        "- Construa as colunas em ordem decrescente **por naipe**; do Ás se passa ao Rei.",
-        "- Cada **célula livre** guarda uma carta.",
-        "- Você pode mover uma carta de cada vez. Pode mover grupos de cartas juntos, mas só se tiver células livres e colunas vazias suficientes para fazer a mesma jogada uma carta de cada vez.",
-        "- Uma **coluna vazia** só pode ser ocupada por uma carta **um valor abaixo do bico** (ou por uma sequência que comece com ela)."
+        "Leve todas as cartas para as fundações.",
+        "## Regras",
+        "| Fundações (4) | Crescente por naipe a partir do valor do bico, passando do Rei ao Ás |",
+        "| Construção | Decrescente, mesmo naipe, passando do Ás ao Rei |",
+        "| Movimento | Uma carta, ou uma sequência se houver espaços livres |",
+        "| Coluna vazia | O valor abaixo do bico |",
+        "| Monte | Não há |",
+        "| Cartas | 52 |",
+        "## Regras especiais",
+        "- A primeira carta distribuída, o **bico**, começa uma fundação e define o primeiro valor de todas as fundações."
       ]
     },
     "quickStart": {
-      "hash": "04c72813",
+      "hash": "5d1ff24e",
       "value": [
-        "A partir do valor do bico, construa as fundações por naipe em ordem crescente e as colunas em ordem decrescente no mesmo naipe."
+        "As fundações começam no valor da carta bico.",
+        "Construa em ordem decrescente por naipe.",
+        "Só o valor abaixo do bico preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -2732,21 +2807,26 @@
   },
   "pyramid": {
     "howToPlay": {
-      "hash": "05b90345",
+      "hash": "09992e6c",
       "value": [
         "## Objetivo",
-        "Desmonte a **pirâmide** inteira de 28 cartas removendo-as em pares que somam **13**.",
-        "## Como jogar",
-        "- Uma carta só fica disponível quando está **totalmente descoberta**, sem nada sobre ela.",
-        "- Remova duas cartas disponíveis cujos valores somem 13 (os Ases valem 1).",
-        "- Um Rei soma 13 sozinho, então é removido sozinho.",
-        "- Quando não houver jogadas, vire cartas do monte para o descarte; a carta do topo do descarte pode formar par com qualquer carta disponível."
+        "Remova as 28 cartas da pirâmide.",
+        "## Regras",
+        "| Jogáveis | Cartas descobertas, e a carta do topo do descarte |",
+        "| Remoção | Pares que somam 13, ou um Rei sozinho |",
+        "| Valores | Ás 1, Valete 11, Dama 12 |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |",
+        "## Variantes",
+        "- **Fácil**: você pode selecionar uma segunda carta se só a primeira carta selecionada a cobrir."
       ]
     },
     "quickStart": {
-      "hash": "38a2c4ea",
+      "hash": "db306590",
       "value": [
-        "Remova os Reis, ou pares expostos que somam 13. Compre para achar mais pares."
+        "Remova pares que somam 13.",
+        "Os Reis saem sozinhos.",
+        "Vire uma carta do monte quando não houver jogadas."
       ]
     },
     "title": {
@@ -2784,28 +2864,28 @@
   },
   "rank-and-file": {
     "howToPlay": {
-      "hash": "544745e3",
+      "hash": "3d1c96ae",
       "value": [
         "## Objetivo",
-        "Leve os dois baralhos para oito fundações, construídas por naipe do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- São distribuídas dez colunas de quatro cartas, só com a carta do topo exposta.",
-        "- Construa em ordem decrescente, alternando cores.",
-        "- Mova qualquer sequência bem ordenada, completa ou em parte.",
-        "- Qualquer carta ou sequência pode ocupar uma coluna vazia.",
-        "- Distribua o monte uma carta de cada vez. Não há redistribuição.",
-        "## Número Dez",
-        "Número Dez é o mesmo jogo com duas cartas viradas para baixo e duas para cima em cada coluna."
+        "| Fundações (8) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, alternando cores |",
+        "| Movimento | Uma carta, ou uma sequência ordenada |",
+        "| Coluna vazia | Qualquer carta ou sequência |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 104 (dois baralhos) |",
+        "## Variantes",
+        "- **Número Dez**: duas cartas viradas para baixo em cada coluna, em vez de três."
       ]
     },
     "quickStart": {
-      "hash": "0dbc41d3",
+      "hash": "3b2a169b",
       "value": [
-        "Leve os dois baralhos para oito fundações, construídas por naipe de A a K.",
-        "No início, só a última carta de cada coluna fica virada para cima.",
         "Construa em ordem decrescente, alternando cores.",
-        "Mova sequências ordenadas, completas ou em parte.",
-        "Não há redistribuição."
+        "Mova sequências ordenadas juntas.",
+        "Qualquer carta ou sequência preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -2887,27 +2967,29 @@
   },
   "royal-cotillion": {
     "howToPlay": {
-      "hash": "55f6e9ce",
+      "hash": "4ee44699",
       "value": [
         "## Objetivo",
-        "Leve as 104 cartas para as oito fundações.",
-        "## Fundações",
-        "- Cada fundação é construída **por naipe em ordem crescente, em passos de dois**, recomeçando depois do Rei.",
-        "- Fundações dos Ases: A, 3, 5, 7, 9, J, K, 2, 4, 6, 8, 10, Q.",
-        "- Fundações dos 2: 2, 4, 6, 8, 10, Q, A, 3, 5, 7, 9, J, K.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Só a carta inferior de cada coluna da esquerda está disponível, e os espaços nunca são preenchidos.",
-        "- Todas as cartas da direita estão disponíveis.",
-        "- Toque num espaço vazio à direita para preenchê-lo com a carta do topo do **descarte**, ou pelo **monte** se o descarte estiver vazio.",
-        "- Toque no **monte** para virar uma carta no descarte. Não há redistribuição."
+        "| Fundações (8) | Quatro a partir do Ás e quatro a partir do 2, crescente por naipe em passos de dois, passando do Rei ao Ás |",
+        "| Jogáveis | Esquerda: a última carta de cada coluna. Direita: todas as cartas |",
+        "| Construção | Não há |",
+        "| Espaço vazio | Esquerda: não se preenche. Direita: recebe carta do descarte, depois do monte |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 104 (dois baralhos) |",
+        "## Regras especiais",
+        "- Fundações dos Ases: A, 3, 5, 7, 9, J, K, 2, 4, 6, 8, 10, Q.",
+        "- Fundações dos 2: 2, 4, 6, 8, 10, Q, A, 3, 5, 7, 9, J, K."
       ]
     },
     "quickStart": {
-      "hash": "44c5dd4d",
+      "hash": "51b4504b",
       "value": [
-        "Mova todas as 104 cartas para as oito fundações, construindo por naipe de dois em dois.",
-        "Os Ases seguem A, 3, 5… K, 2, 4… Q por naipe.",
-        "Os Dois seguem 2, 4, 6… Q, A, 3… K por naipe."
+        "As fundações são construídas por naipe em passos de dois.",
+        "À esquerda, só as últimas cartas são jogáveis; à direita, todas.",
+        "Os buracos da direita são preenchidos pelo descarte."
       ]
     },
     "title": {
@@ -2947,25 +3029,24 @@
   },
   "royal-marriage": {
     "howToPlay": {
-      "hash": "f2ecd27f",
+      "hash": "2e9a5200",
       "value": [
         "## Objetivo",
-        "Descarte todas as cartas, exceto a **Dama** e o **Rei de copas**, que devem terminar lado a lado.",
-        "## Distribuição",
-        "- As 52 cartas são dispostas numa única linha contínua, que passa de uma fileira para a seguinte.",
-        "- A Dama de copas abre a linha e o Rei de copas a fecha.",
-        "## Descarte",
+        "Descarte todas as cartas, exceto a Dama e o Rei de copas, que terminam lado a lado.",
+        "## Regras",
+        "| Jogáveis | Todas as cartas da linha |",
+        "| Remoção | Uma ou duas cartas entre duas do mesmo valor ou naipe; uma sequência mais longa só se for toda de um naipe |",
+        "| Monte | Não há; todas as cartas são distribuídas numa linha |",
+        "## Regras especiais",
         "- Selecione a carta ou as cartas a remover e pressione **Descartar**.",
-        "- Uma carta, ou duas cartas lado a lado, podem sair se as cartas de cada lado delas forem do mesmo **valor ou naipe**.",
-        "- Uma sequência mais longa só pode sair se todas as cartas dela forem do **mesmo naipe** e as cartas de cada lado forem do mesmo valor ou naipe.",
-        "- A Dama e o Rei de copas nunca saem da linha.",
-        "- A linha se fecha depois de cada descarte."
+        "- A Dama de copas abre a linha, o Rei de copas a fecha, e nenhum dos dois sai dela."
       ]
     },
     "quickStart": {
-      "hash": "11cc1c79",
+      "hash": "4485151a",
       "value": [
-        "Descarte as cartas que estiverem entre duas cartas do mesmo valor ou naipe, até a Dama e o Rei de copas ficarem lado a lado."
+        "Descarte cartas entre duas que tenham o mesmo valor ou naipe.",
+        "Junte a Dama e o Rei de copas."
       ]
     },
     "title": {
@@ -3011,27 +3092,27 @@
   },
   "scorpion": {
     "howToPlay": {
-      "hash": "6cabf38a",
+      "hash": "04a50a66",
       "value": [
         "## Objetivo",
-        "Forme **quatro sequências completas do mesmo naipe**, cada uma do Rei ao Ás.",
+        "Forme quatro sequências do Rei ao Ás, cada uma de um só naipe.",
         "## Regras",
-        "- Construa as colunas **em ordem decrescente e no mesmo naipe**.",
-        "- Você pode pegar **qualquer carta virada para cima** e movê-la junto com **todas as cartas sobre ela**, mesmo que não estejam em sequência.",
-        "- Só um **Rei** (com as cartas que estiverem sobre ele) pode ir para uma **coluna vazia**.",
-        "- As sequências completas são retiradas das colunas e colocadas nas fundações.",
-        "## Monte",
-        "Quando não restar jogada útil, distribua as três cartas do monte, uma em cada uma das três primeiras colunas.",
-        "## Vespa",
-        "Na variante Vespa, qualquer carta (com as cartas sobre ela) pode ir para uma coluna vazia."
+        "| Fundações (4) | Sequências completas do Rei ao Ás de um só naipe, retiradas automaticamente |",
+        "| Construção | Decrescente, mesmo naipe |",
+        "| Movimento | Qualquer carta virada para cima, com todas as cartas sobre ela |",
+        "| Coluna vazia | Só Rei |",
+        "| Monte | Distribui as suas 3 cartas nas três primeiras colunas |",
+        "| Cartas | 52 |",
+        "## Variantes",
+        "- **Vespa**: qualquer carta preenche uma coluna vazia."
       ]
     },
     "quickStart": {
-      "hash": "faaa0ff2",
+      "hash": "69450c36",
       "value": [
-        "Construa as quatro fundações por naipe, de K a A.",
-        "Mova qualquer grupo de cartas viradas para cima, mesmo fora de sequência.",
-        "Só os Reis podem ocupar colunas vazias."
+        "Construa em ordem decrescente por naipe.",
+        "Mova qualquer carta virada para cima com todas as cartas sobre ela.",
+        "Só um Rei preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -3041,24 +3122,25 @@
   },
   "seahaven-towers": {
     "howToPlay": {
-      "hash": "1342469d",
+      "hash": "d2e2c9c1",
       "value": [
         "## Objetivo",
-        "Leve as 52 cartas para quatro fundações, construídas por naipe do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- As dez colunas começam com cinco cartas viradas para cima cada.",
-        "- Duas das quatro células livres começam ocupadas; cada célula guarda uma carta.",
-        "- Construa as colunas em ordem decrescente no mesmo naipe.",
-        "- Você pode mover uma carta de cada vez. Pode mover grupos de cartas juntos, mas só se tiver células livres e colunas vazias suficientes para fazer a mesma jogada uma carta de cada vez.",
-        "- Só um Rei, ou uma sequência começando por um Rei, pode ocupar uma coluna vazia."
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, mesmo naipe |",
+        "| Movimento | Uma carta, ou uma sequência se houver espaços livres |",
+        "| Coluna vazia | Só Rei |",
+        "| Monte | Não há |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "4eb4b58b",
+      "hash": "205a53a2",
       "value": [
-        "Construa as fundações por naipe, do Ás ao Rei.",
-        "Construa as colunas em ordem decrescente no mesmo naipe.",
-        "Use quatro células; só os Reis podem ocupar colunas vazias."
+        "Construa em ordem decrescente por naipe.",
+        "Cada célula livre guarda uma carta.",
+        "Só um Rei preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -3104,23 +3186,25 @@
   },
   "simple-simon": {
     "howToPlay": {
-      "hash": "c280dcc9",
+      "hash": "9edbe6a4",
       "value": [
         "## Objetivo",
-        "Retire quatro sequências completas do mesmo naipe, do Rei ao Ás.",
+        "Forme quatro sequências do Rei ao Ás, cada uma de um só naipe.",
         "## Regras",
-        "- Construa as colunas em ordem decrescente, independentemente do naipe.",
-        "- Só sequências decrescentes do mesmo naipe se movem juntas.",
-        "- Qualquer carta ou sequência válida pode ocupar uma coluna vazia.",
-        "- Uma sequência completa do Rei ao Ás no mesmo naipe sai da mesa automaticamente."
+        "| Fundações (4) | Sequências completas do Rei ao Ás de um só naipe, retiradas automaticamente |",
+        "| Construção | Decrescente, independentemente do naipe |",
+        "| Movimento | Uma carta, ou uma sequência do mesmo naipe |",
+        "| Coluna vazia | Qualquer carta ou sequência |",
+        "| Monte | Não há |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "3620793d",
+      "hash": "cf3fbfec",
       "value": [
-        "Construa em ordem decrescente.",
-        "Mova sequências decrescentes do mesmo naipe.",
-        "Complete sequências do Rei ao Ás no mesmo naipe."
+        "Construa em ordem decrescente, independentemente do naipe.",
+        "Só sequências do mesmo naipe se movem juntas.",
+        "Qualquer carta ou sequência preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -3130,29 +3214,28 @@
   },
   "sir-tommy": {
     "howToPlay": {
-      "hash": "95c0ca0b",
+      "hash": "4c7344a5",
       "value": [
         "## Objetivo",
-        "Construa quatro fundações do Ás ao Rei, **independentemente do naipe**.",
-        "**Neste jogo, os naipes não importam.**",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Cada carta virada do monte deve ir para uma das quatro pilhas de descarte.",
-        "- Você **não** pode reorganizar as pilhas de descarte.",
-        "- Só a carta do **topo** de cada pilha de descarte pode ir para as fundações.",
-        "- Toque numa pilha de descarte para colocar ali a carta do monte.",
-        "- **Toque duas vezes** na carta do monte ou na carta do topo de uma pilha de descarte para jogá-la numa fundação.",
-        "- Não há redistribuição.",
-        "## Quatro cantos",
-        "Nesta variante, os Ases começam nas fundações, que sobem **por cor** (qualquer um dos dois naipes da mesma cor), e as pilhas de descarte podem ser recolhidas para uma redistribuição."
+        "| Fundações (4) | Do Ás ao Rei, independentemente do naipe |",
+        "| Pilhas de descarte (4) | Qualquer carta; só a carta do topo é jogada, numa fundação |",
+        "| Monte | Vira 1, para uma pilha de descarte ou uma fundação |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 52 |",
+        "## Regras especiais",
+        "- Toque numa pilha de descarte para colocar ali a carta do monte, ou toque duas vezes numa carta para jogá-la numa fundação.",
+        "## Variantes",
+        "- **Quatro cantos**: os Ases começam nas fundações, que sobem por cor, e as pilhas de descarte podem ser recolhidas para uma redistribuição."
       ]
     },
     "quickStart": {
-      "hash": "ea2f7d47",
+      "hash": "fd0d1d47",
       "value": [
-        "Construa as fundações de A a K, independentemente do naipe.",
-        "As cartas nas pilhas de descarte não podem ser movidas.",
-        "Toque numa pilha de descarte para colocar ali a carta do monte.",
-        "Toque duas vezes na carta do monte ou na carta do topo de uma pilha de descarte para jogá-la numa fundação."
+        "As fundações ignoram o naipe.",
+        "Coloque cada carta do monte numa pilha de descarte.",
+        "As cartas do descarte só vão para as fundações."
       ]
     },
     "title": {
@@ -3162,26 +3245,28 @@
   },
   "sly-fox": {
     "howToPlay": {
-      "hash": "cd900ba6",
+      "hash": "72ae852e",
       "value": [
         "## Objetivo",
-        "Leve as 104 cartas para as oito fundações.",
-        "## Fundações",
-        "- Os Ases sobem **em ordem crescente** por naipe; os Reis descem **em ordem decrescente** por naipe.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Só as cartas do topo das pilhas de **reserva** podem ser jogadas, e nunca umas sobre as outras.",
-        "- No início, uma pilha de reserva esvaziada por uma jogada nas fundações é preenchida pelo monte.",
-        "- Toque no **monte** para começar uma distribuição de **20 cartas**. Cada uma deve ir para uma pilha de reserva à sua escolha, ou ser jogada direto numa fundação, e nesse caso não conta entre as 20.",
-        "- Nenhuma carta da reserva pode ser jogada até a distribuição terminar. Depois disso, as pilhas esvaziadas ficam vazias até a próxima distribuição.",
+        "| Fundações (8) | Quatro do Ás ao Rei e quatro do Rei ao Ás, por naipe |",
+        "| Reserva (20) | As cartas do topo só vão para as fundações |",
+        "| Monte | Distribui 20 cartas, cada uma numa pilha de reserva à sua escolha |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 104 (dois baralhos) |",
+        "## Regras especiais",
+        "- Até você começar a distribuir, uma pilha de reserva esvaziada é preenchida pelo monte; depois disso, ela espera a próxima distribuição.",
+        "- Nenhuma carta da reserva pode ser jogada até as 20 cartas de uma distribuição serem colocadas. Uma carta jogada direto numa fundação não conta entre as 20.",
         "- Distribua de novo quando quiser, até o monte acabar."
       ]
     },
     "quickStart": {
-      "hash": "658a2a22",
+      "hash": "a303e828",
       "value": [
-        "Mova todas as 104 cartas para as fundações. Construa com os A para cima e os K para baixo por naipe.",
-        "Toque no monte para distribuir 20 cartas, colocando cada uma em uma pilha de reserva.",
-        "Toque na carta do topo de uma pilha de reserva para enviá-la à fundação."
+        "Construa a partir dos Ases em ordem crescente e dos Reis em ordem decrescente, por naipe.",
+        "As cartas da reserva só vão para as fundações.",
+        "Cada distribuição coloca 20 cartas na reserva."
       ]
     },
     "title": {
@@ -3233,25 +3318,28 @@
   },
   "spider-solitaire": {
     "howToPlay": {
-      "hash": "349fc938",
+      "hash": "5bc579dc",
       "value": [
         "## Objetivo",
-        "Monte **8 sequências completas do mesmo naipe**, cada uma do Rei ao Ás. As sequências completas saem da mesa.",
+        "Forme oito sequências do Rei ao Ás, cada uma de um só naipe.",
         "## Regras",
-        "- Construa as colunas **em ordem decrescente, independentemente do naipe**.",
-        "- Você só pode mover um grupo de cartas se ele formar uma **sequência decrescente do mesmo naipe**.",
-        "- Qualquer carta ou sequência válida pode ir para uma coluna vazia.",
-        "- Quando se forma uma sequência completa **do Rei ao Ás** do mesmo naipe, ela é removida automaticamente.",
-        "## Monte",
-        "Toque no monte para distribuir uma carta em cada coluna de uma vez. Só é possível distribuir quando nenhuma coluna estiver vazia.",
-        "## Naipes",
-        "Jogue com quatro naipes, ou deixe o jogo mais fácil com dois (Espadas e Copas) ou um (Espadas) nas configurações."
+        "| Fundações (8) | Sequências completas do Rei ao Ás de um só naipe, retiradas automaticamente |",
+        "| Construção | Decrescente, independentemente do naipe |",
+        "| Movimento | Uma carta, ou uma sequência do mesmo naipe |",
+        "| Coluna vazia | Qualquer carta ou sequência |",
+        "| Monte | Distribui uma carta em cada coluna, quando nenhuma está vazia |",
+        "| Cartas | 104 (dois baralhos) |",
+        "## Variantes",
+        "- **2 naipes**: só espadas e copas.",
+        "- **1 naipe**: só espadas."
       ]
     },
     "quickStart": {
-      "hash": "50b8bd5d",
+      "hash": "77f60e9d",
       "value": [
-        "Construa em ordem decrescente; mova sequências do mesmo naipe; distribua quando não houver jogadas."
+        "Construa em ordem decrescente, independentemente do naipe.",
+        "Só sequências do mesmo naipe se movem juntas.",
+        "Distribua quando não houver jogadas, desde que toda coluna tenha uma carta."
       ]
     },
     "title": {
@@ -3261,23 +3349,25 @@
   },
   "spiderette": {
     "howToPlay": {
-      "hash": "07143aa9",
+      "hash": "eea1a106",
       "value": [
         "## Objetivo",
-        "Retire quatro sequências completas do mesmo naipe, do Rei ao Ás.",
+        "Forme quatro sequências do Rei ao Ás, cada uma de um só naipe.",
         "## Regras",
-        "- Construa as colunas em ordem decrescente, independentemente do naipe.",
-        "- Só sequências decrescentes do mesmo naipe se movem juntas.",
-        "- Qualquer carta ou sequência válida pode ocupar uma coluna vazia.",
-        "- O monte distribui uma carta em cada coluna, mas só quando nenhuma coluna estiver vazia."
+        "| Fundações (4) | Sequências completas do Rei ao Ás de um só naipe, retiradas automaticamente |",
+        "| Construção | Decrescente, independentemente do naipe |",
+        "| Movimento | Uma carta, ou uma sequência do mesmo naipe |",
+        "| Coluna vazia | Qualquer carta ou sequência |",
+        "| Monte | Distribui uma carta em cada coluna, quando nenhuma está vazia |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "131e6bea",
+      "hash": "77f60e9d",
       "value": [
-        "Remova quatro sequências completas do mesmo naipe, do Rei ao Ás.",
-        "Construa em ordem decrescente e mova sequências decrescentes do mesmo naipe.",
-        "Distribua as fileiras do monte só quando todas as colunas estiverem ocupadas."
+        "Construa em ordem decrescente, independentemente do naipe.",
+        "Só sequências do mesmo naipe se movem juntas.",
+        "Distribua quando não houver jogadas, desde que toda coluna tenha uma carta."
       ]
     },
     "title": {
@@ -3287,32 +3377,32 @@
   },
   "stalactites": {
     "howToPlay": {
-      "hash": "4c72e1d1",
+      "hash": "3c1bc99e",
       "value": [
         "## Objetivo",
-        "Suba as quatro **fundações** até treze cartas cada.",
-        "## Distribuição",
-        "- As quatro primeiras cartas começam as quatro fundações.",
-        "- As outras 48 cartas são distribuídas em oito colunas de seis.",
-        "## Fundações",
-        "- As fundações sobem **de um em um** (7, 8, 9…) ou **de dois em dois** (7, 9, J…), igual para as quatro. Escolha com os botões, ou jogue uma carta um ou dois valores acima de uma fundação e ela escolhe por você.",
-        "- As fundações sobem **sem considerar o naipe**, passando do Rei ao Ás, até cada uma ter treze cartas.",
-        "## Jogadas",
-        "- Mova a carta de cima de uma coluna para uma fundação ou para uma das **duas células**.",
-        "- Uma carta numa célula só pode ir para uma fundação.",
-        "- Nunca se constrói sobre as colunas, e uma coluna vazia continua vazia.",
-        "- Toque em uma carta para mandá-la a uma fundação, ou a uma célula se não couber, ou arraste-a para onde quiser. Enquanto o passo não for escolhido, uma carta que poderia ir dos dois jeitos precisa ser arrastada.",
+        "Construa todas as fundações até treze cartas.",
+        "## Regras",
+        "| Fundações (4) | As quatro primeiras cartas; crescente de 1 em 1 ou de 2 em 2, independentemente do naipe, passando do Rei ao Ás |",
+        "| Construção | Não há |",
+        "| Movimento | A carta do topo de uma coluna, para uma fundação ou uma célula |",
+        "| Coluna vazia | Não se preenche |",
+        "| Células (2) | Uma carta cada; saem só para as fundações |",
+        "| Monte | Não há |",
+        "| Cartas | 52 |",
+        "## Regras especiais",
+        "- Escolha com os botões se as fundações sobem de um em um ou de dois em dois, ou jogue uma carta um ou dois valores acima de uma carta de fundação e ela escolhe por você.",
+        "- Enquanto o passo não for escolhido, arraste uma carta que poderia ir para uma fundação ou uma célula até a que você quiser.",
         "## Dicas",
         "- Olhe a distribuição inteira antes de escolher de um em um ou de dois em dois.",
         "- As células enchem rápido: deixe uma livre para a carta que desbloqueia uma coluna."
       ]
     },
     "quickStart": {
-      "hash": "1e22b470",
+      "hash": "d85bdc28",
       "value": [
-        "As fundações sobem sem considerar o naipe, passando do Rei ao Ás.",
-        "Escolha se elas sobem de um em um ou de dois em dois, ou deixe sua primeira jogada numa fundação decidir.",
-        "As cartas de cima só vão para as fundações ou para as duas células."
+        "Escolha se as fundações contam de um em um ou de dois em dois.",
+        "Os naipes não importam.",
+        "Nada se constrói nas colunas; duas células guardam cartas."
       ]
     },
     "title": {
@@ -3387,24 +3477,26 @@
   },
   "ten-twenty-thirty": {
     "howToPlay": {
-      "hash": "03753ddd",
+      "hash": "8b0b8c0f",
       "value": [
         "## Objetivo",
         "Descarte as 52 cartas.",
         "## Regras",
-        "- As cartas valem o seu número; Valetes, Damas e Reis valem **10**.",
-        "- Toque no **monte** para acrescentar a próxima carta ao fim da fila.",
-        "- Quaisquer **duas ou mais cartas vizinhas** na fila que somem **10, 20 ou 30** podem ser descartadas.",
-        "- Toque na primeira carta do grupo e depois na última; as cartas ao redor se juntam.",
-        "- Você perde quando o monte estiver vazio e nenhum grupo somar o total certo."
+        "| Jogáveis | Todas as cartas da linha |",
+        "| Remoção | Duas ou mais cartas vizinhas que somam 10, 20 ou 30 |",
+        "| Valores | Valete, Dama e Rei valem 10 |",
+        "| Monte | Acrescenta uma carta ao fim da linha |",
+        "| Redistribuições | Não há |",
+        "## Regras especiais",
+        "- Toque na primeira carta de uma sequência e depois na última.",
+        "- Você perde quando o monte estiver vazio e nenhuma sequência somar o total certo."
       ]
     },
     "quickStart": {
-      "hash": "a276041b",
+      "hash": "bb2d61da",
       "value": [
-        "Descarte todas as 52 cartas removendo sequências adjacentes que somem 10, 20 ou 30.",
-        "Toque no monte para adicionar uma carta ao fim da fileira.",
-        "Toque na primeira e na última carta de uma sequência para removê-la."
+        "Remova cartas vizinhas que somam 10, 20 ou 30.",
+        "As figuras valem 10."
       ]
     },
     "title": {
@@ -3414,21 +3506,21 @@
   },
   "terrace": {
     "howToPlay": {
-      "hash": "885ccd26",
+      "hash": "4d355846",
       "value": [
         "## Objetivo",
-        "Leve as 104 cartas para as oito fundações.",
-        "## Início",
-        "- Quatro cartas são distribuídas na mesa. Toque numa para começar a primeira fundação: o valor dela é o **valor base** de todas as fundações.",
-        "- Depois, as outras colunas são distribuídas, com uma carta cada.",
-        "## Fundações",
-        "- Cada fundação começa com uma carta do valor base.",
-        "- Construa-as **alternando cores**, passando do Rei ao Ás, até cada fundação ter 13 cartas.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Só a carta exposta do **terraço** (a reserva) está disponível, e ela só pode ir para uma fundação.",
-        "- Construa as colunas **em ordem decrescente, alternando cores**, passando do Ás ao Rei. Mova uma carta de cada vez.",
-        "- Uma coluna vazia deve ser preenchida com o descarte, ou tocando no monte, que então distribui direto nela.",
-        "- Vire as cartas do monte uma de cada vez. Não há redistribuição.",
+        "| Fundações (8) | Crescente a partir do valor base, alternando cores, passando do Rei ao Ás |",
+        "| Construção | Decrescente, alternando cores, passando do Ás ao Rei |",
+        "| Movimento | Uma carta de cada vez |",
+        "| Coluna vazia | Deve ser preenchida, pelo descarte ou pelo monte |",
+        "| Terraço (11) | A carta do topo, só para as fundações |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 104 (dois baralhos) |",
+        "## Regras especiais",
+        "- Quatro cartas são distribuídas primeiro: toque numa para começar a primeira fundação e definir o valor base.",
         "## Variantes",
         "- **Paciência do General**: um terraço de treze cartas, e as fundações sobem por naipe.",
         "- **Loiras e morenas**: um terraço de dez cartas, e a primeira carta distribuída define o valor base.",
@@ -3436,11 +3528,11 @@
       ]
     },
     "quickStart": {
-      "hash": "ccae7220",
+      "hash": "2a3719c0",
       "value": [
-        "Toque numa das quatro cartas destacadas para escolher o valor das fundações.",
-        "As fundações sobem alternando cores, passando do Rei ao Ás.",
-        "A carta exposta do terraço só pode ir para uma fundação."
+        "Escolha o valor base de todas as fundações.",
+        "Construa em ordem decrescente, alternando cores.",
+        "As cartas do terraço só vão para as fundações."
       ]
     },
     "title": {
@@ -3450,20 +3542,23 @@
   },
   "three-peaks": {
     "howToPlay": {
-      "hash": "6c8edb31",
+      "hash": "808f47ec",
       "value": [
         "## Objetivo",
-        "Limpe os três picos removendo cartas um valor acima ou abaixo da carta do descarte.",
+        "Desmonte os três picos.",
         "## Regras",
-        "- Uma carta exposta de um pico pode ir para o descarte se for **um valor acima ou abaixo** da carta atual do descarte.",
-        "- Os valores dão a volta: Reis podem ser jogados sobre Ases, e vice-versa.",
-        "- Quando não restar jogada válida, vire uma carta do monte para o descarte."
+        "| Jogáveis | Cartas descobertas dos picos |",
+        "| Remoção | Para o descarte, um valor acima ou abaixo da carta dele |",
+        "| Valores | Ás e Rei são vizinhos |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |"
       ]
     },
     "quickStart": {
-      "hash": "387e2c46",
+      "hash": "5d2e930b",
       "value": [
-        "Jogue no descarte cartas expostas +/-1; A<->K se ligam; compre quando não houver jogadas."
+        "Jogue uma carta dos picos um valor acima ou abaixo da carta do descarte.",
+        "Vire uma carta do monte quando não houver jogadas."
       ]
     },
     "title": {
@@ -3473,23 +3568,26 @@
   },
   "thumb-and-pouch": {
     "howToPlay": {
-      "hash": "9a483acf",
+      "hash": "1518aadd",
       "value": [
         "## Objetivo",
-        "Construa quatro fundações por naipe, do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- São distribuídas sete colunas em escada, de 1 a 7 cartas.",
-        "- Construa em ordem decrescente, mas nunca coloque uma carta sobre o mesmo naipe.",
-        "- Mova juntas as sequências empilhadas.",
-        "- Qualquer carta ou sequência pode ocupar uma coluna vazia."
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, qualquer outro naipe |",
+        "| Movimento | Uma carta, ou uma sequência ordenada |",
+        "| Coluna vazia | Qualquer carta ou sequência |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "a87ab14c",
+      "hash": "1dd78e51",
       "value": [
-        "Construa quatro fundações por naipe, de A a K.",
-        "Construa em ordem decrescente sobre qualquer naipe, menos o mesmo; mova sequências bem empilhadas.",
-        "Qualquer carta ou sequência pode ocupar uma coluna vazia."
+        "Construa em ordem decrescente sobre qualquer naipe que não seja o da carta.",
+        "Mova sequências ordenadas juntas.",
+        "Qualquer carta preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -3646,24 +3744,26 @@
   },
   "westcliff": {
     "howToPlay": {
-      "hash": "3b649110",
+      "hash": "9e8257ef",
       "value": [
         "## Objetivo",
-        "Leve as 52 cartas para quatro fundações, construídas por naipe do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- As dez colunas começam com três cartas cada; só a última fica virada para cima.",
-        "- Construa em ordem decrescente, alternando cores.",
-        "- Sequências bem ordenadas podem se mover juntas.",
-        "- Qualquer carta ou sequência pode ocupar uma coluna vazia.",
-        "- Vire o monte uma carta de cada vez, sem redistribuir."
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, alternando cores |",
+        "| Movimento | Uma carta, ou uma sequência ordenada |",
+        "| Coluna vazia | Qualquer carta ou sequência |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "912a5d6b",
+      "hash": "24cb2017",
       "value": [
-        "Construa as fundações por naipe, do Ás ao Rei.",
-        "Construa as colunas em ordem decrescente, alternando cores.",
-        "Mova sequências ordenadas; qualquer carta pode ocupar uma coluna vazia."
+        "Construa em ordem decrescente, alternando cores.",
+        "Mova sequências ordenadas juntas.",
+        "Qualquer carta preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -3673,23 +3773,26 @@
   },
   "whitehead": {
     "howToPlay": {
-      "hash": "60370154",
+      "hash": "9415ebda",
       "value": [
         "## Objetivo",
-        "Construa quatro fundações por naipe, do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Todas as cartas das colunas ficam viradas para cima.",
-        "- Construa em ordem decrescente na mesma cor.",
-        "- Sequências bem ordenadas do mesmo naipe se movem juntas.",
-        "- Qualquer carta pode ocupar uma coluna vazia."
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, mesma cor |",
+        "| Movimento | Uma carta, ou uma sequência do mesmo naipe |",
+        "| Coluna vazia | Qualquer carta |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "a6fd3cc6",
+      "hash": "817a882f",
       "value": [
-        "Construa as fundações por naipe em ordem crescente.",
         "Construa em ordem decrescente na mesma cor.",
-        "Mova sequências do mesmo naipe; qualquer carta ocupa um espaço vazio."
+        "Só sequências do mesmo naipe se movem juntas.",
+        "Qualquer carta preenche uma coluna vazia."
       ]
     },
     "title": {
@@ -3699,27 +3802,29 @@
   },
   "windmill": {
     "howToPlay": {
-      "hash": "f5a3d316",
+      "hash": "b74e8c32",
       "value": [
         "## Objetivo",
-        "Leve as 104 cartas para as fundações.",
-        "## Fundações",
-        "- Construa o **centro em ordem crescente independentemente do naipe**, do Ás ao Rei, quatro vezes.",
-        "- Construa cada **canto em ordem decrescente independentemente do naipe**, do Rei ao Ás.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- As oito **pás** e a carta do topo do **descarte** estão disponíveis.",
-        "- Uma pá vazia é reposta na hora pelo descarte, ou pelo monte se o descarte estiver vazio.",
-        "- A carta do topo de um canto pode ir para o centro, mas a **próxima** carta jogada no centro precisa vir de uma pá ou do descarte.",
-        "- Quando uma carta puder ir para mais de um lugar, toque nela e depois toque no destino.",
-        "- Toque no **monte** para virar uma carta no descarte. Não há redistribuição."
+        "| Fundações (5) | Centro: do Ás ao Rei quatro vezes. Cantos: do Rei ao Ás. Independentemente do naipe |",
+        "| Jogáveis | As oito pás, e a carta do topo do descarte |",
+        "| Construção | Não há |",
+        "| Pá vazia | Recebe carta do descarte, depois do monte |",
+        "| Monte | Vira 1 |",
+        "| Redistribuições | Não há |",
+        "| Cartas | 104 (dois baralhos) |",
+        "## Regras especiais",
+        "- A carta do topo de um canto pode ir para o centro, mas a próxima carta jogada no centro precisa vir de uma pá ou do descarte.",
+        "- Quando uma carta puder ir para mais de um lugar, toque nela e depois toque no destino."
       ]
     },
     "quickStart": {
-      "hash": "d36852ca",
+      "hash": "3a2358ad",
       "value": [
-        "Mova todas as 104 cartas para as fundações.",
-        "Construa o centro do Ás ao Rei quatro vezes e os cantos do Rei ao Ás, independentemente do naipe.",
-        "As pás são preenchidas pelo descarte e depois pelo monte."
+        "O centro sobe e os cantos descem, independentemente do naipe.",
+        "As pás e a carta do topo do descarte são jogáveis.",
+        "Uma carta de canto pode ir para o centro, mas não duas vezes seguidas."
       ]
     },
     "title": {
@@ -3729,30 +3834,29 @@
   },
   "yukon": {
     "howToPlay": {
-      "hash": "e8b97b81",
+      "hash": "9557c2f9",
       "value": [
         "## Objetivo",
-        "Construa as quatro fundações por naipe em ordem crescente, do Ás ao Rei.",
+        "Leve todas as cartas para as fundações.",
         "## Regras",
-        "- Mova qualquer carta virada para cima ou **grupo** de cartas **em ordem decrescente, alternando cores**.",
-        "- As cartas levadas **não** precisam estar em sequência.",
-        "- As colunas vazias só podem ser ocupadas por Reis.",
-        "- Toque duas vezes ou arraste cartas avulsas para as fundações.",
+        "| Fundações (4) | Do Ás ao Rei, por naipe |",
+        "| Construção | Decrescente, alternando cores |",
+        "| Movimento | Qualquer carta virada para cima, com todas as cartas sobre ela |",
+        "| Coluna vazia | Só Rei |",
+        "| Monte | Não há |",
+        "| Cartas | 52 |",
         "## Variantes",
-        "Escolha nas configurações do jogo como as colunas são construídas:",
-        "- **Yukon**: em ordem decrescente, alternando cores.",
-        "- **Paciência russa**: em ordem decrescente, no mesmo naipe.",
-        "- **Alasca**: em ordem crescente ou decrescente, no mesmo naipe.",
-        "- **Pele de alce**: em ordem decrescente, sobre qualquer naipe que não seja o seu."
+        "- **Paciência russa**: construa em ordem decrescente no mesmo naipe.",
+        "- **Alasca**: construa em ordem crescente ou decrescente no mesmo naipe.",
+        "- **Pele de alce**: construa em ordem decrescente sobre qualquer naipe que não seja o da carta."
       ]
     },
     "quickStart": {
-      "hash": "7f7cfdd7",
+      "hash": "6e65a0dd",
       "value": [
-        "Construa as fundações por naipe em ordem crescente, de A a K.",
-        "Construa as colunas em ordem decrescente, alternando cores.",
-        "Mova qualquer grupo de cartas viradas para cima.",
-        "Só os Reis podem ocupar colunas vazias."
+        "Construa em ordem decrescente, alternando cores.",
+        "Mova qualquer carta virada para cima com todas as cartas sobre ela, em ordem ou não.",
+        "Só um Rei preenche uma coluna vazia."
       ]
     },
     "title": {
