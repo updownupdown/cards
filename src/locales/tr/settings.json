@@ -77,7 +77,14 @@
     "unlockAll": "Kampanyadaki tüm oyunları aç",
     "unlockedAll": "Kampanyadaki tüm oyunlar açıldı",
     "grantMercySkip": "Bir af ver",
-    "mercySkipGranted": "Af verildi ({{count}} kullanılmamış)"
+    "mercySkipGranted": "Af verildi ({{count}} kullanılmamış)",
+    "needsKey": "Geliştirici modu için geliştirici anahtarı gerekir",
+    "forceField": {
+      "label": "Güç alanı",
+      "asPlayed": "Oyundaki gibi",
+      "shown": "Her zaman göster",
+      "lifted": "Kaldırıldı"
+    }
   },
   "tabs": {
     "general": "Genel",
@@ -87,5 +94,19 @@
   "useEnglishGameTitles": {
     "label": "Oyun adlarını İngilizce kullan",
     "description": "Dilden bağımsız olarak oyun adlarını her zaman İngilizce göster."
+  },
+  "unlockKey": {
+    "label": "Kilit açma anahtarı",
+    "description": "Anahtarın mı var? Yolculuk'un tamamını açmak için gir.",
+    "unlocked": "Yolculuk'un tamamı açıldı.",
+    "devKey": "Geliştirici anahtarı girildi: Yolculuk'un tamamı açıldı ve geliştirici modu açılabilir.",
+    "submit": "Aç",
+    "clear": "Anahtarı temizle",
+    "result": {
+      "unlocked": "Yolculuk'un tamamı açıldı",
+      "devKey": "Geliştirici anahtarı kabul edildi",
+      "webOnly": "Bu anahtar web uygulamasında çalışır. Uygulamada Yolculuk'un tamamı Google Play'den alınır.",
+      "invalid": "Bu anahtar geçerli değil"
+    }
   }
 }

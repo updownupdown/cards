@@ -15,7 +15,7 @@ import { getTestGameDotPaths, getTestWonPaths } from "@/data/test-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
-import { Colors, theme } from "@/styles/styles";
+import { Colors, rgba, theme } from "@/styles/styles";
 import { ThemePicker, settingsView } from "../common/ThemePicker";
 import {
   getDeviceLanguageCodes,
@@ -43,7 +43,18 @@ import { Text } from "../common/Text";
 import ModalFull from "./ModalFull";
 import { UnderlineTabs } from "../ui/Nocturne";
 import { useToast } from "../common/Toast";
-import { saveDevMode, useDevMode, useDevModeKnock } from "@/data/dev-mode";
+import {
+  canUseDevMode,
+  saveDevMode,
+  useDevMode,
+  useDevModeKnock,
+} from "@/data/dev-mode";
+import {
+  setDevFieldView,
+  useOdysseyUnlock,
+  type DevFieldView,
+} from "@/data/odyssey-unlock";
+import { UnlockKeyPanel } from "../common/UnlockKeyPanel";
 import { HelpFromAbovePanel } from "@/components/common/HelpFromAbovePanel";
 import { resetHintMode } from "@/data/hint-mode";
 
@@ -86,7 +97,19 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const scrollRef = React.useRef<ScrollView>(null);
   const scrollRestored = React.useRef(false);
   const devMode = useDevMode();
+  const { devFieldView } = useOdysseyUnlock();
+  // The unlock key's field: always on the web, where friends are given keys;
+  // in the app, only once the knock has asked for a developer key.
+  const [askedForDevKey, setAskedForDevKey] = React.useState(false);
+  const showKeyField = Platform.OS === "web" || askedForDevKey;
   const devModeKnock = useDevModeKnock(() => {
+    // Dev mode needs a developer key, unless the app runs locally.
+    if (!canUseDevMode()) {
+      setAskedForDevKey(true);
+      setTab("advanced");
+      showToast(t("devMode.needsKey"));
+      return;
+    }
     void saveDevMode(true);
     onHomeDataInvalidated();
     showToast(t("devMode.on"));
@@ -334,6 +357,13 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               />
             </View>
 
+            {showKeyField && (
+              <UnlockKeyPanel
+                onRedeemed={onHomeDataInvalidated}
+                askedForDevKey={askedForDevKey}
+              />
+            )}
+
             <AddToHomeScreenNotice />
 
             {/* Dev mode's shortcuts, boxed and named so they can't pass for
@@ -342,17 +372,20 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               <View
                 style={{
                   width: "100%",
-                  gap: spacing(10),
-                  padding: spacing(14),
+                  gap: spacing(12),
+                  padding: spacing(20),
                   borderRadius: spacing(16),
-                  borderWidth: 1,
-                  borderColor: theme.faint,
+                  backgroundColor: rgba(theme.ink, 0.1),
                 }}
               >
                 <View
                   style={[
                     flexStyles.rowCentered,
-                    { justifyContent: "space-between", gap: spacing(12) },
+                    {
+                      justifyContent: "space-between",
+                      gap: spacing(12),
+                      paddingBottom: spacing(12),
+                    },
                   ]}
                 >
                   <Text
@@ -377,7 +410,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                   uppercase={false}
                   text={t("populateTestProgress")}
                   iconName="milky-way"
-                  theme="blue"
                   disabled={isPopulatingTestData}
                   onPress={async () => {
                     setIsPopulatingTestData(true);
@@ -399,7 +431,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                   uppercase={false}
                   text={t("devMode.unlockAll")}
                   iconName="unlock"
-                  theme="blue"
                   onPress={async () => {
                     await unlockAllCampaignGames();
                     onHomeDataInvalidated();
@@ -422,6 +453,30 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                     );
                   }}
                 />
+                <View
+                  style={{
+                    width: "100%",
+                    gap: spacing(4),
+                    paddingTop: spacing(12),
+                  }}
+                >
+                  <Text size="sm" weight={400} color={theme.dim}>
+                    {t("devMode.forceField.label")}
+                  </Text>
+                  <SelectControl<DevFieldView>
+                    value={devFieldView}
+                    options={(["asPlayed", "shown", "lifted"] as const).map(
+                      (view) => ({
+                        value: view,
+                        label: t(`devMode.forceField.${view}`),
+                      }),
+                    )}
+                    accessibilityLabel={t("devMode.forceField.label")}
+                    onChange={(view) => {
+                      void setDevFieldView(view);
+                    }}
+                  />
+                </View>
               </View>
             )}
 

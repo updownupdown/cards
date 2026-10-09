@@ -77,7 +77,14 @@
     "unlockAll": "Débloquer toutes les parties de la campagne",
     "unlockedAll": "Toutes les parties de la campagne sont débloquées",
     "grantMercySkip": "Accorder un passe-droit",
-    "mercySkipGranted": "Passe-droit accordé ({{count}} non utilisé(s))"
+    "mercySkipGranted": "Passe-droit accordé ({{count}} non utilisé(s))",
+    "needsKey": "Le mode dev nécessite une clé de développeur",
+    "forceField": {
+      "label": "Champ de force",
+      "asPlayed": "Selon la partie",
+      "shown": "Toujours visible",
+      "lifted": "Levé"
+    }
   },
   "tabs": {
     "general": "Général",
@@ -87,5 +94,19 @@
   "useEnglishGameTitles": {
     "label": "Utiliser les titres de jeux en anglais",
     "description": "Toujours afficher les noms des jeux en anglais, quelle que soit la langue."
+  },
+  "unlockKey": {
+    "label": "Clé de déblocage",
+    "description": "Vous avez une clé ? Saisissez-la pour débloquer l'Odyssée complète.",
+    "unlocked": "L'Odyssée complète est débloquée.",
+    "devKey": "Clé de développeur saisie : l'Odyssée complète est débloquée et le mode dev peut être activé.",
+    "submit": "Débloquer",
+    "clear": "Effacer la clé",
+    "result": {
+      "unlocked": "L'Odyssée complète est débloquée",
+      "devKey": "Clé de développeur acceptée",
+      "webOnly": "Cette clé fonctionne dans l'application web. Dans l'application, l'Odyssée complète s'obtient sur Google Play.",
+      "invalid": "Cette clé n'est pas valide"
+    }
   }
 }

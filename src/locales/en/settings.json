@@ -77,7 +77,14 @@
     "unlockAll": "Unlock every campaign game",
     "unlockedAll": "Every campaign game unlocked",
     "grantMercySkip": "Grant a Mercy Skip",
-    "mercySkipGranted": "Mercy Skip granted ({{count}} unused)"
+    "mercySkipGranted": "Mercy Skip granted ({{count}} unused)",
+    "needsKey": "Dev mode needs a developer key",
+    "forceField": {
+      "label": "Force field",
+      "asPlayed": "As played",
+      "shown": "Always shown",
+      "lifted": "Lifted"
+    }
   },
   "tabs": {
     "general": "General",
@@ -87,5 +94,19 @@
   "useEnglishGameTitles": {
     "label": "Use English game titles",
     "description": "Always show game names in English, whatever the language."
+  },
+  "unlockKey": {
+    "label": "Unlock key",
+    "description": "Have a key? Enter it to unlock the Full Odyssey.",
+    "unlocked": "The Full Odyssey is unlocked.",
+    "devKey": "Developer key entered: the Full Odyssey is unlocked, and dev mode can be turned on.",
+    "submit": "Unlock",
+    "clear": "Clear key",
+    "result": {
+      "unlocked": "The Full Odyssey is unlocked",
+      "devKey": "Developer key accepted",
+      "webOnly": "This key works in the web app. In the app, the Full Odyssey comes from Google Play.",
+      "invalid": "That key isn't valid"
+    }
   }
 }

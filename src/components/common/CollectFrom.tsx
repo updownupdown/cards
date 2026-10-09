@@ -1,7 +1,9 @@
 import { Button } from "@/components/Button/Button";
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
+import { isPathBeyondField } from "@/data/force-field";
 import { setLastPlayedGameDot } from "@/data/campaign-progress";
+import { useFieldUp } from "@/data/odyssey-field";
 import { GAMES_DATA } from "@/data/games-registry";
 import { useCampaignProgress } from "@/hooks/useCampaignProgress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -28,7 +30,7 @@ const GLOW_PULSE_MS = 1800;
  * game's name in bold, which starts the game, glowing softly in the button's
  * colour. A Tao chapter or quote only comes from a Campaign win, so for
  * those the game starts in Campaign mode, and there's no button while the
- * game is still locked on the map.
+ * game is still locked on the map, or held beyond the force field.
  */
 export function CollectFrom({
   path,
@@ -44,10 +46,17 @@ export function CollectFrom({
   const theme = usePalette();
   const language = useDisplayLanguage();
   const { unlockedPaths, isLoading } = useCampaignProgress();
+  const fieldUp = useFieldUp();
   const game = GAMES_DATA[path];
   // A Campaign win is the only way to collect a quote or chapter, so no
   // button until the game is open on the map (or the map is read).
-  if (!game || (campaign && (isLoading || !unlockedPaths.has(path)))) {
+  if (
+    !game ||
+    (campaign &&
+      (isLoading ||
+        !unlockedPaths.has(path) ||
+        (fieldUp && isPathBeyondField(path))))
+  ) {
     return null;
   }
   const gameTitle = localizeGameTitle(game, path, language);
@@ -82,11 +91,16 @@ export function CollectFrom({
 
 /**
  * Whether a quote or chapter from this game can't be collected yet: its game
- * is still locked on the map (or it has none). False until progress is read.
+ * is still locked on the map, or held beyond the force field (or it has
+ * none). False until progress is read.
  */
 export function useLockedOnMap(path: string | undefined) {
   const { unlockedPaths, isLoading } = useCampaignProgress();
-  return !isLoading && !(path && unlockedPaths.has(path));
+  const fieldUp = useFieldUp();
+  return (
+    !isLoading &&
+    !(path && unlockedPaths.has(path) && !(fieldUp && isPathBeyondField(path)))
+  );
 }
 
 /** The game's name, marked **bold** in the translation, in bold. */

@@ -77,7 +77,14 @@
     "unlockAll": "Buka semua game kampanye",
     "unlockedAll": "Semua game kampanye terbuka",
     "grantMercySkip": "Beri sebuah pengampunan",
-    "mercySkipGranted": "Pengampunan diberikan ({{count}} belum dipakai)"
+    "mercySkipGranted": "Pengampunan diberikan ({{count}} belum dipakai)",
+    "needsKey": "Mode dev memerlukan kunci pengembang",
+    "forceField": {
+      "label": "Medan gaya",
+      "asPlayed": "Sesuai permainan",
+      "shown": "Selalu tampil",
+      "lifted": "Diangkat"
+    }
   },
   "tabs": {
     "general": "Umum",
@@ -87,5 +94,19 @@
   "useEnglishGameTitles": {
     "label": "Gunakan judul game dalam bahasa Inggris",
     "description": "Selalu tampilkan nama game dalam bahasa Inggris, apa pun bahasanya."
+  },
+  "unlockKey": {
+    "label": "Kunci pembuka",
+    "description": "Punya kunci? Masukkan untuk membuka Pengembaraan lengkap.",
+    "unlocked": "Pengembaraan lengkap sudah terbuka.",
+    "devKey": "Kunci pengembang dimasukkan: Pengembaraan lengkap terbuka dan mode dev bisa diaktifkan.",
+    "submit": "Buka",
+    "clear": "Hapus kunci",
+    "result": {
+      "unlocked": "Pengembaraan lengkap sudah terbuka",
+      "devKey": "Kunci pengembang diterima",
+      "webOnly": "Kunci ini berlaku di aplikasi web. Di aplikasi, Pengembaraan lengkap didapat dari Google Play.",
+      "invalid": "Kunci itu tidak valid"
+    }
   }
 }
