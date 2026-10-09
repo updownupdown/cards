@@ -537,6 +537,19 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         ],
       },
     ],
+    "/machination": [
+      {
+        key: "difficulty",
+        label: "Difficulty",
+        type: "string",
+        applyBehavior: "next-game",
+        description: "Controls how many piles you place cards on.",
+        options: [
+          { label: "Normal (8 piles)", value: "easy" },
+          { label: "Hard (7 piles)", value: "difficult" },
+        ],
+      },
+    ],
     "/baroness": [
       {
         key: "difficulty",
