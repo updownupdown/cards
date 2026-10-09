@@ -9,7 +9,7 @@ import {
 import { Colors, rgba, theme } from "@/styles/styles";
 import type { GameSettingsMap, GameStats } from "@/data/game-menu";
 import { QUOTE_COUNT, TAO_CHAPTER_COUNT } from "@/data/collectibles";
-import { describe, expect, jest, test } from "@jest/globals";
+import { afterEach, describe, expect, jest, test } from "@jest/globals";
 import React from "react";
 import { ScrollView, StyleSheet, Text } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
@@ -101,6 +101,14 @@ jest.mock("@/components/Home/HomeArt", () => {
     ),
   };
 });
+
+// Earned achievements are read and written through storage, which would
+// finish after the test and render into a torn-down environment.
+jest.mock("@/data/earned-achievements", () => ({
+  loadEarnedAchievements: () => Promise.resolve(new Set()),
+  subscribeToEarnedAchievements: () => () => {},
+  recordEarnedAchievements: () => Promise.resolve(new Set()),
+}));
 
 jest.mock("@/hooks/useResponsiveMetrics", () => ({
   useResponsiveMetrics: () => ({
@@ -315,6 +323,15 @@ const placeholders = (renderer: ReactTestRenderer) =>
       node.props.testID === "persona placeholder",
   );
 
+const renderers: ReactTestRenderer[] = [];
+
+afterEach(() => {
+  // Unmount before the environment goes, so nothing async renders into it.
+  act(() => {
+    renderers.splice(0).forEach((renderer) => renderer.unmount());
+  });
+});
+
 const renderList = (
   map = settingsMap,
   onOpenGame = jest.fn(),
@@ -335,6 +352,7 @@ const renderList = (
       />,
     );
   });
+  renderers.push(renderer);
   return renderer;
 };
 
