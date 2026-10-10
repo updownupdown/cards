@@ -1,3 +1,5 @@
+import { HoveringUfoIcon } from "@/hints/HintUfo";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Icon, type IconName } from "@/icons";
@@ -38,6 +40,12 @@ export function HomeTabBar({
   const { spacing, ui } = useResponsiveMetrics();
   const { t } = useTranslation("home");
   const glass = useGlassStyle();
+  const { settings, isLoading } = useGlobalSettings();
+  // The UFO waits over the Odyssey's icon, as it does over the hint button,
+  // until the Odyssey's introduction has been read and put away.
+  const odysseyUnread = !isLoading && !settings.dismissCampaignIntro;
+  const iconSize = spacing(24);
+  const ufoSize = spacing(22);
   const onLayout = (event: LayoutChangeEvent) => {
     onHeightChange?.(event.nativeEvent.layout.height);
   };
@@ -117,10 +125,24 @@ export function HomeTabBar({
                 />
                 <Icon
                   name={tab.icon}
-                  size={spacing(24)}
+                  size={iconSize}
                   color={isActive ? theme.accent : theme.dim}
                   style={{ ...transitionStyles.all02sec }}
                 />
+                {tab.key === "campaign" && odysseyUnread && !isActive && (
+                  <View
+                    testID="odyssey-tab-ufo"
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      // Over the icon's top edge, so both show.
+                      marginTop: -iconSize / 2 - ufoSize * 0.6,
+                      pointerEvents: "none",
+                    }}
+                  >
+                    <HoveringUfoIcon size={ufoSize} />
+                  </View>
+                )}
               </Pressable>
             );
           })}

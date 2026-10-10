@@ -666,7 +666,6 @@ export async function saveGameSettingsMap(map: GameSettingsMap) {
 
 /** Defaults that differ for one game, keyed by game path. */
 const GAME_DEFAULT_OVERRIDES: Record<string, Partial<GameSettings>> = {
-  "/klondike": { drawCount: 3 },
   // Forty Thieves proper has no redeal; unlimited redeals are the easy option.
   "/forty-thieves": { difficulty: "difficult" },
   ...Object.fromEntries(
