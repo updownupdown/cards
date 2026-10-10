@@ -1,6 +1,5 @@
 import { GameInfoPanel } from "@/components/ui/GameInfoPanel";
 
-import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import {
   getGameDotDefinition,
   getGameDotState,
@@ -17,7 +16,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { layoutDims } from "@/styles/styles";
 import { HomeHeader } from "@/components/Home/HomeHeader";
 import { CampaignMap } from "./CampaignMap";
-import { CampaignIntroPanel } from "./CampaignIntroPanel";
+import { CampaignIntroPanel, useOdysseyIntro } from "./CampaignIntroPanel";
 import { BeyondFieldPanel } from "./BeyondFieldPanel";
 import { useFieldUp } from "@/data/odyssey-field";
 import { UnlockKeyEntry } from "@/components/common/UnlockKeyEntry";
@@ -49,12 +48,7 @@ export function CampaignTab({
   const [selectedPath, setSelectedPath] = useState(CAMPAIGN_START_PATH);
   const [isMapReady, setIsMapReady] = useState(false);
   const insets = useSafeAreaInsets();
-  const {
-    settings,
-    updateSettings,
-    isLoading: settingsLoading,
-  } = useGlobalSettings();
-  const showIntro = !settingsLoading && !settings.dismissCampaignIntro;
+  const { shown: showIntro, dismiss: dismissIntro } = useOdysseyIntro();
   // The rare UFO stays hidden for the first stretch on the map each visit,
   // so it never appears the instant the tab opens.
   const [onMapLongEnough, setOnMapLongEnough] = useState(false);
@@ -73,6 +67,8 @@ export function CampaignTab({
   const totalCollectibles = collectedTaoIds.size + collectedQuoteIds.size;
   const ufoGateOpen =
     onMapLongEnough &&
+    // One UFO at a time: none flies past while the guide beams on Klondike.
+    !showIntro &&
     // Nothing to offer someone who is still holding a skip.
     progress.mercySkipCount === 0 &&
     (progress.mercySkipCollectibleCheckpoint === null ||
@@ -166,6 +162,7 @@ export function CampaignTab({
         unlockedPaths={unlockedPaths}
         collectedTaoIds={collectedTaoIds}
         collectedQuoteIds={collectedQuoteIds}
+        guidePath={showIntro && !heldBeyondField ? CAMPAIGN_START_PATH : null}
       />
       <View
         style={[
@@ -229,11 +226,7 @@ export function CampaignTab({
               paddingHorizontal: spacing(layoutDims.pagePadding / 2),
             }}
           >
-            <CampaignIntroPanel
-              onClose={() =>
-                void updateSettings({ dismissCampaignIntro: true })
-              }
-            />
+            <CampaignIntroPanel onClose={dismissIntro} />
           </View>
         )}
       </View>

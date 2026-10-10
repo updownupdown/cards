@@ -529,7 +529,9 @@ export const GameWrapper = ({
             {
               position: "absolute",
               zIndex: LayerZIndexes.tipsContainer,
-              top: insets.top + spacing(layoutDims.pagePadding / 2),
+              // At the foot of the screen, clear of the header and its
+              // buttons (Home, Rules, the UFO, Undo, the menu).
+              bottom: insets.bottom + spacing(layoutDims.pagePadding / 2),
               right: 0,
               left: 0,
               opacity: tipsFade.opacity,
@@ -665,7 +667,6 @@ export const GameWrapper = ({
           scale={ui.scale}
           contentMaxWidth={ui.contentMaxWidth}
           insetTop={insets.top}
-          hidden={showTipsBox}
           ended={ended}
           canUndo={!!canUndo}
           undoDisabled={

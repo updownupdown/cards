@@ -3,6 +3,10 @@ import { QuotesView } from "@/components/Gallery/QuotesView";
 import { WorksView } from "@/components/Gallery/WorksView";
 import { WorkViewer } from "@/components/Gallery/WorkViewer";
 import {
+  GalleryIntroBox,
+  useGalleryIntro,
+} from "@/components/Gallery/GalleryIntro";
+import {
   glassFill,
   useBarSideInset,
   useGlassStyle,
@@ -47,6 +51,7 @@ export function GalleryTab({
   const side = useBarSideInset();
   const [view, setView] = useState<GalleryView>("works");
   const starfield = useStarfield();
+  const intro = useGalleryIntro();
   const [switchHeight, setSwitchHeight] = useState(0);
   const [open, setOpen] = useState<{ path: string; order: string[] } | null>(
     null,
@@ -59,7 +64,14 @@ export function GalleryTab({
     chapters: `${collectedTaoIds.size}/${TAO_CHAPTER_COUNT}`,
     quotes: `${collectedQuoteIds.size}/${QUOTE_COUNT}`,
   };
-  const belowSwitch = contentPaddingTop + switchHeight + spacing(16);
+  const [introHeight, setIntroHeight] = useState(0);
+  // The UFO's note sits under the switch and pushes the shelves down, so it
+  // covers none of them.
+  const belowSwitch =
+    contentPaddingTop +
+    switchHeight +
+    spacing(16) +
+    (intro.shown ? introHeight + spacing(16) : 0);
 
   return (
     <View style={{ flex: 1 }}>
@@ -129,6 +141,20 @@ export function GalleryTab({
             }}
           />
         </View>
+        {intro.shown && (
+          <View
+            onLayout={(event) =>
+              setIntroHeight(Math.ceil(event.nativeEvent.layout.height))
+            }
+            style={{
+              width: "100%",
+              maxWidth: ui.contentMaxWidth - side * 2,
+              marginTop: spacing(16),
+            }}
+          >
+            <GalleryIntroBox onClose={intro.dismiss} />
+          </View>
+        )}
       </View>
 
       {open && (

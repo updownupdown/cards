@@ -1,24 +1,40 @@
-import { IntroPanel } from "@/components/common/IntroPanel";
+import { UfoGuideBox } from "@/components/common/UfoGuideBox";
+import { useCampaignProgress } from "@/hooks/useCampaignProgress";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useTranslation } from "@/i18n";
 
-type CampaignIntroPanelProps = {
-  onClose: () => void;
-};
+/**
+ * Whether the Odyssey's introduction still has something to say: until it
+ * is put away, or the first game is won in the Odyssey, whichever is first.
+ * While it does, the UFO hovers over the Odyssey's tab and, on the map,
+ * over Klondike.
+ */
+export function useOdysseyIntro() {
+  const { settings, updateSettings, isLoading } = useGlobalSettings();
+  const { wonPaths, isLoading: progressLoading } = useCampaignProgress();
+  return {
+    shown:
+      !isLoading &&
+      !progressLoading &&
+      !settings.dismissCampaignIntro &&
+      wonPaths.size === 0,
+    dismiss: () => void updateSettings({ dismissCampaignIntro: true }),
+  };
+}
 
 /**
- * What the Campaign is, in a small box under the progress pills. It floats
- * over the map without blocking it, so the map can be explored while reading,
- * and stays until closed.
+ * What the Odyssey is, in the UFO's box under the header, while the UFO
+ * beams down on Klondike. "Got it!" puts both away for good.
  */
-export function CampaignIntroPanel({ onClose }: CampaignIntroPanelProps) {
+export function CampaignIntroPanel({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation("campaign");
 
   return (
-    <IntroPanel
+    <UfoGuideBox
       title={t("intro.title")}
       text={t("intro.text")}
-      onClose={onClose}
       closeLabel={t("intro.close")}
+      onClose={onClose}
     />
   );
 }

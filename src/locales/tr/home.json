@@ -268,7 +268,11 @@
     },
     "back": "Galeriye dön",
     "unknownArtist": "Bilinmeyen sanatçı",
-    "notAcquired": "Edinilmedi"
+    "notAcquired": "Edinilmedi",
+    "intro": {
+      "text": "Topladığın eserleri, bölümleri ve alıntıları burada bulabilirsin!",
+      "close": "Anladım!"
+    }
   },
   "header": {
     "stats": "İstatistikler",

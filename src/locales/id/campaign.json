@@ -1,8 +1,8 @@
 {
   "mercySkip": {
-    "granted": "Seorang pengelana yang baik hati memberimu sebuah **pengampunan**! Lewati game yang sulit dari menu game tersebut.",
-    "ufoLabel": "UFO yang lewat",
-    "dismiss": "Tutup"
+    "granted": "UFO meninggalkan sebuah **pengampunan** untukmu. Gunakan untuk melewati game yang membuatmu buntu, dari menu game tersebut.",
+    "ufoLabel": "UFO",
+    "dismiss": "Terima kasih!"
   },
   "quotes": {
     "previousQuote": "Kutipan sebelumnya",
@@ -32,9 +32,9 @@
     "label": "Tampilkan aslinya"
   },
   "intro": {
-    "title": "Pengembaraan Langit",
-    "text": "Tentukan jalurmu dengan memenangkan dan membuka permainan, dimulai dari Klondike klasik. Bergeraklah ke luar untuk menjelajahi mekanik permainan baru, menghadapi tantangan yang makin sulit, dan membuka koleksi yang menghadirkan momen tenang dan renungan.",
-    "close": "Tutup"
+    "title": "Pengembaraan",
+    "text": "Setiap kemenangan membuka game yang terhubung. Setiap game punya beberapa koleksi. Mulai di sini.",
+    "close": "Mengerti!"
   },
   "field": {
     "title": "Di balik medan gaya",

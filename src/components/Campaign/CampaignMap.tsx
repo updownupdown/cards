@@ -10,6 +10,7 @@ import {
 } from "@/data/campaign-map";
 import { Colors, FontWeight, rgba, textShadow, theme } from "@/styles/styles";
 import { mix } from "@/styles/palette";
+import { BeamingUfo } from "@/hints/HintUfo";
 import { seededRandom } from "@/hints/random";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useDisplayLanguage } from "@/i18n";
@@ -260,7 +261,12 @@ type Props = {
   unlockedPaths: ReadonlySet<string>;
   collectedTaoIds: ReadonlySet<number>;
   collectedQuoteIds: ReadonlySet<number>;
+  /** A game dot the UFO hovers over, its beam on it (the introduction's). */
+  guidePath?: string | null;
 };
+
+/** How high over its game dot the guiding UFO hovers: its beam's length. */
+const GUIDE_LIFT = 96;
 
 const GameDotLabels = memo(function GameDotLabels({
   gameDotStates,
@@ -806,6 +812,7 @@ export function CampaignMap({
   unlockedPaths,
   collectedTaoIds,
   collectedQuoteIds,
+  guidePath,
 }: Props) {
   const { settings } = useGlobalSettings();
   const fieldUp = useFieldUp();
@@ -1021,6 +1028,18 @@ export function CampaignMap({
     };
   });
 
+  // The guiding UFO stays the same size however far the map is zoomed: it
+  // follows its game dot's place on screen, not the world's scale.
+  const guideDot = guidePath ? GAME_DOTS_BY_PATH.get(guidePath) : undefined;
+  const guideX = (guideDot?.x ?? 0) * WORLD_SIZE * 0.5;
+  const guideY = (guideDot?.y ?? 0) * WORLD_SIZE * 0.5;
+  const guideStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: translateX.value + guideX * scale.value },
+      { translateY: translateY.value + guideY * scale.value },
+    ],
+  }));
+
   const onLayout = (event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout;
     setViewport({ width, height });
@@ -1095,6 +1114,22 @@ export function CampaignMap({
             fieldUp={fieldUp}
           />
         </Animated.View>
+
+        {guideDot && centered && (
+          <Animated.View
+            style={[
+              {
+                position: "absolute",
+                left: viewport.width / 2,
+                top: viewport.height / 2,
+                pointerEvents: "none",
+              },
+              guideStyle,
+            ]}
+          >
+            <BeamingUfo lift={GUIDE_LIFT} />
+          </Animated.View>
+        )}
       </View>
     </GestureDetector>
   );

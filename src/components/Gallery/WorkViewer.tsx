@@ -107,8 +107,12 @@ export function WorkViewer({
                           (artBox.height - spacing(80)) * aspect,
                         ) / aspect
                       }
-                      iconSize={spacing(48)}
                       radius={spacing(4)}
+                      source={
+                        game.thumbnail
+                          ? GAME_FULL_THUMBNAIL_ASSETS[game.thumbnail]
+                          : null
+                      }
                     />
                     <CollectFrom path={path} onLaunch={onClose} />
                   </View>

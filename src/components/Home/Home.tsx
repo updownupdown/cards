@@ -131,6 +131,14 @@ export default function Home() {
     toggleFavorite,
   } = useHomeData(homeDataRefreshToken);
 
+  const artAcquired = useMemo(
+    () =>
+      allEnabledGamePaths.some(
+        (path) => (settingsMap[path]?.stats?.wins ?? 0) > 0,
+      ),
+    [allEnabledGamePaths, settingsMap],
+  );
+
   const unplayedGamePaths = useMemo(
     () =>
       allEnabledGamePaths.filter((path) => (attemptsByPath[path] ?? 0) === 0),
@@ -398,7 +406,11 @@ export default function Home() {
               </View>
             )}
 
-            <HomeTabBar activeIndex={activeTab} onSelectTab={onSelectTab} />
+            <HomeTabBar
+              activeIndex={activeTab}
+              onSelectTab={onSelectTab}
+              artAcquired={artAcquired}
+            />
 
             {/* Last, so it flies over the header and tab bar rather than under
             them. It only exists while the Campaign tab has asked for it. */}

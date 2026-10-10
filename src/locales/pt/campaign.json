@@ -1,8 +1,8 @@
 {
   "mercySkip": {
-    "granted": "Um viajante gentil oferece-lhe um **indulto**! Salte uma partida difícil a partir do menu dessa partida.",
-    "ufoLabel": "Um OVNI passando",
-    "dismiss": "Fechar"
+    "granted": "O OVNI deixa-lhe um **indulto**. Use-o para saltar uma partida em que esteja preso, a partir do menu dessa partida.",
+    "ufoLabel": "O OVNI",
+    "dismiss": "Obrigado!"
   },
   "quotes": {
     "previousQuote": "Citação anterior",
@@ -32,9 +32,9 @@
     "label": "Mostrar original"
   },
   "intro": {
-    "title": "Odisseia Celestial",
-    "text": "Trace seu caminho vencendo e desbloqueando jogos, começando pelo clássico Klondike. Avance para fora para explorar novas mecânicas de jogo, enfrentar desafios cada vez mais difíceis e desbloquear colecionáveis que criam momentos de calma e reflexão.",
-    "close": "Fechar"
+    "title": "A Odisseia",
+    "text": "Cada vitória desbloqueia os jogos ligados. Cada jogo tem vários colecionáveis. Comece aqui.",
+    "close": "Entendi!"
   },
   "field": {
     "title": "Além do campo de força",

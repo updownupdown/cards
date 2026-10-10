@@ -33,8 +33,6 @@ type Props = {
   scale: number;
   contentMaxWidth: number;
   insetTop: number;
-  /** Under the quick-start tips: still drawn, but ignores touches. */
-  hidden: boolean;
   ended: boolean;
   canUndo: boolean;
   undoDisabled: boolean;
@@ -61,7 +59,6 @@ export const GameHeader = memo(function GameHeader({
   scale,
   contentMaxWidth,
   insetTop,
-  hidden,
   ended,
   canUndo,
   undoDisabled,
@@ -95,7 +92,6 @@ export const GameHeader = memo(function GameHeader({
   return (
     <View
       style={{
-        pointerEvents: hidden ? "none" : "auto",
         position: "relative",
         zIndex: LayerZIndexes.header,
         width: "100%",

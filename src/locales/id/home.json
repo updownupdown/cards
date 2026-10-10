@@ -268,7 +268,11 @@
     },
     "back": "Kembali ke Galeri",
     "unknownArtist": "Seniman tidak diketahui",
-    "notAcquired": "Belum diperoleh"
+    "notAcquired": "Belum diperoleh",
+    "intro": {
+      "text": "Temukan karya seni, bab, dan kutipan yang telah kamu kumpulkan di sini!",
+      "close": "Mengerti!"
+    }
   },
   "header": {
     "stats": "Statistik",
