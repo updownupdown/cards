@@ -70,6 +70,7 @@ function render(animationsEnabled: boolean, onCatch = () => {}) {
         summons={0}
         visits={0}
         onCatch={onCatch}
+        noteTop={120}
       />,
     );
   });
@@ -141,18 +142,25 @@ describe("CampaignUFO", () => {
           summons={0}
           visits={0}
           onCatch={() => {}}
+          noteTop={120}
         />,
       );
+    });
+    // Its note is drawn under the header: 100 high, from 120 down.
+    act(() => {
+      renderer.root
+        .findAll((node) => typeof node.props.onLayout === "function")[0]
+        .props.onLayout({ nativeEvent: { layout: { y: 0, height: 100 } } });
     });
     advance(PAST_A_WHOLE_FLIGHT);
 
     expect(ufo(renderer)).toBeDefined();
     expect(opacityOf(ufo(renderer))).toBe(1);
-    // It still finishes its drift to the middle, where the message is readable,
-    // rather than freezing wherever it was when the gate closed.
+    // It still drifts in under its note, rather than freezing wherever it was
+    // when the gate closed.
     const { x, y } = positionOf(ufo(renderer));
-    expect(x).toBeCloseTo(400 / 2, 0);
-    expect(y).toBeCloseTo(800 * 0.44, 0);
+    expect(x).toBeCloseTo((400 - 36) / 2, 0);
+    expect(y).toBeCloseTo(120 + 100 + 24, 0);
   });
 
   test("a summoned UFO leaves at once, even with the gate closed", () => {
@@ -169,6 +177,7 @@ describe("CampaignUFO", () => {
           summons={1}
           visits={0}
           onCatch={() => {}}
+          noteTop={120}
         />,
       );
     });
@@ -189,6 +198,7 @@ describe("CampaignUFO", () => {
           summons={0}
           visits={1}
           onCatch={onCatch}
+          noteTop={120}
         />,
       );
     });

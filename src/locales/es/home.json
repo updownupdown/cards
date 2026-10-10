@@ -270,6 +270,7 @@
     "unknownArtist": "Artista desconocido",
     "notAcquired": "No adquirida",
     "intro": {
+      "title": "Galería",
       "text": "¡Aquí encontrarás las obras, los capítulos y las citas que has coleccionado!",
       "close": "¡Entendido!"
     }

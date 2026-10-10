@@ -1,6 +1,7 @@
 {
   "mercySkip": {
-    "granted": "The UFO leaves you a **Mercy Skip**. Use it to skip a game you're stuck on, from that game's menu.",
+    "title": "Mercy Skip",
+    "granted": "The UFO leaves you a Mercy Skip. Use it to skip a game you're stuck on, from that game's menu.",
     "ufoLabel": "The UFO",
     "dismiss": "Thanks!"
   },

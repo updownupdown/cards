@@ -88,7 +88,7 @@ export const Colors = { ...BASE_COLORS } as {
 
 /**
  * The UFO's colours, for everything it touches in the interface: Mercy Skip,
- * Help from Above, its alien script. Soft, so they sit calmly on screen, and
+ * Help from Above. Soft, so they sit calmly on screen, and
  * the same in every colour theme. Green leads, purple follows, blue comes
  * third.
  */
