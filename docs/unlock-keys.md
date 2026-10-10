@@ -53,13 +53,14 @@ release (so a developer key for Android needs a build with it in).
   storage, apart from Safari's, and links always open in Safari. So:
   1. Open solitarius.app in Safari, tap Share, then Add to Home Screen.
   2. Open Solitarius from the Home Screen.
-  3. Go to Settings, Advanced, Unlock key, and type or paste the key.
+  3. Go to Settings, Advanced, tap "Enter it" under Unlock key, and type or
+     paste the key.
 
   Playing from the Home Screen is better anyway: Safari clears a website's
   data after about a week without a visit, but not a Home Screen app's.
 
-On the map, "Enter a key" on the banner over a game beyond the field goes to
-the same place in Settings.
+On the map, "Enter a key" on the banner over a game beyond the field opens
+the same screen.
 
 Entering a key never touches progress: it only adds the unlock.
 
@@ -86,6 +87,21 @@ line in the privacy policy.
 The first time a save loads with the field, it is checked once: if it had
 already won a game beyond the field in the Odyssey, the full Odyssey stays
 open for it, for good.
+
+## Dev mode
+
+Dev mode is turned on with a knock on the version number at the foot of
+Settings, Advanced: five taps, a pause until the number turns red (five
+seconds), then five more. Ten taps in a row do nothing, on purpose, so stray
+taps never add up.
+
+Outside a local run it needs a developer key. Without one, the knock says so
+and opens the key screen; a developer key entered there turns dev mode on at
+once. Settings then has a Dev tab with its shortcuts and Turn off.
+
+The Android app only knows the keys that were in the list when it was built,
+so a new developer key needs a new build before it works there; the web app
+has it as soon as main is published.
 
 ## Testing
 

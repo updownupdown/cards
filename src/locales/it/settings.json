@@ -78,6 +78,7 @@
     "unlockedAll": "Tutte le partite della campagna sono sbloccate",
     "grantMercySkip": "Concedi una grazia",
     "mercySkipGranted": "Grazia concessa ({{count}} da usare)",
+    "artGallery": "Galleria d'arte",
     "needsKey": "La modalità dev richiede una chiave sviluppatore",
     "forceField": {
       "label": "Campo di forza",
@@ -89,7 +90,8 @@
   "tabs": {
     "general": "Generali",
     "advanced": "Avanzate",
-    "theme": "Tema"
+    "theme": "Tema",
+    "dev": "Dev"
   },
   "useEnglishGameTitles": {
     "label": "Usa i titoli dei giochi in inglese",
@@ -112,11 +114,12 @@
   },
   "unlockKey": {
     "label": "Chiave di sblocco",
-    "description": "Hai una chiave? Inseriscila per sbloccare l'Odissea completa.",
+    "description": "Hai una chiave? <enter>Inseriscila</enter> per sbloccare l'Odissea completa.",
     "unlocked": "L'Odissea completa è sbloccata.",
     "devKey": "Chiave sviluppatore inserita: l'Odissea completa è sbloccata e puoi attivare la modalità dev.",
     "submit": "Sblocca",
     "clear": "Cancella la chiave",
+    "back": "Indietro",
     "result": {
       "unlocked": "L'Odissea completa è sbloccata",
       "devKey": "Chiave sviluppatore accettata",

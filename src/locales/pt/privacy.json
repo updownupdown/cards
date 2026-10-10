@@ -28,6 +28,6 @@
   },
   "contact": {
     "title": "Contato",
-    "body": "Dúvidas sobre esta política podem ser enviadas para <link>{{email}}</link>."
+    "body": "Dúvidas sobre esta política podem ser enviadas para <email>{{email}}</email>."
   }
 }

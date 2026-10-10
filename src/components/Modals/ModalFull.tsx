@@ -1,4 +1,5 @@
 import { Text } from "@/components/common/Text";
+import { ToastOutlet } from "@/components/common/Toast";
 import { usePalette } from "@/styles/palette";
 import { flexStyles } from "@/styles/flexStyles";
 import { useModalStyles } from "@/styles/modalStyles";
@@ -113,6 +114,7 @@ export default function ModalFull({
 
           {children}
         </View>
+        <ToastOutlet />
       </GestureHandlerRootView>
     </Modal>
   );

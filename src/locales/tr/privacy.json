@@ -28,6 +28,6 @@
   },
   "contact": {
     "title": "İletişim",
-    "body": "Bu politikayla ilgili sorularını <link>{{email}}</link> adresine gönderebilirsin."
+    "body": "Bu politikayla ilgili sorularını <email>{{email}}</email> adresine gönderebilirsin."
   }
 }

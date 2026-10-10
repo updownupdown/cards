@@ -8,7 +8,7 @@ import {
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { i18n } from "@/i18n";
 import { reportMessage } from "@/utils/crash-reporting";
-import { isDevMode } from "@/data/dev-mode";
+import { devModeReady } from "@/data/dev-mode";
 import { isLocalDevEnvironment } from "@/utils/utils";
 import { router, type Href } from "expo-router";
 import { useEffect, useRef } from "react";
@@ -17,18 +17,19 @@ export default function HomeScreen() {
   const { settings, isLoading } = useGlobalSettings();
   const showToast = useToast();
   const hasCheckedResumeRef = useRef(false);
-  const isDev = isLocalDevEnvironment() || isDevMode();
 
   useEffect(() => {
     if (isLoading || hasCheckedResumeRef.current) return;
 
     hasCheckedResumeRef.current = true;
-    if (!settings.resumeLastGame || isDev) return;
+    if (!settings.resumeLastGame || isLocalDevEnvironment()) return;
 
     let active = true;
 
     (async () => {
       try {
+        // Dev mode starts at home; its saved choice may still be loading.
+        if (await devModeReady()) return;
         // The app died while a game was opening last time: resuming it again
         // could crash-loop, so start from the home screen instead. A native
         // crash leaves no JavaScript error behind, so name the game here.

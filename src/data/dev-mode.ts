@@ -6,20 +6,22 @@ import { DEV_MODE_STORAGE_KEY } from "./storage-keys";
 
 /**
  * Dev mode, for testing on any platform: a player turns it on with a knock
- * on the version number in the settings (createDevModeKnock), and off from
- * the link under it. While it's on, the game header has a trophy that wins the game at
- * once, the beta (local-only) games show, the dev pages open, the app
- * doesn't resume the last game at startup, and the settings' Other tab has
- * a Dev mode box of shortcuts (test progress, unlocking the campaign, a
- * Mercy Skip). The choice is saved under its own key and kept here, so
- * synchronous checks (isGameEnabled) can read it.
+ * on the version number in Settings, Advanced (createDevModeKnock), and off
+ * from the Dev tab it brings. While it's on, the game header has a trophy
+ * that wins the game at once, the beta (local-only) games show, the dev pages
+ * open, the app doesn't resume the last game at startup, and Settings has a
+ * Dev tab of shortcuts (test progress, unlocking the campaign, a Mercy Skip,
+ * the force field's view, previews of the quiet moments, the art gallery).
+ * The choice is saved under its own key and kept here, so synchronous checks
+ * (isGameEnabled) can read it.
  *
  * It can only be turned on where the app runs locally (a development build,
  * or the web build served from this computer), or once a developer key has
- * been entered (src/data/unlock-keys.ts): elsewhere the knock does nothing,
+ * been entered (src/data/unlock-keys.ts): elsewhere the knock asks for one,
  * and a saved "on" is read as off.
  */
 let devMode = false;
+let firstLoad: Promise<boolean> | null = null;
 const listeners = new Set<(enabled: boolean) => void>();
 
 function setDevMode(enabled: boolean) {
@@ -37,7 +39,22 @@ export function canUseDevMode() {
 }
 
 /** Reads the saved choice; called once at startup. */
-export async function loadDevMode() {
+export function loadDevMode() {
+  const load = readDevMode();
+  firstLoad ??= load;
+  return load;
+}
+
+/**
+ * Whether dev mode is on, once the saved choice has been read: for what
+ * decides at startup (resuming the last game, a dev page opened by its
+ * address), which would otherwise see it off.
+ */
+export function devModeReady() {
+  return firstLoad ?? loadDevMode();
+}
+
+async function readDevMode() {
   try {
     await loadOdysseyUnlock();
     setDevMode(

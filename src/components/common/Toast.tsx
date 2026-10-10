@@ -14,6 +14,7 @@ import React, {
   ReactNode,
   useCallback,
   useContext,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -39,6 +40,21 @@ type ShowToastFn = (
 
 const ToastContext = createContext<ShowToastFn | null>(null);
 
+/**
+ * A modal (a window of its own on Android and iOS, a portal on the web)
+ * covers the app's root, and a toast drawn there with it. So each modal has
+ * a ToastOutlet, and the toast shows in the newest one open.
+ */
+type ToastLayer = {
+  view: ReactNode;
+  top: number | null;
+  register: (id: number) => () => void;
+};
+
+const ToastLayerContext = createContext<ToastLayer | null>(null);
+
+let nextOutletId = 0;
+
 interface ToastProviderProps {
   children: ReactNode;
 }
@@ -60,6 +76,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
   const { spacing, scale } = useResponsiveMetrics();
   const insets = useSafeAreaInsets();
   const [toast, setToast] = useState<ToastState>(HIDDEN_TOAST);
+  const [outlets, setOutlets] = useState<number[]>([]);
   const opacity = useRef(new Animated.Value(0)).current;
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -104,66 +121,104 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
       : insets.top +
         spacing(layoutDims.pagePadding * 0.5 + layoutDims.menuBarPadding);
 
+  const register = useCallback((id: number) => {
+    setOutlets((open) => [...open, id]);
+    return () => setOutlets((open) => open.filter((other) => other !== id));
+  }, []);
+
+  const view = toast.visible && (
+    <Animated.View
+      style={[
+        {
+          opacity,
+          top: opacity.interpolate({
+            inputRange: [0, 1],
+            outputRange:
+              toast.placement === "belowHeader"
+                ? [restingTop - spacing(12), restingTop]
+                : [spacing(-100), restingTop], // Slide in from top, below the status bar
+          }),
+          // Only a message: taps go through to what's underneath.
+          pointerEvents: "none",
+          position: "absolute",
+          minHeight: spacing(
+            layoutDims.menuBarHeight - layoutDims.menuBarPadding * 2,
+          ),
+          zIndex: LayerZIndexes.toast,
+          alignSelf: "center",
+          marginHorizontal: spacing(layoutDims.pagePadding),
+          paddingHorizontal: spacing(20),
+          paddingVertical: spacing(10),
+          borderRadius: spacing(12),
+          backgroundColor: rgba(Colors.K950, 0.9),
+          boxShadow: `0 4px 6px ${rgba(Colors.black, 0.3)}`,
+        },
+      ]}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: spacing(8),
+        }}
+      >
+        {toast.icon && (
+          <Icon name={toast.icon} size={spacing(22)} color={Colors.K100} />
+        )}
+        <Text
+          style={{
+            color: Colors.K100,
+            fontSize: 16,
+            fontFamily: FontWeight[400],
+            textAlign: "center",
+            flexShrink: 1,
+          }}
+        >
+          {toast.message}
+        </Text>
+      </View>
+    </Animated.View>
+  );
+  const top = outlets.length > 0 ? outlets[outlets.length - 1] : null;
+  // Moved to another outlet (a modal opened or closed), the toast is drawn
+  // afresh, and losing its old view stopped its fade: bring it back in, or,
+  // if it was on its way out, let it go.
+  const shownIn = useRef(top);
+  useEffect(() => {
+    if (shownIn.current === top) return;
+    shownIn.current = top;
+    if (!toast.visible) return;
+    if (!hideTimerRef.current) {
+      setToast(HIDDEN_TOAST);
+      return;
+    }
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: Platform.OS !== "web",
+    }).start();
+  }, [top, toast.visible, opacity]);
+  const layer = { view, top, register };
+
   return (
     <ToastContext.Provider value={showToast}>
-      {children}
-      {toast.visible && (
-        <Animated.View
-          style={[
-            {
-              opacity,
-              top: opacity.interpolate({
-                inputRange: [0, 1],
-                outputRange:
-                  toast.placement === "belowHeader"
-                    ? [restingTop - spacing(12), restingTop]
-                    : [spacing(-100), restingTop], // Slide in from top, below the status bar
-              }),
-              // Only a message: taps go through to what's underneath.
-              pointerEvents: "none",
-              position: "absolute",
-              minHeight: spacing(
-                layoutDims.menuBarHeight - layoutDims.menuBarPadding * 2,
-              ),
-              zIndex: LayerZIndexes.toast,
-              alignSelf: "center",
-              marginHorizontal: spacing(layoutDims.pagePadding),
-              paddingHorizontal: spacing(20),
-              paddingVertical: spacing(10),
-              borderRadius: spacing(12),
-              backgroundColor: rgba(Colors.K950, 0.9),
-              boxShadow: `0 4px 6px ${rgba(Colors.black, 0.3)}`,
-            },
-          ]}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: spacing(8),
-            }}
-          >
-            {toast.icon && (
-              <Icon name={toast.icon} size={spacing(22)} color={Colors.K100} />
-            )}
-            <Text
-              style={{
-                color: Colors.K100,
-                fontSize: 16,
-                fontFamily: FontWeight[400],
-                textAlign: "center",
-                flexShrink: 1,
-              }}
-            >
-              {toast.message}
-            </Text>
-          </View>
-        </Animated.View>
-      )}
+      <ToastLayerContext.Provider value={layer}>
+        {children}
+        {top === null && view}
+      </ToastLayerContext.Provider>
     </ToastContext.Provider>
   );
 };
+
+/** Where a modal shows toasts, over itself; put it last inside the modal. */
+export function ToastOutlet() {
+  const layer = useContext(ToastLayerContext);
+  const [id] = useState(() => ++nextOutletId);
+  const register = layer?.register;
+  useEffect(() => register?.(id), [register, id]);
+  return layer && layer.top === id ? layer.view : null;
+}
 
 export const useToast = (): ShowToastFn => {
   const context = useContext(ToastContext);

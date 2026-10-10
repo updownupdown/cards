@@ -39,7 +39,7 @@ import { AddToHomeScreenNotice } from "../common/AddToHomeScreenNotice";
 import { SelectControl } from "../common/SelectControl";
 import { SettingControl } from "../common/SettingControl";
 import { AutoCompleteModeRadio } from "../common/AutoCompletePanel";
-import { MomentSettings } from "../Moments/MomentSettings";
+import { MomentPreviews, MomentSettings } from "../Moments/MomentSettings";
 import { Text } from "../common/Text";
 import ModalFull from "./ModalFull";
 import { UnderlineTabs } from "../ui/Nocturne";
@@ -54,7 +54,9 @@ import {
   setDevFieldView,
   useOdysseyUnlock,
   type DevFieldView,
+  type RedeemResult,
 } from "@/data/odyssey-unlock";
+import { UnlockKeyEntry } from "../common/UnlockKeyEntry";
 import { UnlockKeyPanel } from "../common/UnlockKeyPanel";
 import { HelpFromAbovePanel } from "@/components/common/HelpFromAbovePanel";
 import { resetHintMode } from "@/data/hint-mode";
@@ -65,7 +67,8 @@ const BUILD_LABEL = `v${Constants.expoConfig?.version ?? "?"} · ${__DEV__ ? "de
 /** Taps on Reset, after asking for it, that erase all app data. */
 const RESET_TAPS = 3;
 
-const TABS = ["general", "advanced", "theme"] as const;
+/** Dev only shows while dev mode is on. */
+const TABS = ["general", "advanced", "theme", "dev"] as const;
 
 interface Props {
   onClose: () => void;
@@ -99,28 +102,42 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const scrollRestored = React.useRef(false);
   const devMode = useDevMode();
   const { devFieldView } = useOdysseyUnlock();
-  // The unlock key's field: always on the web, where friends are given keys;
-  // in the app, only once the knock has asked for a developer key.
+  // Back from a theme change with dev mode since turned off.
+  const shownTab = tab === "dev" && !devMode ? "advanced" : tab;
+  // The unlock key: always on the web, where friends are given keys; in the
+  // app, only once the knock has asked for a developer key.
   const [askedForDevKey, setAskedForDevKey] = React.useState(false);
-  const showKeyField = Platform.OS === "web" || askedForDevKey;
+  const showKeyPanel = Platform.OS === "web" || askedForDevKey;
+  const [enteringKey, setEnteringKey] = React.useState(false);
+  const turnDevModeOn = async () => {
+    await saveDevMode(true);
+    onHomeDataInvalidated();
+    setTab("dev");
+    showToast(t("devMode.on"));
+  };
   const devModeKnock = useDevModeKnock(() => {
     // Dev mode needs a developer key, unless the app runs locally.
     if (!canUseDevMode()) {
       setAskedForDevKey(true);
       setTab("advanced");
+      setEnteringKey(true);
       showToast(t("devMode.needsKey"));
       return;
     }
-    void saveDevMode(true);
-    onHomeDataInvalidated();
-    showToast(t("devMode.on"));
+    void turnDevModeOn();
   });
+  const onKeyRedeemed = (result: RedeemResult) => {
+    onHomeDataInvalidated();
+    // The knock asked for this key: it's done its job.
+    if (result === "devKey" && askedForDevKey) void turnDevModeOn();
+  };
   const onVersionPress = () => {
     if (!devMode) devModeKnock.tap();
   };
   const onDevModeOff = () => {
     void saveDevMode(false);
     onHomeDataInvalidated();
+    setTab("advanced");
     showToast(t("devMode.off"));
   };
   const { t } = useTranslation("settings");
@@ -184,12 +201,15 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
       onClose={onCloseAndRefresh}
     >
       <UnderlineTabs
-        options={TABS.map((id) => ({ value: id, label: t(`tabs.${id}`) }))}
-        value={tab}
+        options={TABS.filter((id) => id !== "dev" || devMode).map((id) => ({
+          value: id,
+          label: t(`tabs.${id}`),
+        }))}
+        value={shownTab}
         onChange={setTab}
       />
       <ScrollView
-        key={tab}
+        key={shownTab}
         ref={scrollRef}
         scrollEventThrottle={16}
         onScroll={(event) => {
@@ -216,7 +236,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
         ]}
         showsVerticalScrollIndicator={false}
       >
-        {tab === "general" && (
+        {shownTab === "general" && (
           <View
             style={[
               flexStyles.colCentered,
@@ -299,7 +319,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             <HelpFromAbovePanel />
           </View>
         )}
-        {tab === "advanced" && (
+        {shownTab === "advanced" && (
           <>
             <View
               style={[
@@ -359,128 +379,14 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               />
             </View>
 
-            {showKeyField && (
+            {showKeyPanel && (
               <UnlockKeyPanel
-                onRedeemed={onHomeDataInvalidated}
+                onEnter={() => setEnteringKey(true)}
                 askedForDevKey={askedForDevKey}
               />
             )}
 
             <AddToHomeScreenNotice />
-
-            {/* Dev mode's shortcuts, boxed and named so they can't pass for
-                settings. */}
-            {devMode && (
-              <View
-                style={{
-                  width: "100%",
-                  gap: spacing(12),
-                  padding: spacing(20),
-                  borderRadius: spacing(16),
-                  backgroundColor: rgba(theme.ink, 0.1),
-                }}
-              >
-                <View
-                  style={[
-                    flexStyles.rowCentered,
-                    {
-                      justifyContent: "space-between",
-                      gap: spacing(12),
-                      paddingBottom: spacing(12),
-                    },
-                  ]}
-                >
-                  <Text
-                    weight={500}
-                    size="md"
-                    color={theme.ink}
-                    style={{ flexShrink: 1 }}
-                  >
-                    {t("devMode.title")}
-                  </Text>
-                  <Text
-                    {...footerLink}
-                    accessibilityRole="button"
-                    onPress={onDevModeOff}
-                    suppressHighlighting
-                  >
-                    {t("devMode.turnOff")}
-                  </Text>
-                </View>
-                <Button
-                  size="md"
-                  uppercase={false}
-                  text={t("populateTestProgress")}
-                  iconName="milky-way"
-                  disabled={isPopulatingTestData}
-                  onPress={async () => {
-                    setIsPopulatingTestData(true);
-                    try {
-                      const gameDotPaths = getTestGameDotPaths();
-                      await Promise.all([
-                        populateTestGameProgress(getTestWonPaths(gameDotPaths)),
-                        populateTestCampaignProgress(gameDotPaths),
-                      ]);
-                      onHomeDataInvalidated();
-                      onClose();
-                    } finally {
-                      setIsPopulatingTestData(false);
-                    }
-                  }}
-                />
-                <Button
-                  size="md"
-                  uppercase={false}
-                  text={t("devMode.unlockAll")}
-                  iconName="unlock"
-                  onPress={async () => {
-                    await unlockAllCampaignGames();
-                    onHomeDataInvalidated();
-                    showToast(t("devMode.unlockedAll"));
-                  }}
-                />
-                <Button
-                  size="md"
-                  uppercase={false}
-                  text={t("devMode.grantMercySkip")}
-                  iconName="ufo"
-                  theme="blue"
-                  onPress={async () => {
-                    const progress = await grantMercySkip();
-                    onHomeDataInvalidated();
-                    showToast(
-                      t("devMode.mercySkipGranted", {
-                        count: progress.mercySkipCount,
-                      }),
-                    );
-                  }}
-                />
-                <View
-                  style={{
-                    width: "100%",
-                    gap: spacing(4),
-                    paddingTop: spacing(12),
-                  }}
-                >
-                  <Text size="sm" weight={400} color={theme.dim}>
-                    {t("devMode.forceField.label")}
-                  </Text>
-                  <SelectControl<DevFieldView>
-                    value={devFieldView}
-                    options={(["asPlayed", "shown", "lifted"] as const).map(
-                      (view) => ({
-                        value: view,
-                        label: t(`devMode.forceField.${view}`),
-                      }),
-                    )}
-                    accessibilityLabel={t("devMode.forceField.label")}
-                    onChange={(view) => {
-                      void setDevFieldView(view);
-                    }}
-                  />
-                </View>
-              </View>
-            )}
 
             {/* Footer: credits, links and data reset, kept small at the bottom. */}
             <View
@@ -608,7 +514,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             </View>
           </>
         )}
-        {tab === "theme" && (
+        {shownTab === "theme" && (
           <View
             style={[
               flexStyles.colCentered,
@@ -624,7 +530,139 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
             />
           </View>
         )}
+        {/* Dev mode's shortcuts, boxed and named so they can't pass for
+            settings. */}
+        {shownTab === "dev" && (
+          <View
+            style={{
+              width: "100%",
+              gap: spacing(12),
+              padding: spacing(20),
+              borderRadius: spacing(16),
+              backgroundColor: rgba(theme.ink, 0.1),
+            }}
+          >
+            <View
+              style={[
+                flexStyles.rowCentered,
+                {
+                  justifyContent: "space-between",
+                  gap: spacing(12),
+                  paddingBottom: spacing(12),
+                },
+              ]}
+            >
+              <Text
+                weight={500}
+                size="md"
+                color={theme.ink}
+                style={{ flexShrink: 1 }}
+              >
+                {t("devMode.title")}
+              </Text>
+              <Text
+                {...footerLink}
+                accessibilityRole="button"
+                onPress={onDevModeOff}
+                suppressHighlighting
+              >
+                {t("devMode.turnOff")}
+              </Text>
+            </View>
+            <Button
+              size="md"
+              uppercase={false}
+              text={t("populateTestProgress")}
+              iconName="milky-way"
+              disabled={isPopulatingTestData}
+              onPress={async () => {
+                setIsPopulatingTestData(true);
+                try {
+                  const gameDotPaths = getTestGameDotPaths();
+                  await Promise.all([
+                    populateTestGameProgress(getTestWonPaths(gameDotPaths)),
+                    populateTestCampaignProgress(gameDotPaths),
+                  ]);
+                  onHomeDataInvalidated();
+                  onClose();
+                } finally {
+                  setIsPopulatingTestData(false);
+                }
+              }}
+            />
+            <Button
+              size="md"
+              uppercase={false}
+              text={t("devMode.unlockAll")}
+              iconName="unlock"
+              onPress={async () => {
+                await unlockAllCampaignGames();
+                onHomeDataInvalidated();
+                showToast(t("devMode.unlockedAll"));
+              }}
+            />
+            <Button
+              size="md"
+              uppercase={false}
+              text={t("devMode.grantMercySkip")}
+              iconName="ufo"
+              theme="blue"
+              onPress={async () => {
+                const progress = await grantMercySkip();
+                onHomeDataInvalidated();
+                showToast(
+                  t("devMode.mercySkipGranted", {
+                    count: progress.mercySkipCount,
+                  }),
+                );
+              }}
+            />
+            <View
+              style={{
+                width: "100%",
+                gap: spacing(4),
+                paddingTop: spacing(12),
+              }}
+            >
+              <Text size="sm" weight={400} color={theme.dim}>
+                {t("devMode.forceField.label")}
+              </Text>
+              <SelectControl<DevFieldView>
+                value={devFieldView}
+                options={(["asPlayed", "shown", "lifted"] as const).map(
+                  (view) => ({
+                    value: view,
+                    label: t(`devMode.forceField.${view}`),
+                  }),
+                )}
+                accessibilityLabel={t("devMode.forceField.label")}
+                onChange={(view) => {
+                  void setDevFieldView(view);
+                }}
+              />
+            </View>
+            <Button
+              size="md"
+              uppercase={false}
+              text={t("devMode.artGallery")}
+              iconName="gallery"
+              theme="blue"
+              onPress={() => {
+                onClose();
+                router.push("/art-gallery");
+              }}
+            />
+            <View style={{ width: "100%", paddingTop: spacing(12) }}>
+              <MomentPreviews />
+            </View>
+          </View>
+        )}
       </ScrollView>
+      <UnlockKeyEntry
+        visible={enteringKey}
+        onClose={() => setEnteringKey(false)}
+        onRedeemed={onKeyRedeemed}
+      />
     </ModalFull>
   );
 };
