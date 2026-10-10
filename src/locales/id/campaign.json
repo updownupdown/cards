@@ -1,6 +1,7 @@
 {
   "mercySkip": {
-    "granted": "UFO meninggalkan sebuah **pengampunan** untukmu. Gunakan untuk melewati game yang membuatmu buntu, dari menu game tersebut.",
+    "title": "Pengampunan",
+    "granted": "UFO meninggalkan sebuah pengampunan untukmu. Gunakan untuk melewati game yang membuatmu buntu, dari menu game tersebut.",
     "ufoLabel": "UFO",
     "dismiss": "Terima kasih!"
   },

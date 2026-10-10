@@ -10,6 +10,8 @@ export type UfoRequest = {
    *  Mercy Skip just spent. */
   visits: number;
   onCatch: () => void;
+  /** Where the Mercy Skip note goes, from the top of the screen. */
+  noteTop: number;
 };
 
 /**

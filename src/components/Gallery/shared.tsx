@@ -257,15 +257,34 @@ export function WorkPlaceholder({
         color={theme.faint}
         numberOfLines={2}
         style={{
+          fontSize: spacing(10),
+          lineHeight: spacing(15),
           letterSpacing: spacing(1.5),
           textAlign: "center",
-          paddingHorizontal: spacing(8),
+          paddingHorizontal: spacing(16),
         }}
       >
-        {t("gallery.notAcquired")}
+        {twoLines(t("gallery.notAcquired"))}
       </Text>
     </View>
   );
+}
+
+/**
+ * The words on two lines, broken at the space nearest their middle, so they
+ * stay narrow and clear of the work's edges.
+ */
+function twoLines(words: string) {
+  const middle = words.length / 2;
+  let best = -1;
+  for (let index = 0; index < words.length; index += 1) {
+    if (
+      words[index] === " " &&
+      (best < 0 || Math.abs(index - middle) < Math.abs(best - middle))
+    )
+      best = index;
+  }
+  return best < 0 ? words : `${words.slice(0, best)}\n${words.slice(best + 1)}`;
 }
 
 /** How much of a work shows before it is acquired. */

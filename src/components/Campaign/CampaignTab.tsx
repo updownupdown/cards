@@ -119,14 +119,25 @@ export function CampaignTab({
 
   // Home draws the UFO, above the header; this tab only says when it may fly.
   const requestUfo = useContext(UfoContext);
+  // The Mercy Skip note goes where the introduction does, under the header.
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const noteTop = contentPaddingTop + headerHeight + spacing(16);
   useEffect(() => {
     requestUfo({
       gateOpen: ufoGateOpen,
       summons: ufoSummons,
       visits: ufoVisits,
       onCatch: handleUfoCaught,
+      noteTop,
     });
-  }, [handleUfoCaught, requestUfo, ufoGateOpen, ufoSummons, ufoVisits]);
+  }, [
+    handleUfoCaught,
+    noteTop,
+    requestUfo,
+    ufoGateOpen,
+    ufoSummons,
+    ufoVisits,
+  ]);
   useEffect(() => () => requestUfo(null), [requestUfo]);
 
   const selectedGameDot =
@@ -206,7 +217,15 @@ export function CampaignTab({
         ]}
       >
         {/* The same logo and buttons as Home, over the map. */}
-        <HomeHeader onOpenStats={onOpenStats} onOpenSettings={onOpenSettings} />
+        <View
+          style={{ width: "100%", alignItems: "center" }}
+          onLayout={(event) => setHeaderHeight(event.nativeEvent.layout.height)}
+        >
+          <HomeHeader
+            onOpenStats={onOpenStats}
+            onOpenSettings={onOpenSettings}
+          />
+        </View>
         {heldBeyondField && (
           <View
             style={{

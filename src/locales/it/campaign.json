@@ -1,6 +1,7 @@
 {
   "mercySkip": {
-    "granted": "L'UFO ti lascia una **grazia**. Usala per saltare una partita in cui sei bloccato, dal menu di quella partita.",
+    "title": "Grazia",
+    "granted": "L'UFO ti lascia una grazia. Usala per saltare una partita in cui sei bloccato, dal menu di quella partita.",
     "ufoLabel": "L'UFO",
     "dismiss": "Grazie!"
   },

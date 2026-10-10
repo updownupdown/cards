@@ -1,6 +1,7 @@
 {
   "mercySkip": {
-    "granted": "UFO sana bir **af** bırakıyor. Takıldığın bir oyunu o oyunun menüsünden atlamak için kullan.",
+    "title": "Af",
+    "granted": "UFO sana bir af bırakıyor. Takıldığın bir oyunu o oyunun menüsünden atlamak için kullan.",
     "ufoLabel": "UFO",
     "dismiss": "Teşekkürler!"
   },

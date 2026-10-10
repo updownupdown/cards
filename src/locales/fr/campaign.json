@@ -1,6 +1,7 @@
 {
   "mercySkip": {
-    "granted": "L'OVNI vous laisse un **passe-droit**. Utilisez-le pour passer une partie qui vous bloque, depuis le menu de cette partie.",
+    "title": "Passe-droit",
+    "granted": "L'OVNI vous laisse un passe-droit. Utilisez-le pour passer une partie qui vous bloque, depuis le menu de cette partie.",
     "ufoLabel": "L'OVNI",
     "dismiss": "Merci !"
   },

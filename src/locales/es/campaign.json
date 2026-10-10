@@ -1,6 +1,7 @@
 {
   "mercySkip": {
-    "granted": "El OVNI te deja un **indulto**. Úsalo para saltar una partida en la que te hayas atascado, desde el menú de esa partida.",
+    "title": "Indulto",
+    "granted": "El OVNI te deja un indulto. Úsalo para saltar una partida en la que te hayas atascado, desde el menú de esa partida.",
     "ufoLabel": "El OVNI",
     "dismiss": "¡Gracias!"
   },

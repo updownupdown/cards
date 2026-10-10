@@ -8,8 +8,11 @@ import { Icon, type IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
 import { glassFill, useGlassStyle } from "@/components/ui/FloatingBar";
 import { layoutDims, theme, transitionStyles } from "@/styles/styles";
+import { useViewportDimensions } from "@/hooks/useViewportDimensions";
+import { useEffect, useRef, useState } from "react";
 import {
   Animated as RNAnimated,
+  Easing,
   Platform,
   Pressable,
   View,
@@ -58,8 +61,7 @@ export function HomeTabBar({
     campaign: odyssey.shown,
     collect: !odyssey.shown && collected && gallery.shown,
   };
-  const iconSize = spacing(24);
-  const ufoSize = spacing(22);
+  const iconSize = spacing(layoutDims.menuIconSize);
   const onLayout = (event: LayoutChangeEvent) => {
     onHeightChange?.(event.nativeEvent.layout.height);
   };
@@ -137,31 +139,132 @@ export function HomeTabBar({
                     ...transitionStyles.all02sec,
                   }}
                 />
-                <Icon
+                <TabIcon
                   name={tab.icon}
                   size={iconSize}
                   color={isActive ? theme.accent : theme.dim}
-                  style={{ ...transitionStyles.all02sec }}
+                  ufo={!!ufoOver[tab.key] && !isActive}
+                  testID={`${tab.key}-tab-ufo`}
                 />
-                {ufoOver[tab.key] && !isActive && (
-                  <View
-                    testID={`${tab.key}-tab-ufo`}
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      // Over the icon's top edge, so both show.
-                      marginTop: -iconSize / 2 - ufoSize * 0.6,
-                      pointerEvents: "none",
-                    }}
-                  >
-                    <HoveringUfoIcon size={ufoSize} />
-                  </View>
-                )}
               </Pressable>
             );
           })}
         </View>
       </View>
     </RNAnimated.View>
+  );
+}
+
+/** How long the UFO takes to fly off a tab's icon, and where to. */
+const FLY_OFF_MS = 800;
+const FLY_OFF_FADE_MS = 300;
+/** Up into the screen, where what it points at is: a share of its height. */
+const FLY_OFF_TO = 0.42;
+
+/**
+ * A tab's icon, with the UFO hovering in its place while it has something
+ * to show there: the same hover as over the hint button, and like there it
+ * takes the icon's place. Once it's no longer wanted (the tab was opened,
+ * or its introduction read), it flies off up into the screen, uncovering
+ * the icon.
+ */
+function TabIcon({
+  name,
+  size,
+  color,
+  ufo,
+  testID,
+}: {
+  name: IconName;
+  size: number;
+  color: string;
+  ufo: boolean;
+  testID: string;
+}) {
+  const { width, height } = useViewportDimensions();
+  const box = useRef<View>(null);
+  const [shown, setShown] = useState(ufo);
+  const [leaving, setLeaving] = useState(false);
+  const offset = useRef(new RNAnimated.ValueXY({ x: 0, y: 0 })).current;
+  const opacity = useRef(new RNAnimated.Value(1)).current;
+  const wasUfo = useRef(ufo);
+
+  useEffect(() => {
+    if (ufo === wasUfo.current) return;
+    wasUfo.current = ufo;
+    if (ufo) {
+      offset.setValue({ x: 0, y: 0 });
+      opacity.setValue(1);
+      setLeaving(false);
+      setShown(true);
+      return;
+    }
+    setLeaving(true);
+    let flight: RNAnimated.CompositeAnimation | null = null;
+    let cancelled = false;
+    const fly = (x: number, y: number) => {
+      if (cancelled) return;
+      const useNativeDriver = Platform.OS !== "web";
+      flight = RNAnimated.parallel([
+        RNAnimated.timing(offset, {
+          toValue: { x, y },
+          duration: FLY_OFF_MS,
+          easing: Easing.inOut(Easing.cubic),
+          useNativeDriver,
+        }),
+        RNAnimated.sequence([
+          RNAnimated.delay(FLY_OFF_MS - FLY_OFF_FADE_MS),
+          RNAnimated.timing(opacity, {
+            toValue: 0,
+            duration: FLY_OFF_FADE_MS,
+            useNativeDriver,
+          }),
+        ]),
+      ]);
+      flight.start(({ finished }) => {
+        if (finished) setShown(false);
+      });
+    };
+    // Measured, it heads for the middle of the screen; if not, straight up.
+    const fallback = setTimeout(() => fly(0, -height * 0.4), 100);
+    box.current?.measureInWindow?.((x, y, w, h) => {
+      clearTimeout(fallback);
+      fly(width / 2 - (x + w / 2), height * FLY_OFF_TO - (y + h / 2));
+    });
+    return () => {
+      cancelled = true;
+      clearTimeout(fallback);
+      flight?.stop();
+    };
+  }, [height, offset, opacity, ufo, width]);
+
+  const hovering = shown && !leaving;
+  return (
+    <View ref={box} collapsable={false} style={{ width: size, height: size }}>
+      <Icon
+        name={name}
+        size={size}
+        color={color}
+        style={{
+          opacity: hovering ? 0 : 1,
+          ...transitionStyles.all02sec,
+        }}
+      />
+      {shown && (
+        <RNAnimated.View
+          testID={testID}
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            opacity,
+            transform: offset.getTranslateTransform(),
+            pointerEvents: "none",
+          }}
+        >
+          <HoveringUfoIcon size={size} />
+        </RNAnimated.View>
+      )}
+    </View>
   );
 }

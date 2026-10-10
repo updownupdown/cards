@@ -422,6 +422,7 @@ export default function Home() {
                 summons={ufo.summons}
                 visits={ufo.visits}
                 onCatch={ufo.onCatch}
+                noteTop={ufo.noteTop}
               />
             )}
           </View>
