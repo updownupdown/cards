@@ -18,8 +18,8 @@ describe("getGameSettings", () => {
     expect(getGameSettings({}, path)).toEqual(getDefaultGameSettings(path));
   });
 
-  test("Klondike draws three by default; other games keep one", () => {
-    expect(getGameSettings({}, path).drawCount).toBe(3);
+  test("Klondike and Canfield draw one by default", () => {
+    expect(getGameSettings({}, path).drawCount).toBe(1);
     expect(getGameSettings({}, "/canfield").drawCount).toBe(1);
   });
 
@@ -43,8 +43,7 @@ describe("getGameSettings", () => {
       path,
     );
 
-    // Klondike's own default, not the shared one.
-    expect(settings.drawCount).toBe(3);
+    expect(settings.drawCount).toBe(1);
     expect(settings.pyramidDifficulty).toBe(
       DEFAULT_GAME_SETTINGS.pyramidDifficulty,
     );
@@ -75,11 +74,14 @@ describe("getGameSettings", () => {
 
 describe("compactGameSettings", () => {
   test("keeps a choice that differs from the game's own default", () => {
-    const drawOne = { ...getDefaultGameSettings(path), drawCount: 1 as const };
-    const stored = compactGameSettings(drawOne, path);
+    const drawThree = {
+      ...getDefaultGameSettings(path),
+      drawCount: 3 as const,
+    };
+    const stored = compactGameSettings(drawThree, path);
 
-    expect(stored).toEqual({ drawCount: 1 });
-    expect(getGameSettings({ [path]: stored }, path).drawCount).toBe(1);
+    expect(stored).toEqual({ drawCount: 3 });
+    expect(getGameSettings({ [path]: stored }, path).drawCount).toBe(3);
     expect(compactGameSettings(getDefaultGameSettings(path), path)).toEqual({});
   });
 
