@@ -25,11 +25,8 @@
     "playToCollect": "Play the Odyssey to collect this chapter."
   },
   "reveal": {
-    "skip": "Skip",
-    "continue": "Continue",
-    "destroyToSkip": "Destroy your attention span to skip",
-    "attentionSpan": "My attention span",
-    "keepWatching": "Keep watching"
+    "holdToSkip": "Hold to skip",
+    "continue": "Continue"
   },
   "original": {
     "label": "Show original"

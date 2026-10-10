@@ -25,11 +25,8 @@
     "playToCollect": "Jogue a Odisseia para obter este capítulo."
   },
   "reveal": {
-    "skip": "Pular",
-    "continue": "Continuar",
-    "destroyToSkip": "Destrua sua capacidade de atenção para pular",
-    "attentionSpan": "Minha capacidade de atenção",
-    "keepWatching": "Continuar assistindo"
+    "holdToSkip": "Segure para pular",
+    "continue": "Continuar"
   },
   "original": {
     "label": "Mostrar original"

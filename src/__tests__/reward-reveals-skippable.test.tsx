@@ -1,5 +1,7 @@
-import { DROP_MS } from "@/components/common/AttentionSpanSkip";
-import { EXIT_TOTAL_MS } from "@/components/common/RewardReveal";
+import {
+  EXIT_TOTAL_MS,
+  HOLD_TO_SKIP_MS,
+} from "@/components/common/RewardReveal";
 import { QuoteReveal } from "@/components/QuoteReveal/QuoteReveal";
 import { TaoReveal } from "@/components/TaoReveal/TaoReveal";
 import { QUOTE_IDS_BY_AUTHOR } from "@/data/quote-authors";
@@ -13,11 +15,6 @@ import {
 } from "@jest/globals";
 import React, { type ReactElement } from "react";
 import { Text } from "react-native";
-import { State } from "react-native-gesture-handler";
-import {
-  fireGestureHandler,
-  getByGestureTestId,
-} from "react-native-gesture-handler/jest-utils";
 import {
   act,
   create,
@@ -52,58 +49,30 @@ function button(renderer: ReactTestRenderer) {
   return {
     text: String(pressable.findAllByType(Text)[0].props.children),
     disabled: !!pressable.props.disabled,
-    // As a touch would: a disabled button isn't pressed.
+    // As a touch would: a disabled button isn't pressed, and a press is
+    // a touch down, then up (when it lets go, it also counts as a press).
+    pressIn: () =>
+      act(() => {
+        if (!pressable.props.disabled) pressable.props.onPressIn?.();
+      }),
+    pressOut: () =>
+      act(() => {
+        if (!pressable.props.disabled) pressable.props.onPressOut?.();
+      }),
     press: () =>
       act(() => {
-        if (!pressable.props.disabled) pressable.props.onPress();
+        if (pressable.props.disabled) return;
+        pressable.props.onPressIn?.();
+        pressable.props.onPressOut?.();
+        pressable.props.onPress();
       }),
   };
 }
 
-/** The skip box, with its square laid out left and its bin right. */
-function skipBox(renderer: ReactTestRenderer) {
-  const boxes = renderer.root.findAll(
-    (node: ReactTestInstance) =>
-      typeof node.type === "string" &&
-      node.props.testID === "attention-span-skip",
-  );
-  if (boxes.length === 0) return null;
-  const host = (testID: string) =>
-    renderer.root.find(
-      (node: ReactTestInstance) =>
-        typeof node.type === "string" && node.props.testID === testID,
-    );
+const wait = (ms: number) =>
   act(() => {
-    host("attention-span-square-seat").props.onLayout({
-      nativeEvent: { layout: { x: 12, y: 0, width: 96, height: 96 } },
-    });
-    host("attention-span-bin").props.onLayout({
-      nativeEvent: { layout: { x: 240, y: 8, width: 64, height: 86 } },
-    });
+    jest.advanceTimersByTime(ms);
   });
-  // The handlers reach React through a microtask, as on the UI thread.
-  const drag = (dx: number, dy: number) =>
-    act(async () => {
-      fireGestureHandler(getByGestureTestId("attention-span-drag"), [
-        { state: State.BEGAN, translationX: 0, translationY: 0 },
-        { state: State.ACTIVE, translationX: dx / 2, translationY: dy / 2 },
-        { state: State.ACTIVE, translationX: dx, translationY: dy },
-        { state: State.END, translationX: dx, translationY: dy },
-      ]);
-    });
-  const closeCross = renderer.root.findAll(
-    (node: ReactTestInstance) =>
-      typeof node.type !== "string" &&
-      node.props.accessibilityRole === "button" &&
-      node.props.accessibilityLabel === "Keep watching",
-  )[0];
-  return {
-    /** Into the bin: from the square's centre (60, 48) to the bin's. */
-    dragIntoBin: () => drag(212, 0),
-    dragShort: () => drag(60, 0),
-    keepWatching: () => act(() => closeCross.props.onPress()),
-  };
-}
 
 const REVEALS: [
   string,
@@ -145,8 +114,7 @@ async function openReveal(
   });
   const root = renderer.root.find(
     (node) =>
-      node.props.testID === testID &&
-      typeof node.props.onLayout === "function",
+      node.props.testID === testID && typeof node.props.onLayout === "function",
   );
   act(() => {
     root.props.onLayout({
@@ -162,42 +130,44 @@ async function openReveal(
 
 describe("Collectible reveals after a win", () => {
   test.each(REVEALS)(
-    "%s can be skipped a second in, for the price of an attention span",
+    "%s can be skipped a second in, by holding Hold to skip",
     async (_name, testID, render) => {
       const { renderer, onUncover, onDone } = await openReveal(testID, render);
 
       const skip = button(renderer);
       expect(skip).not.toBeNull();
-      // Still animating, so it is Skip, and it can be pressed.
-      expect(skip!.text).toBe("Skip");
+      // Still animating, so it is Hold to skip, and it can be pressed.
+      expect(skip!.text).toBe("Hold to skip");
       expect(skip!.disabled).toBe(false);
-      expect(skipBox(renderer)).toBeNull();
+      // The dark that comes over the page as it's held is there, unseen.
+      expect(
+        renderer.root.findAll(
+          (node: ReactTestInstance) =>
+            typeof node.type === "string" && node.props.testID === "reveal-dim",
+        ),
+      ).toHaveLength(1);
 
-      // Pressing it doesn't leave: it asks.
+      // A tap doesn't leave.
       skip!.press();
+      wait(300);
       expect(onDone).not.toHaveBeenCalled();
-      const box = skipBox(renderer);
-      expect(box).not.toBeNull();
 
-      // Dropped short of the bin, nothing happens.
-      await box!.dragShort();
-      act(() => {
-        jest.advanceTimersByTime(DROP_MS);
-      });
+      // Nor does letting go before the end.
+      skip!.pressIn();
+      wait(HOLD_TO_SKIP_MS - 100);
+      skip!.pressOut();
+      wait(300);
       expect(onDone).not.toHaveBeenCalled();
-      expect(skipBox(renderer)).not.toBeNull();
+      // (Quick, so the page is still animating and it is still the hold.)
+      expect(button(renderer)!.text).toBe("Hold to skip");
+      expect(button(renderer)!.disabled).toBe(false);
 
-      // Into the bin, and the reveal closes.
-      await box!.dragIntoBin();
-      act(() => {
-        jest.advanceTimersByTime(DROP_MS);
-      });
-      // It can't be pressed again while it closes, and the box is gone.
+      // Held all the way, the reveal closes.
+      skip!.pressIn();
+      wait(HOLD_TO_SKIP_MS);
+      // It can't be pressed again while it closes.
       expect(button(renderer)!.disabled).toBe(true);
-      expect(skipBox(renderer)).toBeNull();
-      act(() => {
-        jest.advanceTimersByTime(EXIT_TOTAL_MS);
-      });
+      wait(EXIT_TOTAL_MS);
       // The win box is uncovered, then given back, once.
       expect(onUncover).toHaveBeenCalledTimes(1);
       expect(onDone).toHaveBeenCalledTimes(1);
@@ -205,26 +175,29 @@ describe("Collectible reveals after a win", () => {
     },
   );
 
-  test("the skip box takes the button's place, and its cross gives it back", async () => {
+  test("a second hold picks up from where the first one drained to", async () => {
     const [, testID, render] = REVEALS[0];
     const { renderer, onDone } = await openReveal(testID, render);
+    const skip = button(renderer)!;
 
-    button(renderer)!.press();
-    expect(skipBox(renderer)).not.toBeNull();
-    // The button is under the box: out of sight and out of reach.
-    expect(button(renderer)).toBeNull();
-    skipBox(renderer)!.keepWatching();
-    expect(skipBox(renderer)).toBeNull();
-    expect(button(renderer)!.text).toBe("Skip");
-    expect(onDone).not.toHaveBeenCalled();
+    // Held most of the way, then let go: it drains back, but not at once.
+    skip.pressIn();
+    wait(HOLD_TO_SKIP_MS * 0.8);
+    skip.pressOut();
+    wait(100);
+    // Pressed again, what's left of the first hold still counts.
+    skip.pressIn();
+    wait(HOLD_TO_SKIP_MS * 0.5);
+    expect(button(renderer)!.disabled).toBe(true);
+    wait(EXIT_TOTAL_MS);
+    expect(onDone).toHaveBeenCalledTimes(1);
     act(() => renderer.unmount());
   });
 
-  test("once the page is read, Continue leaves at once and the box is gone", async () => {
+  test("once the page is read, Continue leaves at once and a hold under way stops", async () => {
     const [, testID, render] = REVEALS[0];
     const { renderer, onDone } = await openReveal(testID, render);
-    button(renderer)!.press();
-    expect(skipBox(renderer)).not.toBeNull();
+    button(renderer)!.pressIn();
 
     // The chapter's page tells the reveal it has finished.
     const page = renderer.root.find(
@@ -234,13 +207,13 @@ describe("Collectible reveals after a win", () => {
         node.props.chapterNumber === 1,
     );
     act(() => page.props.onRead());
-    expect(skipBox(renderer)).toBeNull();
     expect(button(renderer)!.text).toBe("Continue");
+    // The hold is let go of: it doesn't close the reveal by itself.
+    wait(HOLD_TO_SKIP_MS);
+    expect(onDone).not.toHaveBeenCalled();
 
     button(renderer)!.press();
-    act(() => {
-      jest.advanceTimersByTime(EXIT_TOTAL_MS);
-    });
+    wait(EXIT_TOTAL_MS);
     expect(onDone).toHaveBeenCalledTimes(1);
     act(() => renderer.unmount());
   });

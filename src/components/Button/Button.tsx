@@ -20,6 +20,7 @@ import {
   useState,
 } from "react";
 import Reanimated, {
+  type SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -147,6 +148,9 @@ interface Props {
   preventWebLongPressMenu?: boolean;
   autoProgress?: number;
   autoProgressColor?: string;
+  /** A bar filling the button as this goes from 0 to 1 (a hold, say), in
+   * autoProgressColor. */
+  progress?: SharedValue<number>;
   /** A header button's small caption under its icon. */
   label?: string;
 }
@@ -177,6 +181,7 @@ export const Button = ({
   preventWebLongPressMenu = false,
   autoProgress,
   autoProgressColor = rgba(Colors.white, 0.3),
+  progress,
   label,
 }: Props) => {
   const autoProgressValue = useRef(new Animated.Value(0)).current;
@@ -297,7 +302,10 @@ export const Button = ({
       opacity: disabled ? 0.35 : 1,
       // Only clip when there's an autoProgress bar to contain: on native,
       // overflow:hidden also clips the button's own drop shadow.
-      overflow: autoProgress === undefined ? undefined : "hidden",
+      overflow:
+        autoProgress === undefined && progress === undefined
+          ? undefined
+          : "hidden",
       display: "flex",
       flexDirection: iconName === "close" ? "row-reverse" : "row",
       justifyContent: "center",
@@ -392,6 +400,10 @@ export const Button = ({
   // Web keeps its CSS transition; this only takes over on native.
   const isNative = Platform.OS !== "web";
   const animateBackground = isNative && targetBackground !== undefined;
+  const progressStyle = useAnimatedStyle(() => ({
+    transform: [{ scaleX: progress?.value ?? 0 }],
+  }));
+
   const stateTransitionStyle = useAnimatedStyle(() => {
     if (!isNative) return {};
     return animateBackground
@@ -434,6 +446,23 @@ export const Button = ({
             transform: [{ scaleX: autoProgressValue }],
             backgroundColor: autoProgressColor,
           }}
+        />
+      )}
+      {progress !== undefined && (
+        <Reanimated.View
+          style={[
+            {
+              pointerEvents: "none",
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              transformOrigin: "left",
+              backgroundColor: autoProgressColor,
+            },
+            progressStyle,
+          ]}
         />
       )}
       {iconName && (

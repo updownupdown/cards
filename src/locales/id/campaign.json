@@ -25,11 +25,8 @@
     "playToCollect": "Mainkan Pengembaraan untuk mengumpulkan bab ini."
   },
   "reveal": {
-    "skip": "Lewati",
-    "continue": "Lanjutkan",
-    "destroyToSkip": "Hancurkan rentang perhatianmu untuk melewati",
-    "attentionSpan": "Rentang perhatianku",
-    "keepWatching": "Terus menonton"
+    "holdToSkip": "Tahan untuk melewati",
+    "continue": "Lanjutkan"
   },
   "original": {
     "label": "Tampilkan aslinya"

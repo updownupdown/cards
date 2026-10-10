@@ -94,7 +94,7 @@ function button(renderer: ReactTestRenderer) {
 }
 
 describe("Quote reveal", () => {
-  test("shows the quote as the Gallery does, in the game's colours, with a quiet Skip that asks for an attention span", async () => {
+  test("shows the quote as the Gallery does, in the game's colours, with a quiet Hold to skip", async () => {
     const onUncover = jest.fn();
     const onDone = jest.fn();
     const renderer = await open(onUncover, onDone);
@@ -108,27 +108,22 @@ describe("Quote reveal", () => {
     expect(portrait.props.stroke).toBe(palette.accent);
 
     const skip = button(renderer);
-    expect(skip.text).toBe("Skip");
+    expect(skip.text).toBe("Hold to skip");
     expect(skip.fill).toBe(palette.night);
     expect(skip.ink).toBe(palette.accent);
 
-    // Skipping has a price: the box asks for the attention span (dragging
-    // it into the bin, and the leaving, are pinned by
-    // reward-reveals-skippable).
+    // A tap doesn't leave: it has to be held (the holding, and the leaving,
+    // are pinned by reward-reveals-skippable).
     skip.press();
+    act(() => {
+      jest.advanceTimersByTime(5000);
+    });
     expect(onDone).not.toHaveBeenCalled();
     expect(onUncover).not.toHaveBeenCalled();
-    expect(
-      renderer.root.findAll(
-        (node: ReactTestInstance) =>
-          typeof node.type === "string" &&
-          node.props.testID === "attention-span-skip",
-      ),
-    ).toHaveLength(1);
     act(() => renderer.unmount());
   });
 
-  test("turns Skip into the bright Continue once the author is drawn, and waits to be closed", async () => {
+  test("turns Hold to skip into the bright Continue once the author is drawn, and waits to be closed", async () => {
     const onUncover = jest.fn();
     const onDone = jest.fn();
     const renderer = await open(onUncover, onDone);
