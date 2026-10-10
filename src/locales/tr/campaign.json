@@ -25,11 +25,8 @@
     "playToCollect": "Bu bölümü toplamak için Yolculuk'u oyna."
   },
   "reveal": {
-    "skip": "Geç",
-    "continue": "Devam et",
-    "destroyToSkip": "Geçmek için dikkat süreni yok et",
-    "attentionSpan": "Dikkat sürem",
-    "keepWatching": "İzlemeye devam et"
+    "holdToSkip": "Geçmek için basılı tut",
+    "continue": "Devam et"
   },
   "original": {
     "label": "Orijinalini göster"

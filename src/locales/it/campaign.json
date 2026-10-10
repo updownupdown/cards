@@ -25,11 +25,8 @@
     "playToCollect": "Gioca all'Odissea per ottenere questo capitolo."
   },
   "reveal": {
-    "skip": "Salta",
-    "continue": "Continua",
-    "destroyToSkip": "Distruggi la tua capacità di attenzione per saltare",
-    "attentionSpan": "La mia capacità di attenzione",
-    "keepWatching": "Continua a guardare"
+    "holdToSkip": "Tieni premuto per saltare",
+    "continue": "Continua"
   },
   "original": {
     "label": "Mostra l'originale"

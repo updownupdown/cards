@@ -72,29 +72,24 @@ function button(renderer: ReactTestRenderer) {
 }
 
 describe("Tao reveal", () => {
-  test("offers a quiet Skip while the chapter is read, which asks for an attention span", async () => {
+  test("offers a quiet Hold to skip while the chapter is read", async () => {
     const onUncover = jest.fn();
     const onDone = jest.fn();
     const renderer = await open(onUncover, onDone);
 
     const skip = button(renderer);
-    expect(skip.text).toBe("Skip");
+    expect(skip.text).toBe("Hold to skip");
     expect(skip.fill).toBe(theme.night);
     expect(skip.ink).toBe(theme.accent);
 
-    // Skipping has a price: the box asks for the attention span (dragging
-    // it into the bin, and the leaving, are pinned by
-    // reward-reveals-skippable).
+    // A tap doesn't leave: it has to be held (the holding, and the leaving,
+    // are pinned by reward-reveals-skippable).
     skip.press();
+    act(() => {
+      jest.advanceTimersByTime(5000);
+    });
     expect(onDone).not.toHaveBeenCalled();
     expect(onUncover).not.toHaveBeenCalled();
-    expect(
-      renderer.root.findAll(
-        (node: ReactTestInstance) =>
-          typeof node.type === "string" &&
-          node.props.testID === "attention-span-skip",
-      ),
-    ).toHaveLength(1);
     act(() => renderer.unmount());
   });
 

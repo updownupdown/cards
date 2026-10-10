@@ -25,11 +25,8 @@
     "playToCollect": "Jouez à l'Odyssée pour obtenir ce chapitre."
   },
   "reveal": {
-    "skip": "Passer",
-    "continue": "Continuer",
-    "destroyToSkip": "Détruisez votre capacité d'attention pour passer",
-    "attentionSpan": "Ma capacité d'attention",
-    "keepWatching": "Continuer à regarder"
+    "holdToSkip": "Maintenez pour passer",
+    "continue": "Continuer"
   },
   "original": {
     "label": "Afficher l'original"

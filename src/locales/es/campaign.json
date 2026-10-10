@@ -25,11 +25,8 @@
     "playToCollect": "Juega a la Odisea para conseguir este capítulo."
   },
   "reveal": {
-    "skip": "Omitir",
-    "continue": "Continuar",
-    "destroyToSkip": "Destruye tu capacidad de atención para omitir",
-    "attentionSpan": "Mi capacidad de atención",
-    "keepWatching": "Seguir mirando"
+    "holdToSkip": "Mantén pulsado para omitir",
+    "continue": "Continuar"
   },
   "original": {
     "label": "Mostrar original"
