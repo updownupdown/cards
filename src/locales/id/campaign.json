@@ -45,6 +45,12 @@
     "unlock": "Buka Pengembaraan lengkap",
     "enterKey": "Masukkan kunci",
     "getApp": "Dapatkan aplikasinya",
-    "purchaseSoon": "Pengembaraan lengkap belum bisa dibeli."
+    "purchaseSoon": "Pengembaraan lengkap belum bisa dibeli.",
+    "result": {
+      "purchased": "Pengembaraan lengkap sudah terbuka.",
+      "pending": "Pembelianmu masih tertunda. Pengembaraan lengkap akan terbuka setelah Google Play mengonfirmasinya.",
+      "failed": "Pembelian tidak berhasil. Silakan coba lagi.",
+      "unavailable": "Google Play tidak dapat dihubungi saat ini. Silakan coba lagi nanti."
+    }
   }
 }

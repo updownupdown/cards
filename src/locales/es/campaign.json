@@ -45,6 +45,12 @@
     "unlock": "Desbloquear la Odisea completa",
     "enterKey": "Introducir una clave",
     "getApp": "Conseguir la aplicación",
-    "purchaseSoon": "La Odisea completa aún no está a la venta."
+    "purchaseSoon": "La Odisea completa aún no está a la venta.",
+    "result": {
+      "purchased": "La Odisea completa está desbloqueada.",
+      "pending": "Tu compra está pendiente. La Odisea completa se abrirá cuando Google Play la confirme.",
+      "failed": "La compra no se completó. Inténtalo de nuevo.",
+      "unavailable": "No se puede conectar con Google Play ahora mismo. Inténtalo más tarde."
+    }
   }
 }

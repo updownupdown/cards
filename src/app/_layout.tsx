@@ -40,6 +40,7 @@ import {
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { loadDevMode } from "@/data/dev-mode";
 import { redeemUnlockKeyFromLink } from "@/data/odyssey-unlock";
+import { syncPlayPurchase } from "@/data/play-purchase";
 import { loadHintMode } from "@/data/hint-mode";
 import { loadMomentSettings } from "@/data/moments";
 import { loadSwipeDismissKnown } from "@/data/swipe-dismiss";
@@ -69,6 +70,8 @@ ExpoSplashScreen.setOptions({ duration: 150, fade: true });
 // (after the full Odyssey's unlock, which says whether dev mode may be on).
 // Then, on the web, an unlock key given in the link (`?key=`).
 void loadDevMode().then(() => redeemUnlockKeyFromLink());
+// On Android, whether Google Play holds the Full Odyssey for this account.
+void syncPlayPurchase();
 // "Help from Above" (the header UFO), read before a game's header shows.
 void loadHintMode();
 // How often a quiet moment follows a win, read before the first win.

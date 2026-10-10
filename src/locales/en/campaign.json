@@ -45,6 +45,12 @@
     "unlock": "Unlock the Full Odyssey",
     "enterKey": "Enter a key",
     "getApp": "Get the app",
-    "purchaseSoon": "The Full Odyssey can't be bought yet."
+    "purchaseSoon": "The Full Odyssey can't be bought yet.",
+    "result": {
+      "purchased": "The Full Odyssey is unlocked.",
+      "pending": "Your purchase is pending. The Full Odyssey opens once Google Play confirms it.",
+      "failed": "The purchase didn't go through. Please try again.",
+      "unavailable": "Google Play can't be reached right now. Please try again later."
+    }
   }
 }

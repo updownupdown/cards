@@ -4,8 +4,10 @@ import { ActionButton, Kicker } from "@/components/ui/Nocturne";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { homeSurfaceShadow } from "@/styles/homeSurfaceShadow";
+import { buyFullOdyssey } from "@/data/play-purchase";
 import { usePalette } from "@/styles/palette";
 import { rgba } from "@/styles/styles";
+import { useState } from "react";
 import { Linking, Platform, View } from "react-native";
 
 /** The app's page on Google Play, for the web app on Android phones. */
@@ -23,9 +25,9 @@ function isAndroidBrowser() {
 /**
  * Under the header while a game beyond the force field is selected on the
  * Odyssey map: it says the game lies beyond the field, and how to open the
- * full Odyssey. In the app, by buying it (not built yet); on the web, with
- * an unlock key (`onEnterKey` opens Settings at the key), or on an Android
- * phone, by getting the app.
+ * full Odyssey. On Android, by buying it on Google Play; on the web, with an
+ * unlock key (`onEnterKey` opens Settings at the key), or on an Android
+ * phone, by getting the app. There is nothing to buy in the iOS app yet.
  */
 export function BeyondFieldPanel({ onEnterKey }: { onEnterKey: () => void }) {
   const { spacing } = useResponsiveMetrics();
@@ -33,6 +35,23 @@ export function BeyondFieldPanel({ onEnterKey }: { onEnterKey: () => void }) {
   const { t } = useTranslation("campaign");
   const showToast = useToast();
   const web = Platform.OS === "web";
+  const [buying, setBuying] = useState(false);
+
+  const buy = async () => {
+    if (Platform.OS !== "android") {
+      showToast(t("field.purchaseSoon"));
+      return;
+    }
+    if (buying) return;
+    setBuying(true);
+    try {
+      const outcome = await buyFullOdyssey();
+      // Once bought, the field falls and this panel goes with it.
+      if (outcome !== "cancelled") showToast(t(`field.result.${outcome}`));
+    } finally {
+      setBuying(false);
+    }
+  };
 
   return (
     <View
@@ -83,8 +102,8 @@ export function BeyondFieldPanel({ onEnterKey }: { onEnterKey: () => void }) {
             small
             iconName="unlock"
             label={t("field.unlock")}
-            // Google Play Billing comes next; until then, say so.
-            onPress={() => showToast(t("field.purchaseSoon"))}
+            disabled={buying}
+            onPress={() => void buy()}
           />
         )}
       </View>

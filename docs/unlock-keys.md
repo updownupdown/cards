@@ -2,8 +2,8 @@
 
 The Odyssey's force field holds back the games beyond it (`FIELD_RADIUS` in
 `src/data/force-field.ts`) until the full Odyssey is unlocked. On Android it
-will be sold through Google Play (product `odyssey_unlock`, "The Full
-Odyssey"). Until then, and on the web, where there is nothing to buy, it
+is sold through Google Play (product `odyssey_unlock`, "The Full Odyssey",
+`src/data/play-purchase.ts`). On the web, where there is nothing to buy, it
 comes from an unlock key.
 
 There are two kinds:
@@ -11,7 +11,7 @@ There are two kinds:
 - **Friend keys** open the full Odyssey in the web app (solitarius.app),
   for people who can't buy it on Google Play, such as iPhone users. In the
   Android app a friend key does nothing; give Android friends a Google Play
-  promo code instead, once the purchase exists.
+  promo code instead.
 - **Developer keys** open the full Odyssey anywhere, and let dev mode be
   turned on (the knock on the version number in Settings, Advanced). Without
   one, dev mode only works where the app runs locally: a development build,
@@ -91,3 +91,16 @@ open for it, for good.
 
 In dev mode, Settings has a Force field choice: As played, Always shown or
 Lifted, whatever the unlock says.
+
+## The Google Play purchase
+
+The Android app sells the Full Odyssey as a one-time product. In Play Console,
+under Monetize with Play, then Products, then In-app products, create
+`odyssey_unlock` (name "The Full Odyssey") and activate it. Play only sells it
+to a build installed from Play (any testing track), not to one installed by
+hand. To buy it without paying, add your Google account under Settings, then
+License testing.
+
+At each start the app asks Play whether the account owns it: that opens the
+Odyssey on a new phone or after a reinstall, and closes it again after a
+refund. Offline, the last answer stands.

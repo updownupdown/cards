@@ -45,6 +45,12 @@
     "unlock": "Yolculuk'un tamamını aç",
     "enterKey": "Anahtar gir",
     "getApp": "Uygulamayı indir",
-    "purchaseSoon": "Yolculuk'un tamamı henüz satın alınamıyor."
+    "purchaseSoon": "Yolculuk'un tamamı henüz satın alınamıyor.",
+    "result": {
+      "purchased": "Yolculuk'un tamamı açıldı.",
+      "pending": "Satın alma işlemin beklemede. Google Play onayladığında Yolculuk'un tamamı açılacak.",
+      "failed": "Satın alma tamamlanamadı. Lütfen tekrar dene.",
+      "unavailable": "Şu anda Google Play'e ulaşılamıyor. Lütfen daha sonra tekrar dene."
+    }
   }
 }

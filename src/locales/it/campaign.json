@@ -45,6 +45,12 @@
     "unlock": "Sblocca l'Odissea completa",
     "enterKey": "Inserisci una chiave",
     "getApp": "Scarica l'app",
-    "purchaseSoon": "L'Odissea completa non è ancora in vendita."
+    "purchaseSoon": "L'Odissea completa non è ancora in vendita.",
+    "result": {
+      "purchased": "L'Odissea completa è sbloccata.",
+      "pending": "Il tuo acquisto è in attesa. L'Odissea completa si aprirà quando Google Play lo confermerà.",
+      "failed": "L'acquisto non è andato a buon fine. Riprova.",
+      "unavailable": "Al momento non è possibile raggiungere Google Play. Riprova più tardi."
+    }
   }
 }

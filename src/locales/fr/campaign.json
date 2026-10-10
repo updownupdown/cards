@@ -45,6 +45,12 @@
     "unlock": "Débloquer l'Odyssée complète",
     "enterKey": "Saisir une clé",
     "getApp": "Obtenir l'application",
-    "purchaseSoon": "L'Odyssée complète n'est pas encore en vente."
+    "purchaseSoon": "L'Odyssée complète n'est pas encore en vente.",
+    "result": {
+      "purchased": "L'Odyssée complète est débloquée.",
+      "pending": "Votre achat est en attente. L'Odyssée complète s'ouvrira dès que Google Play l'aura confirmé.",
+      "failed": "L'achat n'a pas abouti. Veuillez réessayer.",
+      "unavailable": "Impossible de joindre Google Play pour le moment. Veuillez réessayer plus tard."
+    }
   }
 }

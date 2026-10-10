@@ -18,7 +18,7 @@ import {
  * The full Odyssey: the games beyond the force field (FIELD_RADIUS in
  * src/data/campaign-map.ts). It comes from an unlock key (src/data/unlock-keys.ts),
  * or is kept by a save that had already won a game beyond the field when the
- * field arrived. Google Play's purchase will be a third way.
+ * field arrived, or is bought on Google Play (src/data/play-purchase.ts).
  *
  * Kept here as well as saved, like dev mode, so synchronous checks (a
  * Campaign win, isFieldUp) can read it.
@@ -32,6 +32,11 @@ export type OdysseyUnlock = {
   keptFromBefore: boolean;
   /** Whether the save has been checked for that, once. */
   checkedBeforeField: boolean;
+  /**
+   * Bought on Google Play: kept so the Odyssey stays open offline, and
+   * checked against Play's purchases at each start.
+   */
+  purchased: boolean;
   /** Dev mode only: show the field as played, always, or never. */
   devFieldView: DevFieldView;
 };
@@ -40,6 +45,7 @@ const DEFAULT_UNLOCK: OdysseyUnlock = {
   keyHash: null,
   keptFromBefore: false,
   checkedBeforeField: false,
+  purchased: false,
   devFieldView: "asPlayed",
 };
 
@@ -94,7 +100,11 @@ function keyOpensOdyssey(role: UnlockKeyRole | null) {
 
 /** Whether this player has the full Odyssey. */
 export function isOdysseyUnlocked() {
-  return unlock.keptFromBefore || keyOpensOdyssey(getUnlockKeyRole());
+  return (
+    unlock.purchased ||
+    unlock.keptFromBefore ||
+    keyOpensOdyssey(getUnlockKeyRole())
+  );
 }
 
 export function getOdysseyUnlock() {
@@ -130,6 +140,7 @@ export function loadOdysseyUnlock() {
         keyHash: typeof parsed.keyHash === "string" ? parsed.keyHash : null,
         keptFromBefore: parsed.keptFromBefore === true,
         checkedBeforeField: parsed.checkedBeforeField === true,
+        purchased: parsed.purchased === true,
         devFieldView:
           parsed.devFieldView === "shown" || parsed.devFieldView === "lifted"
             ? parsed.devFieldView
@@ -179,6 +190,12 @@ export async function redeemUnlockKey(text: string): Promise<RedeemResult> {
     await save({ ...unlock, keyHash: hash });
   }
   return key.role === "dev" ? "devKey" : "unlocked";
+}
+
+/** Records whether Google Play holds the purchase (src/data/play-purchase.ts). */
+export async function setOdysseyPurchased(purchased: boolean) {
+  await loadOdysseyUnlock();
+  if (unlock.purchased !== purchased) await save({ ...unlock, purchased });
 }
 
 export async function setDevFieldView(devFieldView: DevFieldView) {
