@@ -78,6 +78,7 @@
     "unlockedAll": "Todas as partidas da campanha desbloqueadas",
     "grantMercySkip": "Conceder um indulto",
     "mercySkipGranted": "Indulto concedido ({{count}} por usar)",
+    "artGallery": "Galeria de arte",
     "needsKey": "O modo dev precisa de uma chave de desenvolvedor",
     "forceField": {
       "label": "Campo de força",
@@ -89,7 +90,8 @@
   "tabs": {
     "general": "Geral",
     "advanced": "Avançado",
-    "theme": "Tema"
+    "theme": "Tema",
+    "dev": "Dev"
   },
   "useEnglishGameTitles": {
     "label": "Usar títulos de jogos em inglês",
@@ -112,11 +114,12 @@
   },
   "unlockKey": {
     "label": "Chave de desbloqueio",
-    "description": "Tem uma chave? Digite-a para desbloquear a Odisseia completa.",
+    "description": "Tem uma chave? <enter>Digite-a</enter> para desbloquear a Odisseia completa.",
     "unlocked": "A Odisseia completa está desbloqueada.",
     "devKey": "Chave de desenvolvedor inserida: a Odisseia completa está desbloqueada e o modo dev pode ser ativado.",
     "submit": "Desbloquear",
     "clear": "Limpar chave",
+    "back": "Voltar",
     "result": {
       "unlocked": "A Odisseia completa está desbloqueada",
       "devKey": "Chave de desenvolvedor aceita",

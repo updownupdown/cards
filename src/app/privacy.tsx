@@ -69,8 +69,9 @@ export default function PrivacyScreen() {
             t={t}
             i18nKey="contact.body"
             values={{ email: CONTACT_EMAIL }}
+            // Not <link>, which Trans reads as HTML's empty element.
             components={{
-              link: (
+              email: (
                 <Text
                   size="sm"
                   color={Colors.accentBlue}

@@ -78,6 +78,7 @@
     "unlockedAll": "Every campaign game unlocked",
     "grantMercySkip": "Grant a Mercy Skip",
     "mercySkipGranted": "Mercy Skip granted ({{count}} unused)",
+    "artGallery": "Art gallery",
     "needsKey": "Dev mode needs a developer key",
     "forceField": {
       "label": "Force field",
@@ -89,7 +90,8 @@
   "tabs": {
     "general": "General",
     "advanced": "Advanced",
-    "theme": "Theme"
+    "theme": "Theme",
+    "dev": "Dev"
   },
   "useEnglishGameTitles": {
     "label": "Use English game titles",
@@ -112,11 +114,12 @@
   },
   "unlockKey": {
     "label": "Unlock key",
-    "description": "Have a key? Enter it to unlock the Full Odyssey.",
+    "description": "Have a key? <enter>Enter it</enter> to unlock the Full Odyssey.",
     "unlocked": "The Full Odyssey is unlocked.",
     "devKey": "Developer key entered: the Full Odyssey is unlocked, and dev mode can be turned on.",
     "submit": "Unlock",
     "clear": "Clear key",
+    "back": "Back",
     "result": {
       "unlocked": "The Full Odyssey is unlocked",
       "devKey": "Developer key accepted",

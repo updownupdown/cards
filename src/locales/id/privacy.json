@@ -28,6 +28,6 @@
   },
   "contact": {
     "title": "Kontak",
-    "body": "Pertanyaan tentang kebijakan ini dapat dikirim ke <link>{{email}}</link>."
+    "body": "Pertanyaan tentang kebijakan ini dapat dikirim ke <email>{{email}}</email>."
   }
 }

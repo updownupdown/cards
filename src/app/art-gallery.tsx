@@ -5,10 +5,11 @@ import { GAME_THUMBNAIL_ASSETS } from "@/data/game-thumbnails";
 import { GameTag, type GameDefinition } from "@/data/games-data";
 import { GAME_DEFINITIONS } from "@/data/games-registry";
 import { useTranslation } from "@/i18n";
-import { isDevMode } from "@/data/dev-mode";
+import { devModeReady, isDevMode } from "@/data/dev-mode";
 import { isLocalDevEnvironment } from "@/utils/utils";
 import { Image } from "expo-image";
 import { Redirect } from "expo-router";
+import { useEffect, useState } from "react";
 import {
   Linking,
   ScrollView,
@@ -42,13 +43,28 @@ const CATEGORIES = Object.values(GameTag).slice(
 /**
  * Dev-only review page for the games' cover art: every game, local-only ones
  * included, grouped by category, with its artwork whole, how it crops on a
- * Home card, and its credit. Not linked from the app; open /art-gallery.
+ * Home card, and its credit. Opened from Settings' Dev tab, or at /art-gallery.
  */
 export default function ArtGalleryScreen() {
   const { width } = useWindowDimensions();
   const { t } = useTranslation("home");
+  // Opened by its address, the page can come before dev mode's saved choice.
+  const [allowed, setAllowed] = useState<boolean | null>(() =>
+    isLocalDevEnvironment() || isDevMode() ? true : null,
+  );
+  useEffect(() => {
+    if (allowed !== null) return;
+    let active = true;
+    void devModeReady().then((on) => {
+      if (active) setAllowed(on);
+    });
+    return () => {
+      active = false;
+    };
+  }, [allowed]);
 
-  if (!isLocalDevEnvironment() && !isDevMode()) return <Redirect href="/" />;
+  if (allowed === null) return null;
+  if (!allowed) return <Redirect href="/" />;
 
   const columns = Math.max(
     1,

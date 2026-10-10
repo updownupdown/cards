@@ -28,6 +28,6 @@
   },
   "contact": {
     "title": "Contatti",
-    "body": "Le domande su questa informativa possono essere inviate a <link>{{email}}</link>."
+    "body": "Le domande su questa informativa possono essere inviate a <email>{{email}}</email>."
   }
 }

@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { areBetaGamesVisible } from "@/data/beta-games";
 import {
   canUseDevMode,
+  devModeReady,
   isDevMode,
   loadDevMode,
   saveDevMode,
@@ -65,5 +66,16 @@ describe("Dev mode", () => {
     expect(canUseDevMode()).toBe(true);
     await saveDevMode(true);
     expect(isDevMode()).toBe(true);
+  });
+
+  test("what decides at startup waits for the saved choice", async () => {
+    jest.spyOn(utils, "isLocalDevEnvironment").mockReturnValue(false);
+    jest.spyOn(odysseyUnlock, "hasDevKey").mockReturnValue(true);
+    await AsyncStorage.setItem("cards.devMode.v1", "1");
+    const startup = loadDevMode();
+    // Asked before the choice is read, it still answers with it.
+    expect(isDevMode()).toBe(false);
+    expect(await devModeReady()).toBe(true);
+    await startup;
   });
 });

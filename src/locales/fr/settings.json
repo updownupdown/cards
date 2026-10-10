@@ -78,6 +78,7 @@
     "unlockedAll": "Toutes les parties de la campagne sont débloquées",
     "grantMercySkip": "Accorder un passe-droit",
     "mercySkipGranted": "Passe-droit accordé ({{count}} non utilisé(s))",
+    "artGallery": "Galerie d'art",
     "needsKey": "Le mode dev nécessite une clé de développeur",
     "forceField": {
       "label": "Champ de force",
@@ -89,7 +90,8 @@
   "tabs": {
     "general": "Général",
     "advanced": "Avancé",
-    "theme": "Thème"
+    "theme": "Thème",
+    "dev": "Dev"
   },
   "useEnglishGameTitles": {
     "label": "Utiliser les titres de jeux en anglais",
@@ -112,11 +114,12 @@
   },
   "unlockKey": {
     "label": "Clé de déblocage",
-    "description": "Vous avez une clé ? Saisissez-la pour débloquer l'Odyssée complète.",
+    "description": "Vous avez une clé ? <enter>Saisissez-la</enter> pour débloquer l'Odyssée complète.",
     "unlocked": "L'Odyssée complète est débloquée.",
     "devKey": "Clé de développeur saisie : l'Odyssée complète est débloquée et le mode dev peut être activé.",
     "submit": "Débloquer",
     "clear": "Effacer la clé",
+    "back": "Retour",
     "result": {
       "unlocked": "L'Odyssée complète est débloquée",
       "devKey": "Clé de développeur acceptée",

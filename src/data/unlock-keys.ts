@@ -28,5 +28,10 @@ export const UNLOCK_KEYS: UnlockKey[] = [
     role: "friend",
     hash: "268f304371c98d6556b38b85e03f54dfc5d631a6c34e28c1e39db62a3fd49f4e",
   },
+  {
+    label: "James",
+    role: "dev",
+    hash: "f528e54765020578f7174ec09690e7166feda47d938cb7d2b253044d3108a036",
+  },
 ];
 // keys:end

@@ -20,7 +20,7 @@ import { CampaignMap } from "./CampaignMap";
 import { CampaignIntroPanel } from "./CampaignIntroPanel";
 import { BeyondFieldPanel } from "./BeyondFieldPanel";
 import { useFieldUp } from "@/data/odyssey-field";
-import { settingsView } from "@/components/common/ThemePicker";
+import { UnlockKeyEntry } from "@/components/common/UnlockKeyEntry";
 import { haptics } from "@/utils/haptics";
 import { UfoContext } from "./UfoContext";
 import { clearMercySkipVisit, isMercySkipVisitOwed } from "./ufo-visit";
@@ -154,13 +154,7 @@ export function CampaignTab({
   // The game lies beyond the standing force field: it can be looked at, not
   // played in the Odyssey.
   const heldBeyondField = fieldUp && isBeyondField(selectedGameDot);
-  const openKeyEntry = useCallback(() => {
-    // Settings opens on its Advanced tab, where the key goes.
-    settingsView.tab = "advanced";
-    settingsView.scrollY = 0;
-    settingsView.restore = true;
-    onOpenSettings?.();
-  }, [onOpenSettings]);
+  const [enteringKey, setEnteringKey] = useState(false);
 
   return (
     <View style={{ flex: 1 }}>
@@ -224,7 +218,7 @@ export function CampaignTab({
               paddingHorizontal: spacing(layoutDims.pagePadding / 2),
             }}
           >
-            <BeyondFieldPanel onEnterKey={openKeyEntry} />
+            <BeyondFieldPanel onEnterKey={() => setEnteringKey(true)} />
           </View>
         )}
         {showIntro && !heldBeyondField && (
@@ -243,6 +237,10 @@ export function CampaignTab({
           </View>
         )}
       </View>
+      <UnlockKeyEntry
+        visible={enteringKey}
+        onClose={() => setEnteringKey(false)}
+      />
     </View>
   );
 }
