@@ -1,5 +1,6 @@
 import FlyingSaucer from "@/assets/images/flying-saucer.svg";
 import { UfoGlow } from "@/components/common/UfoSaucer";
+import { useUfoOnScreen } from "@/components/common/UfoStage";
 import { isBoardInputLocked } from "@/components/Cards/input-lock";
 import { defaultAnimDuration } from "@/constants/animation";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
@@ -892,8 +893,20 @@ export function BeamingUfo({ lift }: { lift: number }) {
   const scale = useRef(new Animated.Value(0)).current;
   const beam = useRef(new Animated.Value(0)).current;
   const bob = useRef(new Animated.Value(0)).current;
+  const ship = useRef<View>(null);
+  // The tab bar's UFO may fly in to be this one: until it lands, the ship
+  // waits unseen, then turns its beam on without popping in.
+  const { waiting } = useUfoOnScreen(true, ship);
+  const waited = useRef(false);
+  if (waiting) waited.current = true;
 
   useEffect(() => {
+    if (waiting) return;
+    if (waited.current) {
+      // Landed in its place: the ship is there, and the beam comes on.
+      scale.setValue(1);
+      beam.setValue(0);
+    }
     const arrive = Animated.sequence([
       Animated.timing(scale, {
         toValue: 1,
@@ -930,7 +943,7 @@ export function BeamingUfo({ lift }: { lift: number }) {
       arrive.stop();
       bobbing.stop();
     };
-  }, [beam, bob, scale]);
+  }, [beam, bob, scale, waiting]);
 
   return (
     <View
@@ -940,6 +953,7 @@ export function BeamingUfo({ lift }: { lift: number }) {
         left: 0,
         top: -lift,
         pointerEvents: "none",
+        opacity: waiting ? 0 : 1,
       }}
     >
       <TractorBeam lift={lift} value={beam} />
@@ -967,6 +981,18 @@ export function BeamingUfo({ lift }: { lift: number }) {
       >
         <UfoGlyph size={UFO_FONT_SIZE} />
       </Animated.View>
+      {/* Where the ship hovers, unscaled, for the tab bar's UFO to find. */}
+      <View
+        ref={ship}
+        collapsable={false}
+        style={{
+          position: "absolute",
+          left: -UFO_FONT_SIZE / 2,
+          top: -UFO_FONT_SIZE / 2,
+          width: UFO_FONT_SIZE,
+          height: UFO_FONT_SIZE,
+        }}
+      />
     </View>
   );
 }

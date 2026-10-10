@@ -64,14 +64,7 @@ export function GalleryTab({
     chapters: `${collectedTaoIds.size}/${TAO_CHAPTER_COUNT}`,
     quotes: `${collectedQuoteIds.size}/${QUOTE_COUNT}`,
   };
-  const [introHeight, setIntroHeight] = useState(0);
-  // The UFO's note sits under the switch and pushes the shelves down, so it
-  // covers none of them.
-  const belowSwitch =
-    contentPaddingTop +
-    switchHeight +
-    spacing(16) +
-    (intro.shown ? introHeight + spacing(16) : 0);
+  const belowSwitch = contentPaddingTop + switchHeight + spacing(16);
 
   return (
     <View style={{ flex: 1 }}>
@@ -142,10 +135,9 @@ export function GalleryTab({
           />
         </View>
         {intro.shown && (
+          // The UFO's note floats over the shelves, as the Odyssey's does over
+          // the map, and stays put while they scroll under it.
           <View
-            onLayout={(event) =>
-              setIntroHeight(Math.ceil(event.nativeEvent.layout.height))
-            }
             style={{
               width: "100%",
               maxWidth: ui.contentMaxWidth - side * 2,

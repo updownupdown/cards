@@ -1,5 +1,6 @@
 import { useTranslation } from "@/i18n";
 import { UfoGuideBox } from "@/components/common/UfoGuideBox";
+import { useUfoOnScreen } from "@/components/common/UfoStage";
 import { UfoSaucer } from "@/components/common/UfoSaucer";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { layoutDims } from "@/styles/styles";
@@ -104,6 +105,8 @@ export function CampaignUFO({
   const [phase, setPhase] = useState<
     "hidden" | "flying" | "caught" | "fleeing" | "visiting"
   >("hidden");
+  // While it's up, no other UFO is (the tab bar's keeps away).
+  useUfoOnScreen(phase !== "hidden");
   const visitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(
     () => () => {

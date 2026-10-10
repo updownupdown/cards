@@ -9,7 +9,8 @@ import { flexStyles } from "@/styles/flexStyles";
 import { glassFill, useGlassStyle } from "@/components/ui/FloatingBar";
 import { layoutDims, theme, transitionStyles } from "@/styles/styles";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
-import { useEffect, useRef, useState } from "react";
+import { useUfoStage } from "@/components/common/UfoStage";
+import { useLayoutEffect, useRef, useState } from "react";
 import {
   Animated as RNAnimated,
   Easing,
@@ -57,6 +58,8 @@ export function HomeTabBar({
   const { collectedTaoIds, collectedQuoteIds } = useCampaignProgress();
   const collected =
     artAcquired || collectedTaoIds.size > 0 || collectedQuoteIds.size > 0;
+  // Only one UFO is ever on screen: with another up, none hovers here.
+  const { count: othersOnScreen } = useUfoStage();
   const ufoOver: Partial<Record<HomeTabKey, boolean>> = {
     campaign: odyssey.shown,
     collect: !odyssey.shown && collected && gallery.shown,
@@ -143,7 +146,7 @@ export function HomeTabBar({
                   name={tab.icon}
                   size={iconSize}
                   color={isActive ? theme.accent : theme.dim}
-                  ufo={!!ufoOver[tab.key] && !isActive}
+                  ufo={!!ufoOver[tab.key] && !isActive && othersOnScreen === 0}
                   testID={`${tab.key}-tab-ufo`}
                 />
               </Pressable>
@@ -160,13 +163,18 @@ const FLY_OFF_MS = 800;
 const FLY_OFF_FADE_MS = 300;
 /** Up into the screen, where what it points at is: a share of its height. */
 const FLY_OFF_TO = 0.42;
+/** How long it waits, once the tab opens, for a spot on screen to fly to. */
+const SPOT_WAIT_MS = 600;
+const SPOT_POLL_MS = 50;
 
 /**
  * A tab's icon, with the UFO hovering in its place while it has something
  * to show there: the same hover as over the hint button, and like there it
  * takes the icon's place. Once it's no longer wanted (the tab was opened,
- * or its introduction read), it flies off up into the screen, uncovering
- * the icon.
+ * or its introduction read), it leaves, uncovering the icon: to where the
+ * UFO turns up on screen (under the Gallery's note, over Klondike), which
+ * waits unseen until it arrives, so there is never a second one; or, with
+ * nowhere to go, up into the screen, fading.
  */
 function TabIcon({
   name,
@@ -182,61 +190,113 @@ function TabIcon({
   testID: string;
 }) {
   const { width, height } = useViewportDimensions();
+  const stage = useUfoStage();
+  const latestStage = useRef(stage);
+  latestStage.current = stage;
   const box = useRef<View>(null);
   const [shown, setShown] = useState(ufo);
   const [leaving, setLeaving] = useState(false);
   const offset = useRef(new RNAnimated.ValueXY({ x: 0, y: 0 })).current;
+  const scale = useRef(new RNAnimated.Value(1)).current;
   const opacity = useRef(new RNAnimated.Value(1)).current;
   const wasUfo = useRef(ufo);
 
-  useEffect(() => {
+  // Before paint: a UFO it is to fly to must not show for even a frame.
+  useLayoutEffect(() => {
     if (ufo === wasUfo.current) return;
     wasUfo.current = ufo;
     if (ufo) {
       offset.setValue({ x: 0, y: 0 });
+      scale.setValue(1);
       opacity.setValue(1);
       setLeaving(false);
       setShown(true);
       return;
     }
     setLeaving(true);
+    const { setFlying } = latestStage.current;
+    setFlying(true);
     let flight: RNAnimated.CompositeAnimation | null = null;
     let cancelled = false;
-    const fly = (x: number, y: number) => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const done = () => {
+      setShown(false);
+      setFlying(false);
+    };
+    const useNativeDriver = Platform.OS !== "web";
+    const fly = (
+      from: { x: number; y: number },
+      to: { x: number; y: number; size: number } | null,
+    ) => {
       if (cancelled) return;
-      const useNativeDriver = Platform.OS !== "web";
-      flight = RNAnimated.parallel([
-        RNAnimated.timing(offset, {
-          toValue: { x, y },
-          duration: FLY_OFF_MS,
-          easing: Easing.inOut(Easing.cubic),
-          useNativeDriver,
-        }),
-        RNAnimated.sequence([
-          RNAnimated.delay(FLY_OFF_MS - FLY_OFF_FADE_MS),
-          RNAnimated.timing(opacity, {
-            toValue: 0,
-            duration: FLY_OFF_FADE_MS,
-            useNativeDriver,
-          }),
-        ]),
-      ]);
+      const target = to ?? {
+        x: width / 2,
+        y: height * FLY_OFF_TO,
+        size,
+      };
+      const move = RNAnimated.timing(offset, {
+        toValue: { x: target.x - from.x, y: target.y - from.y },
+        duration: FLY_OFF_MS,
+        easing: Easing.inOut(Easing.cubic),
+        useNativeDriver,
+      });
+      const resize = RNAnimated.timing(scale, {
+        toValue: target.size / size,
+        duration: FLY_OFF_MS,
+        easing: Easing.inOut(Easing.cubic),
+        useNativeDriver,
+      });
+      // Arriving, it becomes the UFO there; with nowhere to go, it fades.
+      flight = to
+        ? RNAnimated.parallel([move, resize])
+        : RNAnimated.parallel([
+            move,
+            RNAnimated.sequence([
+              RNAnimated.delay(FLY_OFF_MS - FLY_OFF_FADE_MS),
+              RNAnimated.timing(opacity, {
+                toValue: 0,
+                duration: FLY_OFF_FADE_MS,
+                useNativeDriver,
+              }),
+            ]),
+          ]);
       flight.start(({ finished }) => {
-        if (finished) setShown(false);
+        if (finished) done();
       });
     };
-    // Measured, it heads for the middle of the screen; if not, straight up.
-    const fallback = setTimeout(() => fly(0, -height * 0.4), 100);
+    const leave = (from: { x: number; y: number }) => {
+      let waited = 0;
+      const look = () => {
+        if (cancelled) return;
+        const { spot, count } = latestStage.current;
+        if (spot) {
+          spot.measure((to) => fly(from, to));
+          return;
+        }
+        waited += SPOT_POLL_MS;
+        if (waited < SPOT_WAIT_MS) {
+          timer = setTimeout(look, SPOT_POLL_MS);
+          return;
+        }
+        // Another UFO is up, with nowhere to go: this one simply goes.
+        if (count > 0) done();
+        else fly(from, null);
+      };
+      look();
+    };
+    // Its own place on screen: measured, or a guess just above the bar.
+    timer = setTimeout(() => leave({ x: width / 2, y: height - size }), 100);
     box.current?.measureInWindow?.((x, y, w, h) => {
-      clearTimeout(fallback);
-      fly(width / 2 - (x + w / 2), height * FLY_OFF_TO - (y + h / 2));
+      clearTimeout(timer);
+      leave({ x: x + w / 2, y: y + h / 2 });
     });
     return () => {
       cancelled = true;
-      clearTimeout(fallback);
+      clearTimeout(timer);
       flight?.stop();
+      setFlying(false);
     };
-  }, [height, offset, opacity, ufo, width]);
+  }, [height, offset, opacity, scale, size, ufo, width]);
 
   const hovering = shown && !leaving;
   return (
@@ -258,7 +318,7 @@ function TabIcon({
             left: 0,
             top: 0,
             opacity,
-            transform: offset.getTranslateTransform(),
+            transform: [...offset.getTranslateTransform(), { scale }],
             pointerEvents: "none",
           }}
         >
