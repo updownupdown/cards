@@ -292,6 +292,8 @@ export type LycanCapturePlan = {
   wolfIds: string[];
   effect: NonNullable<ReturnType<typeof getLycanCaptureEffect>>;
   roundWillEnd: boolean;
+  /** The capture leaves your hand empty, so the round folds by itself. */
+  handWillEmpty: boolean;
 };
 
 function createLycanCapturePlan(
@@ -327,6 +329,9 @@ function createLycanCapturePlan(
     roundWillEnd:
       selectedWolf.length === state.wolf.length &&
       (effect.drawFor === "player" || state.deck.length === 0),
+    handWillEmpty:
+      selectedPlayer.length === state.player.length &&
+      (effect.drawFor === "wolf" || state.deck.length === 0),
   };
 }
 
@@ -362,6 +367,8 @@ function completeLycanCaptureAction(
   draft.player = sortCardsByRank(draft.player);
   draft.wolf = sortCardsByRank(draft.wolf);
   if (draft.wolf.length === 0) finishRound(draft, true);
+  // An empty hand folds by itself: there's nothing left to capture with.
+  else if (draft.player.length === 0) finishRound(draft, false);
 }
 
 function executeLycanCaptureAction(
@@ -793,7 +800,7 @@ export default function Lycan() {
     setSelectedPlayer([]);
     setSelectedWolf([]);
 
-    if (capturePlan.roundWillEnd) {
+    if (capturePlan.roundWillEnd || capturePlan.handWillEmpty) {
       nextRound();
     }
   }

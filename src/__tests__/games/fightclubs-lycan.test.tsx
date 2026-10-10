@@ -113,4 +113,28 @@ describe("Lycan", () => {
 
     expect(outcome()).toBe("lost");
   });
+
+  test("emptying your hand folds by itself", async () => {
+    // A lone 9 splits the Wolf's 4 and 5; the Wolf keeps its 3 and draws the
+    // 2, scoring 5 to reach 100.
+    const nine = card("9", "spades");
+    const wolfFour = card("4", "hearts");
+    const wolfFive = card("5", "clubs");
+    const renderer = await renderGame("/lycan", Lycan, {
+      ...roundState,
+      deck: [card("2", "clubs", false)],
+      player: [nine],
+      wolf: [card("3", "diamonds"), wolfFour, wolfFive],
+      playerScore: 20,
+      wolfScore: 95,
+    });
+    expect(outcome()).toBe("playing");
+
+    await pressCardId(nine.id);
+    await pressCardId(wolfFour.id);
+    await pressCardId(wolfFive.id);
+    await pressButton(renderer, "Split");
+
+    expect(outcome()).toBe("lost");
+  });
 });
