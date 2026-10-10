@@ -1,8 +1,8 @@
 {
   "mercySkip": {
-    "granted": "Un voyageur bienveillant vous offre un **passe-droit** ! Passez une partie difficile depuis le menu de cette partie.",
-    "ufoLabel": "Un OVNI de passage",
-    "dismiss": "Fermer"
+    "granted": "L'OVNI vous laisse un **passe-droit**. Utilisez-le pour passer une partie qui vous bloque, depuis le menu de cette partie.",
+    "ufoLabel": "L'OVNI",
+    "dismiss": "Merci !"
   },
   "quotes": {
     "previousQuote": "Citation précédente",
@@ -32,9 +32,9 @@
     "label": "Afficher l'original"
   },
   "intro": {
-    "title": "Odyssée céleste",
-    "text": "Tracez votre route en gagnant et en débloquant des jeux, en commençant par le classique Klondike. Avancez vers l'extérieur pour découvrir de nouvelles mécaniques de jeu, relever des défis de plus en plus difficiles et débloquer des objets à collectionner, pour des moments de calme et de réflexion.",
-    "close": "Fermer"
+    "title": "L'Odyssée",
+    "text": "Chaque victoire débloque les jeux reliés. Chaque jeu a plusieurs objets de collection. Commencez ici.",
+    "close": "Compris !"
   },
   "field": {
     "title": "Au-delà du champ de force",

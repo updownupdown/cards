@@ -268,7 +268,11 @@
     },
     "back": "Voltar à galeria",
     "unknownArtist": "Artista desconhecido",
-    "notAcquired": "Não adquirida"
+    "notAcquired": "Não adquirida",
+    "intro": {
+      "text": "Encontre aqui as obras, os capítulos e as citações que colecionou!",
+      "close": "Entendi!"
+    }
   },
   "header": {
     "stats": "Estatísticas",

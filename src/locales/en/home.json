@@ -268,7 +268,11 @@
     },
     "back": "Back to Gallery",
     "unknownArtist": "Unknown artist",
-    "notAcquired": "Not acquired"
+    "notAcquired": "Not acquired",
+    "intro": {
+      "text": "Find your collected artwork, chapters, and quotes here!",
+      "close": "Got it!"
+    }
   },
   "header": {
     "stats": "Stats",

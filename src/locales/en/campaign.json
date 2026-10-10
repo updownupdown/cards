@@ -1,8 +1,8 @@
 {
   "mercySkip": {
-    "granted": "A kind traveller offers you a **Mercy Skip**! Skip a difficult game from that game's menu.",
-    "ufoLabel": "A passing UFO",
-    "dismiss": "Dismiss"
+    "granted": "The UFO leaves you a **Mercy Skip**. Use it to skip a game you're stuck on, from that game's menu.",
+    "ufoLabel": "The UFO",
+    "dismiss": "Thanks!"
   },
   "quotes": {
     "previousQuote": "Previous quote",
@@ -32,9 +32,9 @@
     "label": "Show original"
   },
   "intro": {
-    "title": "Celestial Odyssey",
-    "text": "Chart a path by winning and unlocking games, starting with the classic Klondike. Move outwards to explore new game mechanics, tackle increasingly difficult challenges, and unlock collectibles to create moments of calm and reflection.",
-    "close": "Dismiss"
+    "title": "The Odyssey",
+    "text": "Each win unlocks connected games. Each game has multiple collectibles. Start here.",
+    "close": "Got it!"
   },
   "field": {
     "title": "Beyond the force field",

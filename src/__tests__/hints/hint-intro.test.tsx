@@ -40,7 +40,6 @@ function Game() {
       scale={1}
       contentMaxWidth={600}
       insetTop={0}
-      hidden={false}
       ended={false}
       canUndo={false}
       undoDisabled

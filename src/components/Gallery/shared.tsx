@@ -2,8 +2,8 @@ import { skyIslandProps } from "@/components/common/TapShootingStars";
 import { Text } from "@/components/common/Text";
 import { useGlassStyle } from "@/components/ui/FloatingBar";
 import { Kicker, RoundButton } from "@/components/ui/Nocturne";
-import { Icon } from "@/icons";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
+import { Image } from "expo-image";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState, type ReactNode } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
@@ -211,18 +211,19 @@ export function CountRow({
 
 /**
  * A work not yet acquired: a plain box in the theme's colour, the size of
- * the work, with a picture icon in the middle.
+ * the work, with the work itself barely there behind "Not acquired".
  */
 export function WorkPlaceholder({
   width,
   height,
-  iconSize,
   radius,
+  source,
 }: {
   width: number;
   height: number;
-  iconSize: number;
   radius: number;
+  /** The work, shown very faintly. */
+  source?: number | null;
 }) {
   const { t } = useTranslation("home");
   const { spacing } = useResponsiveMetrics();
@@ -236,15 +237,36 @@ export function WorkPlaceholder({
         backgroundColor: theme.surface,
         alignItems: "center",
         justifyContent: "center",
+        overflow: "hidden",
         boxShadow: `0 ${radius + 1}px ${radius * 4}px ${rgba(Colors.black, 0.55)}`,
-        gap: spacing(12),
       }}
     >
-      <Icon name="frame" size={iconSize} color={theme.faint} />
+      {source != null && (
+        <Image
+          source={source}
+          cachePolicy="memory"
+          contentFit="cover"
+          style={[StyleSheet.absoluteFill, { opacity: UNACQUIRED_ART_OPACITY }]}
+        />
+      )}
 
-      <Text size="xs" weight={400} color={theme.faint} numberOfLines={1}>
+      <Text
+        size="xxs"
+        weight={500}
+        textTransform="uppercase"
+        color={theme.faint}
+        numberOfLines={2}
+        style={{
+          letterSpacing: spacing(1.5),
+          textAlign: "center",
+          paddingHorizontal: spacing(8),
+        }}
+      >
         {t("gallery.notAcquired")}
       </Text>
     </View>
   );
 }
+
+/** How much of a work shows before it is acquired. */
+const UNACQUIRED_ART_OPACITY = 0.05;

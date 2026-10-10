@@ -1,8 +1,8 @@
 {
   "mercySkip": {
-    "granted": "Nazik bir yolcu sana bir **af** sunuyor! Zor bir oyunu o oyunun menüsünden atla.",
-    "ufoLabel": "Geçen bir UFO",
-    "dismiss": "Kapat"
+    "granted": "UFO sana bir **af** bırakıyor. Takıldığın bir oyunu o oyunun menüsünden atlamak için kullan.",
+    "ufoLabel": "UFO",
+    "dismiss": "Teşekkürler!"
   },
   "quotes": {
     "previousQuote": "Önceki alıntı",
@@ -32,9 +32,9 @@
     "label": "Orijinalini göster"
   },
   "intro": {
-    "title": "Göksel Yolculuk",
-    "text": "Klasik Klondike'tan başlayarak oyunları kazan, kilitlerini aç ve kendi yolunu çiz. Yeni oyun mekaniklerini keşfetmek, giderek zorlaşan meydan okumalarla yüzleşmek ve sakinlik ile düşünme anları yaratan koleksiyon parçalarının kilidini açmak için dışarıya doğru ilerle.",
-    "close": "Kapat"
+    "title": "Yolculuk",
+    "text": "Her galibiyet bağlantılı oyunların kilidini açar. Her oyunun birden çok koleksiyon öğesi var. Buradan başla.",
+    "close": "Anladım!"
   },
   "field": {
     "title": "Güç alanının ötesinde",

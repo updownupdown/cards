@@ -1,5 +1,5 @@
 import { useTranslation } from "@/i18n";
-import { Icon } from "@/icons/Icon";
+import { ActionButton } from "@/components/ui/Nocturne";
 import { UfoFrame } from "@/components/common/UfoFrame";
 import { UfoSaucer } from "@/components/common/UfoSaucer";
 import {
@@ -624,19 +624,17 @@ export function CampaignUFO({
                 ),
               )}
             </Text>
+            {/* The one way to close the message: the UFO stays until it is
+                pressed. */}
+            <ActionButton
+              label={t("mercySkip.dismiss")}
+              small
+              color={UfoColors.green}
+              ink={UfoColors.black}
+              style={thanksButtonStyle}
+              onPress={handleDismiss}
+            />
           </UfoFrame>
-          {/* Outside the bubble's corner and in the ship's own green, so it
-              reads as the one way to close the message. Nothing else does:
-              the UFO stays until this is pressed. */}
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t("mercySkip.dismiss")}
-            onPress={handleDismiss}
-            hitSlop={14}
-            style={dismissButtonStyle}
-          >
-            <Icon name="close" size={DISMISS_ICON_SIZE} color={Colors.K950} />
-          </Pressable>
         </View>
       )}
 
@@ -678,8 +676,7 @@ const bubbleContainerStyle = {
   marginLeft: -90,
   marginBottom: 8,
   width: 180,
-  // Stretched, so the bubble fills the container and the dismiss button,
-  // positioned against the container, lands on the bubble's own corner.
+  // Stretched, so the bubble fills the container.
   alignItems: "stretch" as const,
 };
 
@@ -723,20 +720,8 @@ const bubbleCaptionBoldStyle = {
   color: UfoColors.green,
 };
 
-/** Big enough to find at a glance on a small, moving, scaled-up ship. */
-const DISMISS_SIZE = 32;
-const DISMISS_ICON_SIZE = 18;
-
-const dismissButtonStyle = {
-  position: "absolute" as const,
-  top: -DISMISS_SIZE / 2 + 2,
-  right: -DISMISS_SIZE / 2 + 2,
-  width: DISMISS_SIZE,
-  height: DISMISS_SIZE,
-  borderRadius: DISMISS_SIZE / 2,
-  alignItems: "center" as const,
-  justifyContent: "center" as const,
-  backgroundColor: UfoColors.green,
-  borderWidth: 2,
-  borderColor: Colors.K950,
+const thanksButtonStyle = {
+  alignSelf: "center" as const,
+  marginTop: 10,
+  marginBottom: 4,
 };

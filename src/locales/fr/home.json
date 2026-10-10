@@ -268,7 +268,11 @@
     },
     "back": "Retour à la galerie",
     "unknownArtist": "Artiste inconnu",
-    "notAcquired": "Pas encore acquise"
+    "notAcquired": "Pas encore acquise",
+    "intro": {
+      "text": "Retrouvez ici vos œuvres, chapitres et citations collectionnés !",
+      "close": "Compris !"
+    }
   },
   "header": {
     "stats": "Statistiques",

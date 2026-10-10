@@ -1,5 +1,7 @@
 import { HoveringUfoIcon } from "@/hints/HintUfo";
-import { useGlobalSettings } from "@/hooks/useGlobalSettings";
+import { useOdysseyIntro } from "@/components/Campaign/CampaignIntroPanel";
+import { useGalleryIntro } from "@/components/Gallery/GalleryIntro";
+import { useCampaignProgress } from "@/hooks/useCampaignProgress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Icon, type IconName } from "@/icons";
@@ -29,21 +31,33 @@ type HomeTabBarProps = {
   activeIndex: number;
   onSelectTab: (index: number) => void;
   onHeightChange?: (height: number) => void;
+  /** A game's artwork has been acquired (a game won). */
+  artAcquired: boolean;
 };
 
 export function HomeTabBar({
   activeIndex,
   onSelectTab,
   onHeightChange,
+  artAcquired,
 }: HomeTabBarProps) {
   const insets = useSafeAreaInsets();
   const { spacing, ui } = useResponsiveMetrics();
   const { t } = useTranslation("home");
   const glass = useGlassStyle();
-  const { settings, isLoading } = useGlobalSettings();
-  // The UFO waits over the Odyssey's icon, as it does over the hint button,
-  // until the Odyssey's introduction has been read and put away.
-  const odysseyUnread = !isLoading && !settings.dismissCampaignIntro;
+  // The UFO waits over a tab's icon, as it does over the hint button, while
+  // there is something there for a new player to see: the Odyssey until its
+  // introduction is put away (or a game in it is won), then the Gallery, once
+  // something has been collected, until its own is.
+  const odyssey = useOdysseyIntro();
+  const gallery = useGalleryIntro();
+  const { collectedTaoIds, collectedQuoteIds } = useCampaignProgress();
+  const collected =
+    artAcquired || collectedTaoIds.size > 0 || collectedQuoteIds.size > 0;
+  const ufoOver: Partial<Record<HomeTabKey, boolean>> = {
+    campaign: odyssey.shown,
+    collect: !odyssey.shown && collected && gallery.shown,
+  };
   const iconSize = spacing(24);
   const ufoSize = spacing(22);
   const onLayout = (event: LayoutChangeEvent) => {
@@ -129,9 +143,9 @@ export function HomeTabBar({
                   color={isActive ? theme.accent : theme.dim}
                   style={{ ...transitionStyles.all02sec }}
                 />
-                {tab.key === "campaign" && odysseyUnread && !isActive && (
+                {ufoOver[tab.key] && !isActive && (
                   <View
-                    testID="odyssey-tab-ufo"
+                    testID={`${tab.key}-tab-ufo`}
                     style={{
                       position: "absolute",
                       top: "50%",

@@ -1,8 +1,8 @@
 {
   "mercySkip": {
-    "granted": "Un viaggiatore gentile ti offre una **grazia**! Salta una partita difficile dal menu di quella partita.",
-    "ufoLabel": "Un UFO di passaggio",
-    "dismiss": "Chiudi"
+    "granted": "L'UFO ti lascia una **grazia**. Usala per saltare una partita in cui sei bloccato, dal menu di quella partita.",
+    "ufoLabel": "L'UFO",
+    "dismiss": "Grazie!"
   },
   "quotes": {
     "previousQuote": "Citazione precedente",
@@ -32,9 +32,9 @@
     "label": "Mostra l'originale"
   },
   "intro": {
-    "title": "Odissea celeste",
-    "text": "Traccia il tuo percorso vincendo e sbloccando giochi, a partire dal classico Klondike. Spostati verso l'esterno per esplorare nuove meccaniche di gioco, affrontare sfide sempre più difficili e sbloccare oggetti da collezione che creano momenti di calma e riflessione.",
-    "close": "Chiudi"
+    "title": "L'Odissea",
+    "text": "Ogni vittoria sblocca i giochi collegati. Ogni gioco ha diversi collezionabili. Inizia da qui.",
+    "close": "Capito!"
   },
   "field": {
     "title": "Oltre il campo di forza",

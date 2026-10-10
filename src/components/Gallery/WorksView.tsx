@@ -333,8 +333,8 @@ function ShelfWork({
         <WorkPlaceholder
           width={width}
           height={height}
-          iconSize={spacing(48)}
           radius={spacing(3)}
+          source={source}
         />
       )}
       {/* Only an acquired work shows its label. */}

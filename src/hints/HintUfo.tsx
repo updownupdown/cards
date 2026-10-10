@@ -882,6 +882,95 @@ function HoverUfo({
   );
 }
 
+/**
+ * The UFO holding still over a spot with its tractor beam on, as Autopilot
+ * does over a card it is about to carry: it pops in, then switches the beam
+ * on, and bobs there until it is taken away. Place it on the spot; the UFO
+ * hovers `lift` above it. The Odyssey's introduction points at Klondike so.
+ */
+export function BeamingUfo({ lift }: { lift: number }) {
+  const scale = useRef(new Animated.Value(0)).current;
+  const beam = useRef(new Animated.Value(0)).current;
+  const bob = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const arrive = Animated.sequence([
+      Animated.timing(scale, {
+        toValue: 1,
+        duration: POP_MS,
+        easing: Easing.out(Easing.back(2)),
+        useNativeDriver,
+      }),
+      Animated.timing(beam, {
+        toValue: 1,
+        duration: BEAM_MS,
+        easing: Easing.out(Easing.quad),
+        useNativeDriver,
+      }),
+    ]);
+    const bobbing = Animated.loop(
+      Animated.sequence([
+        Animated.timing(bob, {
+          toValue: 1,
+          duration: 700,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver,
+        }),
+        Animated.timing(bob, {
+          toValue: 0,
+          duration: 700,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver,
+        }),
+      ]),
+    );
+    arrive.start();
+    bobbing.start();
+    return () => {
+      arrive.stop();
+      bobbing.stop();
+    };
+  }, [beam, bob, scale]);
+
+  return (
+    <View
+      testID="beaming-ufo"
+      style={{
+        position: "absolute",
+        left: 0,
+        top: -lift,
+        pointerEvents: "none",
+      }}
+    >
+      <TractorBeam lift={lift} value={beam} />
+      <Animated.View
+        style={{
+          position: "absolute",
+          zIndex: 1,
+          left: -UFO_FONT_SIZE / 2,
+          top: -UFO_FONT_SIZE / 2,
+          opacity: scale.interpolate({
+            inputRange: [0, 0.3, 1],
+            outputRange: [0, 1, 1],
+            extrapolate: "clamp",
+          }),
+          transform: [
+            { scale },
+            {
+              translateY: bob.interpolate({
+                inputRange: [0, 1],
+                outputRange: [-2.5, 2.5],
+              }),
+            },
+          ],
+        }}
+      >
+        <UfoGlyph size={UFO_FONT_SIZE} />
+      </Animated.View>
+    </View>
+  );
+}
+
 /** The hovering UFO, in place: the header's icon while the intro is unread. */
 export function HoveringUfoIcon({ size }: { size: number }) {
   return <HoverBody size={size} hovering onRest={noop} />;
