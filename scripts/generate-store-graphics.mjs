@@ -2,10 +2,9 @@
 // Run: node scripts/generate-store-graphics.mjs [--lang fr]
 //
 // The feature graphic is drawn as a page in Chromium (Playwright): the
-// Home sky (assets/images/starfield.webp) with the Milky Way and shooting
-// stars across it, in Nocturne's colours: the spade and name, the store's
-// lines, a fan of the Regular deck's cards, and the middle of the Odyssey map
-// (src/data/campaign-map.generated.ts) laid out beneath them.
+// Home sky (assets/images/starfield.webp) with the Milky Way and a few comets
+// across it, in Nocturne's colours: the spade and name, the store's lines,
+// and a fan of the Regular deck's cards.
 // CHROMIUM_PATH: a Chromium of your own, if Playwright's isn't installed.
 
 import sharp from "sharp";
@@ -100,61 +99,14 @@ const outfit = (weight, name) =>
 /** A royal flush in four suits' colours, fanned from the left. */
 const FAN = ["10S", "JD", "QC", "KH", "AS"];
 
-/** The Odyssey's game dots and links, from the generated campaign map. */
-function readMap() {
-  const source = fs.readFileSync(
-    path.join(ROOT, "src/data/campaign-map.generated.ts"),
-    "utf8",
-  );
-  const start =
-    source.indexOf("= [", source.indexOf("GAME_DOT_DEFINITIONS")) + 2;
-  const end = source.indexOf("\n];", start) + 2;
-  return JSON.parse(source.slice(start, end));
-}
-
 /**
- * The middle of the Odyssey map as an SVG: its links, its dots (the ones
- * inside the force field in the accent) and the field's ring.
+ * Shooting stars like the Home sky's comets: thin, headless, at most 55%
+ * opaque. Where each tail ends, its angle, length and colour.
  */
-function mapSvg() {
-  const RADIUS = 0.62;
-  const FIELD = 0.45;
-  const SIZE = 600;
-  const dots = readMap().filter((dot) => Math.hypot(dot.x, dot.y) <= RADIUS);
-  const byPath = new Map(dots.map((dot) => [dot.path, dot]));
-  const at = (value) => ((value / RADIUS + 1) * SIZE) / 2;
-  const links = [];
-  for (const dot of dots) {
-    for (const other of dot.connections) {
-      const next = byPath.get(other);
-      if (next && dot.path < other) {
-        links.push(
-          `<line x1="${at(dot.x)}" y1="${at(dot.y)}" x2="${at(next.x)}" y2="${at(next.y)}"/>`,
-        );
-      }
-    }
-  }
-  const circles = dots.map((dot) => {
-    const inside = Math.hypot(dot.x, dot.y) <= FIELD;
-    const r = dot.path === "/klondike" ? 9 : inside ? 5.5 : 4.5;
-    return `<circle cx="${at(dot.x)}" cy="${at(dot.y)}" r="${r}" fill="${inside ? ACCENT : ACCENT2}" opacity="${inside ? 1 : 0.75}"/>`;
-  });
-  const half = SIZE / 2;
-  return `<svg viewBox="0 0 ${SIZE} ${SIZE}" width="${SIZE}" height="${SIZE}">
-<defs><radialGradient id="fade"><stop offset="60%" stop-color="#fff"/><stop offset="100%" stop-color="#000"/></radialGradient>
-<mask id="edge"><circle cx="${half}" cy="${half}" r="${half}" fill="url(#fade)"/></mask></defs>
-<g mask="url(#edge)">
-<circle cx="${half}" cy="${half}" r="${(FIELD / RADIUS) * half}" fill="${ACCENT}" fill-opacity="0.05" stroke="${ACCENT}" stroke-opacity="0.7" stroke-width="2.5" stroke-dasharray="3 8"/>
-<g stroke="${ACCENT2}" stroke-opacity="0.4" stroke-width="1.6">${links.join("")}</g>
-${circles.join("")}
-</g></svg>`;
-}
-
-/** Shooting stars: where each starts, its angle and length. */
 const SHOOTING_STARS = [
-  { left: 430, top: 108, angle: -28, length: 170, opacity: 0.9 },
-  { left: 900, top: 74, angle: -36, length: 110, opacity: 0.7 },
-  { left: 585, top: 290, angle: -30, length: 80, opacity: 0.5 },
+  { left: 430, top: 112, angle: -28, length: 190, color: INK },
+  { left: 905, top: 92, angle: -34, length: 130, color: ACCENT2 },
+  { left: 600, top: 440, angle: -30, length: 150, color: INK },
 ];
 
 function featureGraphicPage([headline, ...lines]) {
@@ -169,8 +121,8 @@ function featureGraphicPage([headline, ...lines]) {
       )}"></div>`,
   ).join("");
   const stars = SHOOTING_STARS.map(
-    ({ left, top, angle, length, opacity }) =>
-      `<div class="shoot" style="left:${left}px;top:${top}px;width:${length}px;opacity:${opacity};transform:rotate(${angle}deg)"></div>`,
+    ({ left, top, angle, length, color }) =>
+      `<div class="shoot" style="left:${left}px;top:${top}px;width:${length}px;color:${color};transform:rotate(${angle}deg)"></div>`,
   ).join("");
   return `<!doctype html><html><head><style>
 ${outfit(300, "300Light")}${outfit(400, "400Regular")}${outfit(600, "600SemiBold")}
@@ -179,8 +131,7 @@ body{width:1024px;height:500px;overflow:hidden;background:${NIGHT};font-family:O
 .sky{position:absolute;left:50%;top:50%;width:1200px;height:1800px;background:url(${dataUrl("assets/images/starfield.webp", "image/webp")}) center/cover;transform:translate(-50%,-50%) rotate(-58deg) scale(0.95) translate(40px,-60px);filter:saturate(1.15) brightness(1.3)}
 .glow{position:absolute;left:500px;top:-200px;width:640px;height:840px;background:url(${dataUrl("assets/images/galaxy-glow.webp", "image/webp")}) center/contain no-repeat;opacity:.5;mix-blend-mode:screen}
 .veil{position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,8,13,.9) 0%,rgba(7,8,13,.72) 44%,rgba(22,24,48,.25) 70%,rgba(22,24,48,.35) 100%)}
-.shoot{position:absolute;height:2px;transform-origin:0 50%;border-radius:2px;background:linear-gradient(90deg,rgba(255,255,255,1),rgba(255,233,200,.5) 25%,rgba(255,255,255,0))}
-.shoot::before{content:"";position:absolute;left:-3px;top:-3px;width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 0 10px 3px rgba(255,236,205,.8)}
+.shoot{position:absolute;height:1px;transform-origin:0 50%;opacity:.55;background:linear-gradient(90deg,currentColor,transparent)}
 .copy{position:absolute;left:64px;top:50%;width:470px;transform:translateY(-50%)}
 .brand{display:flex;align-items:center;gap:16px}
 .spade{width:62px;height:62px}
@@ -188,14 +139,12 @@ body{width:1024px;height:500px;overflow:hidden;background:${NIGHT};font-family:O
 .name{color:${INK};font-weight:400;font-size:54px;letter-spacing:.4px;line-height:1}
 .headline{margin-top:26px;color:${ACCENT};font-weight:600;font-size:29px;line-height:1.22}
 .line{margin-top:12px;color:${DIM};font-weight:300;font-size:19px;line-height:1.38}
-.map{position:absolute;left:792px;top:420px;width:600px;height:600px;margin:-300px 0 0 -300px;transform:perspective(1000px) rotateX(58deg) scale(.95)}
-.fan{position:absolute;left:792px;top:236px}
-.card{position:absolute;width:122px;height:171px;left:-61px;top:-128px;border-radius:9px;overflow:hidden;transform-origin:50% 135%;box-shadow:0 14px 30px rgba(0,0,0,.6),0 0 0 1px rgba(0,0,0,.25)}
+.fan{position:absolute;left:792px;top:287px}
+.card{position:absolute;width:148px;height:207px;left:-74px;top:-150px;border-radius:11px;overflow:hidden;transform-origin:50% 135%;box-shadow:0 14px 30px rgba(0,0,0,.6),0 0 0 1px rgba(0,0,0,.25)}
 .card img{width:100%;height:100%;display:block}
 </style></head><body>
 <div class="sky"></div><div class="glow"></div><div class="veil"></div>
 ${stars}
-<div class="map">${mapSvg()}</div>
 <div class="copy"><div class="brand">${spade}<div class="name">Solitarius</div></div>
 <div class="headline">${headline}</div>${lines.map((line) => `<div class="line">${line}</div>`).join("")}</div>
 <div class="fan">${cards}</div>
