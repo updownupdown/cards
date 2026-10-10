@@ -3,6 +3,8 @@ import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { HoveringUfoIcon } from "@/hints/HintUfo";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
+import { useUfoOnScreen } from "@/components/common/UfoStage";
+import { useRef } from "react";
 import { View } from "react-native";
 
 /**
@@ -24,6 +26,8 @@ export function useGalleryIntro() {
 export function GalleryIntroBox({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation("home");
   const { spacing } = useResponsiveMetrics();
+  const ufo = useRef<View>(null);
+  const { waiting } = useUfoOnScreen(true, ufo);
   return (
     <View style={{ alignItems: "center", gap: spacing(14) }}>
       <UfoGuideBox
@@ -32,7 +36,10 @@ export function GalleryIntroBox({ onClose }: { onClose: () => void }) {
         closeLabel={t("gallery.intro.close")}
         onClose={onClose}
       />
-      <HoveringUfoIcon size={spacing(34)} />
+      {/* Unseen while the tab bar's UFO flies in to be it. */}
+      <View ref={ufo} collapsable={false} style={{ opacity: waiting ? 0 : 1 }}>
+        <HoveringUfoIcon size={spacing(34)} />
+      </View>
     </View>
   );
 }

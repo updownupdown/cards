@@ -6,6 +6,10 @@ import { HomeTabBar } from "@/components/Home/HomeTabBar";
 import { SearchTab } from "@/components/Home/SearchTab";
 import { CampaignTab } from "@/components/Campaign/CampaignTab";
 import { CampaignUFO } from "@/components/Campaign/CampaignUFO";
+import {
+  TabShownContext,
+  UfoStageProvider,
+} from "@/components/common/UfoStage";
 import { UfoContext, type UfoRequest } from "@/components/Campaign/UfoContext";
 import {
   StarfieldBackdrop,
@@ -337,96 +341,98 @@ export default function Home() {
         />
       )}
       <StarfieldProvider value={starfield}>
-        <UfoContext.Provider value={setUfo}>
-          <View style={containerStyle} onLayout={onContainerLayout}>
-            {isScreenReady && (
-              <View style={{ flex: 1 }}>
-                <View
-                  style={{
-                    flex: 1,
-                    height: screenHeight || undefined,
-                    // Clips the tabs moved aside, so they are skipped entirely.
-                    overflow: "hidden",
-                  }}
-                >
-                  {/* One sky behind every tab, moving as you go between them. */}
-                  <StarfieldBackdrop
-                    motion={starfield}
-                    activeTab={activeTab}
-                    animated={settings.showAnimations}
-                    comets={isFocused}
-                  />
+        <UfoStageProvider>
+          <UfoContext.Provider value={setUfo}>
+            <View style={containerStyle} onLayout={onContainerLayout}>
+              {isScreenReady && (
+                <View style={{ flex: 1 }}>
+                  <View
+                    style={{
+                      flex: 1,
+                      height: screenHeight || undefined,
+                      // Clips the tabs moved aside, so they are skipped entirely.
+                      overflow: "hidden",
+                    }}
+                  >
+                    {/* One sky behind every tab, moving as you go between them. */}
+                    <StarfieldBackdrop
+                      motion={starfield}
+                      activeTab={activeTab}
+                      animated={settings.showAnimations}
+                      comets={isFocused}
+                    />
 
-                  {HOME_TAB_INDICES.map((index) => {
-                    if (!mountedTabs.has(index)) return null;
-                    if (index === CAMPAIGN_HOME_TAB_INDEX && !isFocused)
-                      return null;
-                    return (
-                      <TabLayer
-                        key={index}
-                        state={
-                          index === shownTab
-                            ? "shown"
-                            : index === activeTab
-                              ? "preparing"
-                              : "away"
-                        }
-                        onReady={() => onTabReady(index)}
-                      >
-                        {tabContents[index]}
-                      </TabLayer>
-                    );
-                  })}
+                    {HOME_TAB_INDICES.map((index) => {
+                      if (!mountedTabs.has(index)) return null;
+                      if (index === CAMPAIGN_HOME_TAB_INDEX && !isFocused)
+                        return null;
+                      return (
+                        <TabLayer
+                          key={index}
+                          state={
+                            index === shownTab
+                              ? "shown"
+                              : index === activeTab
+                                ? "preparing"
+                                : "away"
+                          }
+                          onReady={() => onTabReady(index)}
+                        >
+                          {tabContents[index]}
+                        </TabLayer>
+                      );
+                    })}
 
-                  {shownTab === null && (
-                    <TabSpinner immediate={!mountedTabs.has(activeTab)} />
-                  )}
-                  {/* While the map is built, its logo and buttons stay up,
-                  just where the Campaign tab draws them once it shows. */}
-                  {shownTab === null &&
-                    activeTab === CAMPAIGN_HOME_TAB_INDEX && (
-                      <View
-                        style={[
-                          pointerEventsStyles.boxNone,
-                          {
-                            position: "absolute",
-                            top: contentPaddingTop,
-                            left: 0,
-                            right: 0,
-                          },
-                        ]}
-                      >
-                        <HomeHeader
-                          onOpenStats={() => setShowStatsModal(true)}
-                          onOpenSettings={() => setShowSettingsModal(true)}
-                        />
-                      </View>
+                    {shownTab === null && (
+                      <TabSpinner immediate={!mountedTabs.has(activeTab)} />
                     )}
+                    {/* While the map is built, its logo and buttons stay up,
+                  just where the Campaign tab draws them once it shows. */}
+                    {shownTab === null &&
+                      activeTab === CAMPAIGN_HOME_TAB_INDEX && (
+                        <View
+                          style={[
+                            pointerEventsStyles.boxNone,
+                            {
+                              position: "absolute",
+                              top: contentPaddingTop,
+                              left: 0,
+                              right: 0,
+                            },
+                          ]}
+                        >
+                          <HomeHeader
+                            onOpenStats={() => setShowStatsModal(true)}
+                            onOpenSettings={() => setShowSettingsModal(true)}
+                          />
+                        </View>
+                      )}
+                  </View>
                 </View>
-              </View>
-            )}
+              )}
 
-            <HomeTabBar
-              activeIndex={activeTab}
-              onSelectTab={onSelectTab}
-              artAcquired={artAcquired}
-            />
-
-            {/* Last, so it flies over the header and tab bar rather than under
-            them. It only exists while the Campaign tab has asked for it. */}
-            {ufo && shownTab === CAMPAIGN_HOME_TAB_INDEX && (
-              <CampaignUFO
-                width={viewportWidth}
-                height={viewportHeight}
-                animationsEnabled={settings.showAnimations && ufo.gateOpen}
-                summons={ufo.summons}
-                visits={ufo.visits}
-                onCatch={ufo.onCatch}
-                noteTop={ufo.noteTop}
+              <HomeTabBar
+                activeIndex={activeTab}
+                onSelectTab={onSelectTab}
+                artAcquired={artAcquired}
               />
-            )}
-          </View>
-        </UfoContext.Provider>
+
+              {/* Last, so it flies over the header and tab bar rather than under
+            them. It only exists while the Campaign tab has asked for it. */}
+              {ufo && shownTab === CAMPAIGN_HOME_TAB_INDEX && (
+                <CampaignUFO
+                  width={viewportWidth}
+                  height={viewportHeight}
+                  animationsEnabled={settings.showAnimations && ufo.gateOpen}
+                  summons={ufo.summons}
+                  visits={ufo.visits}
+                  onCatch={ufo.onCatch}
+                  noteTop={ufo.noteTop}
+                />
+              )}
+            </View>
+          </UfoContext.Provider>
+        </UfoStageProvider>
       </StarfieldProvider>
     </>
   );
@@ -492,30 +498,32 @@ export function TabLayer({
 
   return (
     <TabReadyContext.Provider value={gate}>
-      <View
-        // Kept as a real view in every state: flattened away in one and not
-        // another, Fabric would move the whole tab between parents.
-        collapsable={false}
-        testID={state === "shown" ? "home-tab-content" : undefined}
-        aria-hidden={state !== "shown"}
-        style={[
-          StyleSheet.absoluteFill,
-          state === "preparing" && { opacity: 0 },
-          state === "away" && { left: OUT_OF_VIEW, right: -OUT_OF_VIEW },
-          // On the web, fixed-position parts of a tab (the search box, the
-          // header fade) ignore the move, and pointerEvents "none" only
-          // reaches a view's direct children there, so a hidden tab's search
-          // box still took clicks (and focus) meant for the Campaign map.
-          // Hidden, nothing in the tab can be seen, clicked or focused. (A
-          // preparing tab still lays out and loads its pictures.)
-          state !== "shown" && Platform.OS === "web" && HIDDEN_ON_WEB,
-          state === "shown"
-            ? pointerEventsStyles.boxNone
-            : pointerEventsStyles.none,
-        ]}
-      >
-        {children}
-      </View>
+      <TabShownContext.Provider value={state === "shown"}>
+        <View
+          // Kept as a real view in every state: flattened away in one and not
+          // another, Fabric would move the whole tab between parents.
+          collapsable={false}
+          testID={state === "shown" ? "home-tab-content" : undefined}
+          aria-hidden={state !== "shown"}
+          style={[
+            StyleSheet.absoluteFill,
+            state === "preparing" && { opacity: 0 },
+            state === "away" && { left: OUT_OF_VIEW, right: -OUT_OF_VIEW },
+            // On the web, fixed-position parts of a tab (the search box, the
+            // header fade) ignore the move, and pointerEvents "none" only
+            // reaches a view's direct children there, so a hidden tab's search
+            // box still took clicks (and focus) meant for the Campaign map.
+            // Hidden, nothing in the tab can be seen, clicked or focused. (A
+            // preparing tab still lays out and loads its pictures.)
+            state !== "shown" && Platform.OS === "web" && HIDDEN_ON_WEB,
+            state === "shown"
+              ? pointerEventsStyles.boxNone
+              : pointerEventsStyles.none,
+          ]}
+        >
+          {children}
+        </View>
+      </TabShownContext.Provider>
     </TabReadyContext.Provider>
   );
 }
