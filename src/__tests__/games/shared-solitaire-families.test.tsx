@@ -8,6 +8,7 @@ import {
 } from "@jest/globals";
 import "../../../jest/game-mocks";
 import {
+  acceptAutoCompleteOffer,
   card,
   dropMove,
   harness,
@@ -28,6 +29,7 @@ import Gargantua from "@/components/Games/Gargantua";
 import Indian from "@/components/Games/Indian";
 import Maria from "@/components/Games/Maria";
 import MissMilligan from "@/components/Games/MissMilligan";
+import { stockTableauRules } from "@/components/Games/StockTableauSolitaire";
 import RankAndFile from "@/components/Games/RankAndFile";
 import ThumbAndPouch from "@/components/Games/ThumbAndPouch";
 import Westcliff from "@/components/Games/Westcliff";
@@ -253,5 +255,25 @@ describe("Miss Milligan", () => {
       ),
     ).toBe(false);
     expect(zoneCardIds("pocket")).toEqual([queen.id]);
+  });
+
+  test("a card waiting in the pocket is hinted and auto-completes", async () => {
+    // Every foundation done but the last spades; their ace is in the pocket
+    // and the rest wait in a column.
+    const ace = card("A", "spades");
+    const tableau = Array.from({ length: 8 }, () => [] as PlayingCard[]);
+    tableau[0] = run("spades", "K", "2");
+    const foundations = lastKingFoundations(8);
+    foundations[7] = [];
+    const state = { ...fixture(tableau, foundations), pocket: [ace] };
+
+    expect(
+      stockTableauRules.findHint(state, "miss-milligan")?.steps[0],
+    ).toEqual([{ card: ace.id }]);
+
+    await renderVariant("/miss-milligan", "miss-milligan", MissMilligan, state);
+    await acceptAutoCompleteOffer();
+    expect(zoneCardIds("pocket")).toEqual([]);
+    expect(outcome()).toBe("won");
   });
 });

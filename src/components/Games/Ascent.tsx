@@ -761,6 +761,7 @@ export default function Ascent() {
       ...draft.hand,
       ...draft.discard,
       ...draft.playedRoutes.flatMap((r) => r.cards),
+      ...draft.trail.flatMap((r) => r.cards),
     ];
     draft.deck = shuffle(flipAllToBack(allCards));
     draft.hand = [];

@@ -176,6 +176,7 @@ export default function SlyFox() {
       setGame((draft) => {
         const cards = [
           ...draft.stock,
+          ...draft.dealing,
           ...draft.reserves.flat(),
           ...draft.foundations.flat(),
         ];
