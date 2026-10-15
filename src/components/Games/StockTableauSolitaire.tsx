@@ -466,6 +466,17 @@ function dealFromStock(
   };
 }
 
+/** Every card in the game, wherever it lies. */
+function allCards(state: StockTableauState) {
+  return [
+    ...state.stock,
+    ...state.waste,
+    ...state.tableau.flat(),
+    ...state.foundations.flat(),
+    ...(state.pocket ?? []),
+  ];
+}
+
 function getCards(state: StockTableauState, selection: Selection) {
   if (!selection) return [];
   if (selection.zone === "pocket") return state.pocket ?? [];
@@ -531,7 +542,8 @@ function hasMove(state: StockTableauState, config: Config) {
 /**
  * The stock's cards are unknown, so until it's gone hints rank the moves on
  * view; once every card is face up and the stock spent, they search for a
- * win. (Setting cards aside in Miss Milligan's pocket isn't hinted.)
+ * win. (Setting cards aside in Miss Milligan's pocket isn't hinted, nor is
+ * playing a run back from it.)
  */
 function findStockTableauHint(
   state: StockTableauState,
@@ -554,7 +566,12 @@ function findStockTableauHint(
     {
       tableau: state.tableau,
       foundations: state.foundations,
-      reserves: [state.waste],
+      // A card in the pocket plays like a reserve's; a run there moves only
+      // as a whole, which the hints don't cover.
+      reserves: [
+        state.waste,
+        ...(state.pocket?.length === 1 ? [state.pocket] : []),
+      ],
     },
     {
       toFoundation: (card, pile) => canBuildFoundation(card, top(pile)),
@@ -639,35 +656,18 @@ export function StockTableauSolitaire({
       clearDragGhost();
     },
     resetAndSetup: async () => {
+      // Every pile is gathered back and the rest of the state starts afresh,
+      // so a pile added later (like the pocket) can't be left out.
       setGame((draft) => {
-        const cards = [
-          ...draft.stock,
-          ...draft.waste,
-          ...draft.tableau.flat(),
-          ...draft.foundations.flat(),
-        ];
-        const next = createInitialState(variant);
-
-        draft.tableau = next.tableau;
-        draft.stock = cards.map(flipToBack);
-        draft.waste = [];
-        draft.foundations = next.foundations;
-        draft.redealsUsed = 0;
-        draft.ended = false;
-        draft.won = false;
+        Object.assign(draft, createInitialState(variant), {
+          stock: allCards(draft).map(flipToBack),
+        });
       });
 
       await delay();
 
       setGame((draft) => {
-        const next = dealFromStock(shuffle(draft.stock), config);
-        draft.tableau = next.tableau;
-        draft.stock = next.stock;
-        draft.waste = next.waste;
-        draft.foundations = next.foundations;
-        draft.redealsUsed = next.redealsUsed;
-        draft.ended = next.ended;
-        draft.won = next.won;
+        Object.assign(draft, dealFromStock(shuffle(draft.stock), config));
       });
     },
   });
@@ -705,8 +705,8 @@ export function StockTableauSolitaire({
     getTapHandler,
   });
 
-  // Once the stock and waste are empty and every card is face up, finish the
-  // game automatically.
+  // Once the stock and waste are empty, every card is face up and the pocket
+  // holds no run, finish the game automatically.
   const { isAutoCompleting } = useAutoComplete({
     game,
     setGame,
@@ -716,8 +716,9 @@ export function StockTableauSolitaire({
     getSources: (state) =>
       state.stock.length === 0 &&
       state.waste.length === 0 &&
-      state.tableau.every((pile) => pile.every((card) => card.faceUp))
-        ? state.tableau
+      state.tableau.every((pile) => pile.every((card) => card.faceUp)) &&
+      (state.pocket?.length ?? 0) <= 1
+        ? [...state.tableau, ...(state.pocket ? [state.pocket] : [])]
         : null,
     getFoundations: (state) => state.foundations,
     canPlaceOnFoundation: canBuildFoundation,

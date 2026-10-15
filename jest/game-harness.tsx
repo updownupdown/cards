@@ -58,6 +58,12 @@ export const harness = {
   /** Sources the latest render passed to makeDragHandlers: what can be dragged now. */
   dragSources: [] as unknown[],
   renderer: null as ReactTestRenderer | null,
+  /** The game's state manager from its latest render: its state and setters. */
+  stateManager: null as {
+    game: unknown;
+    setGame: (next: unknown) => void;
+    reset: () => Promise<void>;
+  } | null,
 };
 
 const noopSetup = async () => {};
@@ -107,8 +113,8 @@ export function mockStateManagerModule() {
   }>("@/hooks/useStateManager");
   return {
     ...actual,
-    useStateManager: (props: Record<string, unknown>) =>
-      actual.useStateManager(
+    useStateManager: (props: Record<string, unknown>) => {
+      const manager = actual.useStateManager(
         harness.fixture === undefined
           ? props
           : {
@@ -117,7 +123,10 @@ export function mockStateManagerModule() {
               resetAndSetup: noopSetup,
               postSetupAction: undefined,
             },
-      ),
+      );
+      harness.stateManager = manager as typeof harness.stateManager;
+      return manager;
+    },
   };
 }
 
@@ -203,6 +212,7 @@ export async function renderGame(
   harness.mapConfig = null;
   harness.dragOptions = null;
   harness.dragSources = [];
+  harness.stateManager = null;
 
   let renderer!: ReactTestRenderer;
   await act(async () => {
