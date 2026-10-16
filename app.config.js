@@ -173,7 +173,7 @@ const config = {
     sentryRelease: process.env.SENTRY_RELEASE ?? null,
     router: {},
     eas: {
-      projectId: "a82abc24-6db7-4465-9ad5-ca9ce212447b",
+      projectId: "25c471b1-9835-49f6-b673-4934604ca672",
     },
   },
 };
