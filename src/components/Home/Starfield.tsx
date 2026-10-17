@@ -1,5 +1,5 @@
 import { ShootingStar } from "@/components/common/ShootingStar";
-import { Colors, rgba, theme } from "@/styles/styles";
+import { theme } from "@/styles/styles";
 import { Image, type ImageSource } from "expo-image";
 import {
   createContext,
@@ -21,7 +21,7 @@ import Animated, {
 import { CAMPAIGN_HOME_TAB_INDEX, type HomeTabIndex } from "./home-view-state";
 
 /**
- * The sky behind every Home tab: the starfield image under a veil of the
+ * The sky behind every Home tab: the starfield image dimmed into the
  * theme's night, and over it layers of stars that slide at their own depth
  * as the page scrolls and as the Odyssey map pans, with comets now and then.
  *
@@ -31,8 +31,13 @@ import { CAMPAIGN_HOME_TAB_INDEX, type HomeTabIndex } from "./home-view-state";
  * transform per layer.
  */
 
-/** The night laid over the starfield image, so the pages read over it. */
-const OVERLAY_OPACITY = 0.7;
+/**
+ * How much of the starfield image shows through the theme's night, so the
+ * pages read over it. Drawn as the image's own opacity over the night
+ * behind it, which looks the same as a veil of night laid over the image
+ * but is one full-screen layer fewer for Android to draw on every frame.
+ */
+const IMAGE_OPACITY = 0.3;
 
 /** A page's scroll moves the sky this much of it, at a depth of 1. */
 const SCROLL_SHARE = 0.5;
@@ -230,15 +235,8 @@ export const StarfieldBackdrop = memo(function StarfieldBackdrop({
               width: imageWidth,
               height: imageHeight,
               transform: landscape ? [{ rotate: "90deg" }] : undefined,
+              opacity: IMAGE_OPACITY,
             }}
-          />
-          <View
-            style={[
-              StyleSheet.absoluteFill,
-              {
-                backgroundColor: rgba(Colors.starfieldOverlay, OVERLAY_OPACITY),
-              },
-            ]}
           />
           {/* The layers of stars, between the image and the pages. */}
           <Animated.View style={[StyleSheet.absoluteFill, skyStyle]}>
