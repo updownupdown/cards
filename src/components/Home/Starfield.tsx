@@ -1,5 +1,5 @@
 import { ShootingStar } from "@/components/common/ShootingStar";
-import { theme } from "@/styles/styles";
+import { rgba, theme } from "@/styles/styles";
 import { Image, type ImageSource } from "expo-image";
 import {
   createContext,
@@ -19,6 +19,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { CAMPAIGN_HOME_TAB_INDEX, type HomeTabIndex } from "./home-view-state";
+import { SKY_STARS, type SkyStar } from "./starfield-stars";
 
 /**
  * The sky behind every Home tab: the starfield image dimmed into the
@@ -47,7 +48,6 @@ const QUIET_SKY = 0.6;
 const SKY_FADE_MS = 670;
 
 type Layer = {
-  source: ImageSource;
   /** Its tile's side, in points (as drawn by the generator). */
   tile: number;
   /** How far it moves for a point of travel: the nearer, the more. */
@@ -55,24 +55,32 @@ type Layer = {
   opacity: number;
   /** A slow swell of brightness, over this many seconds. */
   twinkle?: number;
-};
+} & (
+  | {
+      /** Many faint stars, baked into a tile. */
+      source: ImageSource;
+    }
+  | {
+      /**
+       * A few bright stars, each its own dot: a tile would be a screenful
+       * of transparent pixels to draw on every frame for a dozen stars, and
+       * a whole screen to redraw whenever it twinkled.
+       */
+      stars: SkyStar[];
+    }
+);
 
 /** Far to near. */
 const LAYERS: Layer[] = [
   {
-    source: require("../../../assets/starfield/dust.png"),
-    tile: 400,
-    depth: 0.05,
-    opacity: 0.9,
-  },
-  {
-    source: require("../../../assets/starfield/small.png"),
+    // The dust and the small stars.
+    source: require("../../../assets/starfield/far.png"),
     tile: 440,
-    depth: 0.1,
+    depth: 0.07,
     opacity: 0.9,
   },
   {
-    source: require("../../../assets/starfield/twinkleA.png"),
+    stars: SKY_STARS.twinkleA,
     tile: 490,
     depth: 0.14,
     opacity: 1,
@@ -85,20 +93,20 @@ const LAYERS: Layer[] = [
     opacity: 0.85,
   },
   {
-    source: require("../../../assets/starfield/twinkleB.png"),
+    stars: SKY_STARS.twinkleB,
     tile: 510,
     depth: 0.25,
     opacity: 1,
     twinkle: 6.8,
   },
   {
-    source: require("../../../assets/starfield/bright.png"),
+    stars: SKY_STARS.bright,
     tile: 500,
     depth: 0.32,
     opacity: 0.9,
   },
   {
-    source: require("../../../assets/starfield/hero.png"),
+    stars: SKY_STARS.hero,
     tile: 520,
     depth: 0.48,
     opacity: 0.85,
@@ -338,24 +346,60 @@ const StarLayer = memo(function StarLayer({
       ],
     };
   });
+  const twinkling = !!layer.twinkle && animated;
   const tiles = [];
   for (let row = 0; row < rows; row += 1) {
     for (let column = 0; column < columns; column += 1) {
-      tiles.push(
-        <Image
-          key={`${row}-${column}`}
-          source={layer.source}
-          cachePolicy="memory"
-          contentFit="fill"
-          style={{
-            position: "absolute",
-            left: column * tile,
-            top: row * tile,
-            width: tile,
-            height: tile,
-          }}
-        />,
-      );
+      const left = column * tile;
+      const top = row * tile;
+      if ("source" in layer) {
+        tiles.push(
+          <Image
+            key={`${row}-${column}`}
+            source={layer.source}
+            cachePolicy="memory"
+            contentFit="fill"
+            style={{
+              position: "absolute",
+              left,
+              top,
+              width: tile,
+              height: tile,
+            }}
+          />,
+        );
+        continue;
+      }
+      layer.stars.forEach((star, index) => {
+        const dot = {
+          position: "absolute",
+          left: left + star.x * tile - star.r,
+          top: top + star.y * tile - star.r,
+          width: star.r * 2,
+          height: star.r * 2,
+          borderRadius: star.r,
+          backgroundColor: rgba(star.colour, star.a * layer.opacity),
+        } as const;
+        tiles.push(
+          twinkling ? (
+            // A CSS animation: it runs on its own, off the JS thread, and
+            // only this dot is drawn again as it swells and fades.
+            <Animated.View
+              key={`${row}-${column}-${index}`}
+              style={{
+                ...dot,
+                animationName: TWINKLE,
+                animationDuration: `${layer.twinkle}s`,
+                animationIterationCount: "infinite",
+                animationTimingFunction: "ease-in-out",
+                animationPlayState: onScreen ? "running" : "paused",
+              }}
+            />
+          ) : (
+            <View key={`${row}-${column}-${index}`} style={dot} />
+          ),
+        );
+      });
     }
   }
   return (
@@ -367,28 +411,14 @@ const StarLayer = memo(function StarLayer({
           top: 0,
           width: columns * tile,
           height: rows * tile,
-          opacity: layer.opacity,
+          // A layer of dots carries its brightness in each dot's colour, so
+          // the moving layer itself is never see-through.
+          opacity: "source" in layer ? layer.opacity : 1,
         },
         style,
       ]}
     >
-      {layer.twinkle && animated ? (
-        // A CSS animation: it runs on its own, off the JS thread.
-        <Animated.View
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            animationName: TWINKLE,
-            animationDuration: `${layer.twinkle}s`,
-            animationIterationCount: "infinite",
-            animationTimingFunction: "ease-in-out",
-            animationPlayState: onScreen ? "running" : "paused",
-          }}
-        >
-          {tiles}
-        </Animated.View>
-      ) : (
-        tiles
-      )}
+      {tiles}
     </Animated.View>
   );
 });

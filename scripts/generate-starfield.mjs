@@ -152,16 +152,40 @@ function starsFor(name, layer) {
   });
 }
 
-async function starTile(name, layer) {
-  const px = Math.min(MAX_PX, Math.round(layer.tile * DENSITY));
-  const scale = px / layer.tile;
-  const stars = starsFor(name, layer);
+/**
+ * Baked into tiles, the many faint stars: as views they would be thousands.
+ * Each tile holds whole layers, every one scaled to the tile's side so it
+ * keeps its density; dust and small drifted at close depths, so they share
+ * one. A tile is a screenful of mostly transparent pixels for Android to
+ * draw on every frame, so there are as few as can be.
+ */
+const TILES = {
+  far: { tile: 440, layers: ["dust", "small"] },
+  mid: { tile: 470, layers: ["mid"] },
+};
+/**
+ * Drawn one by one as views (Starfield.tsx), the few bright stars, written
+ * to starfield-stars.ts: a dozen stars cost a dozen dots, not a screenful.
+ */
+const SPRITES = ["twinkleA", "twinkleB", "bright", "hero"];
+
+async function starTile(name, { tile, layers }) {
+  const px = Math.min(MAX_PX, Math.round(tile * DENSITY));
+  const scale = px / tile;
+  const drawn = layers.flatMap((layerName) => {
+    const layer = LAYERS[layerName];
+    const count = Math.round(layer.count * (tile / layer.tile) ** 2);
+    return starsFor(layerName, { ...layer, count }).map((star) => ({
+      star,
+      layer,
+    }));
+  });
   const gradients = COLOURS.map(
     ([colour], index) =>
       `<radialGradient id="g${index}"><stop offset="0" stop-color="${colour}" stop-opacity="1"/><stop offset="0.25" stop-color="${colour}" stop-opacity="0.35"/><stop offset="1" stop-color="${colour}" stop-opacity="0"/></radialGradient>`,
   ).join("");
   const shapes = [];
-  for (const star of stars) {
+  for (const { star, layer } of drawn) {
     const r = star.r * scale;
     const glowR = r * (4 + 6 * layer.glow);
     const gradient = `g${COLOURS.findIndex(([colour]) => colour === star.colour)}`;
@@ -197,12 +221,15 @@ async function starTile(name, layer) {
   await sharp(Buffer.from(svg))
     .png({ compressionLevel: 9, palette: false })
     .toFile(path.join(outDir, `${name}.png`));
-  return { name, tile: layer.tile, px };
+  return { name, tile, px };
 }
 
+for (const file of fs.readdirSync(outDir)) {
+  if (file.endsWith(".png")) fs.rmSync(path.join(outDir, file));
+}
 const results = [];
-for (const [name, layer] of Object.entries(LAYERS)) {
-  results.push(await starTile(name, layer));
+for (const [name, tile] of Object.entries(TILES)) {
+  results.push(await starTile(name, tile));
 }
 for (const { name, tile, px } of results) {
   const kb = Math.round(
@@ -210,3 +237,34 @@ for (const { name, tile, px } of results) {
   );
   console.log(`${name}.png  ${px}px for ${tile}dp  ${kb} KB`);
 }
+
+const round = (value, places) => Number(value.toFixed(places));
+const sprites = Object.fromEntries(
+  SPRITES.map((name) => [
+    name,
+    starsFor(name, LAYERS[name]).map((star) => ({
+      x: round(star.x, 4),
+      y: round(star.y, 4),
+      r: round(star.r, 3),
+      a: round(star.a, 3),
+      colour: star.colour,
+    })),
+  ]),
+);
+const spritesFile = path.join(root, "src/components/Home/starfield-stars.ts");
+fs.writeFileSync(
+  spritesFile,
+  `// AUTO-GENERATED FILE. DO NOT EDIT.
+// Run: npm run starfield:generate
+
+/**
+ * The starfield's bright stars, drawn one by one (Starfield.tsx): where each
+ * sits in its layer's tile (0 to 1 across and down), its radius in dp, its
+ * brightness and colour.
+ */
+export type SkyStar = { x: number; y: number; r: number; a: number; colour: string };
+
+export const SKY_STARS = ${JSON.stringify(sprites, null, 2)} satisfies Record<string, SkyStar[]>;
+`,
+);
+console.log(`starfield-stars.ts  ${SPRITES.join(", ")}`);

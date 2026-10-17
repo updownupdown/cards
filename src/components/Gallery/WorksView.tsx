@@ -22,7 +22,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
-import { Colors, rgba, theme } from "@/styles/styles";
+import { cardShadow, Colors, rgba, theme } from "@/styles/styles";
 import { Image } from "expo-image";
 import { WorkPlaceholder } from "./shared";
 import { useMemo, useState } from "react";
@@ -312,7 +312,10 @@ function ShelfWork({
             width,
             borderRadius: spacing(3),
             backgroundColor: theme.night,
-            boxShadow: `0 ${spacing(4)}px ${spacing(12)}px ${rgba(Colors.black, 0.55)}`,
+            ...cardShadow(
+              `0 ${spacing(4)}px ${spacing(12)}px ${rgba(Colors.black, 0.55)}`,
+              spacing(6),
+            ),
           }}
         >
           <Image
