@@ -9,7 +9,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { ImageBackground, StyleSheet, View } from "react-native";
+import { AppState, ImageBackground, StyleSheet, View } from "react-native";
 import Animated, {
   Easing,
   type SharedValue,
@@ -46,6 +46,15 @@ const SCROLL_SHARE = 0.5;
 const QUIET_SKY = 0.6;
 /** The sky's fade as the Odyssey tab is entered or left. */
 const SKY_FADE_MS = 670;
+/**
+ * The twinkle moves on this often, not on every frame: a swell over seconds
+ * reads the same in a few steps a second, and a sky left still on screen
+ * then redraws a few times a second instead of sixty, which spares the
+ * battery.
+ */
+const TWINKLE_TICK_MS = 150;
+/** The faintest a twinkling star gets, at the middle of its swell. */
+const TWINKLE_LOW = 0.25;
 
 type Layer = {
   /** Its tile's side, in points (as drawn by the generator). */
@@ -241,6 +250,7 @@ export const StarfieldBackdrop = memo(function StarfieldBackdrop({
     });
   }, [odyssey, skyOpacity]);
   const skyStyle = useAnimatedStyle(() => ({ opacity: skyOpacity.value }));
+  const twinkleTime = useTwinkleClock(animated && comets);
   // In landscape the portrait image is turned on its side, so it always
   // covers the screen.
   const landscape = size.width > size.height;
@@ -291,7 +301,7 @@ export const StarfieldBackdrop = memo(function StarfieldBackdrop({
                 size={size}
                 motion={motion}
                 animated={animated}
-                onScreen={comets}
+                twinkleTime={twinkleTime}
               />
             ))}
           </Animated.View>
@@ -314,6 +324,32 @@ export const StarfieldBackdrop = memo(function StarfieldBackdrop({
 });
 
 /**
+ * The twinkle's time, in seconds, stepped on a timer while it runs. Under a
+ * game or with the app away, it holds where it is, and goes on from there.
+ */
+function useTwinkleClock(running: boolean) {
+  const time = useSharedValue(0);
+  const [appActive, setAppActive] = useState(
+    AppState.currentState !== "background" &&
+      AppState.currentState !== "inactive",
+  );
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", (state) =>
+      setAppActive(state === "active"),
+    );
+    return () => subscription.remove();
+  }, []);
+  useEffect(() => {
+    if (!running || !appActive) return;
+    const timer = setInterval(() => {
+      time.value += TWINKLE_TICK_MS / 1000;
+    }, TWINKLE_TICK_MS);
+    return () => clearInterval(timer);
+  }, [appActive, running, time]);
+  return time;
+}
+
+/**
  * One layer: its tile repeated to cover the screen and one tile more, then
  * slid by the sky's travel at its depth and wrapped within a tile, so it
  * never runs out.
@@ -323,30 +359,39 @@ const StarLayer = memo(function StarLayer({
   size,
   motion,
   animated,
-  onScreen,
+  twinkleTime,
 }: {
   layer: Layer;
   size: { width: number; height: number };
   motion: Starfield;
   animated: boolean;
-  /** Under a game, the twinkle holds where it is, and goes on from there. */
-  onScreen: boolean;
+  twinkleTime: SharedValue<number>;
 }) {
   const { tile, depth } = layer;
+  const twinkle = animated ? layer.twinkle : undefined;
+  // A layer of dots carries its brightness in each dot's colour, so the
+  // moving layer is only ever see-through as it twinkles (and its dots
+  // never overlap, so that costs no layer of its own).
+  const opacity = "source" in layer ? layer.opacity : 1;
   const columns = Math.ceil(size.width / tile) + 1;
   const rows = Math.ceil(size.height / tile) + 1;
   const { skyX, skyY } = motion;
   const style = useAnimatedStyle(() => {
     const factor = animated ? depth : 0;
     const wrap = (value: number) => (((value % tile) + tile) % tile) - tile;
+    // A twinkling layer's stars swell and fade together: from full, down to
+    // TWINKLE_LOW halfway through, and back, easing in and out.
+    const swell = twinkle
+      ? (1 + Math.cos((2 * Math.PI * twinkleTime.value) / twinkle)) / 2
+      : 1;
     return {
+      opacity: twinkle ? TWINKLE_LOW + (1 - TWINKLE_LOW) * swell : opacity,
       transform: [
         { translateX: wrap(skyX.value * factor) },
         { translateY: wrap(skyY.value * factor) },
       ],
     };
   });
-  const twinkling = !!layer.twinkle && animated;
   const tiles = [];
   for (let row = 0; row < rows; row += 1) {
     for (let column = 0; column < columns; column += 1) {
@@ -371,33 +416,19 @@ const StarLayer = memo(function StarLayer({
         continue;
       }
       layer.stars.forEach((star, index) => {
-        const dot = {
-          position: "absolute",
-          left: left + star.x * tile - star.r,
-          top: top + star.y * tile - star.r,
-          width: star.r * 2,
-          height: star.r * 2,
-          borderRadius: star.r,
-          backgroundColor: rgba(star.colour, star.a * layer.opacity),
-        } as const;
         tiles.push(
-          twinkling ? (
-            // A CSS animation: it runs on its own, off the JS thread, and
-            // only this dot is drawn again as it swells and fades.
-            <Animated.View
-              key={`${row}-${column}-${index}`}
-              style={{
-                ...dot,
-                animationName: TWINKLE,
-                animationDuration: `${layer.twinkle}s`,
-                animationIterationCount: "infinite",
-                animationTimingFunction: "ease-in-out",
-                animationPlayState: onScreen ? "running" : "paused",
-              }}
-            />
-          ) : (
-            <View key={`${row}-${column}-${index}`} style={dot} />
-          ),
+          <View
+            key={`${row}-${column}-${index}`}
+            style={{
+              position: "absolute",
+              left: left + star.x * tile - star.r,
+              top: top + star.y * tile - star.r,
+              width: star.r * 2,
+              height: star.r * 2,
+              borderRadius: star.r,
+              backgroundColor: rgba(star.colour, star.a * layer.opacity),
+            }}
+          />,
         );
       });
     }
@@ -411,9 +442,6 @@ const StarLayer = memo(function StarLayer({
           top: 0,
           width: columns * tile,
           height: rows * tile,
-          // A layer of dots carries its brightness in each dot's colour, so
-          // the moving layer itself is never see-through.
-          opacity: "source" in layer ? layer.opacity : 1,
         },
         style,
       ]}
@@ -422,9 +450,3 @@ const StarLayer = memo(function StarLayer({
     </Animated.View>
   );
 });
-
-const TWINKLE = {
-  "0%": { opacity: 1 },
-  "50%": { opacity: 0.25 },
-  "100%": { opacity: 1 },
-};
