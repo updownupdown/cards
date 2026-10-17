@@ -14,7 +14,7 @@ import type { Href } from "expo-router";
 import { useMemo } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { FavButton } from "./FavButton";
-import { useTabReadyImage } from "./TabReady";
+import { useStagedSource, useTabReadyImage } from "./TabReady";
 
 export function gameArt(game: GameMenuInfo) {
   return game.thumbnail ? GAME_THUMBNAIL_ASSETS[game.thumbnail] : null;
@@ -118,7 +118,7 @@ export function GameTile({
   const { spacing } = useResponsiveMetrics();
   const frame = useCardFrame();
   const language = useDisplayLanguage();
-  const source = gameArt(game);
+  const source = useStagedSource(gameArt(game));
   const ready = useTabReadyImage(source);
   const title = localizeGameTitle(game, path, language);
   const palette = useGamePalette(game);

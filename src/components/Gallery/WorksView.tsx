@@ -1,7 +1,7 @@
 import { Text } from "@/components/common/Text";
 import { COLLECT_HOME_TAB_INDEX } from "@/components/Home/home-view-state";
 import { useSkyScrollHandler } from "@/components/Home/Starfield";
-import { useTabReadyImage } from "@/components/Home/TabReady";
+import { useStagedSource, useTabReadyImage } from "@/components/Home/TabReady";
 import { useBarSideInset } from "@/components/ui/FloatingBar";
 import { Pill } from "@/components/ui/Nocturne";
 import {
@@ -13,7 +13,7 @@ import {
   getArtworkInfo,
 } from "@/data/artworks";
 import {
-  GAME_FULL_THUMBNAIL_ASSETS,
+  GAME_SHELF_THUMBNAIL_ASSETS,
   GAME_THUMBNAIL_ASPECTS,
 } from "@/data/game-thumbnails";
 import { GameTag, type GameMenuInfo } from "@/data/games-data";
@@ -287,7 +287,9 @@ function ShelfWork({
   const { t } = useTranslation("home");
   const language = useDisplayLanguage();
   const thumbnail = game.thumbnail;
-  const source = thumbnail ? GAME_FULL_THUMBNAIL_ASSETS[thumbnail] : null;
+  const source = useStagedSource(
+    thumbnail ? GAME_SHELF_THUMBNAIL_ASSETS[thumbnail] : null,
+  );
   // Only an acquired work draws its picture, so only it is waited for.
   const ready = useTabReadyImage(collected ? source : null);
   const aspect = thumbnail ? GAME_THUMBNAIL_ASPECTS[thumbnail] : 0.8;
