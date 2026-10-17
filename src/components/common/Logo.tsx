@@ -6,8 +6,8 @@ import { View } from "react-native";
 
 /**
  * The spade mark: interlacing ribbons (assets/images/spade.svg), in the colour
- * theme's accent. The app icons and the splash draw it white on black, as
- * they show before the theme is known.
+ * theme's accent. The app icons and the splash draw it in Nocturne's yellow
+ * on its night, as they show before the theme is known.
  */
 export function SpadeMark({
   size = 32,

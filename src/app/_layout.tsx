@@ -1,9 +1,9 @@
 import { AppErrorScreen } from "@/components/common/AppErrorScreen";
 import { GameLaunchOverlay } from "@/components/common/GameLaunchOverlay";
 import {
-  LaunchIntro,
-  useLaunchIntroPhase,
-} from "@/components/common/LaunchIntro";
+  LaunchSplash,
+  useLaunchSplashDone,
+} from "@/components/common/LaunchSplash";
 import { SystemBarScrims } from "@/components/common/SystemBarScrims";
 import { ToastProvider } from "@/components/common/Toast";
 import { useGameColors } from "@/hooks/useGameColors";
@@ -53,16 +53,15 @@ import {
 } from "expo-router";
 import * as ExpoSplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { View, Platform } from "react-native";
 
 // Install the crash handlers before the first screen mounts, so a failure
 // during startup is still reported.
 initCrashReporting();
 
-// Keep the splash screen visible while we fetch resources; the launch intro
-// hides it once it's drawn the same picture underneath. A short fade, over in
-// the intro's hold, before its colours start to move.
+// Keep the splash screen visible until the first screen is drawn
+// (LaunchSplash), then a short fade straight to it.
 SplashScreen.preventAutoHideAsync();
 ExpoSplashScreen.setOptions({ duration: 150, fade: true });
 // Beta games turned on from the settings, read before Home lists games
@@ -96,8 +95,8 @@ function Layout() {
           Outfit_200ExtraLight,
           Outfit_300Light,
           Outfit_400Regular,
-          // font-display: block. The web's launch intro sets the name in it
-          // before the app loads, and it mustn't show in a fallback first.
+          // font-display: block. The web's splash sets the name in it before
+          // the app loads, and it mustn't show in a fallback first.
           Outfit_500Medium: {
             uri: Outfit_500Medium,
             display: FontDisplay.BLOCK,
@@ -116,7 +115,9 @@ function Layout() {
   const languageReady = startLanguage !== null;
   const displayLanguage = useDisplayLanguage();
   const isSplashVisible = !fontsLoaded || !languageReady;
-  const introPhase = useLaunchIntroPhase();
+  const splashDone = useLaunchSplashDone();
+  // Opened on Home, the splash waits for its first tab to be drawn.
+  const [launchedOnHome] = useState(() => pathname === "/");
 
   // Colour for the chrome the app can't draw behind: Chrome mobile's header,
   // and the page background Chrome samples for Android's button bar in a
@@ -124,14 +125,14 @@ function Layout() {
   // itself shows - a game's own dark colour inside a game, and the starfield's
   // overlay colour on the home screen, whose tabs all sit on the same
   // background image (the theme's night, looked up from the setting so this
-  // follows it). Until the launch intro is gone, it has these: black (the
-  // page's head and global.css), then easing into this colour.
+  // follows it). Until the splash is gone, they keep its colour (the page's
+  // head and global.css).
   const themeColor = isGamePath(pathname)
     ? colorDark
     : getColorTheme(settings.colorTheme).colors.night;
 
   useEffect(() => {
-    if (typeof document === "undefined" || introPhase !== "done") return;
+    if (typeof document === "undefined" || !splashDone) return;
 
     const updateMeta = (name: string, content: string) => {
       document
@@ -145,12 +146,12 @@ function Layout() {
     // Tint the Android system navigation (bottom button) bar to match the
     // current screen. Chrome paints that area with the canvas background,
     // which comes from the root element whenever the root has a background of
-    // its own - and global.css gives <html> the splash black so the page is
-    // black before the app mounts. That means body's colour never propagates
-    // to the canvas, so the root has to be updated too or the bar stays black.
+    // its own - and global.css gives <html> the splash's colour so the page
+    // has it before the app mounts. That means body's colour never propagates
+    // to the canvas, so the root has to be updated too or the bar keeps it.
     document.documentElement.style.backgroundColor = themeColor;
     document.body.style.backgroundColor = themeColor;
-  }, [themeColor, introPhase]);
+  }, [themeColor, splashDone]);
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -241,11 +242,10 @@ function Layout() {
             <SystemBarScrims inGame={isGamePath(pathname)} />
           </View>
         </ToastProvider>
-        {/* Over everything, once fonts are ready, the saved language applied
-            and the colour theme known: it takes over from the splash, hides
-            it and eases into the theme. */}
+        {/* Once fonts are ready, the saved language applied and the colour
+            theme known: hides the splash as soon as the screen is drawn. */}
         {!isSplashVisible && !settingsLoading && (
-          <LaunchIntro pageColor={themeColor} />
+          <LaunchSplash waitForScreen={launchedOnHome} />
         )}
       </SafeAreaProvider>
     </GestureHandlerRootView>
