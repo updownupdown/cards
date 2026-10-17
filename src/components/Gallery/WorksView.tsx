@@ -88,10 +88,13 @@ const FIRST_SHELVES = 3;
 
 /**
  * Which part of a scroll is shown, to half a screen: the scroll offset over
- * half the screen, rounded down. It changes rarely enough to render on.
+ * half the screen, rounded down. It changes rarely enough to render on. A
+ * worklet, as the page's scroll reads it on the UI thread.
  */
-const bandOf = (offset: number, screen: number) =>
-  Math.floor(offset / (screen / 2));
+function bandOf(offset: number, screen: number) {
+  "worklet";
+  return Math.floor(offset / (screen / 2));
+}
 
 /** Whether [start, end) is near the screen, with the scroll in `band`. */
 function nearBand(start: number, end: number, band: number, screen: number) {
