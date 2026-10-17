@@ -1,6 +1,6 @@
 import { Text } from "@/components/common/Text";
 import { COLLECT_HOME_TAB_INDEX } from "@/components/Home/home-view-state";
-import { useStarfield } from "@/components/Home/Starfield";
+import { useSkyScrollHandler } from "@/components/Home/Starfield";
 import { useTabReadyImage } from "@/components/Home/TabReady";
 import { useBarSideInset } from "@/components/ui/FloatingBar";
 import { Pill } from "@/components/ui/Nocturne";
@@ -27,6 +27,7 @@ import { Image } from "expo-image";
 import { WorkPlaceholder } from "./shared";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
+import Animated from "react-native-reanimated";
 
 /** One shelf per family of games, under Game Category. */
 const GAME_CATEGORIES: GameTag[] = [
@@ -159,7 +160,7 @@ export function WorksView({
   const { spacing, ui } = useResponsiveMetrics();
   const { width: viewportWidth } = useViewportDimensions();
   const [grouping, setGrouping] = useState<WorkGrouping>(lastGrouping);
-  const starfield = useStarfield();
+  const onScroll = useSkyScrollHandler(COLLECT_HOME_TAB_INDEX);
   const shelves = useShelves(allEnabledGames, grouping);
   const order = useMemo(
     () => shelves.flatMap((shelf) => shelf.games.map(([path]) => path)),
@@ -177,17 +178,14 @@ export function WorksView({
   };
 
   return (
-    <ScrollView
+    <Animated.ScrollView
       style={{ flex: 1 }}
       contentContainerStyle={{
         paddingTop: contentPaddingTop,
         paddingBottom: contentPaddingBottom,
         gap: spacing(67.5),
       }}
-      onScroll={(event) => {
-        const y = event.nativeEvent.contentOffset.y;
-        starfield?.reportScroll(COLLECT_HOME_TAB_INDEX, y);
-      }}
+      onScroll={onScroll}
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
     >
@@ -269,7 +267,7 @@ export function WorksView({
           </View>
         );
       })}
-    </ScrollView>
+    </Animated.ScrollView>
   );
 }
 
