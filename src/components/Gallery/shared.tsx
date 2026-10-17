@@ -244,12 +244,25 @@ export function WorkPlaceholder({
         ),
       }}
     >
+      {/* Faded by a veil of the box's colour over it, not by its opacity:
+          on Android a see-through picture is drawn through an extra layer,
+          every frame, for each work on the shelves. */}
       {source != null && (
         <Image
           source={source}
           cachePolicy="memory"
           contentFit="cover"
-          style={[StyleSheet.absoluteFill, { opacity: UNACQUIRED_ART_OPACITY }]}
+          style={StyleSheet.absoluteFill}
+        />
+      )}
+      {source != null && (
+        <View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              backgroundColor: rgba(theme.surface, 1 - UNACQUIRED_ART_OPACITY),
+            },
+          ]}
         />
       )}
 
