@@ -9,9 +9,6 @@ import {
   useLaunchIntroPhase,
 } from "@/components/common/LaunchIntro";
 import {
-  INTRO_EASE_MS,
-  INTRO_FADE_MS,
-  INTRO_HOLD_MS,
   LOCKUP_HEIGHT,
   NAME_GAP,
   NAME_SIZE,
@@ -20,15 +17,12 @@ import {
   SPADE_PATH,
   SPADE_VIEWBOX,
   SPLASH_BACKGROUND,
+  SPLASH_SPADE,
 } from "@/components/common/launch-lockup";
+import { COLOR_THEMES } from "@/styles/themes";
 
 const mockHide = jest.fn();
 jest.mock("expo-router", () => ({ SplashScreen: { hide: () => mockHide() } }));
-// Reanimated's mock has no useReducedMotion.
-jest.mock("react-native-reanimated", () => ({
-  ...(jest.requireActual("react-native-reanimated/mock") as object),
-  useReducedMotion: () => false,
-}));
 
 const repoRoot = path.resolve(__dirname, "../..");
 
@@ -53,8 +47,16 @@ describe("launch lockup", () => {
     expect(splash.imageWidth).toBe(LOCKUP_HEIGHT);
     expect(splash.backgroundColor).toBe(SPLASH_BACKGROUND);
     expect(expo.backgroundColor).toBe(SPLASH_BACKGROUND);
+    expect(expo.android?.backgroundColor).toBe(SPLASH_BACKGROUND);
+    expect(expo.android?.adaptiveIcon?.backgroundColor).toBe(SPLASH_BACKGROUND);
     expect(SPADE_HEIGHT + NAME_GAP + NAME_SIZE).toBeCloseTo(LOCKUP_HEIGHT, 6);
     expect(SPADE_HEIGHT).toBeCloseTo(70, 0);
+  });
+
+  test("the splash has Nocturne's night and accent", () => {
+    const nocturne = COLOR_THEMES.find((entry) => entry.id === "nocturne");
+    expect(SPLASH_BACKGROUND).toBe(nocturne?.colors.night);
+    expect(SPLASH_SPADE).toBe(nocturne?.colors.accent);
   });
 });
 
@@ -63,7 +65,7 @@ describe("launch intro (native)", () => {
     jest.useRealTimers();
   });
 
-  test("hides the splash once laid out, then goes", async () => {
+  test("hides the splash once laid out, and goes at once", async () => {
     jest.useFakeTimers();
     const phases: string[] = [];
     function Probe() {
@@ -90,16 +92,7 @@ describe("launch intro (native)", () => {
       jest.advanceTimersByTime(50);
     });
     expect(mockHide).toHaveBeenCalledTimes(1);
-
-    await act(async () => {
-      jest.advanceTimersByTime(INTRO_HOLD_MS);
-    });
-    expect(phases[phases.length - 1]).toBe("easing");
-    expect(renderer.toJSON()).not.toBeNull();
-
-    await act(async () => {
-      jest.advanceTimersByTime(INTRO_EASE_MS + INTRO_FADE_MS);
-    });
+    expect(phases).not.toContain("easing");
     expect(renderer.toJSON()).toBeNull();
     expect(phases[phases.length - 1]).toBe("done");
   });

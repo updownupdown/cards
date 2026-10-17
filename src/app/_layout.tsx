@@ -60,9 +60,8 @@ import { View, Platform } from "react-native";
 // during startup is still reported.
 initCrashReporting();
 
-// Keep the splash screen visible while we fetch resources; the launch intro
-// hides it once it's drawn the same picture underneath. A short fade, over in
-// the intro's hold, before its colours start to move.
+// Keep the splash screen visible while we fetch resources; it's hidden as
+// soon as the app has laid out (LaunchIntro), with a short fade into it.
 SplashScreen.preventAutoHideAsync();
 ExpoSplashScreen.setOptions({ duration: 150, fade: true });
 // Beta games turned on from the settings, read before Home lists games
@@ -124,8 +123,8 @@ function Layout() {
   // itself shows - a game's own dark colour inside a game, and the starfield's
   // overlay colour on the home screen, whose tabs all sit on the same
   // background image (the theme's night, looked up from the setting so this
-  // follows it). Until the launch intro is gone, it has these: black (the
-  // page's head and global.css), then easing into this colour.
+  // follows it). Until the launch intro is gone, it has the splash's night
+  // (the page's head and global.css), then easing into this colour.
   const themeColor = isGamePath(pathname)
     ? colorDark
     : getColorTheme(settings.colorTheme).colors.night;
@@ -145,9 +144,9 @@ function Layout() {
     // Tint the Android system navigation (bottom button) bar to match the
     // current screen. Chrome paints that area with the canvas background,
     // which comes from the root element whenever the root has a background of
-    // its own - and global.css gives <html> the splash black so the page is
-    // black before the app mounts. That means body's colour never propagates
-    // to the canvas, so the root has to be updated too or the bar stays black.
+    // its own - and global.css gives <html> the splash night so the page is
+    // dark before the app mounts. That means body's colour never propagates
+    // to the canvas, so the root has to be updated too or the bar keeps it.
     document.documentElement.style.backgroundColor = themeColor;
     document.body.style.backgroundColor = themeColor;
   }, [themeColor, introPhase]);

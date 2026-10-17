@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 // Draws every app icon, the web icons and the splash image from the spade in
-// assets/images/spade.svg: a white spade on black. The system shows these
-// before the app runs, so they can't take the chosen colour theme; the launch
-// intro (LaunchIntro) starts from the same white on black and eases into it.
+// assets/images/spade.svg: Nocturne's accent spade on its night. The system
+// shows these before the app runs, so they can't take the chosen colour theme;
+// they take Nocturne's, the default (NIGHT and ACCENT in src/styles/themes.ts).
 // Run:
 //   npm run logo:generate
 
@@ -15,7 +15,9 @@ import sharp from "sharp";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const source = fs.readFileSync(path.join(root, "assets/images/spade.svg"), "utf8");
 
-const BLACK = "#000000";
+const NIGHT = "#07080d";
+const ACCENT = "#ffcf87";
+// Android's themed (monochrome) icon is a mask: only its alpha is used.
 const WHITE = "#ffffff";
 
 // The spade's bounds on its 828 grid.
@@ -53,14 +55,14 @@ const write = async (file, image) => {
 // "any" icons are the exception, at 55%: Chrome's splash for the installed
 // app shows that icon about 128 dp tall, which puts the spade at about 70 dp,
 // the size of the launch intro's.
-const icon = (size) => spade(size, Math.round(size * 0.79), WHITE, BLACK);
-const pwaIcon = (size) => spade(size, Math.round(size * 0.55), WHITE, BLACK);
-const maskable = (size) => spade(size, Math.round(size * 0.533), WHITE, BLACK);
+const icon = (size) => spade(size, Math.round(size * 0.79), ACCENT, NIGHT);
+const pwaIcon = (size) => spade(size, Math.round(size * 0.55), ACCENT, NIGHT);
+const maskable = (size) => spade(size, Math.round(size * 0.533), ACCENT, NIGHT);
 
 await write("assets/app-icon/icon.png", await icon(1024));
 await write(
   "assets/app-icon/android-foreground.png",
-  await spade(432, 175, WHITE, null),
+  await spade(432, 175, ACCENT, null),
 );
 await write(
   "assets/app-icon/android-monochrome.png",
@@ -68,27 +70,27 @@ await write(
 );
 await write(
   "assets/app-icon/android-background.png",
-  sharp({ create: { width: 1024, height: 1024, channels: 4, background: BLACK } }).png(),
+  sharp({ create: { width: 1024, height: 1024, channels: 4, background: NIGHT } }).png(),
 );
-// The splash image is a square as tall as the launch lockup (spade, gap and
-// name: LOCKUP_HEIGHT in LaunchIntro), with the spade at its top and nothing
-// under it. The system centres it, which puts the spade where the intro's
-// centred lockup has it. LOCKUP is the lockup's height in spade heights.
+// The splash image is a square LOCKUP_HEIGHT dp wide (launch-lockup.ts, the
+// splash's imageWidth) with the spade centred in it, SPADE_HEIGHT tall: a
+// LOCKUP-th of the square, LOCKUP being the lockup's height in spade heights.
 const LOCKUP = 1 + 1.75 / 3.4;
 const SPLASH = 1024;
 await write(
   "assets/app-icon/splash-icon.png",
-  await spade(SPLASH, SPLASH / LOCKUP, WHITE, null, 0),
+  await spade(SPLASH, SPLASH / LOCKUP, ACCENT, null),
 );
 
 for (const size of [192, 512, 1024]) {
   await write(`public/icon-${size}.png`, await pwaIcon(size));
   await write(`public/icon-${size}-maskable.png`, await maskable(size));
 }
-await write("public/apple-touch-icon.png", await spade(180, 141, WHITE, BLACK));
+await write("public/apple-touch-icon.png", await spade(180, 141, ACCENT, NIGHT));
+// The Play Console's app icon: 512 square, opaque, no rounding of its own.
 await write(
   "store-assets/play-store-icon-512.png",
-  (await icon(512)).flatten({ background: BLACK }),
+  (await icon(512)).flatten({ background: NIGHT }),
 );
 
 // favicon.ico: PNG images in an ICO wrapper, which every browser reads.

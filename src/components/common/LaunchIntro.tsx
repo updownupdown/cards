@@ -1,41 +1,22 @@
-import { SpadeMark } from "@/components/common/Logo";
 import {
   INTRO_EASE_MS,
   INTRO_FADE_MS,
-  INTRO_HOLD_MS,
   LAUNCH_INTRO_ID,
   LAUNCH_INTRO_NAME_ID,
   LAUNCH_INTRO_SPADE_ID,
-  NAME_GAP,
-  NAME_SIZE,
-  SPADE_FILL,
-  SPADE_HEIGHT,
-  SPLASH_BACKGROUND,
-  SPLASH_SPADE,
 } from "@/components/common/launch-lockup";
-import { FontWeight, theme } from "@/styles/styles";
+import { theme } from "@/styles/styles";
 import { SplashScreen } from "expo-router";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { Platform, StyleSheet, View } from "react-native";
-import Animated, {
-  Easing,
-  interpolateColor,
-  ReduceMotion,
-  useAnimatedStyle,
-  useReducedMotion,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
 
-// The launch intro takes over from the splash with the same picture (the
-// white spade on black), eases the colours into the colour theme, adding the
-// name in its ink, then fades away over the home screen. Native draws it here;
-// the web page draws it before the app loads (+html.tsx) and this drives it.
+// On the web, the launch intro is the page's splash (+html.tsx, drawn before
+// the app loads): this eases it into the colour theme, adding the name in its
+// ink, then fades it away over the home screen. Native has no intro: the
+// system splash already shows the spade in Nocturne's colours, so it's hidden
+// as soon as the app has laid out, and the app shows straight away.
 
-/** CSS's ease-in-out, which the web uses, so both ease alike. */
-const EASE_IN_OUT = Easing.bezier(0.42, 0, 0.58, 1);
 const CSS_EASE_IN_OUT = "cubic-bezier(0.42, 0, 0.58, 1)";
-const SPADE_BOX = SPADE_HEIGHT / SPADE_FILL;
 
 /** "intro" until the colours start to move, "easing" until it's gone. */
 export type LaunchIntroPhase = "intro" | "easing" | "done";
@@ -84,98 +65,29 @@ export function LaunchIntro({ pageColor }: { pageColor: string }) {
   return Platform.OS === "web" ? (
     <WebLaunchIntro pageColor={pageColor} />
   ) : (
-    <NativeLaunchIntro />
+    <NativeSplashHide />
   );
 }
 
-function NativeLaunchIntro() {
-  const reduceMotion = useReducedMotion();
-  const progress = useSharedValue(0);
-  const opacity = useSharedValue(1);
-  const [fading, setFading] = useState(false);
+/** Hides the system splash once the screens under it have laid out. */
+function NativeSplashHide() {
   const started = useRef(false);
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const { night, accent, ink } = theme;
-
-  useEffect(() => {
-    const pending = timers.current;
-    return () => pending.forEach(clearTimeout);
-  }, []);
-
-  // Hidden only once this has laid out, so nothing shows between the two.
-  const start = () => {
+  const hide = () => {
     if (started.current) return;
     started.current = true;
-    requestAnimationFrame(() => SplashScreen.hide());
-    const at = (ms: number, run: () => void) =>
-      timers.current.push(setTimeout(run, ms));
-    const easeAt = INTRO_HOLD_MS;
-    const fadeAt = easeAt + INTRO_EASE_MS;
-    at(easeAt, () => {
-      setPhase("easing");
-      progress.value = reduceMotion
-        ? 1
-        : withTiming(1, {
-            duration: INTRO_EASE_MS,
-            easing: EASE_IN_OUT,
-            reduceMotion: ReduceMotion.Never,
-          });
+    requestAnimationFrame(() => {
+      SplashScreen.hide();
+      setPhase("done");
     });
-    if (reduceMotion) {
-      at(fadeAt, () => setPhase("done"));
-      return;
-    }
-    at(fadeAt, () => {
-      setFading(true);
-      opacity.value = withTiming(0, {
-        duration: INTRO_FADE_MS,
-        easing: EASE_IN_OUT,
-        reduceMotion: ReduceMotion.Never,
-      });
-    });
-    at(fadeAt + INTRO_FADE_MS, () => setPhase("done"));
   };
-
-  const overlayStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      progress.value,
-      [0, 1],
-      [SPLASH_BACKGROUND, night],
-    ),
-    opacity: opacity.value,
-  }));
-  // react-native-svg's colour can't be animated, so the spade in the accent
-  // fades in over the white one; the white goes once it's covered, so its
-  // anti-aliased edge doesn't linger.
-  const whiteStyle = useAnimatedStyle(() => ({
-    opacity: progress.value < 1 ? 1 : 0,
-  }));
-  const accentStyle = useAnimatedStyle(() => ({ opacity: progress.value }));
-  // The splash has no name: it starts black, unseen on the black.
-  const nameStyle = useAnimatedStyle(() => ({
-    color: interpolateColor(progress.value, [0, 1], ["#000000", ink]),
-  }));
-
   return (
-    <Animated.View
-      onLayout={start}
-      pointerEvents={fading ? "none" : "auto"}
+    <View
+      onLayout={hide}
+      pointerEvents="none"
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
-      style={[styles.overlay, overlayStyle]}
-    >
-      <View style={styles.spade}>
-        <Animated.View style={[styles.spadeBox, whiteStyle]}>
-          <SpadeMark size={SPADE_BOX} color={SPLASH_SPADE} />
-        </Animated.View>
-        <Animated.View style={[styles.spadeBox, accentStyle]}>
-          <SpadeMark size={SPADE_BOX} color={accent} />
-        </Animated.View>
-      </View>
-      <Animated.Text allowFontScaling={false} style={[styles.name, nameStyle]}>
-        Solitarius
-      </Animated.Text>
-    </Animated.View>
+      style={styles.probe}
+    />
   );
 }
 
@@ -214,7 +126,7 @@ function runWebIntro(pageColor: string) {
   overlay.style.backgroundColor = theme.night;
   spade.style.color = theme.accent;
   name.style.color = theme.ink;
-  // The page and Chrome's bars move with it, from the splash's black.
+  // The page and Chrome's bars move with it, from the splash's night.
   html.style.backgroundColor = pageColor;
   body.style.backgroundColor = pageColor;
   easeThemeColor(pageColor, reduceMotion);
@@ -231,15 +143,16 @@ function runWebIntro(pageColor: string) {
   setTimeout(dismissLaunchIntro, INTRO_EASE_MS + INTRO_FADE_MS);
 }
 
-/** Steps the theme-color meta tags from the splash's black to `to`. */
+/** Steps the theme-color meta tags from the splash's colour to `to`. */
 function easeThemeColor(to: string, instant: boolean) {
   const metas = document.querySelectorAll<HTMLMetaElement>(
     'meta[name="theme-color"], meta[name="msapplication-navbutton-color"]',
   );
   const set = (color: string) =>
     metas.forEach((meta) => meta.setAttribute("content", color));
+  const from = parseHex(metas[0]?.getAttribute("content") ?? "");
   const target = parseHex(to);
-  if (instant || !target) {
+  if (instant || !target || !from) {
     set(to);
     return;
   }
@@ -251,7 +164,9 @@ function easeThemeColor(to: string, instant: boolean) {
     const t = Math.min(1, Math.max(0, elapsed));
     // Close to CSS's ease-in-out.
     const eased = t * t * (3 - 2 * t);
-    const channels = target.map((channel) => Math.round(channel * eased));
+    const channels = target.map((channel, index) =>
+      Math.round(from[index] + (channel - from[index]) * eased),
+    );
     set(t < 1 ? `rgb(${channels.join(",")})` : to);
     if (t < 1) requestAnimationFrame(step);
   };
@@ -264,30 +179,8 @@ function parseHex(color: string): number[] | null {
 }
 
 const styles = StyleSheet.create({
-  overlay: {
+  // Laid out with the screens under it; draws nothing.
+  probe: {
     ...StyleSheet.absoluteFillObject,
-    // Above everything, the system bars' scrims included.
-    zIndex: 1000,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  // As tall as the spade itself, so the lockup (spade, gap, name) centres.
-  spade: {
-    width: SPADE_BOX,
-    height: SPADE_HEIGHT,
-  },
-  spadeBox: {
-    position: "absolute",
-    left: 0,
-    top: (SPADE_HEIGHT - SPADE_BOX) / 2,
-  },
-  name: {
-    marginTop: NAME_GAP,
-    height: NAME_SIZE,
-    fontFamily: FontWeight[500],
-    fontSize: NAME_SIZE,
-    lineHeight: NAME_SIZE,
-    includeFontPadding: false,
-    textAlignVertical: "center",
   },
 });

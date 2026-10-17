@@ -53,7 +53,7 @@ export default function Root({ children }: { children: ReactNode }) {
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
-        {/* The splash's black, matching the manifest's background_color. The
+        {/* The splash's night, matching the manifest's background_color. The
             launch intro eases it into the current screen's colour, which the
             theme-color effect in _layout keeps up after. */}
         <meta name="theme-color" content={SPLASH_BACKGROUND} />
