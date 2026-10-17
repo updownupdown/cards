@@ -15,7 +15,11 @@ import { seededRandom } from "@/hints/random";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useDisplayLanguage } from "@/i18n";
 import { useStarfield } from "@/components/Home/Starfield";
-import { useTabReadyHold, useTabReadyImage } from "@/components/Home/TabReady";
+import {
+  useTabOnStage,
+  useTabReadyHold,
+  useTabReadyImage,
+} from "@/components/Home/TabReady";
 import { localizeGameTitle } from "@/i18n/content";
 import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -768,8 +772,10 @@ function GrowingDot({
   }));
   // The rings' clock, shared by their halves under and over the dot.
   const turn = useSharedValue(0);
+  // Out of sight, behind another Home tab, the rings rest.
+  const onStage = useTabOnStage();
   useEffect(() => {
-    if (!animated) return;
+    if (!animated || !onStage) return;
     turn.value = withRepeat(
       withTiming(1, { duration: RING_CYCLE_MS, easing: Easing.linear }),
       -1,
@@ -778,7 +784,7 @@ function GrowingDot({
       cancelAnimation(turn);
       turn.value = 0;
     };
-  }, [animated, turn]);
+  }, [animated, onStage, turn]);
   const box = markBox(state);
   const rings = { gameDot, box, scale, turn };
   return (

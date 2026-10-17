@@ -7,13 +7,13 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import { ImageBackground, StyleSheet, View } from "react-native";
 import Animated, {
   Easing,
   type SharedValue,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -114,8 +114,10 @@ export type Starfield = {
   /** The map's pan the sky last followed. */
   panFromX: SharedValue<number>;
   panFromY: SharedValue<number>;
-  /** A tab reports its scroll, which moves the sky while it is shown. */
-  reportScroll: (tab: HomeTabIndex, y: number) => void;
+  /** Each tab's scroll the sky last followed (see useSkyScrollHandler). */
+  scrolls: SharedValue<number[]>;
+  /** The tab shown, whose scroll moves the sky. */
+  shownTab: SharedValue<HomeTabIndex>;
   /** A tab's content was replaced: its next scroll starts afresh. */
   resetScroll: (tab: HomeTabIndex, y?: number) => void;
   /** From the map's pan as it now is, its pans move the sky. */
@@ -140,12 +142,12 @@ export function useStarfieldMotion(activeTab: HomeTabIndex): Starfield {
   const panLinked = useSharedValue(false);
   const panFromX = useSharedValue(0);
   const panFromY = useSharedValue(0);
-  const scrolls = useRef<Partial<Record<HomeTabIndex, number>>>({});
-  const active = useRef(activeTab);
+  const scrolls = useSharedValue<number[]>([0, 0, 0, 0]);
+  const shownTab = useSharedValue<HomeTabIndex>(activeTab);
   useEffect(() => {
-    active.current = activeTab;
+    shownTab.value = activeTab;
     if (activeTab !== CAMPAIGN_HOME_TAB_INDEX) panLinked.value = false;
-  }, [activeTab, panLinked]);
+  }, [activeTab, panLinked, shownTab]);
 
   return useMemo(
     () => ({
@@ -154,13 +156,14 @@ export function useStarfieldMotion(activeTab: HomeTabIndex): Starfield {
       panLinked,
       panFromX,
       panFromY,
-      reportScroll: (tab, y) => {
-        const from = scrolls.current[tab] ?? 0;
-        scrolls.current[tab] = y;
-        if (tab === active.current) skyY.value -= (y - from) * SCROLL_SHARE;
-      },
+      scrolls,
+      shownTab,
       resetScroll: (tab, y = 0) => {
-        scrolls.current[tab] = y;
+        scrolls.modify((all) => {
+          "worklet";
+          all[tab] = y;
+          return all;
+        });
       },
       linkPan: (x, y) => {
         panFromX.value = x;
@@ -168,7 +171,40 @@ export function useStarfieldMotion(activeTab: HomeTabIndex): Starfield {
         panLinked.value = true;
       },
     }),
-    [panFromX, panFromY, panLinked, skyX, skyY],
+    [panFromX, panFromY, panLinked, scrolls, shownTab, skyX, skyY],
+  );
+}
+
+/**
+ * A tab's scroll handler, which moves the sky while the tab is shown. It runs
+ * on the UI thread, so the sky keeps pace with the page whatever the JS
+ * thread is doing, and no scroll event has to cross over to it. For a
+ * Reanimated scroll view; `scrollY`, if given, follows the page's offset too.
+ */
+export function useSkyScrollHandler(
+  tab: HomeTabIndex,
+  scrollY?: SharedValue<number>,
+) {
+  const starfield = useStarfield();
+  const skyY = starfield?.skyY;
+  const scrolls = starfield?.scrolls;
+  const shownTab = starfield?.shownTab;
+  return useAnimatedScrollHandler(
+    {
+      onScroll: (event) => {
+        const y = event.contentOffset.y;
+        if (scrollY) scrollY.value = y;
+        if (!skyY || !scrolls || !shownTab) return;
+        const from = scrolls.value[tab] ?? 0;
+        scrolls.modify((all) => {
+          "worklet";
+          all[tab] = y;
+          return all;
+        });
+        if (tab === shownTab.value) skyY.value -= (y - from) * SCROLL_SHARE;
+      },
+    },
+    [tab, scrollY, skyY, scrolls, shownTab],
   );
 }
 
@@ -183,7 +219,7 @@ export const StarfieldBackdrop = memo(function StarfieldBackdrop({
   activeTab: HomeTabIndex;
   /** Without animations, the sky holds still. */
   animated: boolean;
-  /** Comets only while Home is on screen. */
+  /** Comets, and the stars' twinkle, only while Home is on screen. */
   comets: boolean;
 }) {
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -247,6 +283,7 @@ export const StarfieldBackdrop = memo(function StarfieldBackdrop({
                 size={size}
                 motion={motion}
                 animated={animated}
+                onScreen={comets}
               />
             ))}
           </Animated.View>
@@ -278,11 +315,14 @@ const StarLayer = memo(function StarLayer({
   size,
   motion,
   animated,
+  onScreen,
 }: {
   layer: Layer;
   size: { width: number; height: number };
   motion: Starfield;
   animated: boolean;
+  /** Under a game, the twinkle holds where it is, and goes on from there. */
+  onScreen: boolean;
 }) {
   const { tile, depth } = layer;
   const columns = Math.ceil(size.width / tile) + 1;
@@ -341,6 +381,7 @@ const StarLayer = memo(function StarLayer({
             animationDuration: `${layer.twinkle}s`,
             animationIterationCount: "infinite",
             animationTimingFunction: "ease-in-out",
+            animationPlayState: onScreen ? "running" : "paused",
           }}
         >
           {tiles}

@@ -1,3 +1,4 @@
+import { useTabOnStage } from "@/components/Home/TabReady";
 import { FIELD_RADIUS } from "@/data/campaign-map";
 import { theme } from "@/styles/styles";
 import { haptics } from "@/utils/haptics";
@@ -82,8 +83,10 @@ export const ForceField = memo(function ForceField({
     );
   }, [animated, fade, swell, up]);
 
+  // Out of sight, behind another Home tab, the rim rests.
+  const onStage = useTabOnStage();
   useEffect(() => {
-    if (!animated || !shown) return;
+    if (!animated || !shown || !onStage) return;
     shimmer.value = withRepeat(
       withTiming(1, { duration: SHIMMER_MS, easing: Easing.inOut(Easing.sin) }),
       -1,
@@ -93,7 +96,7 @@ export const ForceField = memo(function ForceField({
       cancelAnimation(shimmer);
       shimmer.value = 0;
     };
-  }, [animated, shimmer, shown]);
+  }, [animated, onStage, shimmer, shown]);
 
   const fieldStyle = useAnimatedStyle(() => ({
     opacity: fade.value,

@@ -37,6 +37,14 @@ export function createTabReadyGate(): TabReadyGate {
 
 export const TabReadyContext = createContext<TabReadyGate | null>(null);
 
+/**
+ * Whether the tab is on stage, shown or being readied to show, rather than
+ * put away out of sight. Endless animations rest while it is away: nobody
+ * can see them, and they would still cost something on every frame.
+ */
+export const TabOnStageContext = createContext(true);
+export const useTabOnStage = () => useContext(TabOnStageContext);
+
 /** Keeps the tab hidden while `holding` is true. */
 export function useTabReadyHold(holding: boolean) {
   const gate = useContext(TabReadyContext);

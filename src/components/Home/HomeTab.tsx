@@ -19,9 +19,10 @@ import { layoutDims } from "@/styles/styles";
 import { areBetaGamesVisible } from "@/data/beta-games";
 import { useDevMode } from "@/data/dev-mode";
 import { type ReactNode, useMemo, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
+import Animated from "react-native-reanimated";
 import { HOME_HOME_TAB_INDEX } from "./home-view-state";
-import { useStarfield } from "./Starfield";
+import { useSkyScrollHandler } from "./Starfield";
 import { useTabReadyHold } from "./TabReady";
 
 const EASY_GAME_COUNT = 6;
@@ -57,7 +58,7 @@ export function HomeTab({
   const language = useDisplayLanguage();
   const { ui, spacing } = useResponsiveMetrics();
   const { width: viewportWidth } = useViewportDimensions();
-  const starfield = useStarfield();
+  const onScroll = useSkyScrollHandler(HOME_HOME_TAB_INDEX);
   // Kept hidden until then, so the easy games never show and then vanish.
   useTabReadyHold(!dataLoaded);
 
@@ -139,17 +140,14 @@ export function HomeTab({
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView
+      <Animated.ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
           paddingTop: contentPaddingTop,
           paddingBottom: contentPaddingBottom,
           gap: spacing(54),
         }}
-        onScroll={(event) => {
-          const y = event.nativeEvent.contentOffset.y;
-          starfield?.reportScroll(HOME_HOME_TAB_INDEX, y);
-        }}
+        onScroll={onScroll}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
       >
@@ -233,7 +231,7 @@ export function HomeTab({
           pageSidePadding={scaledPageSidePadding}
           contentMaxWidth={contentMaxWidth}
         />
-      </ScrollView>
+      </Animated.ScrollView>
     </View>
   );
 }

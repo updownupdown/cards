@@ -16,7 +16,11 @@ import {
   StarfieldProvider,
   useStarfieldMotion,
 } from "./Starfield";
-import { createTabReadyGate, TabReadyContext } from "./TabReady";
+import {
+  createTabReadyGate,
+  TabOnStageContext,
+  TabReadyContext,
+} from "./TabReady";
 import {
   COLLECT_HOME_TAB_INDEX,
   getActiveHomeTab,
@@ -498,32 +502,34 @@ export function TabLayer({
 
   return (
     <TabReadyContext.Provider value={gate}>
-      <TabShownContext.Provider value={state === "shown"}>
-        <View
-          // Kept as a real view in every state: flattened away in one and not
-          // another, Fabric would move the whole tab between parents.
-          collapsable={false}
-          testID={state === "shown" ? "home-tab-content" : undefined}
-          aria-hidden={state !== "shown"}
-          style={[
-            StyleSheet.absoluteFill,
-            state === "preparing" && { opacity: 0 },
-            state === "away" && { left: OUT_OF_VIEW, right: -OUT_OF_VIEW },
-            // On the web, fixed-position parts of a tab (the search box, the
-            // header fade) ignore the move, and pointerEvents "none" only
-            // reaches a view's direct children there, so a hidden tab's search
-            // box still took clicks (and focus) meant for the Campaign map.
-            // Hidden, nothing in the tab can be seen, clicked or focused. (A
-            // preparing tab still lays out and loads its pictures.)
-            state !== "shown" && Platform.OS === "web" && HIDDEN_ON_WEB,
-            state === "shown"
-              ? pointerEventsStyles.boxNone
-              : pointerEventsStyles.none,
-          ]}
-        >
-          {children}
-        </View>
-      </TabShownContext.Provider>
+      <TabOnStageContext.Provider value={state !== "away"}>
+        <TabShownContext.Provider value={state === "shown"}>
+          <View
+            // Kept as a real view in every state: flattened away in one and not
+            // another, Fabric would move the whole tab between parents.
+            collapsable={false}
+            testID={state === "shown" ? "home-tab-content" : undefined}
+            aria-hidden={state !== "shown"}
+            style={[
+              StyleSheet.absoluteFill,
+              state === "preparing" && { opacity: 0 },
+              state === "away" && { left: OUT_OF_VIEW, right: -OUT_OF_VIEW },
+              // On the web, fixed-position parts of a tab (the search box, the
+              // header fade) ignore the move, and pointerEvents "none" only
+              // reaches a view's direct children there, so a hidden tab's search
+              // box still took clicks (and focus) meant for the Campaign map.
+              // Hidden, nothing in the tab can be seen, clicked or focused. (A
+              // preparing tab still lays out and loads its pictures.)
+              state !== "shown" && Platform.OS === "web" && HIDDEN_ON_WEB,
+              state === "shown"
+                ? pointerEventsStyles.boxNone
+                : pointerEventsStyles.none,
+            ]}
+          >
+            {children}
+          </View>
+        </TabShownContext.Provider>
+      </TabOnStageContext.Provider>
     </TabReadyContext.Provider>
   );
 }

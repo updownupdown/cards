@@ -1,3 +1,4 @@
+import { useTabOnStage } from "@/components/Home/TabReady";
 import { rgba } from "@/styles/styles";
 import { useEffect, useRef } from "react";
 import {
@@ -100,15 +101,20 @@ const ORBIT_SAMPLE_POINTS = Array.from(
 function OrbitStar({
   star,
   animationsEnabled,
+  running,
 }: {
   star: OrbitStarData;
   animationsEnabled: boolean;
+  running: boolean;
 }) {
   const progress = useRef(new RNAnimated.Value(0)).current;
 
   useEffect(() => {
-    if (!animationsEnabled) return;
+    if (!animationsEnabled || !running) return;
 
+    // Back from a rest, the orbit starts its lap afresh, out of sight: a loop
+    // would otherwise go round from where it stopped, and jump back there.
+    progress.setValue(0);
     let animation: RNAnimated.CompositeAnimation | undefined;
     const start = () => {
       animation?.stop();
@@ -142,7 +148,7 @@ function OrbitStar({
       document.removeEventListener("visibilitychange", onVisibilityChange);
       animation?.stop();
     };
-  }, [animationsEnabled, progress, star.periodMs]);
+  }, [animationsEnabled, progress, running, star.periodMs]);
 
   const path = ORBIT_SAMPLE_POINTS.map((t) =>
     orbitPosition(star, star.startPhase + t),
@@ -210,6 +216,8 @@ export function CampaignBlackHole({
   size?: number;
   animationsEnabled: boolean;
 }) {
+  // Out of sight, behind another Home tab, the stars rest.
+  const running = useTabOnStage();
   return (
     <View
       style={{
@@ -232,6 +240,7 @@ export function CampaignBlackHole({
             key={index}
             star={star}
             animationsEnabled={animationsEnabled}
+            running={running}
           />
         ))}
       </View>

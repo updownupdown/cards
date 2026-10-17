@@ -14,7 +14,6 @@ import { FontWeight, layoutDims, rgba, theme } from "@/styles/styles";
 import type { Href } from "expo-router";
 import { useMemo, useRef, useState } from "react";
 import {
-  Animated,
   Keyboard,
   Platform,
   Pressable,
@@ -23,12 +22,16 @@ import {
   StyleSheet,
   TextInput,
   View,
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
 } from "react-native";
+import Animated, {
+  interpolate,
+  type SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 import { FavButton } from "./FavButton";
 import { SEARCH_HOME_TAB_INDEX } from "./home-view-state";
-import { useStarfield } from "./Starfield";
+import { useSkyScrollHandler } from "./Starfield";
 
 const FILTERS = ["all", "unplayed", "favorites", "unbeaten", "won"] as const;
 type Filter = (typeof FILTERS)[number];
@@ -90,21 +93,9 @@ export function SearchTab({
   const [headerHeight, setHeaderHeight] = useState(0);
   const pageSidePadding = spacing(layoutDims.pagePadding);
   const indexed = sort === "az";
-  const scrollY = useRef(new Animated.Value(0)).current;
-  const starfield = useStarfield();
-  const onScroll = useMemo(
-    () =>
-      Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
-        useNativeDriver: Platform.OS !== "web",
-        // The sky behind moves with the list.
-        listener: (event: NativeSyntheticEvent<NativeScrollEvent>) =>
-          starfield?.reportScroll(
-            SEARCH_HOME_TAB_INDEX,
-            event.nativeEvent.contentOffset.y,
-          ),
-      }),
-    [scrollY, starfield],
-  );
+  const scrollY = useSharedValue(0);
+  // The sky behind moves with the list.
+  const onScroll = useSkyScrollHandler(SEARCH_HOME_TAB_INDEX, scrollY);
 
   const stats = (path: string) => settingsMap[path]?.stats;
 
@@ -530,10 +521,9 @@ function IndexLetters({
   scrollY,
 }: {
   sections: Section[];
-  scrollY: Animated.Value;
+  scrollY: SharedValue<number>;
 }) {
   const { spacing, font, ui } = useResponsiveMetrics();
-  const letterStyle = useLetterStyle();
   const letterHeight = font(36);
   const rowHeight = spacing(ROW_HEIGHT);
   const starts: number[] = [];
@@ -542,7 +532,6 @@ function IndexLetters({
     starts.push(top);
     top += section.data.length * rowHeight;
   }
-  const far = 100000;
   return (
     <View
       style={[
@@ -558,37 +547,64 @@ function IndexLetters({
           flex: 1,
         }}
       >
-        {sections.map((section, index) => {
-          const start = starts[index];
-          // Pushed off once the next letter reaches it.
-          const leave = (starts[index + 1] ?? far) - letterHeight - spacing(6);
-          const translateY = scrollY.interpolate({
-            inputRange: [
-              start - far,
-              start,
-              Math.max(start, leave),
-              Math.max(start, leave) + far,
-            ],
-            outputRange: [far, 0, 0, -far],
-          });
-          return (
-            <Animated.View
-              key={section.key}
-              style={{
-                position: "absolute",
-                top: 0,
-                left: spacing(layoutDims.pagePadding),
-                transform: [{ translateY }],
-              }}
-            >
-              <Text weight={500} color={theme.accent} style={letterStyle}>
-                {section.key}
-              </Text>
-            </Animated.View>
-          );
-        })}
+        {sections.map((section, index) => (
+          <IndexLetter
+            key={section.key}
+            letter={section.key}
+            start={starts[index]}
+            // Pushed off once the next letter reaches it.
+            leave={(starts[index + 1] ?? FAR) - letterHeight - spacing(6)}
+            scrollY={scrollY}
+          />
+        ))}
       </View>
     </View>
+  );
+}
+
+/** Far enough down the list that the last letter is never pushed off. */
+const FAR = 100000;
+
+function IndexLetter({
+  letter,
+  start,
+  leave,
+  scrollY,
+}: {
+  letter: string;
+  start: number;
+  leave: number;
+  scrollY: SharedValue<number>;
+}) {
+  const { spacing } = useResponsiveMetrics();
+  const letterStyle = useLetterStyle();
+  const end = Math.max(start, leave);
+  const style = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: interpolate(
+          scrollY.value,
+          [start - FAR, start, end, end + FAR],
+          [FAR, 0, 0, -FAR],
+        ),
+      },
+    ],
+  }));
+  return (
+    <Animated.View
+      style={[
+        {
+          position: "absolute",
+          top: 0,
+          left: spacing(layoutDims.pagePadding),
+        },
+        style,
+      ]}
+    >
+      <Text weight={500} color={theme.accent} style={letterStyle}>
+        {letter}
+      </Text>
+    </Animated.View>
   );
 }
 
