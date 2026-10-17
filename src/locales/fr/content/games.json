@@ -2360,6 +2360,39 @@
       "value": "Lycanthrope"
     }
   },
+  "machination": {
+    "howToPlay": {
+      "hash": "3a5e0003",
+      "value": [
+        "## Objectif",
+        "Placez toutes les cartes de sorte qu'à la fin, les quatre fondations puissent monter par couleur de l'As au Roi.",
+        "## Placement",
+        "- La pioche se retourne une carte à la fois. Touchez une pile pour y poser la carte retournée.",
+        "- Un **As** va directement sur une fondation dès qu'il est retourné.",
+        "- Les cartes ne passent jamais d'une pile à l'autre, alors réfléchissez à la place de chacune\u00a0: la carte du dessus d'une pile doit partir avant celles qui sont dessous.",
+        "## Montée",
+        "- Quand la pioche est vide, chaque carte du dessus d'une pile qui suit le rang de sa couleur part sur la fondation, l'une après l'autre, jusqu'à ce qu'aucune ne puisse plus partir.",
+        "- Vous gagnez quand les 52 cartes ont rejoint les fondations.",
+        "## Conseils",
+        "- Une carte basse sur une plus haute ne risque rien. Une carte haute sur une plus basse la bloque jusqu'à ce que la plus haute parte.",
+        "- Ne posez jamais une carte sur une carte plus basse de sa couleur\u00a0: aucune des deux ne pourra jamais partir.",
+        "- Gardez une pile vide pour les cartes hautes le plus longtemps possible.",
+        "- Dans les réglages du jeu, **Facile** se joue avec neuf piles et **Difficile** avec sept, au lieu de huit."
+      ]
+    },
+    "quickStart": {
+      "hash": "cbc83afc",
+      "value": [
+        "Retournez la pioche une carte à la fois et posez chacune sur la pile de votre choix.",
+        "Les As vont directement aux fondations.",
+        "Quand la pioche est épuisée, les piles montent sur les fondations par couleur, en commençant par les cartes du dessus."
+      ]
+    },
+    "title": {
+      "hash": "5617e152",
+      "value": "Machination"
+    }
+  },
   "maria": {
     "howToPlay": {
       "hash": "6df7d8cf",
@@ -2482,7 +2515,9 @@
     },
     "quickStart": {
       "hash": "c43135e0",
-      "value": ["Retirez deux cartes de même rang."]
+      "value": [
+        "Retirez deux cartes de même rang."
+      ]
     },
     "title": {
       "hash": "142bf888",
@@ -2735,43 +2770,6 @@
     "title": {
       "hash": "63ac8afa",
       "value": "Palissade"
-    }
-  },
-  "pocket-poker": {
-    "howToPlay": {
-      "hash": "24a831bd",
-      "value": [
-        "## Objectif",
-        "Atteignez **10 points** pour gagner. Vous perdez si une mise fait tomber votre score à 0.",
-        "## Déroulement du tour",
-        "1. **Piochez 5 cartes**",
-        "2. **Jouez ou couchez-vous\u00a0:** se coucher coûte **1 point**. Après **deux abandons consécutifs**, ou à 1 point, vous devez jouer. Jouer remet le compteur à zéro.",
-        "3. **Défaussez et repiochez** jusqu'à **2 fois** pour améliorer votre main.",
-        "4. **Misez\u00a0:** votre mise minimale est égale au nombre de fois où vous avez pioché\u00a0:",
-        "- 1 pioche → mise de 1, 2 ou 3",
-        "- 2 pioches → mise de 2 ou 3",
-        "\n5. **L'adversaire pioche** des cartes selon la difficulté choisie et garde ses **cinq meilleures**.",
-        "6. **Comparez les mains** selon le classement habituel du poker. En cas d'égalité, la carte la plus haute départage.",
-        "7. **Annuler** n'est plus disponible après qu'une nouvelle pioche, l'abattage ou une nouvelle donne révèle des cartes cachées.",
-        "## Difficulté",
-        "- **Normal\u00a0:** commencez avec 5 points\u00a0; les égalités ne changent pas le score\u00a0; l'adversaire pioche 5 cartes plus votre mise.",
-        "- **Difficile\u00a0:** commencez avec 3 points\u00a0; la banque gagne les égalités\u00a0; l'adversaire pioche 5 cartes plus votre mise.",
-        "- **Expert\u00a0:** règles du mode Difficile, mais l'adversaire pioche 6 cartes plus votre mise.",
-        "## Jokers",
-        "Activez les **Jokers libres** dans les réglages pour ajouter deux Jokers qui valent n'importe quelle carte absente de la main."
-      ]
-    },
-    "quickStart": {
-      "hash": "226dffa2",
-      "value": [
-        "Formez une main de poker, puis misez.",
-        "Plus vous misez, plus votre adversaire pioche de cartes.",
-        "Atteignez 10 points pour gagner\u00a0; à 0, vous perdez."
-      ]
-    },
-    "title": {
-      "hash": "e6a10a58",
-      "value": "Poker de poche"
     }
   },
   "poker-squares": {

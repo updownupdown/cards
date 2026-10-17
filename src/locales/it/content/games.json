@@ -2360,6 +2360,39 @@
       "value": "Licantropo"
     }
   },
+  "machination": {
+    "howToPlay": {
+      "hash": "3a5e0003",
+      "value": [
+        "## Obiettivo",
+        "Sistema tutte le carte in modo che, alla fine, le quattro fondazioni si possano costruire per seme dall'Asso al Re.",
+        "## Come si piazza",
+        "- Il mazzo si gira una carta alla volta. Tocca una pila per metterci la carta girata.",
+        "- Un **Asso** va subito su una fondazione appena viene girato.",
+        "- Le carte non passano mai da una pila all'altra, quindi pensa bene a dove va ciascuna: la carta in cima a una pila deve uscire prima di quelle sotto.",
+        "## Costruzione",
+        "- Quando il mazzo è vuoto, ogni carta in cima a una pila che è la successiva del suo seme passa alla fondazione, una dopo l'altra, finché nessuna può più uscire.",
+        "- Vinci quando tutte le 52 carte arrivano alle fondazioni.",
+        "## Consigli",
+        "- Una carta bassa su una più alta è sicura. Una carta alta su una più bassa la blocca finché la più alta non esce.",
+        "- Non mettere mai una carta su una più bassa del suo stesso seme: nessuna delle due potrà mai uscire.",
+        "- Tieni una pila vuota per le carte alte il più a lungo possibile.",
+        "- Nelle impostazioni del gioco, **Facile** si gioca con nove pile e **Difficile** con sette, invece di otto."
+      ]
+    },
+    "quickStart": {
+      "hash": "cbc83afc",
+      "value": [
+        "Gira il mazzo una carta alla volta e mettila sulla pila che preferisci.",
+        "Gli Assi vanno subito alle fondazioni.",
+        "Quando il mazzo finisce, le pile salgono sulle fondazioni per seme, a partire dalle carte in cima."
+      ]
+    },
+    "title": {
+      "hash": "5617e152",
+      "value": "Macchinazione"
+    }
+  },
   "maria": {
     "howToPlay": {
       "hash": "6df7d8cf",
@@ -2482,7 +2515,9 @@
     },
     "quickStart": {
       "hash": "c43135e0",
-      "value": ["Togli due carte dello stesso valore."]
+      "value": [
+        "Togli due carte dello stesso valore."
+      ]
     },
     "title": {
       "hash": "142bf888",
@@ -2735,43 +2770,6 @@
     "title": {
       "hash": "63ac8afa",
       "value": "Staccionata"
-    }
-  },
-  "pocket-poker": {
-    "howToPlay": {
-      "hash": "24a831bd",
-      "value": [
-        "## Obiettivo",
-        "Raggiungi **10 punti** per vincere. Perdi se una puntata porta il tuo punteggio a 0.",
-        "## Ordine del turno",
-        "1. **Pesca 5 carte**",
-        "2. **Gioca o lascia:** lasciare costa **1 punto**. Dopo **due rinunce consecutive**, o a 1 punto, devi giocare. Giocando azzeri il conteggio.",
-        "3. **Scarta e ripesca** fino a **2 volte** per migliorare la mano.",
-        "4. **Punta:** la puntata minima è pari al numero di volte che hai pescato:",
-        "- 1 pescata → punta 1, 2 o 3",
-        "- 2 pescate → punta 2 o 3",
-        "\n5. **L'avversario pesca** carte in base alla difficoltà selezionata e tiene le sue **cinque migliori**.",
-        "6. **Confronta le mani** secondo la normale classifica del poker. In caso di parità vince la carta più alta.",
-        "7. **Annulla** non è disponibile dopo che una nuova pescata, la rivelazione o una nuova mano mostra carte nascoste.",
-        "## Difficoltà",
-        "- **Normale:** parti con 5 punti; i pareggi non cambiano il punteggio; l'avversario pesca 5 carte più la tua puntata.",
-        "- **Difficile:** parti con 3 punti; il banco vince i pareggi; l'avversario pesca 5 carte più la tua puntata.",
-        "- **Esperto:** regole Difficili, ma l'avversario pesca 6 carte più la tua puntata.",
-        "## Jolly",
-        "Attiva **Jolly liberi** nelle impostazioni per aggiungere due jolly che valgono come qualsiasi carta non già presente nella mano."
-      ]
-    },
-    "quickStart": {
-      "hash": "226dffa2",
-      "value": [
-        "Forma una mano di poker, poi punta.",
-        "Più punti, più carte pesca il tuo avversario.",
-        "Arriva a 10 punti per vincere; a 0 perdi."
-      ]
-    },
-    "title": {
-      "hash": "e6a10a58",
-      "value": "Poker tascabile"
     }
   },
   "poker-squares": {

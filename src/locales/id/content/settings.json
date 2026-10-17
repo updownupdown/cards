@@ -545,6 +545,26 @@
       }
     }
   },
+  "machination": {
+    "machinationDifficulty": {
+      "hash": "434b7dba",
+      "value": {
+        "description": "Menentukan berapa banyak tumpukan tempat kamu menaruh kartu.",
+        "label": "Kesulitan",
+        "options": [
+          {
+            "label": "Mudah (9 tumpukan)"
+          },
+          {
+            "label": "Sedang (8 tumpukan)"
+          },
+          {
+            "label": "Sulit (7 tumpukan)"
+          }
+        ]
+      }
+    }
+  },
   "memory": {
     "memoryDifficulty": {
       "hash": "4ec0fa07",
@@ -644,41 +664,6 @@
           },
           {
             "label": "Sulit (5 kartu)"
-          }
-        ]
-      }
-    }
-  },
-  "pocket-poker": {
-    "pokerDifficulty": {
-      "hash": "505d7998",
-      "value": {
-        "description": "Mode Sulit dimulai dengan 3 poin (bukan 5) dan memberikan seri kepada lawan. Ahli juga memberi lawan satu kartu ekstra.",
-        "label": "Kesulitan",
-        "options": [
-          {
-            "label": "Normal"
-          },
-          {
-            "label": "Sulit"
-          },
-          {
-            "label": "Ahli"
-          }
-        ]
-      }
-    },
-    "pokerJokers": {
-      "hash": "8bf4ba75",
-      "value": {
-        "description": "Masukkan dua Joker bebas ke dek.",
-        "label": "Joker",
-        "options": [
-          {
-            "label": "Tanpa Joker"
-          },
-          {
-            "label": "Joker bebas"
           }
         ]
       }

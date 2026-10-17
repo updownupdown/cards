@@ -347,10 +347,11 @@ const GOLDEN_UNLOCKED_PATHS = [
   "/golf",
   "/grandfathers-clock",
   "/klondike",
+  // Pocket Poker's node, which Machination took over (REPLACED_GAME_PATHS).
+  "/machination",
   "/memory",
   "/ouroboros",
   "/penguin",
-  "/pocket-poker",
   "/red-diamond",
   "/simple-simon",
   "/stalactites",
@@ -438,7 +439,8 @@ describe("Saved data: an existing player's save loads intact", () => {
         "/klondike": 3,
         "/beehive": 1,
         "/memory": 2,
-        "/pocket-poker": 1,
+        // The Pocket Poker win went with the game (Machination replaced it);
+        // what it opened, such as Diplomat, stays open.
         // Won as /alaska.
         "/yukon": 1,
       },

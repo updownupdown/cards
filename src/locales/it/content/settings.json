@@ -545,6 +545,26 @@
       }
     }
   },
+  "machination": {
+    "machinationDifficulty": {
+      "hash": "434b7dba",
+      "value": {
+        "description": "Stabilisce su quante pile metti le carte.",
+        "label": "Difficoltà",
+        "options": [
+          {
+            "label": "Facile (9 pile)"
+          },
+          {
+            "label": "Media (8 pile)"
+          },
+          {
+            "label": "Difficile (7 pile)"
+          }
+        ]
+      }
+    }
+  },
   "memory": {
     "memoryDifficulty": {
       "hash": "4ec0fa07",
@@ -644,41 +664,6 @@
           },
           {
             "label": "Difficile (5 carte)"
-          }
-        ]
-      }
-    }
-  },
-  "pocket-poker": {
-    "pokerDifficulty": {
-      "hash": "505d7998",
-      "value": {
-        "description": "La modalità Difficile parte da 3 punti (invece di 5) e assegna i pareggi all'avversario. Esperto dà anche una carta extra all'avversario.",
-        "label": "Difficoltà",
-        "options": [
-          {
-            "label": "Normale"
-          },
-          {
-            "label": "Difficile"
-          },
-          {
-            "label": "Esperto"
-          }
-        ]
-      }
-    },
-    "pokerJokers": {
-      "hash": "8bf4ba75",
-      "value": {
-        "description": "Aggiunge al mazzo due Jolly che valgono come qualsiasi carta.",
-        "label": "Jolly",
-        "options": [
-          {
-            "label": "Senza Jolly"
-          },
-          {
-            "label": "Jolly liberi"
           }
         ]
       }

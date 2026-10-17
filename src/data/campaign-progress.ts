@@ -101,7 +101,15 @@ function migrateUnlockedPaths(
     }
   }
 
-  const current = getUnlockedGameDotPaths(new Set(Object.keys(winsByPath)));
+  // A replaced game's wins aren't kept (the game in its place is a different
+  // game), but what they opened is: they open the node's neighbours still.
+  const wonNodes = new Set(Object.keys(winsByPath));
+  for (const [wonPath, wins] of Object.entries(candidate.winsByPath ?? {})) {
+    if (typeof wins !== "number" || !(wins > 0)) continue;
+    const node = currentGameDotPath(wonPath);
+    if (node !== currentGamePath(wonPath)) wonNodes.add(node);
+  }
+  const current = getUnlockedGameDotPaths(wonNodes);
   return [
     ...new Set([
       ...[...opened]

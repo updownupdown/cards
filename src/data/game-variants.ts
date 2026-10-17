@@ -99,10 +99,16 @@ export const RETIRED_GAME_PATHS: readonly string[] = ["/pickpocket", "/seer"];
  * Replacing a released game needs the owner's OK: see "Locked: players' saved
  * data" in AGENTS.md.
  */
-export const REPLACED_GAME_PATHS: Record<string, string> = {};
+export const REPLACED_GAME_PATHS: Record<string, string> = {
+  "/pocket-poker": "/machination",
+};
 
 /** Game settings that only retired games used; saved values are ignored. */
-export const RETIRED_GAME_SETTINGS: readonly string[] = ["seerDifficulty"];
+export const RETIRED_GAME_SETTINGS: readonly string[] = [
+  "seerDifficulty",
+  "pokerDifficulty",
+  "pokerJokers",
+];
 
 /** The current path for a game path that may have moved. */
 export function currentGamePath(path: string): string {

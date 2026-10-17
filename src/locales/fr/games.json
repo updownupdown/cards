@@ -588,46 +588,16 @@
     "wonWithTier": "{{score}} points : {{tier}} !",
     "lostShortOfTarget": "{{score}} points : {{tier}}. Il vous faut {{target}} points pour gagner."
   },
-  "pocketPoker": {
-    "youHit10PointsYou": "Vous atteignez 10 points, vous gagnez !",
-    "youBustedOut": "Vous êtes à sec.",
-    "tapCardsToDiscard": "Touchez les cartes à défausser",
-    "minBet": "Mise min.",
-    "opponentDrawsYourBet": "L'adversaire pioche : {{value}} + (votre mise)",
-    "youWin": "Vous gagnez",
-    "youLose": "Vous perdez",
-    "pushTie": "Égalité",
-    "draw": "Piocher {{value}}",
-    "setHand": "Valider la main",
-    "bet": "Miser {{value}}",
-    "nextRound": "Manche suivante",
-    "opponent": "Adversaire",
-    "hands": {
-      "highCard": "Carte haute",
-      "onePair": "Paire",
-      "twoPair": "Double paire",
-      "threeOfAKind": "Brelan",
-      "straight": "Quinte",
-      "flush": "Couleur",
-      "fullHouse": "Full",
-      "fourOfAKind": "Carré",
-      "straightFlush": "Quinte flush"
-    },
-    "hint": {
-      "play": "Jouez : une mise d'un point ne risque pas plus qu'un abandon",
-      "setHandStrong": "Valider la main : une quinte ou mieux mérite d'être gardée",
-      "setHandBet": "Valider la main : piocher encore porte votre mise minimale à 2 pour trop peu",
-      "keepSets": "Gardez vos cartes assorties, tirez les autres",
-      "keepFlushDraw": "Gardez les quatre cartes à la couleur",
-      "keepPair": "Gardez la paire, tirez les autres",
-      "keepStraightDraw": "Gardez les quatre cartes à la quinte",
-      "keepHighCards_one": "Gardez la haute carte, tirez les autres",
-      "keepHighCards_other": "Gardez les hautes cartes, tirez les autres",
-      "keepJokers_one": "Gardez le Joker, tirez les autres",
-      "keepJokers_other": "Gardez les Jokers, tirez les autres",
-      "keepNothing": "Rien ne vaut la peine d'être gardé : tirez les cinq",
-      "odds": "Cette main gagne environ {{chance}} % du temps"
-    }
+  "pokerHands": {
+    "highCard": "Carte haute",
+    "onePair": "Paire",
+    "twoPair": "Double paire",
+    "threeOfAKind": "Brelan",
+    "straight": "Quinte",
+    "flush": "Couleur",
+    "fullHouse": "Full",
+    "fourOfAKind": "Carré",
+    "straightFlush": "Quinte flush"
   },
   "pokerSquares": {
     "greatHandYouScored": "Belle main ! Vous avez marqué {{score}}.",
@@ -955,8 +925,13 @@
     "noMorePairsOrFaceTriplets": "Plus aucune paire ni aucun trio de figures n'est possible."
   },
   "machination": {
-    "allBuilt": "All four suits built up to the King!",
-    "stuck": "{{value}} cards could not come off the piles."
+    "allBuilt": "Les quatre couleurs montées jusqu'au Roi !",
+    "stuck": "{{value}} cartes n'ont pas pu quitter les piles.",
+    "hint": {
+      "comesOffFirst": "Sans risque ici : elle part avant la carte du dessous",
+      "emptyPile": "Commencez une pile avec elle",
+      "leastHarm": "Chaque pile bloque quelque chose : celle-ci bloque le moins"
+    }
   },
   "newDeck": {
     "runs": "Runs: {{value}} of {{max}}",

@@ -1406,7 +1406,10 @@
     },
     "quickStart": {
       "hash": "6f936e84",
-      "value": ["Remova pares que somam 11.", "Valete, Dama e Rei saem juntos."]
+      "value": [
+        "Remova pares que somam 11.",
+        "Valete, Dama e Rei saem juntos."
+      ]
     },
     "title": {
       "hash": "b11d7c71",
@@ -2357,6 +2360,39 @@
       "value": "Licantropo"
     }
   },
+  "machination": {
+    "howToPlay": {
+      "hash": "3a5e0003",
+      "value": [
+        "## Objetivo",
+        "Coloque todas as cartas de forma que, no fim, as quatro fundações possam ser construídas por naipe do Ás ao Rei.",
+        "## Colocação",
+        "- O monte é virado uma carta por vez. Toque em uma pilha para colocar nela a carta virada.",
+        "- Um **Ás** vai direto para uma fundação assim que é virado.",
+        "- As cartas nunca passam de uma pilha para outra, então planeje onde cada uma vai: a carta do topo de uma pilha precisa sair antes das que estão embaixo.",
+        "## Construção",
+        "- Quando o monte fica vazio, cada carta do topo de uma pilha que seja a próxima do seu naipe vai para a fundação, uma após a outra, até que nenhuma mais possa sair.",
+        "- Você vence quando as 52 cartas chegam às fundações.",
+        "## Dicas",
+        "- Uma carta baixa sobre uma mais alta é segura. Uma carta alta sobre uma mais baixa a bloqueia até a mais alta sair.",
+        "- Nunca coloque uma carta sobre uma mais baixa do mesmo naipe: nenhuma das duas poderá sair.",
+        "- Guarde uma pilha vazia para as cartas altas pelo maior tempo possível.",
+        "- Nas configurações do jogo, **Fácil** usa nove pilhas e **Difícil** usa sete, em vez de oito."
+      ]
+    },
+    "quickStart": {
+      "hash": "cbc83afc",
+      "value": [
+        "Vire o monte uma carta por vez e coloque cada uma na pilha que quiser.",
+        "Os Ases vão direto para as fundações.",
+        "Quando o monte acaba, as pilhas sobem para as fundações por naipe, começando pelas cartas do topo."
+      ]
+    },
+    "title": {
+      "hash": "5617e152",
+      "value": "Maquinação"
+    }
+  },
   "maria": {
     "howToPlay": {
       "hash": "6df7d8cf",
@@ -2479,7 +2515,9 @@
     },
     "quickStart": {
       "hash": "c43135e0",
-      "value": ["Remova duas cartas do mesmo valor."]
+      "value": [
+        "Remova duas cartas do mesmo valor."
+      ]
     },
     "title": {
       "hash": "142bf888",
@@ -2732,43 +2770,6 @@
     "title": {
       "hash": "63ac8afa",
       "value": "Cerca Branca"
-    }
-  },
-  "pocket-poker": {
-    "howToPlay": {
-      "hash": "24a831bd",
-      "value": [
-        "## Objetivo",
-        "Chegue a **10 pontos** para vencer. Você perde se uma aposta reduzir sua pontuação a 0.",
-        "## Ordem do turno",
-        "1. **Compre 5 cartas**",
-        "2. **Jogue ou desista:** desistir custa **1 ponto**. Depois de **duas desistências seguidas**, ou com 1 ponto, você deve jogar. Jogar zera a contagem.",
-        "3. **Descarte e compre de novo** até **2 vezes** para melhorar sua mão.",
-        "4. **Aposte:** sua aposta mínima é igual ao número de vezes que você comprou:",
-        "- 1 compra → aposte 1, 2 ou 3",
-        "- 2 compras → aposte 2 ou 3",
-        "\n5. **O oponente compra** cartas de acordo com a dificuldade selecionada e fica com as suas **cinco melhores**.",
-        "6. **Compare as mãos** pela classificação normal do pôquer. Os empates são decididos pela carta mais alta.",
-        "7. **Desfazer** não fica disponível depois que uma nova compra, a revelação ou uma nova mão mostra cartas ocultas.",
-        "## Dificuldade",
-        "- **Normal:** comece com 5 pontos; empates não alteram a pontuação; o oponente compra 5 cartas mais sua aposta.",
-        "- **Difícil:** comece com 3 pontos; a banca vence empates; o oponente compra 5 cartas mais sua aposta.",
-        "- **Especialista:** regras do Difícil, mas o oponente compra 6 cartas mais sua aposta.",
-        "## Coringas",
-        "Ative **Coringas livres** nas configurações para adicionar dois coringas que valem como qualquer carta que ainda não esteja na mão."
-      ]
-    },
-    "quickStart": {
-      "hash": "226dffa2",
-      "value": [
-        "Monte uma mão de pôquer e depois aposte.",
-        "Quanto maior a aposta, mais cartas seu rival compra.",
-        "Chegue a 10 pontos para vencer; com 0, você perde."
-      ]
-    },
-    "title": {
-      "hash": "e6a10a58",
-      "value": "Pôquer de bolso"
     }
   },
   "poker-squares": {

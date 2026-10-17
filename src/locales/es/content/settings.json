@@ -545,6 +545,26 @@
       }
     }
   },
+  "machination": {
+    "machinationDifficulty": {
+      "hash": "434b7dba",
+      "value": {
+        "description": "Determina en cuántas pilas pones las cartas.",
+        "label": "Dificultad",
+        "options": [
+          {
+            "label": "Fácil (9 pilas)"
+          },
+          {
+            "label": "Media (8 pilas)"
+          },
+          {
+            "label": "Difícil (7 pilas)"
+          }
+        ]
+      }
+    }
+  },
   "memory": {
     "memoryDifficulty": {
       "hash": "4ec0fa07",
@@ -644,41 +664,6 @@
           },
           {
             "label": "Difícil (5 cartas)"
-          }
-        ]
-      }
-    }
-  },
-  "pocket-poker": {
-    "pokerDifficulty": {
-      "hash": "505d7998",
-      "value": {
-        "description": "El modo Difícil empieza con 3 puntos (en vez de 5) y concede los empates al rival. Experto también da una carta extra al rival.",
-        "label": "Dificultad",
-        "options": [
-          {
-            "label": "Normal"
-          },
-          {
-            "label": "Difícil"
-          },
-          {
-            "label": "Experto"
-          }
-        ]
-      }
-    },
-    "pokerJokers": {
-      "hash": "8bf4ba75",
-      "value": {
-        "description": "Incluye dos comodines en el mazo.",
-        "label": "Comodines",
-        "options": [
-          {
-            "label": "Sin Comodines"
-          },
-          {
-            "label": "Con Comodines"
           }
         ]
       }

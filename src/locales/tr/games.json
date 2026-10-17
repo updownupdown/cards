@@ -588,46 +588,16 @@
     "wonWithTier": "{{score}} puan: {{tier}}!",
     "lostShortOfTarget": "{{score}} puan: {{tier}}. Kazanmak için {{target}} puan gerekiyor."
   },
-  "pocketPoker": {
-    "youHit10PointsYou": "10 puana ulaştın, kazandın!",
-    "youBustedOut": "Puanın bitti.",
-    "tapCardsToDiscard": "Iskartaya atmak için kartlara dokun",
-    "minBet": "Min. bahis",
-    "opponentDrawsYourBet": "Rakip çeker: {{value}} + (bahisin)",
-    "youWin": "Kazandın",
-    "youLose": "Kaybettin",
-    "pushTie": "Berabere",
-    "draw": "{{value}} çek",
-    "setHand": "Eli onayla",
-    "bet": "Bahis {{value}}",
-    "nextRound": "Sonraki tur",
-    "opponent": "Rakip",
-    "hands": {
-      "highCard": "Yüksek kart",
-      "onePair": "Per",
-      "twoPair": "Döper",
-      "threeOfAKind": "Üçlü",
-      "straight": "Kent",
-      "flush": "Floş",
-      "fullHouse": "Full",
-      "fourOfAKind": "Kare",
-      "straightFlush": "Straight Flush"
-    },
-    "hint": {
-      "play": "Oyna: bir puanlık bahis, pas geçmekten fazlasını riske atmaz",
-      "setHandStrong": "Eli onayla: kenta veya daha iyisi tutulmaya değer",
-      "setHandBet": "Eli onayla: bir çekiş daha en düşük bahsini 2'ye çıkarır, değmez",
-      "keepSets": "Eşleşen kartlarını tut, gerisini çek",
-      "keepFlushDraw": "Floşa giden dört kartı tut",
-      "keepPair": "Çifti tut, gerisini çek",
-      "keepStraightDraw": "Kentiye giden dört kartı tut",
-      "keepHighCards_one": "Yüksek kartı tut, gerisini çek",
-      "keepHighCards_other": "Yüksek kartları tut, gerisini çek",
-      "keepJokers_one": "Jokeri tut, gerisini çek",
-      "keepJokers_other": "Jokerleri tut, gerisini çek",
-      "keepNothing": "Tutmaya değer bir şey yok: beşini de çek",
-      "odds": "Bu el yaklaşık %{{chance}} oranında kazanır"
-    }
+  "pokerHands": {
+    "highCard": "Yüksek kart",
+    "onePair": "Per",
+    "twoPair": "Döper",
+    "threeOfAKind": "Üçlü",
+    "straight": "Kent",
+    "flush": "Floş",
+    "fullHouse": "Full",
+    "fourOfAKind": "Kare",
+    "straightFlush": "Straight Flush"
   },
   "pokerSquares": {
     "greatHandYouScored": "Harika el! Puanın: {{score}}.",
@@ -955,8 +925,13 @@
     "noMorePairsOrFaceTriplets": "Yapılabilecek çift ya da resimli kart üçlüsü kalmadı."
   },
   "machination": {
-    "allBuilt": "All four suits built up to the King!",
-    "stuck": "{{value}} cards could not come off the piles."
+    "allBuilt": "Dört takımın hepsi Papaz'a kadar dizildi!",
+    "stuck": "Yığınlardan çıkamayan kart: {{value}}",
+    "hint": {
+      "comesOffFirst": "Burası güvenli: altındaki karttan önce çıkar",
+      "emptyPile": "Onunla yeni bir yığın başlat",
+      "leastHarm": "Her yığın bir şeyi kilitliyor: bu en azını kilitliyor"
+    }
   },
   "newDeck": {
     "runs": "Runs: {{value}} of {{max}}",

@@ -588,46 +588,16 @@
     "wonWithTier": "{{score}} poin: {{tier}}!",
     "lostShortOfTarget": "{{score}} poin: {{tier}}. Anda butuh {{target}} poin untuk menang."
   },
-  "pocketPoker": {
-    "youHit10PointsYou": "Kamu mencapai 10 poin — kamu menang!",
-    "youBustedOut": "Poinmu habis.",
-    "tapCardsToDiscard": "Ketuk kartu untuk dibuang",
-    "minBet": "Taruhan min.",
-    "opponentDrawsYourBet": "Lawan mengambil: {{value}} + (taruhanmu)",
-    "youWin": "Kamu menang",
-    "youLose": "Kamu kalah",
-    "pushTie": "Seri",
-    "draw": "Ambil {{value}}",
-    "setHand": "Kunci kartu",
-    "bet": "Taruh {{value}}",
-    "nextRound": "Ronde berikutnya",
-    "opponent": "Lawan",
-    "hands": {
-      "highCard": "High Card",
-      "onePair": "One Pair",
-      "twoPair": "Two Pair",
-      "threeOfAKind": "Three of a Kind",
-      "straight": "Straight",
-      "flush": "Flush",
-      "fullHouse": "Full House",
-      "fourOfAKind": "Four of a Kind",
-      "straightFlush": "Straight Flush"
-    },
-    "hint": {
-      "play": "Main: taruhan satu poin tidak lebih berisiko daripada menyerah",
-      "setHandStrong": "Kunci kartu: straight atau lebih baik layak dipertahankan",
-      "setHandBet": "Kunci kartu: mengambil lagi menaikkan taruhan minimum ke 2 demi hasil terlalu kecil",
-      "keepSets": "Simpan kartu yang sama, ambil sisanya",
-      "keepFlushDraw": "Simpan empat kartu menuju flush",
-      "keepPair": "Simpan pasangan, ambil sisanya",
-      "keepStraightDraw": "Simpan empat kartu menuju straight",
-      "keepHighCards_one": "Simpan kartu tinggi, ambil sisanya",
-      "keepHighCards_other": "Simpan kartu tinggi, ambil sisanya",
-      "keepJokers_one": "Simpan joker, ambil sisanya",
-      "keepJokers_other": "Simpan kedua joker, ambil sisanya",
-      "keepNothing": "Tidak ada yang layak disimpan: ambil kelimanya",
-      "odds": "Tangan ini menang sekitar {{chance}}% dari waktu"
-    }
+  "pokerHands": {
+    "highCard": "High Card",
+    "onePair": "One Pair",
+    "twoPair": "Two Pair",
+    "threeOfAKind": "Three of a Kind",
+    "straight": "Straight",
+    "flush": "Flush",
+    "fullHouse": "Full House",
+    "fourOfAKind": "Four of a Kind",
+    "straightFlush": "Straight Flush"
   },
   "pokerSquares": {
     "greatHandYouScored": "Kartu hebat! Skormu {{score}}.",
@@ -955,8 +925,13 @@
     "noMorePairsOrFaceTriplets": "Tidak ada lagi pasangan atau trio kartu bergambar yang bisa dibuat."
   },
   "machination": {
-    "allBuilt": "All four suits built up to the King!",
-    "stuck": "{{value}} cards could not come off the piles."
+    "allBuilt": "Keempat jenis tersusun sampai King!",
+    "stuck": "{{value}} kartu tidak bisa keluar dari tumpukan.",
+    "hint": {
+      "comesOffFirst": "Aman di sini: keluar sebelum kartu di bawahnya",
+      "emptyPile": "Mulai tumpukan baru dengan kartu ini",
+      "leastHarm": "Setiap tumpukan menghalangi sesuatu: yang ini paling sedikit"
+    }
   },
   "newDeck": {
     "runs": "Runs: {{value}} of {{max}}",

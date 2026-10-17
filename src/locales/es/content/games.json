@@ -2360,6 +2360,39 @@
       "value": "Licántropo"
     }
   },
+  "machination": {
+    "howToPlay": {
+      "hash": "3a5e0003",
+      "value": [
+        "## Objetivo",
+        "Coloca todas las cartas de modo que, al final, las cuatro fundaciones puedan subir por palo del As al Rey.",
+        "## Colocación",
+        "- El mazo se gira de una carta en una. Toca una pila para poner en ella la carta girada.",
+        "- Un **As** va directamente a una fundación en cuanto se gira.",
+        "- Las cartas nunca pasan de una pila a otra, así que piensa bien dónde va cada una: la carta de arriba de una pila tiene que salir antes que las de debajo.",
+        "## Subida",
+        "- Cuando el mazo está vacío, cada carta de arriba de una pila que sea la siguiente de su palo pasa a la fundación, una tras otra, hasta que ya no pueda salir ninguna.",
+        "- Ganas cuando las 52 cartas llegan a las fundaciones.",
+        "## Consejos",
+        "- Una carta baja sobre una más alta es segura. Una carta alta sobre una más baja la bloquea hasta que sale la más alta.",
+        "- Nunca pongas una carta sobre una más baja de su mismo palo: ninguna de las dos podrá salir.",
+        "- Guarda una pila vacía para las cartas altas todo el tiempo que puedas.",
+        "- En los ajustes del juego, **Fácil** se juega con nueve pilas y **Difícil** con siete, en lugar de ocho."
+      ]
+    },
+    "quickStart": {
+      "hash": "cbc83afc",
+      "value": [
+        "Gira el mazo de una carta en una y pon cada una en la pila que quieras.",
+        "Los Ases van directamente a las fundaciones.",
+        "Cuando se acaba el mazo, las pilas suben a las fundaciones por palo, empezando por las cartas de arriba."
+      ]
+    },
+    "title": {
+      "hash": "5617e152",
+      "value": "Maquinación"
+    }
+  },
   "maria": {
     "howToPlay": {
       "hash": "6df7d8cf",
@@ -2482,7 +2515,9 @@
     },
     "quickStart": {
       "hash": "c43135e0",
-      "value": ["Retira dos cartas del mismo valor."]
+      "value": [
+        "Retira dos cartas del mismo valor."
+      ]
     },
     "title": {
       "hash": "142bf888",
@@ -2735,43 +2770,6 @@
     "title": {
       "hash": "63ac8afa",
       "value": "Cerca de estacas"
-    }
-  },
-  "pocket-poker": {
-    "howToPlay": {
-      "hash": "24a831bd",
-      "value": [
-        "## Objetivo",
-        "Llega a **10 puntos** para ganar. Pierdes si una apuesta reduce tu puntuación a 0.",
-        "## Orden del turno",
-        "1. **Roba 5 cartas**",
-        "2. **Juega o retírate:** retirarse cuesta **1 punto**. Después de **dos retiradas seguidas**, o con 1 punto, debes jugar. Jugar reinicia el contador.",
-        "3. **Descarta y vuelve a robar** hasta **2 veces** para mejorar tu mano.",
-        "4. **Apuesta:** tu apuesta mínima es igual al número de veces que has robado:",
-        "- 1 robo → apuesta 1, 2 o 3",
-        "- 2 robos → apuesta 2 o 3",
-        "\n5. **El rival roba** cartas según la dificultad seleccionada y se queda con sus **cinco mejores**.",
-        "6. **Compara las manos** según la clasificación habitual del póker. Los empates se deciden por la carta más alta.",
-        "7. **Deshacer** no está disponible después de que un nuevo robo, la confrontación o un nuevo reparto revele cartas ocultas.",
-        "## Dificultad",
-        "- **Normal:** empieza con 5 puntos; los empates no cambian la puntuación; el rival roba 5 cartas más tu apuesta.",
-        "- **Difícil:** empieza con 3 puntos; la casa gana los empates; el rival roba 5 cartas más tu apuesta.",
-        "- **Experto:** reglas de Difícil, pero el rival roba 6 cartas más tu apuesta.",
-        "## Comodines",
-        "Activa los **Comodines** en los ajustes para añadir dos comodines que cuentan como cualquier carta que no esté ya en la mano."
-      ]
-    },
-    "quickStart": {
-      "hash": "226dffa2",
-      "value": [
-        "Forma una mano de póker y luego apuesta.",
-        "Cuanto más apuestes, más cartas roba tu rival.",
-        "Llega a 10 puntos para ganar; si bajas a 0, pierdes."
-      ]
-    },
-    "title": {
-      "hash": "e6a10a58",
-      "value": "Póker de bolsillo"
     }
   },
   "poker-squares": {

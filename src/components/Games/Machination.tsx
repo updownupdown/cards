@@ -1,6 +1,9 @@
 import { useGameColors } from "@/hooks/useGameColors";
 import { useGameSettingValue } from "@/hooks/useGameSettingValue";
 import { useStateManager } from "@/hooks/useStateManager";
+import { makeHint, withNote, zoneTarget } from "@/hints/hint";
+import { useHint } from "@/hints/hint-store";
+import { seededRandom, shuffledWith } from "@/hints/random";
 import { i18n } from "@/i18n";
 import { delay } from "@/utils/utils";
 import { useEffect, useMemo } from "react";
@@ -15,6 +18,7 @@ import {
   rankValue,
   redealWith,
   shuffle,
+  suitValue,
   top,
   zoneFanOffset,
   type PlayingCard,
@@ -29,9 +33,9 @@ import { rgba } from "@/styles/styles";
 // unpacked onto the foundations. The order of that unpacking can't matter (a
 // card that can be built stays buildable until it is), so it plays itself:
 // the game is won or lost in the placing.
-const NORMAL_PILES = 8;
-const HARD_PILES = 7;
-const BOARD_COLS = 8;
+const PILES_BY_DIFFICULTY = { easy: 9, medium: 8, hard: 7 } as const;
+/** Board width in cards: eight, or one more for Easy's ninth pile. */
+const MIN_BOARD_COLS = 8;
 const BUILD_INTERVAL = 150;
 const FOUNDATION_COUNT = 4;
 const DECK_SIZE = 52;
@@ -42,7 +46,8 @@ const TOP_ROW = BAR_HEIGHT + 0.5;
 const PILE_ROW = TOP_ROW + 1.4;
 /** The most a pile may fan down before its cards close up to fit. */
 const PILE_SPAN = 3.4;
-const FOUNDATION_COL = 3;
+/** The foundations end one column short of the board's right edge. */
+const FOUNDATIONS_FROM_RIGHT = 5;
 const BOARD_ROWS = PILE_ROW + 1 + PILE_SPAN;
 
 export type MachinationGameState = {
@@ -129,6 +134,235 @@ function isLost(state: MachinationGameState) {
   );
 }
 
+// ========== Hints ========== //
+// The piles come off in an order fixed by two rules: a card comes off before
+// the card under it, and a suit builds up one rank at a time. Placing a card
+// adds one more "comes off before", from it to the pile's top card. If that
+// top card must already come off before it, the two wait for each other and
+// the game is lost; otherwise the new rule may only delay the top card.
+/** How many guesses at the order of the cards still to come each pile gets. */
+const HINT_PLAYOUTS = 24;
+const DEADLOCK = 1000;
+/** Weights of a quick player's costs, in steps of "comes off later". */
+// Tuned on random deals: a small delay is cheap (the card under often isn't
+// needed soon), wasted room on a much later card is not.
+const DELAY_COST = 0.25;
+const DELAY_SQUARED_COST = 0.05;
+const SPARE_ROOM_COST = 0.4;
+const EMPTY_PILE_BASE = 4;
+const EMPTY_PILE_COST = 0.2;
+
+/** A card as the order sees it: 13 per suit, Ace to King. */
+const orderIndex = (card: PlayingCard) =>
+  (suitValue(card) - 1) * 13 + rankValue(card) - 1;
+const NONE = -1;
+
+/** Which card lies directly on and under each card in the piles. */
+class PileOrder {
+  private under = new Int8Array(DECK_SIZE).fill(NONE);
+  private over = new Int8Array(DECK_SIZE).fill(NONE);
+  private earliestMemo = new Int16Array(DECK_SIZE).fill(NONE);
+  private seen = new Uint8Array(DECK_SIZE);
+
+  constructor(piles: PlayingCard[][]) {
+    for (const pile of piles) {
+      for (let index = 1; index < pile.length; index += 1) {
+        this.link(orderIndex(pile[index]), orderIndex(pile[index - 1]));
+      }
+    }
+  }
+
+  private link(card: number, below: number) {
+    this.under[card] = below;
+    this.over[below] = card;
+  }
+
+  /** Records a card placed on `below` (the pile's top card, if any). */
+  place(card: PlayingCard, below: PlayingCard | undefined) {
+    if (below) this.link(orderIndex(card), orderIndex(below));
+    this.earliestMemo.fill(NONE);
+  }
+
+  /** Must `first` come off before `then`, whatever else happens? */
+  mustPrecede(first: PlayingCard, then: PlayingCard) {
+    const goal = orderIndex(then);
+    this.seen.fill(0);
+    const stack = [orderIndex(first)];
+    while (stack.length > 0) {
+      const current = stack.pop()!;
+      if (current === goal) return true;
+      if (this.seen[current]) continue;
+      this.seen[current] = 1;
+      // The next rank of its suit, unless it is a King.
+      if (current % 13 < 12) stack.push(current + 1);
+      if (this.under[current] !== NONE) stack.push(this.under[current]);
+    }
+    return false;
+  }
+
+  /**
+   * How many cards must come off, one after another, before this one can: a
+   * 2 can come first; a card under others waits for them.
+   */
+  earliest(card: PlayingCard) {
+    return this.earliestOf(orderIndex(card));
+  }
+
+  private earliestOf(index: number): number {
+    const known = this.earliestMemo[index];
+    if (known !== NONE) return known;
+    // Cards that wait for each other (a deadlock already placed) never come
+    // off: count them as coming off last.
+    this.earliestMemo[index] = DECK_SIZE;
+    let steps = 0;
+    // Below a 2 is its Ace, already on a foundation.
+    if (index % 13 > 1) steps = this.earliestOf(index - 1) + 1;
+    const above = this.over[index];
+    if (above !== NONE) steps = Math.max(steps, this.earliestOf(above) + 1);
+    this.earliestMemo[index] = steps;
+    return steps;
+  }
+}
+
+/**
+ * What placing `card` on a pile costs a quick player: a deadlock if the top
+ * card must already come off first; else how much later the top card can
+ * come off, and the room the card takes. On a card that comes off later
+ * anyway, the closer the better (a 2 on a King wastes the King's room for a
+ * Queen); an empty pile is best kept for a card that comes off late.
+ */
+function placementCost(
+  order: PileOrder,
+  card: PlayingCard,
+  pile: PlayingCard[],
+) {
+  const pileTop = top(pile);
+  const cardSteps = order.earliest(card);
+  if (!pileTop) {
+    return EMPTY_PILE_BASE + EMPTY_PILE_COST * Math.max(0, 11 - cardSteps);
+  }
+  if (order.mustPrecede(pileTop, card)) return DEADLOCK;
+  const topSteps = order.earliest(pileTop);
+  return topSteps > cardSteps
+    ? SPARE_ROOM_COST * (topSteps - cardSteps - 1)
+    : delayCost(cardSteps + 1 - topSteps);
+}
+
+/** A long delay costs more than its steps: a 3 under a King waits all game. */
+function delayCost(steps: number) {
+  return DELAY_COST * steps + DELAY_SQUARED_COST * steps * steps;
+}
+
+/** Where a quick player puts `card`: the cheapest pile, the first of ties. */
+function quickPlacement(
+  piles: PlayingCard[][],
+  card: PlayingCard,
+  order = new PileOrder(piles),
+) {
+  let best = 0;
+  let bestCost = Infinity;
+  piles.forEach((pile, index) => {
+    const cost = placementCost(order, card, pile);
+    if (cost < bestCost) {
+      best = index;
+      bestCost = cost;
+    }
+  });
+  return best;
+}
+
+/** Do the piles all come off once the stock is empty? */
+function unpacks(state: MachinationGameState) {
+  const next = structuredClone(state);
+  for (let index = buildablePile(next); index >= 0;) {
+    buildCard(next, index);
+    index = buildablePile(next);
+  }
+  return isWon(next);
+}
+
+/**
+ * How often the game is won after placing the turned card on a pile, over a
+ * few guesses at the order of the cards still to come (the stock is face
+ * down, so a hint knows which cards are left, not their order), placed by
+ * the quick player.
+ */
+function placementWins(
+  state: MachinationGameState,
+  pileIndex: number,
+  orders: PlayingCard[][],
+) {
+  let wins = 0;
+  for (const order of orders) {
+    const next: MachinationGameState = {
+      stock: [],
+      piles: state.piles.map((pile) => [...pile]),
+      foundations: state.foundations.map((pile) => [...pile]),
+    };
+    const pileOrder = new PileOrder(next.piles);
+    const turned = turnedCard(state)!;
+    pileOrder.place(turned, top(next.piles[pileIndex]));
+    next.piles[pileIndex].push(turned);
+    for (const card of order) {
+      if (card.rank === "A") {
+        next.foundations[foundationFor(next, card)].push(card);
+        continue;
+      }
+      const pile = next.piles[quickPlacement(next.piles, card, pileOrder)];
+      pileOrder.place(card, top(pile));
+      pile.push(card);
+    }
+    if (unpacks(next)) wins += 1;
+  }
+  return wins;
+}
+
+/** The best pile for the turned card, and why. */
+function bestPlacement(state: MachinationGameState) {
+  const card = turnedCard(state);
+  if (!card || card.rank === "A") return null;
+  // Empty piles are all alike: weigh only the first.
+  const firstEmpty = state.piles.findIndex((pile) => pile.length === 0);
+  const candidates = state.piles.flatMap((pile, index) =>
+    pile.length > 0 || index === firstEmpty ? [index] : [],
+  );
+  const toCome = state.stock.slice(0, -1);
+  const random = seededRandom(
+    JSON.stringify([state.piles, state.foundations, card.id]),
+  );
+  const orders = Array.from({ length: HINT_PLAYOUTS }, () =>
+    shuffledWith(toCome, random),
+  );
+  const order = new PileOrder(state.piles);
+  let best: { pile: number; wins: number; cost: number } | null = null;
+  for (const pile of candidates) {
+    const cost = placementCost(order, card, state.piles[pile]);
+    // A deadlock now can't be won, whatever comes.
+    const wins = cost >= DEADLOCK ? -1 : placementWins(state, pile, orders);
+    if (!best || wins > best.wins || (wins === best.wins && cost < best.cost)) {
+      best = { pile, wins, cost };
+    }
+  }
+  if (!best) return null;
+  const pileTop = top(state.piles[best.pile]);
+  const reason = !pileTop
+    ? ("emptyPile" as const)
+    : order.earliest(pileTop) > order.earliest(card)
+      ? ("comesOffFirst" as const)
+      : ("leastHarm" as const);
+  return { pile: best.pile, reason };
+}
+
+function findMachinationHint(state: MachinationGameState) {
+  if (isWon(state) || isLost(state)) return null;
+  const placement = bestPlacement(state);
+  if (!placement) return null;
+  return withNote(
+    makeHint("moveCard", zoneTarget(`pile-${placement.pile}`)),
+    i18n.t(`games:machination.hint.${placement.reason}`),
+  );
+}
+
 // ========== Deal ========== //
 /** The next pile top that builds, if any. */
 function buildablePile(state: MachinationGameState) {
@@ -136,7 +370,7 @@ function buildablePile(state: MachinationGameState) {
 }
 
 function createInitialState(
-  pileCount: number = NORMAL_PILES,
+  pileCount: number = PILES_BY_DIFFICULTY.medium,
 ): MachinationGameState {
   return {
     stock: shuffle(createDeck()),
@@ -156,8 +390,7 @@ function gatherState(state: MachinationGameState): MachinationGameState {
 const gameStateInitial = createInitialState();
 
 export const machinationRules = {
-  NORMAL_PILES,
-  HARD_PILES,
+  PILES_BY_DIFFICULTY,
   buildablePile,
   turnedCard,
   isPlacing,
@@ -169,15 +402,17 @@ export const machinationRules = {
   isWon,
   isLost,
   createInitialState,
+  PileOrder,
+  quickPlacement,
+  bestPlacement,
+  findHint: findMachinationHint,
 };
 
 // ========== Component ========== //
 export default function Machination() {
   const { colorAccent } = useGameColors();
   const pileCount =
-    useGameSettingValue("difficulty") === "difficult"
-      ? HARD_PILES
-      : NORMAL_PILES;
+    PILES_BY_DIFFICULTY[useGameSettingValue("machinationDifficulty")];
 
   const {
     isLoaded,
@@ -227,6 +462,8 @@ export default function Machination() {
     return () => clearTimeout(timer);
   }, [game, nextBuild, setGame]);
 
+  useHint(() => findMachinationHint(game), { game });
+
   function onPilePress(pileIndex: number) {
     if (ended || isSettingUp || !placing || !turned) return;
     saveUndoState(structuredClone(game));
@@ -235,20 +472,23 @@ export default function Machination() {
     });
   }
 
+  const boardCols = Math.max(MIN_BOARD_COLS, game.piles.length);
+
   const zones: MapZone[] = useMemo(() => {
+    const cols = Math.max(MIN_BOARD_COLS, game.piles.length);
     const foundationZones: MapZone[] = game.foundations.map((cards, i) => ({
       id: `foundation-${i}`,
       name: "foundation",
       pileIndex: i,
       cards,
-      col: FOUNDATION_COL + i,
+      col: cols - FOUNDATIONS_FROM_RIGHT + i,
       row: TOP_ROW,
       baseZIndex: 30,
       fan: { maxVisible: 3 },
       placeholder: { iconName: "ace" },
     }));
     // Fewer piles sit in the middle of the board.
-    const firstCol = (BOARD_COLS - game.piles.length) / 2;
+    const firstCol = (cols - game.piles.length) / 2;
     const pileZones: MapZone[] = game.piles.map((cards, i) => ({
       id: `pile-${i}`,
       name: "pile",
@@ -287,7 +527,7 @@ export default function Machination() {
         baseZIndex: 50,
         fan: { maxVisible: 3 },
         placeholder: {
-          text: "Stock",
+          text: i18n.t("cards:stock"),
           infoPos: "right",
         },
       },
@@ -329,7 +569,7 @@ export default function Machination() {
     cardMapper,
     zoneMapper,
     cardSize: "tableau",
-    fixedCols: BOARD_COLS,
+    fixedCols: boardCols,
     fixedRows: BOARD_ROWS,
   });
 

@@ -10,8 +10,6 @@ export type GameSpecificSettingKey =
   | "boomerAce"
   | "powerReserve"
   | "specialAbilities"
-  | "pokerJokers"
-  | "pokerDifficulty"
   | "ascentDifficulty"
   | "ascentChallenge"
   | "chapterAndVerseLoyalPatrons"
@@ -32,6 +30,7 @@ export type GameSpecificSettingKey =
   | "nightVigilDifficulty"
   | "pagodaDifficulty"
   | "ebbAndFlowDifficulty"
+  | "machinationDifficulty"
   | "variant"
   | "spiderSuits";
 export type GameSpecificSettingApplyBehavior = "immediate" | "next-game";
@@ -539,14 +538,15 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
     ],
     "/machination": [
       {
-        key: "difficulty",
+        key: "machinationDifficulty",
         label: "Difficulty",
         type: "string",
         applyBehavior: "next-game",
         description: "Controls how many piles you place cards on.",
         options: [
-          { label: "Normal (8 piles)", value: "easy" },
-          { label: "Hard (7 piles)", value: "difficult" },
+          { label: "Easy (9 piles)", value: "easy" },
+          { label: "Medium (8 piles)", value: "medium" },
+          { label: "Hard (7 piles)", value: "hard" },
         ],
       },
     ],
@@ -696,32 +696,6 @@ const GAME_SPECIFIC_SETTINGS: Record<string, GameSpecificSettingDefinition[]> =
         options: [
           { label: "Off", value: false },
           { label: "On", value: true },
-        ],
-      },
-    ],
-    "/pocket-poker": [
-      {
-        key: "pokerDifficulty",
-        label: "Difficulty",
-        type: "string",
-        applyBehavior: "next-game",
-        description:
-          "Hard mode starts at 3 points (instead of 5) and awards ties to the opponent. Expert also gives the opponent an extra card.",
-        options: [
-          { label: "Normal", value: "normal" },
-          { label: "Hard", value: "hard" },
-          { label: "Expert", value: "expert" },
-        ],
-      },
-      {
-        key: "pokerJokers",
-        label: "Jokers",
-        type: "string",
-        applyBehavior: "next-game",
-        description: "Include two wild Jokers in the deck.",
-        options: [
-          { label: "No Jokers", value: false },
-          { label: "Wild Jokers", value: true },
         ],
       },
     ],

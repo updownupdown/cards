@@ -588,46 +588,16 @@
     "wonWithTier": "{{score}} points: {{tier}}!",
     "lostShortOfTarget": "{{score}} points: {{tier}}. You need {{target}} points to win."
   },
-  "pocketPoker": {
-    "youHit10PointsYou": "You hit 10 points — you win!",
-    "youBustedOut": "You busted out.",
-    "tapCardsToDiscard": "Tap cards to discard",
-    "minBet": "Min bet",
-    "opponentDrawsYourBet": "Opponent draws: {{value}} + (your bet)",
-    "youWin": "You win",
-    "youLose": "You lose",
-    "pushTie": "Push (tie)",
-    "draw": "Draw {{value}}",
-    "setHand": "Set Hand",
-    "bet": "Bet {{value}}",
-    "nextRound": "Next Round",
-    "opponent": "Opponent",
-    "hands": {
-      "highCard": "High Card",
-      "onePair": "One Pair",
-      "twoPair": "Two Pair",
-      "threeOfAKind": "Three of a Kind",
-      "straight": "Straight",
-      "flush": "Flush",
-      "fullHouse": "Full House",
-      "fourOfAKind": "Four of a Kind",
-      "straightFlush": "Straight Flush"
-    },
-    "hint": {
-      "play": "Play: a one-point bet risks no more than a fold",
-      "setHandStrong": "Set Hand: a straight or better is worth keeping",
-      "setHandBet": "Set Hand: another draw raises your minimum bet to 2 for too little",
-      "keepSets": "Keep your matched cards, draw the rest",
-      "keepFlushDraw": "Keep the four to a flush",
-      "keepPair": "Keep the pair, draw the rest",
-      "keepStraightDraw": "Keep the four to a straight",
-      "keepHighCards_one": "Keep the high card, draw the rest",
-      "keepHighCards_other": "Keep the high cards, draw the rest",
-      "keepJokers_one": "Keep the Joker, draw the rest",
-      "keepJokers_other": "Keep the Jokers, draw the rest",
-      "keepNothing": "Nothing here is worth keeping: draw all five",
-      "odds": "This hand wins about {{chance}}% of the time"
-    }
+  "pokerHands": {
+    "highCard": "High Card",
+    "onePair": "One Pair",
+    "twoPair": "Two Pair",
+    "threeOfAKind": "Three of a Kind",
+    "straight": "Straight",
+    "flush": "Flush",
+    "fullHouse": "Full House",
+    "fourOfAKind": "Four of a Kind",
+    "straightFlush": "Straight Flush"
   },
   "pokerSquares": {
     "greatHandYouScored": "Great hand! You scored {{score}}.",
@@ -956,7 +926,12 @@
   },
   "machination": {
     "allBuilt": "All four suits built up to the King!",
-    "stuck": "{{value}} cards could not come off the piles."
+    "stuck": "{{value}} cards could not come off the piles.",
+    "hint": {
+      "comesOffFirst": "Safe here: it comes off before the card under it",
+      "emptyPile": "Start a pile with it",
+      "leastHarm": "Every pile blocks something: this one blocks least"
+    }
   },
   "newDeck": {
     "runs": "Runs: {{value}} of {{max}}",

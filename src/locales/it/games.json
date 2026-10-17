@@ -588,46 +588,16 @@
     "wonWithTier": "{{score}} punti: {{tier}}!",
     "lostShortOfTarget": "{{score}} punti: {{tier}}. Te ne servono {{target}} per vincere."
   },
-  "pocketPoker": {
-    "youHit10PointsYou": "Hai raggiunto 10 punti: hai vinto!",
-    "youBustedOut": "Sei rimasto a secco.",
-    "tapCardsToDiscard": "Tocca le carte da scartare",
-    "minBet": "Puntata min.",
-    "opponentDrawsYourBet": "L'avversario pesca: {{value}} + (la tua puntata)",
-    "youWin": "Hai vinto",
-    "youLose": "Hai perso",
-    "pushTie": "Pareggio",
-    "draw": "Pesca {{value}}",
-    "setHand": "Conferma la mano",
-    "bet": "Punta {{value}}",
-    "nextRound": "Prossimo round",
-    "opponent": "Avversario",
-    "hands": {
-      "highCard": "Carta alta",
-      "onePair": "Coppia",
-      "twoPair": "Doppia coppia",
-      "threeOfAKind": "Tris",
-      "straight": "Scala",
-      "flush": "Colore",
-      "fullHouse": "Full",
-      "fourOfAKind": "Poker",
-      "straightFlush": "Scala reale"
-    },
-    "hint": {
-      "play": "Gioca: una puntata di un punto non rischia più di un abbandono",
-      "setHandStrong": "Conferma la mano: una scala o meglio va tenuta",
-      "setHandBet": "Conferma la mano: pescare ancora alza la puntata minima a 2 per troppo poco",
-      "keepSets": "Tieni le carte uguali e pesca le altre",
-      "keepFlushDraw": "Tieni le quattro carte per il colore",
-      "keepPair": "Tieni la coppia e pesca le altre",
-      "keepStraightDraw": "Tieni le quattro carte per la scala",
-      "keepHighCards_one": "Tieni la carta alta e pesca le altre",
-      "keepHighCards_other": "Tieni le carte alte e pesca le altre",
-      "keepJokers_one": "Tieni il jolly e pesca le altre",
-      "keepJokers_other": "Tieni i jolly e pesca le altre",
-      "keepNothing": "Niente vale la pena di tenerlo: pescale tutte e cinque",
-      "odds": "Questa mano vince circa il {{chance}}% delle volte"
-    }
+  "pokerHands": {
+    "highCard": "Carta alta",
+    "onePair": "Coppia",
+    "twoPair": "Doppia coppia",
+    "threeOfAKind": "Tris",
+    "straight": "Scala",
+    "flush": "Colore",
+    "fullHouse": "Full",
+    "fourOfAKind": "Poker",
+    "straightFlush": "Scala reale"
   },
   "pokerSquares": {
     "greatHandYouScored": "Bella mano! Hai fatto {{score}} punti.",
@@ -955,8 +925,13 @@
     "noMorePairsOrFaceTriplets": "Non si possono più formare coppie né tris di figure."
   },
   "machination": {
-    "allBuilt": "All four suits built up to the King!",
-    "stuck": "{{value}} cards could not come off the piles."
+    "allBuilt": "Tutti e quattro i semi costruiti fino al Re!",
+    "stuck": "{{value}} carte non sono potute uscire dalle pile.",
+    "hint": {
+      "comesOffFirst": "Sicura qui: esce prima della carta sotto",
+      "emptyPile": "Inizia una pila con questa",
+      "leastHarm": "Ogni pila blocca qualcosa: questa blocca meno"
+    }
   },
   "newDeck": {
     "runs": "Runs: {{value}} of {{max}}",

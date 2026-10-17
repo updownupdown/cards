@@ -2360,6 +2360,39 @@
       "value": "Manusia serigala"
     }
   },
+  "machination": {
+    "howToPlay": {
+      "hash": "3a5e0003",
+      "value": [
+        "## Tujuan",
+        "Taruh setiap kartu sehingga, di akhir, keempat fondasi bisa disusun naik per jenis dari As sampai King.",
+        "## Menaruh kartu",
+        "- Dek dibuka satu kartu demi satu. Ketuk tumpukan untuk menaruh kartu yang terbuka di atasnya.",
+        "- **As** langsung masuk ke fondasi begitu terbuka.",
+        "- Kartu tidak pernah berpindah antartumpukan, jadi rencanakan tempat setiap kartu: kartu teratas sebuah tumpukan harus keluar sebelum kartu di bawahnya.",
+        "## Menyusun",
+        "- Saat dek kosong, setiap kartu teratas tumpukan yang merupakan nilai berikutnya dari jenisnya pindah ke fondasi, satu demi satu, sampai tidak ada lagi yang bisa keluar.",
+        "- Kamu menang saat ke-52 kartu sampai di fondasi.",
+        "## Tips",
+        "- Kartu rendah di atas kartu yang lebih tinggi itu aman. Kartu tinggi di atas kartu yang lebih rendah menghalanginya sampai kartu tinggi itu keluar.",
+        "- Jangan pernah menaruh kartu di atas kartu yang lebih rendah dari jenis yang sama: keduanya tidak akan pernah bisa keluar.",
+        "- Sisakan satu tumpukan kosong untuk kartu tinggi selama mungkin.",
+        "- Di pengaturan permainan, **Mudah** dimainkan dengan sembilan tumpukan dan **Sulit** dengan tujuh, bukan delapan."
+      ]
+    },
+    "quickStart": {
+      "hash": "cbc83afc",
+      "value": [
+        "Buka dek satu kartu demi satu dan taruh masing-masing di tumpukan mana pun.",
+        "As langsung masuk ke fondasi.",
+        "Saat dek habis, tumpukan disusun ke fondasi per jenis, dimulai dari kartu teratas."
+      ]
+    },
+    "title": {
+      "hash": "5617e152",
+      "value": "Muslihat"
+    }
+  },
   "maria": {
     "howToPlay": {
       "hash": "6df7d8cf",
@@ -2482,7 +2515,9 @@
     },
     "quickStart": {
       "hash": "c43135e0",
-      "value": ["Buang dua kartu yang nilainya sama."]
+      "value": [
+        "Buang dua kartu yang nilainya sama."
+      ]
     },
     "title": {
       "hash": "142bf888",
@@ -2735,43 +2770,6 @@
     "title": {
       "hash": "63ac8afa",
       "value": "Pagar Kayu"
-    }
-  },
-  "pocket-poker": {
-    "howToPlay": {
-      "hash": "24a831bd",
-      "value": [
-        "## Tujuan",
-        "Capai **10 poin** untuk menang. Kamu kalah jika taruhan menurunkan skormu ke 0.",
-        "## Urutan giliran",
-        "1. **Ambil 5 kartu**",
-        "2. **Main atau menyerah:** menyerah menghabiskan **1 poin**. Setelah **dua kali menyerah berturut-turut**, atau saat tersisa 1 poin, kamu harus bermain. Bermain mereset hitungan.",
-        "3. **Buang & ambil lagi** hingga **2 kali** untuk memperbaiki kartumu.",
-        "4. **Taruh:** taruhan minimalmu sama dengan jumlah kali kamu mengambil kartu:",
-        "- 1 kali ambil → taruh 1, 2, atau 3",
-        "- 2 kali ambil → taruh 2 atau 3",
-        "\n5. **Lawan mengambil** kartu berdasarkan tingkat kesulitan yang dipilih, lalu menyimpan **lima terbaiknya**.",
-        "6. **Bandingkan kartu** berdasarkan peringkat poker standar. Seri ditentukan oleh kartu tertinggi.",
-        "7. **Urungkan** tidak tersedia setelah pengambilan ulang, pembukaan kartu lawan, atau pembagian baru menampilkan kartu tersembunyi.",
-        "## Kesulitan",
-        "- **Normal:** mulai dengan 5 poin; seri tidak mengubah skor; lawan mengambil 5 kartu ditambah taruhanmu.",
-        "- **Sulit:** mulai dengan 3 poin; lawan menang jika seri; lawan mengambil 5 kartu ditambah taruhanmu.",
-        "- **Ahli:** aturan Sulit, tetapi lawan mengambil 6 kartu ditambah taruhanmu.",
-        "## Joker",
-        "Aktifkan **Joker bebas** di pengaturan untuk menambahkan dua joker yang berlaku sebagai kartu apa pun yang belum ada di tangan."
-      ]
-    },
-    "quickStart": {
-      "hash": "226dffa2",
-      "value": [
-        "Bentuk kombinasi poker, lalu pasang taruhan.",
-        "Makin besar taruhan, makin banyak kartu yang diambil lawan.",
-        "Capai 10 poin untuk menang, atau 0 untuk kalah."
-      ]
-    },
-    "title": {
-      "hash": "e6a10a58",
-      "value": "Poker saku"
     }
   },
   "poker-squares": {

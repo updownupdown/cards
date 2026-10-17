@@ -588,46 +588,16 @@
     "wonWithTier": "{{score}} pontos: {{tier}}!",
     "lostShortOfTarget": "{{score}} pontos: {{tier}}. Você precisa de {{target}} pontos para vencer."
   },
-  "pocketPoker": {
-    "youHit10PointsYou": "Você chegou a 10 pontos e venceu!",
-    "youBustedOut": "Você ficou sem pontos.",
-    "tapCardsToDiscard": "Toque nas cartas para descartar",
-    "minBet": "Aposta mín.",
-    "opponentDrawsYourBet": "O oponente compra: {{value}} + (sua aposta)",
-    "youWin": "Você venceu",
-    "youLose": "Você perdeu",
-    "pushTie": "Empate",
-    "draw": "Comprar {{value}}",
-    "setHand": "Confirmar mão",
-    "bet": "Apostar {{value}}",
-    "nextRound": "Próxima rodada",
-    "opponent": "Oponente",
-    "hands": {
-      "highCard": "Carta alta",
-      "onePair": "Par",
-      "twoPair": "Dois pares",
-      "threeOfAKind": "Trinca",
-      "straight": "Sequência",
-      "flush": "Flush",
-      "fullHouse": "Full House",
-      "fourOfAKind": "Quadra",
-      "straightFlush": "Straight Flush"
-    },
-    "hint": {
-      "play": "Jogue: uma aposta de um ponto não arrisca mais do que desistir",
-      "setHandStrong": "Confirmar mão: uma sequência ou melhor vale a pena manter",
-      "setHandBet": "Confirmar mão: comprar outra vez sobe sua aposta mínima para 2 por muito pouco",
-      "keepSets": "Fique com as cartas iguais e compre o resto",
-      "keepFlushDraw": "Fique com as quatro cartas para o flush",
-      "keepPair": "Fique com o par e compre o resto",
-      "keepStraightDraw": "Fique com as quatro cartas para a sequência",
-      "keepHighCards_one": "Fique com a carta alta e compre o resto",
-      "keepHighCards_other": "Fique com as cartas altas e compre o resto",
-      "keepJokers_one": "Fique com o curinga e compre o resto",
-      "keepJokers_other": "Fique com os curingas e compre o resto",
-      "keepNothing": "Nada vale a pena manter: compre as cinco",
-      "odds": "Esta mão vence cerca de {{chance}}% das vezes"
-    }
+  "pokerHands": {
+    "highCard": "Carta alta",
+    "onePair": "Par",
+    "twoPair": "Dois pares",
+    "threeOfAKind": "Trinca",
+    "straight": "Sequência",
+    "flush": "Flush",
+    "fullHouse": "Full House",
+    "fourOfAKind": "Quadra",
+    "straightFlush": "Straight Flush"
   },
   "pokerSquares": {
     "greatHandYouScored": "Ótima mão! Você fez {{score}}.",
@@ -955,8 +925,13 @@
     "noMorePairsOrFaceTriplets": "Não há mais pares nem trios de figuras possíveis."
   },
   "machination": {
-    "allBuilt": "All four suits built up to the King!",
-    "stuck": "{{value}} cards could not come off the piles."
+    "allBuilt": "Os quatro naipes construídos até o Rei!",
+    "stuck": "{{value}} cartas não conseguiram sair das pilhas.",
+    "hint": {
+      "comesOffFirst": "Segura aqui: sai antes da carta de baixo",
+      "emptyPile": "Comece uma pilha com ela",
+      "leastHarm": "Toda pilha bloqueia algo: esta bloqueia menos"
+    }
   },
   "newDeck": {
     "runs": "Runs: {{value}} of {{max}}",

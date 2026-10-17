@@ -12,7 +12,6 @@ export const machination: GameDefinition = {
     year: "1949",
     link: "https://www.pagat.com/patience/strategy.html",
   },
-  enabledOnLocalOnly: true,
   thumbnailCredit: {
     title: "The Elephant Clock, from al-Jazari's Book of the Knowledge of Ingenious Mechanical Devices",
     artistName: "Farrukh ibn `Abd al-Latif",
@@ -55,6 +54,6 @@ export const machination: GameDefinition = {
     "- A lower card on a higher one is safe. A higher card on a lower one blocks it until the higher card comes off.",
     "- Never put a card on a lower card of its own suit: neither can ever come off.",
     "- Keep an empty pile for the high cards for as long as you can.",
-    "- **Hard** mode, in the game's settings, plays with seven piles instead of eight.",
+    "- In the game's settings, **Easy** plays with nine piles and **Hard** with seven, instead of eight.",
   ],
 };

@@ -545,6 +545,26 @@
       }
     }
   },
+  "machination": {
+    "machinationDifficulty": {
+      "hash": "434b7dba",
+      "value": {
+        "description": "Kartları kaç yığına koyacağını belirler.",
+        "label": "Zorluk",
+        "options": [
+          {
+            "label": "Kolay (9 yığın)"
+          },
+          {
+            "label": "Orta (8 yığın)"
+          },
+          {
+            "label": "Zor (7 yığın)"
+          }
+        ]
+      }
+    }
+  },
   "memory": {
     "memoryDifficulty": {
       "hash": "4ec0fa07",
@@ -644,41 +664,6 @@
           },
           {
             "label": "Zor (5 kart)"
-          }
-        ]
-      }
-    }
-  },
-  "pocket-poker": {
-    "pokerDifficulty": {
-      "hash": "505d7998",
-      "value": {
-        "description": "Zor mod 5 yerine 3 puanla başlar ve eşitlikleri rakibe verir. Uzman ayrıca rakibe fazladan bir kart verir.",
-        "label": "Zorluk",
-        "options": [
-          {
-            "label": "Normal"
-          },
-          {
-            "label": "Zor"
-          },
-          {
-            "label": "Uzman"
-          }
-        ]
-      }
-    },
-    "pokerJokers": {
-      "hash": "8bf4ba75",
-      "value": {
-        "description": "Desteye her kartın yerine geçebilen iki joker ekler.",
-        "label": "Jokerler",
-        "options": [
-          {
-            "label": "Joker yok"
-          },
-          {
-            "label": "Serbest jokerler"
           }
         ]
       }

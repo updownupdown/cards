@@ -545,6 +545,26 @@
       }
     }
   },
+  "machination": {
+    "machinationDifficulty": {
+      "hash": "434b7dba",
+      "value": {
+        "description": "Define em quantas pilhas você coloca as cartas.",
+        "label": "Dificuldade",
+        "options": [
+          {
+            "label": "Fácil (9 pilhas)"
+          },
+          {
+            "label": "Médio (8 pilhas)"
+          },
+          {
+            "label": "Difícil (7 pilhas)"
+          }
+        ]
+      }
+    }
+  },
   "memory": {
     "memoryDifficulty": {
       "hash": "4ec0fa07",
@@ -644,41 +664,6 @@
           },
           {
             "label": "Difícil (5 cartas)"
-          }
-        ]
-      }
-    }
-  },
-  "pocket-poker": {
-    "pokerDifficulty": {
-      "hash": "505d7998",
-      "value": {
-        "description": "O modo Difícil começa com 3 pontos (em vez de 5) e concede os empates ao oponente. Especialista também dá uma carta extra ao oponente.",
-        "label": "Dificuldade",
-        "options": [
-          {
-            "label": "Normal"
-          },
-          {
-            "label": "Difícil"
-          },
-          {
-            "label": "Especialista"
-          }
-        ]
-      }
-    },
-    "pokerJokers": {
-      "hash": "8bf4ba75",
-      "value": {
-        "description": "Inclui no baralho dois Coringas que valem como qualquer carta.",
-        "label": "Coringas",
-        "options": [
-          {
-            "label": "Sem Coringas"
-          },
-          {
-            "label": "Coringas livres"
           }
         ]
       }

@@ -8,8 +8,8 @@
         "/bowling",
         "/fifteen-puzzle",
         "/grandfathers-clock",
+        "/machination",
         "/memory",
-        "/pocket-poker",
         "/three-peaks"
       ],
       "rewards": [
@@ -80,7 +80,7 @@
       "y": -0.0064,
       "connections": [
         "/klondike",
-        "/pocket-poker",
+        "/machination",
         "/sultan"
       ],
       "rewards": [
@@ -115,7 +115,7 @@
         }
       ]
     },
-    "/pocket-poker": {
+    "/machination": {
       "x": 0.0797,
       "y": -0.112,
       "connections": [
@@ -226,7 +226,7 @@
       "connections": [
         "/beehive",
         "/diplomat",
-        "/pocket-poker",
+        "/machination",
         "/whitehead"
       ],
       "rewards": [
@@ -309,8 +309,8 @@
       "y": -0.1547,
       "connections": [
         "/delta-21",
+        "/machination",
         "/ozanams-square",
-        "/pocket-poker",
         "/whitehead"
       ],
       "rewards": [

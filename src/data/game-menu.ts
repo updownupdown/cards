@@ -42,8 +42,6 @@ export type GameSettings = {
   boomerAce: boolean;
   powerReserve: boolean;
   specialAbilities: boolean;
-  pokerJokers: boolean;
-  pokerDifficulty: "normal" | "hard" | "expert";
   ascentDifficulty: "gentle" | "standard" | "intense";
   ascentChallenge: AscentChallenge;
   chapterAndVerseLoyalPatrons: boolean;
@@ -64,6 +62,7 @@ export type GameSettings = {
   nightVigilDifficulty: "street" | "kingpin" | "city";
   pagodaDifficulty: "easy" | "normal" | "hard";
   ebbAndFlowDifficulty: "easy" | "normal" | "hard";
+  machinationDifficulty: "easy" | "medium" | "hard";
   /** Which classic variant to deal, for games listed in GAME_VARIANTS. */
   variant: string;
   spiderSuits: 1 | 2 | 4;
@@ -221,8 +220,6 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   boomerAce: false,
   powerReserve: false,
   specialAbilities: false,
-  pokerJokers: false,
-  pokerDifficulty: "normal",
   ascentDifficulty: "standard",
   ascentChallenge: "none",
   chapterAndVerseLoyalPatrons: false,
@@ -243,6 +240,7 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   nightVigilDifficulty: "kingpin",
   pagodaDifficulty: "normal",
   ebbAndFlowDifficulty: "normal",
+  machinationDifficulty: "medium",
   variant: "",
   spiderSuits: 4,
   stats: {
@@ -730,11 +728,6 @@ export function getGameSettings(
     boomerAce: merged.boomerAce === true,
     powerReserve: merged.powerReserve === true,
     specialAbilities: merged.specialAbilities === true,
-    pokerJokers: merged.pokerJokers === true,
-    pokerDifficulty:
-      merged.pokerDifficulty === "hard" || merged.pokerDifficulty === "expert"
-        ? merged.pokerDifficulty
-        : "normal",
     ascentDifficulty:
       merged.ascentDifficulty === "gentle" ||
       merged.ascentDifficulty === "intense"
@@ -787,6 +780,11 @@ export function getGameSettings(
       merged.ebbAndFlowDifficulty === "hard"
         ? merged.ebbAndFlowDifficulty
         : "normal",
+    machinationDifficulty:
+      merged.machinationDifficulty === "easy" ||
+      merged.machinationDifficulty === "hard"
+        ? merged.machinationDifficulty
+        : "medium",
     variant: isVariantGamePath(key)
       ? pickVariant(key, merged.variant)
       : defaults.variant,

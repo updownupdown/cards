@@ -18,10 +18,10 @@ describe("Best score", () => {
   });
 
   test("is the highest score for most games", async () => {
-    await recordResult("/pocket-poker", true, 80);
-    await recordResult("/pocket-poker", true, 120);
-    await recordResult("/pocket-poker", false, 30);
-    expect(await bestScore("/pocket-poker")).toBe(120);
+    await recordResult("/poker-squares", true, 80);
+    await recordResult("/poker-squares", true, 120);
+    await recordResult("/poker-squares", false, 30);
+    expect(await bestScore("/poker-squares")).toBe(120);
   });
 
   test("is the lowest winning score when fewer is better", async () => {

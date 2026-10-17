@@ -35,7 +35,6 @@ const WON = [
   "/klondike",
   "/beehive",
   "/memory",
-  "/pocket-poker",
   "/sultan",
   "/fifteen-puzzle",
   "/bowling",

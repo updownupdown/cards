@@ -173,12 +173,6 @@
     "bottom": 0.01
   },
   "Pickpocket": false,
-  "PocketPoker": {
-    "left": 0.059,
-    "top": 0.064,
-    "right": 0.069,
-    "bottom": 0.145
-  },
   "PokerSquares": {
     "left": 0.02,
     "top": 0.02,

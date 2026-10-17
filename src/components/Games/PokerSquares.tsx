@@ -99,14 +99,14 @@ function handCategory(hand: PlayingCard[]) {
 function handCategoryName(category: number) {
   return [
     i18n.t("games:pokerSquares.noHand"),
-    i18n.t("games:pocketPoker.hands.onePair"),
-    i18n.t("games:pocketPoker.hands.twoPair"),
+    i18n.t("games:pokerHands.onePair"),
+    i18n.t("games:pokerHands.twoPair"),
     "x3",
-    i18n.t("games:pocketPoker.hands.straight"),
-    i18n.t("games:pocketPoker.hands.flush"),
-    i18n.t("games:pocketPoker.hands.fullHouse"),
+    i18n.t("games:pokerHands.straight"),
+    i18n.t("games:pokerHands.flush"),
+    i18n.t("games:pokerHands.fullHouse"),
     "x4",
-    i18n.t("games:pocketPoker.hands.straightFlush"),
+    i18n.t("games:pokerHands.straightFlush"),
     i18n.t("cards:royalFlush"),
   ][category];
 }

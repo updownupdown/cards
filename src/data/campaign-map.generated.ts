@@ -22,8 +22,8 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
       "/bowling",
       "/fifteen-puzzle",
       "/grandfathers-clock",
+      "/machination",
       "/memory",
-      "/pocket-poker",
       "/three-peaks"
     ],
     "rewards": [
@@ -100,7 +100,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": null,
     "connections": [
       "/klondike",
-      "/pocket-poker",
+      "/machination",
       "/sultan"
     ],
     "rewards": [
@@ -138,7 +138,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     ]
   },
   {
-    "path": "/pocket-poker",
+    "path": "/machination",
     "x": 0.0797,
     "y": -0.112,
     "arm": 0,
@@ -260,7 +260,7 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "connections": [
       "/beehive",
       "/diplomat",
-      "/pocket-poker",
+      "/machination",
       "/whitehead"
     ],
     "rewards": [
@@ -351,8 +351,8 @@ export const GAME_DOT_DEFINITIONS: GameDotDefinition[] = [
     "arm": 1,
     "connections": [
       "/delta-21",
+      "/machination",
       "/ozanams-square",
-      "/pocket-poker",
       "/whitehead"
     ],
     "rewards": [

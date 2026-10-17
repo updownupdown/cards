@@ -104,6 +104,8 @@ Also on 2026-10-05 Charlatan became Boiling Over, with a plain run: its node kep
 
 On 2026-10-08 local-only games left the map for good: the eight added that day (Gambit, Carousel, Sweep, Sevens, Go Fish, Osmosis, Cipher and Mosaic, none ever released) had been appended at the rim with quotes 185–200; a plain run let them go, and those quotes are unassigned again. Cipher was then deleted, and the other seven on 2026-10-09; none was ever on the map players see.
 
+On 2026-10-17 Machination replaced Pocket Poker (whose betting rated the app for simulated gambling), with a plain run: Machination took Pocket Poker's node, so the first win still opens it from Klondike (one of the two `HUB_EXTRA_LINKS`), and it holds Pocket Poker's rewards (Tao chapter 6 and quote 10). Machination is rated harder than Pocket Poker (difficulty 70 against 40), so this spot near the centre is harder than its neighbours; its Easy mode (nine piles) softens that. A save that won Pocket Poker loses that win but keeps every game it opened, also in saves from before version 4, whose opened games come from their wins.
+
 ## The force field
 
 A force field round the centre (`FIELD_RADIUS` in `src/data/force-field.ts`,

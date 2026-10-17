@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, jest, test } from "@jest/globals";
 import "../../../jest/game-mocks";
 import { card } from "../../../jest/game-harness";
 import { cabinSiegeRules } from "@/components/Games/CabinSiege";
@@ -8,9 +8,12 @@ import { fortunesCallRules } from "@/components/Games/FortunesCall";
 import { gremlinRules } from "@/components/Games/Gremlin";
 import { invadersRules } from "@/components/Games/Invaders";
 import { irisGardenRules } from "@/components/Games/IrisGarden";
+import {
+  machinationRules,
+  type MachinationGameState,
+} from "@/components/Games/Machination";
 import { ouroborosRules } from "@/components/Games/Ouroboros";
 import { ozanamsSquareRules } from "@/components/Games/OzanamsSquare";
-import { pocketPokerRules } from "@/components/Games/PocketPoker";
 import { pokerSquaresRules } from "@/components/Games/PokerSquares";
 import { rogueRunRules } from "@/components/Games/RogueRun";
 import type { PlayingCard } from "@/components/Cards/card-utils";
@@ -268,64 +271,110 @@ describe("Cabin Siege hints", () => {
   });
 });
 
-describe("Pocket Poker hints", () => {
-  const keep = (hand: PlayingCard[]) =>
-    pocketPokerRules
-      .cardsToKeep(hand)
-      ?.keep.map((c) => c.id)
-      .sort();
+describe("Machination hints", () => {
+  const piles = (...cards: (PlayingCard | null)[]) =>
+    cards.map((placed) => (placed ? [placed] : []));
+  const placing = (
+    turned: PlayingCard,
+    onPiles: PlayingCard[][],
+  ): MachinationGameState => ({
+    stock: [card("9", "clubs", false), turned],
+    piles: onPiles,
+    foundations: [[], [], [], []],
+  });
+  const pileOf = (state: MachinationGameState) => {
+    const target = machinationRules.findHint(state)?.steps[0]?.[0];
+    return target && "zone" in target ? target.zone : undefined;
+  };
 
-  test("keeps a pair, four to a flush, and stands on a straight", () => {
-    const pair = [card("A", "spades"), card("A", "hearts")];
-    expect(
-      keep([
-        ...pair,
-        card("7", "clubs"),
-        card("4", "diamonds"),
-        card("2", "spades"),
-      ]),
-    ).toEqual(pair.map((c) => c.id).sort());
-
-    const hearts = ["2", "6", "9", "J"].map((rank) =>
-      card(rank as PlayingCard["rank"], "hearts"),
+  test("never puts a card on a lower card of its own suit", () => {
+    const state = placing(
+      card("5", "spades"),
+      piles(card("4", "spades"), null, null, null, null, null, null, null),
     );
-    expect(keep([...hearts, card("K", "clubs")])).toEqual(
-      hearts.map((c) => c.id).sort(),
-    );
+    expect(pileOf(state)).not.toBe("pile-0");
+  });
 
+  test("puts a card on one that comes off later", () => {
+    const state = placing(
+      card("7", "hearts"),
+      piles(card("2", "diamonds"), card("8", "clubs"), null, null),
+    );
+    const hint = machinationRules.findHint(state);
+    expect(pileOf(state)).toBe("pile-1");
+    expect(hint?.message.note).toBe(
+      "Safe here: it comes off before the card under it",
+    );
+  });
+
+  test("starts a pile with a high card", () => {
+    const state = placing(
+      card("K", "hearts"),
+      piles(card("3", "diamonds"), null, null, null),
+    );
+    const hint = machinationRules.findHint(state);
+    expect(pileOf(state)).toBe("pile-1");
+    expect(hint?.message.note).toBe("Start a pile with it");
+  });
+
+  test("a card that must wait comes after the card under it", () => {
+    const order = new machinationRules.PileOrder([
+      [card("9", "clubs"), card("3", "hearts")],
+    ]);
+    // The 3♥ is on the 9♣, so the 9♣ waits for it; the 4♥ waits for the 3♥.
+    expect(order.mustPrecede(card("3", "hearts"), card("9", "clubs"))).toBe(
+      true,
+    );
+    expect(order.mustPrecede(card("9", "clubs"), card("4", "hearts"))).toBe(
+      false,
+    );
+    expect(order.earliest(card("9", "clubs"))).toBe(7);
+    expect(order.earliest(card("3", "hearts"))).toBe(1);
+  });
+
+  test("gives no hint while the piles build or once the game is over", () => {
     expect(
-      pocketPokerRules.cardsToKeep([
-        card("5", "spades"),
-        card("6", "hearts"),
-        card("7", "clubs"),
-        card("8", "diamonds"),
-        card("9", "spades"),
-      ]),
+      machinationRules.findHint({
+        stock: [],
+        piles: piles(card("2", "spades"), null),
+        foundations: [[card("A", "spades")], [], [], []],
+      }),
     ).toBeNull();
   });
 
-  test("keeps four to an Ace-high straight", () => {
-    const run = [
-      card("J", "spades"),
-      card("Q", "hearts"),
-      card("K", "clubs"),
-      card("A", "diamonds"),
-    ];
-    expect(pocketPokerRules.cardsToKeep([...run, card("4", "spades")])).toEqual(
-      { keep: run, reason: "keepStraightDraw" },
-    );
-  });
-
-  test("draws five when nothing is worth keeping", () => {
-    expect(
-      pocketPokerRules.cardsToKeep([
-        card("2", "spades"),
-        card("4", "hearts"),
-        card("6", "clubs"),
-        card("8", "diamonds"),
-        card("10", "spades"),
-      ]),
-    ).toEqual({ keep: [], reason: "keepNothing" });
+  test("following the hints wins deals on every difficulty", () => {
+    const { PILES_BY_DIFFICULTY, createInitialState } = machinationRules;
+    let seed = 7;
+    const random = jest.spyOn(Math, "random").mockImplementation(() => {
+      seed = (seed * 16807) % 2147483647;
+      return seed / 2147483647;
+    });
+    const wins = Object.values(PILES_BY_DIFFICULTY).map((pileCount) => {
+      let won = 0;
+      for (let deal = 0; deal < 3; deal++) {
+        const state = createInitialState(pileCount);
+        while (machinationRules.isPlacing(state)) {
+          machinationRules.turnStockCard(state);
+          if (!machinationRules.turnedCard(state)) continue;
+          const pile = machinationRules.bestPlacement(state)!.pile;
+          machinationRules.placeCard(state, pile);
+        }
+        for (
+          let index = machinationRules.buildablePile(state);
+          index >= 0;
+          index = machinationRules.buildablePile(state)
+        ) {
+          machinationRules.buildCard(state, index);
+        }
+        if (machinationRules.isWon(state)) won += 1;
+      }
+      return won;
+    });
+    random.mockRestore();
+    // Easy, Medium and Hard: most deals won, even with seven piles.
+    expect(wins[0]).toBe(3);
+    expect(wins[1]).toBeGreaterThanOrEqual(2);
+    expect(wins[2]).toBeGreaterThanOrEqual(2);
   });
 });
 

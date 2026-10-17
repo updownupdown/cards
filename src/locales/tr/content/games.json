@@ -1436,7 +1436,9 @@
     },
     "quickStart": {
       "hash": "a14a111d",
-      "value": ["Düşman hattı sağa kayar, sonra düşman destesinden dolar."]
+      "value": [
+        "Düşman hattı sağa kayar, sonra düşman destesinden dolar."
+      ]
     },
     "title": {
       "hash": "946d7b10",
@@ -2358,6 +2360,39 @@
       "value": "Kurt adam"
     }
   },
+  "machination": {
+    "howToPlay": {
+      "hash": "3a5e0003",
+      "value": [
+        "## Amaç",
+        "Tüm kartları öyle yerleştir ki sonunda dört temel de As'tan Papaz'a takım takım dizilebilsin.",
+        "## Yerleştirme",
+        "- Deste birer kart açılır. Açılan kartı koymak için bir yığına dokun.",
+        "- Bir **As** açılır açılmaz doğrudan bir temele gider.",
+        "- Kartlar yığınlar arasında hiç yer değiştirmez, bu yüzden her kartın nereye gideceğini iyi planla: bir yığının en üstteki kartı, altındakilerden önce çıkmalıdır.",
+        "## Dizme",
+        "- Deste boşalınca, takımının sıradaki değeri olan her yığın tepesi kartı birbiri ardına temele geçer; ta ki hiçbiri çıkamayana dek.",
+        "- 52 kartın hepsi temellere ulaşınca kazanırsın.",
+        "## İpuçları",
+        "- Düşük bir kartı daha yüksek bir kartın üstüne koymak güvenlidir. Yüksek bir kart, daha düşük bir kartın üstündeyse o kartı, yüksek kart çıkana dek kilitler.",
+        "- Bir kartı asla kendi takımından daha düşük bir kartın üstüne koyma: ikisi de bir daha çıkamaz.",
+        "- Yüksek kartlar için bir yığını olabildiğince uzun süre boş tut.",
+        "- Oyunun ayarlarında **Kolay** sekiz yerine dokuz yığınla, **Zor** ise yedi yığınla oynanır."
+      ]
+    },
+    "quickStart": {
+      "hash": "cbc83afc",
+      "value": [
+        "Desteden kartları birer birer aç ve her birini istediğin yığına koy.",
+        "Aslar doğrudan temellere gider.",
+        "Deste bitince yığınlar takım takım temellere dizilir, en üstteki kartlardan başlayarak."
+      ]
+    },
+    "title": {
+      "hash": "5617e152",
+      "value": "Entrika"
+    }
+  },
   "maria": {
     "howToPlay": {
       "hash": "6df7d8cf",
@@ -2480,7 +2515,9 @@
     },
     "quickStart": {
       "hash": "c43135e0",
-      "value": ["Aynı değerdeki iki kartı çıkar."]
+      "value": [
+        "Aynı değerdeki iki kartı çıkar."
+      ]
     },
     "title": {
       "hash": "142bf888",
@@ -2733,43 +2770,6 @@
     "title": {
       "hash": "63ac8afa",
       "value": "Bahçe Çiti"
-    }
-  },
-  "pocket-poker": {
-    "howToPlay": {
-      "hash": "24a831bd",
-      "value": [
-        "## Amaç",
-        "Kazanmak için **10 puana** ulaş. Bir bahis puanını 0'a düşürürse kaybedersin.",
-        "## Tur sırası",
-        "1. **5 kart çek**",
-        "2. **Oyna ya da çekil:** çekilmek **1 puana** mal olur. **Üst üste iki kez** çekildikten sonra veya 1 puandayken oynamalısın. Oynamak sayacı sıfırlar.",
-        "3. Elini güçlendirmek için **en fazla 2 kez** **at ve yeniden çek**.",
-        "4. **Bahis yap:** en düşük bahsin, kart çekme sayına eşittir:",
-        "- 1 çekiş → 1, 2 ya da 3 bahis",
-        "- 2 çekiş → 2 ya da 3 bahis",
-        "\n5. **Rakip çeker:** seçilen zorluğa göre kart çeker ve **en iyi beş** kartını tutar.",
-        "6. **Elleri karşılaştır:** standart poker sıralaması geçerlidir. Eşitlikte en yüksek kart kazanır.",
-        "7. **Geri al**, yeniden çekiş, kart açma veya yeni dağıtım gizli kartları gösterdikten sonra kullanılamaz.",
-        "## Zorluk",
-        "- **Normal:** 5 puanla başla; eşitlikte puan değişmez; rakip 5 kart artı bahsin kadar kart çeker.",
-        "- **Zor:** 3 puanla başla; eşitliği kasa kazanır; rakip 5 kart artı bahsin kadar kart çeker.",
-        "- **Uzman:** Zor kuralları geçerlidir, ancak rakip 6 kart artı bahsin kadar kart çeker.",
-        "## Jokerler",
-        "Ayarlardan **Serbest jokerler**i açarak eldeki kartlar dışında herhangi bir kart yerine geçen iki joker ekle."
-      ]
-    },
-    "quickStart": {
-      "hash": "226dffa2",
-      "value": [
-        "Bir poker eli kur, sonra bahis yap.",
-        "Bahsin büyüdükçe rakibin daha çok kart çeker.",
-        "Kazanmak için 10 puana ulaş; 0'a düşersen kaybedersin."
-      ]
-    },
-    "title": {
-      "hash": "e6a10a58",
-      "value": "Cep pokeri"
     }
   },
   "poker-squares": {

@@ -42,7 +42,6 @@ const NOT_PILES: Record<string, string[]> = {
   "/bowling": ["bonusRolls"],
   "/delta-21": ["breakthroughs"],
   "/infiltrator": ["neutralizedSpies", "recruitedSpies"],
-  "/pocket-poker": ["oppBest"],
 };
 
 /** Piles of groups of cards, and a group holding one card for each. */

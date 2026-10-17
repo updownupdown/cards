@@ -545,6 +545,26 @@
       }
     }
   },
+  "machination": {
+    "machinationDifficulty": {
+      "hash": "434b7dba",
+      "value": {
+        "description": "Détermine le nombre de piles où poser les cartes.",
+        "label": "Difficulté",
+        "options": [
+          {
+            "label": "Facile (9 piles)"
+          },
+          {
+            "label": "Moyen (8 piles)"
+          },
+          {
+            "label": "Difficile (7 piles)"
+          }
+        ]
+      }
+    }
+  },
   "memory": {
     "memoryDifficulty": {
       "hash": "4ec0fa07",
@@ -644,41 +664,6 @@
           },
           {
             "label": "Difficile (5 cartes)"
-          }
-        ]
-      }
-    }
-  },
-  "pocket-poker": {
-    "pokerDifficulty": {
-      "hash": "505d7998",
-      "value": {
-        "description": "Le mode Difficile commence à 3 points (au lieu de 5) et accorde les égalités à l'adversaire. Expert donne aussi une carte supplémentaire à l'adversaire.",
-        "label": "Difficulté",
-        "options": [
-          {
-            "label": "Normal"
-          },
-          {
-            "label": "Difficile"
-          },
-          {
-            "label": "Expert"
-          }
-        ]
-      }
-    },
-    "pokerJokers": {
-      "hash": "8bf4ba75",
-      "value": {
-        "description": "Ajoute deux Jokers libres au paquet.",
-        "label": "Jokers",
-        "options": [
-          {
-            "label": "Sans Jokers"
-          },
-          {
-            "label": "Jokers libres"
           }
         ]
       }
