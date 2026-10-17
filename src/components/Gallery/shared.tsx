@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState, type ReactNode } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { Colors, rgba, theme } from "@/styles/styles";
+import { cardShadow, Colors, rgba, theme } from "@/styles/styles";
 import { useTranslation } from "@/i18n";
 
 /**
@@ -238,7 +238,10 @@ export function WorkPlaceholder({
         alignItems: "center",
         justifyContent: "center",
         overflow: "hidden",
-        boxShadow: `0 ${radius + 1}px ${radius * 4}px ${rgba(Colors.black, 0.55)}`,
+        ...cardShadow(
+          `0 ${radius + 1}px ${radius * 4}px ${rgba(Colors.black, 0.55)}`,
+          radius + 2,
+        ),
       }}
     >
       {source != null && (

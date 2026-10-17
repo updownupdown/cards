@@ -7,7 +7,7 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
 import { gamePalette, PaletteContext, usePalette } from "@/styles/palette";
-import { Colors, rgba, theme } from "@/styles/styles";
+import { cardShadow, Colors, rgba, theme } from "@/styles/styles";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import type { Href } from "expo-router";
@@ -31,7 +31,10 @@ export function useCardFrame() {
     borderRadius: spacing(CARD_RADIUS),
     overflow: "hidden",
     // Lifts the card off the sky.
-    boxShadow: `0 ${spacing(6)}px ${spacing(18)}px ${rgba(Colors.black, 0.5)}`,
+    ...cardShadow(
+      `0 ${spacing(6)}px ${spacing(18)}px ${rgba(Colors.black, 0.5)}`,
+      spacing(8),
+    ),
   } as const;
 }
 
