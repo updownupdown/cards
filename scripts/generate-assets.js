@@ -68,6 +68,13 @@ const SHORT_SIDE = 460;
 const MAX_LONG_SIDE = SHORT_SIDE * 2;
 // Full thumbnails are shown whole, so their longer side is what counts.
 const FULL_LONG_SIDE = 1000;
+// The Collect tab's shelves show every work whole at once, WORK_HEIGHT in
+// src/components/Gallery/WorksView.tsx tall. Android decodes a bundled image
+// at its own size, and there the full thumbnails took 345MB of GPU memory,
+// three times what it keeps, so every frame uploaded them all again (8 fps on
+// a Pixel 7, on every tab). The shelves use copies this many pixels tall:
+// sharp at WORK_HEIGHT on a Pixel 7.
+const SHELF_HEIGHT = 360;
 
 /** Whether `target` needs making again from any of `sources`. */
 function isStale(target, sources) {
@@ -170,8 +177,33 @@ async function generateCopies(files, targetName, width, { grey = false } = {}) {
   }
 }
 
+/** Copies of the full thumbnails, SHELF_HEIGHT tall, redone when stale. */
+async function generateShelfCopies(files) {
+  const fullDir = path.join(projectRoot, "assets", "thumbnails-full");
+  const targetDir = path.join(projectRoot, "assets", "thumbnails-shelf");
+  fs.mkdirSync(targetDir, { recursive: true });
+  removeUnwanted(targetDir, new Set(files));
+  for (const file of files) {
+    const source = path.join(fullDir, file);
+    const target = path.join(targetDir, file);
+    const height = Math.min(
+      SHELF_HEIGHT,
+      (await sharp(source).metadata()).height,
+    );
+    if (
+      fs.existsSync(target) &&
+      fs.statSync(target).mtimeMs >= fs.statSync(source).mtimeMs &&
+      (await sharp(target).metadata()).height === height
+    ) {
+      continue;
+    }
+    await sharp(source).resize({ height }).webp({ quality: 80 }).toFile(target);
+  }
+}
+
 async function generateThumbnails() {
   const files = await generateFromSources();
+  await generateShelfCopies(files);
   await generateCopies(files, "thumbnail-stickers", STICKER_SIZE);
   await generateCopies(files, "thumbnail-stickers-grey", STICKER_SIZE, {
     grey: true,
@@ -197,6 +229,11 @@ ${mapEntries(files, "thumbnails")}
 /** Each game's art whole, borders and all, for showing it uncropped. */
 export const GAME_FULL_THUMBNAIL_ASSETS: Record<GameThumbnailName, number> = {
 ${mapEntries(files, "thumbnails-full")}
+};
+
+/** The full thumbnails SHELF_HEIGHT tall, for the Collect tab's shelves. */
+export const GAME_SHELF_THUMBNAIL_ASSETS: Record<GameThumbnailName, number> = {
+${mapEntries(files, "thumbnails-shelf")}
 };
 
 /** Small copies of the thumbnails, for the Collect tab's stickers. */

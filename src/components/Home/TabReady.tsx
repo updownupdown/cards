@@ -45,6 +45,20 @@ export const TabReadyContext = createContext<TabReadyGate | null>(null);
 export const TabOnStageContext = createContext(true);
 export const useTabOnStage = () => useContext(TabOnStageContext);
 
+/**
+ * An image's source while its tab is on stage, and null while it is away.
+ * Android uploads every picture in the view tree to the GPU on each frame,
+ * tabs moved out of sight included, and keeps only about twelve screens'
+ * worth: past that it throws them out and uploads them all again, every
+ * frame. The kept Collect tab's artworks alone did that, and every tab
+ * scrolled at 8 fps on a Pixel 7. So a tab put away lets go of its pictures,
+ * and takes them back (from memory) while it is readied to show again.
+ */
+export function useStagedSource<T>(source: T): T | null {
+  const onStage = useTabOnStage();
+  return Platform.OS === "android" && !onStage ? null : source;
+}
+
 /** Keeps the tab hidden while `holding` is true. */
 export function useTabReadyHold(holding: boolean) {
   const gate = useContext(TabReadyContext);
