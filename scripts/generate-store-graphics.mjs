@@ -129,7 +129,7 @@ ${outfit(300, "300Light")}${outfit(400, "400Regular")}${outfit(600, "600SemiBold
 *{margin:0;padding:0;box-sizing:border-box}
 body{width:1024px;height:500px;overflow:hidden;background:${NIGHT};font-family:Outfit;position:relative}
 .sky{position:absolute;left:50%;top:50%;width:1200px;height:1800px;background:url(${dataUrl("assets/images/starfield.webp", "image/webp")}) center/cover;transform:translate(-50%,-50%) rotate(-58deg) scale(0.95) translate(40px,-60px);filter:saturate(1.15) brightness(1.3)}
-.glow{position:absolute;left:500px;top:-200px;width:640px;height:840px;background:url(${dataUrl("assets/images/galaxy-glow.webp", "image/webp")}) center/contain no-repeat;opacity:.5;mix-blend-mode:screen}
+.glow{position:absolute;left:500px;top:-200px;width:640px;height:840px;background:url(${dataUrl("assets/images/galaxy-glow.webp", "image/webp")}) center/contain no-repeat;opacity:.667;mix-blend-mode:screen}
 .veil{position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,8,13,.9) 0%,rgba(7,8,13,.72) 44%,rgba(22,24,48,.25) 70%,rgba(22,24,48,.35) 100%)}
 .shoot{position:absolute;height:1px;transform-origin:0 50%;opacity:.55;background:linear-gradient(90deg,currentColor,transparent)}
 .copy{position:absolute;left:64px;top:50%;width:470px;transform:translateY(-50%)}

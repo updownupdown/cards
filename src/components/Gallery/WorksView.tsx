@@ -25,9 +25,20 @@ import { localizeGameTitle } from "@/i18n/content";
 import { cardShadow, Colors, rgba, theme } from "@/styles/styles";
 import { Image } from "expo-image";
 import { WorkPlaceholder } from "./shared";
-import { useMemo, useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
-import Animated from "react-native-reanimated";
+import { useMemo, useRef, useState } from "react";
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  View,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+} from "react-native";
+import Animated, {
+  useAnimatedReaction,
+  useSharedValue,
+} from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
 /** One shelf per family of games, under Game Category. */
 const GAME_CATEGORIES: GameTag[] = [
@@ -62,6 +73,32 @@ export type WorkGrouping = (typeof WORK_GROUPINGS)[number];
 const WORK_HEIGHT = 138;
 /** A narrow work's label still gets this much room. */
 const LABEL_MIN_WIDTH = 108;
+
+/**
+ * On Android only the works on screen, or within half a screen of it, have
+ * their pictures. Android keeps every picture in the view tree on the GPU,
+ * scrolled away or not, and all the shelves' pictures together overflowed
+ * its memory, after which it sent every picture again each frame.
+ */
+const WINDOWED = Platform.OS === "android";
+/** How far past the screen works keep their pictures, in screens. */
+const PICTURE_MARGIN = 0.5;
+/** Shelves drawn before their place is known that count as on screen. */
+const FIRST_SHELVES = 3;
+
+/**
+ * Which part of a scroll is shown, to half a screen: the scroll offset over
+ * half the screen, rounded down. It changes rarely enough to render on.
+ */
+const bandOf = (offset: number, screen: number) =>
+  Math.floor(offset / (screen / 2));
+
+/** Whether [start, end) is near the screen, with the scroll in `band`. */
+function nearBand(start: number, end: number, band: number, screen: number) {
+  const from = (band * screen) / 2 - screen * PICTURE_MARGIN;
+  const to = ((band + 1) * screen) / 2 + screen * (1 + PICTURE_MARGIN);
+  return end > from && start < to;
+}
 
 /** Kept for the session, so coming back finds the shelves as they were. */
 let lastGrouping: WorkGrouping = "era";
@@ -158,9 +195,23 @@ export function WorksView({
 }) {
   const { t } = useTranslation("home");
   const { spacing, ui } = useResponsiveMetrics();
-  const { width: viewportWidth } = useViewportDimensions();
+  const { width: viewportWidth, height: viewportHeight } =
+    useViewportDimensions();
   const [grouping, setGrouping] = useState<WorkGrouping>(lastGrouping);
-  const onScroll = useSkyScrollHandler(COLLECT_HOME_TAB_INDEX);
+  const scrollY = useSharedValue(0);
+  const onScroll = useSkyScrollHandler(COLLECT_HOME_TAB_INDEX, scrollY);
+  const [band, setBand] = useState(0);
+  useAnimatedReaction(
+    () => (WINDOWED ? bandOf(scrollY.value, viewportHeight) : 0),
+    (next, previous) => {
+      if (next !== previous) scheduleOnRN(setBand, next);
+    },
+    [viewportHeight],
+  );
+  // Each shelf's place in the scroll, by grouping and shelf.
+  const [shelfSpans, setShelfSpans] = useState<
+    Record<string, { top: number; bottom: number }>
+  >({});
   const shelves = useShelves(allEnabledGames, grouping);
   const order = useMemo(
     () => shelves.flatMap((shelf) => shelf.games.map(([path]) => path)),
@@ -210,11 +261,35 @@ export function WorksView({
         ))}
       </ScrollView>
 
-      {shelves.map(({ key, title, games }) => {
+      {shelves.map(({ key, title, games }, index) => {
         const won = games.filter(([path]) => hasWon(path)).length;
         const complete = won === games.length;
+        const span = shelfSpans[`${grouping}:${key}`];
+        const near = span
+          ? nearBand(span.top, span.bottom, band, viewportHeight)
+          : index < FIRST_SHELVES;
         return (
-          <View key={key} style={{ gap: spacing(12) }}>
+          <View
+            key={key}
+            style={{ gap: spacing(12) }}
+            onLayout={
+              WINDOWED
+                ? (event) => {
+                    const { y, height } = event.nativeEvent.layout;
+                    const spanKey = `${grouping}:${key}`;
+                    setShelfSpans((current) => {
+                      const known = current[spanKey];
+                      return known?.top === y && known.bottom === y + height
+                        ? current
+                        : {
+                            ...current,
+                            [spanKey]: { top: y, bottom: y + height },
+                          };
+                    });
+                  }
+                : undefined
+            }
+          >
             <View
               style={{
                 width: "100%",
@@ -245,29 +320,88 @@ export function WorksView({
                 {won} / {games.length}
               </Text>
             </View>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{
-                paddingHorizontal: shelfStart,
-                gap: spacing(19.6),
-                alignItems: "flex-start",
-              }}
-            >
-              {games.map(([path, game]) => (
-                <ShelfWork
-                  key={path}
-                  path={path}
-                  game={game}
-                  collected={hasWon(path)}
-                  onPress={() => onOpenWork(path, order)}
-                />
-              ))}
-            </ScrollView>
+            <ShelfRow
+              games={games}
+              near={!WINDOWED || near}
+              shelfStart={shelfStart}
+              viewportWidth={viewportWidth}
+              hasWon={hasWon}
+              onOpenWork={(path) => onOpenWork(path, order)}
+            />
           </View>
         );
       })}
     </Animated.ScrollView>
+  );
+}
+
+/** A work's picture size, and the room it takes on its shelf. */
+function workSize(game: GameMenuInfo, spacing: (value: number) => number) {
+  const thumbnail = game.thumbnail;
+  const aspect = thumbnail ? GAME_THUMBNAIL_ASPECTS[thumbnail] : 0.8;
+  const height = spacing(WORK_HEIGHT);
+  const width = height * aspect;
+  return { width, height, room: Math.max(width, spacing(LABEL_MIN_WIDTH)) };
+}
+
+/** One shelf's row of works, scrolled sideways. */
+function ShelfRow({
+  games,
+  near,
+  shelfStart,
+  viewportWidth,
+  hasWon,
+  onOpenWork,
+}: {
+  games: HomeGameEntry[];
+  /** The shelf is on screen or close to it (see WINDOWED). */
+  near: boolean;
+  shelfStart: number;
+  viewportWidth: number;
+  hasWon: (path: string) => boolean;
+  onOpenWork: (path: string) => void;
+}) {
+  const { spacing } = useResponsiveMetrics();
+  const gap = spacing(19.6);
+  const [band, setBand] = useState(0);
+  const bandRef = useRef(0);
+  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const next = bandOf(event.nativeEvent.contentOffset.x, viewportWidth);
+    if (next === bandRef.current) return;
+    bandRef.current = next;
+    setBand(next);
+  };
+  let left = shelfStart;
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      onScroll={WINDOWED ? onScroll : undefined}
+      scrollEventThrottle={WINDOWED ? 32 : undefined}
+      contentContainerStyle={{
+        paddingHorizontal: shelfStart,
+        gap,
+        alignItems: "flex-start",
+      }}
+    >
+      {games.map(([path, game]) => {
+        const start = left;
+        left += workSize(game, spacing).room + gap;
+        return (
+          <ShelfWork
+            key={path}
+            path={path}
+            game={game}
+            collected={hasWon(path)}
+            near={
+              near &&
+              (!WINDOWED || nearBand(start, left - gap, band, viewportWidth))
+            }
+            onPress={() => onOpenWork(path)}
+          />
+        );
+      })}
+    </ScrollView>
   );
 }
 
@@ -276,25 +410,27 @@ function ShelfWork({
   path,
   game,
   collected,
+  near,
   onPress,
 }: {
   path: string;
   game: GameMenuInfo;
   collected: boolean;
+  /** On screen or close to it: only then is its picture drawn. */
+  near: boolean;
   onPress: () => void;
 }) {
   const { spacing } = useResponsiveMetrics();
   const { t } = useTranslation("home");
   const language = useDisplayLanguage();
   const thumbnail = game.thumbnail;
-  const source = useStagedSource(
+  const staged = useStagedSource(
     thumbnail ? GAME_SHELF_THUMBNAIL_ASSETS[thumbnail] : null,
   );
+  const source = near ? staged : null;
   // Only an acquired work draws its picture, so only it is waited for.
   const ready = useTabReadyImage(collected ? source : null);
-  const aspect = thumbnail ? GAME_THUMBNAIL_ASPECTS[thumbnail] : 0.8;
-  const height = spacing(WORK_HEIGHT);
-  const width = height * aspect;
+  const { width, height, room } = workSize(game, spacing);
   const credit = game.thumbnailCredit;
   const gameTitle = localizeGameTitle(game, path, language);
   return (
@@ -303,7 +439,7 @@ function ShelfWork({
       accessibilityRole="button"
       accessibilityLabel={collected && credit ? credit.title : gameTitle}
       style={{
-        width: Math.max(width, spacing(LABEL_MIN_WIDTH)),
+        width: room,
         gap: spacing(8),
       }}
     >

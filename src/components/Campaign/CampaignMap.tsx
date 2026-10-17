@@ -343,7 +343,11 @@ const GALAXY_GLOW = require("@/assets/images/galaxy-glow.webp");
  * scripts/generate-campaign-map.mjs: a real blur is the only way to get
  * smooth arms (stacked shapes band), SVG blur filters are unreliable on
  * Android, and Android draws a map-sized SVG as one huge bitmap. The tab
- * waits for it, so the map never shows without it.
+ * waits for it, so the map never shows without it. Its faintness is baked in
+ * and it is half the map's size (it's all blur): on Android, a see-through
+ * picture is drawn through an extra layer every frame, and a bigger one
+ * crowds the GPU's memory, after which every picture is sent to it again
+ * each frame.
  */
 const GalaxyArms = memo(function GalaxyArms() {
   const ready = useTabReadyImage(GALAXY_GLOW);
@@ -365,7 +369,7 @@ const GalaxyArms = memo(function GalaxyArms() {
         source={GALAXY_GLOW}
         cachePolicy="memory"
         contentFit="fill"
-        style={{ width: "100%", height: "100%", opacity: 0.75 }}
+        style={{ width: "100%", height: "100%" }}
         onDisplay={ready.onDisplay}
         onError={ready.onError}
       />
