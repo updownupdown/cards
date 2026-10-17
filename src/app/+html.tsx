@@ -1,8 +1,8 @@
 import {
-  LAUNCH_INTRO_ID,
-  LAUNCH_INTRO_NAME_ID,
-  LAUNCH_INTRO_SPADE_ID,
   LAUNCH_SPADE_CENTRED_CLASS,
+  LAUNCH_SPLASH_ID,
+  LAUNCH_SPLASH_NAME_ID,
+  LAUNCH_SPLASH_SPADE_ID,
   NAME_GAP,
   NAME_SIZE,
   SPADE_FILL,
@@ -10,6 +10,7 @@ import {
   SPADE_PATH,
   SPADE_VIEWBOX,
   SPLASH_BACKGROUND,
+  SPLASH_NAME,
   SPLASH_SPADE,
 } from "@/components/common/launch-lockup";
 import { FontWeight } from "@/styles/styles";
@@ -53,9 +54,9 @@ export default function Root({ children }: { children: ReactNode }) {
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
-        {/* The splash's black, matching the manifest's background_color. The
-            launch intro eases it into the current screen's colour, which the
-            theme-color effect in _layout keeps up after. */}
+        {/* The splash's colour, matching the manifest's background_color.
+            Once the splash is gone, the theme-color effect in _layout keeps
+            these to the current screen's colour. */}
         <meta name="theme-color" content={SPLASH_BACKGROUND} />
         <meta
           name="msapplication-navbutton-color"
@@ -71,20 +72,20 @@ export default function Root({ children }: { children: ReactNode }) {
         <ScrollViewStyleReset />
       </head>
       <body>
-        {/* The launch intro, painted before the app loads, which then eases
-            it into the colour theme and takes it away (LaunchIntro). */}
-        <div id={LAUNCH_INTRO_ID} aria-hidden="true">
+        {/* The splash, painted before the app loads, which takes it away
+            once the first screen is drawn (LaunchSplash). */}
+        <div id={LAUNCH_SPLASH_ID} aria-hidden="true">
           <svg
-            id={LAUNCH_INTRO_SPADE_ID}
+            id={LAUNCH_SPLASH_SPADE_ID}
             viewBox={SPADE_VIEWBOX}
             xmlns="http://www.w3.org/2000/svg"
           >
             <path d={SPADE_PATH} fill="currentColor" />
           </svg>
-          <div id={LAUNCH_INTRO_NAME_ID}>Solitarius</div>
+          <div id={LAUNCH_SPLASH_NAME_ID}>Solitarius</div>
         </div>
         <noscript>
-          <style>{`#${LAUNCH_INTRO_ID}{display:none}`}</style>
+          <style>{`#${LAUNCH_SPLASH_ID}{display:none}`}</style>
         </noscript>
         {children}
       </body>
@@ -144,9 +145,9 @@ if ('serviceWorker' in navigator) {
 
 /**
  * The installed Android web app opens on Chrome's splash, which centres the
- * spade (the manifest's icon), so there the intro centres the spade and hangs
- * the name under it. Elsewhere it centres the whole lockup, like the native
- * splash. Runs before the first paint.
+ * spade (the manifest's icon), so there the page's splash centres the spade
+ * too and hangs the name under it. Elsewhere it centres the whole lockup.
+ * Runs before the first paint.
  */
 const launchLayout = `
 try {
@@ -163,7 +164,7 @@ const spadeBox = SPADE_HEIGHT / SPADE_FILL;
 /** How far the lockup's centre sits below the spade's. */
 const lockupShift = (NAME_GAP + NAME_SIZE) / 2;
 const launchStyle = `
-#${LAUNCH_INTRO_ID} {
+#${LAUNCH_SPLASH_ID} {
   position: fixed;
   inset: 0;
   z-index: 2147483647;
@@ -172,7 +173,7 @@ const launchStyle = `
   user-select: none;
   -webkit-user-select: none;
 }
-#${LAUNCH_INTRO_SPADE_ID} {
+#${LAUNCH_SPLASH_SPADE_ID} {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -182,7 +183,7 @@ const launchStyle = `
   margin: ${px(-spadeBox / 2 - lockupShift)} 0 0 ${px(-spadeBox / 2)};
   color: ${SPLASH_SPADE};
 }
-#${LAUNCH_INTRO_NAME_ID} {
+#${LAUNCH_SPLASH_NAME_ID} {
   position: absolute;
   left: 0;
   right: 0;
@@ -192,12 +193,12 @@ const launchStyle = `
   font: 500 ${px(NAME_SIZE)}/${px(NAME_SIZE)} "${FontWeight[500]}", sans-serif;
   text-align: center;
   white-space: nowrap;
-  color: ${SPLASH_SPADE};
+  color: ${SPLASH_NAME};
 }
-.${LAUNCH_SPADE_CENTRED_CLASS} #${LAUNCH_INTRO_SPADE_ID} {
+.${LAUNCH_SPADE_CENTRED_CLASS} #${LAUNCH_SPLASH_SPADE_ID} {
   margin-top: ${px(-spadeBox / 2)};
 }
-.${LAUNCH_SPADE_CENTRED_CLASS} #${LAUNCH_INTRO_NAME_ID} {
+.${LAUNCH_SPADE_CENTRED_CLASS} #${LAUNCH_SPLASH_NAME_ID} {
   margin-top: ${px(SPADE_HEIGHT / 2 + NAME_GAP)};
 }
 `;

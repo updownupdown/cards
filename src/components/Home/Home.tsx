@@ -34,6 +34,7 @@ import {
 import { HomeModal } from "@/components/Modals/HomeModal";
 import { StatsModal } from "@/components/Modals/StatsModal";
 import { consumeReopenSettings } from "@/components/common/ThemePicker";
+import { markLaunchScreenReady } from "@/components/common/LaunchSplash";
 import { useHomeData } from "@/hooks/useHomeData";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -234,7 +235,9 @@ export default function Home() {
   }, []);
 
   const onTabReady = (index: HomeTabIndex) => {
-    if (activeTabRef.current === index) setShownTab(index);
+    if (activeTabRef.current !== index) return;
+    setShownTab(index);
+    markLaunchScreenReady();
   };
 
   // The map is dropped while a game is open over Home, so coming back it is

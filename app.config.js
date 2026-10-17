@@ -12,19 +12,20 @@ const config = {
   // modals (which React Native draws edge-to-edge with a contrast scrim) a
   // light navigation bar with dark buttons.
   userInterfaceStyle: "dark",
-  // Black, like the splash, so the launch shows no other colour before the
-  // intro eases into the colour theme (LaunchIntro).
-  backgroundColor: "#000000",
+  // Nocturne's night, like the splash, so the launch shows no other colour
+  // before the first screen (LaunchSplash).
+  backgroundColor: "#07080d",
   primaryColor: "#C62440",
   ios: {
     icon: "./assets/app-icon/icon.png",
   },
   android: {
-    backgroundColor: "#000000",
+    backgroundColor: "#07080d",
     softwareKeyboardLayoutMode: "resize",
     adaptiveIcon: {
-      // The white spade on black, like every icon.
-      backgroundColor: "#000000",
+      // Nocturne's yellow spade on its night, like every icon; the monochrome
+      // one, which Android tints, stays white.
+      backgroundColor: "#07080d",
       foregroundImage: "./assets/app-icon/android-foreground.png",
       backgroundImage: "./assets/app-icon/android-background.png",
       monochromeImage: "./assets/app-icon/android-monochrome.png",
@@ -50,10 +51,9 @@ const config = {
     favicon: "./assets/app-icon/icon.png",
     // Chrome 152 can pin installed PWAs to this color and ignore runtime
     // theme-color updates (crbug.com/554055703), so it is Nocturne's night,
-    // where the app opens. The splash (backgroundColor) is black, like the
-    // native one, and the launch intro eases from it into the theme. Mirrored
-    // in public/manifest.json, the manifest the static web build actually
-    // ships.
+    // where the app opens, as is the splash (backgroundColor), like the
+    // native one. Mirrored in public/manifest.json, the manifest the static
+    // web build actually ships.
     themeColor: "#07080d",
     name: "Solitarius",
     shortName: "Solitarius",
@@ -61,7 +61,7 @@ const config = {
     display: "standalone",
     startUrl: "./",
     scope: "./",
-    backgroundColor: "#000000",
+    backgroundColor: "#07080d",
     orientation: "any",
   },
   plugins: [
@@ -91,13 +91,13 @@ const config = {
     [
       "expo-splash-screen",
       {
-        // The white spade on black: the splash shows before the app can read
-        // the colour theme. The image is a square as tall as the launch
-        // lockup (spade, gap and name) with the spade at its top, shown
-        // imageWidth dp (pt on iOS) wide and centred, so the spade sits where
-        // the launch intro, which takes over from it, draws it. imageWidth is
-        // LOCKUP_HEIGHT in components/common/launch-lockup.ts.
-        backgroundColor: "#000000",
+        // Nocturne's yellow spade on its night (SPLASH_* in
+        // components/common/launch-lockup.ts): the splash shows before the
+        // app can read the colour theme. The image is a square with the spade
+        // centred, shown imageWidth dp (pt on iOS) wide, which puts the spade
+        // at the web splash's size; imageWidth is LOCKUP_HEIGHT there. It
+        // stays until the first screen is drawn (LaunchSplash).
+        backgroundColor: "#07080d",
         image: "./assets/app-icon/splash-icon.png",
         imageWidth: 106,
       },

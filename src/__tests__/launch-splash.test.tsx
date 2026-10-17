@@ -2,16 +2,13 @@ import { afterEach, describe, expect, jest, test } from "@jest/globals";
 import fs from "fs";
 import path from "path";
 import React from "react";
-import { act, create, type ReactTestRenderer } from "react-test-renderer";
+import { act, create } from "react-test-renderer";
 import appConfig from "../../app.config.js";
 import {
-  LaunchIntro,
-  useLaunchIntroPhase,
-} from "@/components/common/LaunchIntro";
+  LaunchSplash,
+  markLaunchScreenReady,
+} from "@/components/common/LaunchSplash";
 import {
-  INTRO_EASE_MS,
-  INTRO_FADE_MS,
-  INTRO_HOLD_MS,
   LOCKUP_HEIGHT,
   NAME_GAP,
   NAME_SIZE,
@@ -20,15 +17,14 @@ import {
   SPADE_PATH,
   SPADE_VIEWBOX,
   SPLASH_BACKGROUND,
+  SPLASH_MAX_WAIT_MS,
+  SPLASH_NAME,
+  SPLASH_SPADE,
 } from "@/components/common/launch-lockup";
+import { getColorTheme } from "@/styles/themes";
 
 const mockHide = jest.fn();
 jest.mock("expo-router", () => ({ SplashScreen: { hide: () => mockHide() } }));
-// Reanimated's mock has no useReducedMotion.
-jest.mock("react-native-reanimated", () => ({
-  ...(jest.requireActual("react-native-reanimated/mock") as object),
-  useReducedMotion: () => false,
-}));
 
 const repoRoot = path.resolve(__dirname, "../..");
 
@@ -44,63 +40,54 @@ describe("launch lockup", () => {
     expect(SPADE_FILL * side).toBeCloseTo(810.64, 1);
   });
 
-  test("the splash image is as wide as the lockup is tall", () => {
+  test("the splash is Nocturne's yellow on its night, everywhere", () => {
     const { expo } = appConfig;
     const entry = (expo.plugins ?? []).find(
       (plugin) => Array.isArray(plugin) && plugin[0] === "expo-splash-screen",
     );
     const splash = (entry as [string, Record<string, unknown>])[1];
     expect(splash.imageWidth).toBe(LOCKUP_HEIGHT);
+    const nocturne = getColorTheme("nocturne").colors;
+    expect(SPLASH_BACKGROUND).toBe(nocturne.night);
+    expect(SPLASH_SPADE).toBe(nocturne.accent);
+    expect(SPLASH_NAME).toBe(nocturne.ink);
     expect(splash.backgroundColor).toBe(SPLASH_BACKGROUND);
     expect(expo.backgroundColor).toBe(SPLASH_BACKGROUND);
+    expect(expo.android?.backgroundColor).toBe(SPLASH_BACKGROUND);
+    expect(expo.android?.adaptiveIcon?.backgroundColor).toBe(SPLASH_BACKGROUND);
+    expect(expo.web?.backgroundColor).toBe(SPLASH_BACKGROUND);
+    const manifest = JSON.parse(
+      fs.readFileSync(path.join(repoRoot, "public/manifest.json"), "utf8"),
+    );
+    expect(manifest.background_color).toBe(SPLASH_BACKGROUND);
     expect(SPADE_HEIGHT + NAME_GAP + NAME_SIZE).toBeCloseTo(LOCKUP_HEIGHT, 6);
     expect(SPADE_HEIGHT).toBeCloseTo(70, 0);
   });
 });
 
-describe("launch intro (native)", () => {
+describe("launch splash (native)", () => {
   afterEach(() => {
     jest.useRealTimers();
   });
 
-  test("hides the splash once laid out, then goes", async () => {
+  test("stays until Home is drawn, then goes at once", async () => {
     jest.useFakeTimers();
-    const phases: string[] = [];
-    function Probe() {
-      phases.push(useLaunchIntroPhase());
-      return null;
-    }
-    let renderer!: ReactTestRenderer;
     await act(async () => {
-      renderer = create(
-        <>
-          <Probe />
-          <LaunchIntro pageColor="#07080d" />
-        </>,
-      );
+      create(<LaunchSplash waitForScreen />);
     });
-    const overlay = renderer.root.findAll(
-      (node) => typeof node.props?.onLayout === "function",
-    )[0];
-    expect(overlay).toBeDefined();
+    await act(async () => {
+      jest.advanceTimersByTime(SPLASH_MAX_WAIT_MS / 2);
+    });
     expect(mockHide).not.toHaveBeenCalled();
 
     await act(async () => {
-      overlay.props.onLayout({ nativeEvent: { layout: {} } });
-      jest.advanceTimersByTime(50);
+      markLaunchScreenReady();
     });
     expect(mockHide).toHaveBeenCalledTimes(1);
 
     await act(async () => {
-      jest.advanceTimersByTime(INTRO_HOLD_MS);
+      jest.advanceTimersByTime(SPLASH_MAX_WAIT_MS);
     });
-    expect(phases[phases.length - 1]).toBe("easing");
-    expect(renderer.toJSON()).not.toBeNull();
-
-    await act(async () => {
-      jest.advanceTimersByTime(INTRO_EASE_MS + INTRO_FADE_MS);
-    });
-    expect(renderer.toJSON()).toBeNull();
-    expect(phases[phases.length - 1]).toBe("done");
+    expect(mockHide).toHaveBeenCalledTimes(1);
   });
 });
