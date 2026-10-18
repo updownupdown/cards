@@ -4,7 +4,7 @@
 // fingerprint is kept in the repository, so a key is shown once, when it is
 // made: send it on then. See docs/unlock-keys.md.
 //
-//   npm run keys:add -- --label "Sam" [--role friend|dev]
+//   npm run keys:add -- --label "Sam" [--role friend|tester|dev]
 //   npm run keys:remove -- --label "Sam"
 //   npm run keys:list
 //
@@ -79,8 +79,8 @@ const label = option("label");
 if (command === "add") {
   const role = option("role") ?? "friend";
   if (!label) throw new Error("Give the key a --label (who it is for).");
-  if (role !== "friend" && role !== "dev") {
-    throw new Error('--role is "friend" or "dev".');
+  if (!["friend", "tester", "dev"].includes(role)) {
+    throw new Error('--role is "friend", "tester" or "dev".');
   }
   if (keys.some((key) => key.label === label)) {
     throw new Error(`There is already a key labelled "${label}".`);
@@ -101,7 +101,9 @@ if (command === "add") {
   if (keys.length === 0) console.log("No keys yet.");
   keys.forEach((key) => console.log(`${key.label} (${key.role})`));
 } else {
-  console.log("Usage: npm run keys:add -- --label <name> [--role friend|dev]");
+  console.log(
+    "Usage: npm run keys:add -- --label <name> [--role friend|tester|dev]",
+  );
   console.log("       npm run keys:remove -- --label <name>");
   console.log("       npm run keys:list");
 }

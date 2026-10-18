@@ -87,9 +87,16 @@ export function hasDevKey() {
   return getUnlockKeyRole() === "dev";
 }
 
-/** A friend's key opens the Odyssey on the web; on Android, Play does. */
+/**
+ * A friend's key opens the Odyssey on the web; on Android, Play does. A
+ * tester's or developer's key opens it anywhere.
+ */
 function keyOpensOdyssey(role: UnlockKeyRole | null) {
-  return role === "dev" || (role === "friend" && Platform.OS === "web");
+  return (
+    role === "dev" ||
+    role === "tester" ||
+    (role === "friend" && Platform.OS === "web")
+  );
 }
 
 /** Whether this player has the full Odyssey. */

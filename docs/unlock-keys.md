@@ -12,6 +12,9 @@ There are two kinds:
   for people who can't buy it on Google Play, such as iPhone users. In the
   Android app a friend key does nothing; give Android friends a Google Play
   promo code instead, once the purchase exists.
+- **Tester keys** open the full Odyssey anywhere, the Android app
+  included, but don't allow dev mode. They are for Play's testers while the
+  purchase doesn't exist yet (`--role tester`).
 - **Developer keys** open the full Odyssey anywhere, and let dev mode be
   turned on (the knock on the version number in Settings, Advanced). Without
   one, dev mode only works where the app runs locally: a development build,
@@ -24,6 +27,7 @@ and missing dashes are fine, and I, L and O are read as 1, 1 and 0.
 
 ```sh
 npm run keys:add -- --label "Sam"              # a friend key
+npm run keys:add -- --label "Testers" --role tester  # a tester key
 npm run keys:add -- --label "James" --role dev  # a developer key
 ```
 

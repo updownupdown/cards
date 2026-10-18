@@ -4,7 +4,7 @@ import {
 } from "./storage-keys";
 import { DEFAULT_COLOR_THEME } from "@/styles/themes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Platform } from "react-native";
+import { AccessibilityInfo, Platform } from "react-native";
 import { formatPercent } from "@/i18n/format";
 import {
   isLanguagePreference,
@@ -34,7 +34,12 @@ export type GameSettings = {
   isFavorite: boolean;
   difficulty: "easy" | "difficult";
   memoryDifficulty:
-    "veryeasy" | "easy" | "medium" | "hard" | "veryhard" | "extreme";
+    | "veryeasy"
+    | "easy"
+    | "medium"
+    | "hard"
+    | "veryhard"
+    | "extreme";
   drawCount: 1 | 3;
   islandJokers: boolean;
   lycanMode: "hard" | "medium" | "easy";
@@ -358,9 +363,26 @@ export async function loadGlobalSettings(): Promise<GlobalSettings> {
   return globalSettingsLoad;
 }
 
+/**
+ * A player's first settings: animations start off when the system asks for
+ * less motion (Android's "Remove animations", which many e-readers have on).
+ * Once saved, the player's own choice is kept, whatever the system says.
+ */
+async function firstGlobalSettings(): Promise<GlobalSettings> {
+  let reducesMotion = false;
+  try {
+    reducesMotion = (await AccessibilityInfo.isReduceMotionEnabled()) === true;
+  } catch {
+    // Unknown: animations stay on.
+  }
+  return reducesMotion
+    ? { ...DEFAULT_GLOBAL_SETTINGS, showAnimations: false }
+    : DEFAULT_GLOBAL_SETTINGS;
+}
+
 async function readGlobalSettings(): Promise<GlobalSettings> {
   const raw = await AsyncStorage.getItem(GLOBAL_SETTINGS_STORAGE_KEY);
-  if (!raw) return DEFAULT_GLOBAL_SETTINGS;
+  if (!raw) return firstGlobalSettings();
   try {
     const parsed = JSON.parse(raw) as Partial<GlobalSettings>;
     const merged = { ...DEFAULT_GLOBAL_SETTINGS, ...parsed };

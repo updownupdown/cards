@@ -1,3 +1,4 @@
+import { useShowAnimations } from "@/hooks/useShowAnimations";
 import FlyingSaucer from "@/assets/images/flying-saucer.svg";
 import { UfoGlow } from "@/components/common/UfoSaucer";
 import { useUfoOnScreen } from "@/components/common/UfoStage";
@@ -893,6 +894,7 @@ export function BeamingUfo({ lift }: { lift: number }) {
   const scale = useRef(new Animated.Value(0)).current;
   const beam = useRef(new Animated.Value(0)).current;
   const bob = useRef(new Animated.Value(0)).current;
+  const animated = useShowAnimations();
   const ship = useRef<View>(null);
   // The tab bar's UFO may fly in to be this one: until it lands, the ship
   // waits unseen, then turns its beam on without popping in.
@@ -938,12 +940,13 @@ export function BeamingUfo({ lift }: { lift: number }) {
       ]),
     );
     arrive.start();
-    bobbing.start();
+    // With animations off, the UFO holds still.
+    if (animated) bobbing.start();
     return () => {
       arrive.stop();
       bobbing.stop();
     };
-  }, [beam, bob, scale, waiting]);
+  }, [animated, beam, bob, scale, waiting]);
 
   return (
     <View
@@ -1021,8 +1024,11 @@ function HoverBody({
   const amount = useRef(new Animated.Value(0)).current;
   const latestOnRest = useRef(onRest);
   latestOnRest.current = onRest;
+  const animated = useShowAnimations();
 
+  // With animations off, the UFO holds still: no bob, drift or swing.
   useEffect(() => {
+    if (!animated) return;
     const loop = Animated.loop(
       Animated.timing(time, {
         toValue: 1,
@@ -1032,8 +1038,11 @@ function HoverBody({
       }),
     );
     loop.start();
-    return () => loop.stop();
-  }, [time]);
+    return () => {
+      loop.stop();
+      time.setValue(0);
+    };
+  }, [animated, time]);
 
   useEffect(() => {
     const animation = Animated.timing(amount, {
@@ -1220,13 +1229,14 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
   const beam = useRef(new Animated.Value(0)).current;
   const zap = useRef(new Animated.Value(0)).current;
   const bob = useRef(new Animated.Value(0)).current;
+  const animated = useShowAnimations();
 
   const latest = useRef({ t, screenWidth, onAutopilotMove, dockIconSize });
   latest.current = { t, screenWidth, onAutopilotMove, dockIconSize };
 
-  // The UFO bobs gently while it's out.
+  // The UFO bobs gently while it's out (unless animations are off).
   useEffect(() => {
-    if (!flying) return;
+    if (!flying || !animated) return;
     const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(bob, {
@@ -1244,8 +1254,11 @@ export function HintUfo({ onAutopilotMove }: { onAutopilotMove: () => void }) {
       ]),
     );
     loop.start();
-    return () => loop.stop();
-  }, [bob, flying]);
+    return () => {
+      loop.stop();
+      bob.setValue(0);
+    };
+  }, [animated, bob, flying]);
 
   // A press of the header's UFO.
   const handledCall = useRef(call?.id);
