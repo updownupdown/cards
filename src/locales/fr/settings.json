@@ -13,7 +13,7 @@
   },
   "showAnimations": {
     "label": "Afficher les animations",
-    "description": "Météo et décor derrière les cartes, et étoiles animées dans les menus."
+    "description": "Météo et décor derrière les cartes, étoiles animées dans les menus et petites touches décoratives. Désactivez-les sur une liseuse."
   },
   "showTips": {
     "label": "Afficher les conseils « Démarrage rapide »",

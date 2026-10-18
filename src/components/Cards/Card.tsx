@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
-import React, { memo } from "react";
-import { View, ViewStyle } from "react-native";
+import React, { memo, useContext, useEffect, useState } from "react";
+import { Platform, View, ViewStyle } from "react-native";
 import { getCardBackImage, getCardImageSource } from "./CardAssets";
 import { cardDims, PlayingCard } from "./card-utils";
 import {
@@ -10,6 +10,14 @@ import {
   getCardShadowStyle,
 } from "./CardStyles";
 import { transitionStyles } from "@/styles/styles";
+
+/**
+ * Lets a board know when its faces are drawn: `start` is called by a face
+ * still loading, and the function it returns once the face is in.
+ */
+export const CardFaceLoads = React.createContext<{
+  start: () => () => void;
+} | null>(null);
 
 export type CardProps = {
   card?: PlayingCard;
@@ -52,6 +60,20 @@ const CardComponent = ({
   const imageSource = isFaceDown
     ? undefined
     : getCardImageSource(cardSize, cardName);
+
+  // On native each face is decoded by its own view, which can take a moment
+  // (longest on slow phones and as a board opens, with many at once). Until
+  // it's in, the card shows its back rather than a blank white face, as if
+  // it hadn't quite turned over yet.
+  const [loadedSource, setLoadedSource] = useState<unknown>(null);
+  const faceLoading =
+    Platform.OS !== "web" && !isFaceDown && loadedSource !== imageSource;
+  const faceLoads = useContext(CardFaceLoads);
+  useEffect(() => {
+    if (!faceLoading || !faceLoads) return;
+    return faceLoads.start();
+  }, [faceLoading, faceLoads]);
+
   if (!isFaceDown && !imageSource) return null;
 
   const borderRadius = Math.max(cardWidth, 1) * cardDims.ratioRadius;
@@ -112,12 +134,28 @@ const CardComponent = ({
             style={{ width: "100%", height: "100%" }}
           />
         ) : (
-          <Image
-            source={imageSource}
-            cachePolicy="memory"
-            style={{ width: "100%", height: "100%" }}
-            transition={0}
-          />
+          <>
+            {faceLoading && (
+              <Image
+                source={getCardBackImage(cardBackPath)}
+                cachePolicy="memory"
+                contentFit="fill"
+                style={{
+                  position: "absolute",
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            )}
+            <Image
+              source={imageSource}
+              cachePolicy="memory"
+              style={{ width: "100%", height: "100%" }}
+              transition={0}
+              onLoad={() => setLoadedSource(imageSource)}
+              onError={() => setLoadedSource(imageSource)}
+            />
+          </>
         )}
       </View>
     </View>

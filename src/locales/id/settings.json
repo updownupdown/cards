@@ -13,7 +13,7 @@
   },
   "showAnimations": {
     "label": "Tampilkan animasi",
-    "description": "Cuaca dan pemandangan di balik kartu, serta bintang bergerak di menu."
+    "description": "Cuaca dan pemandangan di balik kartu, bintang bergerak di menu, dan sentuhan dekoratif kecil. Matikan di e-reader."
   },
   "showTips": {
     "label": "Tampilkan tips \"Mulai cepat\"",

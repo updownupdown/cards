@@ -13,7 +13,7 @@
   },
   "showAnimations": {
     "label": "Mostra animazioni",
-    "description": "Meteo e paesaggi dietro le carte, e stelle in movimento nei menu."
+    "description": "Meteo e paesaggi dietro le carte, stelle in movimento nei menu e piccoli tocchi decorativi. Disattivale su un e-reader."
   },
   "showTips": {
     "label": "Mostra i suggerimenti «Guida rapida»",

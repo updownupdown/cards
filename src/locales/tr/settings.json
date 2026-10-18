@@ -13,7 +13,7 @@
   },
   "showAnimations": {
     "label": "Animasyonları göster",
-    "description": "Kartların arkasında hava durumu ve manzara, menülerde hareketli yıldızlar."
+    "description": "Kartların arkasında hava durumu ve manzara, menülerde hareketli yıldızlar ve küçük süslemeler. E-okuyucuda kapatın."
   },
   "showTips": {
     "label": "\"Hızlı başlangıç\" ipuçlarını göster",

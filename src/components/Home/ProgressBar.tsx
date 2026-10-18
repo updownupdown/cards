@@ -1,3 +1,4 @@
+import { useShowAnimations } from "@/hooks/useShowAnimations";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, IconName } from "@/icons";
 import { flexStyles } from "@/styles/flexStyles";
@@ -68,11 +69,13 @@ export const ProgressBar = ({
   const heartbeatSecondScale =
     color === "green" ? 0.8 : color === "orange" ? 0.78 : 0.7;
 
+  const animated = useShowAnimations();
+
   React.useEffect(() => {
     heartbeatScale.stopAnimation();
     heartbeatScale.setValue(1);
 
-    if (!heartbeatColor) return;
+    if (!heartbeatColor || !animated) return;
 
     const timing = (toValue: number, duration: number) =>
       Animated.timing(heartbeatScale, {
@@ -92,6 +95,7 @@ export const ProgressBar = ({
     animation.start();
     return () => animation.stop();
   }, [
+    animated,
     color,
     heartbeatColor,
     heartbeatFirstScale,
