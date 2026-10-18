@@ -1,3 +1,4 @@
+import { useShowAnimations } from "@/hooks/useShowAnimations";
 import { BoardButtonsContext } from "@/components/Button/Button";
 import { CARD_BACK_INKS } from "@/data/card-backs";
 import { BackgroundAnimation } from "@/animations/BackgroundAnimation";
@@ -166,6 +167,7 @@ export const GameWrapper = ({
   const { settings, isLoading } = useGameSettings(pathname);
   const { settings: globalSettings, isLoading: isGlobalSettingsLoading } =
     useGlobalSettings();
+  const showAnimations = useShowAnimations();
   const spacing = (value: number) => value * ui.scale;
   // Dev mode's trophy wins the deal as it stands: the game's own outcome is
   // overridden until the next deal, so every win-time path (stats, campaign
@@ -633,29 +635,27 @@ export const GameWrapper = ({
           }}
         />
 
-        {globalSettings.showAnimations &&
-          !isGlobalSettingsLoading &&
-          isSceneReady && (
-            <View
-              style={{
-                position: "absolute",
-                zIndex: LayerZIndexes.boardAnimation,
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0,
-                overflow: "hidden",
-                pointerEvents: "none",
-              }}
-            >
-              <BackgroundAnimation
-                animation={gameInfo.animation}
-                width={viewportWidth}
-                height={viewportHeight}
-                paused={isScenePaused}
-              />
-            </View>
-          )}
+        {showAnimations && !isGlobalSettingsLoading && isSceneReady && (
+          <View
+            style={{
+              position: "absolute",
+              zIndex: LayerZIndexes.boardAnimation,
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              overflow: "hidden",
+              pointerEvents: "none",
+            }}
+          >
+            <BackgroundAnimation
+              animation={gameInfo.animation}
+              width={viewportWidth}
+              height={viewportHeight}
+              paused={isScenePaused}
+            />
+          </View>
+        )}
 
         <DeviceRotateHint orientation={showDeviceRotateHint} />
 

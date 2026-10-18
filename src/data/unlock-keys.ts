@@ -5,11 +5,13 @@
  *
  * - "friend": the full Odyssey, in the web app only (on Android it comes
  *   from Google Play).
+ * - "tester": the full Odyssey anywhere, Android included (for Play's
+ *   testers, before the purchase exists), but not dev mode.
  * - "dev": the full Odyssey anywhere, and dev mode may be turned on.
  *
  * Removing a key locks it again wherever it was entered, at the next start.
  */
-export type UnlockKeyRole = "friend" | "dev";
+export type UnlockKeyRole = "friend" | "tester" | "dev";
 
 export type UnlockKey = {
   label: string;
@@ -32,6 +34,11 @@ export const UNLOCK_KEYS: UnlockKey[] = [
     label: "James",
     role: "dev",
     hash: "f528e54765020578f7174ec09690e7166feda47d938cb7d2b253044d3108a036",
+  },
+  {
+    label: "Closed testers",
+    role: "tester",
+    hash: "f4d8e12553d38acd1fca13d1303b18e10bcbba5594bd6083770ec4ffa5617e5f",
   },
 ];
 // keys:end

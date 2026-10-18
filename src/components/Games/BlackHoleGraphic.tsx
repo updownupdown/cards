@@ -1,4 +1,4 @@
-import { useGlobalSettings } from "@/hooks/useGlobalSettings";
+import { useShowAnimations } from "@/hooks/useShowAnimations";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, Platform, StyleSheet } from "react-native";
 import Svg, {
@@ -153,7 +153,7 @@ export function BlackHoleGraphic({
   size,
   absorbed = 1,
 }: BlackHoleGraphicProps) {
-  const { settings } = useGlobalSettings();
+  const showAnimations = useShowAnimations();
   const luminosity = useRef(new Animated.Value(0)).current;
   const intensity = useRef(new Animated.Value(0)).current;
   const motion = useRef(new Animated.Value(0)).current;
@@ -618,7 +618,7 @@ export function BlackHoleGraphic({
         <Ellipse cx="196" cy="133" rx="158" ry="4.5" fill="url(#nearCore)" />
       </Svg>
 
-      {settings.showAnimations &&
+      {showAnimations &&
         SPARKS.map((spark, index) => (
           <Spark key={index} spark={spark} toPixels={toPixels} />
         ))}

@@ -1,3 +1,4 @@
+import { useShowAnimations } from "@/hooks/useShowAnimations";
 import { GAMES_DATA } from "@/data/games-registry";
 import { CampaignBlackHole } from "@/components/Campaign/CampaignBlackHole";
 import {
@@ -12,7 +13,6 @@ import { Colors, FontWeight, rgba, textShadow, theme } from "@/styles/styles";
 import { mix } from "@/styles/palette";
 import { BeamingUfo } from "@/hints/HintUfo";
 import { seededRandom } from "@/hints/random";
-import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useDisplayLanguage } from "@/i18n";
 import { useStarfield } from "@/components/Home/Starfield";
 import {
@@ -824,7 +824,7 @@ export function CampaignMap({
   collectedQuoteIds,
   guidePath,
 }: Props) {
-  const { settings } = useGlobalSettings();
+  const showAnimations = useShowAnimations();
   const fieldUp = useFieldUp();
   const [viewport, setViewport] = useState({ width: 0, height: 0 });
   const translateX = useSharedValue(0);
@@ -901,7 +901,7 @@ export function CampaignMap({
     setCentered(true);
     // From here, the sky follows the map's pans.
     starfield?.linkPan(translateX.value, translateY.value);
-  }, [ready, selectedPath, settings.showAnimations, viewport.width]);
+  }, [ready, selectedPath, showAnimations, viewport.width]);
 
   useEffect(() => {
     if (Platform.OS !== "web") return;
@@ -1087,7 +1087,7 @@ export function CampaignMap({
               blackHoleStyle,
             ]}
           >
-            <CampaignBlackHole animationsEnabled={settings.showAnimations} />
+            <CampaignBlackHole animationsEnabled={showAnimations} />
           </Animated.View>
 
           <GalaxyArms />
@@ -1095,7 +1095,7 @@ export function CampaignMap({
           <ForceField
             up={fieldUp}
             worldSize={WORLD_SIZE}
-            animated={settings.showAnimations}
+            animated={showAnimations}
           />
 
           <GameDotConnections gameDotStates={gameDotStates} fieldUp={fieldUp} />
@@ -1115,7 +1115,7 @@ export function CampaignMap({
           <SelectedDots
             selected={selectedGameDot}
             gameDotStates={gameDotStates}
-            animated={settings.showAnimations}
+            animated={showAnimations}
           />
 
           <GameDotLabels

@@ -1,3 +1,4 @@
+import { useShowAnimations } from "@/hooks/useShowAnimations";
 import { LoadingOverlay } from "@/components/common/LoadingOverlay";
 import { GalleryTab } from "@/components/Home/GalleryTab";
 import { HomeTab } from "@/components/Home/HomeTab";
@@ -36,7 +37,6 @@ import { StatsModal } from "@/components/Modals/StatsModal";
 import { consumeReopenSettings } from "@/components/common/ThemePicker";
 import { markLaunchScreenReady } from "@/components/common/LaunchSplash";
 import { useHomeData } from "@/hooks/useHomeData";
-import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { Colors, layoutDims } from "@/styles/styles";
@@ -122,7 +122,7 @@ export default function Home() {
   const [mountedTabs, setMountedTabs] = useState<ReadonlySet<HomeTabIndex>>(
     () => new Set([initialActiveTab]),
   );
-  const { settings } = useGlobalSettings();
+  const showAnimations = useShowAnimations();
   const starfield = useStarfieldMotion(activeTab);
   // Set by the Campaign tab while the map is open; the UFO itself is drawn here.
   const [ufo, setUfo] = useState<UfoRequest | null>(null);
@@ -365,7 +365,7 @@ export default function Home() {
                     <StarfieldBackdrop
                       motion={starfield}
                       activeTab={activeTab}
-                      animated={settings.showAnimations}
+                      animated={showAnimations}
                       comets={isFocused}
                     />
 
@@ -430,7 +430,7 @@ export default function Home() {
                 <CampaignUFO
                   width={viewportWidth}
                   height={viewportHeight}
-                  animationsEnabled={settings.showAnimations && ufo.gateOpen}
+                  animationsEnabled={showAnimations && ufo.gateOpen}
                   summons={ufo.summons}
                   visits={ufo.visits}
                   onCatch={ufo.onCatch}

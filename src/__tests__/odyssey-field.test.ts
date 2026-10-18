@@ -42,6 +42,7 @@ import * as utils from "@/utils/utils";
 
 const FRIEND_KEY = "ABCD-EFGH-JK12";
 const DEV_KEY = "MNPQ-RSTV-WXYZ";
+const TESTER_KEY = "2345-6789-ABCD";
 
 jest.mock("@/data/unlock-keys", () => {
   const { sha256Hex } =
@@ -56,6 +57,11 @@ jest.mock("@/data/unlock-keys", () => {
         hash: sha256Hex(salt + "ABCDEFGHJK12"),
       },
       { label: "Me", role: "dev", hash: sha256Hex(salt + "MNPQRSTVWXYZ") },
+      {
+        label: "Testers",
+        role: "tester",
+        hash: sha256Hex(salt + "23456789ABCD"),
+      },
     ],
   };
 });
@@ -165,6 +171,15 @@ describe("Unlock keys", () => {
     await loadOdysseyUnlock();
     expect(await redeemUnlockKey(FRIEND_KEY)).toBe("webOnly");
     expect(isOdysseyUnlocked()).toBe(false);
+  });
+
+  test("a tester's key opens the Odyssey in the app, without dev mode", async () => {
+    jest.replaceProperty(Platform, "OS", "android");
+    await loadOdysseyUnlock();
+    expect(await redeemUnlockKey(TESTER_KEY)).toBe("unlocked");
+    expect(isOdysseyUnlocked()).toBe(true);
+    expect(hasDevKey()).toBe(false);
+    expect(canUseDevMode()).toBe(false);
   });
 
   test("a developer key opens the Odyssey anywhere and allows dev mode", async () => {
