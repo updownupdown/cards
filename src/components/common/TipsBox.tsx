@@ -1,3 +1,4 @@
+import { useShowAnimations } from "@/hooks/useShowAnimations";
 import { usePalette } from "@/styles/palette";
 import { getGameInfo } from "@/data/game-menu";
 import {
@@ -72,9 +73,10 @@ export function TipsBox({ onClose, showRulesModal }: Props) {
   // The cue's lean, as a share of CUE_REACH: -1 left, 1 right.
   const cue = useSharedValue(0);
   const swipeKnown = useSwipeDismissKnown();
+  const animated = useShowAnimations();
 
   useEffect(() => {
-    if (swipeKnown) return;
+    if (swipeKnown || !animated) return;
     const ease = Easing.inOut(Easing.quad);
     cue.value = withDelay(
       CUE_DELAY,
@@ -85,7 +87,7 @@ export function TipsBox({ onClose, showRulesModal }: Props) {
       ),
     );
     return () => cancelAnimation(cue);
-  }, [swipeKnown, cue]);
+  }, [animated, swipeKnown, cue]);
 
   const swipeToDismiss = useMemo(
     () =>

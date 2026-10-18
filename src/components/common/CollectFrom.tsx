@@ -1,3 +1,4 @@
+import { useShowAnimations } from "@/hooks/useShowAnimations";
 import { Button } from "@/components/Button/Button";
 import { launchGame } from "@/components/common/GameLaunchOverlay";
 import { Text } from "@/components/common/Text";
@@ -15,6 +16,7 @@ import type { Href } from "expo-router";
 import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, {
+  cancelAnimation,
   Easing,
   useAnimatedStyle,
   useSharedValue,
@@ -126,7 +128,13 @@ function Glow({
 }) {
   const { spacing } = useResponsiveMetrics();
   const pulse = useSharedValue(0);
+  const animated = useShowAnimations();
   useEffect(() => {
+    if (!animated) {
+      // A steady light instead.
+      pulse.value = 0.5;
+      return;
+    }
     pulse.value = withRepeat(
       withTiming(1, {
         duration: GLOW_PULSE_MS,
@@ -135,7 +143,8 @@ function Glow({
       -1,
       true,
     );
-  }, [pulse]);
+    return () => cancelAnimation(pulse);
+  }, [animated, pulse]);
   const glowStyle = useAnimatedStyle(() => ({
     opacity: 0.25 + 0.5 * pulse.value,
   }));

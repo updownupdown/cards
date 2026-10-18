@@ -1,3 +1,4 @@
+import { useShowAnimations } from "@/hooks/useShowAnimations";
 import { UfoFrame } from "@/components/common/UfoFrame";
 import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -15,8 +16,10 @@ const useNativeDriver = Platform.OS !== "web";
 function RestlessUfo({ size }: { size: number }) {
   const hover = useRef(new Animated.Value(0)).current;
   const zip = useRef(new Animated.Value(0)).current;
+  const animated = useShowAnimations();
 
   useEffect(() => {
+    if (!animated) return;
     const wobble = Animated.loop(
       Animated.sequence([
         Animated.timing(hover, {
@@ -59,7 +62,7 @@ function RestlessUfo({ size }: { size: number }) {
       wobble.stop();
       zipping.stop();
     };
-  }, [hover, zip]);
+  }, [animated, hover, zip]);
 
   const frame = size * 1.5;
   return (

@@ -1,3 +1,4 @@
+import { useShowAnimations } from "@/hooks/useShowAnimations";
 import { usePalette } from "@/styles/palette";
 import { rgba, UFO_INKS, UfoColors } from "@/styles/styles";
 import { useEffect, useRef, type ReactNode } from "react";
@@ -38,8 +39,10 @@ const OPACITIES = UFO_INKS.map((_, index) => inkOpacity(index));
 /** The hairline border turning through the UFO's inks. */
 function TurningBorder({ radius }: { radius: number }) {
   const cycle = useRef(new Animated.Value(0)).current;
+  const animated = useShowAnimations();
 
   useEffect(() => {
+    if (!animated) return;
     const loop = Animated.loop(
       Animated.timing(cycle, {
         toValue: 1,
@@ -50,7 +53,7 @@ function TurningBorder({ radius }: { radius: number }) {
     );
     loop.start();
     return () => loop.stop();
-  }, [cycle]);
+  }, [animated, cycle]);
 
   return UFO_INKS.map((ink, index) => (
     <Animated.View

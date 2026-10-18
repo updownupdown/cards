@@ -1,3 +1,4 @@
+import { useShowAnimations } from "@/hooks/useShowAnimations";
 import { lifespan, portraitLength } from "@/components/Campaign/voices";
 import { CollectFrom, useLockedOnMap } from "@/components/common/CollectFrom";
 import { Text } from "@/components/common/Text";
@@ -295,7 +296,9 @@ function Portrait({
 
   // Breathing, for as long as the page is in front of someone: paused in
   // the background, so nothing animates unseen.
+  const animated = useShowAnimations();
   useEffect(() => {
+    if (!animated) return;
     const breathe = () => {
       breath.value = withRepeat(
         withTiming(1, { duration: PORTRAIT_BREATH_MS, easing: Easing.linear }),
@@ -313,7 +316,7 @@ function Portrait({
       subscription.remove();
       rest();
     };
-  }, [breath]);
+  }, [animated, breath]);
 
   const lineProps = useAnimatedProps(() => ({
     d: wavedPath(points, breath.value),

@@ -1,3 +1,4 @@
+import { useShowAnimations } from "@/hooks/useShowAnimations";
 import { Text } from "@/components/common/Text";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { Icon, type IconName } from "@/icons";
@@ -55,8 +56,10 @@ export function UfoButton({
   const height = spacing(46);
   const [width, setWidth] = useState(0);
   const drift = useRef(new Animated.Value(0)).current;
+  const animated = useShowAnimations();
 
   useEffect(() => {
+    if (!animated) return;
     const loop = Animated.loop(
       Animated.timing(drift, {
         toValue: 1,
@@ -67,7 +70,7 @@ export function UfoButton({
     );
     loop.start();
     return () => loop.stop();
-  }, [drift]);
+  }, [animated, drift]);
 
   const span = width * SPAN_WIDTHS;
   const ink = UfoColors.black;

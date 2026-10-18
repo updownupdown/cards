@@ -13,7 +13,7 @@
   },
   "showAnimations": {
     "label": "Mostrar animações",
-    "description": "Clima e paisagem atrás das cartas, e estrelas em movimento nos menus."
+    "description": "Clima e paisagem atrás das cartas, estrelas em movimento nos menus e pequenos toques decorativos. Desative em um leitor de e-books."
   },
   "showTips": {
     "label": "Mostrar dicas de \"Início rápido\"",

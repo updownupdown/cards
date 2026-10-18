@@ -8,14 +8,16 @@ import { memo, useEffect, useMemo, useState } from "react";
 import { Text, View } from "react-native";
 import { theme } from "@/styles/styles";
 import Animated from "react-native-reanimated";
+import { useShowAnimations } from "@/hooks/useShowAnimations";
 
 /**
  * A Tao chapter read out line by line. Each line fades in whole when the
  * reading reaches it, and a longer line holds the reading longer before the
  * next, so the pace is the reader's. The lines sit in the normal layout from
  * the start (just transparent), so the page has its full height and scrolls
- * freely while they appear. Each line's fade is a CSS animation with a
- * delay: nothing runs per frame.
+ * freely while they appear. Each line waits on a timer, then fades in with
+ * a CSS animation (or simply appears, when animations are off): nothing
+ * runs per frame.
  */
 
 const FONT_FAMILY = "Outfit_300Light";
@@ -105,6 +107,7 @@ export const ChapterText = memo(function ChapterText({
   onLineLayout,
 }: Props) {
   const parsed = useMemo(() => parseChapterText(text), [text]);
+  const fade = useShowAnimations();
   const schedule = useMemo(
     () =>
       timing ? scheduleLines(parsed, timing.startMs, timing.hurriedAt) : null,
@@ -187,6 +190,7 @@ export const ChapterText = memo(function ChapterText({
                 fontSize={fontSize}
                 startsAt={schedule.startsAt[lineIndex]}
                 openedAt={timing.openedAt}
+                fade={fade}
               />
             ) : (
               <Text allowFontScaling={false} style={textStyle(fontSize)}>
@@ -205,15 +209,37 @@ const AnimatedLine = memo(function AnimatedLine({
   fontSize,
   startsAt,
   openedAt,
+  fade,
 }: {
   text: string;
   fontSize: number;
   startsAt: number;
   openedAt: number;
+  fade: boolean;
 }) {
-  // Fixed at mount, so a re-render never restarts a fade already under way.
-  // A hurried line's start moves, but only while it is still in the future.
-  const [elapsed] = useState(() => Date.now() - openedAt);
+  // A timer, not an animation delay, decides when the line shows; until then
+  // it is plainly transparent. With delayed fades, an e-reader showed the
+  // chapter's last lines at once and its first ones after.
+  const [shown, setShown] = useState(() => Date.now() - openedAt >= startsAt);
+  useEffect(() => {
+    if (shown) return;
+    const timer = setTimeout(
+      () => setShown(true),
+      Math.max(0, startsAt - (Date.now() - openedAt)),
+    );
+    return () => clearTimeout(timer);
+  }, [openedAt, shown, startsAt]);
+
+  if (!shown || !fade) {
+    return (
+      <Text
+        allowFontScaling={false}
+        style={[textStyle(fontSize), { opacity: shown ? 1 : 0 }]}
+      >
+        {text}
+      </Text>
+    );
+  }
   return (
     <Animated.Text
       allowFontScaling={false}
@@ -222,8 +248,7 @@ const AnimatedLine = memo(function AnimatedLine({
         {
           animationName: LINE_IN,
           animationDuration: `${REVEAL.lineFadeMs}ms`,
-          animationDelay: `${Math.max(0, Math.round(startsAt - elapsed))}ms`,
-          animationFillMode: "both",
+          animationFillMode: "backwards",
           animationTimingFunction: "ease-in-out",
         },
       ]}

@@ -13,7 +13,7 @@
   },
   "showAnimations": {
     "label": "Show animations",
-    "description": "Weather and scenery behind the cards, and moving stars in the menus."
+    "description": "Weather and scenery behind the cards, moving stars in the menus, and small decorative touches. Turn this off on an e-reader."
   },
   "showTips": {
     "label": "Show \"Quick Start\" tips",

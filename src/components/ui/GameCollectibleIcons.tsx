@@ -1,3 +1,4 @@
+import { useShowAnimations } from "@/hooks/useShowAnimations";
 import { Icon } from "@/icons";
 import type { CollectibleReward } from "@/data/collectibles";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
@@ -33,15 +34,17 @@ function RewardIcon({
   const { spacing } = useResponsiveMetrics();
   const theme = usePalette();
   const pulse = useSharedValue(0);
+  const animated = useShowAnimations();
 
   useEffect(() => {
-    if (!glowing) {
-      pulse.value = 0;
+    if (!glowing || !animated) {
+      // Without animations a glowing icon holds a steady glow.
+      pulse.value = glowing ? 0.5 : 0;
       return;
     }
     pulse.value = withRepeat(withTiming(1, { duration: 900 }), -1, true);
     return () => cancelAnimation(pulse);
-  }, [glowing, pulse]);
+  }, [animated, glowing, pulse]);
 
   // Worked out here, not in the worklet: rgba() is a plain JS function, and
   // calling it on the native UI thread crashes ("Object is not a function").

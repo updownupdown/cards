@@ -4,7 +4,7 @@ import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { roundToPixel } from "@/utils/utils";
 import { useGameColors } from "@/hooks/useGameColors";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ViewStyle } from "react-native";
+import { Platform, ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LoadingOverlay } from "../common/LoadingOverlay";
 import {
@@ -12,6 +12,7 @@ import {
   AnimatedCardMapping,
   CardMapBGMapping,
 } from "./AnimatedCard";
+import { CardFaceLoads } from "./Card";
 import { isCardImageSetPreloaded, preloadCardImageSet } from "./CardAssets";
 import { isBoardInputLocked } from "./input-lock";
 import {
@@ -27,6 +28,9 @@ import { HintBoardLink } from "@/hints/HintBoardLink";
 import type { Hint, HintTarget } from "@/hints/hint";
 import { findButtonTap, findDragTap } from "@/hints/hint-taps";
 import { locateHintTarget } from "@/hints/locate";
+
+/** The longest the first board waits for its card faces to be drawn. */
+const FACES_WAIT_MS = 1500;
 
 export type CardPosition = {
   x: number;
@@ -190,6 +194,39 @@ export function useCardMap({
       cancelled = true;
     };
   }, [cardBackPath, cardSize]);
+
+  // The first time a card set is opened, the loading overlay also waits for
+  // the faces on the board to be drawn (on native each card decodes its own),
+  // though never longer than FACES_WAIT_MS. Later boards don't wait: a face
+  // still loading shows the card's back (see Card).
+  const facesPending = useRef(0);
+  const [facesSettled, setFacesSettled] = useState(
+    () => Platform.OS === "web" || cardImagesLoaded,
+  );
+  const faceLoads = useMemo(
+    () => ({
+      start: () => {
+        facesPending.current += 1;
+        let finished = false;
+        return () => {
+          if (finished) return;
+          finished = true;
+          facesPending.current -= 1;
+          if (facesPending.current === 0) setFacesSettled(true);
+        };
+      },
+    }),
+    [],
+  );
+  useEffect(() => {
+    if (facesSettled || !cardImagesLoaded) return;
+    if (facesPending.current === 0) {
+      setFacesSettled(true);
+      return;
+    }
+    const timer = setTimeout(() => setFacesSettled(true), FACES_WAIT_MS);
+    return () => clearTimeout(timer);
+  }, [cardImagesLoaded, facesSettled]);
 
   // Calculate the end column (col + height) for each zone
   // and find the maximum value among them.
@@ -690,17 +727,21 @@ export function useCardMap({
     () => (
       <>
         <LoadingOverlay
-          isLoaded={cardImagesLoaded}
+          isLoaded={cardImagesLoaded && facesSettled}
           backgroundColor={gameColorDark}
         />
         {mapBackgrounds}
-        {mappedCards}
+        <CardFaceLoads.Provider value={faceLoads}>
+          {mappedCards}
+        </CardFaceLoads.Provider>
         <HintBoardLink locate={locateHint} tap={tapHint} />
         {mapVisualizer}
       </>
     ),
     [
       cardImagesLoaded,
+      faceLoads,
+      facesSettled,
       gameColorDark,
       locateHint,
       mapBackgrounds,
