@@ -1,13 +1,15 @@
+import { Text } from "@/components/common/Text";
 import { useFade } from "@/hooks/useFade";
 import { TABLET_BREAKPOINT } from "@/hooks/useResponsiveLayout";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { useTranslation } from "@/i18n";
+import { Icon } from "@/icons";
+import { usePalette } from "@/styles/palette";
 import { Colors, LayerZIndexes, layoutDims, rgba } from "@/styles/styles";
-import { useEffect, useState } from "react";
-import { Animated, Platform } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Animated, Easing, Platform, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Button } from "../Button/Button";
 
 const HINT_DURATION = 8_000;
 const FADE_DURATION = 250;
@@ -28,8 +30,10 @@ export const DeviceRotateHint = ({ orientation = null }: Props) => {
   const { spacing } = useResponsiveMetrics();
   const { t } = useTranslation("game");
   const insets = useSafeAreaInsets();
+  const palette = usePalette();
   const [started, setStarted] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const progress = useRef(new Animated.Value(0)).current;
   const isPhone =
     width > 0 && height > 0 && Math.min(width, height) < TABLET_BREAKPOINT;
   const qualifies =
@@ -52,11 +56,25 @@ export const DeviceRotateHint = ({ orientation = null }: Props) => {
     if (!started || dismissed) return;
 
     const timeout = setTimeout(() => setDismissed(true), HINT_DURATION);
-    return () => clearTimeout(timeout);
-  }, [dismissed, started]);
+    progress.setValue(0);
+    const animation = Animated.timing(progress, {
+      toValue: 1,
+      duration: HINT_DURATION,
+      easing: Easing.linear,
+      // Drives scaleX (not width) so this can run off the JS thread.
+      useNativeDriver: Platform.OS !== "web",
+    });
+    animation.start();
+    return () => {
+      clearTimeout(timeout);
+      animation.stop();
+    };
+  }, [dismissed, progress, started]);
 
   if (orientation === null || !fade.isRendered) return null;
 
+  // Its own pill rather than a Button: a Button's label is one line that
+  // shrinks to fit, which cut the two-line hint down to a tiny first line.
   return (
     <Animated.View
       style={{
@@ -68,31 +86,48 @@ export const DeviceRotateHint = ({ orientation = null }: Props) => {
         pointerEvents: "none",
       }}
     >
-      <Button
-        text={t(
-          orientation === "landscape"
-            ? "rotateHint.landscape"
-            : "rotateHint.portrait",
-        )}
-        size="md"
-        iconSize={40}
-        iconName="rotate-device"
-        autoProgress={HINT_DURATION}
-        autoProgressColor={rgba(Colors.white, 0.1)}
-        onPress={() => {}}
-        theme={rgba(Colors.K950, 0.65)}
-        lineHeight={1.3}
+      <View
+        accessibilityRole="text"
         style={{
-          // Grow to fit both lines (and larger system font sizes) instead of
-          // the button's fixed height, which clipped the second line.
-          height: "auto",
-          borderRadius: spacing(12),
-          paddingHorizontal: spacing(14),
+          flexDirection: "row",
+          alignItems: "center",
+          gap: spacing(12),
+          overflow: "hidden",
+          borderRadius: spacing(14),
           paddingVertical: spacing(12),
-          boxShadow: "none",
+          paddingLeft: spacing(14),
+          paddingRight: spacing(18),
+          borderWidth: 1,
+          borderColor: rgba(palette.ink, 0.1),
+          backgroundColor: rgba(Colors.K950, 0.65),
         }}
-        taller
-      />
+      >
+        <Animated.View
+          style={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            transformOrigin: "left",
+            transform: [{ scaleX: progress }],
+            backgroundColor: rgba(Colors.white, 0.1),
+          }}
+        />
+        <Icon
+          name="rotate-device"
+          size={spacing(36)}
+          color={palette.ink}
+          style={{ flexShrink: 0 }}
+        />
+        <Text size="sm" weight="medium" lineHeight={1.3}>
+          {t(
+            orientation === "landscape"
+              ? "rotateHint.landscape"
+              : "rotateHint.portrait",
+          )}
+        </Text>
+      </View>
     </Animated.View>
   );
 };
