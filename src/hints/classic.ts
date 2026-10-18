@@ -99,6 +99,12 @@ export type ClassicRules = {
    */
   pilesDiffer?: boolean;
   /**
+   * Tableau piles that play by rules of their own (Miss Milligan's pocket)
+   * get a kind of their own, so the search never takes them for a column
+   * holding the same cards. Default: every pile is alike.
+   */
+  pileKind?: (pile: number) => string;
+  /**
    * What happens on its own after a move, e.g. a finished Spider run leaving
    * for the foundations. Must not turn hidden cards up.
    */
@@ -425,7 +431,10 @@ function cardKey(card: PlayingCard) {
 }
 
 function boardKey(board: ClassicBoard, rules: ClassicRules) {
-  const piles = board.tableau.map((pile) => pile.map(cardKey).join(","));
+  const piles = board.tableau.map(
+    (pile, index) =>
+      `${rules.pileKind?.(index) ?? ""}:${pile.map(cardKey).join(",")}`,
+  );
   if (!rules.pilesDiffer) piles.sort();
   const cells = (board.cells ?? []).map((card) => (card ? cardKey(card) : "-"));
   cells.sort();

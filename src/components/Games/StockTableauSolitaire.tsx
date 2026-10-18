@@ -542,8 +542,9 @@ function hasMove(state: StockTableauState, config: Config) {
 /**
  * The stock's cards are unknown, so until it's gone hints rank the moves on
  * view; once every card is face up and the stock spent, they search for a
- * win. (Setting cards aside in Miss Milligan's pocket isn't hinted, nor is
- * playing a run back from it.)
+ * win. Miss Milligan's pocket, once it's open, joins the tableau as one more
+ * pile of its own kind: it takes a card or built run only from the tableau,
+ * only while empty, and gives it back whole.
  */
 function findStockTableauHint(
   state: StockTableauState,
@@ -562,28 +563,32 @@ function findStockTableauHint(
   const allOnView = state.tableau.every((pile) =>
     pile.every((card) => card.faceUp),
   );
+  const withPocket =
+    canUsePocket(state, config) || (state.pocket?.length ?? 0) > 0;
+  const pocket = withPocket ? state.tableau.length : -1;
   return findClassicHint(
     {
-      tableau: state.tableau,
+      tableau: withPocket
+        ? [...state.tableau, state.pocket ?? []]
+        : state.tableau,
       foundations: state.foundations,
-      // A card in the pocket plays like a reserve's; a run there moves only
-      // as a whole, which the hints don't cover.
-      reserves: [
-        state.waste,
-        ...(state.pocket?.length === 1 ? [state.pocket] : []),
-      ],
+      reserves: [state.waste],
     },
     {
       toFoundation: (card, pile) => canBuildFoundation(card, top(pile)),
-      toTableau: (cards, pile) =>
+      toTableau: (cards, pile, pileIndex, _board, from) =>
         isMovableRun(cards, config.move, config) &&
-        canBuildTableau(cards[0], top(pile), config),
-      canLift: (pile, index) =>
+        (pileIndex === pocket
+          ? pile.length === 0 && from.kind === "tableau"
+          : canBuildTableau(cards[0], top(pile), config)),
+      canLift: (pile, index, pileIndex) =>
+        (pileIndex !== pocket || index === 0) &&
         isMovableRun(pile.slice(index), config.move, config),
+      pileKind: (pile) => (pile === pocket ? "pocket" : ""),
       decks: config.decks,
     },
     {
-      tableau: (pile) => `tableau-${pile}`,
+      tableau: (pile) => (pile === pocket ? "pocket" : `tableau-${pile}`),
       foundation: (pile) => `foundation-${pile}`,
     },
     {

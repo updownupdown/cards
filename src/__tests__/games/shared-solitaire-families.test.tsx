@@ -257,6 +257,24 @@ describe("Miss Milligan", () => {
     expect(zoneCardIds("pocket")).toEqual([queen.id]);
   });
 
+  test("hints set a card aside in the pocket when that's the way on", () => {
+    // The spades' Ace is under their 2, which has nowhere to go but the
+    // pocket (a player report: hints never used it).
+    const ace = card("A", "spades");
+    const two = card("2", "spades");
+    const tableau = Array.from({ length: 8 }, () => [] as PlayingCard[]);
+    tableau[0] = [ace, two];
+    tableau[1] = run("spades", "K", "3");
+    const foundations = lastKingFoundations(8);
+    foundations[7] = [];
+    const state = fixture(tableau, foundations);
+
+    expect(stockTableauRules.findHint(state, "miss-milligan")?.steps).toEqual([
+      [{ card: two.id }],
+      [{ zone: "pocket" }],
+    ]);
+  });
+
   test("a card waiting in the pocket is hinted and auto-completes", async () => {
     // Every foundation done but the last spades; their ace is in the pocket
     // and the rest wait in a column.

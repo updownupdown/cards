@@ -1,6 +1,6 @@
 import { useStateManager } from "@/hooks/useStateManager";
 import { delay } from "@/utils/utils";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatedCardMapping, CardMapBGMapping } from "../Cards/AnimatedCard";
 import {
   createDeck,
@@ -84,10 +84,18 @@ function canBuildFoundation(
   return rankValue(card) === rankValue(pileTop) + (index < 4 ? 1 : -1);
 }
 
-function foundationFor(state: RowsState, card: PlayingCard) {
-  return state.foundations.findIndex((pile, index) =>
-    canBuildFoundation(card, pile, index),
+/**
+ * Every foundation the card may go to. In Parallels a card can fit both its
+ * suit's Ace pile and its King pile (a 6 between a 5 and a 7).
+ */
+function foundationsFor(state: RowsState, card: PlayingCard) {
+  return state.foundations.flatMap((pile, index) =>
+    canBuildFoundation(card, pile, index) ? [index] : [],
   );
+}
+
+function foundationFor(state: RowsState, card: PlayingCard) {
+  return foundationsFor(state, card)[0] ?? -1;
 }
 
 /** A card is free when the space directly above or below it is open. */
@@ -178,18 +186,19 @@ function findRowsHint(state: RowsState, variant: RowsVariant) {
     );
   let best: { card: PlayingCard; home: number; worth: number } | null = null;
   for (const { card, r, c } of playable(state)) {
-    const home = foundationFor(state, card);
-    const after: RowsState = {
-      ...state,
-      rows: state.rows.map((row, index) =>
-        index === r ? row.map((cell, col) => (col === c ? null : cell)) : row,
-      ),
-      foundations: state.foundations.map((pile, index) =>
-        index === home ? [...pile, card] : pile,
-      ),
-    };
-    const worth = playable(after).length;
-    if (!best || worth > best.worth) best = { card, home, worth };
+    for (const home of foundationsFor(state, card)) {
+      const after: RowsState = {
+        ...state,
+        rows: state.rows.map((row, index) =>
+          index === r ? row.map((cell, col) => (col === c ? null : cell)) : row,
+        ),
+        foundations: state.foundations.map((pile, index) =>
+          index === home ? [...pile, card] : pile,
+        ),
+      };
+      const worth = playable(after).length;
+      if (!best || worth > best.worth) best = { card, home, worth };
+    }
   }
   if (best) {
     return makeHint(
@@ -205,6 +214,7 @@ export const rowsRules = {
   findHint: findRowsHint,
   configs: CONFIGS,
   canBuildFoundation,
+  foundationsFor,
   isAvailable,
   evaluateEnd,
 };
@@ -212,6 +222,10 @@ export const rowsRules = {
 export function RowsSolitaire({ variant }: { variant: RowsVariant }) {
   const config = CONFIGS[variant];
   const initial = useMemo(() => createInitialState(config), [config]);
+  /** A card that fits more than one foundation, waiting for the player's pick. */
+  const [selected, setSelected] = useState<{ row: number; col: number } | null>(
+    null,
+  );
   const {
     isLoaded,
     isSettingUp,
@@ -223,6 +237,7 @@ export function RowsSolitaire({ variant }: { variant: RowsVariant }) {
     reset,
   } = useStateManager<RowsState>({
     gameStateInitial: initial,
+    resetNonGameStates: () => setSelected(null),
     resetAndSetup: async () => {
       setGame((draft) => {
         const cards = [
@@ -263,12 +278,29 @@ export function RowsSolitaire({ variant }: { variant: RowsVariant }) {
     enabled: !isSettingUp && !game.ended,
   });
 
-  function playCard(row: number, col: number) {
+  const selectedCard = selected
+    ? game.rows[selected.row]?.[selected.col]
+    : null;
+  const selectedHomes = selectedCard ? foundationsFor(game, selectedCard) : [];
+
+  function onCellPress(row: number, col: number) {
     const card = game.rows[row]?.[col];
     if (game.ended || !card || !isAvailable(game, config, row, col)) return;
-    const target = foundationFor(game, card);
-    if (target < 0) return;
+    const homes = foundationsFor(game, card);
+    if (homes.length === 1) return playCard(row, col, homes[0]);
+    // It fits two foundations: pick it up and let the player choose.
+    if (homes.length === 0 || (selected?.row === row && selected.col === col))
+      return setSelected(null);
+    setSelected({ row, col });
+  }
 
+  function onFoundationPress(index: number) {
+    if (!selected || !selectedHomes.includes(index)) return;
+    playCard(selected.row, selected.col, index);
+  }
+
+  function playCard(row: number, col: number, target: number) {
+    setSelected(null);
     saveUndoState(structuredClone(game));
     setGame((draft) => {
       const moved = draft.rows[row][col];
@@ -284,6 +316,7 @@ export function RowsSolitaire({ variant }: { variant: RowsVariant }) {
 
   function dealStock() {
     if (game.ended || game.stock.length === 0) return;
+    setSelected(null);
     saveUndoState(structuredClone(game));
     setGame((draft) => {
       const hasGaps = draft.rows.some((row) => row.some((card) => !card));
@@ -374,7 +407,23 @@ export function RowsSolitaire({ variant }: { variant: RowsVariant }) {
       const col = mappedCard.pileIndex % config.columns;
       return {
         isDisabled: game.ended || !isAvailable(game, config, row, col),
-        onPress: () => playCard(row, col),
+        isSelected: selected?.row === row && selected.col === col,
+        selectColor: "blue",
+        onPress: () => onCellPress(row, col),
+      };
+    }
+    if (
+      mappedCard.zoneName === "foundation" &&
+      mappedCard.topOfZone &&
+      mappedCard.pileIndex !== undefined
+    ) {
+      const index = mappedCard.pileIndex;
+      const isDestination = selectedHomes.includes(index);
+      return {
+        isDisabled: game.ended,
+        isSelected: isDestination,
+        selectColor: "green",
+        onPress: () => onFoundationPress(index),
       };
     }
     if (mappedCard.zoneName === "stock" && mappedCard.topOfZone) {

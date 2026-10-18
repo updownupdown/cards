@@ -177,6 +177,34 @@ describe.each<RowsCase>([
   });
 });
 
+describe("Parallels", () => {
+  // A 6♦ fits both the Ace pile at 5♦ and the King pile at 7♦: the player
+  // picks which (a player report: it always went up the Ace pile).
+  test.each([
+    ["the Ace pile", 2],
+    ["the King pile", 6],
+  ])("a card that fits two foundations can go on %s", async (_name, pile) => {
+    const six = card("6", "diamonds");
+    const foundations = aceKingSeeds();
+    foundations[2] = run("diamonds", "A", "5");
+    foundations[6] = run("diamonds", "K", "7");
+    await renderGame("/parallels", Parallels, {
+      stock: [card("9", "clubs", false)],
+      rows: [[six, ...Array(9).fill(null)]],
+      foundations,
+      ended: false,
+      won: false,
+    });
+
+    await pressCardId(six.id);
+    expect(zoneCardIds("cell-0-0")).toEqual([six.id]);
+
+    await pressCardId(foundations[pile].at(-1)!.id);
+    expect(zoneCardIds(`foundation-${pile}`).at(-1)).toBe(six.id);
+    expect(zoneCardIds("cell-0-0")).toEqual([]);
+  });
+});
+
 describe("Crazy Quilt", () => {
   test("playing the last card wins", async () => {
     const ace = card("A", "spades");
