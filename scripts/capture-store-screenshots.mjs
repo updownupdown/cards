@@ -3,12 +3,12 @@
 // store-assets/screenshots/<lang>/.
 //
 //   npx expo export -p web --output-dir <dir>
-//   npm run store-screenshots:capture -- --web <dir> [--lang fr]
+//   npm run store-screenshots:capture -- --web <dir> [--lang fr] [--device tablet]
 //
 // Each shot starts from a seeded player: tips off (so the quick-start banner
 // doesn't cover boards), intros dismissed, some games won and some campaign
-// progress, so the map and the Gallery aren't empty. Shots vary the colour
-// theme to show them off.
+// progress, so the map and the Gallery aren't empty. Every shot uses the Nocturne
+// colour theme.
 
 import fs from "node:fs";
 import http from "node:http";
@@ -24,26 +24,35 @@ const arg = (name, fallback) => {
 };
 const WEB = path.resolve(arg("web", path.join(ROOT, "dist")));
 const LANG = arg("lang", "en");
-const OUT = path.join(ROOT, "store-assets/screenshots", LANG);
+const TABLET = arg("device", "phone") === "tablet";
+const OUT = path.join(
+  ROOT,
+  "store-assets/screenshots",
+  TABLET ? `${LANG}-tablet` : LANG,
+);
 
 // 360x640 points at 3x: 1080x1920, within Play's 2:1 limit.
-const VIEWPORT = { width: 360, height: 640 };
-const SCALE = 3;
+// --device tablet: 810x1440 points at 1.5x, 1215x2160, 9:16 within Play's
+// 1080-7680px limits.
+const VIEWPORT = TABLET
+  ? { width: 810, height: 1440 }
+  : { width: 360, height: 640 };
+const SCALE = TABLET ? 1.5 : 3;
 
-/** Games the seeded player has won, near the start of the campaign. */
-const WON = [
-  "/klondike",
-  "/beehive",
-  "/memory",
-  "/sultan",
-  "/fifteen-puzzle",
-  "/bowling",
-  "/grandfathers-clock",
-  "/golf",
-  "/pyramid",
-  "/freecell",
-  "/spider-solitaire",
-];
+/** A deterministic 90% completion state, so Gallery shelves show artworks. */
+const ALL_GAME_PATHS = fs
+  .readdirSync(path.join(ROOT, "src/data/games"))
+  .sort()
+  .flatMap((file) => {
+    if (!file.endsWith(".ts")) return [];
+    const definition = fs.readFileSync(
+      path.join(ROOT, "src/data/games", file),
+      "utf8",
+    );
+    const match = definition.match(/path:\s*["']([^"']+)["']/);
+    return match ? [match[1]] : [];
+  });
+const WON = ALL_GAME_PATHS.slice(0, Math.ceil(ALL_GAME_PATHS.length * 0.9));
 
 function seededStorage(colorTheme) {
   const stats = (wins) => ({
@@ -76,6 +85,13 @@ function seededStorage(colorTheme) {
       collectedTaoIds: [1, 2, 3, 4, 5],
       collectedQuoteIds: [1, 2, 3, 40, 84, 90, 120],
     },
+    // Opens the full Odyssey, as a save with a win beyond the force field.
+    "cards.odysseyUnlock.v1": {
+      keyHash: null,
+      keptFromBefore: true,
+      checkedBeforeField: true,
+      devFieldView: "asPlayed",
+    },
     "cards.recentGames.v1": WON.slice(0, 5).map((gamePath, index) => ({
       path: gamePath,
       playedAt: Date.now() - index * 3600000,
@@ -96,15 +112,111 @@ const openTab = (key) => async (page) => {
     .click();
 };
 
+/** Taps a button by its label. */
+const press = (name) => async (page) => {
+  await page.getByRole("button", { name, exact: true }).first().click();
+};
+
+/** Zooms the Odyssey map out enough to show the unlocked local galaxy. */
+const zoomOutMap = async (page) => {
+  const { width, height } = VIEWPORT;
+  await page.mouse.move(width / 2, height / 2);
+  // One notch shows the surrounding unlocked paths without shrinking the map
+  // into an unreadable overview.
+  if (!TABLET) await page.mouse.wheel(0, 650);
+  await page.waitForTimeout(300);
+  if (TABLET) return;
+  // The map stays where it was; drag the galaxy up to the middle.
+  await page.mouse.move(width / 2, height * 0.3);
+  await page.mouse.down();
+  for (let i = 1; i <= 15; i++) {
+    await page.mouse.move(width / 2, height * 0.3 - i * height * 0.022);
+    await page.waitForTimeout(30);
+  }
+  await page.mouse.up();
+  await page.waitForTimeout(500);
+};
+
+/**
+ * Plays a few moves with the UFO's Autopilot, for a game under way. With
+ * \`flying\`, shoots while the last move is still in the air.
+ */
+const midGame =
+  (moves, { flying = false } = {}) =>
+  async (page) => {
+    const hint = page.getByRole("button", {
+      name: gameStrings.menu.hint,
+      exact: true,
+    });
+    // Some games have no hints to play with.
+    if (!(await hint.isEnabled())) return;
+    await hint.click();
+    await page.waitForTimeout(900);
+    await page.getByRole("button", { name: "Autopilot", exact: true }).click();
+    await page.waitForTimeout(600);
+    await page.getByRole("button", { name: "Dismiss", exact: true }).click();
+    await page.waitForTimeout(1000);
+    for (let i = 0; i < moves; i++) {
+      if (!(await hint.isEnabled())) return;
+      await hint.click();
+      await page.waitForTimeout(i === moves - 1 && flying ? 150 : 2200);
+    }
+  };
+
 /** The screenshots, in store order. */
 const SHOTS = [
-  { name: "01-home", url: "/", theme: "nocturne" },
-  { name: "02-odyssey", url: "/?tab=campaign", theme: "aurora" },
-  { name: "03-klondike", url: "/klondike", theme: "nocturne" },
-  { name: "04-search", url: "/", theme: "ember", after: openTab("search") },
-  { name: "05-rogue-run", url: "/rogue-run", theme: "nocturne" },
-  { name: "06-gallery", url: "/", theme: "folio", after: openTab("collect") },
-  { name: "07-pagoda", url: "/pagoda", theme: "nocturne" },
+  {
+    name: "01-queens-audience",
+    url: "/queens-audience",
+    theme: "nocturne",
+    after: midGame(6),
+  },
+  {
+    name: "02-odyssey",
+    url: "/?tab=campaign",
+    theme: "nocturne",
+    after: zoomOutMap,
+  },
+  {
+    name: "03-klondike",
+    url: "/klondike",
+    theme: "nocturne",
+    after: midGame(4),
+  },
+  {
+    name: "04-pyramid",
+    url: "/pyramid",
+    theme: "nocturne",
+    after: midGame(10),
+  },
+  {
+    name: "05-rogue-run",
+    url: "/rogue-run",
+    theme: "nocturne",
+    after: midGame(5),
+  },
+  {
+    name: "06-gallery",
+    url: "/",
+    theme: "nocturne",
+    after: async (page) => {
+      await openTab("collect")(page);
+      await page.waitForTimeout(800);
+      await page.getByText("Style", { exact: true }).first().click();
+      await page.mouse.move(VIEWPORT.width / 2, VIEWPORT.height / 2);
+      for (let i = 0; i < 4; i++) {
+        await page.mouse.wheel(0, 500);
+        await page.waitForTimeout(150);
+      }
+    },
+  },
+  {
+    name: "07-freecell",
+    url: "/freecell",
+    theme: "nocturne",
+    after: midGame(8, { flying: true }),
+    afterWait: 0,
+  },
   {
     name: "08-rules",
     url: "/beehive",
@@ -175,7 +287,8 @@ const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM_PATH,
 });
 
-for (const shot of SHOTS) {
+const ONLY = arg("only", null);
+for (const shot of SHOTS.filter((s) => !ONLY || s.name.includes(ONLY))) {
   const context = await browser.newContext({
     viewport: VIEWPORT,
     deviceScaleFactor: SCALE,
@@ -197,7 +310,7 @@ for (const shot of SHOTS) {
   await page.waitForTimeout(3500);
   if (shot.after) {
     await shot.after(page);
-    await page.waitForTimeout(1500);
+    await page.waitForTimeout(shot.afterWait ?? 1500);
   }
   const file = path.join(OUT, `${shot.name}.png`);
   await page.screenshot({ path: file });
