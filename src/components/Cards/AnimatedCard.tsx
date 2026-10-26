@@ -176,6 +176,7 @@ const AnimatedCardComponent = ({
     layoutKey,
   });
   const [movingKey, setMovingKey] = useState<string | null>(null);
+  const flightTimers = useRef(new Set<ReturnType<typeof setTimeout>>());
   const endMove = useCallback((key: string) => {
     setMovingKey((current) => (current === key ? null : current));
   }, []);
@@ -205,8 +206,16 @@ const AnimatedCardComponent = ({
     // deal), and the card would stay above the whole board.
     const flight = dropOffset !== undefined ? DROP_FLIGHT_DURATION : duration;
     // Left running when the card moves on: it clears only this move's key.
-    setTimeout(() => endMove(moveKey), flight + 100);
+    const timer = setTimeout(() => {
+      flightTimers.current.delete(timer);
+      endMove(moveKey);
+    }, flight + 100);
+    flightTimers.current.add(timer);
   }, [moveKey, layoutKey]);
+  useEffect(() => {
+    const timers = flightTimers.current;
+    return () => timers.forEach(clearTimeout);
+  }, []);
 
   useAnimatedReaction(
     () => ({

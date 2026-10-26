@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@jest/globals";
+import { afterEach, describe, expect, jest, test } from "@jest/globals";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
@@ -18,6 +18,13 @@ const card: PlayingCard = {
 
 const resting: TargetState = { card, zoneId: "hand", x: 40, y: 200, zIndex: 1 };
 
+const mounted: ReactTestRenderer[] = [];
+
+afterEach(() => {
+  act(() => mounted.splice(0).forEach((renderer) => renderer.unmount()));
+  jest.useRealTimers();
+});
+
 function render(props: Partial<AnimatedCardProps> = {}) {
   let renderer!: ReactTestRenderer;
   act(() => {
@@ -31,6 +38,7 @@ function render(props: Partial<AnimatedCardProps> = {}) {
       />,
     );
   });
+  mounted.push(renderer);
   return renderer;
 }
 
@@ -97,6 +105,18 @@ describe("AnimatedCard stacking", () => {
       targetState: { ...resting, zoneId: "foundation-0", x: 300, zIndex: 3 },
     });
     expect(zIndexOf(renderer)).toBeGreaterThan(3);
+  });
+
+  test("a card that never animates its flight settles once the flight is over", () => {
+    jest.useFakeTimers();
+    const renderer = render();
+    update(renderer, {
+      targetState: { ...resting, zoneId: "foundation-0", x: 300, zIndex: 3 },
+    });
+    expect(zIndexOf(renderer)).toBeGreaterThan(3);
+    // The test renderer runs no animations, so only the backstop ends it.
+    act(() => jest.advanceTimersByTime(400));
+    expect(zIndexOf(renderer)).toBe(3);
   });
 
   test("a card orbiting to the next place on a loop keeps the loop's order", () => {
