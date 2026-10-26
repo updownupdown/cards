@@ -1,4 +1,11 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { scheduleOnRN } from "react-native-worklets";
 import { Platform, Pressable, StyleSheet } from "react-native";
 import {
@@ -146,11 +153,14 @@ const AnimatedCardComponent = ({
   // Reanimated's synchronous prop updates change a view's zIndex without
   // re-sorting it among its siblings, so moving cards were drawn in the wrong
   // order until the animation's end was committed.
+  //
+  // Whether a move changes pile is worked out in a layout effect, which runs
+  // before the browser paints. It used to be set while rendering, but React
+  // drops a state update made during render once an update to the same state
+  // waiting at a lower priority is applied (it rebases from the state before
+  // both), so on web a card drawn in Klondike often lost its lift a moment
+  // after leaving and flew under the stock's own placeholder.
   const targetZ = targetState.zIndex + zIndexOffset;
-  const [lastZoneId, setLastZoneId] = useState(targetState.zoneId);
-  const [lastLayoutKey, setLastLayoutKey] = useState(layoutKey);
-  const relaidOut = lastLayoutKey !== layoutKey;
-  if (relaidOut) setLastLayoutKey(layoutKey);
   const moveKey = [
     targetState.zoneId,
     targetState.x,
@@ -160,28 +170,43 @@ const AnimatedCardComponent = ({
     yOffset,
     targetState.card?.faceUp,
   ].join("|");
-  const [lastMoveKey, setLastMoveKey] = useState(moveKey);
+  const lastMove = useRef({
+    key: moveKey,
+    zoneId: targetState.zoneId,
+    layoutKey,
+  });
   const [movingKey, setMovingKey] = useState<string | null>(null);
-  if (lastMoveKey !== moveKey) {
-    setLastMoveKey(moveKey);
-    setLastZoneId(targetState.zoneId);
+  const endMove = useCallback((key: string) => {
+    setMovingKey((current) => (current === key ? null : current));
+  }, []);
+  useLayoutEffect(() => {
+    const last = lastMove.current;
+    lastMove.current = { key: moveKey, zoneId: targetState.zoneId, layoutKey };
+    if (last.key === moveKey) return;
     // Mirrors the reaction below: only a drop flight or a timed move animates.
     const animates = dropOffset !== undefined || duration !== 0;
     // Orbiting from one place on a loop to the next stays within the loop.
     const orbits =
       !!orbitConfig?.enabled &&
-      lastZoneId.startsWith("loop-") &&
+      last.zoneId.startsWith("loop-") &&
       targetState.zoneId.startsWith("loop-");
     // A card still in flight to its new pile stays above until it lands.
     const changesPile =
-      (lastZoneId !== targetState.zoneId && !orbits) ||
-      movingKey === lastMoveKey ||
-      relaidOut;
-    setMovingKey(animates && changesPile ? moveKey : null);
-  }
-  const endMove = useCallback((key: string) => {
-    setMovingKey((current) => (current === key ? null : current));
-  }, []);
+      (last.zoneId !== targetState.zoneId && !orbits) ||
+      (movingKey !== null && movingKey === last.key) ||
+      last.layoutKey !== layoutKey;
+    if (!animates || !changesPile) {
+      setMovingKey(null);
+      return;
+    }
+    setMovingKey(moveKey);
+    // The flight's end normally clears this, but a move the reaction never
+    // animates has no end (in Klondike, the stock's bottom card after a new
+    // deal), and the card would stay above the whole board.
+    const flight = dropOffset !== undefined ? DROP_FLIGHT_DURATION : duration;
+    // Left running when the card moves on: it clears only this move's key.
+    setTimeout(() => endMove(moveKey), flight + 100);
+  }, [moveKey, layoutKey]);
 
   useAnimatedReaction(
     () => ({
