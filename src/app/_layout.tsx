@@ -1,4 +1,5 @@
 import { AppErrorScreen } from "@/components/common/AppErrorScreen";
+import { preloadAllCardImagesOnWeb } from "@/components/Cards/CardAssets";
 import { GameLaunchOverlay } from "@/components/common/GameLaunchOverlay";
 import {
   LaunchSplash,
@@ -160,6 +161,15 @@ function Layout() {
     html.classList.toggle("fonts-loading", !fontsLoaded);
     html.classList.toggle("fonts-ready", fontsLoaded);
   }, [fontsLoaded]);
+
+  // On web, every card image is fetched once the page has settled, so a game
+  // opened later finds its cards ready (a game opened first loads its own set
+  // straight away, behind its loading screen).
+  useEffect(() => {
+    if (Platform.OS !== "web" || !splashDone) return;
+    const timer = setTimeout(preloadAllCardImagesOnWeb, 1000);
+    return () => clearTimeout(timer);
+  }, [splashDone]);
 
   // On web, expo-router keeps previous screens mounted but hides them with
   // display:none (which react-native-web flags with aria-hidden). If the
