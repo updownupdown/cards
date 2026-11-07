@@ -78,8 +78,7 @@
     "unlockedAll": "Tutte le partite della campagna sono sbloccate",
     "grantMercySkip": "Concedi una grazia",
     "mercySkipGranted": "Grazia concessa ({{count}} da usare)",
-    "artGallery": "Galleria d'arte",
-    "needsKey": "La modalità dev richiede una chiave sviluppatore"
+    "artGallery": "Galleria d'arte"
   },
   "tabs": {
     "general": "Generali",
@@ -104,16 +103,6 @@
       "settle": "Carte che si posano",
       "quote": "Una citazione",
       "artwork": "L'opera di un gioco"
-    }
-  },
-  "unlockKey": {
-    "label": "Chiave di sblocco",
-    "submit": "Sblocca",
-    "clear": "Cancella la chiave",
-    "back": "Indietro",
-    "result": {
-      "devKey": "Chiave sviluppatore accettata",
-      "invalid": "Questa chiave non è valida"
     }
   }
 }

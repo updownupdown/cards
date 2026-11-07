@@ -64,8 +64,7 @@ initCrashReporting();
 // (LaunchSplash), then a short fade straight to it.
 SplashScreen.preventAutoHideAsync();
 ExpoSplashScreen.setOptions({ duration: 150, fade: true });
-// Beta games turned on from the settings, read before Home lists games
-// (after the developer key, which says whether dev mode may be on).
+// Beta games turned on from the settings, read before Home lists games.
 void loadDevMode();
 // "Help from Above" (the header UFO), read before a game's header shows.
 void loadHintMode();

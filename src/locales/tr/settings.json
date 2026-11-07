@@ -78,8 +78,7 @@
     "unlockedAll": "Kampanyadaki tüm oyunlar açıldı",
     "grantMercySkip": "Bir af ver",
     "mercySkipGranted": "Af verildi ({{count}} kullanılmamış)",
-    "artGallery": "Sanat galerisi",
-    "needsKey": "Geliştirici modu için geliştirici anahtarı gerekir"
+    "artGallery": "Sanat galerisi"
   },
   "tabs": {
     "general": "Genel",
@@ -104,16 +103,6 @@
       "settle": "Yerine oturan kartlar",
       "quote": "Bir alıntı",
       "artwork": "Bir oyunun eseri"
-    }
-  },
-  "unlockKey": {
-    "label": "Kilit açma anahtarı",
-    "submit": "Aç",
-    "clear": "Anahtarı temizle",
-    "back": "Geri",
-    "result": {
-      "devKey": "Geliştirici anahtarı kabul edildi",
-      "invalid": "Bu anahtar geçerli değil"
     }
   }
 }

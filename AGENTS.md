@@ -55,9 +55,8 @@ a change to a released game's rules breaks its saved deals, bump its
 `sessionVersion`. The rules, step by step, are in "Adding, renaming,
 replacing and removing games" in `docs/campaign-map.md`.
 
-# Developer keys and dev mode
+# Dev mode
 
-Dev mode outside a local run needs a developer key; see `docs/dev-keys.md`.
-Keys are made only with `npm run keys:add`, which shows the key once and keeps
-just its fingerprint in `src/data/dev-keys.ts`. Never write a real key into the
-repository, a test or a commit message.
+Dev mode is turned on by a knock on the version number in Settings, Advanced
+(five taps, a pause until it turns red, five more); see `src/data/dev-mode.ts`.
+It needs no key.

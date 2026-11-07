@@ -78,8 +78,7 @@
     "unlockedAll": "Todas as partidas da campanha desbloqueadas",
     "grantMercySkip": "Conceder um indulto",
     "mercySkipGranted": "Indulto concedido ({{count}} por usar)",
-    "artGallery": "Galeria de arte",
-    "needsKey": "O modo dev precisa de uma chave de desenvolvedor"
+    "artGallery": "Galeria de arte"
   },
   "tabs": {
     "general": "Geral",
@@ -104,16 +103,6 @@
       "settle": "Cartas se assentando",
       "quote": "Uma citação",
       "artwork": "A obra de um jogo"
-    }
-  },
-  "unlockKey": {
-    "label": "Chave de desbloqueio",
-    "submit": "Desbloquear",
-    "clear": "Limpar chave",
-    "back": "Voltar",
-    "result": {
-      "devKey": "Chave de desenvolvedor aceita",
-      "invalid": "Essa chave não é válida"
     }
   }
 }

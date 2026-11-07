@@ -46,12 +46,10 @@ import ModalFull from "./ModalFull";
 import { UnderlineTabs } from "../ui/Nocturne";
 import { useToast } from "../common/Toast";
 import {
-  canUseDevMode,
   saveDevMode,
   useDevMode,
   useDevModeKnock,
 } from "@/data/dev-mode";
-import { DevKeyEntry } from "../common/DevKeyEntry";
 import { HelpFromAbovePanel } from "@/components/common/HelpFromAbovePanel";
 import { resetHintMode } from "@/data/hint-mode";
 
@@ -99,8 +97,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const devMode = useDevMode();
   // Back from a theme change with dev mode since turned off.
   const shownTab = tab === "dev" && !devMode ? "advanced" : tab;
-  // The developer key the knock asks for outside a local run.
-  const [enteringKey, setEnteringKey] = React.useState(false);
   const turnDevModeOn = async () => {
     await saveDevMode(true);
     onHomeDataInvalidated();
@@ -108,18 +104,8 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
     showToast(t("devMode.on"));
   };
   const devModeKnock = useDevModeKnock(() => {
-    // Dev mode needs a developer key, unless the app runs locally.
-    if (!canUseDevMode()) {
-      setEnteringKey(true);
-      showToast(t("devMode.needsKey"));
-      return;
-    }
     void turnDevModeOn();
   });
-  const onKeyRedeemed = () => {
-    // The knock asked for this key: it's done its job.
-    void turnDevModeOn();
-  };
   const onVersionPress = () => {
     if (!devMode) devModeKnock.tap();
   };
@@ -616,11 +602,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
           </View>
         )}
       </ScrollView>
-      <DevKeyEntry
-        visible={enteringKey}
-        onClose={() => setEnteringKey(false)}
-        onRedeemed={onKeyRedeemed}
-      />
     </ModalFull>
   );
 };

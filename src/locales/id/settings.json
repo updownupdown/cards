@@ -78,8 +78,7 @@
     "unlockedAll": "Semua game kampanye terbuka",
     "grantMercySkip": "Beri sebuah pengampunan",
     "mercySkipGranted": "Pengampunan diberikan ({{count}} belum dipakai)",
-    "artGallery": "Galeri seni",
-    "needsKey": "Mode dev memerlukan kunci pengembang"
+    "artGallery": "Galeri seni"
   },
   "tabs": {
     "general": "Umum",
@@ -104,16 +103,6 @@
       "settle": "Kartu yang tertata",
       "quote": "Sebuah kutipan",
       "artwork": "Karya seni permainan"
-    }
-  },
-  "unlockKey": {
-    "label": "Kunci pembuka",
-    "submit": "Buka",
-    "clear": "Hapus kunci",
-    "back": "Kembali",
-    "result": {
-      "devKey": "Kunci pengembang diterima",
-      "invalid": "Kunci itu tidak valid"
     }
   }
 }

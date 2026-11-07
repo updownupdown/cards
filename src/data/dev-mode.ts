@@ -1,7 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useRef, useState } from "react";
-import { isLocalDevEnvironment } from "@/utils/utils";
-import { hasDevKey, loadDevKey } from "./dev-key";
 import { DEV_MODE_STORAGE_KEY } from "./storage-keys";
 
 /**
@@ -14,11 +12,6 @@ import { DEV_MODE_STORAGE_KEY } from "./storage-keys";
  * previews of the quiet moments, the art gallery).
  * The choice is saved under its own key and kept here, so synchronous checks
  * (isGameEnabled) can read it.
- *
- * It can only be turned on where the app runs locally (a development build,
- * or the web build served from this computer), or once a developer key has
- * been entered (src/data/dev-keys.ts): elsewhere the knock asks for one,
- * and a saved "on" is read as off.
  */
 let devMode = false;
 let firstLoad: Promise<boolean> | null = null;
@@ -31,11 +24,6 @@ function setDevMode(enabled: boolean) {
 
 export function isDevMode() {
   return devMode;
-}
-
-/** Whether dev mode may be turned on here. */
-export function canUseDevMode() {
-  return isLocalDevEnvironment() || hasDevKey();
 }
 
 /** Reads the saved choice; called once at startup. */
@@ -56,11 +44,7 @@ export function devModeReady() {
 
 async function readDevMode() {
   try {
-    await loadDevKey();
-    setDevMode(
-      canUseDevMode() &&
-        (await AsyncStorage.getItem(DEV_MODE_STORAGE_KEY)) === "1",
-    );
+    setDevMode((await AsyncStorage.getItem(DEV_MODE_STORAGE_KEY)) === "1");
   } catch {
     setDevMode(false);
   }
@@ -68,7 +52,6 @@ async function readDevMode() {
 }
 
 export async function saveDevMode(enabled: boolean) {
-  if (enabled && !canUseDevMode()) return;
   setDevMode(enabled);
   await AsyncStorage.setItem(DEV_MODE_STORAGE_KEY, enabled ? "1" : "0");
 }

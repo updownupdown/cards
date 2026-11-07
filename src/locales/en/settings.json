@@ -78,8 +78,7 @@
     "unlockedAll": "Every campaign game unlocked",
     "grantMercySkip": "Grant a Mercy Skip",
     "mercySkipGranted": "Mercy Skip granted ({{count}} unused)",
-    "artGallery": "Art gallery",
-    "needsKey": "Dev mode needs a developer key"
+    "artGallery": "Art gallery"
   },
   "tabs": {
     "general": "General",
@@ -104,16 +103,6 @@
       "settle": "Cards settling",
       "quote": "A quote",
       "artwork": "A game's artwork"
-    }
-  },
-  "unlockKey": {
-    "label": "Unlock key",
-    "submit": "Unlock",
-    "clear": "Clear key",
-    "back": "Back",
-    "result": {
-      "devKey": "Developer key accepted",
-      "invalid": "That key isn't valid"
     }
   }
 }

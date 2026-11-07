@@ -78,8 +78,7 @@
     "unlockedAll": "Toutes les parties de la campagne sont débloquées",
     "grantMercySkip": "Accorder un passe-droit",
     "mercySkipGranted": "Passe-droit accordé ({{count}} non utilisé(s))",
-    "artGallery": "Galerie d'art",
-    "needsKey": "Le mode dev nécessite une clé de développeur"
+    "artGallery": "Galerie d'art"
   },
   "tabs": {
     "general": "Général",
@@ -104,16 +103,6 @@
       "settle": "Des cartes qui se posent",
       "quote": "Une citation",
       "artwork": "L'œuvre d'un jeu"
-    }
-  },
-  "unlockKey": {
-    "label": "Clé de déblocage",
-    "submit": "Débloquer",
-    "clear": "Effacer la clé",
-    "back": "Retour",
-    "result": {
-      "devKey": "Clé de développeur acceptée",
-      "invalid": "Cette clé n'est pas valide"
     }
   }
 }
