@@ -208,7 +208,17 @@ function clearingOrder(random = Math.random): [number, number][] | null {
 }
 
 /** A deal that can be cleared: each pair of the clearing order shares a rank. */
+/**
+ * A deal that can be cleared and opens with a choice: at least two pairs
+ * joined from the start (the clearing order alone promises only one).
+ */
 function dealGrid(random = Math.random): (PlayingCard | null)[] {
+  let grid = placePairs(random);
+  while (availableMatches(grid).length < 2) grid = placePairs(random);
+  return grid;
+}
+
+function placePairs(random: () => number): (PlayingCard | null)[] {
   let order = clearingOrder(random);
   while (!order) order = clearingOrder(random);
   const cards = createDeck({ faceUp: true }).filter((card) =>
