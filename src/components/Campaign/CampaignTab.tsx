@@ -3,24 +3,19 @@ import { GameInfoPanel } from "@/components/ui/GameInfoPanel";
 import {
   getGameDotDefinition,
   getGameDotState,
-  isBeyondField,
   CAMPAIGN_START_PATH,
   type GameDotDefinition,
 } from "@/data/campaign-map";
 import { useCampaignProgress } from "@/hooks/useCampaignProgress";
 import { grantMercySkip } from "@/data/campaign-progress";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Platform, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { layoutDims } from "@/styles/styles";
 import { HomeHeader } from "@/components/Home/HomeHeader";
 import { CampaignMap } from "./CampaignMap";
 import { CampaignIntroPanel, useOdysseyIntro } from "./CampaignIntroPanel";
-import { BeyondFieldPanel } from "./BeyondFieldPanel";
-import { useFieldUp } from "@/data/odyssey-field";
-import { UnlockKeyEntry } from "@/components/common/UnlockKeyEntry";
-import { haptics } from "@/utils/haptics";
 import { UfoContext } from "./UfoContext";
 import { clearMercySkipVisit, isMercySkipVisitOwed } from "./ufo-visit";
 import { pointerEventsStyles } from "@/styles/pointerEventsStyles";
@@ -150,18 +145,9 @@ export function CampaignTab({
     collectedQuoteIds,
     unlockedPaths,
   );
-  const fieldUp = useFieldUp();
-  const fieldUpRef = useRef(fieldUp);
-  fieldUpRef.current = fieldUp;
   const selectGameDot = useCallback((gameDot: GameDotDefinition) => {
-    // A light touch on reaching across the field.
-    if (fieldUpRef.current && isBeyondField(gameDot)) haptics.validTarget();
     setSelectedPath(gameDot.path);
   }, []);
-  // The game lies beyond the standing force field: it can be looked at, not
-  // played in the Odyssey.
-  const heldBeyondField = fieldUp && isBeyondField(selectedGameDot);
-  const [enteringKey, setEnteringKey] = useState(false);
 
   return (
     <View style={{ flex: 1 }}>
@@ -173,7 +159,7 @@ export function CampaignTab({
         unlockedPaths={unlockedPaths}
         collectedTaoIds={collectedTaoIds}
         collectedQuoteIds={collectedQuoteIds}
-        guidePath={showIntro && !heldBeyondField ? CAMPAIGN_START_PATH : null}
+        guidePath={showIntro ? CAMPAIGN_START_PATH : null}
       />
       <View
         style={[
@@ -193,7 +179,7 @@ export function CampaignTab({
         <GameInfoPanel
           path={selectedGameDot.path}
           campaign
-          locked={state === "locked" || heldBeyondField}
+          locked={state === "locked"}
           collectedTaoIds={collectedTaoIds}
           collectedQuoteIds={collectedQuoteIds}
           style={{
@@ -226,18 +212,7 @@ export function CampaignTab({
             onOpenSettings={onOpenSettings}
           />
         </View>
-        {heldBeyondField && (
-          <View
-            style={{
-              width: "100%",
-              maxWidth: ui.contentMaxWidth,
-              paddingHorizontal: spacing(layoutDims.pagePadding / 2),
-            }}
-          >
-            <BeyondFieldPanel onEnterKey={() => setEnteringKey(true)} />
-          </View>
-        )}
-        {showIntro && !heldBeyondField && (
+        {showIntro && (
           <View
             style={{
               width: "100%",
@@ -249,10 +224,6 @@ export function CampaignTab({
           </View>
         )}
       </View>
-      <UnlockKeyEntry
-        visible={enteringKey}
-        onClose={() => setEnteringKey(false)}
-      />
     </View>
   );
 }

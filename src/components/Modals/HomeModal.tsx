@@ -46,19 +46,10 @@ import ModalFull from "./ModalFull";
 import { UnderlineTabs } from "../ui/Nocturne";
 import { useToast } from "../common/Toast";
 import {
-  canUseDevMode,
   saveDevMode,
   useDevMode,
   useDevModeKnock,
 } from "@/data/dev-mode";
-import {
-  setDevFieldView,
-  useOdysseyUnlock,
-  type DevFieldView,
-  type RedeemResult,
-} from "@/data/odyssey-unlock";
-import { UnlockKeyEntry } from "../common/UnlockKeyEntry";
-import { UnlockKeyPanel } from "../common/UnlockKeyPanel";
 import { HelpFromAbovePanel } from "@/components/common/HelpFromAbovePanel";
 import { resetHintMode } from "@/data/hint-mode";
 
@@ -104,14 +95,8 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
   const scrollRef = React.useRef<ScrollView>(null);
   const scrollRestored = React.useRef(false);
   const devMode = useDevMode();
-  const { devFieldView } = useOdysseyUnlock();
   // Back from a theme change with dev mode since turned off.
   const shownTab = tab === "dev" && !devMode ? "advanced" : tab;
-  // The unlock key: always on the web, where friends are given keys; in the
-  // app, only once the knock has asked for a developer key.
-  const [askedForDevKey, setAskedForDevKey] = React.useState(false);
-  const showKeyPanel = Platform.OS === "web" || askedForDevKey;
-  const [enteringKey, setEnteringKey] = React.useState(false);
   const turnDevModeOn = async () => {
     await saveDevMode(true);
     onHomeDataInvalidated();
@@ -119,21 +104,8 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
     showToast(t("devMode.on"));
   };
   const devModeKnock = useDevModeKnock(() => {
-    // Dev mode needs a developer key, unless the app runs locally.
-    if (!canUseDevMode()) {
-      setAskedForDevKey(true);
-      setTab("advanced");
-      setEnteringKey(true);
-      showToast(t("devMode.needsKey"));
-      return;
-    }
     void turnDevModeOn();
   });
-  const onKeyRedeemed = (result: RedeemResult) => {
-    onHomeDataInvalidated();
-    // The knock asked for this key: it's done its job.
-    if (result === "devKey" && askedForDevKey) void turnDevModeOn();
-  };
   const onVersionPress = () => {
     if (!devMode) devModeKnock.tap();
   };
@@ -382,13 +354,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
               />
             </View>
 
-            {showKeyPanel && (
-              <UnlockKeyPanel
-                onEnter={() => setEnteringKey(true)}
-                askedForDevKey={askedForDevKey}
-              />
-            )}
-
             <AddToHomeScreenNotice />
 
             {/* Footer: credits, links and data reset, kept small at the bottom. */}
@@ -620,30 +585,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                 );
               }}
             />
-            <View
-              style={{
-                width: "100%",
-                gap: spacing(4),
-                paddingTop: spacing(12),
-              }}
-            >
-              <Text size="sm" weight={400} color={theme.dim}>
-                {t("devMode.forceField.label")}
-              </Text>
-              <SelectControl<DevFieldView>
-                value={devFieldView}
-                options={(["asPlayed", "shown", "lifted"] as const).map(
-                  (view) => ({
-                    value: view,
-                    label: t(`devMode.forceField.${view}`),
-                  }),
-                )}
-                accessibilityLabel={t("devMode.forceField.label")}
-                onChange={(view) => {
-                  void setDevFieldView(view);
-                }}
-              />
-            </View>
             <Button
               size="md"
               uppercase={false}
@@ -661,11 +602,6 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
           </View>
         )}
       </ScrollView>
-      <UnlockKeyEntry
-        visible={enteringKey}
-        onClose={() => setEnteringKey(false)}
-        onRedeemed={onKeyRedeemed}
-      />
     </ModalFull>
   );
 };

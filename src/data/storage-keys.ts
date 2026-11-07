@@ -38,8 +38,8 @@ export const EARNED_ACHIEVEMENTS_STORAGE_KEY = "cards.achievements.v1";
  */
 export const MOMENTS_STORAGE_KEY = "cards.moments.v1";
 /**
- * The full Odyssey (src/data/odyssey-unlock.ts), JSON: the role of an unlock
- * key entered, whether a save from before the force field kept the Odyssey
- * open, and dev mode's view of the field.
+ * Retired: the Odyssey's unlock (unlock keys, the force field), removed in
+ * 2026-11 when the whole Odyssey opened and dev mode stopped needing a key.
+ * Nothing reads it; the key stays for saved-data-guard.test.ts.
  */
-export const ODYSSEY_UNLOCK_STORAGE_KEY = "cards.odysseyUnlock.v1";
+export const RETIRED_ODYSSEY_UNLOCK_STORAGE_KEY = "cards.odysseyUnlock.v1";

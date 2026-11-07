@@ -78,14 +78,7 @@
     "unlockedAll": "Toutes les parties de la campagne sont débloquées",
     "grantMercySkip": "Accorder un passe-droit",
     "mercySkipGranted": "Passe-droit accordé ({{count}} non utilisé(s))",
-    "artGallery": "Galerie d'art",
-    "needsKey": "Le mode dev nécessite une clé de développeur",
-    "forceField": {
-      "label": "Champ de force",
-      "asPlayed": "Selon la partie",
-      "shown": "Toujours visible",
-      "lifted": "Levé"
-    }
+    "artGallery": "Galerie d'art"
   },
   "tabs": {
     "general": "Général",
@@ -110,21 +103,6 @@
       "settle": "Des cartes qui se posent",
       "quote": "Une citation",
       "artwork": "L'œuvre d'un jeu"
-    }
-  },
-  "unlockKey": {
-    "label": "Clé de déblocage",
-    "description": "Vous avez une clé ? <enter>Saisissez-la</enter> pour débloquer l'Odyssée complète.",
-    "unlocked": "L'Odyssée complète est débloquée.",
-    "devKey": "Clé de développeur saisie : l'Odyssée complète est débloquée et le mode dev peut être activé.",
-    "submit": "Débloquer",
-    "clear": "Effacer la clé",
-    "back": "Retour",
-    "result": {
-      "unlocked": "L'Odyssée complète est débloquée",
-      "devKey": "Clé de développeur acceptée",
-      "webOnly": "Cette clé fonctionne dans l'application web. Dans l'application, l'Odyssée complète s'obtient sur Google Play.",
-      "invalid": "Cette clé n'est pas valide"
     }
   }
 }

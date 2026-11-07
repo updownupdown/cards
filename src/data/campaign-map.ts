@@ -11,8 +11,6 @@ import {
   LAYOUT_FINGERPRINT,
 } from "./campaign-map.generated";
 
-export { FIELD_RADIUS, isBeyondField, isPathBeyondField } from "./force-field";
-
 export const CAMPAIGN_START_PATH = "/klondike";
 
 export type GameDotDefinition = {
