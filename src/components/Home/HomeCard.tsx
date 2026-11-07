@@ -19,7 +19,7 @@ import {
   useGamePalette,
 } from "./HomeArt";
 import { PaletteContext } from "@/styles/palette";
-import { useStagedSource, useTabReadyImage } from "./TabReady";
+import { useTabReadyImage } from "./TabReady";
 
 type Props = {
   path: string;
@@ -61,7 +61,7 @@ export function HomeCard({
   const frame = useCardFrame();
   const { t: tCommon } = useTranslation("common");
   const category = useGameCategory();
-  const thumbnail = useStagedSource(gameArt(game));
+  const thumbnail = gameArt(game);
   const thumbnailReady = useTabReadyImage(thumbnail);
   const title = localizeGameTitle(game, path, useDisplayLanguage());
 

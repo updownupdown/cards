@@ -43,3 +43,9 @@ export const MOMENTS_STORAGE_KEY = "cards.moments.v1";
  * Nothing reads it; the key stays for saved-data-guard.test.ts.
  */
 export const RETIRED_ODYSSEY_UNLOCK_STORAGE_KEY = "cards.odysseyUnlock.v1";
+/**
+ * Retired: "1" once the app had asked for a Google Play rating, removed in
+ * 2026-11 with everything for Play. Nothing reads it; the key stays for
+ * saved-data-guard.test.ts.
+ */
+export const RETIRED_STORE_REVIEW_STORAGE_KEY = "cards.storeReviewPrompted.v1";

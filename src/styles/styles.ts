@@ -124,19 +124,6 @@ export const UfoEffectColors = {
  * @param opacity Opacity percentage (0 to 0.1)
  */
 /**
- * The shadow under an opaque card. A blurred boxShadow is drawn again for
- * every card on every frame while a page scrolls, which Android feels, so
- * there the card is raised with the platform's own elevation shadow instead:
- * cast from the card's outline, near free to draw, and lighter. Android draws
- * that shadow under the whole card, so only for cards that are opaque.
- */
-export function cardShadow(boxShadow: string, elevation: number) {
-  return Platform.OS === "android"
-    ? { elevation, shadowColor: Colors.black }
-    : { boxShadow };
-}
-
-/**
  * Apply an opacity to a colour. Accepts hex (#rgb, #rrggbb, or #rrggbbaa, whose
  * own alpha is replaced) and rgb()/rgba() strings. Anything else is returned
  * unchanged: this used to assume hex and turn e.g. an rgba() input into an

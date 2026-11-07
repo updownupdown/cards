@@ -16,7 +16,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { BackHandler, Platform, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -119,16 +119,6 @@ export function RewardReveal({
       easing: Easing.inOut(Easing.quad),
     });
   }, [button, pageOpen]);
-
-  // The back button mustn't leave the game; the button is the way out.
-  useEffect(() => {
-    if (Platform.OS !== "android") return;
-    const subscription = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => true,
-    );
-    return () => subscription.remove();
-  }, []);
 
   const exitTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
   useEffect(() => () => exitTimers.current.forEach(clearTimeout), []);

@@ -25,14 +25,7 @@ import {
 import { usePalette } from "@/styles/palette";
 import { rgba } from "@/styles/styles";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  AppState,
-  BackHandler,
-  Platform,
-  Pressable,
-  StyleSheet,
-  View,
-} from "react-native";
+import { AppState, Pressable, StyleSheet, View } from "react-native";
 import Animated, {
   cancelAnimation,
   Easing,
@@ -119,7 +112,7 @@ type Props = {
  * cards settling, a quote, or the game's picture to look into; or, the first
  * time, the choice of how often they come. At the foot, "Skip quiet moment",
  * filling as the moment runs, ends it at once; when it's full the moment
- * moves on by itself. Android's back button ends it too.
+ * moves on by itself.
  */
 export function MomentOverlay({
   moment,
@@ -206,18 +199,6 @@ export function MomentOverlay({
       easing: Easing.inOut(Easing.quad),
     });
   }, [cover, shown]);
-
-  useEffect(() => {
-    if (Platform.OS !== "android" || !shown) return;
-    const subscription = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => {
-        close();
-        return true;
-      },
-    );
-    return () => subscription.remove();
-  }, [close, shown]);
 
   const coverStyle = useAnimatedStyle(() => ({ opacity: cover.value }));
 

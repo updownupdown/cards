@@ -17,7 +17,7 @@ import {
   type ErrorBoundaryProps,
 } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, BackHandler, Platform, View } from "react-native";
+import { ActivityIndicator, Platform, View } from "react-native";
 import { endGameLaunch } from "@/components/common/GameLaunchOverlay";
 import { i18n } from "@/i18n";
 import { reportCrash } from "@/utils/crash-reporting";
@@ -120,23 +120,6 @@ export default function DynamicGameRoute() {
   // otherwise flashed the home screen between them. End it here if the game is
   // left or never mounts.
   useEffect(() => endGameLaunch, []);
-
-  // A game opened with nothing behind it (a deep link, or Android restoring
-  // the app) would otherwise close the app on back; go home instead.
-  useEffect(() => {
-    if (Platform.OS !== "android") return;
-
-    const subscription = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => {
-        if (router.canGoBack()) return false;
-        router.replace("/");
-        return true;
-      },
-    );
-
-    return () => subscription.remove();
-  }, []);
 
   const gameInfo = game ? getGameInfo(`/${game}`) : undefined;
   const palette = useMemo(

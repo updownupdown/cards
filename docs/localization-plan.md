@@ -115,7 +115,7 @@ An import that fails a check is rejected field by field, so a bad batch can neve
 ## Next steps
 
 1. **Check it on the phone.** Run the all-games sweep in each language, and in the pseudo-locale, and fix any overflow. French and Spanish were checked; Italian, Portuguese, Turkish and Indonesian were not. The random-play stress test already passes with `RANDOM_PLAY_LANGUAGE=fr`.
-2. **Store listing.** Translate the Play Store description and screenshots' captions. The feature graphic tagline is already localized: `npm run store-graphics:generate -- --lang fr` writes `feature-graphic-1024x500-fr.png` (fr, es, it, pt, tr and id exist).
+2. **Store listing.** None: the app is web only (solitarius.app) since 2026-11.
 3. **More languages.** See "Next languages" below.
 4. **Crash reporting** (`docs/crash-reporting-plan.md`) is still deferred and remains open before the first release.
 

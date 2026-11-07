@@ -7,14 +7,14 @@ import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useDisplayLanguage, useTranslation } from "@/i18n";
 import { localizeGameTitle } from "@/i18n/content";
 import { gamePalette, PaletteContext, usePalette } from "@/styles/palette";
-import { cardShadow, Colors, rgba, theme } from "@/styles/styles";
+import { Colors, rgba, theme } from "@/styles/styles";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import type { Href } from "expo-router";
 import { useMemo } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { FavButton } from "./FavButton";
-import { useStagedSource, useTabReadyImage } from "./TabReady";
+import { useTabReadyImage } from "./TabReady";
 
 export function gameArt(game: GameMenuInfo) {
   return game.thumbnail ? GAME_THUMBNAIL_ASSETS[game.thumbnail] : null;
@@ -31,10 +31,7 @@ export function useCardFrame() {
     borderRadius: spacing(CARD_RADIUS),
     overflow: "hidden",
     // Lifts the card off the sky.
-    ...cardShadow(
-      `0 ${spacing(6)}px ${spacing(18)}px ${rgba(Colors.black, 0.5)}`,
-      spacing(8),
-    ),
+    boxShadow: `0 ${spacing(6)}px ${spacing(18)}px ${rgba(Colors.black, 0.5)}`,
   } as const;
 }
 
@@ -118,7 +115,7 @@ export function GameTile({
   const { spacing } = useResponsiveMetrics();
   const frame = useCardFrame();
   const language = useDisplayLanguage();
-  const source = useStagedSource(gameArt(game));
+  const source = gameArt(game);
   const ready = useTabReadyImage(source);
   const title = localizeGameTitle(game, path, language);
   const palette = useGamePalette(game);
