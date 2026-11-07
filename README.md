@@ -1,22 +1,29 @@
 # Solitarius
 
-Solitarius is a collection of single-player card games built for quick sessions, thoughtful strategy, and discovering new ways to play with a standard deck. It includes a growing library of solitaire games, persistent statistics and favorites, configurable card styles, and a progression-based Nodes mode.
+**A library of 100+ single-player card games, from Klondike and FreeCell to originals you won't find anywhere else.**
 
-The app is built with Expo and React Native for web and mobile. The web version supports offline play when installed as a progressive web app.
+▶ **Play it at [solitarius.app](https://solitarius.app)** — works in any browser, and can be installed to your phone's home screen to play offline.
 
-## Play
-
-[Play Solitarius at solitarius.app](https://solitarius.app)
+Solitarius is built for quick sessions and thoughtful strategy. Every game comes with its rules and contextual tips, and there's a progression mode (Nodes) that walks you across a map of games, so you keep discovering new ways to play with a standard deck.
 
 ## Features
 
-- A broad collection of classic and original solo card games
-- Built-in rules and contextual gameplay tips
-- Favorites, recent games, statistics, and saved sessions
-- Multiple card styles and game-specific visual themes
-- Responsive layouts for phones, tablets, and desktop browsers
-- Installable, offline-capable web app
+- 100+ classic and original solitaire games
+- Built-in rules and in-game tips for each one
+- Favourites, recent games, statistics and saved sessions
+- Several card styles and per-game visual themes
+- Responsive layouts for phones, tablets and desktop
+- Installable, offline-capable progressive web app
 
-## Technology
+## Built with
 
-Solitarius uses Expo Router, React Native, TypeScript, Reanimated, and AsyncStorage. The same application code targets the web and native mobile platforms.
+Expo Router, React Native and TypeScript, with Reanimated for animation. One codebase targets the web and native mobile. Game logic is covered by Jest tests running seeded, reproducible deals.
+
+There's also a companion app for Wear OS watches: [cards-watch](https://github.com/updownupdown/cards-watch).
+
+## Running locally
+
+```sh
+npm install
+npm run web
+```
