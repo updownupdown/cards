@@ -46,7 +46,6 @@ import {
   getActiveGameSessionId,
   getSessionPlayTimeMs,
 } from "@/hooks/useStateManager";
-import { maybeRequestStoreReview } from "@/utils/review-prompt";
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { haptics } from "@/utils/haptics";
@@ -68,14 +67,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  Animated,
-  BackHandler,
-  ImageBackground,
-  Platform,
-  Pressable,
-  View,
-} from "react-native";
+import { Animated, ImageBackground, Pressable, View } from "react-native";
 import { setBoardInputLocked } from "@/components/Cards/input-lock";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -389,22 +381,6 @@ export const GameWrapper = ({
     return releaseKeepAwake;
   }, [keepAwakeEnabled]);
 
-  // Android's back button closes the quick-start tips first, instead of
-  // leaving the game.
-  useEffect(() => {
-    if (Platform.OS !== "android" || !showTipsBox) return;
-
-    const subscription = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => {
-        setTipsDismissed(true);
-        return true;
-      },
-    );
-
-    return () => subscription.remove();
-  }, [showTipsBox]);
-
   // The time of a win, and the fastest win counting this one.
   const showWinTime = useEffectEvent((timeMs: number) => {
     const previous = settings?.stats.fastestTimeMs ?? null;
@@ -478,7 +454,6 @@ export const GameWrapper = ({
     recordResult(pathname, outcome === "won", score, sessionId, winTimeMs)
       .then(() => {
         if (outcome !== "won") return;
-        void maybeRequestStoreReview();
         syncEarnedAchievements().catch(() => {});
       })
       .catch(() => {});

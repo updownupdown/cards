@@ -30,7 +30,6 @@ import {
   SUPPORTED_LANGUAGES,
   type LanguagePreference,
 } from "@/i18n/languages";
-import * as Application from "expo-application";
 import Constants from "expo-constants";
 import { router } from "expo-router";
 import React from "react";
@@ -45,18 +44,12 @@ import { Text } from "../common/Text";
 import ModalFull from "./ModalFull";
 import { UnderlineTabs } from "../ui/Nocturne";
 import { useToast } from "../common/Toast";
-import {
-  saveDevMode,
-  useDevMode,
-  useDevModeKnock,
-} from "@/data/dev-mode";
+import { saveDevMode, useDevMode, useDevModeKnock } from "@/data/dev-mode";
 import { HelpFromAbovePanel } from "@/components/common/HelpFromAbovePanel";
 import { resetHintMode } from "@/data/hint-mode";
 
-/** App version, build number (Android's versionCode, iOS's build; none on
- *  web) and build type; not translated, since it's for bug reports. */
-const BUILD_NUMBER = Application.nativeBuildVersion;
-const BUILD_LABEL = `v${Constants.expoConfig?.version ?? "?"}${BUILD_NUMBER ? ` (${BUILD_NUMBER})` : ""} · ${__DEV__ ? "dev" : "release"}`;
+/** App version and build type; not translated, since it's for bug reports. */
+const BUILD_LABEL = `v${Constants.expoConfig?.version ?? "?"} · ${__DEV__ ? "dev" : "release"}`;
 
 /** Taps on Reset, after asking for it, that erase all app data. */
 const RESET_TAPS = 3;

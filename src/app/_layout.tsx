@@ -82,33 +82,24 @@ function Layout() {
   applyColorTheme(settings.colorTheme);
   const { colorDark } = useGameColors();
   const pathname = usePathname();
-  // Android embeds the fonts at build time (expo-font plugin in app.config.js),
-  // so they're ready from the first frame and the splash can hide straight
-  // away. Other platforms load them at runtime.
-  const embedsFonts = Platform.OS === "android";
-  const [fontsLoadedAtRuntime] = useFonts(
-    embedsFonts
-      ? {}
-      : {
-          Outfit_200ExtraLight,
-          Outfit_300Light,
-          Outfit_400Regular,
-          // font-display: block. The web's splash sets the name in it before
-          // the app loads, and it mustn't show in a fallback first.
-          Outfit_500Medium: {
-            uri: Outfit_500Medium,
-            display: FontDisplay.BLOCK,
-          },
-          Outfit_600SemiBold,
-          Outfit_700Bold,
-          EBGaramond_400Regular,
-          EBGaramond_400Regular_Italic,
-          EBGaramond_500Medium,
-          EBGaramond_500Medium_Italic,
-          EBGaramond_600SemiBold,
-        },
-  );
-  const fontsLoaded = embedsFonts || fontsLoadedAtRuntime;
+  const [fontsLoaded] = useFonts({
+    Outfit_200ExtraLight,
+    Outfit_300Light,
+    Outfit_400Regular,
+    // font-display: block. The web's splash sets the name in it before
+    // the app loads, and it mustn't show in a fallback first.
+    Outfit_500Medium: {
+      uri: Outfit_500Medium,
+      display: FontDisplay.BLOCK,
+    },
+    Outfit_600SemiBold,
+    Outfit_700Bold,
+    EBGaramond_400Regular,
+    EBGaramond_400Regular_Italic,
+    EBGaramond_500Medium,
+    EBGaramond_500Medium_Italic,
+    EBGaramond_600SemiBold,
+  });
   const startLanguage = useLanguageSync();
   const languageReady = startLanguage !== null;
   const displayLanguage = useDisplayLanguage();

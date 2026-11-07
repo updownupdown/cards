@@ -53,8 +53,6 @@ describe("launch lockup", () => {
     expect(SPLASH_NAME).toBe(nocturne.ink);
     expect(splash.backgroundColor).toBe(SPLASH_BACKGROUND);
     expect(expo.backgroundColor).toBe(SPLASH_BACKGROUND);
-    expect(expo.android?.backgroundColor).toBe(SPLASH_BACKGROUND);
-    expect(expo.android?.adaptiveIcon?.backgroundColor).toBe(SPLASH_BACKGROUND);
     expect(expo.web?.backgroundColor).toBe(SPLASH_BACKGROUND);
     const manifest = JSON.parse(
       fs.readFileSync(path.join(repoRoot, "public/manifest.json"), "utf8"),

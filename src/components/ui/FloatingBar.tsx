@@ -63,7 +63,7 @@ export function useGlassStyle(radius = 22): ViewStyle {
     borderRadius: spacing(radius),
     borderWidth: 1,
     borderColor: glassEdge(),
-    ...homeSurfaceShadow(spacing, { translucent: true }),
+    ...homeSurfaceShadow(spacing),
   };
 }
 
