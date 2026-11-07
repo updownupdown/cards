@@ -36,13 +36,5 @@
     "title": "La Odisea",
     "text": "Cada victoria desbloquea los juegos conectados. Cada juego tiene varios coleccionables. Empieza aquí.",
     "close": "¡Entendido!"
-  },
-  "field": {
-    "title": "Más allá del campo de fuerza",
-    "text": "Esta estrella está más allá del campo de fuerza. Desbloquea la Odisea completa para viajar hasta aquí y conseguir lo que guarda.",
-    "unlock": "Desbloquear la Odisea completa",
-    "enterKey": "Introducir una clave",
-    "getApp": "Conseguir la aplicación",
-    "purchaseSoon": "La Odisea completa aún no está a la venta."
   }
 }

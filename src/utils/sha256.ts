@@ -1,6 +1,6 @@
 /**
  * SHA-256 of a string (as UTF-8), in lowercase hex. Small and synchronous, for
- * checking unlock keys against their fingerprints (src/data/unlock-keys.ts)
+ * checking developer keys against their fingerprints (src/data/dev-keys.ts)
  * the same way on every platform, with no native module.
  */
 const K = new Uint32Array([

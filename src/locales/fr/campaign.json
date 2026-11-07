@@ -36,13 +36,5 @@
     "title": "L'Odyssée",
     "text": "Chaque victoire débloque les jeux reliés. Chaque jeu a plusieurs objets de collection. Commencez ici.",
     "close": "Compris !"
-  },
-  "field": {
-    "title": "Au-delà du champ de force",
-    "text": "Cette étoile se trouve au-delà du champ de force. Débloquez l'Odyssée complète pour y voyager et obtenir ce qu'elle renferme.",
-    "unlock": "Débloquer l'Odyssée complète",
-    "enterKey": "Saisir une clé",
-    "getApp": "Obtenir l'application",
-    "purchaseSoon": "L'Odyssée complète n'est pas encore en vente."
   }
 }

@@ -38,8 +38,10 @@ export const EARNED_ACHIEVEMENTS_STORAGE_KEY = "cards.achievements.v1";
  */
 export const MOMENTS_STORAGE_KEY = "cards.moments.v1";
 /**
- * The full Odyssey (src/data/odyssey-unlock.ts), JSON: the role of an unlock
- * key entered, whether a save from before the force field kept the Odyssey
- * open, and dev mode's view of the field.
+ * The developer key entered (src/data/dev-key.ts), JSON: `{ keyHash }`.
+ * Named for the Odyssey's unlock, retired in 2026-11 with the force field,
+ * which kept a key's fingerprint here too, so a developer key entered then
+ * still counts. Its other fields (keptFromBefore, checkedBeforeField,
+ * devFieldView) are no longer read.
  */
-export const ODYSSEY_UNLOCK_STORAGE_KEY = "cards.odysseyUnlock.v1";
+export const DEV_KEY_STORAGE_KEY = "cards.odysseyUnlock.v1";

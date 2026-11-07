@@ -12,7 +12,6 @@ import {
   GAME_DOTS_BY_PATH,
   CAMPAIGN_START_PATH,
 } from "./campaign-map";
-import { isHeldBeyondField } from "./odyssey-field";
 // Straight from the generated file: campaign-map is still loading when a
 // game's own imports reach this module first.
 import { GAME_DOT_DEFINITIONS as ALL_GAME_DOT_DEFINITIONS } from "./campaign-map.generated";
@@ -344,8 +343,7 @@ export async function recordCampaignWin(
       wonPaths,
       progress.unlockedPaths,
     );
-    // Beyond the force field, a win counts only with the full Odyssey.
-    if (!unlockedPathsBeforeWin.has(path) || isHeldBeyondField(path)) {
+    if (!unlockedPathsBeforeWin.has(path)) {
       return { progress, newlyUnlockedPaths: [], duplicate: false };
     }
 
@@ -406,7 +404,7 @@ export async function spendMercySkip(
       wonPaths,
       progress.unlockedPaths,
     );
-    if (!unlockedPathsBeforeSkip.has(path) || isHeldBeyondField(path)) {
+    if (!unlockedPathsBeforeSkip.has(path)) {
       return { progress, newlyUnlockedPaths: [], applied: false };
     }
 

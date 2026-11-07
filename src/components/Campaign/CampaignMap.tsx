@@ -3,7 +3,6 @@ import { GAMES_DATA } from "@/data/games-registry";
 import { CampaignBlackHole } from "@/components/Campaign/CampaignBlackHole";
 import {
   getGameDotState,
-  isBeyondField,
   GAME_DOTS_BY_PATH,
   GAME_DOT_DEFINITIONS,
   type GameDotDefinition,
@@ -32,8 +31,6 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { GAME_CHANGE_MS } from "@/components/ui/GameInfoPanel";
-import { useFieldUp } from "@/data/odyssey-field";
-import { ForceField } from "./ForceField";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Svg, { Path } from "react-native-svg";
 import { scheduleOnRN } from "react-native-worklets";
@@ -121,16 +118,6 @@ const LINK_LOOK: Record<
 const LINE_WIDTH = { arm: 1, bridge: 1 };
 /** Locked links are drawn a little finer as well as fainter. */
 const LOCKED_LINE_SCALE = 1;
-
-/**
- * While the force field stands, the game dots beyond it, their names and the
- * links reaching them are drawn this faint: still there to see, plainly
- * out of reach.
- */
-const BEYOND_FIELD_OPACITY = 0.4;
-const BEYOND_FIELD = new Set(
-  GAME_DOT_DEFINITIONS.filter(isBeyondField).map((gameDot) => gameDot.path),
-);
 
 /** The selected game dot is drawn this much larger. */
 const SELECTED_SCALE = 1.6;
@@ -275,11 +262,9 @@ const GUIDE_LIFT = 96;
 const GameDotLabels = memo(function GameDotLabels({
   gameDotStates,
   scale,
-  fieldUp,
 }: {
   gameDotStates: ReadonlyMap<string, GameDotState>;
   scale: SharedValue<number>;
-  fieldUp: boolean;
 }) {
   const language = useDisplayLanguage();
   // One animated wrapper for all of the labels: they share a single fade, so
@@ -299,13 +284,11 @@ const GameDotLabels = memo(function GameDotLabels({
     >
       {GAME_DOT_DEFINITIONS.map((gameDot) => {
         const state = gameDotStates.get(gameDot.path)!;
-        const held = fieldUp && BEYOND_FIELD.has(gameDot.path);
         return (
           <Text
             key={gameDot.path}
             style={{
               position: "absolute",
-              opacity: held ? BEYOND_FIELD_OPACITY : 1,
               left: toWorld(gameDot.x) - LABEL.maxWidth / 2,
               top: toWorld(gameDot.y) + GAME_DOT_SIZE / 2 + LABEL.gap,
               width: LABEL.maxWidth,
@@ -379,10 +362,8 @@ const GalaxyArms = memo(function GalaxyArms() {
 
 const GameDotConnections = memo(function GameDotConnections({
   gameDotStates,
-  fieldUp,
 }: {
   gameDotStates: ReadonlyMap<string, GameDotState>;
-  fieldUp: boolean;
 }) {
   // Each link is a thin view, turned to lie between its game dots, with ends
   // rounded like a round line cap. An SVG would be simpler, but Android draws
@@ -397,12 +378,8 @@ const GameDotConnections = memo(function GameDotConnections({
             gameDotStates.get(target.path)!,
           );
           const locked = state === "locked";
-          const { color: strokeColor, opacity: lookOpacity } =
+          const { color: strokeColor, opacity: strokeOpacity } =
             LINK_LOOK[state]();
-          const held =
-            fieldUp &&
-            (BEYOND_FIELD.has(gameDot.path) || BEYOND_FIELD.has(target.path));
-          const strokeOpacity = lookOpacity * (held ? BEYOND_FIELD_OPACITY : 1);
 
           const width =
             LINE_WIDTH[onArm ? "arm" : "bridge"] *
@@ -505,16 +482,12 @@ function markBox(state: GameDotState) {
 const GameDot = memo(function GameDot({
   gameDot,
   state,
-  held,
   onSelectGameDot,
 }: {
   gameDot: GameDotDefinition;
   state: GameDotState;
-  /** Beyond the standing force field: drawn faint. */
-  held: boolean;
   onSelectGameDot: (gameDot: GameDotDefinition) => void;
 }) {
-  const opacity = held ? BEYOND_FIELD_OPACITY : 1;
   const game = GAMES_DATA[gameDot.path];
   const title = localizeGameTitle(game, gameDot.path, useDisplayLanguage());
   const left = toWorld(gameDot.x);
@@ -535,7 +508,6 @@ const GameDot = memo(function GameDot({
           top: top - box / 2,
           width: box,
           height: box,
-          opacity,
         }}
       >
         <DotMark state={state} />
@@ -554,7 +526,6 @@ const GameDot = memo(function GameDot({
         top: top - box / 2,
         width: box,
         height: box,
-        opacity,
       }}
     >
       <DotMark state={state} />
@@ -825,7 +796,6 @@ export function CampaignMap({
   guidePath,
 }: Props) {
   const showAnimations = useShowAnimations();
-  const fieldUp = useFieldUp();
   const [viewport, setViewport] = useState({ width: 0, height: 0 });
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -1092,13 +1062,7 @@ export function CampaignMap({
 
           <GalaxyArms />
 
-          <ForceField
-            up={fieldUp}
-            worldSize={WORLD_SIZE}
-            animated={showAnimations}
-          />
-
-          <GameDotConnections gameDotStates={gameDotStates} fieldUp={fieldUp} />
+          <GameDotConnections gameDotStates={gameDotStates} />
 
           {GAME_DOT_DEFINITIONS.map((gameDot) => {
             return (
@@ -1106,7 +1070,6 @@ export function CampaignMap({
                 key={gameDot.path}
                 gameDot={gameDot}
                 state={gameDotStates.get(gameDot.path)!}
-                held={fieldUp && BEYOND_FIELD.has(gameDot.path)}
                 onSelectGameDot={onSelectGameDot}
               />
             );
@@ -1121,7 +1084,6 @@ export function CampaignMap({
           <GameDotLabels
             gameDotStates={gameDotStates}
             scale={scale}
-            fieldUp={fieldUp}
           />
         </Animated.View>
 

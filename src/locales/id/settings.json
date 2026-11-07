@@ -79,13 +79,7 @@
     "grantMercySkip": "Beri sebuah pengampunan",
     "mercySkipGranted": "Pengampunan diberikan ({{count}} belum dipakai)",
     "artGallery": "Galeri seni",
-    "needsKey": "Mode dev memerlukan kunci pengembang",
-    "forceField": {
-      "label": "Medan gaya",
-      "asPlayed": "Sesuai permainan",
-      "shown": "Selalu tampil",
-      "lifted": "Diangkat"
-    }
+    "needsKey": "Mode dev memerlukan kunci pengembang"
   },
   "tabs": {
     "general": "Umum",
@@ -114,16 +108,11 @@
   },
   "unlockKey": {
     "label": "Kunci pembuka",
-    "description": "Punya kunci? <enter>Masukkan</enter> untuk membuka Pengembaraan lengkap.",
-    "unlocked": "Pengembaraan lengkap sudah terbuka.",
-    "devKey": "Kunci pengembang dimasukkan: Pengembaraan lengkap terbuka dan mode dev bisa diaktifkan.",
     "submit": "Buka",
     "clear": "Hapus kunci",
     "back": "Kembali",
     "result": {
-      "unlocked": "Pengembaraan lengkap sudah terbuka",
       "devKey": "Kunci pengembang diterima",
-      "webOnly": "Kunci ini berlaku di aplikasi web. Di aplikasi, Pengembaraan lengkap didapat dari Google Play.",
       "invalid": "Kunci itu tidak valid"
     }
   }

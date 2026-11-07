@@ -24,10 +24,9 @@
     "i18n": "node ./scripts/i18n.mjs",
     "logo:generate": "node ./scripts/generate-logo-assets.mjs",
     "starfield:generate": "node ./scripts/generate-starfield.mjs",
-    "force-field:generate": "node ./scripts/generate-force-field.mjs",
-    "keys:add": "node ./scripts/unlock-keys.mjs add",
-    "keys:remove": "node ./scripts/unlock-keys.mjs remove",
-    "keys:list": "node ./scripts/unlock-keys.mjs list"
+    "keys:add": "node ./scripts/dev-keys.mjs add",
+    "keys:remove": "node ./scripts/dev-keys.mjs remove",
+    "keys:list": "node ./scripts/dev-keys.mjs list"
   },
   "dependencies": {
     "@expo-google-fonts/eb-garamond": "^0.4.3",

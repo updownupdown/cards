@@ -1,6 +1,6 @@
 import { ToastOutlet, useToast } from "@/components/common/Toast";
 import { ActionButton } from "@/components/ui/Nocturne";
-import { redeemUnlockKey, type RedeemResult } from "@/data/odyssey-unlock";
+import { redeemDevKey } from "@/data/dev-key";
 import { useResponsiveMetrics } from "@/hooks/useResponsiveMetrics";
 import { useTranslation } from "@/i18n";
 import { Icon } from "@/icons";
@@ -11,18 +11,19 @@ import { Modal, Pressable, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 /**
- * Entering an unlock key (src/data/unlock-keys.ts): a screen of its own with
- * just the field, Unlock and Back, near the top, so the keyboard never covers
- * the field. Closes once a key opens something (`onRedeemed`).
+ * Entering a developer key (src/data/dev-keys.ts), which the knock that turns
+ * dev mode on asks for outside a local run: a screen of its own with just the
+ * field, Unlock and Back, near the top, so the keyboard never covers the
+ * field. Closes once a key is accepted (`onRedeemed`).
  */
-export function UnlockKeyEntry({
+export function DevKeyEntry({
   visible,
   onClose,
   onRedeemed,
 }: {
   visible: boolean;
   onClose: () => void;
-  onRedeemed?: (result: RedeemResult) => void;
+  onRedeemed?: () => void;
 }) {
   return (
     <Modal
@@ -41,7 +42,7 @@ function EntryScreen({
   onRedeemed,
 }: {
   onClose: () => void;
-  onRedeemed?: (result: RedeemResult) => void;
+  onRedeemed?: () => void;
 }) {
   const { spacing } = useResponsiveMetrics();
   const theme = usePalette();
@@ -63,15 +64,15 @@ function EntryScreen({
     if (checking || text.trim().length === 0) return;
     setChecking(true);
     try {
-      const result = await redeemUnlockKey(text);
-      setRejected(result === "invalid");
-      if (result === "unlocked" || result === "devKey") {
+      const accepted = await redeemDevKey(text);
+      setRejected(!accepted);
+      if (accepted) {
         onClose();
         // Shown over what's underneath, once this screen has gone.
-        showToast(t(`unlockKey.result.${result}`));
-        onRedeemed?.(result);
+        showToast(t("unlockKey.result.devKey"));
+        onRedeemed?.();
       } else {
-        showToast(t(`unlockKey.result.${result}`));
+        showToast(t("unlockKey.result.invalid"));
       }
     } finally {
       setChecking(false);

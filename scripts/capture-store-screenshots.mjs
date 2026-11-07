@@ -85,13 +85,6 @@ function seededStorage(colorTheme) {
       collectedTaoIds: [1, 2, 3, 4, 5],
       collectedQuoteIds: [1, 2, 3, 40, 84, 90, 120],
     },
-    // Opens the full Odyssey, as a save with a win beyond the force field.
-    "cards.odysseyUnlock.v1": {
-      keyHash: null,
-      keptFromBefore: true,
-      checkedBeforeField: true,
-      devFieldView: "asPlayed",
-    },
     "cards.recentGames.v1": WON.slice(0, 5).map((gamePath, index) => ({
       path: gamePath,
       playedAt: Date.now() - index * 3600000,

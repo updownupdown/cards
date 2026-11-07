@@ -36,13 +36,5 @@
     "title": "Yolculuk",
     "text": "Her galibiyet bağlantılı oyunların kilidini açar. Her oyunun birden çok koleksiyon öğesi var. Buradan başla.",
     "close": "Anladım!"
-  },
-  "field": {
-    "title": "Güç alanının ötesinde",
-    "text": "Bu yıldız güç alanının ötesinde. Buraya gitmek ve içindekileri toplamak için Yolculuk'un tamamını aç.",
-    "unlock": "Yolculuk'un tamamını aç",
-    "enterKey": "Anahtar gir",
-    "getApp": "Uygulamayı indir",
-    "purchaseSoon": "Yolculuk'un tamamı henüz satın alınamıyor."
   }
 }

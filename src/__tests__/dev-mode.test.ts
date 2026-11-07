@@ -10,7 +10,7 @@ import {
 } from "@/data/dev-mode";
 import { isGameEnabled } from "@/data/games-data";
 import { GAME_DEFINITIONS } from "@/data/games-registry";
-import * as odysseyUnlock from "@/data/odyssey-unlock";
+import * as devKey from "@/data/dev-key";
 import * as utils from "@/utils/utils";
 
 // A real beta game if there is one; when none is in beta, any game marked
@@ -29,7 +29,7 @@ afterEach(async () => {
 describe("Dev mode", () => {
   test("outside dev, beta games show only once dev mode is on", async () => {
     jest.spyOn(utils, "isLocalDevEnvironment").mockReturnValue(false);
-    jest.spyOn(odysseyUnlock, "hasDevKey").mockReturnValue(true);
+    jest.spyOn(devKey, "hasDevKey").mockReturnValue(true);
     expect(isDevMode()).toBe(false);
     expect(areBetaGamesVisible()).toBe(false);
     expect(isGameEnabled(betaGame)).toBe(false);
@@ -40,7 +40,7 @@ describe("Dev mode", () => {
 
   test("the saved choice is read back at startup", async () => {
     jest.spyOn(utils, "isLocalDevEnvironment").mockReturnValue(false);
-    jest.spyOn(odysseyUnlock, "hasDevKey").mockReturnValue(true);
+    jest.spyOn(devKey, "hasDevKey").mockReturnValue(true);
     await AsyncStorage.setItem("cards.devMode.v1", "1");
     expect(await loadDevMode()).toBe(true);
     expect(areBetaGamesVisible()).toBe(true);
@@ -51,7 +51,7 @@ describe("Dev mode", () => {
 
   test("outside dev, it needs a developer key", async () => {
     jest.spyOn(utils, "isLocalDevEnvironment").mockReturnValue(false);
-    jest.spyOn(odysseyUnlock, "hasDevKey").mockReturnValue(false);
+    jest.spyOn(devKey, "hasDevKey").mockReturnValue(false);
     expect(canUseDevMode()).toBe(false);
     await saveDevMode(true);
     expect(isDevMode()).toBe(false);
@@ -62,7 +62,7 @@ describe("Dev mode", () => {
 
   test("running locally, it needs no key", async () => {
     jest.spyOn(utils, "isLocalDevEnvironment").mockReturnValue(true);
-    jest.spyOn(odysseyUnlock, "hasDevKey").mockReturnValue(false);
+    jest.spyOn(devKey, "hasDevKey").mockReturnValue(false);
     expect(canUseDevMode()).toBe(true);
     await saveDevMode(true);
     expect(isDevMode()).toBe(true);
@@ -70,7 +70,7 @@ describe("Dev mode", () => {
 
   test("what decides at startup waits for the saved choice", async () => {
     jest.spyOn(utils, "isLocalDevEnvironment").mockReturnValue(false);
-    jest.spyOn(odysseyUnlock, "hasDevKey").mockReturnValue(true);
+    jest.spyOn(devKey, "hasDevKey").mockReturnValue(true);
     await AsyncStorage.setItem("cards.devMode.v1", "1");
     const startup = loadDevMode();
     // Asked before the choice is read, it still answers with it.

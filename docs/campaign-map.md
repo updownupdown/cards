@@ -106,28 +106,15 @@ On 2026-10-08 local-only games left the map for good: the eight added that day (
 
 On 2026-10-17 Machination replaced Pocket Poker (whose betting rated the app for simulated gambling), with a plain run: Machination took Pocket Poker's node, so the first win still opens it from Klondike (one of the two `HUB_EXTRA_LINKS`), and it holds Pocket Poker's rewards (Tao chapter 6 and quote 10). Machination is rated harder than Pocket Poker (difficulty 70 against 40), so this spot near the centre is harder than its neighbours; its Easy mode (nine piles) softens that. A save that won Pocket Poker loses that win but keeps every game it opened, also in saves from before version 4, whose opened games come from their wins.
 
-## The force field
+## The force field (retired)
 
-A force field round the centre (`FIELD_RADIUS` in `src/data/force-field.ts`,
-0.45 map units) holds back the games beyond it until the full Odyssey is
-unlocked (`src/data/odyssey-unlock.ts`; see `docs/unlock-keys.md`). Those games
-can still be selected on the map, with a banner under the header saying they
-lie beyond the field, but not played in the Odyssey: their Play button is
-locked, a Campaign win or a Mercy Skip there counts for nothing, and their
-quotes and chapters have no "Win to collect" button. Winning a game next to
-the field still opens its neighbours beyond it, so they are ready once the
-Odyssey is unlocked. Free play is untouched.
-
-When it was set, 46 of the 118 games (39%) lay inside. It sits in the widest
-gap between game dots at that distance, and every game inside can be reached
-from Klondike without leaving it. `src/__tests__/odyssey-field.test.ts` keeps
-the share inside between 30% and 40% and holds the rest: a new game placed
-inside or a change to the map may mean moving the radius. The field is a
-radius, not part of the map, so it never moves a node, link or reward, and
-the lock is unaffected.
-
-The field is drawn from `assets/images/force-field.webp`
-(`npm run force-field:generate`), tinted in the colour theme's accent.
+From 2026-10 to 2026-11 a force field round the centre (0.45 map units) held
+back the games beyond it until "the full Odyssey" was bought or unlocked with
+a key. It went when the app stopped being headed for Google Play: every game
+on the map can be played in the Odyssey again. It was only ever a radius,
+never part of the map, so removing it moved no node, link or reward; wins
+next to it had already opened their neighbours beyond it, so saves carry on
+as they were.
 
 ## Validation
 

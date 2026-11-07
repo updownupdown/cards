@@ -79,13 +79,7 @@
     "grantMercySkip": "Grant a Mercy Skip",
     "mercySkipGranted": "Mercy Skip granted ({{count}} unused)",
     "artGallery": "Art gallery",
-    "needsKey": "Dev mode needs a developer key",
-    "forceField": {
-      "label": "Force field",
-      "asPlayed": "As played",
-      "shown": "Always shown",
-      "lifted": "Lifted"
-    }
+    "needsKey": "Dev mode needs a developer key"
   },
   "tabs": {
     "general": "General",
@@ -114,16 +108,11 @@
   },
   "unlockKey": {
     "label": "Unlock key",
-    "description": "Have a key? <enter>Enter it</enter> to unlock the Full Odyssey.",
-    "unlocked": "The Full Odyssey is unlocked.",
-    "devKey": "Developer key entered: the Full Odyssey is unlocked, and dev mode can be turned on.",
     "submit": "Unlock",
     "clear": "Clear key",
     "back": "Back",
     "result": {
-      "unlocked": "The Full Odyssey is unlocked",
       "devKey": "Developer key accepted",
-      "webOnly": "This key works in the web app. In the app, the Full Odyssey comes from Google Play.",
       "invalid": "That key isn't valid"
     }
   }

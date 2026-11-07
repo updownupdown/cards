@@ -55,10 +55,9 @@ a change to a released game's rules breaks its saved deals, bump its
 `sessionVersion`. The rules, step by step, are in "Adding, renaming,
 replacing and removing games" in `docs/campaign-map.md`.
 
-# Unlock keys and dev mode
+# Developer keys and dev mode
 
-The full Odyssey (the games beyond the force field) and dev mode outside a
-local run come from unlock keys; see `docs/unlock-keys.md`. Keys are made only
-with `npm run keys:add`, which shows the key once and keeps just its
-fingerprint in `src/data/unlock-keys.ts`. Never write a real key into the
+Dev mode outside a local run needs a developer key; see `docs/dev-keys.md`.
+Keys are made only with `npm run keys:add`, which shows the key once and keeps
+just its fingerprint in `src/data/dev-keys.ts`. Never write a real key into the
 repository, a test or a commit message.
