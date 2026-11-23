@@ -38,6 +38,8 @@ const BUTTON_IN_MS = 700;
 export const HOLD_TO_SKIP_MS = 2500;
 /** Let go early, and the dark and the bar drain back at this pace (from full). */
 const RELEASE_MS = 500;
+/** A long press on Hold to skip is just more holding. */
+const keepHolding = () => {};
 
 export type RevealPage = {
   width: number;
@@ -274,6 +276,12 @@ export function RewardReveal({
                 onPress={onButton}
                 onPressIn={read ? undefined : startHold}
                 onPressOut={read ? undefined : endHold}
+                // A finger held on a phone's browser brings the long-press
+                // menu half a second in, and react-native-web ends the press
+                // there (so the hold drained back at once) unless the
+                // button takes long presses itself. It does nothing with
+                // them: the hold is timed by startHold.
+                onLongPress={read ? undefined : keepHolding}
                 preventWebLongPressMenu
                 progress={read ? undefined : hold}
                 autoProgressColor={rgba(palette.accent, 0.3)}
