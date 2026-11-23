@@ -49,6 +49,7 @@ function button(renderer: ReactTestRenderer) {
   return {
     text: String(pressable.findAllByType(Text)[0].props.children),
     disabled: !!pressable.props.disabled,
+    takesLongPress: typeof pressable.props.onLongPress === "function",
     // As a touch would: a disabled button isn't pressed, and a press is
     // a touch down, then up (when it lets go, it also counts as a press).
     pressIn: () =>
@@ -139,6 +140,9 @@ describe("Collectible reveals after a win", () => {
       // Still animating, so it is Hold to skip, and it can be pressed.
       expect(skip!.text).toBe("Hold to skip");
       expect(skip!.disabled).toBe(false);
+      // It takes long presses, or a phone's browser ends the hold half a
+      // second in, when its long-press menu would open.
+      expect(skip!.takesLongPress).toBe(true);
       // The dark that comes over the page as it's held is there, unseen.
       expect(
         renderer.root.findAll(
