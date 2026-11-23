@@ -324,14 +324,14 @@
   },
   "beleaguered-castle": {
     "howToPlay": {
-      "hash": "0c14b15c",
+      "hash": "c189474a",
       "value": [
         "## Tujuan",
         "Pindahkan semua kartu ke fondasi.",
         "## Aturan",
         "| Fondasi (4) | As sampai King, per jenis; As dimulai di sana |",
         "| Susun | Turun, apa pun jenisnya |",
-        "| Pindah | Satu kartu setiap kali |",
+        "| Pindah | Satu kartu, atau urutan jika baris kosong cukup |",
         "| Baris kosong | Kartu apa pun |",
         "| Dek | Tidak ada |",
         "| Kartu | 52 |",
@@ -340,10 +340,10 @@
       ]
     },
     "quickStart": {
-      "hash": "8b657e09",
+      "hash": "2a2216e6",
       "value": [
         "Susun turun apa pun jenisnya.",
-        "Pindahkan satu kartu setiap kali.",
+        "Pindahkan satu kartu, atau urutan jika baris kosong cukup.",
         "Kartu apa pun boleh mengisi baris kosong."
       ]
     },
@@ -847,14 +847,14 @@
   },
   "congress": {
     "howToPlay": {
-      "hash": "9e657720",
+      "hash": "d57ff954",
       "value": [
         "## Tujuan",
         "Pindahkan semua kartu ke fondasi.",
         "## Aturan",
         "| Fondasi (8) | As sampai King, per jenis |",
         "| Susun | Turun, apa pun jenisnya |",
-        "| Pindah | Satu kartu setiap kali |",
+        "| Pindah | Satu kartu, atau urutan jika kolom kosong cukup |",
         "| Kolom kosong | Kartu apa pun |",
         "| Dek | Ambil 1 |",
         "| Bagi ulang | Tidak ada |",
@@ -862,10 +862,10 @@
       ]
     },
     "quickStart": {
-      "hash": "c79129d7",
+      "hash": "671d920a",
       "value": [
         "Susun turun apa pun jenisnya.",
-        "Pindahkan satu kartu setiap kali.",
+        "Pindahkan satu kartu, atau urutan jika kolom kosong cukup.",
         "Kartu apa pun boleh mengisi kolom kosong."
       ]
     },
@@ -1186,14 +1186,14 @@
   },
   "diplomat": {
     "howToPlay": {
-      "hash": "9e657720",
+      "hash": "d57ff954",
       "value": [
         "## Tujuan",
         "Pindahkan semua kartu ke fondasi.",
         "## Aturan",
         "| Fondasi (8) | As sampai King, per jenis |",
         "| Susun | Turun, apa pun jenisnya |",
-        "| Pindah | Satu kartu setiap kali |",
+        "| Pindah | Satu kartu, atau urutan jika kolom kosong cukup |",
         "| Kolom kosong | Kartu apa pun |",
         "| Dek | Ambil 1 |",
         "| Bagi ulang | Tidak ada |",
@@ -1201,10 +1201,10 @@
       ]
     },
     "quickStart": {
-      "hash": "c79129d7",
+      "hash": "671d920a",
       "value": [
         "Susun turun apa pun jenisnya.",
-        "Pindahkan satu kartu setiap kali.",
+        "Pindahkan satu kartu, atau urutan jika kolom kosong cukup.",
         "Kartu apa pun boleh mengisi kolom kosong."
       ]
     },
@@ -1334,14 +1334,14 @@
   },
   "eight-off": {
     "howToPlay": {
-      "hash": "d2e2c9c1",
+      "hash": "6c385fbb",
       "value": [
         "## Tujuan",
         "Pindahkan semua kartu ke fondasi.",
         "## Aturan",
         "| Fondasi (4) | As sampai King, per jenis |",
         "| Susun | Turun, jenis yang sama |",
-        "| Pindah | Satu kartu, atau urutan jika ruang kosong cukup |",
+        "| Pindah | Satu kartu, atau urutan jika sel kosong cukup |",
         "| Kolom kosong | Hanya King |",
         "| Dek | Tidak ada |",
         "| Kartu | 52 |"
@@ -1525,14 +1525,14 @@
   },
   "flower-garden": {
     "howToPlay": {
-      "hash": "ebad4d6c",
+      "hash": "9d0fc0c3",
       "value": [
         "## Tujuan",
         "Pindahkan semua kartu ke fondasi.",
         "## Aturan",
         "| Fondasi (4) | As sampai King, per jenis |",
         "| Susun | Turun, apa pun jenisnya |",
-        "| Pindah | Satu kartu setiap kali |",
+        "| Pindah | Satu kartu, atau urutan jika petak bunga kosong cukup |",
         "| Petak bunga kosong | Kartu apa pun |",
         "| Buket (16) | Semua kartu bisa dimainkan; tidak ada yang kembali |",
         "| Dek | Tidak ada |",
@@ -1554,24 +1554,24 @@
   },
   "fortress": {
     "howToPlay": {
-      "hash": "bb74089b",
+      "hash": "0a44131d",
       "value": [
         "## Tujuan",
         "Pindahkan semua kartu ke fondasi.",
         "## Aturan",
         "| Fondasi (4) | As sampai King, per jenis |",
         "| Susun | Naik atau turun, jenis yang sama |",
-        "| Pindah | Satu kartu setiap kali |",
+        "| Pindah | Satu kartu, atau urutan jika lajur kosong cukup |",
         "| Lajur kosong | Kartu apa pun |",
         "| Dek | Tidak ada |",
         "| Kartu | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "16527157",
+      "hash": "1cdcf8d2",
       "value": [
         "Susun naik atau turun per jenis.",
-        "Pindahkan satu kartu setiap kali.",
+        "Pindahkan satu kartu, atau urutan jika lajur kosong cukup.",
         "Kartu apa pun boleh mengisi lajur kosong."
       ]
     },
@@ -1608,14 +1608,14 @@
   },
   "forty-thieves": {
     "howToPlay": {
-      "hash": "3ac3d532",
+      "hash": "b04caf58",
       "value": [
         "## Tujuan",
         "Pindahkan semua kartu ke fondasi.",
         "## Aturan",
         "| Fondasi (8) | As sampai King, per jenis |",
         "| Susun | Turun, jenis yang sama |",
-        "| Pindah | Satu kartu setiap kali |",
+        "| Pindah | Satu kartu, atau urutan jika kolom kosong cukup |",
         "| Kolom kosong | Kartu apa pun |",
         "| Dek | Ambil 1 |",
         "| Bagi ulang | Tidak ada, atau tanpa batas di pengaturan |",
@@ -1627,10 +1627,10 @@
       ]
     },
     "quickStart": {
-      "hash": "568cdabd",
+      "hash": "5f249a78",
       "value": [
         "Susun turun per jenis.",
-        "Pindahkan satu kartu setiap kali.",
+        "Pindahkan satu kartu, atau urutan jika kolom kosong cukup.",
         "Kartu apa pun boleh mengisi kolom kosong."
       ]
     },
@@ -1835,14 +1835,14 @@
   },
   "grandfathers-clock": {
     "howToPlay": {
-      "hash": "9a231296",
+      "hash": "00b0e5e2",
       "value": [
         "## Tujuan",
         "Susun setiap fondasi jam sampai menunjukkan jamnya.",
         "## Aturan",
         "| Fondasi (12) | Naik per jenis, bersambung dari King ke As, masing-masing berhenti di jamnya |",
         "| Susun | Turun, apa pun jenisnya; King boleh di atas As |",
-        "| Pindah | Satu kartu setiap kali |",
+        "| Pindah | Satu kartu, atau urutan jika tumpukan kosong cukup |",
         "| Tumpukan kosong | Kartu apa pun |",
         "| Dek | Tidak ada |",
         "| Kartu | 52 |",
@@ -1937,14 +1937,14 @@
   },
   "indian": {
     "howToPlay": {
-      "hash": "49243709",
+      "hash": "5122887b",
       "value": [
         "## Tujuan",
         "Pindahkan semua kartu ke fondasi.",
         "## Aturan",
         "| Fondasi (8) | As sampai King, per jenis |",
         "| Susun | Turun, jenis lain apa pun |",
-        "| Pindah | Satu kartu setiap kali |",
+        "| Pindah | Satu kartu, atau urutan jika kolom kosong cukup |",
         "| Kolom kosong | Kartu apa pun |",
         "| Dek | Ambil 1 |",
         "| Bagi ulang | Tidak ada |",
@@ -1952,10 +1952,10 @@
       ]
     },
     "quickStart": {
-      "hash": "e4b1b9bb",
+      "hash": "4f72d146",
       "value": [
         "Susun turun di atas jenis apa pun selain jenisnya sendiri.",
-        "Pindahkan satu kartu setiap kali.",
+        "Pindahkan satu kartu, atau urutan jika kolom kosong cukup.",
         "Kartu apa pun boleh mengisi kolom kosong."
       ]
     },
@@ -2085,14 +2085,14 @@
   },
   "king-albert": {
     "howToPlay": {
-      "hash": "96d6c4f9",
+      "hash": "ae390bc3",
       "value": [
         "## Tujuan",
         "Pindahkan semua kartu ke fondasi.",
         "## Aturan",
         "| Fondasi (4) | As sampai King, per jenis |",
         "| Susun | Turun, warna berselang |",
-        "| Pindah | Satu kartu setiap kali |",
+        "| Pindah | Satu kartu, atau urutan jika kolom kosong cukup |",
         "| Kolom kosong | Kartu apa pun |",
         "| Cadangan (7) | Semua kartu bisa dimainkan; tidak ada yang kembali |",
         "| Dek | Tidak ada |",
@@ -2102,10 +2102,10 @@
       ]
     },
     "quickStart": {
-      "hash": "2c48201d",
+      "hash": "85ec1332",
       "value": [
         "Susun turun dengan warna berselang.",
-        "Pindahkan satu kartu setiap kali.",
+        "Pindahkan satu kartu, atau urutan jika kolom kosong cukup.",
         "Kartu cadangan bisa dimainkan, tetapi tidak pernah dikembalikan."
       ]
     },
@@ -2395,14 +2395,14 @@
   },
   "maria": {
     "howToPlay": {
-      "hash": "6df7d8cf",
+      "hash": "1f9b7d89",
       "value": [
         "## Tujuan",
         "Pindahkan semua kartu ke fondasi.",
         "## Aturan",
         "| Fondasi (8) | As sampai King, per jenis |",
         "| Susun | Turun, warna berselang |",
-        "| Pindah | Satu kartu setiap kali |",
+        "| Pindah | Satu kartu, atau urutan jika kolom kosong cukup |",
         "| Kolom kosong | Kartu apa pun |",
         "| Dek | Ambil 1 |",
         "| Bagi ulang | Tidak ada |",
@@ -2410,10 +2410,10 @@
       ]
     },
     "quickStart": {
-      "hash": "6a765a29",
+      "hash": "76263f6c",
       "value": [
         "Susun turun dengan warna berselang.",
-        "Pindahkan satu kartu setiap kali.",
+        "Pindahkan satu kartu, atau urutan jika kolom kosong cukup.",
         "Kartu apa pun boleh mengisi kolom kosong."
       ]
     },
@@ -2699,14 +2699,14 @@
   },
   "penguin": {
     "howToPlay": {
-      "hash": "88ea4103",
+      "hash": "81404eea",
       "value": [
         "## Tujuan",
         "Pindahkan semua kartu ke fondasi.",
         "## Aturan",
         "| Fondasi (4) | Naik per jenis dari nilai paruh, bersambung dari King ke As |",
         "| Susun | Turun, jenis yang sama, bersambung dari As ke King |",
-        "| Pindah | Satu kartu, atau urutan jika ruang kosong cukup |",
+        "| Pindah | Satu kartu, atau urutan sejenis |",
         "| Kolom kosong | Nilai di bawah paruh |",
         "| Dek | Tidak ada |",
         "| Kartu | 52 |",
@@ -3123,14 +3123,14 @@
   },
   "seahaven-towers": {
     "howToPlay": {
-      "hash": "d2e2c9c1",
+      "hash": "6c385fbb",
       "value": [
         "## Tujuan",
         "Pindahkan semua kartu ke fondasi.",
         "## Aturan",
         "| Fondasi (4) | As sampai King, per jenis |",
         "| Susun | Turun, jenis yang sama |",
-        "| Pindah | Satu kartu, atau urutan jika ruang kosong cukup |",
+        "| Pindah | Satu kartu, atau urutan jika sel kosong cukup |",
         "| Kolom kosong | Hanya King |",
         "| Dek | Tidak ada |",
         "| Kartu | 52 |"

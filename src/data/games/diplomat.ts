@@ -29,7 +29,7 @@ export const diplomat: GameDefinition = {
   cardBack: CardBackColors.Ocean,
   quickStart: [
     "Build down on any suit.",
-    "Move one card at a time.",
+    "Move a card, or a run if empty columns allow.",
     "Any card fills an empty column.",
   ],
   howToPlay: [
@@ -38,7 +38,7 @@ export const diplomat: GameDefinition = {
     "## Rules",
     "| Foundations (8) | Ace to King, by suit |",
     "| Build | Down, regardless of suit |",
-    "| Move | One card at a time |",
+    "| Move | One card, or a run if empty columns allow |",
     "| Empty column | Any card |",
     "| Stock | Draw 1 |",
     "| Redeals | None |",

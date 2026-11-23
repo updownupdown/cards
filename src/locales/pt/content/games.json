@@ -324,14 +324,14 @@
   },
   "beleaguered-castle": {
     "howToPlay": {
-      "hash": "0c14b15c",
+      "hash": "c189474a",
       "value": [
         "## Objetivo",
         "Leve todas as cartas para as fundações.",
         "## Regras",
         "| Fundações (4) | Do Ás ao Rei, por naipe; os Ases começam nelas |",
         "| Construção | Decrescente, independentemente do naipe |",
-        "| Movimento | Uma carta de cada vez |",
+        "| Movimento | Uma carta, ou uma sequência se houver fileiras vazias |",
         "| Fileira vazia | Qualquer carta |",
         "| Monte | Não há |",
         "| Cartas | 52 |",
@@ -340,10 +340,10 @@
       ]
     },
     "quickStart": {
-      "hash": "8b657e09",
+      "hash": "2a2216e6",
       "value": [
         "Construa em ordem decrescente, independentemente do naipe.",
-        "Mova uma carta de cada vez.",
+        "Mova uma carta, ou uma sequência se houver fileiras vazias.",
         "Qualquer carta preenche uma fileira vazia."
       ]
     },
@@ -847,14 +847,14 @@
   },
   "congress": {
     "howToPlay": {
-      "hash": "9e657720",
+      "hash": "d57ff954",
       "value": [
         "## Objetivo",
         "Leve todas as cartas para as fundações.",
         "## Regras",
         "| Fundações (8) | Do Ás ao Rei, por naipe |",
         "| Construção | Decrescente, independentemente do naipe |",
-        "| Movimento | Uma carta de cada vez |",
+        "| Movimento | Uma carta, ou uma sequência se houver colunas vazias |",
         "| Coluna vazia | Qualquer carta |",
         "| Monte | Vira 1 |",
         "| Redistribuições | Não há |",
@@ -862,10 +862,10 @@
       ]
     },
     "quickStart": {
-      "hash": "c79129d7",
+      "hash": "671d920a",
       "value": [
         "Construa em ordem decrescente, independentemente do naipe.",
-        "Mova uma carta de cada vez.",
+        "Mova uma carta, ou uma sequência se houver colunas vazias.",
         "Qualquer carta preenche uma coluna vazia."
       ]
     },
@@ -1186,14 +1186,14 @@
   },
   "diplomat": {
     "howToPlay": {
-      "hash": "9e657720",
+      "hash": "d57ff954",
       "value": [
         "## Objetivo",
         "Leve todas as cartas para as fundações.",
         "## Regras",
         "| Fundações (8) | Do Ás ao Rei, por naipe |",
         "| Construção | Decrescente, independentemente do naipe |",
-        "| Movimento | Uma carta de cada vez |",
+        "| Movimento | Uma carta, ou uma sequência se houver colunas vazias |",
         "| Coluna vazia | Qualquer carta |",
         "| Monte | Vira 1 |",
         "| Redistribuições | Não há |",
@@ -1201,10 +1201,10 @@
       ]
     },
     "quickStart": {
-      "hash": "c79129d7",
+      "hash": "671d920a",
       "value": [
         "Construa em ordem decrescente, independentemente do naipe.",
-        "Mova uma carta de cada vez.",
+        "Mova uma carta, ou uma sequência se houver colunas vazias.",
         "Qualquer carta preenche uma coluna vazia."
       ]
     },
@@ -1334,14 +1334,14 @@
   },
   "eight-off": {
     "howToPlay": {
-      "hash": "d2e2c9c1",
+      "hash": "6c385fbb",
       "value": [
         "## Objetivo",
         "Leve todas as cartas para as fundações.",
         "## Regras",
         "| Fundações (4) | Do Ás ao Rei, por naipe |",
         "| Construção | Decrescente, mesmo naipe |",
-        "| Movimento | Uma carta, ou uma sequência se houver espaços livres |",
+        "| Movimento | Uma carta, ou uma sequência se houver células livres |",
         "| Coluna vazia | Só Rei |",
         "| Monte | Não há |",
         "| Cartas | 52 |"
@@ -1525,14 +1525,14 @@
   },
   "flower-garden": {
     "howToPlay": {
-      "hash": "ebad4d6c",
+      "hash": "9d0fc0c3",
       "value": [
         "## Objetivo",
         "Leve todas as cartas para as fundações.",
         "## Regras",
         "| Fundações (4) | Do Ás ao Rei, por naipe |",
         "| Construção | Decrescente, independentemente do naipe |",
-        "| Movimento | Uma carta de cada vez |",
+        "| Movimento | Uma carta, ou uma sequência se houver canteiros vazios |",
         "| Canteiro vazio | Qualquer carta |",
         "| Buquê (16) | Todas as cartas são jogáveis; nada volta |",
         "| Monte | Não há |",
@@ -1554,24 +1554,24 @@
   },
   "fortress": {
     "howToPlay": {
-      "hash": "bb74089b",
+      "hash": "0a44131d",
       "value": [
         "## Objetivo",
         "Leve todas as cartas para as fundações.",
         "## Regras",
         "| Fundações (4) | Do Ás ao Rei, por naipe |",
         "| Construção | Crescente ou decrescente, mesmo naipe |",
-        "| Movimento | Uma carta de cada vez |",
+        "| Movimento | Uma carta, ou uma sequência se houver corredores vazios |",
         "| Corredor vazio | Qualquer carta |",
         "| Monte | Não há |",
         "| Cartas | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "16527157",
+      "hash": "1cdcf8d2",
       "value": [
         "Construa em ordem crescente ou decrescente por naipe.",
-        "Mova uma carta de cada vez.",
+        "Mova uma carta, ou uma sequência se houver corredores vazios.",
         "Qualquer carta preenche um corredor vazio."
       ]
     },
@@ -1608,14 +1608,14 @@
   },
   "forty-thieves": {
     "howToPlay": {
-      "hash": "3ac3d532",
+      "hash": "b04caf58",
       "value": [
         "## Objetivo",
         "Leve todas as cartas para as fundações.",
         "## Regras",
         "| Fundações (8) | Do Ás ao Rei, por naipe |",
         "| Construção | Decrescente, mesmo naipe |",
-        "| Movimento | Uma carta de cada vez |",
+        "| Movimento | Uma carta, ou uma sequência se houver colunas vazias |",
         "| Coluna vazia | Qualquer carta |",
         "| Monte | Vira 1 |",
         "| Redistribuições | Não há, ou ilimitadas nas configurações |",
@@ -1627,10 +1627,10 @@
       ]
     },
     "quickStart": {
-      "hash": "568cdabd",
+      "hash": "5f249a78",
       "value": [
         "Construa em ordem decrescente por naipe.",
-        "Mova uma carta de cada vez.",
+        "Mova uma carta, ou uma sequência se houver colunas vazias.",
         "Qualquer carta preenche uma coluna vazia."
       ]
     },
@@ -1835,14 +1835,14 @@
   },
   "grandfathers-clock": {
     "howToPlay": {
-      "hash": "9a231296",
+      "hash": "00b0e5e2",
       "value": [
         "## Objetivo",
         "Construa cada fundação do relógio até ela mostrar a sua hora.",
         "## Regras",
         "| Fundações (12) | Crescente por naipe, passando do Rei ao Ás, cada uma parando na sua hora |",
         "| Construção | Decrescente, independentemente do naipe; um Rei vai sobre um Ás |",
-        "| Movimento | Uma carta de cada vez |",
+        "| Movimento | Uma carta, ou uma sequência se houver pilhas vazias |",
         "| Pilha vazia | Qualquer carta |",
         "| Monte | Não há |",
         "| Cartas | 52 |",
@@ -1937,14 +1937,14 @@
   },
   "indian": {
     "howToPlay": {
-      "hash": "49243709",
+      "hash": "5122887b",
       "value": [
         "## Objetivo",
         "Leve todas as cartas para as fundações.",
         "## Regras",
         "| Fundações (8) | Do Ás ao Rei, por naipe |",
         "| Construção | Decrescente, qualquer outro naipe |",
-        "| Movimento | Uma carta de cada vez |",
+        "| Movimento | Uma carta, ou uma sequência se houver colunas vazias |",
         "| Coluna vazia | Qualquer carta |",
         "| Monte | Vira 1 |",
         "| Redistribuições | Não há |",
@@ -1952,10 +1952,10 @@
       ]
     },
     "quickStart": {
-      "hash": "e4b1b9bb",
+      "hash": "4f72d146",
       "value": [
         "Construa em ordem decrescente sobre qualquer naipe que não seja o da carta.",
-        "Mova uma carta de cada vez.",
+        "Mova uma carta, ou uma sequência se houver colunas vazias.",
         "Qualquer carta preenche uma coluna vazia."
       ]
     },
@@ -2085,14 +2085,14 @@
   },
   "king-albert": {
     "howToPlay": {
-      "hash": "96d6c4f9",
+      "hash": "ae390bc3",
       "value": [
         "## Objetivo",
         "Leve todas as cartas para as fundações.",
         "## Regras",
         "| Fundações (4) | Do Ás ao Rei, por naipe |",
         "| Construção | Decrescente, alternando cores |",
-        "| Movimento | Uma carta de cada vez |",
+        "| Movimento | Uma carta, ou uma sequência se houver colunas vazias |",
         "| Coluna vazia | Qualquer carta |",
         "| Reserva (7) | Todas as cartas são jogáveis; nada volta |",
         "| Monte | Não há |",
@@ -2102,10 +2102,10 @@
       ]
     },
     "quickStart": {
-      "hash": "2c48201d",
+      "hash": "85ec1332",
       "value": [
         "Construa em ordem decrescente, alternando cores.",
-        "Mova uma carta de cada vez.",
+        "Mova uma carta, ou uma sequência se houver colunas vazias.",
         "As cartas da reserva podem ser jogadas, mas nunca devolvidas."
       ]
     },
@@ -2395,14 +2395,14 @@
   },
   "maria": {
     "howToPlay": {
-      "hash": "6df7d8cf",
+      "hash": "1f9b7d89",
       "value": [
         "## Objetivo",
         "Leve todas as cartas para as fundações.",
         "## Regras",
         "| Fundações (8) | Do Ás ao Rei, por naipe |",
         "| Construção | Decrescente, alternando cores |",
-        "| Movimento | Uma carta de cada vez |",
+        "| Movimento | Uma carta, ou uma sequência se houver colunas vazias |",
         "| Coluna vazia | Qualquer carta |",
         "| Monte | Vira 1 |",
         "| Redistribuições | Não há |",
@@ -2410,10 +2410,10 @@
       ]
     },
     "quickStart": {
-      "hash": "6a765a29",
+      "hash": "76263f6c",
       "value": [
         "Construa em ordem decrescente, alternando cores.",
-        "Mova uma carta de cada vez.",
+        "Mova uma carta, ou uma sequência se houver colunas vazias.",
         "Qualquer carta preenche uma coluna vazia."
       ]
     },
@@ -2699,14 +2699,14 @@
   },
   "penguin": {
     "howToPlay": {
-      "hash": "88ea4103",
+      "hash": "81404eea",
       "value": [
         "## Objetivo",
         "Leve todas as cartas para as fundações.",
         "## Regras",
         "| Fundações (4) | Crescente por naipe a partir do valor do bico, passando do Rei ao Ás |",
         "| Construção | Decrescente, mesmo naipe, passando do Ás ao Rei |",
-        "| Movimento | Uma carta, ou uma sequência se houver espaços livres |",
+        "| Movimento | Uma carta, ou uma sequência do mesmo naipe |",
         "| Coluna vazia | O valor abaixo do bico |",
         "| Monte | Não há |",
         "| Cartas | 52 |",
@@ -3123,14 +3123,14 @@
   },
   "seahaven-towers": {
     "howToPlay": {
-      "hash": "d2e2c9c1",
+      "hash": "6c385fbb",
       "value": [
         "## Objetivo",
         "Leve todas as cartas para as fundações.",
         "## Regras",
         "| Fundações (4) | Do Ás ao Rei, por naipe |",
         "| Construção | Decrescente, mesmo naipe |",
-        "| Movimento | Uma carta, ou uma sequência se houver espaços livres |",
+        "| Movimento | Uma carta, ou uma sequência se houver células livres |",
         "| Coluna vazia | Só Rei |",
         "| Monte | Não há |",
         "| Cartas | 52 |"

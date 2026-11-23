@@ -24,7 +24,7 @@ export const fortress: GameDefinition = {
   cardBack: CardBackColors.Walnut,
   quickStart: [
     "Build up or down by suit.",
-    "Move one card at a time.",
+    "Move a card, or a run if empty lanes allow.",
     "Any card fills an empty lane.",
   ],
   howToPlay: [
@@ -33,7 +33,7 @@ export const fortress: GameDefinition = {
     "## Rules",
     "| Foundations (4) | Ace to King, by suit |",
     "| Build | Up or down, same suit |",
-    "| Move | One card at a time |",
+    "| Move | One card, or a run if empty lanes allow |",
     "| Empty lane | Any card |",
     "| Stock | None |",
     "| Cards | 52 |",

@@ -42,7 +42,7 @@ export const grandfathersClock: GameDefinition = {
     "## Rules",
     "| Foundations (12) | Up by suit, wrapping from King to Ace, each stopping at its hour |",
     "| Build | Down, regardless of suit; a King goes on an Ace |",
-    "| Move | One card at a time |",
+    "| Move | One card, or a run if empty piles allow |",
     "| Empty pile | Any card |",
     "| Stock | None |",
     "| Cards | 52 |",

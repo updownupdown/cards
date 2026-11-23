@@ -38,7 +38,7 @@ export const eightOff: GameDefinition = {
     "## Rules",
     "| Foundations (4) | Ace to King, by suit |",
     "| Build | Down, same suit |",
-    "| Move | One card, or a run if free spaces allow |",
+    "| Move | One card, or a run if free cells allow |",
     "| Empty column | King only |",
     "| Stock | None |",
     "| Cards | 52 |",

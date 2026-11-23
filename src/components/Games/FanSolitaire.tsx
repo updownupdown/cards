@@ -37,6 +37,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { i18n } from "@/i18n";
 import { useHint } from "@/hints/hint-store";
 import { findClassicHint } from "@/hints/classic";
+import { countEmptyPiles, maxSupermove } from "../Cards/supermove";
 export type FanVariant =
   | "la-belle-lucie"
   | "trefoil"
@@ -79,7 +80,8 @@ export type FanGameState = {
 };
 
 type Selection =
-  | { zone: "tableau"; index: number }
+  /** `start`: the first card of a run that moves together (the top if unset). */
+  | { zone: "tableau"; index: number; start?: number }
   | { zone: "reserve"; index: number }
   | null;
 
@@ -209,11 +211,58 @@ function dealFan(stock: PlayingCard[], variant: FanVariant): FanGameState {
   };
 }
 
+function getSelectedCards(
+  state: FanGameState,
+  selection: Selection,
+): PlayingCard[] {
+  if (!selection) return [];
+  if (selection.zone === "reserve") {
+    const card = state.reserve[selection.index];
+    return card ? [card] : [];
+  }
+  const pile = state.tableau[selection.index];
+  return pile.slice(selection.start ?? pile.length - 1);
+}
+
 function getSelectedCard(state: FanGameState, selection: Selection) {
-  if (!selection) return undefined;
-  return selection.zone === "tableau"
-    ? top(state.tableau[selection.index])
-    : state.reserve[selection.index];
+  return getSelectedCards(state, selection)[0];
+}
+
+/**
+ * Cards move one at a time, but where any card fills an empty pile (Flower
+ * Garden), a run moves together when the empty piles other than the
+ * destination could carry it there card by card.
+ */
+function canMoveCards(
+  cards: PlayingCard[],
+  state: FanGameState,
+  destination: number,
+  config: FanConfig,
+) {
+  if (cards.length === 0) return false;
+  const pile = state.tableau[destination];
+  if (!canBuildTableau(cards[0], top(pile), pile.length, config)) return false;
+  return (
+    cards.length === 1 ||
+    (isFanRun(cards, config) &&
+      cards.length <=
+        maxSupermove({
+          freeCells: 0,
+          emptyColumns: countEmptyPiles(state.tableau, destination),
+        }))
+  );
+}
+
+/** A run of two or more that can move together (see `canMoveCards`). */
+function isFanRun(cards: PlayingCard[], config: FanConfig) {
+  return (
+    config.emptyPile === "any" &&
+    !config.maxPileSize &&
+    cards.every(
+      (card, index) =>
+        index === 0 || canBuildTableau(card, cards[index - 1], 1, config),
+    )
+  );
 }
 
 function hasAnyLegalMove(state: FanGameState, config: FanConfig) {
@@ -274,10 +323,17 @@ function findFanHint(state: FanGameState, variant: FanVariant) {
     },
     {
       toFoundation: (card, pile) => canBuildFoundation(card, top(pile)),
-      toTableau: (cards, pile) =>
-        cards.length === 1 &&
-        canBuildTableau(cards[0], top(pile), pile.length, config),
-      canLift: (pile, index) => index === pile.length - 1,
+      toTableau: (cards, pile, pileIndex, board) =>
+        canBuildTableau(cards[0], top(pile), pile.length, config) &&
+        (cards.length === 1 ||
+          (isFanRun(cards, config) &&
+            cards.length <=
+              maxSupermove({
+                freeCells: 0,
+                emptyColumns: countEmptyPiles(board.tableau, pileIndex),
+              }))),
+      canLift: (pile, index) =>
+        index === pile.length - 1 || isFanRun(pile.slice(index), config),
       buildQuality: (card, base) =>
         canBuildTableau(card, base, 1, config) ? 2 : 0,
     },
@@ -400,10 +456,8 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
         moveToTableau(target.index, source);
       }
     },
-    getDroppedCardIds: (source) => {
-      const card = getSelectedCard(game, source);
-      return card ? [card.id] : [];
-    },
+    getDroppedCardIds: (source) =>
+      getSelectedCards(game, source).map((card) => card.id),
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
     getTapHandler,
@@ -442,10 +496,10 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
   const selectedCard = getSelectedCard(game, selected);
 
   function removeSelection(draft: FanGameState, source: Selection) {
-    if (!source) return undefined;
-    return source.zone === "tableau"
-      ? draft.tableau[source.index].pop()
-      : draft.reserve.splice(source.index, 1)[0];
+    if (!source) return [];
+    if (source.zone === "reserve") return draft.reserve.splice(source.index, 1);
+    const pile = draft.tableau[source.index];
+    return pile.splice(source.start ?? pile.length - 1);
   }
 
   function canDropOnTarget(
@@ -454,21 +508,19 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
     snapshot = game,
   ) {
     if (snapshot.ended) return false;
-    const card = getSelectedCard(snapshot, source);
-    if (!card) return false;
+    const cards = getSelectedCards(snapshot, source);
+    if (cards.length === 0) return false;
 
     if (target.zone === "foundation") {
-      return canBuildFoundation(card, top(snapshot.foundations[target.index]));
+      return (
+        cards.length === 1 &&
+        canBuildFoundation(cards[0], top(snapshot.foundations[target.index]))
+      );
     }
 
     return (
       !(source.zone === "tableau" && source.index === target.index) &&
-      canBuildTableau(
-        card,
-        top(snapshot.tableau[target.index]),
-        snapshot.tableau[target.index].length,
-        config,
-      )
+      canMoveCards(cards, snapshot, target.index, config)
     );
   }
 
@@ -476,24 +528,16 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
     destinationIndex: number,
     source: Selection = selected,
   ) {
-    const sourceCard = getSelectedCard(game, source);
     if (
-      !sourceCard ||
-      (source?.zone === "tableau" && source.index === destinationIndex) ||
-      !canBuildTableau(
-        sourceCard,
-        top(game.tableau[destinationIndex]),
-        game.tableau[destinationIndex].length,
-        config,
-      )
+      !source ||
+      !canDropOnTarget(source, { zone: "tableau", index: destinationIndex })
     ) {
       return false;
     }
 
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      const card = removeSelection(draft, source);
-      if (card) draft.tableau[destinationIndex].push(card);
+      draft.tableau[destinationIndex].push(...removeSelection(draft, source));
     });
     setSelected(null);
     return true;
@@ -503,8 +547,9 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
     foundationIndex?: number,
     source: Selection = selected,
   ) {
-    const sourceCard = getSelectedCard(game, source);
-    if (!sourceCard) return false;
+    const cards = getSelectedCards(game, source);
+    if (cards.length !== 1) return false;
+    const sourceCard = cards[0];
     const target =
       foundationIndex ??
       game.foundations.findIndex((foundation) =>
@@ -519,8 +564,7 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
 
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      const card = removeSelection(draft, source);
-      if (card) draft.foundations[target].push(card);
+      draft.foundations[target].push(...removeSelection(draft, source));
     });
     setSelected(null);
     return true;
@@ -528,7 +572,7 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
 
   function selectOrMove(next: Exclude<Selection, null>) {
     if (game.ended) return;
-    const key = `${next.zone}-${next.index}`;
+    const key = `${next.zone}-${next.index}-${next.zone === "tableau" ? next.start : ""}`;
     const now = Date.now();
     if (lastTap?.key === key && now - lastTap.at < DOUBLE_TAP_MS) {
       setLastTap(null);
@@ -541,7 +585,12 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
       setSelected(next);
       return;
     }
-    if (selected.zone === next.zone && selected.index === next.index) {
+    if (
+      selected.zone === next.zone &&
+      selected.index === next.index &&
+      (selected.zone === "reserve" ||
+        selected.start === (next as { start?: number }).start)
+    ) {
       setSelected(null);
       return;
     }
@@ -680,19 +729,34 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
     if (mappedCard.pileIndex === undefined)
       return { isVisible: !isBeingDragged, animDuration };
 
-    const selection: Exclude<Selection, null> = {
-      zone: mappedCard.zoneName === "reserve" ? "reserve" : "tableau",
-      index: mappedCard.pileIndex,
-    };
+    const pileIndex = mappedCard.pileIndex;
+    const isReserve = mappedCard.zoneName === "reserve";
+    const pile = isReserve ? [] : game.tableau[pileIndex];
+    // A card under the top one can be picked up with the run on it.
+    const canPick =
+      isReserve ||
+      mappedCard.topOfZone ||
+      isFanRun(pile.slice(mappedCard.cardIndex), config);
+    const selection: Exclude<Selection, null> = isReserve
+      ? { zone: "reserve", index: pileIndex }
+      : {
+          zone: "tableau",
+          index: pileIndex,
+          ...(mappedCard.topOfZone ? {} : { start: mappedCard.cardIndex }),
+        };
     const isSelected =
-      selected?.zone === selection.zone && selected.index === selection.index;
+      selected?.zone === selection.zone &&
+      selected.index === selection.index &&
+      (isReserve ||
+        mappedCard.cardIndex >=
+          ((selected as { start?: number }).start ?? pile.length - 1));
     const canDrop =
       selection.zone === "tableau" &&
-      !!selectedCard &&
-      canBuildTableau(
-        selectedCard,
-        top(game.tableau[selection.index]),
-        game.tableau[selection.index].length,
+      !!selected &&
+      canMoveCards(
+        getSelectedCards(game, selected),
+        game,
+        selection.index,
         config,
       );
     const isHoverTarget =
@@ -703,8 +767,8 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
       hoverTarget.index === selection.index;
 
     return {
-      isDisabled: game.ended || !mappedCard.topOfZone,
-      isSelected: (mappedCard.topOfZone && isSelected) || isHoverTarget,
+      isDisabled: game.ended || !canPick,
+      isSelected: isSelected || isHoverTarget,
       selectColor: isHoverTarget || canDrop ? "green" : "blue",
       onPress: () => selectOrMove(selection),
       isVisible: !isBeingDragged,
@@ -765,12 +829,13 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
     const base = getZoneBasePos(zone);
     const pileLength =
       source.zone === "tableau" ? game.tableau[source.index].length : 1;
+    const cardIndex =
+      source.zone === "tableau"
+        ? (source.start ?? pileLength - 1)
+        : Math.max(0, pileLength - 1);
     return createRect(
       base.x,
-      base.y +
-        Math.max(0, pileLength - 1) *
-          fanOffset(pileLength, variant) *
-          cardHeight,
+      base.y + cardIndex * fanOffset(pileLength, variant) * cardHeight,
       cardWidth,
       cardHeight,
     );
@@ -789,22 +854,37 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
       }
 
       const base = getZoneBasePos(zone);
-      const cardIndex = zone.cards.length - 1;
-      areas.push({
-        source: { zone: zone.name, index: zone.pileIndex },
-        rect: createRect(
-          base.x,
-          base.y +
-            cardIndex * fanOffset(zone.cards.length, variant) * cardHeight,
-          cardWidth,
-          cardHeight,
-        ),
-        priority: zone.name === "reserve" ? 90 : 10 + zone.cards.length,
-      });
+      const cards = zone.cards;
+      const topIndex = cards.length - 1;
+      // The top card, and in Flower Garden each card heading a run on it.
+      let firstIndex = topIndex;
+      if (zone.name === "tableau") {
+        while (firstIndex > 0 && isFanRun(cards.slice(firstIndex - 1), config))
+          firstIndex -= 1;
+      }
+      for (let cardIndex = firstIndex; cardIndex <= topIndex; cardIndex += 1) {
+        areas.push({
+          source:
+            zone.name === "reserve"
+              ? { zone: "reserve", index: zone.pileIndex }
+              : {
+                  zone: "tableau",
+                  index: zone.pileIndex,
+                  ...(cardIndex === topIndex ? {} : { start: cardIndex }),
+                },
+          rect: createRect(
+            base.x,
+            base.y + cardIndex * fanOffset(cards.length, variant) * cardHeight,
+            cardWidth,
+            cardHeight,
+          ),
+          priority: zone.name === "reserve" ? 90 : 10 + cardIndex,
+        });
+      }
     });
 
     return areas;
-  }, [cardHeight, cardWidth, getZoneBasePos, variant, zones]);
+  }, [cardHeight, cardWidth, config, getZoneBasePos, variant, zones]);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => updateBoardOffset());
@@ -862,10 +942,14 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
 
   function startGhostDrag(source: MoveSource) {
     if (game.ended) return;
-    const card = getSelectedCard(game, source);
+    const cards = getSelectedCards(game, source);
     const rect = getSourceRect(source);
-    if (!card || !rect) return;
-    startDrag(source, [card], { x: rect.x, y: rect.y });
+    if (cards.length === 0 || !rect) return;
+    const fanOffsetValue =
+      source.zone === "tableau"
+        ? fanOffset(game.tableau[source.index].length, variant)
+        : undefined;
+    startDrag(source, cards, { x: rect.x, y: rect.y }, fanOffsetValue);
   }
 
   function getTapHandler(source: MoveSource) {
@@ -876,7 +960,7 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
     () =>
       cardHitAreas.map(({ source, rect }) => (
         <DragHandle
-          key={`${source.zone}-${source.index}`}
+          key={`${source.zone}-${source.index}-${source.zone === "tableau" ? source.start : ""}`}
           collapsable={false}
           style={{
             position: "absolute",
@@ -958,6 +1042,7 @@ export function FanSolitaire({ variant }: { variant: FanVariant }) {
             cardHeight={cardHeight}
             cardSize="tableau"
             isValidDrop={hoverTarget !== null}
+            highlightLeadOnly
           />
         )}
       </View>

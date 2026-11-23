@@ -71,7 +71,8 @@ describe("King Albert", () => {
   });
 
   test("moves one card at a time, and nothing goes back to the reserve", async () => {
-    const cascades = emptyPiles(9);
+    // No empty column, so a run can't move through one.
+    const cascades = emptyPiles(9).map(() => [card("4", "diamonds")]);
     cascades[0] = [card("9", "spades"), card("8", "hearts")];
     cascades[1] = [card("10", "hearts")];
     cascades[2] = [card("9", "clubs")];
@@ -81,7 +82,7 @@ describe("King Albert", () => {
       foundations: emptyPiles(4),
     });
 
-    // A built run doesn't move as a unit...
+    // A built run doesn't move as a unit without an empty column...
     expect(
       canDrop(
         { zone: "cascade", pileIndex: 0, startIndex: 0 },

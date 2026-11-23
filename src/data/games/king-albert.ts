@@ -26,7 +26,7 @@ export const kingAlbert: GameDefinition = {
   cardBack: CardBackColors.Pine,
   quickStart: [
     "Build down in alternating colors.",
-    "Move one card at a time.",
+    "Move a card, or a run if empty columns allow.",
     "Reserve cards can be played, but never put back.",
   ],
   howToPlay: [
@@ -35,7 +35,7 @@ export const kingAlbert: GameDefinition = {
     "## Rules",
     "| Foundations (4) | Ace to King, by suit |",
     "| Build | Down, alternating colors |",
-    "| Move | One card at a time |",
+    "| Move | One card, or a run if empty columns allow |",
     "| Empty column | Any card |",
     "| Reserve (7) | Every card is playable; nothing goes back |",
     "| Stock | None |",
