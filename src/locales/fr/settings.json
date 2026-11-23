@@ -66,6 +66,34 @@
     "tapsLeft_one": "Touchez encore {{count}} fois pour réinitialiser",
     "tapsLeft_other": "Touchez encore {{count}} fois pour réinitialiser"
   },
+  "backup": {
+    "label": "Transférer votre progression",
+    "description": "Sauvegardez vos favoris, vos statistiques, votre progression dans l'Odyssée et vos objets de collection, puis restaurez-les dans un autre navigateur ou sur un autre appareil.",
+    "saveFile": "Télécharger",
+    "copyCode": "Copier le code",
+    "copied": "Code copié. Collez-le dans Solitarius sur votre autre appareil.",
+    "copyManually": "Votre navigateur n'a pas pu le copier. Sélectionnez ce code, copiez-le et gardez-le en lieu sûr :",
+    "done": "Terminé",
+    "openFile": "Ouvrir un fichier",
+    "pasteCode": "Coller un code",
+    "pastePlaceholder": "Collez votre code ici",
+    "check": "Continuer",
+    "confirmTitle": "Restaurer cette sauvegarde ?",
+    "confirmWarning": "Cela remplace toute la progression et tous les réglages de cet appareil.",
+    "restore": "Restaurer",
+    "summary": {
+      "savedOn": "Enregistrée le",
+      "gamesWon": "Jeux gagnés",
+      "wins": "Victoires",
+      "quotes": "Citations",
+      "chapters": "Chapitres du Tao"
+    },
+    "errors": {
+      "notBackup": "Ce n'est pas une sauvegarde de Solitarius.",
+      "damaged": "Cette sauvegarde est incomplète ou endommagée. Essayez de la copier à nouveau.",
+      "newer": "Cette sauvegarde vient d'une version plus récente de Solitarius. Rechargez l'application pour la mettre à jour, puis réessayez."
+    }
+  },
   "colorTheme": {
     "label": "Thème de couleurs"
   },

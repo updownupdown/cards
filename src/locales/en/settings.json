@@ -66,6 +66,34 @@
     "tapsLeft_one": "Tap {{count}} more time to reset",
     "tapsLeft_other": "Tap {{count}} more times to reset"
   },
+  "backup": {
+    "label": "Move your progress",
+    "description": "Back up your favorites, stats, Odyssey progress and collectibles, then restore them in another browser or on another device.",
+    "saveFile": "Save to file",
+    "copyCode": "Copy code",
+    "copied": "Code copied. Paste it into Solitarius on your other device.",
+    "copyManually": "Your browser wouldn't copy it. Select this code, copy it and keep it somewhere safe:",
+    "done": "Done",
+    "openFile": "Open file",
+    "pasteCode": "Paste code",
+    "pastePlaceholder": "Paste your code here",
+    "check": "Continue",
+    "confirmTitle": "Restore this backup?",
+    "confirmWarning": "This replaces all progress and settings on this device.",
+    "restore": "Restore",
+    "summary": {
+      "savedOn": "Saved on",
+      "gamesWon": "Games won",
+      "wins": "Wins",
+      "quotes": "Quotes",
+      "chapters": "Tao chapters"
+    },
+    "errors": {
+      "notBackup": "That isn't a Solitarius backup.",
+      "damaged": "That backup is incomplete or damaged. Try copying it again.",
+      "newer": "That backup comes from a newer version of Solitarius. Reload the app to update it, then try again."
+    }
+  },
   "colorTheme": {
     "label": "Colour theme"
   },

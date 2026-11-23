@@ -66,6 +66,34 @@
     "tapsLeft_one": "Ketuk {{count}} kali lagi untuk mengatur ulang",
     "tapsLeft_other": "Ketuk {{count}} kali lagi untuk mengatur ulang"
   },
+  "backup": {
+    "label": "Pindahkan progresmu",
+    "description": "Cadangkan favorit, statistik, progres Pengembaraan, dan koleksimu, lalu pulihkan di browser lain atau di perangkat lain.",
+    "saveFile": "Simpan ke file",
+    "copyCode": "Salin kode",
+    "copied": "Kode disalin. Tempel di Solitarius pada perangkatmu yang lain.",
+    "copyManually": "Browsermu tidak bisa menyalinnya. Pilih kode ini, salin, dan simpan di tempat yang aman:",
+    "done": "Selesai",
+    "openFile": "Buka file",
+    "pasteCode": "Tempel kode",
+    "pastePlaceholder": "Tempel kodemu di sini",
+    "check": "Lanjut",
+    "confirmTitle": "Pulihkan cadangan ini?",
+    "confirmWarning": "Ini menggantikan semua progres dan pengaturan di perangkat ini.",
+    "restore": "Pulihkan",
+    "summary": {
+      "savedOn": "Disimpan pada",
+      "gamesWon": "Permainan dimenangkan",
+      "wins": "Menang",
+      "quotes": "Kutipan",
+      "chapters": "Bab Tao"
+    },
+    "errors": {
+      "notBackup": "Itu bukan cadangan Solitarius.",
+      "damaged": "Cadangan itu tidak lengkap atau rusak. Coba salin lagi.",
+      "newer": "Cadangan itu dari versi Solitarius yang lebih baru. Muat ulang aplikasi untuk memperbaruinya, lalu coba lagi."
+    }
+  },
   "colorTheme": {
     "label": "Tema warna"
   },
