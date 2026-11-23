@@ -35,6 +35,7 @@ import {
 import { GameWrapper } from "../common/GameWrapper";
 import { useHint } from "@/hints/hint-store";
 import { findClassicHint, type StockAction } from "@/hints/classic";
+import { countEmptyPiles, maxSupermove } from "../Cards/supermove";
 
 import { i18n } from "@/i18n";
 export type StockTableauVariant =
@@ -64,7 +65,11 @@ type BuildRule =
   | "same-suit"
   | "not-same-suit"
   | "rank";
-type MoveRule = "single" | "suited-run" | "built-run" | "any-tail";
+/**
+ * "supermove": one card at a time, but a built run moves together when the
+ * empty columns could carry it there one card at a time (`maxSupermove`).
+ */
+type MoveRule = "supermove" | "suited-run" | "built-run" | "any-tail";
 type DealConfig = {
   columns: number;
   sizes: number[];
@@ -211,7 +216,7 @@ const CONFIGS: Record<StockTableauVariant, Config> = {
     foundations: 8,
     deal: { columns: 8, sizes: Array(8).fill(1), faceUp: "all" },
     build: "rank",
-    move: "single",
+    move: "supermove",
     empty: "any",
     stock: "waste",
     redeals: 0,
@@ -261,7 +266,7 @@ const CONFIGS: Record<StockTableauVariant, Config> = {
     foundations: 8,
     deal: { columns: 13, sizes: Array(13).fill(3), faceUp: "all" },
     build: "same-suit",
-    move: "single",
+    move: "supermove",
     empty: "any",
     stock: "waste",
     redeals: 0,
@@ -282,7 +287,7 @@ const CONFIGS: Record<StockTableauVariant, Config> = {
     foundations: 8,
     deal: { columns: 10, sizes: Array(10).fill(3), faceUp: 2 },
     build: "not-same-suit",
-    move: "single",
+    move: "supermove",
     empty: "any",
     stock: "waste",
     redeals: 0,
@@ -292,7 +297,7 @@ const CONFIGS: Record<StockTableauVariant, Config> = {
     foundations: 8,
     deal: { columns: 8, sizes: Array(8).fill(4), faceUp: "all" },
     build: "rank",
-    move: "single",
+    move: "supermove",
     empty: "any",
     stock: "waste",
     redeals: 0,
@@ -302,7 +307,7 @@ const CONFIGS: Record<StockTableauVariant, Config> = {
     foundations: 8,
     deal: { columns: 9, sizes: Array(9).fill(4), faceUp: "all" },
     build: "alternating",
-    move: "single",
+    move: "supermove",
     empty: "any",
     stock: "waste",
     redeals: 0,
@@ -322,7 +327,7 @@ const CONFIGS: Record<StockTableauVariant, Config> = {
     foundations: 8,
     deal: { columns: 12, sizes: Array(12).fill(2), faceUp: 1 },
     build: "same-suit",
-    move: "single",
+    move: "supermove",
     empty: "any",
     stock: "waste",
     redeals: 0,
@@ -332,7 +337,7 @@ const CONFIGS: Record<StockTableauVariant, Config> = {
     foundations: 8,
     deal: { columns: 10, sizes: Array(10).fill(4), faceUp: "all" },
     build: "same-suit",
-    move: "single",
+    move: "supermove",
     empty: "any",
     stock: "waste",
     redeals: 0,
@@ -383,10 +388,33 @@ function canBuildTableau(
   return isRed(card.suit) !== isRed(destination.suit);
 }
 
-function isMovableRun(cards: PlayingCard[], rule: MoveRule, config: Config) {
+/**
+ * Whether these cards can move together. With `room`, a supermove run must
+ * also fit through the empty columns (other than the destination).
+ */
+function isMovableRun(
+  cards: PlayingCard[],
+  rule: MoveRule,
+  config: Config,
+  room?: { tableau: PlayingCard[][]; destination?: number },
+) {
   if (cards.length === 0) return false;
-  if (rule === "single") return cards.length === 1;
   if (rule === "any-tail") return true;
+  if (rule === "supermove") {
+    if (
+      room &&
+      cards.length >
+        maxSupermove({
+          freeCells: 0,
+          emptyColumns:
+            config.empty === "any"
+              ? countEmptyPiles(room.tableau, room.destination)
+              : 0,
+        })
+    )
+      return false;
+    return isMovableRun(cards, "built-run", config);
+  }
   if (rule === "built-run") {
     return cards.every(
       (card, index) =>
@@ -519,7 +547,8 @@ function hasMove(state: StockTableauState, config: Config) {
     ...state.tableau.flatMap((pile, sourcePile) =>
       pile.flatMap((card, cardIndex) => {
         const cards = pile.slice(cardIndex);
-        return card.faceUp && isMovableRun(cards, config.move, config)
+        return card.faceUp &&
+          isMovableRun(cards, config.move, config, { tableau: state.tableau })
           ? [{ cards, sourcePile }]
           : [];
       }),
@@ -534,7 +563,12 @@ function hasMove(state: StockTableauState, config: Config) {
       return true;
     return state.tableau.some(
       (pile, destination) =>
-        destination !== sourcePile && canBuildTableau(card, top(pile), config),
+        destination !== sourcePile &&
+        canBuildTableau(card, top(pile), config) &&
+        isMovableRun(cards, config.move, config, {
+          tableau: state.tableau,
+          destination,
+        }),
     );
   });
 }
@@ -576,8 +610,11 @@ function findStockTableauHint(
     },
     {
       toFoundation: (card, pile) => canBuildFoundation(card, top(pile)),
-      toTableau: (cards, pile, pileIndex, _board, from) =>
-        isMovableRun(cards, config.move, config) &&
+      toTableau: (cards, pile, pileIndex, board, from) =>
+        isMovableRun(cards, config.move, config, {
+          tableau: board.tableau,
+          destination: pileIndex,
+        }) &&
         (pileIndex === pocket
           ? pile.length === 0 && from.kind === "tableau"
           : canBuildTableau(cards[0], top(pile), config)),
@@ -768,7 +805,10 @@ export function StockTableauSolitaire({
       !source ||
       !card ||
       (source.zone === "tableau" && source.pile === destination) ||
-      !isMovableRun(cards, config.move, config) ||
+      !isMovableRun(cards, config.move, config, {
+        tableau: game.tableau,
+        destination,
+      }) ||
       !canBuildTableau(card, top(game.tableau[destination]), config)
     ) {
       return false;
@@ -846,7 +886,9 @@ export function StockTableauSolitaire({
       if (moveToFoundation(next)) return;
     } else setLastTap({ key, at: now });
     // Only a card that can move with the cards on it is selectable.
-    const selectable = isMovableRun(getCards(game, next), config.move, config);
+    const selectable = isMovableRun(getCards(game, next), config.move, config, {
+      tableau: game.tableau,
+    });
     if (!selected) return setSelected(selectable ? next : null);
     if (
       selected.zone === "tableau" &&
@@ -923,7 +965,10 @@ export function StockTableauSolitaire({
 
     return (
       !(source.zone === "tableau" && source.pile === target.pile) &&
-      isMovableRun(cards, config.move, config) &&
+      isMovableRun(cards, config.move, config, {
+        tableau: snapshot.tableau,
+        destination: target.pile,
+      }) &&
       canBuildTableau(card, top(snapshot.tableau[target.pile]), config)
     );
   }
@@ -1321,7 +1366,8 @@ export function StockTableauSolitaire({
   function startGhostDrag(source: MoveSource) {
     if (game.ended) return;
     const cards = getCards(game, source);
-    if (!isMovableRun(cards, config.move, config)) return;
+    if (!isMovableRun(cards, config.move, config, { tableau: game.tableau }))
+      return;
     const rect = getSourceRect(source);
     if (!rect) return;
     const fanOffset =

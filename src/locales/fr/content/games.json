@@ -324,14 +324,14 @@
   },
   "beleaguered-castle": {
     "howToPlay": {
-      "hash": "0c14b15c",
+      "hash": "c189474a",
       "value": [
         "## Objectif",
         "Placez toutes les cartes sur les fondations.",
         "## Règles",
         "| Fondations (4) | De l'As au Roi, par couleur\u00a0; les As y commencent |",
         "| Construction | En descendant, sans tenir compte de la couleur |",
-        "| Déplacement | Une carte à la fois |",
+        "| Déplacement | Une carte, ou une séquence si les rangées vides le permettent |",
         "| Rangée vide | N'importe quelle carte |",
         "| Pioche | Aucune |",
         "| Cartes | 52 |",
@@ -340,10 +340,10 @@
       ]
     },
     "quickStart": {
-      "hash": "8b657e09",
+      "hash": "2a2216e6",
       "value": [
         "Descendez sans tenir compte de la couleur.",
-        "Déplacez une carte à la fois.",
+        "Déplacez une carte, ou une séquence si les rangées vides le permettent.",
         "N'importe quelle carte remplit une rangée vide."
       ]
     },
@@ -847,14 +847,14 @@
   },
   "congress": {
     "howToPlay": {
-      "hash": "9e657720",
+      "hash": "d57ff954",
       "value": [
         "## Objectif",
         "Placez toutes les cartes sur les fondations.",
         "## Règles",
         "| Fondations (8) | De l'As au Roi, par couleur |",
         "| Construction | En descendant, sans tenir compte de la couleur |",
-        "| Déplacement | Une carte à la fois |",
+        "| Déplacement | Une carte, ou une séquence si les colonnes vides le permettent |",
         "| Colonne vide | N'importe quelle carte |",
         "| Pioche | Retourne 1 carte |",
         "| Redistributions | Aucune |",
@@ -862,10 +862,10 @@
       ]
     },
     "quickStart": {
-      "hash": "c79129d7",
+      "hash": "671d920a",
       "value": [
         "Descendez sans tenir compte de la couleur.",
-        "Déplacez une carte à la fois.",
+        "Déplacez une carte, ou une séquence si les colonnes vides le permettent.",
         "N'importe quelle carte remplit une colonne vide."
       ]
     },
@@ -1186,14 +1186,14 @@
   },
   "diplomat": {
     "howToPlay": {
-      "hash": "9e657720",
+      "hash": "d57ff954",
       "value": [
         "## Objectif",
         "Placez toutes les cartes sur les fondations.",
         "## Règles",
         "| Fondations (8) | De l'As au Roi, par couleur |",
         "| Construction | En descendant, sans tenir compte de la couleur |",
-        "| Déplacement | Une carte à la fois |",
+        "| Déplacement | Une carte, ou une séquence si les colonnes vides le permettent |",
         "| Colonne vide | N'importe quelle carte |",
         "| Pioche | Retourne 1 carte |",
         "| Redistributions | Aucune |",
@@ -1201,10 +1201,10 @@
       ]
     },
     "quickStart": {
-      "hash": "c79129d7",
+      "hash": "671d920a",
       "value": [
         "Descendez sans tenir compte de la couleur.",
-        "Déplacez une carte à la fois.",
+        "Déplacez une carte, ou une séquence si les colonnes vides le permettent.",
         "N'importe quelle carte remplit une colonne vide."
       ]
     },
@@ -1334,14 +1334,14 @@
   },
   "eight-off": {
     "howToPlay": {
-      "hash": "d2e2c9c1",
+      "hash": "6c385fbb",
       "value": [
         "## Objectif",
         "Placez toutes les cartes sur les fondations.",
         "## Règles",
         "| Fondations (4) | De l'As au Roi, par couleur |",
         "| Construction | En descendant, même couleur |",
-        "| Déplacement | Une carte, ou une séquence si les places libres le permettent |",
+        "| Déplacement | Une carte, ou une séquence si les cellules libres le permettent |",
         "| Colonne vide | Roi uniquement |",
         "| Pioche | Aucune |",
         "| Cartes | 52 |"
@@ -1525,14 +1525,14 @@
   },
   "flower-garden": {
     "howToPlay": {
-      "hash": "ebad4d6c",
+      "hash": "9d0fc0c3",
       "value": [
         "## Objectif",
         "Placez toutes les cartes sur les fondations.",
         "## Règles",
         "| Fondations (4) | De l'As au Roi, par couleur |",
         "| Construction | En descendant, sans tenir compte de la couleur |",
-        "| Déplacement | Une carte à la fois |",
+        "| Déplacement | Une carte, ou une séquence si les parterres vides le permettent |",
         "| Parterre vide | N'importe quelle carte |",
         "| Bouquet (16) | Toutes les cartes sont jouables\u00a0; rien n'y retourne |",
         "| Pioche | Aucune |",
@@ -1554,24 +1554,24 @@
   },
   "fortress": {
     "howToPlay": {
-      "hash": "bb74089b",
+      "hash": "0a44131d",
       "value": [
         "## Objectif",
         "Placez toutes les cartes sur les fondations.",
         "## Règles",
         "| Fondations (4) | De l'As au Roi, par couleur |",
         "| Construction | En montant ou en descendant, même couleur |",
-        "| Déplacement | Une carte à la fois |",
+        "| Déplacement | Une carte, ou une séquence si les allées vides le permettent |",
         "| Allée vide | N'importe quelle carte |",
         "| Pioche | Aucune |",
         "| Cartes | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "16527157",
+      "hash": "1cdcf8d2",
       "value": [
         "Montez ou descendez par couleur.",
-        "Déplacez une carte à la fois.",
+        "Déplacez une carte, ou une séquence si les allées vides le permettent.",
         "N'importe quelle carte remplit une allée vide."
       ]
     },
@@ -1608,14 +1608,14 @@
   },
   "forty-thieves": {
     "howToPlay": {
-      "hash": "3ac3d532",
+      "hash": "b04caf58",
       "value": [
         "## Objectif",
         "Placez toutes les cartes sur les fondations.",
         "## Règles",
         "| Fondations (8) | De l'As au Roi, par couleur |",
         "| Construction | En descendant, même couleur |",
-        "| Déplacement | Une carte à la fois |",
+        "| Déplacement | Une carte, ou une séquence si les colonnes vides le permettent |",
         "| Colonne vide | N'importe quelle carte |",
         "| Pioche | Retourne 1 carte |",
         "| Redistributions | Aucune, ou illimitées dans les réglages |",
@@ -1627,10 +1627,10 @@
       ]
     },
     "quickStart": {
-      "hash": "568cdabd",
+      "hash": "5f249a78",
       "value": [
         "Descendez par couleur.",
-        "Déplacez une carte à la fois.",
+        "Déplacez une carte, ou une séquence si les colonnes vides le permettent.",
         "N'importe quelle carte remplit une colonne vide."
       ]
     },
@@ -1835,14 +1835,14 @@
   },
   "grandfathers-clock": {
     "howToPlay": {
-      "hash": "9a231296",
+      "hash": "00b0e5e2",
       "value": [
         "## Objectif",
         "Montez chaque fondation de l'horloge jusqu'à ce qu'elle indique son heure.",
         "## Règles",
         "| Fondations (12) | En montant par couleur, en passant du Roi à l'As, chacune s'arrêtant à son heure |",
         "| Construction | En descendant, sans tenir compte de la couleur\u00a0; un Roi va sur un As |",
-        "| Déplacement | Une carte à la fois |",
+        "| Déplacement | Une carte, ou une séquence si les piles vides le permettent |",
         "| Pile vide | N'importe quelle carte |",
         "| Pioche | Aucune |",
         "| Cartes | 52 |",
@@ -1937,14 +1937,14 @@
   },
   "indian": {
     "howToPlay": {
-      "hash": "49243709",
+      "hash": "5122887b",
       "value": [
         "## Objectif",
         "Placez toutes les cartes sur les fondations.",
         "## Règles",
         "| Fondations (8) | De l'As au Roi, par couleur |",
         "| Construction | En descendant, sur une autre couleur |",
-        "| Déplacement | Une carte à la fois |",
+        "| Déplacement | Une carte, ou une séquence si les colonnes vides le permettent |",
         "| Colonne vide | N'importe quelle carte |",
         "| Pioche | Retourne 1 carte |",
         "| Redistributions | Aucune |",
@@ -1952,10 +1952,10 @@
       ]
     },
     "quickStart": {
-      "hash": "e4b1b9bb",
+      "hash": "4f72d146",
       "value": [
         "Descendez sur toute couleur autre que la sienne.",
-        "Déplacez une carte à la fois.",
+        "Déplacez une carte, ou une séquence si les colonnes vides le permettent.",
         "N'importe quelle carte remplit une colonne vide."
       ]
     },
@@ -2085,14 +2085,14 @@
   },
   "king-albert": {
     "howToPlay": {
-      "hash": "96d6c4f9",
+      "hash": "ae390bc3",
       "value": [
         "## Objectif",
         "Placez toutes les cartes sur les fondations.",
         "## Règles",
         "| Fondations (4) | De l'As au Roi, par couleur |",
         "| Construction | En descendant, en alternant rouge et noir |",
-        "| Déplacement | Une carte à la fois |",
+        "| Déplacement | Une carte, ou une séquence si les colonnes vides le permettent |",
         "| Colonne vide | N'importe quelle carte |",
         "| Réserve (7) | Toutes les cartes sont jouables\u00a0; rien n'y retourne |",
         "| Pioche | Aucune |",
@@ -2102,10 +2102,10 @@
       ]
     },
     "quickStart": {
-      "hash": "2c48201d",
+      "hash": "85ec1332",
       "value": [
         "Descendez en alternant rouge et noir.",
-        "Déplacez une carte à la fois.",
+        "Déplacez une carte, ou une séquence si les colonnes vides le permettent.",
         "Les cartes de la réserve peuvent être jouées, mais jamais remises."
       ]
     },
@@ -2395,14 +2395,14 @@
   },
   "maria": {
     "howToPlay": {
-      "hash": "6df7d8cf",
+      "hash": "1f9b7d89",
       "value": [
         "## Objectif",
         "Placez toutes les cartes sur les fondations.",
         "## Règles",
         "| Fondations (8) | De l'As au Roi, par couleur |",
         "| Construction | En descendant, en alternant rouge et noir |",
-        "| Déplacement | Une carte à la fois |",
+        "| Déplacement | Une carte, ou une séquence si les colonnes vides le permettent |",
         "| Colonne vide | N'importe quelle carte |",
         "| Pioche | Retourne 1 carte |",
         "| Redistributions | Aucune |",
@@ -2410,10 +2410,10 @@
       ]
     },
     "quickStart": {
-      "hash": "6a765a29",
+      "hash": "76263f6c",
       "value": [
         "Descendez en alternant rouge et noir.",
-        "Déplacez une carte à la fois.",
+        "Déplacez une carte, ou une séquence si les colonnes vides le permettent.",
         "N'importe quelle carte remplit une colonne vide."
       ]
     },
@@ -2699,14 +2699,14 @@
   },
   "penguin": {
     "howToPlay": {
-      "hash": "88ea4103",
+      "hash": "81404eea",
       "value": [
         "## Objectif",
         "Placez toutes les cartes sur les fondations.",
         "## Règles",
         "| Fondations (4) | En montant par couleur à partir du rang du bec, en passant du Roi à l'As |",
         "| Construction | En descendant, même couleur, en passant de l'As au Roi |",
-        "| Déplacement | Une carte, ou une séquence si les places libres le permettent |",
+        "| Déplacement | Une carte, ou une séquence de même couleur |",
         "| Colonne vide | Le rang juste inférieur au bec |",
         "| Pioche | Aucune |",
         "| Cartes | 52 |",
@@ -3123,14 +3123,14 @@
   },
   "seahaven-towers": {
     "howToPlay": {
-      "hash": "d2e2c9c1",
+      "hash": "6c385fbb",
       "value": [
         "## Objectif",
         "Placez toutes les cartes sur les fondations.",
         "## Règles",
         "| Fondations (4) | De l'As au Roi, par couleur |",
         "| Construction | En descendant, même couleur |",
-        "| Déplacement | Une carte, ou une séquence si les places libres le permettent |",
+        "| Déplacement | Une carte, ou une séquence si les cellules libres le permettent |",
         "| Colonne vide | Roi uniquement |",
         "| Pioche | Aucune |",
         "| Cartes | 52 |"

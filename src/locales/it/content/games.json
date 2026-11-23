@@ -324,14 +324,14 @@
   },
   "beleaguered-castle": {
     "howToPlay": {
-      "hash": "0c14b15c",
+      "hash": "c189474a",
       "value": [
         "## Obiettivo",
         "Porta tutte le carte sulle fondazioni.",
         "## Regole",
         "| Fondazioni (4) | Dall'Asso al Re, per seme; gli Assi partono lì |",
         "| Costruzione | Decrescente, a prescindere dal seme |",
-        "| Spostamento | Una carta alla volta |",
+        "| Spostamento | Una carta, o una sequenza se le file vuote lo permettono |",
         "| Fila vuota | Qualsiasi carta |",
         "| Mazzo | Nessuno |",
         "| Carte | 52 |",
@@ -340,10 +340,10 @@
       ]
     },
     "quickStart": {
-      "hash": "8b657e09",
+      "hash": "2a2216e6",
       "value": [
         "Costruisci in ordine decrescente, a prescindere dal seme.",
-        "Sposta una carta alla volta.",
+        "Sposta una carta, o una sequenza se le file vuote lo permettono.",
         "Qualsiasi carta riempie una fila vuota."
       ]
     },
@@ -847,14 +847,14 @@
   },
   "congress": {
     "howToPlay": {
-      "hash": "9e657720",
+      "hash": "d57ff954",
       "value": [
         "## Obiettivo",
         "Porta tutte le carte sulle fondazioni.",
         "## Regole",
         "| Fondazioni (8) | Dall'Asso al Re, per seme |",
         "| Costruzione | Decrescente, a prescindere dal seme |",
-        "| Spostamento | Una carta alla volta |",
+        "| Spostamento | Una carta, o una sequenza se le colonne vuote lo permettono |",
         "| Colonna vuota | Qualsiasi carta |",
         "| Mazzo | Pesca 1 |",
         "| Ridistribuzioni | Nessuna |",
@@ -862,10 +862,10 @@
       ]
     },
     "quickStart": {
-      "hash": "c79129d7",
+      "hash": "671d920a",
       "value": [
         "Costruisci in ordine decrescente, a prescindere dal seme.",
-        "Sposta una carta alla volta.",
+        "Sposta una carta, o una sequenza se le colonne vuote lo permettono.",
         "Qualsiasi carta riempie una colonna vuota."
       ]
     },
@@ -1186,14 +1186,14 @@
   },
   "diplomat": {
     "howToPlay": {
-      "hash": "9e657720",
+      "hash": "d57ff954",
       "value": [
         "## Obiettivo",
         "Porta tutte le carte sulle fondazioni.",
         "## Regole",
         "| Fondazioni (8) | Dall'Asso al Re, per seme |",
         "| Costruzione | Decrescente, a prescindere dal seme |",
-        "| Spostamento | Una carta alla volta |",
+        "| Spostamento | Una carta, o una sequenza se le colonne vuote lo permettono |",
         "| Colonna vuota | Qualsiasi carta |",
         "| Mazzo | Pesca 1 |",
         "| Ridistribuzioni | Nessuna |",
@@ -1201,10 +1201,10 @@
       ]
     },
     "quickStart": {
-      "hash": "c79129d7",
+      "hash": "671d920a",
       "value": [
         "Costruisci in ordine decrescente, a prescindere dal seme.",
-        "Sposta una carta alla volta.",
+        "Sposta una carta, o una sequenza se le colonne vuote lo permettono.",
         "Qualsiasi carta riempie una colonna vuota."
       ]
     },
@@ -1334,14 +1334,14 @@
   },
   "eight-off": {
     "howToPlay": {
-      "hash": "d2e2c9c1",
+      "hash": "6c385fbb",
       "value": [
         "## Obiettivo",
         "Porta tutte le carte sulle fondazioni.",
         "## Regole",
         "| Fondazioni (4) | Dall'Asso al Re, per seme |",
         "| Costruzione | Decrescente, stesso seme |",
-        "| Spostamento | Una carta, o una sequenza se gli spazi liberi lo permettono |",
+        "| Spostamento | Una carta, o una sequenza se le celle libere lo permettono |",
         "| Colonna vuota | Solo un Re |",
         "| Mazzo | Nessuno |",
         "| Carte | 52 |"
@@ -1525,14 +1525,14 @@
   },
   "flower-garden": {
     "howToPlay": {
-      "hash": "ebad4d6c",
+      "hash": "9d0fc0c3",
       "value": [
         "## Obiettivo",
         "Porta tutte le carte sulle fondazioni.",
         "## Regole",
         "| Fondazioni (4) | Dall'Asso al Re, per seme |",
         "| Costruzione | Decrescente, a prescindere dal seme |",
-        "| Spostamento | Una carta alla volta |",
+        "| Spostamento | Una carta, o una sequenza se le aiuole vuote lo permettono |",
         "| Aiuola vuota | Qualsiasi carta |",
         "| Mazzolino (16) | Ogni carta è giocabile; nessuna ci torna |",
         "| Mazzo | Nessuno |",
@@ -1554,24 +1554,24 @@
   },
   "fortress": {
     "howToPlay": {
-      "hash": "bb74089b",
+      "hash": "0a44131d",
       "value": [
         "## Obiettivo",
         "Porta tutte le carte sulle fondazioni.",
         "## Regole",
         "| Fondazioni (4) | Dall'Asso al Re, per seme |",
         "| Costruzione | Crescente o decrescente, stesso seme |",
-        "| Spostamento | Una carta alla volta |",
+        "| Spostamento | Una carta, o una sequenza se le corsie vuote lo permettono |",
         "| Corsia vuota | Qualsiasi carta |",
         "| Mazzo | Nessuno |",
         "| Carte | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "16527157",
+      "hash": "1cdcf8d2",
       "value": [
         "Costruisci in ordine crescente o decrescente per seme.",
-        "Sposta una carta alla volta.",
+        "Sposta una carta, o una sequenza se le corsie vuote lo permettono.",
         "Qualsiasi carta riempie una corsia vuota."
       ]
     },
@@ -1608,14 +1608,14 @@
   },
   "forty-thieves": {
     "howToPlay": {
-      "hash": "3ac3d532",
+      "hash": "b04caf58",
       "value": [
         "## Obiettivo",
         "Porta tutte le carte sulle fondazioni.",
         "## Regole",
         "| Fondazioni (8) | Dall'Asso al Re, per seme |",
         "| Costruzione | Decrescente, stesso seme |",
-        "| Spostamento | Una carta alla volta |",
+        "| Spostamento | Una carta, o una sequenza se le colonne vuote lo permettono |",
         "| Colonna vuota | Qualsiasi carta |",
         "| Mazzo | Pesca 1 |",
         "| Ridistribuzioni | Nessuna, o illimitate nelle impostazioni |",
@@ -1627,10 +1627,10 @@
       ]
     },
     "quickStart": {
-      "hash": "568cdabd",
+      "hash": "5f249a78",
       "value": [
         "Costruisci in ordine decrescente per seme.",
-        "Sposta una carta alla volta.",
+        "Sposta una carta, o una sequenza se le colonne vuote lo permettono.",
         "Qualsiasi carta riempie una colonna vuota."
       ]
     },
@@ -1835,14 +1835,14 @@
   },
   "grandfathers-clock": {
     "howToPlay": {
-      "hash": "9a231296",
+      "hash": "00b0e5e2",
       "value": [
         "## Obiettivo",
         "Costruisci ogni fondazione dell'orologio finché mostra la sua ora.",
         "## Regole",
         "| Fondazioni (12) | Crescenti per seme, passando dal Re all'Asso, ognuna fino alla sua ora |",
         "| Costruzione | Decrescente, a prescindere dal seme; un Re va su un Asso |",
-        "| Spostamento | Una carta alla volta |",
+        "| Spostamento | Una carta, o una sequenza se le pile vuote lo permettono |",
         "| Pila vuota | Qualsiasi carta |",
         "| Mazzo | Nessuno |",
         "| Carte | 52 |",
@@ -1937,14 +1937,14 @@
   },
   "indian": {
     "howToPlay": {
-      "hash": "49243709",
+      "hash": "5122887b",
       "value": [
         "## Obiettivo",
         "Porta tutte le carte sulle fondazioni.",
         "## Regole",
         "| Fondazioni (8) | Dall'Asso al Re, per seme |",
         "| Costruzione | Decrescente, su un seme diverso |",
-        "| Spostamento | Una carta alla volta |",
+        "| Spostamento | Una carta, o una sequenza se le colonne vuote lo permettono |",
         "| Colonna vuota | Qualsiasi carta |",
         "| Mazzo | Pesca 1 |",
         "| Ridistribuzioni | Nessuna |",
@@ -1952,10 +1952,10 @@
       ]
     },
     "quickStart": {
-      "hash": "e4b1b9bb",
+      "hash": "4f72d146",
       "value": [
         "Costruisci in ordine decrescente su un seme diverso da quello della carta.",
-        "Sposta una carta alla volta.",
+        "Sposta una carta, o una sequenza se le colonne vuote lo permettono.",
         "Qualsiasi carta riempie una colonna vuota."
       ]
     },
@@ -2085,14 +2085,14 @@
   },
   "king-albert": {
     "howToPlay": {
-      "hash": "96d6c4f9",
+      "hash": "ae390bc3",
       "value": [
         "## Obiettivo",
         "Porta tutte le carte sulle fondazioni.",
         "## Regole",
         "| Fondazioni (4) | Dall'Asso al Re, per seme |",
         "| Costruzione | Decrescente, alternando rosso e nero |",
-        "| Spostamento | Una carta alla volta |",
+        "| Spostamento | Una carta, o una sequenza se le colonne vuote lo permettono |",
         "| Colonna vuota | Qualsiasi carta |",
         "| Riserva (7) | Ogni carta è giocabile; nessuna ci torna |",
         "| Mazzo | Nessuno |",
@@ -2102,10 +2102,10 @@
       ]
     },
     "quickStart": {
-      "hash": "2c48201d",
+      "hash": "85ec1332",
       "value": [
         "Costruisci in ordine decrescente, alternando rosso e nero.",
-        "Sposta una carta alla volta.",
+        "Sposta una carta, o una sequenza se le colonne vuote lo permettono.",
         "Le carte della riserva si possono giocare, ma non rimettere."
       ]
     },
@@ -2395,14 +2395,14 @@
   },
   "maria": {
     "howToPlay": {
-      "hash": "6df7d8cf",
+      "hash": "1f9b7d89",
       "value": [
         "## Obiettivo",
         "Porta tutte le carte sulle fondazioni.",
         "## Regole",
         "| Fondazioni (8) | Dall'Asso al Re, per seme |",
         "| Costruzione | Decrescente, alternando rosso e nero |",
-        "| Spostamento | Una carta alla volta |",
+        "| Spostamento | Una carta, o una sequenza se le colonne vuote lo permettono |",
         "| Colonna vuota | Qualsiasi carta |",
         "| Mazzo | Pesca 1 |",
         "| Ridistribuzioni | Nessuna |",
@@ -2410,10 +2410,10 @@
       ]
     },
     "quickStart": {
-      "hash": "6a765a29",
+      "hash": "76263f6c",
       "value": [
         "Costruisci in ordine decrescente, alternando rosso e nero.",
-        "Sposta una carta alla volta.",
+        "Sposta una carta, o una sequenza se le colonne vuote lo permettono.",
         "Qualsiasi carta riempie una colonna vuota."
       ]
     },
@@ -2699,14 +2699,14 @@
   },
   "penguin": {
     "howToPlay": {
-      "hash": "88ea4103",
+      "hash": "81404eea",
       "value": [
         "## Obiettivo",
         "Porta tutte le carte sulle fondazioni.",
         "## Regole",
         "| Fondazioni (4) | Crescenti per seme dal valore del becco, passando dal Re all'Asso |",
         "| Costruzione | Decrescente, stesso seme, passando dall'Asso al Re |",
-        "| Spostamento | Una carta, o una sequenza se gli spazi liberi lo permettono |",
+        "| Spostamento | Una carta, o una sequenza dello stesso seme |",
         "| Colonna vuota | Il valore sotto il becco |",
         "| Mazzo | Nessuno |",
         "| Carte | 52 |",
@@ -3123,14 +3123,14 @@
   },
   "seahaven-towers": {
     "howToPlay": {
-      "hash": "d2e2c9c1",
+      "hash": "6c385fbb",
       "value": [
         "## Obiettivo",
         "Porta tutte le carte sulle fondazioni.",
         "## Regole",
         "| Fondazioni (4) | Dall'Asso al Re, per seme |",
         "| Costruzione | Decrescente, stesso seme |",
-        "| Spostamento | Una carta, o una sequenza se gli spazi liberi lo permettono |",
+        "| Spostamento | Una carta, o una sequenza se le celle libere lo permettono |",
         "| Colonna vuota | Solo un Re |",
         "| Mazzo | Nessuno |",
         "| Carte | 52 |"

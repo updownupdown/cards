@@ -20,6 +20,7 @@ import { GameWrapper } from "../common/GameWrapper";
 import { i18n } from "@/i18n";
 import { useHint } from "@/hints/hint-store";
 import { findClassicHint } from "@/hints/classic";
+import { countEmptyPiles, maxSupermove } from "../Cards/supermove";
 type GameState = {
   columns: PlayingCard[][];
   foundations: PlayingCard[][];
@@ -166,7 +167,46 @@ function evaluateEnd(
   return { ended: false, won: false };
 }
 
-/** Every card is on view: the hint searches for a win, one card at a time. */
+type CanStack = (
+  card: PlayingCard,
+  destTop: PlayingCard | undefined,
+) => boolean;
+
+/** Whether each card in `cards` could sit on the one before it. */
+function isCastleRun(cards: PlayingCard[], canStack: CanStack) {
+  return (
+    cards.length > 0 &&
+    cards.every(
+      (card, index) => index === 0 || canStack(card, cards[index - 1]),
+    )
+  );
+}
+
+/**
+ * Cards move one at a time, but a run moves together when the empty rows
+ * (other than the destination) could carry it there card by card.
+ */
+function canMoveRun(
+  columns: PlayingCard[][],
+  from: number,
+  start: number,
+  to: number,
+  canStack: CanStack,
+) {
+  if (from === to) return false;
+  const cards = columns[from].slice(start);
+  return (
+    isCastleRun(cards, canStack) &&
+    cards.length <=
+      maxSupermove({
+        freeCells: 0,
+        emptyColumns: countEmptyPiles(columns, to),
+      }) &&
+    canStack(cards[0], top(columns[to]))
+  );
+}
+
+/** Every card is on view: the hint searches for a win. */
 function findCastleHint(
   state: GameState,
   canStack: (card: PlayingCard, destTop: PlayingCard | undefined) => boolean,
@@ -175,9 +215,15 @@ function findCastleHint(
     { tableau: state.columns, foundations: state.foundations },
     {
       toFoundation: (card, pile) => canPlaceFoundation(card, top(pile)),
-      toTableau: (cards, pile) =>
-        cards.length === 1 && canStack(cards[0], top(pile)),
-      canLift: (pile, index) => index === pile.length - 1,
+      toTableau: (cards, pile, pileIndex, board) =>
+        isCastleRun(cards, canStack) &&
+        cards.length <=
+          maxSupermove({
+            freeCells: 0,
+            emptyColumns: countEmptyPiles(board.tableau, pileIndex),
+          }) &&
+        canStack(cards[0], top(pile)),
+      canLift: (pile, index) => isCastleRun(pile.slice(index), canStack),
       buildQuality: (card, base) => (canStack(card, base) ? 2 : 0),
     },
     {
@@ -192,6 +238,7 @@ export const beleagueredCastleRules = {
   findHint: findCastleHint,
   canStackDown,
   canPlaceFoundation,
+  canMoveRun,
   anyLegalMove,
   hasTwoMoves,
   evaluateEnd,
@@ -207,7 +254,10 @@ export function CastleBoard({
   canStack,
   winMessage,
 }: CastleBoardProps) {
-  const [selectedCol, setSelectedCol] = useState<number | undefined>(undefined);
+  // The selected card and every card on it in its row.
+  const [selected, setSelected] = useState<
+    { col: number; card: number } | undefined
+  >(undefined);
   const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
     null,
   );
@@ -259,7 +309,7 @@ export function CastleBoard({
       setGame((draft) => deal(draft));
     },
     gameStateInitial,
-    resetNonGameStates: () => setSelectedCol(undefined),
+    resetNonGameStates: () => setSelected(undefined),
   });
 
   const { isAutoCompleting } = useAutoComplete({
@@ -271,7 +321,7 @@ export function CastleBoard({
     getSources: (state) => state.columns,
     getFoundations: (state) => state.foundations,
     canPlaceOnFoundation: canPlaceFoundation,
-    onStart: () => setSelectedCol(undefined),
+    onStart: () => setSelected(undefined),
   });
 
   useHint(() => findCastleHint(game, canStack), {
@@ -289,13 +339,12 @@ export function CastleBoard({
     }
   }, [canStack, game, isSettingUp, setGame]);
 
-  function moveToColumn(from: number, to: number) {
+  function moveToColumn(from: number, start: number, to: number) {
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      const card = draft.columns[from].pop();
-      if (card) draft.columns[to].push(card);
+      draft.columns[to].push(...draft.columns[from].splice(start));
     });
-    setSelectedCol(undefined);
+    setSelected(undefined);
   }
 
   function moveToFoundation(from: number, f: number) {
@@ -304,19 +353,35 @@ export function CastleBoard({
       const card = draft.columns[from].pop();
       if (card) draft.foundations[f].push(card);
     });
-    setSelectedCol(undefined);
+    setSelected(undefined);
   }
 
-  function onColumnPress(index: number) {
+  /** Selects from a card, if it heads a run that could move; else the top card. */
+  function selectFrom(col: number, card: number) {
+    const pile = game.columns[col];
+    if (pile.length === 0) return setSelected(undefined);
+    setSelected({
+      col,
+      card: isCastleRun(pile.slice(card), canStack) ? card : pile.length - 1,
+    });
+  }
+
+  function onColumnPress(index: number, cardIndex?: number) {
     if (game.ended) return;
+    const pile = game.columns[index];
+    const card = cardIndex ?? pile.length - 1;
 
     const now = Date.now();
-    const tapKey = `col-${index}`;
-    if (lastTap?.key === tapKey && now - lastTap.at < DOUBLE_TAP_MS) {
+    const tapKey = `col-${index}-${card}`;
+    if (
+      card === pile.length - 1 &&
+      lastTap?.key === tapKey &&
+      now - lastTap.at < DOUBLE_TAP_MS
+    ) {
       setLastTap(null);
-      const card = top(game.columns[index]);
+      const topCard = top(pile);
       const foundationIndex = game.foundations.findIndex((foundation) =>
-        card ? canPlaceFoundation(card, top(foundation)) : false,
+        topCard ? canPlaceFoundation(topCard, top(foundation)) : false,
       );
       if (foundationIndex >= 0) moveToFoundation(index, foundationIndex);
       return;
@@ -324,35 +389,34 @@ export function CastleBoard({
 
     setLastTap({ key: tapKey, at: now });
 
-    if (selectedCol === undefined) {
-      if (game.columns[index].length > 0) setSelectedCol(index);
-      return;
-    }
-    if (selectedCol === index) {
-      setSelectedCol(undefined);
+    if (selected === undefined) return selectFrom(index, card);
+    if (selected.col === index) {
+      if (selected.card === card) setSelected(undefined);
+      else selectFrom(index, card);
       return;
     }
 
-    const card = top(game.columns[selectedCol]);
-    if (card && canStack(card, top(game.columns[index]))) {
-      moveToColumn(selectedCol, index);
-    } else if (game.columns[index].length > 0) {
-      setSelectedCol(index);
+    if (
+      canMoveRun(game.columns, selected.col, selected.card, index, canStack)
+    ) {
+      moveToColumn(selected.col, selected.card, index);
     } else {
-      setSelectedCol(undefined);
+      selectFrom(index, card);
     }
   }
 
   function onFoundationPress(f: number) {
-    if (game.ended || selectedCol === undefined) return;
-    const card = top(game.columns[selectedCol]);
-    if (card && canPlaceFoundation(card, top(game.foundations[f]))) {
-      moveToFoundation(selectedCol, f);
+    if (game.ended || !selectedCard) return;
+    if (canPlaceFoundation(selectedCard, top(game.foundations[f]))) {
+      moveToFoundation(selected!.col, f);
     }
   }
 
+  // Only a single card goes to a foundation.
   const selectedCard =
-    selectedCol !== undefined ? top(game.columns[selectedCol]) : undefined;
+    selected && selected.card === game.columns[selected.col].length - 1
+      ? top(game.columns[selected.col])
+      : undefined;
 
   // ========== Card Mapping ========== //
   const zones: MapZone[] = useMemo(() => {
@@ -399,7 +463,7 @@ export function CastleBoard({
   const cardMapper = (
     mappedCard: MappedCard,
   ): AnimatedCardMapping | undefined => {
-    if (!mappedCard.topOfZone) return {};
+    if (!mappedCard.topOfZone && mappedCard.zoneName !== "col") return {};
 
     if (
       mappedCard.zoneName === "foundation" &&
@@ -412,7 +476,7 @@ export function CastleBoard({
           top(game.foundations[mappedCard.pileIndex]),
         );
       return {
-        isDisabled: game.ended || selectedCol === undefined,
+        isDisabled: game.ended || selected === undefined,
         selectColor: canDrop ? "green" : "none",
         onPress: () => onFoundationPress(mappedCard.pileIndex!),
       };
@@ -420,16 +484,17 @@ export function CastleBoard({
 
     if (mappedCard.zoneName === "col" && mappedCard.pileIndex !== undefined) {
       const index = mappedCard.pileIndex;
-      const isSelected = selectedCol === index;
+      const isSelected =
+        selected?.col === index && mappedCard.cardIndex >= selected.card;
       const canDrop =
-        !!selectedCard &&
-        selectedCol !== index &&
-        canStack(selectedCard, top(game.columns[index]));
+        mappedCard.topOfZone &&
+        !!selected &&
+        canMoveRun(game.columns, selected.col, selected.card, index, canStack);
       return {
         isSelected,
         selectColor: canDrop ? "green" : "blue",
         isDisabled: game.ended,
-        onPress: () => onColumnPress(index),
+        onPress: () => onColumnPress(index, mappedCard.cardIndex),
       };
     }
 
@@ -442,7 +507,7 @@ export function CastleBoard({
       const isEmpty = game.columns[index].length === 0;
       return {
         onPress: () => onColumnPress(index),
-        isDisabled: game.ended || selectedCol === undefined || !isEmpty,
+        isDisabled: game.ended || selected === undefined || !isEmpty,
         // selectColor: "green",
       };
     }

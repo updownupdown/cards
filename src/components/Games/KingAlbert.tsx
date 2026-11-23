@@ -90,7 +90,6 @@ export default function KingAlbert() {
       canPlaceOnCascade={canPlaceOnCascade}
       foundationStartColumn={2.5}
       freeCellStartColumn={(9 - reserveSize) / 2}
-      singleCardMoves
       cellsAcceptCards={false}
       fixedRows={7.6}
     />

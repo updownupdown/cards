@@ -324,14 +324,14 @@
   },
   "beleaguered-castle": {
     "howToPlay": {
-      "hash": "0c14b15c",
+      "hash": "c189474a",
       "value": [
         "## Amaç",
         "Bütün kartları temellere taşı.",
         "## Kurallar",
         "| Temeller (4) | As'tan Papaz'a, takıma göre; Aslar orada başlar |",
         "| Dizme | Azalan, takımı fark etmeksizin |",
-        "| Taşıma | Birer birer |",
+        "| Taşıma | Tek kart ya da boş sıralar yetiyorsa bir dizi |",
         "| Boş sıra | Herhangi bir kart |",
         "| Deste | Yok |",
         "| Kartlar | 52 |",
@@ -340,10 +340,10 @@
       ]
     },
     "quickStart": {
-      "hash": "8b657e09",
+      "hash": "2a2216e6",
       "value": [
         "Takımı fark etmeksizin azalan sırayla diz.",
-        "Kartları birer birer taşı.",
+        "Tek kart taşı ya da boş sıralar yetiyorsa bir dizi.",
         "Boş sıraya herhangi bir kart konabilir."
       ]
     },
@@ -847,14 +847,14 @@
   },
   "congress": {
     "howToPlay": {
-      "hash": "9e657720",
+      "hash": "d57ff954",
       "value": [
         "## Amaç",
         "Bütün kartları temellere taşı.",
         "## Kurallar",
         "| Temeller (8) | As'tan Papaz'a, takıma göre |",
         "| Dizme | Azalan, takımı fark etmeksizin |",
-        "| Taşıma | Birer birer |",
+        "| Taşıma | Tek kart ya da boş sütunlar yetiyorsa bir dizi |",
         "| Boş sütun | Herhangi bir kart |",
         "| Deste | 1 kart çek |",
         "| Yeniden dağıtma | Yok |",
@@ -862,10 +862,10 @@
       ]
     },
     "quickStart": {
-      "hash": "c79129d7",
+      "hash": "671d920a",
       "value": [
         "Takımı fark etmeksizin azalan sırayla diz.",
-        "Kartları birer birer taşı.",
+        "Tek kart taşı ya da boş sütunlar yetiyorsa bir dizi.",
         "Boş sütuna herhangi bir kart konabilir."
       ]
     },
@@ -1186,14 +1186,14 @@
   },
   "diplomat": {
     "howToPlay": {
-      "hash": "9e657720",
+      "hash": "d57ff954",
       "value": [
         "## Amaç",
         "Bütün kartları temellere taşı.",
         "## Kurallar",
         "| Temeller (8) | As'tan Papaz'a, takıma göre |",
         "| Dizme | Azalan, takımı fark etmeksizin |",
-        "| Taşıma | Birer birer |",
+        "| Taşıma | Tek kart ya da boş sütunlar yetiyorsa bir dizi |",
         "| Boş sütun | Herhangi bir kart |",
         "| Deste | 1 kart çek |",
         "| Yeniden dağıtma | Yok |",
@@ -1201,10 +1201,10 @@
       ]
     },
     "quickStart": {
-      "hash": "c79129d7",
+      "hash": "671d920a",
       "value": [
         "Takımı fark etmeksizin azalan sırayla diz.",
-        "Kartları birer birer taşı.",
+        "Tek kart taşı ya da boş sütunlar yetiyorsa bir dizi.",
         "Boş sütuna herhangi bir kart konabilir."
       ]
     },
@@ -1334,14 +1334,14 @@
   },
   "eight-off": {
     "howToPlay": {
-      "hash": "d2e2c9c1",
+      "hash": "6c385fbb",
       "value": [
         "## Amaç",
         "Bütün kartları temellere taşı.",
         "## Kurallar",
         "| Temeller (4) | As'tan Papaz'a, takıma göre |",
         "| Dizme | Azalan, aynı takım |",
-        "| Taşıma | Tek kart ya da boş yerler yetiyorsa bir dizi |",
+        "| Taşıma | Tek kart ya da boş hücreler yetiyorsa bir dizi |",
         "| Boş sütun | Yalnızca Papaz |",
         "| Deste | Yok |",
         "| Kartlar | 52 |"
@@ -1525,14 +1525,14 @@
   },
   "flower-garden": {
     "howToPlay": {
-      "hash": "ebad4d6c",
+      "hash": "9d0fc0c3",
       "value": [
         "## Amaç",
         "Bütün kartları temellere taşı.",
         "## Kurallar",
         "| Temeller (4) | As'tan Papaz'a, takıma göre |",
         "| Dizme | Azalan, takımı fark etmeksizin |",
-        "| Taşıma | Birer birer |",
+        "| Taşıma | Tek kart ya da boş tarhlar yetiyorsa bir dizi |",
         "| Boş tarh | Herhangi bir kart |",
         "| Buket (16) | Her kart oynanabilir; hiçbir kart geri konmaz |",
         "| Deste | Yok |",
@@ -1554,24 +1554,24 @@
   },
   "fortress": {
     "howToPlay": {
-      "hash": "bb74089b",
+      "hash": "0a44131d",
       "value": [
         "## Amaç",
         "Bütün kartları temellere taşı.",
         "## Kurallar",
         "| Temeller (4) | As'tan Papaz'a, takıma göre |",
         "| Dizme | Artan ya da azalan, aynı takım |",
-        "| Taşıma | Birer birer |",
+        "| Taşıma | Tek kart ya da boş şeritler yetiyorsa bir dizi |",
         "| Boş şerit | Herhangi bir kart |",
         "| Deste | Yok |",
         "| Kartlar | 52 |"
       ]
     },
     "quickStart": {
-      "hash": "16527157",
+      "hash": "1cdcf8d2",
       "value": [
         "Takıma göre artan ya da azalan sırayla diz.",
-        "Kartları birer birer taşı.",
+        "Tek kart taşı ya da boş şeritler yetiyorsa bir dizi.",
         "Boş şeride herhangi bir kart konabilir."
       ]
     },
@@ -1608,14 +1608,14 @@
   },
   "forty-thieves": {
     "howToPlay": {
-      "hash": "3ac3d532",
+      "hash": "b04caf58",
       "value": [
         "## Amaç",
         "Bütün kartları temellere taşı.",
         "## Kurallar",
         "| Temeller (8) | As'tan Papaz'a, takıma göre |",
         "| Dizme | Azalan, aynı takım |",
-        "| Taşıma | Birer birer |",
+        "| Taşıma | Tek kart ya da boş sütunlar yetiyorsa bir dizi |",
         "| Boş sütun | Herhangi bir kart |",
         "| Deste | 1 kart çek |",
         "| Yeniden dağıtma | Yok ya da ayarlardan sınırsız |",
@@ -1627,10 +1627,10 @@
       ]
     },
     "quickStart": {
-      "hash": "568cdabd",
+      "hash": "5f249a78",
       "value": [
         "Takıma göre azalan sırayla diz.",
-        "Kartları birer birer taşı.",
+        "Tek kart taşı ya da boş sütunlar yetiyorsa bir dizi.",
         "Boş sütuna herhangi bir kart konabilir."
       ]
     },
@@ -1835,14 +1835,14 @@
   },
   "grandfathers-clock": {
     "howToPlay": {
-      "hash": "9a231296",
+      "hash": "00b0e5e2",
       "value": [
         "## Amaç",
         "Saatteki her temeli kendi saatini gösterene kadar diz.",
         "## Kurallar",
         "| Temeller (12) | Takıma göre artan, Papaz'dan As'a döner; her biri kendi saatinde durur |",
         "| Dizme | Azalan, takımı fark etmeksizin; Papaz, As'ın üstüne gider |",
-        "| Taşıma | Birer birer |",
+        "| Taşıma | Tek kart ya da boş yığınlar yetiyorsa bir dizi |",
         "| Boş yığın | Herhangi bir kart |",
         "| Deste | Yok |",
         "| Kartlar | 52 |",
@@ -1937,14 +1937,14 @@
   },
   "indian": {
     "howToPlay": {
-      "hash": "49243709",
+      "hash": "5122887b",
       "value": [
         "## Amaç",
         "Bütün kartları temellere taşı.",
         "## Kurallar",
         "| Temeller (8) | As'tan Papaz'a, takıma göre |",
         "| Dizme | Azalan, başka herhangi bir takım |",
-        "| Taşıma | Birer birer |",
+        "| Taşıma | Tek kart ya da boş sütunlar yetiyorsa bir dizi |",
         "| Boş sütun | Herhangi bir kart |",
         "| Deste | 1 kart çek |",
         "| Yeniden dağıtma | Yok |",
@@ -1952,10 +1952,10 @@
       ]
     },
     "quickStart": {
-      "hash": "e4b1b9bb",
+      "hash": "4f72d146",
       "value": [
         "Kartın kendi takımı dışındaki herhangi bir takımın üstüne azalan sırayla diz.",
-        "Kartları birer birer taşı.",
+        "Tek kart taşı ya da boş sütunlar yetiyorsa bir dizi.",
         "Boş sütuna herhangi bir kart konabilir."
       ]
     },
@@ -2085,14 +2085,14 @@
   },
   "king-albert": {
     "howToPlay": {
-      "hash": "96d6c4f9",
+      "hash": "ae390bc3",
       "value": [
         "## Amaç",
         "Bütün kartları temellere taşı.",
         "## Kurallar",
         "| Temeller (4) | As'tan Papaz'a, takıma göre |",
         "| Dizme | Azalan, kırmızı ve siyah sırayla |",
-        "| Taşıma | Birer birer |",
+        "| Taşıma | Tek kart ya da boş sütunlar yetiyorsa bir dizi |",
         "| Boş sütun | Herhangi bir kart |",
         "| Yedek (7) | Her kart oynanabilir; hiçbir kart geri konmaz |",
         "| Deste | Yok |",
@@ -2102,10 +2102,10 @@
       ]
     },
     "quickStart": {
-      "hash": "2c48201d",
+      "hash": "85ec1332",
       "value": [
         "Kırmızı ve siyah sırayla azalan şekilde diz.",
-        "Kartları birer birer taşı.",
+        "Tek kart taşı ya da boş sütunlar yetiyorsa bir dizi.",
         "Yedekteki kartlar oynanabilir ama asla geri konamaz."
       ]
     },
@@ -2395,14 +2395,14 @@
   },
   "maria": {
     "howToPlay": {
-      "hash": "6df7d8cf",
+      "hash": "1f9b7d89",
       "value": [
         "## Amaç",
         "Bütün kartları temellere taşı.",
         "## Kurallar",
         "| Temeller (8) | As'tan Papaz'a, takıma göre |",
         "| Dizme | Azalan, kırmızı ve siyah sırayla |",
-        "| Taşıma | Birer birer |",
+        "| Taşıma | Tek kart ya da boş sütunlar yetiyorsa bir dizi |",
         "| Boş sütun | Herhangi bir kart |",
         "| Deste | 1 kart çek |",
         "| Yeniden dağıtma | Yok |",
@@ -2410,10 +2410,10 @@
       ]
     },
     "quickStart": {
-      "hash": "6a765a29",
+      "hash": "76263f6c",
       "value": [
         "Kırmızı ve siyah sırayla azalan şekilde diz.",
-        "Kartları birer birer taşı.",
+        "Tek kart taşı ya da boş sütunlar yetiyorsa bir dizi.",
         "Boş sütuna herhangi bir kart konabilir."
       ]
     },
@@ -2699,14 +2699,14 @@
   },
   "penguin": {
     "howToPlay": {
-      "hash": "88ea4103",
+      "hash": "81404eea",
       "value": [
         "## Amaç",
         "Bütün kartları temellere taşı.",
         "## Kurallar",
         "| Temeller (4) | Gaga değerinden, takıma göre artan; Papaz'dan As'a döner |",
         "| Dizme | Azalan, aynı takım; As'tan Papaz'a döner |",
-        "| Taşıma | Tek kart ya da boş yerler yetiyorsa bir dizi |",
+        "| Taşıma | Tek kart ya da aynı takımdan bir dizi |",
         "| Boş sütun | Gaganın bir altındaki değer |",
         "| Deste | Yok |",
         "| Kartlar | 52 |",
@@ -3123,14 +3123,14 @@
   },
   "seahaven-towers": {
     "howToPlay": {
-      "hash": "d2e2c9c1",
+      "hash": "6c385fbb",
       "value": [
         "## Amaç",
         "Bütün kartları temellere taşı.",
         "## Kurallar",
         "| Temeller (4) | As'tan Papaz'a, takıma göre |",
         "| Dizme | Azalan, aynı takım |",
-        "| Taşıma | Tek kart ya da boş yerler yetiyorsa bir dizi |",
+        "| Taşıma | Tek kart ya da boş hücreler yetiyorsa bir dizi |",
         "| Boş sütun | Yalnızca Papaz |",
         "| Deste | Yok |",
         "| Kartlar | 52 |"

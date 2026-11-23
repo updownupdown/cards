@@ -30,7 +30,7 @@ export const maria: GameDefinition = {
   cardBack: CardBackColors.Burgundy,
   quickStart: [
     "Build down in alternating colors.",
-    "Move one card at a time.",
+    "Move a card, or a run if empty columns allow.",
     "Any card fills an empty column.",
   ],
   howToPlay: [
@@ -39,7 +39,7 @@ export const maria: GameDefinition = {
     "## Rules",
     "| Foundations (8) | Ace to King, by suit |",
     "| Build | Down, alternating colors |",
-    "| Move | One card at a time |",
+    "| Move | One card, or a run if empty columns allow |",
     "| Empty column | Any card |",
     "| Stock | Draw 1 |",
     "| Redeals | None |",

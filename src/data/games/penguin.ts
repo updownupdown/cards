@@ -46,7 +46,7 @@ export const penguin: GameDefinition = {
     "## Rules",
     "| Foundations (4) | Up by suit from the beak's rank, wrapping from King to Ace |",
     "| Build | Down, same suit, wrapping from Ace to King |",
-    "| Move | One card, or a run if free spaces allow |",
+    "| Move | One card, or a same-suit run |",
     "| Empty column | The rank below the beak |",
     "| Stock | None |",
     "| Cards | 52 |",

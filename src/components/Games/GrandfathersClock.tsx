@@ -30,6 +30,7 @@ import { GameWrapper } from "../common/GameWrapper";
 
 import { i18n } from "@/i18n";
 import { useHint } from "@/hints/hint-store";
+import { countEmptyPiles, maxSupermove } from "../Cards/supermove";
 import { findClassicHint } from "@/hints/classic";
 const pileCount = 8;
 const pileSize = 5;
@@ -67,7 +68,8 @@ type GameState = {
 
 export type GrandfathersClockGameState = GameState;
 
-type Source = { pile: number };
+/** `start`: the first card of a run that moves together (the top if unset). */
+type Source = { pile: number; start?: number };
 type Target =
   | { zone: "tableau"; pile: number }
   | { zone: "foundation"; pile: number };
@@ -115,18 +117,39 @@ function canBuildTableau(card: PlayingCard, pile: PlayingCard[]) {
   return !pileTop || nextRankValue(rankValue(card)) === rankValue(pileTop);
 }
 
+function sourceCards(state: GameState, source: Source) {
+  const pile = state.tableau[source.pile];
+  return pile.slice(source.start ?? pile.length - 1);
+}
+
+function isRun(cards: PlayingCard[]) {
+  return cards.every(
+    (card, index) => index === 0 || canBuildTableau(card, [cards[index - 1]]),
+  );
+}
+
+/**
+ * Cards move one at a time, but a run moves together when the empty piles
+ * other than the destination could carry it there card by card.
+ */
 function canMove(state: GameState, source: Source, target: Target) {
-  const card = top(state.tableau[source.pile]);
+  const cards = sourceCards(state, source);
+  const card = cards[0];
   if (!card) return false;
   if (target.zone === "foundation")
-    return canBuildFoundation(
-      card,
-      state.foundations[target.pile],
-      target.pile,
+    return (
+      cards.length === 1 &&
+      canBuildFoundation(card, state.foundations[target.pile], target.pile)
     );
   return (
     target.pile !== source.pile &&
-    canBuildTableau(card, state.tableau[target.pile])
+    canBuildTableau(card, state.tableau[target.pile]) &&
+    isRun(cards) &&
+    cards.length <=
+      maxSupermove({
+        freeCells: 0,
+        emptyColumns: countEmptyPiles(state.tableau, target.pile),
+      })
   );
 }
 
@@ -158,16 +181,22 @@ function pileOffset(count: number) {
   return zoneFanOffset(count, pileRows, 0.12, cardDims.tableauOffset);
 }
 
-/** Every card is on view: the hint searches for a win, one card at a time. */
+/** Every card is on view: the hint searches for a win. */
 function findGrandfathersClockHint(state: GameState) {
   return findClassicHint(
     { tableau: state.tableau, foundations: state.foundations },
     {
       toFoundation: (card, pile, index) =>
         canBuildFoundation(card, pile, index),
-      toTableau: (cards, pile) =>
-        cards.length === 1 && canBuildTableau(cards[0], pile),
-      canLift: (pile, index) => index === pile.length - 1,
+      toTableau: (cards, pile, pileIndex, board) =>
+        canBuildTableau(cards[0], pile) &&
+        isRun(cards) &&
+        cards.length <=
+          maxSupermove({
+            freeCells: 0,
+            emptyColumns: countEmptyPiles(board.tableau, pileIndex),
+          }),
+      canLift: (pile, index) => isRun(pile.slice(index)),
       buildQuality: (card, base) => (canBuildTableau(card, [base]) ? 2 : 0),
     },
     {
@@ -188,8 +217,8 @@ export const grandfathersClockRules = {
 };
 
 export default function GrandfathersClock() {
-  const [selected, setSelected] = useState<number | null>(null);
-  const [lastTap, setLastTap] = useState<{ pile: number; at: number } | null>(
+  const [selected, setSelected] = useState<Source | null>(null);
+  const [lastTap, setLastTap] = useState<{ key: string; at: number } | null>(
     null,
   );
   const {
@@ -263,15 +292,13 @@ export default function GrandfathersClock() {
     canDropOnTarget: (source, target) =>
       !game.ended && canMove(game, source, target),
     onSuccessfulDrop: (source, target) => {
-      moveCard(source.pile, target);
+      moveCard(source, target);
     },
-    getDroppedCardIds: (source) => {
-      const card = top(game.tableau[source.pile]);
-      return card ? [card.id] : [];
-    },
+    getDroppedCardIds: (source) =>
+      sourceCards(game, source).map((card) => card.id),
     getDropHitAreas: () => dropHitAreasRef.current,
     getSourceRect,
-    getTapHandler: (source) => () => onPilePress(source.pile),
+    getTapHandler: (source) => () => onPilePress(source.pile, source.start),
   });
 
   useHint(() => findGrandfathersClockHint(game), {
@@ -289,16 +316,16 @@ export default function GrandfathersClock() {
     }
   }, [game, isSettingUp, setGame]);
 
-  function moveCard(source: number, target: Target) {
-    if (game.ended || !canMove(game, { pile: source }, target)) return false;
+  function moveCard(source: Source, target: Target) {
+    if (game.ended || !canMove(game, source, target)) return false;
+    const count = sourceCards(game, source).length;
     saveUndoState(structuredClone(game));
     setGame((draft) => {
-      const card = draft.tableau[source].pop();
-      if (!card) return;
+      const cards = draft.tableau[source.pile].splice(-count);
       if (target.zone === "foundation") {
-        draft.foundations[target.pile].push(card);
+        draft.foundations[target.pile].push(...cards);
       } else {
-        draft.tableau[target.pile].push(card);
+        draft.tableau[target.pile].push(...cards);
       }
     });
     setSelected(null);
@@ -311,23 +338,39 @@ export default function GrandfathersClock() {
     const pile = game.foundations.findIndex((foundation, index) =>
       canBuildFoundation(card, foundation, index),
     );
-    return pile >= 0 && moveCard(source, { zone: "foundation", pile });
+    return (
+      pile >= 0 && moveCard({ pile: source }, { zone: "foundation", pile })
+    );
   }
 
-  function onPilePress(pile: number) {
+  /** A card under the top one is picked up with the run on it, if it's one. */
+  function sourceAt(pile: number, card?: number): Source {
+    const cards = game.tableau[pile];
+    return card === undefined ||
+      card >= cards.length - 1 ||
+      !isRun(cards.slice(card))
+      ? { pile }
+      : { pile, start: card };
+  }
+
+  function onPilePress(pile: number, card?: number) {
     if (game.ended) return;
     if (!top(game.tableau[pile])) {
       if (selected !== null) moveCard(selected, { zone: "tableau", pile });
       return;
     }
+    const next = sourceAt(pile, card);
+    const key = `${pile}-${next.start ?? "top"}`;
     const now = Date.now();
-    if (lastTap?.pile === pile && now - lastTap.at < DOUBLE_TAP_MS) {
+    if (lastTap?.key === key && now - lastTap.at < DOUBLE_TAP_MS) {
       setLastTap(null);
-      if (moveToFoundation(pile)) return;
-    } else setLastTap({ pile, at: now });
-    if (selected === null) return setSelected(pile);
-    if (selected === pile) return setSelected(null);
-    if (!moveCard(selected, { zone: "tableau", pile })) setSelected(pile);
+      if (next.start === undefined && moveToFoundation(pile)) return;
+    } else setLastTap({ key, at: now });
+    if (selected === null) return setSelected(next);
+    if (selected.pile === pile) {
+      return setSelected(selected.start === next.start ? null : next);
+    }
+    if (!moveCard(selected, { zone: "tableau", pile })) setSelected(next);
   }
 
   const zones: MapZone[] = useMemo(() => {
@@ -392,11 +435,14 @@ export default function GrandfathersClock() {
         card.topOfZone &&
         hoverTarget?.zone === "tableau" &&
         hoverTarget.pile === pile;
+      const isSelected =
+        selected?.pile === pile &&
+        card.cardIndex >= (selected.start ?? game.tableau[pile].length - 1);
       return {
         isDisabled: game.ended,
-        isSelected: (selected === pile && card.topOfZone) || isHoverTarget,
+        isSelected: isSelected || isHoverTarget,
         selectColor: isHoverTarget ? "green" : "blue",
-        onPress: () => onPilePress(pile),
+        onPress: () => onPilePress(pile, card.cardIndex),
         isVisible: !isBeingDragged,
         animDuration,
       };
@@ -452,20 +498,29 @@ export default function GrandfathersClock() {
     );
     if (!zone) return null;
     const count = game.tableau[source.pile].length;
+    const index = source.start ?? Math.max(0, count - 1);
     const base = getZoneBasePos(zone);
     return createRect(
       base.x,
-      base.y + Math.max(0, count - 1) * pileOffset(count) * cardHeight,
+      base.y + index * pileOffset(count) * cardHeight,
       cardWidth,
       cardHeight,
     );
   }
 
+  // The top card of each pile, and each card heading a run on it.
   const cardHitAreas = useMemo<CardHitArea<Source>[]>(
     () =>
       game.tableau.flatMap((pile, index) => {
-        const rect = pile.length > 0 ? getSourceRect({ pile: index }) : null;
-        return rect ? [{ source: { pile: index }, rect, priority: 10 }] : [];
+        if (pile.length === 0) return [];
+        let first = pile.length - 1;
+        while (first > 0 && isRun(pile.slice(first - 1))) first -= 1;
+        return pile.slice(first).flatMap((_, offset) => {
+          const cardIndex = first + offset;
+          const source = sourceAt(index, cardIndex);
+          const rect = getSourceRect(source);
+          return rect ? [{ source, rect, priority: 10 + cardIndex }] : [];
+        });
       }),
     [cardHeight, cardWidth, game, getZoneBasePos, zones],
   );
@@ -515,17 +570,22 @@ export default function GrandfathersClock() {
 
   function startGhostDrag(source: Source) {
     if (game.ended) return;
-    const card = top(game.tableau[source.pile]);
+    const cards = sourceCards(game, source);
     const rect = getSourceRect(source);
-    if (!card || !rect) return;
-    startDrag(source, [card], { x: rect.x, y: rect.y });
+    if (cards.length === 0 || !rect) return;
+    startDrag(
+      source,
+      cards,
+      { x: rect.x, y: rect.y },
+      pileOffset(game.tableau[source.pile].length),
+    );
   }
 
   const interactionTargets = useMemo(
     () =>
       cardHitAreas.map(({ source, rect }) => (
         <DragHandle
-          key={`tableau-${source.pile}`}
+          key={`tableau-${source.pile}-${source.start ?? "top"}`}
           collapsable={false}
           style={{
             position: "absolute",

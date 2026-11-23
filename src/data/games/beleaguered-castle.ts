@@ -29,7 +29,7 @@ export const beleagueredCastle: GameDefinition = {
   cardBack: CardBackColors.Slate,
   quickStart: [
     "Build down on any suit.",
-    "Move one card at a time.",
+    "Move a card, or a run if empty rows allow.",
     "Any card fills an empty row.",
   ],
   howToPlay: [
@@ -38,7 +38,7 @@ export const beleagueredCastle: GameDefinition = {
     "## Rules",
     "| Foundations (4) | Ace to King, by suit; the Aces start there |",
     "| Build | Down, regardless of suit |",
-    "| Move | One card at a time |",
+    "| Move | One card, or a run if empty rows allow |",
     "| Empty row | Any card |",
     "| Stock | None |",
     "| Cards | 52 |",

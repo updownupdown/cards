@@ -31,6 +31,7 @@ import {
   zoneFanOffset,
 } from "../Cards/card-utils";
 import { GameWrapper } from "../common/GameWrapper";
+import { countEmptyPiles, maxSupermove } from "../Cards/supermove";
 import { useHint } from "@/hints/hint-store";
 import {
   findClassicHint,
@@ -64,8 +65,6 @@ type ReserveCellBoardProps = {
   freeCellStartColumn?: number;
   cascadeRow?: number;
   fixedRows?: number;
-  /** Only one card moves at a time (no runs), as in King Albert. */
-  singleCardMoves?: boolean;
   /** False for a reserve: its cards play out, but nothing goes back in. */
   cellsAcceptCards?: boolean;
 };
@@ -179,7 +178,6 @@ type ReserveCellHintOptions = {
     card: PlayingCard,
     destinationTop?: PlayingCard,
   ) => boolean;
-  singleCardMoves?: boolean;
   cellsAcceptCards?: boolean;
 };
 
@@ -191,7 +189,6 @@ function findReserveCellHint(
   state: GameState,
   {
     canPlaceOnCascade: canPlaceOnCascadeRule = canPlaceOnCascade,
-    singleCardMoves = false,
     cellsAcceptCards = true,
   }: ReserveCellHintOptions = {},
 ) {
@@ -202,14 +199,14 @@ function findReserveCellHint(
       ? { cells: state.freeCells }
       : { reserves: state.freeCells.map((card) => (card ? [card] : [])) }),
   };
+  const emptyColumnsHoldRuns = canPlaceOnCascadeRule(QUEEN_PROBE);
   const maxRun = (current: ClassicBoard, target: number) =>
-    singleCardMoves
-      ? 1
-      : ((current.cells ?? []).filter((card) => card === null).length + 1) *
-        2 **
-          current.tableau.filter(
-            (pile, index) => pile.length === 0 && index !== target,
-          ).length;
+    maxSupermove({
+      freeCells: (current.cells ?? []).filter((card) => card === null).length,
+      emptyColumns: emptyColumnsHoldRuns
+        ? countEmptyPiles(current.tableau, target)
+        : 0,
+    });
   const rules: ClassicRules = {
     toFoundation: (card, pile) =>
       canPlaceOnFoundation(card, pile[pile.length - 1]),
@@ -218,13 +215,10 @@ function findReserveCellHint(
       canPlaceOnCascadeRule(cards[0], pile[pile.length - 1]),
     canLift: (pile, index) => {
       const cards = pile.slice(index);
-      return singleCardMoves
-        ? cards.length === 1
-        : cards.every(
-            (card, cardIndex) =>
-              cardIndex === 0 ||
-              canPlaceOnCascadeRule(card, cards[cardIndex - 1]),
-          );
+      return cards.every(
+        (card, cardIndex) =>
+          cardIndex === 0 || canPlaceOnCascadeRule(card, cards[cardIndex - 1]),
+      );
     },
   };
   return findClassicHint(
@@ -273,7 +267,6 @@ export function ReserveCellBoard({
   freeCellStartColumn = 0,
   cascadeRow = 2.4,
   fixedRows = 7,
-  singleCardMoves = false,
   cellsAcceptCards = true,
 }: ReserveCellBoardProps) {
   const [selected, setSelected] = useState<Selection>(null);
@@ -370,7 +363,6 @@ export function ReserveCellBoard({
     () =>
       findReserveCellHint(game, {
         canPlaceOnCascade: canPlaceOnCascadeRule,
-        singleCardMoves,
         cellsAcceptCards,
       }),
     { game, enabled: !isSettingUp && !won && !game.deal?.length },
@@ -727,22 +719,22 @@ export function ReserveCellBoard({
   }
 
   /**
-   * The longest run that could be moved one card at a time: each free cell
-   * doubles as a stop, and each empty column (other than the destination)
-   * doubles the whole count.
+   * The longest run that could be moved one card at a time (see
+   * `maxSupermove`). Empty columns only count where any card may fill them:
+   * a King-only column can't hold the middle of a run.
    */
   function getMaxMovableStackSize(
     snapshot: GameState,
     targetPileIndex?: number,
   ): number {
-    if (singleCardMoves) return 1;
-    const freeCells = cellsAcceptCards
-      ? snapshot.freeCells.filter((card) => card === null).length
-      : 0;
-    const emptyColumns = snapshot.cascades.filter(
-      (pile, index) => pile.length === 0 && index !== targetPileIndex,
-    ).length;
-    return (freeCells + 1) * 2 ** emptyColumns;
+    return maxSupermove({
+      freeCells: cellsAcceptCards
+        ? snapshot.freeCells.filter((card) => card === null).length
+        : 0,
+      emptyColumns: kingsOnlyInEmptyColumns
+        ? 0
+        : countEmptyPiles(snapshot.cascades, targetPileIndex),
+    });
   }
 
   function isValidCascadeStack(cards: PlayingCard[]): boolean {

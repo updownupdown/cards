@@ -34,7 +34,7 @@ export const flowerGarden: GameDefinition = {
     "## Rules",
     "| Foundations (4) | Ace to King, by suit |",
     "| Build | Down, regardless of suit |",
-    "| Move | One card at a time |",
+    "| Move | One card, or a run if empty beds allow |",
     "| Empty bed | Any card |",
     "| Bouquet (16) | Every card is playable; nothing goes back |",
     "| Stock | None |",
