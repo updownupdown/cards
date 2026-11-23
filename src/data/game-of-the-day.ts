@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GAME_DEFINITIONS } from "./games-registry";
 
-const DAILY_WINS_STORAGE_KEY = "cards.dailyWins.v1";
+export const DAILY_WINS_STORAGE_KEY = "cards.dailyWins.v1";
 /** Enough history for any streak worth showing, without growing forever. */
 const MAX_DAILY_WINS = 400;
 

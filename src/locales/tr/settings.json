@@ -66,6 +66,34 @@
     "tapsLeft_one": "Sıfırlamak için {{count}} kez daha dokun",
     "tapsLeft_other": "Sıfırlamak için {{count}} kez daha dokun"
   },
+  "backup": {
+    "label": "İlerlemeni taşı",
+    "description": "Favorilerini, istatistiklerini, Yolculuk ilerlemeni ve koleksiyon öğelerini yedekle, sonra başka bir tarayıcıda ya da başka bir cihazda geri yükle.",
+    "saveFile": "Dosyaya kaydet",
+    "copyCode": "Kodu kopyala",
+    "copied": "Kod kopyalandı. Diğer cihazındaki Solitarius'a yapıştır.",
+    "copyManually": "Tarayıcın kopyalayamadı. Bu kodu seç, kopyala ve güvenli bir yerde sakla:",
+    "done": "Tamam",
+    "openFile": "Dosya aç",
+    "pasteCode": "Kod yapıştır",
+    "pastePlaceholder": "Kodunu buraya yapıştır",
+    "check": "Devam",
+    "confirmTitle": "Bu yedek geri yüklensin mi?",
+    "confirmWarning": "Bu, cihazdaki tüm ilerlemenin ve ayarların yerine geçer.",
+    "restore": "Geri yükle",
+    "summary": {
+      "savedOn": "Kaydedildiği tarih",
+      "gamesWon": "Kazanılan oyunlar",
+      "wins": "Galibiyet",
+      "quotes": "Alıntılar",
+      "chapters": "Tao bölümleri"
+    },
+    "errors": {
+      "notBackup": "Bu bir Solitarius yedeği değil.",
+      "damaged": "Bu yedek eksik ya da bozuk. Yeniden kopyalamayı dene.",
+      "newer": "Bu yedek Solitarius'un daha yeni bir sürümünden. Güncellemek için uygulamayı yeniden yükle, sonra tekrar dene."
+    }
+  },
   "colorTheme": {
     "label": "Renk teması"
   },

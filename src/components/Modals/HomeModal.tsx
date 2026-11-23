@@ -36,6 +36,7 @@ import React from "react";
 import { Linking, Platform, ScrollView, View } from "react-native";
 import { Button } from "../Button/Button";
 import { AddToHomeScreenNotice } from "../common/AddToHomeScreenNotice";
+import { SaveTransferPanel } from "../common/SaveTransferPanel";
 import { SelectControl } from "../common/SelectControl";
 import { SettingControl } from "../common/SettingControl";
 import { AutoCompleteModeRadio } from "../common/AutoCompletePanel";
@@ -345,6 +346,7 @@ export const HomeModal = ({ onClose, onHomeDataInvalidated }: Props) => {
                   void updateSettings({ crashReports: val });
                 }}
               />
+              <SaveTransferPanel />
             </View>
 
             <AddToHomeScreenNotice />

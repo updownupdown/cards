@@ -66,6 +66,34 @@
     "tapsLeft_one": "Toque mais {{count}} vez para redefinir",
     "tapsLeft_other": "Toque mais {{count}} vezes para redefinir"
   },
+  "backup": {
+    "label": "Transfira seu progresso",
+    "description": "Faça um backup dos seus favoritos, estatísticas, progresso na Odisseia e colecionáveis, e restaure-os em outro navegador ou em outro dispositivo.",
+    "saveFile": "Salvar arquivo",
+    "copyCode": "Copiar código",
+    "copied": "Código copiado. Cole-o no Solitarius no seu outro dispositivo.",
+    "copyManually": "Seu navegador não conseguiu copiá-lo. Selecione este código, copie-o e guarde-o em um lugar seguro:",
+    "done": "Pronto",
+    "openFile": "Abrir arquivo",
+    "pasteCode": "Colar código",
+    "pastePlaceholder": "Cole seu código aqui",
+    "check": "Continuar",
+    "confirmTitle": "Restaurar este backup?",
+    "confirmWarning": "Isso substitui todo o progresso e as configurações deste dispositivo.",
+    "restore": "Restaurar",
+    "summary": {
+      "savedOn": "Salvo em",
+      "gamesWon": "Jogos vencidos",
+      "wins": "Vitórias",
+      "quotes": "Citações",
+      "chapters": "Capítulos do Tao"
+    },
+    "errors": {
+      "notBackup": "Isso não é um backup do Solitarius.",
+      "damaged": "Esse backup está incompleto ou danificado. Tente copiá-lo de novo.",
+      "newer": "Esse backup vem de uma versão mais recente do Solitarius. Recarregue o app para atualizá-lo e tente de novo."
+    }
+  },
   "colorTheme": {
     "label": "Tema de cores"
   },
