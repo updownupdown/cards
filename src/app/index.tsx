@@ -7,7 +7,6 @@ import {
 } from "@/data/game-menu";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 import { i18n } from "@/i18n";
-import { reportMessage } from "@/utils/crash-reporting";
 import { devModeReady } from "@/data/dev-mode";
 import { isLocalDevEnvironment } from "@/utils/utils";
 import { router, type Href } from "expo-router";
@@ -31,11 +30,9 @@ export default function HomeScreen() {
         // Dev mode starts at home; its saved choice may still be loading.
         if (await devModeReady()) return;
         // The app died while a game was opening last time: resuming it again
-        // could crash-loop, so start from the home screen instead. A native
-        // crash leaves no JavaScript error behind, so name the game here.
+        // could crash-loop, so start from the home screen instead.
         const interruptedGame = await consumeInterruptedGameLaunch();
         if (interruptedGame) {
-          reportMessage("Game launch never settled", { game: interruptedGame });
           await clearLastGameSession();
           if (active) showToast(i18n.t("game:errors.resumeFailed"));
           return;

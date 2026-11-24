@@ -4,7 +4,7 @@
   "translationNote": "Cette traduction est fournie à titre indicatif. En cas de différence avec la version anglaise de cette politique, la version anglaise fait foi.",
   "summary": {
     "title": "Résumé",
-    "body": "Solitarius ne collecte, ne stocke et ne partage aucune information personnelle. L'application n'a ni système de compte, ni outil d'analyse, ni publicité, ni serveur. La seule chose qui quitte votre appareil est un rapport d'erreur anonyme, envoyé en cas de problème, et que vous pouvez désactiver."
+    "body": "Solitarius ne collecte, ne stocke et ne partage aucune information personnelle. L'application n'a ni système de compte, ni outil d'analyse, ni rapports d'erreur, ni publicité, ni serveur. Rien sur vous ou sur votre façon de jouer ne quitte votre appareil."
   },
   "stored": {
     "title": "Données stockées sur votre appareil",
@@ -12,7 +12,7 @@
   },
   "collected": {
     "title": "Données que nous collectons",
-    "body": "Uniquement des diagnostics d'erreur. Lorsque l'application rencontre une erreur ou plante, elle envoie un rapport à Sentry, un service de surveillance des erreurs, afin que la panne puisse être identifiée et corrigée. Le rapport contient l'erreur et l'endroit du code d'où elle provient, le modèle de votre appareil, la version de son système d'exploitation et celle de l'application, un bref historique de ce qui s'est passé juste avant, comme le jeu qui était ouvert, ainsi que, sur Android, un identifiant aléatoire créé à l'installation de l'application, pour que les rapports répétés d'une même installation puissent être comptés ensemble. Cet identifiant n'est lié ni à vous, ni à votre compte, ni à votre appareil, et une réinstallation en crée un nouveau. Le rapport ne contient ni nom, ni adresse e-mail, ni position, ni aucune autre information personnelle, et les adresses IP ne sont pas conservées. Désactiver « Envoyer les rapports d'erreur » dans les réglages arrête complètement cet envoi."
+    "body": "Aucune. Solitarius n'envoie rien sur vous ou sur votre façon de jouer, ni à nous ni à qui que ce soit."
   },
   "links": {
     "title": "Liens externes",
@@ -20,7 +20,7 @@
   },
   "children": {
     "title": "Confidentialité des enfants",
-    "body": "Solitarius ne collecte sciemment aucune information auprès de qui que ce soit, y compris les enfants. L'application n'a pas de système de compte et ne demande aucune donnée personnelle, et les diagnostics d'erreur décrits ci-dessus n'identifient personne."
+    "body": "Solitarius ne collecte aucune information auprès de qui que ce soit, y compris les enfants. L'application n'a pas de système de compte et ne demande aucune donnée personnelle."
   },
   "changes": {
     "title": "Modifications de cette politique",

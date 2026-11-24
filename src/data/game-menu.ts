@@ -141,8 +141,6 @@ export type GlobalSettings = {
   /** When a game that can finish itself on the foundations does so: from a
    *  button in a panel under the header, right away, or never. */
   autoComplete: AutoCompleteMode;
-  /** Send anonymous crash diagnostics to Sentry. */
-  crashReports: boolean;
   /** The colour theme's id, from COLOR_THEMES. */
   colorTheme: string;
 };
@@ -209,9 +207,14 @@ export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
   hapticFeedback: false,
   keepScreenAwake: false,
   autoComplete: "ask",
-  crashReports: true,
   colorTheme: DEFAULT_COLOR_THEME,
 };
+
+/**
+ * Settings the app no longer has. Saves may still hold them; they're ignored.
+ * "crashReports" went with crash reporting (Sentry) in November 2026.
+ */
+export const RETIRED_GLOBAL_SETTINGS: readonly string[] = ["crashReports"];
 
 export const DEFAULT_GAME_SETTINGS: GameSettings = {
   showCardHints: true,
@@ -586,7 +589,7 @@ export async function clearGameLaunchPending() {
 
 /**
  * Returns the game path (and clears the flag) if the last game launch never
- * settled, or null if it did. The path names the game in a crash report.
+ * settled, or null if it did.
  */
 export async function consumeInterruptedGameLaunch() {
   const raw = await AsyncStorage.getItem(GAME_LAUNCH_GUARD_STORAGE_KEY);

@@ -1,7 +1,6 @@
 import { dismissLaunchSplash } from "@/components/common/LaunchSplash";
 import { i18n } from "@/i18n";
 import { Colors, FontWeight } from "@/styles/styles";
-import { reportCrash } from "@/utils/crash-reporting";
 import { useEffect } from "react";
 import { Pressable, Text, View } from "react-native";
 
@@ -22,7 +21,6 @@ export function AppErrorScreen({ error, retry }: Props) {
   useEffect(() => {
     dismissLaunchSplash();
     console.error("Screen crashed:", error);
-    reportCrash(error);
   }, [error]);
 
   return (

@@ -4,7 +4,7 @@
   "translationNote": "Terjemahan ini disediakan untuk kemudahan. Jika berbeda dengan versi bahasa Inggris kebijakan ini, versi bahasa Inggris yang berlaku.",
   "summary": {
     "title": "Ringkasan",
-    "body": "Solitarius tidak mengumpulkan, menyimpan, atau membagikan informasi pribadi apa pun. Aplikasi ini tidak memiliki sistem akun, analitik, iklan, maupun server. Satu-satunya hal yang keluar dari perangkatmu adalah laporan kerusakan anonim, yang dikirim saat terjadi masalah, dan bisa kamu matikan."
+    "body": "Solitarius tidak mengumpulkan, menyimpan, atau membagikan informasi pribadi apa pun. Aplikasi ini tidak memiliki sistem akun, analitik, laporan kerusakan, iklan, maupun server. Tidak ada apa pun tentang dirimu atau caramu bermain yang keluar dari perangkatmu."
   },
   "stored": {
     "title": "Data yang disimpan di perangkatmu",
@@ -12,7 +12,7 @@
   },
   "collected": {
     "title": "Data yang kami kumpulkan",
-    "body": "Hanya diagnostik kerusakan. Saat aplikasi mengalami error atau berhenti, aplikasi mengirim laporan ke Sentry, layanan pemantauan error, agar masalahnya bisa ditemukan dan diperbaiki. Laporan berisi error dan bagian kode asalnya, model perangkatmu, versi sistem operasi dan versi aplikasi, catatan singkat tentang apa yang terjadi sebelumnya, misalnya permainan yang sedang dibuka, serta, di Android, pengenal acak yang dibuat saat aplikasi dipasang, agar laporan berulang dari satu pemasangan bisa dihitung bersama. Pengenal itu tidak terkait denganmu, akunmu, atau perangkatmu, dan pemasangan ulang membuat pengenal baru. Laporan tidak berisi nama, alamat email, lokasi, atau informasi pribadi lainnya, dan alamat IP tidak disimpan. Mematikan “Kirim laporan kerusakan” di pengaturan menghentikannya sepenuhnya."
+    "body": "Tidak ada. Solitarius tidak mengirim apa pun tentang dirimu atau caramu bermain, baik kepada kami maupun kepada siapa pun."
   },
   "links": {
     "title": "Tautan eksternal",
@@ -20,7 +20,7 @@
   },
   "children": {
     "title": "Privasi anak-anak",
-    "body": "Solitarius tidak dengan sengaja mengumpulkan informasi dari siapa pun, termasuk anak-anak. Aplikasi ini tidak memiliki sistem akun dan tidak meminta data pribadi, dan diagnostik kerusakan yang dijelaskan di atas tidak mengidentifikasi siapa pun."
+    "body": "Solitarius tidak mengumpulkan informasi dari siapa pun, termasuk anak-anak. Aplikasi ini tidak memiliki sistem akun dan tidak meminta data pribadi."
   },
   "changes": {
     "title": "Perubahan kebijakan ini",

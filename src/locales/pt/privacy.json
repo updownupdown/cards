@@ -4,7 +4,7 @@
   "translationNote": "Esta tradução é oferecida por conveniência. Se ela divergir da versão em inglês desta política, vale a versão em inglês.",
   "summary": {
     "title": "Resumo",
-    "body": "O Solitarius não coleta, armazena nem compartilha nenhuma informação pessoal. O app não tem sistema de contas, nem análise, nem publicidade, nem servidor. A única coisa que sai do seu dispositivo é um relatório de erro anônimo, enviado quando algo dá errado, e que você pode desativar."
+    "body": "O Solitarius não coleta, armazena nem compartilha nenhuma informação pessoal. O app não tem sistema de contas, nem análise, nem relatórios de erro, nem publicidade, nem servidor. Nada sobre você ou sobre como você joga sai do seu dispositivo."
   },
   "stored": {
     "title": "Dados armazenados no seu dispositivo",
@@ -12,7 +12,7 @@
   },
   "collected": {
     "title": "Dados que coletamos",
-    "body": "Apenas diagnósticos de erro. Quando o app encontra um erro ou trava, ele envia um relatório para o Sentry, um serviço de monitoramento de erros, para que a falha possa ser encontrada e corrigida. O relatório contém o erro e o ponto do código de onde ele veio, o modelo do seu dispositivo, a versão do sistema operacional e a do app, um breve registro do que aconteceu logo antes, como o jogo que estava aberto, e, no Android, um identificador aleatório criado quando o app foi instalado, para que relatórios repetidos de uma mesma instalação possam ser contados juntos. Esse identificador não está ligado a você, à sua conta nem ao seu dispositivo, e uma reinstalação cria um novo. O relatório não contém nome, endereço de e-mail, localização nem qualquer outra informação pessoal, e endereços IP não são armazenados. Desativar “Enviar relatórios de erro” nas configurações interrompe isso por completo."
+    "body": "Nenhum. O Solitarius não envia nada sobre você ou sobre como você joga, nem para nós nem para ninguém."
   },
   "links": {
     "title": "Links externos",
@@ -20,7 +20,7 @@
   },
   "children": {
     "title": "Privacidade de crianças",
-    "body": "O Solitarius não coleta intencionalmente informações de ninguém, incluindo crianças. O app não tem sistema de contas nem pede dados pessoais, e os diagnósticos de erro descritos acima não identificam ninguém."
+    "body": "O Solitarius não coleta informações de ninguém, incluindo crianças. O app não tem sistema de contas nem pede dados pessoais."
   },
   "changes": {
     "title": "Alterações nesta política",

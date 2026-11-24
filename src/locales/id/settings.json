@@ -47,10 +47,6 @@
     "always": "Selalu",
     "never": "Tidak pernah"
   },
-  "crashReports": {
-    "label": "Kirim laporan kerusakan",
-    "description": "Mengirim diagnostik anonim saat terjadi masalah agar bisa diperbaiki. Tidak ada informasi pribadi yang disertakan."
-  },
   "populateTestProgress": "Isi progres uji",
   "credits": {
     "taoTranslation": {
