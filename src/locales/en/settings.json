@@ -47,10 +47,6 @@
     "always": "Always",
     "never": "Never"
   },
-  "crashReports": {
-    "label": "Send crash reports",
-    "description": "Sends anonymous diagnostics when something goes wrong, so it can be fixed. No personal information is included."
-  },
   "populateTestProgress": "Populate test progress",
   "credits": {
     "taoTranslation": {

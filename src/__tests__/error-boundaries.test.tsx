@@ -8,13 +8,6 @@ import { Try } from "expo-router/build/views/Try";
 // fonts and native modules the test environment doesn't have).
 import { AppErrorScreen } from "@/components/common/AppErrorScreen";
 
-const mockReportCrash = jest.fn();
-
-jest.mock("@/utils/crash-reporting", () => ({
-  reportCrash: (...args: unknown[]) => mockReportCrash(...args),
-  withCrashReporting: (component: unknown) => component,
-}));
-
 let shouldThrow = true;
 
 function Flaky() {
@@ -30,7 +23,6 @@ function texts(renderer: ReactTestRenderer) {
 
 beforeEach(() => {
   shouldThrow = true;
-  mockReportCrash.mockClear();
   jest.spyOn(console, "error").mockImplementation(() => {});
 });
 
@@ -46,9 +38,6 @@ describe("error boundaries", () => {
     });
 
     expect(texts(renderer)).toEqual(["Something went wrong.", "Try again"]);
-    expect(mockReportCrash).toHaveBeenCalledWith(
-      expect.objectContaining({ message: "boom" }),
-    );
 
     shouldThrow = false;
     await act(async () => {

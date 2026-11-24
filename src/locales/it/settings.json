@@ -47,10 +47,6 @@
     "always": "Sempre",
     "never": "Mai"
   },
-  "crashReports": {
-    "label": "Invia segnalazioni di errore",
-    "description": "Invia diagnostica anonima quando qualcosa va storto, così può essere corretto. Non include nessuna informazione personale."
-  },
   "populateTestProgress": "Genera progressi di prova",
   "credits": {
     "taoTranslation": {

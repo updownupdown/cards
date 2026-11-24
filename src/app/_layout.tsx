@@ -15,12 +15,6 @@ import { localizeGameTitle } from "@/i18n/content";
 import { SOURCE_LANGUAGE } from "@/i18n/languages";
 import { applyColorTheme, Colors } from "@/styles/styles";
 import { getColorTheme } from "@/styles/themes";
-import {
-  addGameBreadcrumb,
-  initCrashReporting,
-  setCrashContext,
-  withCrashReporting,
-} from "@/utils/crash-reporting";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import {
@@ -55,10 +49,6 @@ import * as ExpoSplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { View, Platform } from "react-native";
-
-// Install the crash handlers before the first screen mounts, so a failure
-// during startup is still reported.
-initCrashReporting();
 
 // Keep the splash screen visible until the first screen is drawn
 // (LaunchSplash), then a short fade straight to it.
@@ -175,14 +165,6 @@ function Layout() {
     document.title = pageTitle;
   }, [displayLanguage, pathname]);
 
-  // Breadcrumbs say which screen an event came from, and the tag lets Sentry
-  // group issues by game.
-  useEffect(() => {
-    const game = isGamePath(pathname) ? pathname : undefined;
-    setCrashContext({ game, language: displayLanguage });
-    addGameBreadcrumb(`screen ${pathname}`);
-  }, [displayLanguage, pathname]);
-
   useEffect(() => {
     if (typeof document === "undefined") return;
     const active = document.activeElement as HTMLElement | null;
@@ -258,5 +240,4 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   return <AppErrorScreen error={error} retry={retry} />;
 }
 
-// Catches native crashes and errors React itself can't hand to a boundary.
-export default withCrashReporting(Layout);
+export default Layout;

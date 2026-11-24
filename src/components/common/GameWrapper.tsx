@@ -49,7 +49,6 @@ import {
 import { useResponsiveUiLayoutFromWidth } from "@/hooks/useResponsiveLayout";
 import { useViewportDimensions } from "@/hooks/useViewportDimensions";
 import { haptics } from "@/utils/haptics";
-import { addGameBreadcrumb, setCrashContext } from "@/utils/crash-reporting";
 import { selectCampaignHomeTab } from "@/components/Home/home-view-state";
 import { REVEAL_TIMING } from "@/components/common/reveal-timing";
 import { flexStyles } from "@/styles/flexStyles";
@@ -214,17 +213,13 @@ export const GameWrapper = ({
   // The same position always gets the same hint, so pressing again replays
   // it. HintUfo shows it.
   const onHeaderHint = useStableCallback(() => {
-    const hint = requestHint(
-      hintMode === "autopilot" ? "autopilot" : "beacons",
-    );
-    addGameBreadcrumb("hint", { found: !!hint, mode: hintMode });
+    requestHint(hintMode === "autopilot" ? "autopilot" : "beacons");
   });
   // A win in a deal Autopilot played in doesn't count.
   const onAutopilotMove = useStableCallback(() => {
     void markAutopilotSession(getActiveGameSessionId(pathname));
   });
   const onHeaderUndo = useStableCallback(() => {
-    addGameBreadcrumb("undo");
     handleUndo?.();
   });
   const onHeaderReset = useStableCallback(handleReset);
@@ -411,9 +406,7 @@ export const GameWrapper = ({
     attemptedPathRef.current = pathname;
 
     recordAttempt(pathname).catch(() => {});
-    setCrashContext({ mode: isCampaignMode ? "campaign" : "standard" });
-    addGameBreadcrumb("deal");
-  }, [isCampaignMode, pathname]);
+  }, [pathname]);
 
   useEffect(() => {
     let active = true;
@@ -437,7 +430,6 @@ export const GameWrapper = ({
     }
 
     if (outcome === "won") haptics.win();
-    addGameBreadcrumb(outcome === "won" ? "win" : "loss");
 
     const sessionId = getActiveGameSessionId(pathname);
     // Autopilot played in this deal: the win is shown, but not counted.

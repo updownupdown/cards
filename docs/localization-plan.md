@@ -117,7 +117,6 @@ An import that fails a check is rejected field by field, so a bad batch can neve
 1. **Check it on the phone.** Run the all-games sweep in each language, and in the pseudo-locale, and fix any overflow. French and Spanish were checked; Italian, Portuguese, Turkish and Indonesian were not. The random-play stress test already passes with `RANDOM_PLAY_LANGUAGE=fr`.
 2. **Store listing.** None: the app is web only (solitarius.app) since 2026-11.
 3. **More languages.** See "Next languages" below.
-4. **Crash reporting** (`docs/crash-reporting-plan.md`) is still deferred and remains open before the first release.
 
 John H. McDonald's Tao Te Ching translation allows derivative translations, which the translated chapters rely on; the Settings credit says the chapters are translated from his English version.
 

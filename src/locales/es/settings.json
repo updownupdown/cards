@@ -47,10 +47,6 @@
     "always": "Siempre",
     "never": "Nunca"
   },
-  "crashReports": {
-    "label": "Enviar informes de errores",
-    "description": "Envía diagnósticos anónimos cuando algo falla, para que pueda corregirse. No se incluye ninguna información personal."
-  },
   "populateTestProgress": "Rellenar progreso de prueba",
   "credits": {
     "taoTranslation": {

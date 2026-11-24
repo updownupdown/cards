@@ -20,7 +20,6 @@ import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Platform, View } from "react-native";
 import { endGameLaunch } from "@/components/common/GameLaunchOverlay";
 import { i18n } from "@/i18n";
-import { reportCrash } from "@/utils/crash-reporting";
 
 export function generateStaticParams() {
   return GAME_DEFINITIONS.map(({ path }) => ({ game: path.slice(1) }));
@@ -56,8 +55,6 @@ export function ErrorBoundary({ error }: ErrorBoundaryProps) {
 
   useEffect(() => {
     console.error("Game crashed, returning home:", error);
-    // The game tag set by the root layout says which game this was.
-    reportCrash(error);
     let active = true;
 
     void clearLastGameSession()

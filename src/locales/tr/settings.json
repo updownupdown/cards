@@ -47,10 +47,6 @@
     "always": "Her zaman",
     "never": "Asla"
   },
-  "crashReports": {
-    "label": "Hata raporları gönder",
-    "description": "Bir sorun çıktığında düzeltilebilmesi için anonim tanılama bilgileri gönderir. Kişisel bilgi içermez."
-  },
   "populateTestProgress": "Test ilerlemesi doldur",
   "credits": {
     "taoTranslation": {

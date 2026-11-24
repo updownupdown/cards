@@ -33,6 +33,7 @@ import {
   DEFAULT_GAME_SETTINGS,
   DEFAULT_GLOBAL_SETTINGS,
   GAME_SETTINGS_STORAGE_KEY,
+  RETIRED_GLOBAL_SETTINGS,
   type GlobalSettings,
 } from "@/data/game-menu";
 import {
@@ -203,6 +204,14 @@ describe("Saved data: what saves refer to still exists", () => {
     ).toEqual([]);
   });
 
+  test("a retired setting is really gone", () => {
+    expect(
+      RETIRED_GLOBAL_SETTINGS.filter(
+        (field) => field in DEFAULT_GLOBAL_SETTINGS,
+      ),
+    ).toEqual([]);
+  });
+
   test("a replaced game is really gone, and the game in its place is new", () => {
     expect(
       Object.entries(REPLACED_GAME_PATHS).flatMap(([gamePath, successor]) => [
@@ -268,7 +277,13 @@ describe("Saved data: what saves refer to still exists", () => {
         .map((field) => `${kind} "${field}" is gone: saved values are lost`);
 
     expectNothingLost([
-      ...missing("global setting", contract.globalSettings, now.globalSettings),
+      ...missing(
+        "global setting",
+        contract.globalSettings.filter(
+          (field) => !RETIRED_GLOBAL_SETTINGS.includes(field),
+        ),
+        now.globalSettings,
+      ),
       ...missing(
         "game setting",
         contract.gameSettings.filter(

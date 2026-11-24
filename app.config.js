@@ -67,17 +67,6 @@ const config = {
     reactCompiler: true,
   },
   extra: {
-    // The DSN is a public project identifier, so it can be committed. Setting
-    // SENTRY_DSN to an empty string turns crash reporting off.
-    sentryDsn:
-      process.env.SENTRY_DSN ??
-      "https://201eca773021e5dd5382dbcae73dfb45@o4512126348623872.ingest.us.sentry.io/4512127229165568",
-    // Separates events in Sentry: the web deploy sets SENTRY_ENVIRONMENT, and
-    // anything else is a local build.
-    sentryEnvironment: process.env.SENTRY_ENVIRONMENT ?? "local",
-    // Ties an event to the exact build its source maps were uploaded for: the
-    // web deploy passes the commit it built.
-    sentryRelease: process.env.SENTRY_RELEASE ?? null,
     router: {},
   },
 };
